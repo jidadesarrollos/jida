@@ -67,20 +67,24 @@ class ValidadorJida {
                                                 'programa'=>false,
                                                );
         $this->mensajesDefecto = array(
-                                    'numerico' => "Debe ser numerico", 
-                                    'obligatorio' => "Es Obligatorio", 
-                                    'decimal' => "Debe ser decimal y los decimales deben estar separados por coma", 
+                                    'numerico' => "Debe ser numerico",
+                                    'obligatorio' => "Es Obligatorio",
+                                    'decimal' => "Debe ser decimal y los decimales deben estar separados por coma",
                                     'caracteres' => "solo puede contener caractares",
                                     'alfanumerico' => "no puede contener caracteres especiales",
                                     'programa'=>"solo puede poseer caracteres alfanumericos, underscore o guion",
-                                    'email'=>"El formato del email no es valido" ,
+                                    'email'=>"El formato del email no es valido",
                                     'telefono'=>'El formato del telefono debe ser 212 4222211',
-                                    'celular'=>'El formato del celular debe ser 4212 4222211'
+                                    'celular'=>'El formato del celular debe ser 4212 4222211',
+                                    'coordenada'=>'La coordenada debe tener el siguiente formato',
+        							'contrasenia'=> 'Debe cumplir con las especificaciones establecidas.',
+        							'internacional'=>'El telefono internacional no es valido',
+                                    'fecha'=>'El formato de fecha debe ser dd-mm-yyyy'
                                    );
     }
     private function obtenerExpresiones() {
         $exp = array(
-                        "numerico" => "/^(?:\+|-)?\d+$/", 
+                                                "numerico" => "/^(?:\+|-)?\d+$/", 
                         "decimal" => "/^([0-9])*[.]?[0-9]*$/", 
                         "caracteres" => "/^[A-ZñÑa-záéíóúÁÉÍÓÚ ]*$/",
         				"programa" => "/^[A-Za-z_-]*$/",
@@ -94,11 +98,17 @@ class ValidadorJida {
 		        		"email"			=> "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
 		        		#"email"			=> "/^[A-Za-z0-9._-]*@[A-Za-z]*\.[A-Za-z]{4}\.[A-Za-z]{2}|[A-Za-z0-9._-]*@[A-Za-z]*\.[A-Za-z]{2}$/",
 		        		"cedula"		=> "/^[0-9]{6,8}$/",
-		        		//"telefono"		=> "/^0[0-9]{10}$/",
-		        		"celular"		=> "/^4\d{9}$/",
-		        		"telefono"		=>	"/^2[0-9]{13}|[2|4][0-9]{9}$/",
+		        		"celular"		=> "/^(412|416|414|424|426)\d{7}$/",
+        				"internacional" => "/^\d{9,18}$/",
+		        		"telefono"		=>	"/^2[0-9]{9,13}$/",
 		        		"twitter"		=> "/^[A-Za-z0-9._-]*$/",
 		        		"url"			=> "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
+        				"minuscula"		=> "/[a-z]/",
+        				"mayuscula"		=> "/[A-Z]/",
+        				"numero"		=> "/[0-9]/",
+        				"caracteresEsp"	=> "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
+        				"coordenada"    =>  "/^\-?[0-9]{2}\.[0-9]{3,15}/",
+        				"fecha"			=> "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
 		        		
                      );
 
@@ -128,6 +138,7 @@ class ValidadorJida {
 			
     	}
         #echo $this->campo['name']." ".$nombreValidacion."<hr>";
+       
         if (preg_match($this -> expresiones[$nombreValidacion], $this -> valorCampo)) {
         	/**
 				 * En caso de que sea decimal o numerico se reemplaza el valor formateado por el requerido 
@@ -147,8 +158,9 @@ class ValidadorJida {
         }
     }
     private function obtenerMensajeError($validacion,$datos){
-        if(isset($datos['Mensaje'])){
-            $this->mensajeError = $datos['Mensaje'];
+    	
+        if(isset($datos['mensaje'])){
+            $this->mensajeError = $datos['mensaje'];
         }else{        
             $this->mensajeError = "El campo ".$this->campo['label'] ." ".$this->mensajesDefecto[$validacion];
         }
@@ -191,6 +203,9 @@ class ValidadorJida {
 						case "telefono" :
 							$CheckValor = $this->validarTelefono($validacion,$detalle);
 							break;
+                        case "fecha" :
+							$CheckValor = $this->validarFecha($validacion,$detalle);
+							break;
                         default :
                             $CheckValor = $this->validarCadena($validacion, $detalle);
                             break;
@@ -218,19 +233,52 @@ class ValidadorJida {
 
     }//fin validarCampo
 
-    /**
-     * Valida un campnameo obligatorio
+     /**
+     * Valida un campo obligatorio
+	  * @method validarCampoLleno
+	  * @access private
      */
     private function validarCampoLleno() {
-        if ($this->valorCampo != "") {
-            return true;
-        } else {
-            return 
-            false;
+    	
+    	$validacion = true;
+    	if(is_array($this->validaciones['obligatorio']) and array_key_exists('condicional',$this->validaciones['obligatorio'])){
+    		if($_POST[$this->validaciones['obligatorio']['condicional']]==$this->validaciones['obligatorio']['condicion']){
+    			$validacion = true;
+    		}else{
+    			$validacion=false;
+    		}
+    	}
+        if($validacion===true){
+        	if ($this->valorCampo != "") {
+        		return true;
+        	} else {
+        		return false;
+        	}
+        }else{
+        	return true;
         }
 
     }
 	
+	/**
+	 * Valida un campo con formato fecha
+	 * @method validarFecha
+	 * @access private
+	 */
+	private function validarFecha($validacion,$detalle){
+		if($this->validarCadena('fecha', $this->valorCampo)){
+			$_POST[$this->campo['name']]=FechaHora::fechaInvertida($this->valorCampo);
+			return true;
+		}else{
+			$this->obtenerMensajeError('fecha', $detalle);
+			return false;
+		}
+	}
+	/**
+	 * Valida un campo para telefono
+	 * @method validarTelefono
+	 * @access private
+	 */
 	private function validarTelefono($validacion,$detalle){
 		
 		
@@ -243,21 +291,51 @@ class ValidadorJida {
 		$valorTelefono = $valorCodigo.$this->valorCampo.$valorExt;
 		$expTlf=$this->expresiones["telefono"];
 		$expCel=$this->expresiones['celular'];
-		
+		$expInter=$this->expresiones['internacional'];
 		$validacionTlf =(preg_match($expTlf,$valorTelefono))?1:0;
 		$validacionCel =(preg_match($expCel,$valorTelefono))?1:0;
+		$validacionInter = (preg_match($expCel,$valorTelefono))?1:0;
 		if(	array_key_exists('tipo',$detalle) and
 				($detalle['tipo']=='telefono' and $validacionTlf==1 or
-					 $detalle['tipo']=='celular' and $validacionCel==1 or
-					 $detalle['tipo']=="multiple" and ($validacionCel==1 or $validacionTlf==1)) or
-				!array_key_exists('tipo',$detalle) and $validacionTlf==1){
+					$detalle['tipo']=='celular' and $validacionCel==1 or
+					$detalle['tipo']=='internacional' and $validacionInter==1 or
+					$detalle['tipo']=="multiple" and ($validacionCel==1 or $validacionTlf==1 or $validacionInter==1)) or 
+					!array_key_exists('tipo',$detalle) and $validacionTlf==1){
 					
 					return true;
 				}else{
-					
+					$this->obtenerMensajeError('telefono', $detalle);
 					return false;
 				}
 		
+	}
+	
+	/**
+	 * Valida un campo de contraseña segura
+	 * @method validarContrasenia
+	 * @access private
+	 */
+	private function validarContrasenia($validacion,$detalle){
+
+		$contrasenia = $this->valorCampo;
+		
+		$expMin = $this->expresiones['minuscula'];
+		$expMay = $this->expresiones['mayuscula'];
+		$expNum = $this->expresiones['numero'];
+		$expCaract = $this->expresiones['caracteresEsp'];
+		
+		$validacionMin =(preg_match($expMin,$contrasenia))?1:0;
+		$validacionMay =(preg_match($expMay,$contrasenia))?1:0;
+		$validacionNum =(preg_match($expNum,$contrasenia))?1:0;
+		$validacionCaract =(preg_match($expCaract,$contrasenia))?1:0;
+		
+		if($validacionMin == 1 && $validacionMay == 1 && $validacionNum == 1 && $validacionCaract == 1 && strlen($contrasenia) >= 8){
+			return true;
+		}else{
+			$this->obtenerMensajeError('contrasenia', $detalle);
+			return false;
+		}
+
 	}
 
 }

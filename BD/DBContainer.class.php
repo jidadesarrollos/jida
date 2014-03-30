@@ -215,7 +215,7 @@ class DBContainer {
      * @param boolean $momentoGuardado
      *          Indica si se registra la fecha y hora del registro
      *          si $momentoGuardado se encuentra activado la tabla de base de datos debe tener los campos
-     *          fecha_creado,hora_creado,usuario_creado y si es un update
+     *          fecha_creaciono,hora_creado,usuario_creado y si es un update
      *          los campo fecha_modificado,hora_modificado,usuario_modificado
      *          salvarObjeto(__CLASS__);
      */
@@ -405,7 +405,7 @@ class DBContainer {
             }
         }
         if ($momentoGuardado === TRUE) {
-            $update .= ',fecha_modificado=current_timestamp ';
+            $update .= ',fecha_modificacion=current_timestamp ';
         }
         $update .= "where $this->clavePrimaria=" . $this->propiedadesPublicas [$this->clavePrimaria] . ";";
         

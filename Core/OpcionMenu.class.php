@@ -47,18 +47,6 @@ class OpcionMenu extends DBContainer {
      * @access public
      */
     var $hijo;
-    /**
-     * Registro de Fecha en que se crea una opción
-     * @var datetime $fecha_creado
-     * @access public
-     */
-     private $fecha_creado;
-    /**
-     * Registro de Fecha en que se modifica una opción
-     * @var datetime $fecha_modificado
-     * @access public
-     */
-     private $fecha_modificado;
     
 	/**
      * Arreglo de opciones de un menu
@@ -84,7 +72,7 @@ class OpcionMenu extends DBContainer {
 	    
         $this->establecerAtributos($post, __CLASS__);
         $this->hijo = (empty($this->hijo))?0:$this->hijo;
-	    $proceso = $this->salvarObjeto(__CLASS__,$this,TRUE);
+	    $proceso = $this->salvar(null,TRUE);
         if($this->padre!=0){
             $this->setHijoPadre(1);
         }

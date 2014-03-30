@@ -11,7 +11,7 @@ class UsersController extends Controller{
     }
     
 	function index(){
-		$query = "select id_usuario,nombre_usuario \"Nombre Usuario\", fecha_creado \"Fecha Creaci&oacute;n\",
+		$query = "select id_usuario,nombre_usuario \"Nombre Usuario\", fecha_creacion \"Fecha Creaci&oacute;n\",
 					activo \"Activo\",ultima_session \"&Uacute;ltima Sesi&oacute;n\",  b.estatus
 				 from s_usuarios a 
 				 join s_estatus b on (a.id_estatus=b.id_estatus)";

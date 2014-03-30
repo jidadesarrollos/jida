@@ -176,7 +176,7 @@ class UsuarioAplicacion extends DBContainer{
             
         }
         $this->establecerAtributos($datos);
-        $this->fecha_creado=FechaHora::datetime();
+        $this->fecha_creacion=FechaHora::datetime();
         $this->fecha_modificacion=FechaHora::datetime();
         $codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
         $this->validacion=$codigo;

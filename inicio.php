@@ -15,7 +15,7 @@
 /**
  * Incluir archivo de configuración de Base de datos
  */
-include_once 'Config/BDConfig.php';
+
 include_once 'Helpers/FuncionesBasicas.php';
 /**
  * Directorio del directorio de aplicación.
@@ -60,6 +60,7 @@ if(TEST_PLATFORM==TRUE){
  * Incluir archivo de configuración general del framework
  */
 include_once 'Config/initConfig.php';
+include_once 'Config/BDConfig.php';
 #=======================================================================
 #=======================================================================
 #=======================================================================

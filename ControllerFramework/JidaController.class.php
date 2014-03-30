@@ -66,7 +66,11 @@
                 $url = explode('/', str_replace('.php', '', $url));
                 $url = array_filter($url);
             }
-            
+			/**
+			 * variable global con todos los parametros pasados via url
+			 * 
+			 */
+            $GLOBALS['arrayParametros'] = $url;
             $this->controlador = $this->validarNombre(array_shift($url),1);
             
             if(in_array(strtolower($this->controlador),$this->modulosExistentes)){
@@ -77,6 +81,7 @@
              
             $this->metodo = $this->validarNombre(array_shift($url),2);
             $this->args = $url;
+            
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
@@ -114,12 +119,14 @@
      * @access private
      * 
      */
-    private function procesarArgumentos(){
+    private function procesarArgumentos($tipo=1){
         
         try{
             $band = 0;
             $clave = TRUE;
-            $totalClaves = count($this->args);
+			
+			
+			$totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
                 for($i = 0; $i<=$totalClaves;$i++){
@@ -130,8 +137,16 @@
                     }
                     $i++;
                 }    
+            }if($tipo>1){
+            	
+            	$GLOBALS['getsIndex']= "otro";
             }
-            $_GET = $gets;
+			
+			$_GET = $gets;
+			
+			
+            
+            
         }catch(Exception $e){
             Excepcion::controlExcepcion($e);
         }
@@ -196,9 +211,12 @@
                          * valor metodo como un parametro get clave
                          * 
                          */
+                         
                         array_unshift($this->args,$this->metodo);
-                        if(count($this->args)>1){
-                            $this->procesarArgumentos();
+						
+                        if(count($this->args)>0){
+                        	
+                            $this->procesarArgumentos(2);
                         }
                         $this->metodo = 'index';
                     }
