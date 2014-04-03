@@ -121,7 +121,9 @@ class Menu extends DBContainer {
          }else{
          	#throw new Exception("Menu no definido", 1); 	
          }
-         $query  = "select * from s_opciones_menu where id_menu = $this->id_menu order by orden,nombre_opcion";
+         $query  = "select * from s_opciones_menu where id_menu = $this->id_menu 
+          and  (id_estatus=1 or id_estatus=null)
+          order by padre,orden,nombre_opcion";
 		
          $data = $this->bd->obtenerDataCompleta($query);
 		 

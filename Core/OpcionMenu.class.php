@@ -47,7 +47,8 @@ class OpcionMenu extends DBContainer {
      * @access public
      */
     var $hijo;
-    
+    var $id_estatus;
+    var $orden;
 	/**
      * Arreglo de opciones de un menu
      */

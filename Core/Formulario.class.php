@@ -553,6 +553,7 @@ class Formulario extends DBContainer {
         // ----------------------------------------------
         $a = 0;
         foreach ( $this->camposFormulario as $key => $campo ) {
+            
             if(!is_array($datos[$campo['name']])){
                 $datos[$campo['name']] = trim($datos[$campo['name']]);
             }

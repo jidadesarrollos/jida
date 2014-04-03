@@ -36,12 +36,46 @@ class MenuHTML extends DBContainer{
      * @var $identacion
      */
     private $identacion=2;
-    
-    function __construct($id=""){
+    /**
+     * Funcion constructora de menus
+     * @param int $id Clave del menu
+     * @param int $tipo Determina si el menu será buscado en la tabla s_menus o en otra. 1)[por defecto] Tabla menus 2)otra 
+     */
+    function __construct($id="",$tipo=1){
         $this->nombreTabla="s_opciones_menu";
         $this->clavePrimaria="id_opcion";
-        $this->menu = new Menu($id);
+        if($tipo==1){
+            $this->menu = new Menu($id);    
+        }else{
+            
+        }
+        
         parent::__construct();
+    }
+    /**
+     * Arma un menu a partir de una tabla distinta a s_menus
+     * @param $funcion Nombre de la función del objeto del cual se obtendran las opciones
+     * 
+     */
+    function showMenuPersonalizado($data){
+       try{
+           $config = $this->configuracion;
+         
+            if(count($data)>0){
+            
+                if(!array_key_exists("li", $config)){
+                    $config['li']=array(0=>"");
+                }
+                $listaMenu = $this->armarListaMenuRecursivo($data,$config);
+                return $listaMenu;    
+                
+            }
+
+       } catch(Exception $e){
+           Excepcion::controlExcepcion($e);
+       }
+        
+        
     }
     /**
      * Devuelde un menu armado
@@ -62,6 +96,7 @@ class MenuHTML extends DBContainer{
             
             $menu = $this->menu;
             $opciones = $menu->obtenerOpcionesMenu();
+            
             if(count($opciones)>0){
                 
                 if(!array_key_exists("li", $config)){
@@ -138,6 +173,10 @@ class MenuHTML extends DBContainer{
     }
 
     private function armarMenuRecursivoHijos($opciones,$config,$padre,$nivel=1){
+        
+        if($padre==12){
+    	 //Arrays::mostrarArray($opciones);
+        }
          $ident = $this->identacion+$nivel+2;
          if(array_key_exists($nivel, $config['ul'])){
             $cssUl['class'] = $config['ul'][$nivel];
@@ -155,11 +194,14 @@ class MenuHTML extends DBContainer{
             }
             if($subopcion['padre']==$padre){
                 if($subopcion['hijo']==1){
-                    $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$ident+1);
+                    
+                    $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = CampoHTML::crearSelectorHTMLSimple($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
+                    }else{
+                        $opc = $subopcion['nombre_opcion'];
                     }
-                    $listaMenu = CampoHTML::crearSelectorHTMLSimple("li",$cssli,$opc.$submenu,$nivel+1);
+                    $listaMenu .= CampoHTML::crearSelectorHTMLSimple("li",$cssli,$opc.$submenus,$nivel+1);
                 }else{
                     $span = $subopcion['nombre_opcion'];
                     $enlace = CampoHTML::crearSelectorHTMLSimple("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);

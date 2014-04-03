@@ -111,7 +111,7 @@ class Pagina{
         }
         #Ruta para vistas de la aplicacion
         if(!empty($modulo)){
-            $this->rutaApp=app_dir ."Modulos/".$modulo."/Vistas/";
+            $this->rutaApp=app_dir ."Modulos/".ucwords($modulo)."/Vistas/";
         }
         else{
             $this->rutaApp=app_dir ."Vistas" . "/" ;

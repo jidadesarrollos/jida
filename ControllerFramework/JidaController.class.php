@@ -73,7 +73,7 @@
             $GLOBALS['arrayParametros'] = $url;
             $this->controlador = $this->validarNombre(array_shift($url),1);
             
-            if(in_array(strtolower($this->controlador),$this->modulosExistentes)){
+            if(in_array($this->controlador,$this->modulosExistentes)){
                 $this->modulo = $this->controlador;
                 $this->controlador = $this->validarNombre(array_shift($url),1);
                 
@@ -196,6 +196,7 @@
                 }
                 
                 $metodo = $this->metodo;
+                
                 if(file_exists($rutaArchivo) and is_readable($rutaArchivo)){
                     
                     if(!empty($this->modulo)){
@@ -242,11 +243,11 @@
                          $nameControl = "Index";
                      }
                     if(is_callable($controlador,$this->validarNombre($this->controlador,2))){
-                        
+                      echo $this->metodo;
                         $this->metodo = $this->controlador;
                         $this->controlador=$nameControl;
                         $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
-                        $this->validacion();
+                        //$this->validacion();
                         
                     }else{
                         if(entorno_app=='dev')
