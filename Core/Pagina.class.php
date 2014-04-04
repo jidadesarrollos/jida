@@ -88,6 +88,9 @@ class Pagina{
      * de la pagina
      * @method validarDefiniciones
      * @access public
+     * @var string $controlador Nombre del controlador a validar
+     * @var string $metodo Nombre del metodo a ejecutar
+     * @var string $modulo Módulo en el cual se encuentra el controlador buscado. 
      */
     function validarDefiniciones($controlador,$metodo="",$modulo=""){
         

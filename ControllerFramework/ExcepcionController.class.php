@@ -9,7 +9,10 @@
  */
 class ExcepcionController extends Controller{
     
-    
+    function __construct(){
+        $this->header="plantillas/error/headerError.php";
+        $this->footer="plantillas/error/footerError.php";
+    }
     /**
      * Funcion por defecto para manejar
      * las excepciones existentes en el entorno de desarrollo
@@ -18,8 +21,7 @@ class ExcepcionController extends Controller{
      * @return boolean true
      */
     function index(){
-        $this->header="plantillas/error/headerError.php";
-        $this->footer="plantillas/error/footerError.php";
+        
         $this->vista = 'excepcion';
     }
     function error500(){   
@@ -28,6 +30,9 @@ class ExcepcionController extends Controller{
     
     function error403(){
         $this->vista='403';
+    }
+    function error404(){
+        $this->vista='404';
     }
 }
 ?>

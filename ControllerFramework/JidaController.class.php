@@ -196,6 +196,10 @@
                 }
                 
                 $metodo = $this->metodo;
+                /**
+                 * Se valida la existencia del archivo, 
+                 * @deprecated Este lógica será cambiada proximamente debido a que el "autoload debe encargarse de validar existencia".
+                 */
                 
                 if(file_exists($rutaArchivo) and is_readable($rutaArchivo)){
                     
@@ -232,6 +236,10 @@
                      */
                      
                      if(!empty($this->modulo)){
+                         /**
+                          * Cada Modulo tiene un controlador con el mismo nombre del módulo, por tanto
+                          * es buscado dicho controlador como controlador por defecto.
+                          */
                          $controlador = $this->validarNombre($this->modulo,1)."Controller";
                          $nameControl = $this->validarNombre($this->modulo,1);
                          if(!class_exists($controlador)){
@@ -242,18 +250,32 @@
                          $controlador = "IndexController";
                          $nameControl = "Index";
                      }
-                    if(is_callable($controlador,$this->validarNombre($this->controlador,2))){
-                      echo $this->metodo;
+                     
+                    if(method_exists($controlador, $this->validarNombre($this->controlador,2))){
                         $this->metodo = $this->controlador;
-                        $this->controlador=$nameControl;
-                        $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
-                        //$this->validacion();
                         
                     }else{
-                        if(entorno_app=='dev')
-                            echo "no se consigue la ruta $rutaArchivo";exit;
+                            
+                        $this->vista->rutaPagina=3;
+                         $this->controlador="Excepcion";
+                         $controlador = $this->controlador."Controller";
+                         $this->metodo = 'error404';
+                        
                     }
-                }
+                    $this->controlador=$nameControl;
+                    $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
+                    // if(is_callable($controlador,$this->validarNombre($this->controlador,2))){
+                        // echo $this->controlador."<hr>";                     
+                        // $this->metodo = $this->controlador;
+                        // 
+//                         
+                        // //$this->validacion();
+//                         
+                    // }else{
+                        // if(entorno_app=='dev')
+                            // echo "no se consigue la ruta $rutaArchivo";exit;
+                    // }
+                }//fin validacion de existencia del controlador.
            }else{
                  
                  $this->vista->rutaPagina=3;
