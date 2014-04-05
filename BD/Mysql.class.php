@@ -9,7 +9,7 @@
  * Hace uso de la API de PHP Mysqli
  * 
  * @author Julio Rodriguez <jirc48@hotmail.com>
- * @version 1.0
+ * @version 1.2
  * @package framework
  * 
  * @category Base de Datos
@@ -222,7 +222,7 @@ class Mysql extends ConexionBD{
 			
 		
 			while($data = $this->result->fetch_assoc()){
-				$dataCompleta[]=$data;
+				$dataCompleta[]=String::codificarArrayToHTML($data);
 				
 			}	
 		
@@ -243,7 +243,7 @@ class Mysql extends ConexionBD{
 			$this->result = $result;
 		}
         if($this->result)		
-		  $arr = $this->result->fetch_array();
+		  $arr = String::codificarArrayToHTML($this->result->fetch_array());
         else{
             throw new Exception("El result de $this->query no trae información", 1);
             
@@ -257,7 +257,7 @@ class Mysql extends ConexionBD{
                 $this->result = $result;
               }
               
-              $arr = $this->result->fetch_assoc();
+              $arr = String::codificarArrayToHTML($this->result->fetch_assoc());
               
               return $arr;
                  
@@ -313,7 +313,7 @@ class Mysql extends ConexionBD{
 	 * @author  
 	 */
 	function fetchRow() {
-		return $this->result->fetch_row();
+		return String::codificarArrayToHTML($this->result->fetch_row());
 	}
 	
 	function totalField() {

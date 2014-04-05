@@ -116,40 +116,61 @@ class String {
     public static function generarUUID($parametro = null) {
         return hash('sha256', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy123456789' . $parametro . date('U'));
     }
-    
+    /**
+     * Codifica el contenido de un array convirtiendo los acentos y caracteres especiales
+     * en formato html
+     * @method codificarArrayToHTML
+     * @param array $array
+     */
+    public static function codificarArrayToHTML($array){
+        
+            if(is_array($array)){
+                foreach ($array as $key => $value) {
+                    $array[$key] = self::codificarHTML($value);
+                }
+            }
+        return $array;
+    }
     /**
      * Verifica los caracteres especiales y los cambia por la codificación asci correspondiente
+     * @method codificarHTML
+     * @param string Cadena
+     * 
      */
-    public static function codificarHTML($cadena){
-        $arrAcentos = array(
-            'á'=>"&aacute;", 'é'=>'&eacute;',
-            'í'=>'&iacute;','ó'=>'&oacute;',
-            'ú'=>'&uacute;','Á'=>"&AACUTE;",
-            'É'=>'&Eacute;','Í'=>'&Iacute;',
-            'Ó'=>'&OACUTE;','Ú'=>'&UACUTE;',
-            'Ñ'=>"&Ntilde;", 'ñ'=>"&ntilde;",
-            '¿'=>'&iquest;'
+    public static function codificarHTML($cadena) {
+        $arrAcentos = array (
+                'á' => "&aacute;",
+                'é' => '&eacute;',
+                'í' => '&iacute;',
+                'ó' => '&oacute;',
+                'ú' => '&uacute;',
+                'Á' => "&Aacute;",
+                'É' => '&Eacute;',
+                'Í' => '&Iacute;',
+                'Ó' => '&Oacute;',
+                'Ú' => '&Uacute;',
+                'Ñ' => "&Ntilde;",
+                'ñ' => "&ntilde;",
+                '¿' => '&iquest;' 
         );
-        $cadena  = explode(" ",$cadena);
-        $arrCadena=array();
-        foreach ($cadena as $valor){
+        $cadena = explode ( " ", $cadena );
+        $arrCadena = array ();
+        
+        foreach ( $cadena as $valor ) {
             $band = 0;
-            foreach ($arrAcentos as $key=>$value){
-                if(strpos($valor,$key)!==false){
-                    $arrCadena[]=str_replace($key,$value,$valor);
+            foreach ( $arrAcentos as $key => $value ) {
+                
+                if (strpos ( $valor, $key ) !== false) {
+                    $valor = str_replace ( $key, $value, $valor );
                     $band = 2;
-                }else{
-                    if($band!=2)
-                    $band=1;
                 }
-            }//fin foreach interno
-            if($band==1){
-                $arrCadena[]= trim($valor);
-            }//final if
-        }//fin foreach
-        $cadenaFinal=implode(" ",$arrCadena);
+            } // fin foreach interno
+            $arrCadena [] = trim ( $valor );
+        } // fin foreach
+        $cadenaFinal = implode ( " ", $arrCadena );
         return $cadenaFinal;
-    }//fin función
+    } // fin función
+    
         
 } // END 
 

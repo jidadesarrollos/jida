@@ -46,7 +46,7 @@ class CampoHTML extends DBContainer {
     var $class = "";
     
     /**
-     * Registra si el formulario debe ser mostrado de forma normal, disabled o readonly
+     * Registra si el campo debe ser mostrado de forma normal, disabled o readonly
      * 
      * @var int $visibilidad
      *      <ul>
@@ -109,7 +109,7 @@ class CampoHTML extends DBContainer {
         }
         
         $this->clavePrimaria = "id_campo";
-        if ($arrValue != "") {
+        if (is_array($arrValue)) {
             $this->typeForm = 2;
             if(is_array($arrValue) and count($arrValue)>0){
                 //Validar si el campo update es multi-selección.
@@ -129,7 +129,7 @@ class CampoHTML extends DBContainer {
         if (isset ( $this->valueUpdate [$this->name] )){
             $validacion = json_decode("{".$this->eventos."}");
             
-            if($validacion!==null and array_key_exists("decimal", $validacion)){
+            if($validacion!==null and array_key_exists("decimal", $validacion) and !empty($this->valueUpdate[$this->name])){
                 
                 $this->value = number_format($this->valueUpdate[$this->name],2,",",".");
             }else{
@@ -249,17 +249,28 @@ class CampoHTML extends DBContainer {
             /**
              * Sección de valores update
              */
+          $eventos = json_decode("{".$this->eventos."}");
+          $tipoTelefono="normal";
+          if(property_exists($eventos->{'telefono'}, 'tipo')){
+              $tipoTelefono = $eventos->{'telefono'}->{'tipo'};
+          }
           $valorCodigo="";$valorTelf="";$valorExtension="";
              if(!empty($this->value)){
-                $valorCodigo=substr($this->value,0,3);
-                $valorTelf=substr($this->value,3,7);
+                $valorCodigo=($tipoTelefono=='internacional')?substr($this->value,0,4):substr($this->value,0,3);
+                $valorTelf=($tipoTelefono=='internacional')?substr($this->value,4,9):substr($this->value,3,7);
                 if($this->opciones=='ext'){
-                    $valorExtension=substr($this->value,10);
+                    $valorExtension=($tipoTelefono=='internacional')?substr($this->value,13):substr($this->value,10);
                 }
              }
-                
-            $this->control="<div class=\"form-inline\"><span class=\"text-muted\">0</span>
-            <input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">-";
+             $this->control="<div class=\"form-inline\">";
+             if($tipoTelefono!='internacional'){
+                $this->control.="<span class=\"text-muted\">+58</span>";
+                $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">-";     
+             }else{
+                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">-";
+             }
+            
+            
             $this->control .= "<input type=\"text\" name=\"$this->name\" value=\"$valorTelf\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
             $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
             
@@ -349,7 +360,7 @@ class CampoHTML extends DBContainer {
      * @return string
      */
     private function crearTextArea() {
-        $this->control = "<textarea name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . ">";
+        $this->control = "<textarea name=\"$this->name\" id=\"$this->id_propiedad\" maxlength=\"$this->maxlength\"" . trim ( $this->atributosAdicionales ) . ">";
         $this->control .= $this->value;
         $this->control .= "</textarea>";
         return $this->control;
@@ -369,12 +380,18 @@ class CampoHTML extends DBContainer {
         $this->armarOpciones ();
         $this->control .= "\n\t\t<div>";
         $i=0;
+        
         foreach ( $this->opciones as $valor => $dato ) {
             $check = "";
             if ($this->typeForm == 2 ) {
-                
-                if ($this->valueUpdate[$this->name] == $valor and $this->valueUpdate[$this->name]!=null and $this->valueUpdate[$this->name]!=""){
-                    $check = "checked=\"checked\"";
+                if(array_key_exists($this->name, $this->valueUpdate)){
+                    $this->valueUpdate[$this->name]=(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
+                    if ($this->valueUpdate[$this->name] == $valor){
+                        $check = "checked=\"checked\"";
+                    }
+                }else{
+                   # throw new Exception("No se encuentra definido un valor update del formulario", 1);
+                    
                 }
             }elseif($i==0){
                #     $check = "checked=\"checked\"";
