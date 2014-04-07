@@ -89,6 +89,7 @@ class Session {
      */
     static function set($clave,$param2,$param3=""){
         if(!empty($param3)){
+            
             $_SESSION[$clave][$param2]=$param3;
             
         }else

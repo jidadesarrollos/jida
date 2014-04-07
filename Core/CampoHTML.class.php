@@ -233,10 +233,12 @@ class CampoHTML extends DBContainer {
      * Crea un input con formato para telefono
      */
     private function crearInputDate(){
-        if(!empty($this->value)){
+        if(!empty($this->value) and is_integer($this->value)){
             $this->value = FechaHora::convertirUnixADate($this->value);
+        }elseif(!empty($this->value) and !is_integer($this->value)){
+            $this->value = FechaHora::fechaInvertida($this->value);
         }
-        $this->control = "<input type=\"text\" name=\"$this->name\" id=\"$this->id_propiedad\" readonly data-picker=\"true\" " . trim ( $this->atributosAdicionales ) . " ";
+        $this->control = "<input type=\"text\" name=\"$this->name\" id=\"$this->id_propiedad\" readonly data-control=\"datepicker\" " . trim ( $this->atributosAdicionales ) . " ";
         $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
         $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
         $this->control .= ($this->maxlength != "") ? " maxlength=\"$this->maxlength\" " : "";

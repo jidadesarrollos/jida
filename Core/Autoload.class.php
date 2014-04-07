@@ -45,7 +45,7 @@
             $modulos = $GLOBALS['modulos'];
             foreach($modulos as $key => $modulo){
                 $total =count($this->directorios);
-                if($modulo=="jadmin"){
+                if($modulo=="Jadmin"){
                     $this->directorios[$total+1]= $modulo ."/Controllers/";
                     $this->directorios[$total+2]= $modulo ."/Models/";
                 }else{       

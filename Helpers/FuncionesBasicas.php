@@ -7,8 +7,13 @@
 
  
  
-function respuestaAjax($respuesta){
-    print($respuesta);
+function respuestaAjax($respuesta,$tipo=1){
+    if($tipo==2){
+        echo $respuesta;
+    }else{
+    print($respuesta);    
+    }
+    
     exit;
 } 
 function redireccionar($url){

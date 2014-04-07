@@ -26,7 +26,9 @@ class JidaControl extends DBContainer{
     function __construct($id_form=""){
 
         $this->nombreTabla="s_formularios";
+        
         $this->clavePrimaria="id_form";
+        $this->unico=array('nombre_identificador');
         parent::__construct(__CLASS__);
 		if($id_form!=""){
 			$this->id_form = $id_form;
@@ -86,7 +88,7 @@ class JidaControl extends DBContainer{
             $campos = array();
             for ($i=0; $i < $totalColumnas; $i++) {
                 $nombreCampo = $this->bd->obtenerNombreCampo($resultDatos, $i); 
-                $campos[] = "($this->id_form,'$nombreCampo','$nombreCampo',2)";
+                $campos[] = "(".$accion['idResultado'].",'$nombreCampo','$nombreCampo',2)";
             }//fin for
             $insertCampos = sprintf("insert into $this->tablaCampos (id_form,name,id_propiedad,control) values %s",
                                     implode(", ", $campos));
@@ -302,6 +304,24 @@ class JidaControl extends DBContainer{
             return true;
         }catch(Exception $e){
             
+        }
+    }
+    /**
+     * Verifica el query de un formulario
+     * @validarQuery
+     */
+    function validarQuery($query){
+        try{
+            if($this->bd->ejecutarQuery($query)){
+                return true;
+            }else{
+                return false;
+            }
+            
+        }catch(Exception $e){
+            if($e->getCode()=='200'){
+                return false;
+            }
         }
     } 
 }

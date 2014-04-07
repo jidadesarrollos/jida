@@ -26,6 +26,7 @@ class FormsController extends Controller{
         $this->footer='jadminDefault/footer.php';
     }
     function index(){
+        
         $this->vista='vistaFormularios';        
         $dataArray['vistaForms'] = $this->mostrarVistaForms();
         $this->data = $dataArray;
@@ -76,22 +77,26 @@ class FormsController extends Controller{
             
 			$formulario = new Formulario('Formularios',$tipoForm,$id_form);
 			$formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->url."gestion-formulario/id/$id_form":$this->url."gestion-formulario/";
+            
 			if(isset($_POST['btnFormularios'])){
 				$validacion = $formulario->validarFormulario($_POST);
 				if($validacion===true){
 					$jctrol =  new JidaControl($id_form);
-					
-					if($_POST['btnFormularios']!='Modificar'){
-						$_POST['nombre_identificador'] = $this->armarNombreIdentificador($_POST['nombre_f']);
-					}
-					
-					
-					$guardado = $jctrol->salvar($_POST);
-					if($guardado['ejecutado']==1){
-						$jctrol->procesarCamposFormulario($guardado);
-						Session::set('__msjForm', Mensajes::mensajeInformativo("El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente"));
-						redireccionar('/jadmin/forms/configuracion-formulario/formulario/'.$guardado['idResultado']);
-					}
+			        if($jctrol->validarQuery($_POST['query_f'])===TRUE){		
+    					if($_POST['btnFormularios']!='Modificar'){
+    						$_POST['nombre_identificador'] = $this->armarNombreIdentificador($_POST['nombre_f']);
+    					}
+    					
+    					
+    					$guardado = $jctrol->salvar($_POST);
+    					if($guardado['ejecutado']==1){
+    						$jctrol->procesarCamposFormulario($guardado);
+    						Session::set('__msjForm', Mensajes::mensajeInformativo("El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente"));
+    						redireccionar('/jadmin/forms/configuracion-formulario/formulario/'.$guardado['idResultado']);
+    					}
+                    }else{
+                        Session::set('__msjForm',Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
+                    }
 				}else{
 					Session::set('__msjForm',Mensajes::mensajeError("No se ha podido registrar el formulario"));
 				}

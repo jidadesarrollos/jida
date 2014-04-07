@@ -110,7 +110,7 @@ class Mysql extends ConexionBD{
 		
 		
 		if(!$this->result){
-			throw new Exception("No se pudo ejecutar el query $query (".$this->mysqli->errno.") ".$this->mysqli->error, 1);		
+			throw new Exception("No se pudo ejecutar el query $query (".$this->mysqli->errno.") ".$this->mysqli->error, 200);		
 		}
 		
 		$this->totalCampos = $this->mysqli->field_count;
@@ -137,7 +137,7 @@ class Mysql extends ConexionBD{
 	                                implode(', ',$valoresCampos)
 	                               );
 			
-			$result = array("query"=>$insert);
+			$result = array("query"=>$insert,'idResultado'=>"");
 			
 			if(!Session::get('__queryInsert')){
 				$validadoUnico=FALSE;
@@ -165,6 +165,7 @@ class Mysql extends ConexionBD{
 					$this->ejecutarQuery($insert);
 					Session::set('__queryInsert',$insert);
 		            if($this->mysqli->insert_id!=""){$ejecutado=1;}else{$ejecutado=0;}
+                    $result['idResultado'] = $this->mysqli->insert_id;
 					$result['ejecutado']=$ejecutado;
 		    		$result['unico'] = 0;
 				}else{

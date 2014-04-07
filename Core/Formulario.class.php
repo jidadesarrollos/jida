@@ -98,28 +98,7 @@ class Formulario extends DBContainer {
     var $nombreSubmit;
     var $enctype = "application/x-www-form-urlencoded";
     var $action = "";
-    /**
-     * Define si el boton del formulario tiene una funcion onclick asociada
-     */
-    var $funcionOnclick;
-    /**
-     * Estilo del Botón del formulario
-     */
-    var $classSubmit = "btn btn-primary";
-    /**
-     * String a Imprimir en el boton del Formulario
-     */
-    var $valueSubmit;
-    /**
-     * Tipo del Input creado
-     *
-     * Por defecto es submit, puede ser especificado como "button"
-     */
-    var $tipoBoton = "submit";
-    /**
-     * Define el id a colocar al submit de envio
-     */
-    private $idSubmit;
+
     
     /* VARIABLES DE LA CLASE */
     
@@ -192,6 +171,54 @@ class Formulario extends DBContainer {
      * Muestra el titulo del formulario
      */
     var $tituloFormulario="";
+    
+    
+    /**
+     * Indica si el boton de guardado del formulario es mostrado, por defecto se encuentra en TRUE,
+     * en caso de que $botonGuardado sea colocado en FALSE, el formulario NO imprimirá la etiqueta <form>
+     * y debe ser colocada en el archivo vista
+     * @var boolean  $botonGuardado  
+     */
+    var $botonGuardado = TRUE;
+        /**
+     * Define si el boton del formulario tiene una funcion onclick asociada
+     */
+    var $funcionOnclick;
+    /**
+     * Estilo del Botón del formulario
+     * @var string $classBotonForm
+     */
+    var $classBotonForm = "btn btn-primary";
+    /**
+     * String a Imprimir en el boton del Formulario
+     * @var string $valueBotonForm
+     */
+    var $valueBotonForm;
+    /**
+     * Tipo del Input creado
+     *
+     * Por defecto es submit, puede ser especificado como "button"
+     *  @var $tipoBoton
+     */
+    var $tipoBoton = "submit";
+    /**
+     * Define el id a colocar al submit de envio
+     * @var $idBotonForm
+     */
+     var $idBotonForm ;
+     
+     /**
+      * segmento de script javascript que realiza llamado al validadorJida.js para 
+      * hacer las validaciones configuradas del lado cliente
+      * @var string $validadorJidaJs
+      */
+    var $validadorJidaJs;
+    
+    /**
+     * Define si la validacionJs será incluida en el formulario, por defecto es true
+     * @var boolean $validacionForm
+     */
+     var $validacionForm=TRUE;
     /**
      * Funcion constructora del formulario
      *
@@ -285,9 +312,9 @@ class Formulario extends DBContainer {
         $this->nameTagForm = "form" . $nombreFormSinEspacios;
         $this->idTagForm = $this->nameTagForm;
         $this->nombreSubmit = "btn" . $nombreFormSinEspacios;
-        $this->idSubmit = $this->nombreSubmit;
+        $this->idBotonForm = $this->nombreSubmit;
         
-        $this->valueSubmit = ($this->tipoF == 1) ? 'Guardar' : 'Modificar';
+        $this->valueBotonForm = ($this->tipoF == 1) ? 'Guardar' : 'Modificar';
     }
     
     /**
@@ -339,7 +366,7 @@ class Formulario extends DBContainer {
 
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario .= "\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
-        $formulario.="\n\t\t\t\t<input $onclick type=\"$this->tipoBoton\" class=\"$this->classSubmit pull-right\"name=\"$this->nombreSubmit\" value=\"$this->valueSubmit\" id=\"$this->idSubmit\">";
+        $formulario.="\n\t\t\t\t<input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\"name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\">";
         $formulario.="\n\t\t\t</div>\n\t\t</div>\n\t</form>";
         return $formulario;
     }
@@ -382,7 +409,7 @@ class Formulario extends DBContainer {
         $formulario .= "
                 <tr>
                     <td colspan=\"2\" class=\"botonForm\">\n\t
-                        <input $onclick type=\"$this->tipoBoton\" class=\"$this->classSubmit\" name=\"$this->nombreSubmit\" value=\"$this->valueSubmit\" id=\"$this->idSubmit\">
+                        <input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm\" name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\">
                     </td>
                 </tr>
             </table>
@@ -427,22 +454,23 @@ class Formulario extends DBContainer {
      * @return string $js cadena que será interpretada como codigo JS para instanciar el validadorJida
      */
     private function armarfuncionJs($json) {
-        $nameBotonJs = $this->idSubmit;
+        $nameBotonJs = $this->idBotonForm;
         $js = "\n\r<SCRIPT>\n\t
         
-        $(document).ready(function(){\n\t
+        $(document).ready(function(){\n\t";
         
-        var validador = new jd.validador(\n\t\t" . "\"" . $nameBotonJs . "\",{";
-        $js .= $json . "\n\t\t\t\t\t}";
+        $validador = "var validador = new jd.validador(\n\t\t" . "\"" . $nameBotonJs . "\",{";
+        $validador .= $json . "\n\t\t\t\t\t}";
         
         if(!empty($this->funcionPreviaValidadorJida)){
-            $js.=",".$this->funcionPreviaValidadorJida."\n";
+            $validador.=",".$this->funcionPreviaValidadorJida."\n";
         }
-        $js.=");";
+        $validador.=");";
         
-        
-        $js.="\r\t}";
+        $this->validadorJidaJs = $validador;
+        $js.=$validador."\r\t}";
         $js.=")\n</SCRIPT>\n";
+        
         return $js;
     }
     
@@ -574,12 +602,12 @@ class Formulario extends DBContainer {
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
                     
-                    if ($resultadoValidacion !== true) {
-                        $arrErrores [$campo ['name']] = $resultadoValidacion;
-                    }elseif($resultadoValidacion===true){
+                    if ($resultadoValidacion['validacion'] !== true) {
+                        $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
+                    }elseif($resultadoValidacion['validacion']===true){
                         
                         //Se connvierten los datos especiales del post
-                        $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                        $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);
                     }
                 } else {
                     // cho "<hr>$datos[eventos] ------------ $campo[name] No funciona.<hr>";
@@ -618,9 +646,20 @@ class Formulario extends DBContainer {
             $validacion=$form['validacion'];
             unset($form['validacion']);
         }
+        $formulario="";
+        if($this->validacionForm===TRUE){
+            $formulario .= $validacion;    
+        }else{
+            
+        }
         
-        $formulario = $validacion . "<form name=\"$this->nameTagForm\" method=\"$this->metodo\"  enctype=\"$this->enctype\" action=\"$this->action\" id=\"$this->idTagForm\" class=\"$this->cssTagForm\" role=\"form\">
-        ";
+        /**
+         * Se valida q se incluya el boton de guardado, caso contrario el formulario debe ser encapsulado en el tag <form> en la vista
+         */
+        if($this->botonGuardado===TRUE){
+            $formulario.="<form name=\"$this->nameTagForm\" method=\"$this->metodo\"  enctype=\"$this->enctype\" action=\"$this->action\" id=\"$this->idTagForm\" class=\"$this->cssTagForm\" role=\"form\">";
+        }
+        
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
             $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
@@ -704,9 +743,12 @@ class Formulario extends DBContainer {
         }
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario .= "<div class=\"row\">";
-        $formulario.="<div class=\"col-md-12\"><input $onclick type=\"$this->tipoBoton\" class=\"$this->classSubmit pull-right\"
-                        name=\"$this->nombreSubmit\" value=\"$this->valueSubmit\" id=\"$this->idSubmit\"></form>";
-        $formulario.="</div></div>";
+        if($this->botonGuardado===TRUE){
+            $formulario.="<div class=\"col-md-12\"><input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\"
+                        name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\"></div></form>";    
+        }
+        
+        $formulario.="</div>";
         return $formulario;
         
         

@@ -184,7 +184,7 @@
                  */
                 if(strtolower($this->controlador)=='jadmin' or strtolower($this->modulo)=='jadmin'){
                    $this->vista->rutaPagina=2;
-                   $rutaArchivo=framework_dir.'jadmin/Controllers/'.$nombreArchivo;
+                   $rutaArchivo=framework_dir.'Jadmin/Controllers/'.$nombreArchivo;
                    
                 }else
                 if(strtolower($this->controlador)=='excepcion' or strtolower($this->modulo)=='excepcion'){
@@ -250,7 +250,7 @@
                          $controlador = "IndexController";
                          $nameControl = "Index";
                      }
-                     
+                    
                     if(method_exists($controlador, $this->validarNombre($this->controlador,2))){
                         $this->metodo = $this->controlador;
                         

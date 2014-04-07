@@ -5,6 +5,7 @@
  * Basado en realizar las validaciones del Plug-in "validadorJida.js" a nivel del Servidor
  * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * Fecha : 28/10/2013
+ * @version 1.6.1 05/05/2014
  */
 
 class ValidadorJida {
@@ -59,7 +60,7 @@ class ValidadorJida {
         $this -> campo = $campo;
                 
         $this->getDataValidaciones();
-        $this -> validaciones = array_merge($this -> validacionesDefault);
+        $this -> validaciones = array_merge($this -> validacionesDefault,$validaciones);
     }//fin funcion
     
     
@@ -124,7 +125,10 @@ class ValidadorJida {
                     "seguridadComentario"   =>array("expresion" =>  "([A-Za-z0-9\|\!\"\#\$\%\&\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+\*]|\/[A-Za-z0-9\|\!\"\#\$\%\&\/\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+])*/?",
                                                     "mensaje"   =>  ""/*NO PUEDE HABER UN COMENTARIO EN EL CAMPO /* */),
                     "seguridadGuiones"      =>array("expresion" =>  "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
-                                                    "mensaje"   =>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/)
+                                                    "mensaje"   =>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/),
+                    "fecha"                 =>array("expresion" => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
+                                                    "mensaje"   => 'El formato de fecha debe ser dd-mm-yyyy'),
+                    
                 );
     }//fin funcion getDataValidaciones()
   
@@ -244,7 +248,7 @@ class ValidadorJida {
                 $validacion = strtolower($validacion);
                 
                 if ($bandera == 0 and (is_array($detalle) or $detalle == true)) {
-                    
+                   
                     switch ($validacion) {
                         case "obligatorio" :
                             $nada="";
@@ -257,7 +261,12 @@ class ValidadorJida {
                         case "contrasenia" :
                             $CheckValor = $this->validarContrasenia($validacion,$detalle);
                             break;
-                            
+                        case "fecha" :
+                            $CheckValor = $this->validarFecha($validacion,$detalle);
+                            break;
+                        case "tiny":
+                            $CheckValor = $this->validartiny($validacion,$detalle);
+                            break;
                         default :
                             $CheckValor = $this->validarCadena($validacion, $detalle);
                             break;
@@ -269,9 +278,10 @@ class ValidadorJida {
                     }
                 }
             }//fin foreach
+       
         }//fin elseif ($valorLleno === true)
         if ($bandera == 0) {
-            return true;
+            return array('validacion'=>true,'campo'=>$this->valorCampo);
         } else {
             return $this -> mensajeError;
         }
@@ -279,7 +289,7 @@ class ValidadorJida {
     }//fin validarCampo
 
     /**
-     * Valida un campnameo obligatorio
+     * Valida un campo obligatorio
      */
     private function validarCampoLleno(){
         
@@ -305,7 +315,16 @@ class ValidadorJida {
         }
 
     }
-    
+    /**
+     * Valida un campo del editor de texto TINY
+     */
+    private function validarTiny($validacion,$detalle){
+        if(array_key_exists('obligatorio', $detalle)){
+            return $this->validarCampoLleno();
+        }else{
+            return true;
+        }
+    }
     private function validarTelefono($validacion,$detalle){
         
         
@@ -340,7 +359,11 @@ class ValidadorJida {
                 }
     }
     
-    
+    /**
+     * Valida un campo de contraseña segura
+     * @method validarContrasenia
+     * @access private
+     */
     private function validarContrasenia($validacion,$detalle){
 
         $contrasenia = $this->valorCampo;
@@ -359,6 +382,23 @@ class ValidadorJida {
             return true;
         }else{
             $this->obtenerMensajeError('contrasenia', $detalle);
+            return false;
+        }
+    }
+    
+    /**
+     * Valida un campo con formato fecha
+     * @method validarFecha
+     * @access private
+     */
+    private function validarFecha($validacion,$detalle){
+        
+        if($this->validarCadena('fecha', $this->valorCampo)){
+            $this->valorCampo=FechaHora::fechaInvertida($this->valorCampo);
+            
+            return true;
+        }else{
+            $this->obtenerMensajeError('fecha', $detalle);
             return false;
         }
     }
