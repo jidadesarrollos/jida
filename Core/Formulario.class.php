@@ -9,8 +9,9 @@
  * @category jida
  *           @create: 21/05/2012
  *           @update :15/10/2013
+ *           @update :04/04/2014
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @version 1.7
+ * @version 1.8
  * 
  */
 
@@ -593,7 +594,7 @@ class Formulario extends DBContainer {
             }
             
             //obtengo el valor del campo ingresado en el post
-            $valorCampo = $datos [$campo ['name']];
+            $valorCampo =& $datos [$campo ['name']];
             if ($campo ['eventos'] != "") {
                 $validaciones = json_decode ( '{' . $campo ['eventos'] . '}', true );
                 
@@ -607,13 +608,22 @@ class Formulario extends DBContainer {
                     }elseif($resultadoValidacion['validacion']===true){
                         
                         //Se connvierten los datos especiales del post
-                        $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);
+                        if(!is_array($resultadoValidacion['campo'])){
+                            $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);    
+                        }else{
+                            $datos[$campo['name']]= $resultadoValidacion['campo'];
+                        }
+                        
                     }
                 } else {
-                    // cho "<hr>$datos[eventos] ------------ $campo[name] No funciona.<hr>";
+                    
                 }
             }else{
-                $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                if(!is_array($valorCampo)){
+                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                }else{
+                     $datos[$campo['name']]= $valorCampo;
+                }
             }
         }
         
@@ -695,8 +705,9 @@ class Formulario extends DBContainer {
                         $fieldSet=1;
                         $limiteCampos=$titulos[$contador]['limite'];
                         $camposInFieldset=0;
+                        $css = (array_key_exists('css', $titulos[$contador]))?$this->cssFieldsetForm." ".$titulos[$contador]['css']:$this->cssFieldsetForm;
                         $formulario.="\n<div class=\"row\">\n\t<div class=\"col-lg-12\">
-                                \n\t<fieldset class=\"$this->cssFieldsetForm\">\n\t\t<legend>".$titulos[$contador]['titulo']."</legend>
+                                \n\t<fieldset class=\"$css\" id=\"field$this->nameTagForm$contador\">\n\t\t<legend>".$titulos[$contador]['titulo']."</legend>
                                 ";
                     }
                 $formulario.="\n<div class=\"row\">";
@@ -750,12 +761,6 @@ class Formulario extends DBContainer {
         
         $formulario.="</div>";
         return $formulario;
-        
-        
-        
-        
-        
-        
     }
     function setParametrosFormulario($configuracion){
         $this->establecerAtributos($configuracion, __CLASS__);

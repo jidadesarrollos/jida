@@ -353,7 +353,9 @@
          * Se define el titulo para tag titile de la página
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
+        $retorno['metaDescripcion']=$controlador->metaDescripcion;
         $this->vista->obtenerDirectorioPlantillas();
+        
         $this->vista->checkHeader($controlador->header);
         $this->vista->checkFooter($controlador->footer);
 

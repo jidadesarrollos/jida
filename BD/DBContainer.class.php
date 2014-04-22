@@ -14,7 +14,11 @@
 
 
 class DBContainer {
-    
+    /**
+     * Define si deben guardarse los campos "fecha_creacion" y "fecha_modificacion";
+     * @var boolean $registroMomentoGuardado 
+     */
+    protected $registroMomentoGuardado = FALSE;    
     /**
      * 
      * @var unknown
@@ -269,6 +273,10 @@ class DBContainer {
     
     function salvar($datos = "", $momentoGuardado = FALSE) {
         try {
+            
+            if($momentoGuardado==FALSE){
+                $momentoGuardado = ($this->registroMomentoGuardado===TRUE)?TRUE:FALSE;
+            }
             if (gettype ( $this->bd ) != 'object') {
                 throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
             }

@@ -67,6 +67,7 @@ class Mysql extends ConexionBD{
     function establecerConexion(){
         try{
           $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+          
             if($this->mysqli->connect_error){
                 throw new Exception("No se establecio la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
                 
@@ -100,7 +101,7 @@ class Mysql extends ConexionBD{
             $this->query=$query;    
         }
         $this->establecerConexion();
-        
+        $this->mysqli->query("SET NAMES 'utf8'");
         
         if($tipoQuery==2){
             $this->result  = $this->mysqli->multi_query($this->query);

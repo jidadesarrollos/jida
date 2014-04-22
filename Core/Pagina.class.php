@@ -229,9 +229,10 @@ class Pagina{
     }
     
     function checkHeader($data){
-        
+    
         if(!empty($data)){
             $this->header=$this->urlPlantilla.$data;
+            
         }
     }
     

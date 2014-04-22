@@ -33,18 +33,7 @@ class UsuarioAplicacion extends DBContainer{
      * @access public 
      */
     var $clave_usuario;
-    /**
-     *
-     * @var datetime $fecha_creado Fecha de creación de usuario 
-     * @access public 
-     */
-    var $fecha_creacion;
-    /**
-     *
-     * @var datetime $fecha_modificado Fecha de modificación del usuario 
-     * @access public 
-     */
-    var $fecha_modificacion;
+ 
     /**
      * @var boolean activo
      */
@@ -74,6 +63,7 @@ class UsuarioAplicacion extends DBContainer{
     protected $perfiles=array();
     function __construct($id=""){
         $this->nombreTabla="s_usuarios";
+        $this->registroMomentoGuardado=TRUE;
         $this->clavePrimaria="id_usuario";
         $this->unico=array('nombre_usuario');
         parent::__construct(__CLASS__,$id);
@@ -176,8 +166,6 @@ class UsuarioAplicacion extends DBContainer{
             
         }
         $this->establecerAtributos($datos);
-        $this->fecha_creacion=FechaHora::datetime();
-        $this->fecha_modificacion=FechaHora::datetime();
         $codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
         $this->validacion=$codigo;
         $this->id_estatus=1;

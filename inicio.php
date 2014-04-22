@@ -32,7 +32,9 @@ define ('libs_dir', ROOT . 'libs' . DS);
 
 //define ('web_root','http://workspace/jidaFramework/');
 /**
- * Directorio publico de HTDOCS
+ * Directorio publico de HTDOCS completo
+ * 
+ * Usada para manejo interno en busqueda de archivos.
  */
 define ('htdocs_dir',ROOT.'htdocs/');
 

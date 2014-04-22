@@ -16,6 +16,12 @@ class Controller {
 	  * @access public
 	  */
 	var $tituloPagina="";
+    
+    /**
+     * Define el contenido de la meta-etiqueta description para uso de los buscadores
+     * @var $metaDescripcion;
+     */
+    var $metaDescripcion=meta_descripcion;
 	/**
 	 * Define la ruta del archivo header  a usar en la vista del controlador, 
      * en caso de no encontrarse definido se usa el header por defecto

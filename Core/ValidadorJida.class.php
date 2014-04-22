@@ -5,7 +5,7 @@
  * Basado en realizar las validaciones del Plug-in "validadorJida.js" a nivel del Servidor
  * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * Fecha : 28/10/2013
- * @version 1.6.1 05/05/2014
+ * @version 1.7.1 05/04/2014
  */
 
 class ValidadorJida {
@@ -128,6 +128,7 @@ class ValidadorJida {
                                                     "mensaje"   =>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/),
                     "fecha"                 =>array("expresion" => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
                                                     "mensaje"   => 'El formato de fecha debe ser dd-mm-yyyy'),
+                    "limiteCaracteres"      =>array("mensaje"=>"La cadena no puede superar el total de caracteres permitidos"),
                     
                 );
     }//fin funcion getDataValidaciones()
@@ -227,7 +228,7 @@ class ValidadorJida {
      */
     function validarCampo($campo) {
 
-        $this->valorCampo = $campo;
+        $this->valorCampo =& $campo;
         
         //En caso de haber un error la variable bandera debe ser modificada a 1.
         $bandera = 0;
@@ -267,6 +268,9 @@ class ValidadorJida {
                         case "tiny":
                             $CheckValor = $this->validartiny($validacion,$detalle);
                             break;
+                        case "limitecaracteres":
+                            $CheckValor = $this->limiteCaracteres($validacion,$detalle);
+                            break;
                         default :
                             $CheckValor = $this->validarCadena($validacion, $detalle);
                             break;
@@ -283,7 +287,8 @@ class ValidadorJida {
         if ($bandera == 0) {
             return array('validacion'=>true,'campo'=>$this->valorCampo);
         } else {
-            return $this -> mensajeError;
+            return array('validacion'=>$this->mensajeError,'campo'=>$this->valorCampo);    
+            
         }
 
     }//fin validarCampo
@@ -295,7 +300,7 @@ class ValidadorJida {
         
         $validacion = true;
         
-        if(is_array($this->validaciones['obligatorio']) and array_key_exists('condicional',$this->validaciones['obligatorio'])){
+        if(array_key_exists('obligatorio', $this->validaciones) and is_array($this->validaciones['obligatorio']) and array_key_exists('condicional',$this->validaciones['obligatorio'])){
             
             if($_POST[$this->validaciones['obligatorio']['condicional']]==$this->validaciones['obligatorio']['condicion']){
                 $validacion = true;
@@ -337,9 +342,9 @@ class ValidadorJida {
         
         $valorTelefono = $valorCodigo.$this->valorCampo.$valorExt;
         
-        $expTlf=$this->dataValidaciones['expresion']['telefono'];
-        $expCel=$this->dataValidaciones['expresion']['celular'];
-        $expInter=$this->dataValidaciones['expresion']['internacional'];
+        $expTlf=$this->dataValidaciones['telefono']['expresion'];
+        $expCel=$this->dataValidaciones['celular']['expresion'];
+        $expInter=$this->dataValidaciones['internacional']['expresion'];
         $validacionTlf =(preg_match($expTlf,$valorTelefono))?1:0;
         $validacionCel =(preg_match($expCel,$valorTelefono))?1:0;
         $validacionInter = (preg_match($expInter,$valorTelefono))?1:0;
@@ -368,9 +373,9 @@ class ValidadorJida {
 
         $contrasenia = $this->valorCampo;
         
-        $expMin = $this->dataValidaciones['expresion']['minuscula'];
-        $expMay = $this->dataValidaciones['expresion']['mayuscula'];
-        $expNum = $this->dataValidaciones['expresion']['numero'];
+        $expMin = $this->dataValidaciones['minuscula']['expresion'];
+        $expMay = $this->dataValidaciones['mayuscula']['expresion'];
+        $expNum = $this->dataValidaciones['numero']['expresion'];
         $expCaract = $this->expresiones['caracteresEsp'];
         
         $validacionMin =(preg_match($expMin,$contrasenia))?1:0;
@@ -402,5 +407,13 @@ class ValidadorJida {
             return false;
         }
     }
+   private function limiteCaracteres($validacion,$detalle){
 
+        if(strlen($this->valorCampo)>($detalle['limite']+10)){
+            $this->obtenerMensajeError($validacion, $detalle);
+            return false;
+        }else{
+            return true;
+        }
+    }
 }//fin Class ValidadorJida
