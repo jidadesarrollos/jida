@@ -63,7 +63,7 @@
              
             if(isset($_GET['url'])){
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
-                $url = explode('/', str_replace('.php', '', $url));
+                $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
             }
 			/**

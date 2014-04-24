@@ -1,5 +1,0 @@
-<?PHP 
-
-echo $dataArray['vista'];
-
-?>

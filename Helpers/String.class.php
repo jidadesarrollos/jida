@@ -27,7 +27,7 @@ class String {
 	}
 	 /**
 	 * Convierte una cadena a formato lowerCamelCase
-	 * @method upperCamelCase
+	 * @method lowerCamelCase
 	 * @param string $cadena
 	 * @param boolean $espacios Opcional, si el valor es true deben ser eliminados los espacios en blanco
 	 * @return string $upperC

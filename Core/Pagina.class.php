@@ -158,10 +158,11 @@ class Pagina{
             }
             
             $rutaVista = $this->obtenerRutaVista();
+            
             if($this->rutaPagina==3){
-                $rutaVista = $rutaVista. $this->nombreVista.".php";
+                $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
             }else{
-                $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". $this->nombreVista.".php";
+                $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";
             }
             if(!is_readable($rutaVista)){
                 $paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";

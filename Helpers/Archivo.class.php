@@ -155,6 +155,20 @@ class Archivo {
 		
 		
 	}
+    
+    function moverArchivosCargados($directorio,$archivos){
+        $bandera=TRUE;
+        foreach ($archivos as $key => $archivo) {
+            
+            $file = new Archivo($archivo);
+            if($this->moverDirectorio($directorio, $file->tmp_name)){
+                continue;
+            }else{
+                $bandera=FALSE;
+            }
+        }//final foreach
+        return $bandera;
+    }
     /**
      * Crea una imagen recortada a partir de una imagen dada;
      * @param string $rutaImagen Ruta de la imagen a recortar
