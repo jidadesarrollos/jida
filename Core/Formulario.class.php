@@ -82,6 +82,13 @@ class Formulario extends DBContainer {
      * @access public
      */
     public $funcionPreviaValidadorJida="";
+    /**
+     * nombre de validación en javascript para ejecutar despues del
+     * validadorJida en JS
+     * @var $funcionPreviaValidadorJida
+     * @access public
+     */
+    public $funcionAfterValidadorJida="";
     // Propiedades del formulario
     private $nameTagForm;
     private $idTagForm;
@@ -465,7 +472,13 @@ class Formulario extends DBContainer {
         
         if(!empty($this->funcionPreviaValidadorJida)){
             $validador.=",".$this->funcionPreviaValidadorJida."\n";
+        }else{
+            $validador.=",null\n";
         }
+        if(!empty($this->funcionAfterValidadorJida)){
+            $validador.=",".$this->funcionAfterValidadorJida."\n";
+        }
+        
         $validador.=");";
         
         $this->validadorJidaJs = $validador;

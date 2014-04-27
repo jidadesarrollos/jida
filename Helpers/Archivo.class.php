@@ -27,17 +27,46 @@ class Archivo {
             $this->size = $file['size'];
             $this->obtenerExtension();
             
-            if(is_uploaded_file($this->tmp_name)){
-                $this->cargaRealizada=TRUE;
-            }else{
-                $this->cargaRealizada=FALSE;
-            }    
+            $this->validarCarga();    
 		}
 		
 	}
+    /**
+     * Verifica la carga de uno o varios archivos
+     * @method validarCarga
+     */
+    private function validarCarga(){
+        if(is_array($this->tmp_name)){
+            $i=0;
+            foreach ($this->tmp_name as $key) {
+                if(is_uploaded_file($key)){
+                    $this->cargaRealizada[$i]=TRUE;
+                    $i++;
+                }else{
+                    $this->cargaRealizada[$i]=FALSE;
+                }
+            }//fin foreach
+        }else{
+            if(is_uploaded_file($this->tmp_name)){
+                    $this->cargaRealizada=TRUE;
+                }else{
+                    $this->cargaRealizada=FALSE;
+            }    
+        }
+        
+    }
 	
 	private function obtenerExtension(){
-		$this->extension = explode("/",$this->type)[1];
+	    
+        if(is_array($this->type)){
+            $i=0;
+            foreach ($this->type as $key ) {
+                $this->extension[$i] = explode("/",$key)[1];
+                $i++;
+            }
+        }else{
+		  $this->extension = explode("/",$this->type)[1];
+        }
 		
 	}
     /**
