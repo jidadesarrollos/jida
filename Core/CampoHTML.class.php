@@ -461,8 +461,8 @@ class CampoHTML extends DBContainer {
                 if ($esSelect === FALSE and $esSelectExterno === FALSE and $esArraySesion === FALSE) {
                     // ntra aqui si las opciones son definidas manualmente
                     $data = explode("=", $opcion );
-                    
-                    $arrOp[$data[0]] = $data[1];
+                
+                        $arrOp[$data[0]] = $data[1];
                 } elseif ($esArraySesion !== false) {
                     // ntra aqui si las opciones son pasadas por medio de una variable de session
                     $arr = explode ( "=", $opcion );

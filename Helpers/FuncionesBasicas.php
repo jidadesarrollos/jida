@@ -74,4 +74,8 @@ function debug(){
     include 'Helpers/debug/testVariables.php';
 
 }
+
 ?>
+
+
+
