@@ -76,6 +76,3 @@ function debug(){
 }
 
 ?>
-
-
-

@@ -66,8 +66,10 @@ class DBContainer {
     protected $clavePrimaria;
     
     /**
+     * define si se deben registrar las fechas de guardado fecha_creacion
+     * y fecha_modificacion
      * 
-     * @var unknown
+     * @var boolean $momentoSalvado
      */
     protected $momentoSalvado = FALSE;
     
@@ -275,7 +277,7 @@ class DBContainer {
         try {
             
             if($momentoGuardado==FALSE){
-                $momentoGuardado = ($this->registroMomentoGuardado===TRUE)?TRUE:FALSE;
+                $momentoGuardado = ($this->registroMomentoGuardado===TRUE || $this->momentoSalvado===TRUE) ?TRUE:FALSE;
             }
             if (gettype ( $this->bd ) != 'object') {
                 throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );

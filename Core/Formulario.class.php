@@ -251,6 +251,7 @@ class Formulario extends DBContainer {
         $this->nombreTabla = "s_formularios";
         $this->tablaCampos = "s_campos_f";
         $this->dataPost =& $_POST;
+        $this->momentoSalvado=FALSE;
             
         /**
          * Se valida el nombre de las tablas en base de datos.

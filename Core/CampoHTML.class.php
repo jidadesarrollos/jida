@@ -104,6 +104,7 @@ class CampoHTML extends DBContainer {
         parent::__construct ();
         $this->externo = $campoExterno;
         $this->nombreTabla = "s_campos_f";
+        $this->momentoSalvado=FALSE;
         if(!empty($this->esquema)){
             $this->nombreTabla= $this->esquema .".". $this->nombreTabla;
         }

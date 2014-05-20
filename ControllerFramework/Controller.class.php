@@ -9,6 +9,15 @@
  * 
  */
 class Controller {
+    /**
+     * Define si la vista que muestra el contenido de un metodo maneja un layout completo o usa
+     * un header y un footer, al colocarlo en true se intentará mostrar el contenido en
+     * un layout completo
+     *  Por cuestiones de compatibilidad con el codigo existente en proyectos se mantendrá en false
+     * por defecto hasta tanto se hagan los ajustes necesarios
+     * @var boolean $layout 
+     */
+    var $layout=FALSE;
 	/**
 	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
 	  * 
