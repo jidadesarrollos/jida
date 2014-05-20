@@ -105,7 +105,12 @@ class Mensajes {
         echo $msj;
     }
     /**
-     * Imprime el mensaje guardado en la variable de sesion "__msj"
+     * Imprime el mensaje guardado en una variable de sesión y luego es destruida la variable
+     * Si no se pasa ningun parametro, la función verificará si existe una variable de sesion 
+     * "__msj".
+     * 
+     * @param string $msj Nombre de la variable de sesión a imprimir.
+     * @method imprimirMsjSesion
      * 
      */
     static function imprimirMsjSesion($msj="__msj"){

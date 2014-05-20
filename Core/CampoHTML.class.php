@@ -252,7 +252,6 @@ class CampoHTML extends DBContainer {
              * Sección de valores update
              * 
              */
-          Arrays::mostrarArray($this->eventos);
           $eventos = json_decode("{".$this->eventos."}");
           $tipoTelefono="normal";
           if(property_exists($eventos->{'telefono'}, 'tipo')){
