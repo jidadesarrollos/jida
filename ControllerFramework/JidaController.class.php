@@ -354,6 +354,7 @@
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
+        $this->vista->layout = $controlador->layout;
         $this->vista->obtenerDirectorioPlantillas();
         
         $this->vista->checkHeader($controlador->header);

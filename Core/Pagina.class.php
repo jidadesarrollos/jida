@@ -58,6 +58,12 @@ class Pagina{
      */
     var $rutaPagina=1;
     /**
+     * Determina si el contenido de la vista sera mostrado en un layout o entre un pre y un post
+     * @var $layout 
+     */
+     
+    var $layout;
+    /**
      * Define la ruta de ubicación de las vistas de la aplicación en desarrollo
      * Por defecto es 1
      * <ul>
@@ -75,6 +81,8 @@ class Pagina{
     private $rutaPlantillasFramework = "";
     
     private $rutaExcepciones="";
+    
+    
     function __construct($controlador,$metodo="",$modulo=""){
         try{
            $this->validarDefiniciones($controlador,$metodo,$modulo);
@@ -169,11 +177,14 @@ class Pagina{
                 $rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
                 
             }
+            if($this->layout===TRUE){
+                
+            }else{
+                include_once $this->header;
+                include_once $rutaVista;
+                include_once $this->footer;    
+            }
             
-            include_once $this->header;
-            
-            include_once $rutaVista;
-            include_once $this->footer;
                
        }catch(Exception $e){
            Excepcion::controlExcepcion($e);

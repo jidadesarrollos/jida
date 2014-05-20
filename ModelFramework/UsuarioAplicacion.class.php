@@ -195,5 +195,6 @@ class UsuarioAplicacion extends DBContainer{
             return false;
         }
     }
+
 }
 ?>
