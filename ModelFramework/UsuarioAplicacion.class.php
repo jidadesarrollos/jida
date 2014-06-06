@@ -159,7 +159,12 @@ class UsuarioAplicacion extends DBContainer{
             return false;
         }
     }
-    
+    /**
+     * Registra un nuevo usuario y asigna los perfiles asociados
+     * @method registrarUsuario
+     * @param array $datos Arreglo con información del usuario (clave, nombre de usuario)
+     * @param array $perfiles Perfiles que se asocian al usuario a registrar
+     */
     function registrarUsuario($datos,$perfiles=""){
         if(empty($perfiles)){
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
@@ -171,6 +176,7 @@ class UsuarioAplicacion extends DBContainer{
         $this->id_estatus=1;
         $this->activo=0;
         $guardado = $this->salvar();
+        
         $guardado['codigo']=$codigo;
         if($guardado['ejecutado']==1){
             $this->id_usuario=$guardado['idResultado'];

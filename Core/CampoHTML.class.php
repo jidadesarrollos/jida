@@ -255,7 +255,7 @@ class CampoHTML extends DBContainer {
              */
           $eventos = json_decode("{".$this->eventos."}");
           $tipoTelefono="normal";
-          if(property_exists($eventos->{'telefono'}, 'tipo')){
+          if(is_object($eventos) and property_exists($eventos->{'telefono'}, 'tipo')){
               $tipoTelefono = $eventos->{'telefono'}->{'tipo'};
           }
           $valorCodigo="";$valorTelf="";$valorExtension="";
@@ -266,16 +266,16 @@ class CampoHTML extends DBContainer {
                     $valorExtension=($tipoTelefono=='internacional')?substr($this->value,13):substr($this->value,10);
                 }
              }
-             $this->control="<div class=\"form-inline\">";
+             $this->control="<div class=\"form-inline btn-group box-ctrl-tlf\">";
              if($tipoTelefono!='internacional'){
-                $this->control.="<span class=\"text-muted\">+58</span>";
-                $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">-";     
+                #$this->control.="<div class=\"text-muted ctrl-number\">(+58) </div>";
+                $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"cod.\">";     
              }else{
-                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">-";
+                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">";
              }
             
             
-            $this->control .= "<input type=\"text\" name=\"$this->name\" value=\"$valorTelf\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
+            $this->control .= "<input type=\"text\" name=\"$this->name\" value=\"$valorTelf\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " data-jidacontrol=\"numerico\"";
             $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
             
             
@@ -286,7 +286,7 @@ class CampoHTML extends DBContainer {
             if(!empty($this->opciones)){
                 
                 if($this->opciones=='ext'){
-                    $this->control.="-<input type=\"text\" id=\"".$this->id_propiedad."-ext\" value=\"$valorExtension\" class=\"$this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-ext\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de extenci&oacute;n\" placeholder=\"ext.\">";
+                    $this->control.="-<input type=\"text\" id=\"".$this->id_propiedad."-ext\" value=\"$valorExtension\" class=\"ctrl-number-ext $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-ext\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de extenci&oacute;n\" placeholder=\"ext.\">";
                 }
                 
                 /* No funciona validar */
@@ -309,7 +309,7 @@ class CampoHTML extends DBContainer {
 
     private function crearControlIdentificacion(){
             $this->control="<div class=\"form-inline\">";
-            $this->control.="<select name=\"".$this->name."-tipo-doc\" class=\"$this->ccsControlRequerida \" id=\"".$this->id_propiedad."-tipo-doc\">";
+            $this->control.="<select name=\"".$this->name."-tipo-doc\" class=\"$this->ccsControlRequerida ctrl-documentacion \" id=\"".$this->id_propiedad."-tipo-doc\">";
             $tipoDoc="";
             $this->armarOpciones();
             
@@ -364,7 +364,7 @@ class CampoHTML extends DBContainer {
      * @return string
      */
     private function crearTextArea() {
-        $this->control = "<textarea name=\"$this->name\" id=\"$this->id_propiedad\" maxlength=\"$this->maxlength\"" . trim ( $this->atributosAdicionales ) . ">";
+        $this->control = "<textarea name=\"$this->name\" id=\"$this->id_propiedad\" maxlength=\"$this->maxlength\" " . trim ( $this->atributosAdicionales ) . ">";
         $this->control .= $this->value;
         $this->control .= "</textarea>";
         return $this->control;

@@ -105,6 +105,26 @@ class DBContainer {
      */
     private $clase;
     
+    
+    
+    /**
+     * Define si se deben convertir los caractes especiales HTML en su código ascii
+     * al momento de guardar en base de datos
+     * @example
+     * Código queria C&oacute;digo
+     * 
+     * @var $convertirAscciToBD
+     */
+    private $convertAsciiToBD=TRUE;
+    /**
+     * Define si se deben convertir los caractes especiales HTML en su código ascii
+     * al momento de traer data de base de datos
+     * @example
+     * Código queria C&oacute;digo
+     * 
+     * @var $convertirAscciToBD
+     */
+    private $convertAsciiFromBD=TRUE;
     /**
      * Contructor del BDContainer
      *
@@ -461,7 +481,7 @@ class DBContainer {
      * @param array $datos          
      * @return boolean Retorna True O False si la Consulta se Ejecuta
      */
-    protected function eliminarDatos($datos) {
+     function eliminarDatos($datos) {
         $query = "DELETE FROM " . $this->nombreTabla;
         
         if (is_array ( $datos )) {
@@ -513,7 +533,8 @@ class DBContainer {
     /**
      * Elimina un objeto en base de datos
      *
-     * Esta funcion puede ser utilizada solo si es un objeto instanciado c
+     * Esta funcion puede ser utilizada solo si es un objeto instanciado
+     * @method eliminarObjeto
      */
     function eliminarObjeto() {
         $clavePrimaria = $this->clavePrimaria;

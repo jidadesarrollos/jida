@@ -38,7 +38,7 @@ class FormsController extends Controller{
                     nombre_identificador as \"Identificador\" from s_formularios
                     ";
         
-        $vForms = new Vista($conForms,$GLOBALS['configPaginador'],"Formularios");
+        $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
         
         $vForms->acciones=array(
                             'Nuevoo'=>array('href'=>'/jadmin/forms/gestion-formulario/','class'=>'btn'),

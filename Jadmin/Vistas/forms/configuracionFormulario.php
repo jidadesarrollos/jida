@@ -13,8 +13,10 @@
    
     textarea{
         min-width: 500px;
+        height:150px;
+        resize:both!important;
         max-width:500px;
-        height: 100px;
+     
     }
     .enlace-form{
         position:relative;

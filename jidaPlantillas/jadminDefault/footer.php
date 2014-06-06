@@ -1,3 +1,4 @@
+            </div><!--Cierre col-lg-9 del contenido-->
             </div><!--Cierre col-lg-9 del contenido-->                    
             <div class="row">
                 
@@ -11,7 +12,7 @@
             <?PHP
             
             if(entorno_app =='dev'){
-                echo debug();
+              #  echo debug();
             }
             ?>    
             <footer class="footer">

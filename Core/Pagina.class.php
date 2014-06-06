@@ -115,8 +115,8 @@ class Pagina{
             throw new Exception("No se encuentra definida la ruta de las plantillas del framework. verifique las configuraciones", 1);
         }
         
-        if(defined('plantillas_excepciones_dir')){
-            $this->rutaExcepciones = plantillas_excepciones_dir;
+        if(defined('DIR_EXCEPCION_PLANTILLAS')){
+            $this->rutaExcepciones = DIR_EXCEPCION_PLANTILLAS;
         }else{
             $this->rutaExcepciones = plantillas_framework_dir."error/";
         }
@@ -136,7 +136,7 @@ class Pagina{
     
     function obtenerDirectorioPlantillas(){
          /*Verificación de ruta de plantillas*/
-        if($this->rutaPagina==1){
+        if($this->rutaPagina==1  or $this->rutaPagina==3){
             $this->urlPlantilla=directorio_plantillas;
         }elseif($this->rutaPagina==2){
             $this->urlPlantilla=plantillas_framework_dir;

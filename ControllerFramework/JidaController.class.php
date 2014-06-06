@@ -255,11 +255,15 @@
                         $this->metodo = $this->controlador;
                         
                     }else{
-                            
+                        
                         $this->vista->rutaPagina=3;
-                         $this->controlador="Excepcion";
-                         $controlador = $this->controlador."Controller";
-                         $this->metodo = 'error404';
+                        if(!defined('CONTROLADOR_EXCEPCIONES'))
+                            throw new Exception("No se encuentra definido el controlador de excepciones", 10);
+                            
+                        $this->controlador=CONTROLADOR_EXCEPCIONES;
+                        
+                        $controlador = $this->controlador."Controller";
+                        $this->metodo = 'error404';
                         
                     }
                     $this->controlador=$nameControl;

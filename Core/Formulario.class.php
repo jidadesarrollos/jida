@@ -183,7 +183,7 @@ class Formulario extends DBContainer {
     
     /**
      * Indica si el boton de guardado del formulario es mostrado, por defecto se encuentra en TRUE,
-     * en caso de que $botonGuardado sea colocado en FALSE, el formulario NO imprimirá la etiqueta <form>
+     * en caso de que $botonGuardado sea colocado en FALSE, el formulario NO imprimirá la etiqueta form
      * y debe ser colocada en el archivo vista
      * @var boolean  $botonGuardado  
      */
@@ -375,7 +375,7 @@ class Formulario extends DBContainer {
 
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario .= "\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
-        $formulario.="\n\t\t\t\t<input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\"name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\">";
+        $formulario.="\n\t\t\t\t<input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\" name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\">";
         $formulario.="\n\t\t\t</div>\n\t\t</div>\n\t</form>";
         return $formulario;
     }
@@ -603,7 +603,7 @@ class Formulario extends DBContainer {
         
         foreach ( $this->camposFormulario as $key => $campo ) {
             
-            if(!is_array($datos[$campo['name']])){
+            if(isset($campo['name']) and array_key_exists($campo['name'], $datos) and !is_array($datos[$campo['name']])){
                 $datos[$campo['name']] = trim($datos[$campo['name']]);
             }
             
@@ -769,8 +769,7 @@ class Formulario extends DBContainer {
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario .= "<div class=\"row\">";
         if($this->botonGuardado===TRUE){
-            $formulario.="<div class=\"col-md-12\"><input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\"
-                        name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\"></div></form>";    
+            $formulario.="<div class=\"col-md-12\"><input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\" name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\"></div></form>";    
         }
         
         $formulario.="</div>";

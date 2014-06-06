@@ -25,6 +25,16 @@ class Numeros{
         }
     }
     
+    /**
+     * Convierte un numero en formato de moneda en el formato correcto para guardarlo en base de datos
+     * @method floatBD
+     */
+    public static function floatBD($valor){
+        $valor = str_replace(".","",$valor);
+        $valor = str_replace(",",".",$valor);
+        return $valor;
+    }
+    
 }
 
 

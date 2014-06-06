@@ -71,8 +71,7 @@ function redireccionar($url){
 
 function debug(){
     
-    include 'Helpers/debug/testVariables.php';
+ #   include 'Helpers/debug/testVariables.php';
 
 }
-
 ?>

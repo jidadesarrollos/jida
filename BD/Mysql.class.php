@@ -102,7 +102,8 @@ class Mysql extends ConexionBD{
         }
         $this->establecerConexion();
         $this->mysqli->query("SET NAMES 'utf8'");
-        
+        if($this->codificarHTML===TRUE)
+            $this->query=String::codificarHTML($this->query);
         if($tipoQuery==2){
             $this->result  = $this->mysqli->multi_query($this->query);
         }else{
@@ -143,7 +144,7 @@ class Mysql extends ConexionBD{
             if(!Session::get('__queryInsert')){
                 $validadoUnico=FALSE;
                 $validarExistencia=0;
-                if(count($unico)>1){
+                if(count($unico)>=1){
                     
                     $queryCheck = "select $id from $nombreTabla where ";
                     $validadoUnico=TRUE;

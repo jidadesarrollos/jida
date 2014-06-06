@@ -129,6 +129,8 @@ class ValidadorJida {
                     "fecha"                 =>array("expresion" => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
                                                     "mensaje"   => 'El formato de fecha debe ser dd-mm-yyyy'),
                     "limiteCaracteres"      =>array("mensaje"=>"La cadena no puede superar el total de caracteres permitidos"),
+                    "documentacion"         =>array("mensaje"=>"El campo debe tener el siguiente formato J-18935170",
+                                                    "expresion"=>"/^([V|E|G|J|P|N]{1}\d{8,10})*$/",),
                     
                 );
     }//fin funcion getDataValidaciones()
@@ -182,8 +184,10 @@ class ValidadorJida {
     private function validarCadena($nombreValidacion, $datosValidacion) {
         
         if($nombreValidacion=="decimal" or $nombreValidacion=="numerico"){
+            
             $this->valorCampo = str_replace(".","",$this->valorCampo);
             $this->valorCampo = str_replace(",",".",$this->valorCampo);
+            
         }
         
         if($this -> dataValidaciones[$nombreValidacion]["expresion"]!=""){
@@ -329,6 +333,15 @@ class ValidadorJida {
         }else{
             return true;
         }
+    }
+    
+    private function validarDocumentacion($validacion,$detalle){
+        $valor =$this->valorCampo;
+        if(array_key_exists('campo_codigo', $detalle)):
+            $valor = $_POST[$this->campo['name']."-tipo-doc"].$this->valorCampo;
+        endif;
+        
+        return $this->validarCadena('documentacion', $this->valorCampo);
     }
     private function validarTelefono($validacion,$detalle){
         

@@ -132,7 +132,7 @@ class JidaControl extends DBContainer{
         $query = "select id_campo,name from $this->tablaCampos where id_form=$this->id_form order by orden asc";
         $data = $this->bd->obtenerDataCompleta($query);
         
-        $vista = "<ul id=\"listaCampos\" style='width:200px;'>";
+        $vista = "<ol id=\"listaCampos\" style='width:200px;'>";
         foreach ($data as $key => $value) {
             $vista.="   <li data-id-campo=\"$value[id_campo]\">$value[name]</li>
                       ";  
