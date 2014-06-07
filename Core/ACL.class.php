@@ -31,6 +31,12 @@ class ACL extends DBContainer{
      */
      
     private $acl;
+    /**
+     * Perfiles asociados al usuario que inicia sesión
+     * @var $perfiles
+     * @access public
+     * 
+     */
     private $perfiles =array();
     /**
      * @var array $componentes Conjunto de componentes a los que tiene el usuario
@@ -47,6 +53,8 @@ class ACL extends DBContainer{
             Session::set('acl_default',true);
         }
         
+        
+        
         $this->perfiles = $_SESSION['usuario']['perfiles'];
         
         $this->obtenerAccesoComponentes();
@@ -62,6 +70,7 @@ class ACL extends DBContainer{
        # try{
             $query = "select id_componente,componente from v_acceso_componentes where clave_perfil in (";
             $i=0;
+            
             foreach ($this->perfiles as $key => $value) {
                 ($i==0)?$i++:$query.=",";
                 $query.="'$value'";

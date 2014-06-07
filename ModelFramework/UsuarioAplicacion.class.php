@@ -104,6 +104,10 @@ class UsuarioAplicacion extends DBContainer{
         $query = "select * from v_perfiles_usuario where id_usuario=$this->id_usuario";
         
         $data  = $this->bd->ejecutarQuery($query);
+        if(count($data)>1){
+            throw new Exception("No se han obtenido los perfiles del usuario", 1);
+            
+        }
         while($perfil = $this->bd->obtenerArrayAsociativo($data)){
         	
             $this->perfiles[]=$perfil['clave_perfil'];

@@ -12,9 +12,8 @@
 class MetodosController	 extends Controller{
     
     function __construct($id=""){
-        $this->header='jadminDefault/header.php';
-        $this->footer='jadminDefault/footer.php';
         
+        $this->layout="jadmin.tpl.php";
     }
 	
 	

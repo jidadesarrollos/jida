@@ -1,0 +1,263 @@
+/* Codigo necesario para footer 
+ * 
+ * el margin negativo del all-container debe ser igual al heigth del footer
+ *  */
+html,
+body {
+   height: 100%;
+   
+}
+textarea{
+	resize: none;
+}
+@font-face {
+    font-family: 'WebSymbolsRegular';
+    src: url('../fonts/websymbols-regular-webfont.eot');
+    src: url('../fonts/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/websymbols-regular-webfont.woff') format('woff'),
+         url('../fonts/websymbols-regular-webfont.ttf') format('truetype'),
+         url('../fonts/websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}	
+
+.all-container{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by it's height */
+    margin: 0 auto -100px;
+}
+.separador-footer{
+	margin-top:50px;
+	height: 100px;	
+	clear: both;
+}
+
+.down-line{
+	border-bottom:1px rgba(230,230,230,1) solid !important;
+}
+/* Fin de código para footer*/
+
+
+.lIcon{
+ 	font-family: 'WebSymbolsRegular', cursive;  
+}
+
+.test{
+	font-size:19px;
+}
+
+.pad10{
+	padding-top:12px;
+	padding-bottom:8px;
+}
+.moveFromBottom {
+	-webkit-animation-name: moveFromBottom;
+	-moz-animation-name: moveFromBottom;
+	-o-animation-name: moveFromBottom;
+	animation-name: moveFromBottom;
+}
+.moveFromRight{
+	-webkit-animation-name: moveFromRight;
+	-moz-animation-name: moveFromRight;
+	-o-animation-name: moveFromRight;
+	animation-name: moveFromRight;
+}
+
+.top-15{
+	margin-top:15px;
+}
+
+.top-30{
+	margin-top:30px;
+}
+.top-60{
+	margin-top:60px;
+	margin-bottom:60px;
+}
+
+a{
+	cursor: pointer;
+}
+
+
+/* KEYFRAMES */
+@-webkit-keyframes moveFromBottom {
+    from {
+        -webkit-transform: translateY(100%);
+    }
+    to {
+        -webkit-transform: translateY(0%);
+    }
+}
+@-moz-keyframes moveFromBottom {
+    from {
+        -moz-transform: translateY(100%);
+        transform: translateY(100%);
+    }
+    to {
+        -moz-transform: translateY(0%);
+        transform: translateY(100%);
+    }
+}
+@-ms-keyframes moveFromBottom {
+    from {
+        -ms-transform: translateY(100%);
+    }
+    to {
+        -ms-transform: translateY(0%);
+    }
+}
+@-webkit-keyframes moveFromRight {
+    from {
+        -webkit-transform: translateX(100%);
+    }
+    to {
+        -webkit-transform: translateX(0%);
+    }
+}
+@-moz-keyframes moveFromRight {
+    from {
+        -moz-transform: translateX(100%);
+    }
+    to {
+        -moz-transform: translateX(0%);
+    }
+}
+@-ms-keyframes moveFromRight {
+    from {
+        -ms-transform: translateX(100%);
+    }
+    to {
+        -ms-transform: translateX(0%);
+    }
+}
+
+
+/**
+ * 	
+.ts-timeline .timeline-list > li > div:before {
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #CCCCCC;
+    border-style: solid;
+    border-width: 15px;
+    content: "";
+    display: inline-block;
+    margin-top: -15px;
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    
+.ts-timeline .timeline-list > li:nth-child(2n+2) > div:before {
+    border-color: rgba(0, 0, 0, 0) #CCCCCC rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 15px;
+    content: "";
+    display: inline-block;
+    left: -30px;
+    margin-top: -15px;
+    position: absolute;
+    right: inherit;
+    top: 50%;
+}
+}
+ */
+
+.control-ci-2col{
+	width: 200px!important;
+}
+span.fa{
+	margin-right:5px;
+}
+
+/*tipysy*/
+
+.tipsy { font-size: 10px; position: absolute; padding: 5px; z-index: 100000; }
+  .tipsy-inner { background-color: #000; color: #FFF; max-width: 200px; padding: 5px 8px 4px 8px; text-align: center; }
+
+  /* Rounded corners */
+  .tipsy-inner { border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+  
+  /* Uncomment for shadow */
+  /*.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }*/
+  
+  .tipsy-arrow { position: absolute; width: 0; height: 0; line-height: 0; border: 5px dashed #000; }
+  
+  /* Rules to colour arrows */
+  .tipsy-arrow-n { border-bottom-color: #000; }
+  .tipsy-arrow-s { border-top-color: #000; }
+  .tipsy-arrow-e { border-left-color: #000; }
+  .tipsy-arrow-w { border-right-color: #000; }
+  
+	.tipsy-n .tipsy-arrow { top: 0px; left: 50%; margin-left: -5px; border-bottom-style: solid; border-top: none; border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-nw .tipsy-arrow { top: 0; left: 10px; border-bottom-style: solid; border-top: none; border-left-color: transparent; border-right-color: transparent;}
+    .tipsy-ne .tipsy-arrow { top: 0; right: 10px; border-bottom-style: solid; border-top: none;  border-left-color: transparent; border-right-color: transparent;}
+  .tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -5px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-se .tipsy-arrow { bottom: 0; right: 10px; border-top-style: solid; border-bottom: none; border-left-color: transparent; border-right-color: transparent; }
+  .tipsy-e .tipsy-arrow { right: 0; top: 50%; margin-top: -5px; border-left-style: solid; border-right: none; border-top-color: transparent; border-bottom-color: transparent; }
+  .tipsy-w .tipsy-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
+
+  
+  
+  
+ .circle{
+ 	border-radius: 50%;
+ 	
+ }
+ 
+ 
+.no-container-left{
+	padding-left: -15px!important;
+}
+.no-container-right{
+	padding-right: -15px!important;
+}
+.no-container{
+	padding:auto -15px!important;
+}
+
+
+/*Controles compuestos de formularios*/
+
+select.ctrl-documentacion{
+	width: 15%!important;
+	min-width: 60px;
+}
+.ctrl-documentacion{
+	width: 80%!important;
+	
+}
+div.ctrl-number{
+	
+	display: inline;
+	width: 20%!important;	
+	padding:6px 12px;
+}
+
+input.ctrl-number-code{
+	width: 10%!important;
+	min-width: 50px!important;
+}
+input.ctrl-number-code + input[type=text]{
+	min-width: 82%!important;
+	max-width: 90%!important;
+
+	margin-right:0%;
+}
+
+.box-ctrl-number{
+	position:relative!important;
+	width: 100%!important;
+}
+.box-ctrl-tlf{
+	width: 100%;
+}
+
+.radio-on-list{
+position:absolute;
+	margin-top:30px;
+}
+
+

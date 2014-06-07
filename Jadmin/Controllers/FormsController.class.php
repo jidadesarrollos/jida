@@ -22,8 +22,7 @@ class FormsController extends Controller{
     function __construct(){
         $this->jctrl = new JidaControl();
         $this->url="/jadmin/forms/";
-        $this->header='jadminDefault/header.php';
-        $this->footer='jadminDefault/footer.php';
+        $this->layout="jadmin.tpl.php";
     }
     function index(){
         

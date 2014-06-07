@@ -25,7 +25,7 @@ define ('app_dir', ROOT. 'Aplicacion' . DS);
 /**
  * Directorio del directorio del framework
  */
-define ('framework_dir', ROOT . 'Framework' . DS);
+define ('framework_dir', ROOT . 'Framework' . "/");
 
 
 define ('libs_dir', ROOT . 'libs' . DS);
@@ -59,10 +59,15 @@ if(TEST_PLATFORM==TRUE){
 #=======================================================================
 #=======================================================================
 /**
+ * Se incluye el archivo de configuración por defecto
+ */
+include_once 'Settings/jidaConfiguracion.php';
+/**
  * Incluir archivo de configuración general del framework
  */
 include_once 'Config/initConfig.php';
 include_once 'Config/BDConfig.php';
+
 #=======================================================================
 #=======================================================================
 #=======================================================================

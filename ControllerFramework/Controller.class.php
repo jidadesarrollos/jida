@@ -9,15 +9,13 @@
  * 
  */
 class Controller {
+
     /**
-     * Define si la vista que muestra el contenido de un metodo maneja un layout completo o usa
-     * un header y un footer, al colocarlo en true se intentará mostrar el contenido en
-     * un layout completo
-     *  Por cuestiones de compatibilidad con el codigo existente en proyectos se mantendrá en false
-     * por defecto hasta tanto se hagan los ajustes necesarios
-     * @var boolean $layout 
+     *  Define el layout a usar por el controlador
+     *  @var $layout
      */
     var $layout=FALSE;
+    
 	/**
 	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
 	  * 
@@ -56,8 +54,8 @@ class Controller {
       */
      protected $modelo="";
 	 
-	 
-	
+    	 
+   
           
      /**
       * Permite especificar una vista para el metodo
@@ -79,7 +77,17 @@ class Controller {
 	  * @var $data
       */
      var $data=array();
-     
+    /**
+     * Archivos Javascript Requeridos
+     * @var array $requireJS
+     */
+    var $requireJS=array();
+    /**
+     * Archivos CSS Requeridos en la vista
+     * @var array $requireCSS
+     * @access public
+     */
+    var $requireCSS=array();
     /**
      *
      * Define la URL principal de acceso para el controlador (En caso de ser usada)
@@ -91,24 +99,17 @@ class Controller {
      *  
      */
     protected $url; 
-    /**
-     * Ejecuta un funcionamiento por defecto en caso de no encontrarse el
-     * controlador requerido.
-     * @method noController
-     * 
-     */
-    protected function noController(){
+    
+    
+    
+    
+    function __construct(){
+        $this->requireCSS=$GLOBALS['requireCSS'];
+        $this->requireJS=$GLOBALS['requireJS'];
         
     }
-    /**
-     * Ejecuta funcionamiento por defecto en caso de no encontrarse
-     * definido el metodo solicitado
-     * @method noMetodo
-     * 
-     */
-    protected function noMetodo(){
-        echo "<h2>Lo sentimos debe definir un metodo</h2>";
-    }
+    
+    
     /**
      * Metodo por defecto
      * 

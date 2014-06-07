@@ -8,8 +8,8 @@ class DebugController extends Controller{
     
     function __construct(){
         $this->jctrl = new JidaControl();
-		$this->header= "query/pre_query.php";
-		$this->footer= "query/footer_query.php";
+		
+        $this->layout="jadmin.tpl.php";
     }      
     
       function query(){

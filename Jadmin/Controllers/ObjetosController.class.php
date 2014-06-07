@@ -14,8 +14,7 @@ class ObjetosController extends Controller{
 	
 	var $Mperfil = "";
     function __construct($id=""){
-        $this->header='jadminDefault/header.php';
-        $this->footer='jadminDefault/footer.php';
+        $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
 		$this->modelo = new Objeto();		
         $this->Mperfil = new Perfil();

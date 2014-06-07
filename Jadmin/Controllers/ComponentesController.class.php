@@ -13,9 +13,7 @@ class ComponentesController extends Controller{
     
     function __construct($id=""){
         $this->url="/jadmin/componentes/";
-        $this->header='jadminDefault/header.php';
-        $this->footer='jadminDefault/footer.php';
-        
+        $this->layout="jadmin.tpl.php";        
         
     }
     function index(){

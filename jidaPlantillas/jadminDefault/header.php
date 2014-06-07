@@ -33,19 +33,20 @@
     </head>
 
     <body class="full-container">
-     <div class="container">
-        <div class="col-lg-3">
+         <div class="container">
+            <div class="col-lg-3">
+                
+                <nav id="menu" class="">
+                
+                    <?PHP 
+                    $menuControl  = new MenusController();
+                    $config['ul']=array(0=>'uno',1=>"dos");
+                    $config['li']=array(0=>'uno',1=>"dos");
+                     echo $menuControl->showMenu('principal',$config);
+                    ?>
+                </nav>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
             
-            <nav id="menu" class="">
-            
-                <?PHP 
-                $menuControl  = new MenusController();
-                $config['ul']=array(0=>'uno',1=>"dos");
-                $config['li']=array(0=>'uno',1=>"dos");
-                 echo $menuControl->showMenu('principal',$config);
-                ?>
-            </nav>
-        </div>
-        <div class="col-lg-9">
-            <div class="row">
-        
+                

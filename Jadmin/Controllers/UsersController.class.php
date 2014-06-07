@@ -8,6 +8,7 @@ class UsersController extends Controller{
         $this->url='/jadmin/users/';
         $this->header="jadminDefault/header.php";
         $this->footer="jadminDefault/footer.php";
+        $this->layout="jadmin.tpl.php";
     }
     
 	function index(){

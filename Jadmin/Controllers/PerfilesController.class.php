@@ -15,9 +15,9 @@ class PerfilesController extends Controller{
 	 * Funcion constructora
 	 */
     function __construct($id=""){
-        $this->header='jadminDefault/header.php';
-        $this->footer='jadminDefault/footer.php';
+        parent::__construct();
 		$this->url="/jadmin/perfiles/";
+        $this->layout="jadmin.tpl.php";
         
     }
 	

@@ -17,7 +17,13 @@ class Pagina{
      * @var $controlador
      */
     private $controlador;
-    
+    /**
+     * Archivo vista a renderizar
+     * @var $vista
+     * @access private
+     */
+     
+    private $vista;
     /**
      * Nombre de la vista requerida
      * 
@@ -49,16 +55,30 @@ class Pagina{
      * a utilizar en la pagina
      * @var string $urlPlantilla
      */
-    var $urlPlantilla="";
+    var $directorioPlantillas="";
+    /**
+     * Define directorio de layout a usar
+     * @var $directorioLayout
+     * @access private
+     */
+     
+    private $directorioLayout;
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
      * en desarrollo o, si es una plantilla prederminada del framework
      * @var $rutaPagina
      * @access public
+     * @example 1 =>Aplicacion 2=>Framework 3=>Excepcion
      */
     var $rutaPagina=1;
     /**
      * Determina si el contenido de la vista sera mostrado en un layout o entre un pre y un post
+     * @var $usoLayout 
+     */
+     
+    var $usoLayout;
+    /**
+     * Layout a usar para renderizar la vista a mostrar
      * @var $layout 
      */
      
@@ -73,10 +93,14 @@ class Pagina{
      */
     /**
      * Define la ruta de los modulos del framework;
+     * @var $rutaFramework
+     * @access private
      */
     private $rutaFramework="";
     /**
      * Define la ruta de las plantillas del Framework
+     * @var $rutaPlantillasFramework
+     * @access private
      */
     private $rutaPlantillasFramework = "";
     
@@ -101,6 +125,9 @@ class Pagina{
      * @var string $modulo Módulo en el cual se encuentra el controlador buscado. 
      */
     function validarDefiniciones($controlador,$metodo="",$modulo=""){
+        if(!defined('DIR_LAYOUT_JIDA')){
+            define('DIR_LAYOUT_JIDA',framework_dir."layout/");
+        }
         
         if(defined('jida_admin_vistas_dir')){
             $this->rutaFramework=jida_admin_vistas_dir;
@@ -134,12 +161,14 @@ class Pagina{
         }
     }
     
-    function obtenerDirectorioPlantillas(){
+    function definirDirectorios(){
          /*Verificación de ruta de plantillas*/
         if($this->rutaPagina==1  or $this->rutaPagina==3){
             $this->urlPlantilla=directorio_plantillas;
+            $this->directorioLayout=DIR_LAYOUT_APP;
         }elseif($this->rutaPagina==2){
             $this->urlPlantilla=plantillas_framework_dir;
+            $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
         
     }
@@ -159,8 +188,7 @@ class Pagina{
     
     function renderizar($data,$nombreVista=""){
        try{
-           global $dataArray ;
-            $dataArray = $data;
+           
             if(!empty($nombreVista)){
                 $this->nombreVista = $nombreVista;
             }
@@ -177,12 +205,13 @@ class Pagina{
                 $rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
                 
             }
-            if($this->layout===TRUE){
-                
+            $this->vista=$rutaVista;
+            
+            if(!empty($this->layout) or $this->layout!==FALSE){
+                $this->renderizarLayout($data);
             }else{
-                include_once $this->header;
-                include_once $rutaVista;
-                include_once $this->footer;    
+                
+               $this->renderizarPlantilla($data); 
             }
             
                
@@ -190,6 +219,47 @@ class Pagina{
            Excepcion::controlExcepcion($e);
        }
     }//final funcion
+    
+    /**
+     * Renderiza una vista haciendo uso de un archivo HEADER y un FOOTER
+     * @method renderizarPlantilla
+     * @access private
+     */
+    
+    private function renderizarPlantilla($data){
+        global $dataArray;
+        $dataArray = $data;
+        include_once $this->header;
+        include_once $this->vista;
+        include_once $this->footer;   
+    }
+    
+    /**
+     * Renderiza una vista en un layout definido
+     * @method renderizarLayout
+     * @access private
+     */
+    private function renderizarLayout($data){
+        global $dataArray ;
+        
+        $dataArray = $data;
+         
+        /* Permitimos almacenamiento en bufer */
+        ob_start();
+        
+        if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
+           #if(!empty($this->nombreVista) and file_exists($this->ru))
+            
+           include_once $this->vista;
+           $contenido = ob_get_clean();
+           
+           include_once $this->directorioLayout.$this->layout;
+           $layout = ob_get_clean();
+           echo $layout;
+        endif;
+        
+        if (ob_get_length()) ob_end_clean();
+    }
     
     /**
      * Muestra una página de error

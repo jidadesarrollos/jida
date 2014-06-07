@@ -126,6 +126,7 @@ class MenuHTML extends DBContainer{
      */
     private function armarListaMenuRecursivo($opciones,$cssMenu){
         $nivel=0;
+        
         if(array_key_exists($nivel, $cssMenu['ul'])){
             $cssUl = $cssMenu['ul'][$nivel];
         }else{
@@ -149,7 +150,7 @@ class MenuHTML extends DBContainer{
                         $this->identacion=4;
                         $opc = CampoHTML::crearSelectorHTMLSimple($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$opcion['nombre_opcion'],3,true);
                     }else{
-                        $opc = $opcion['nombreOpcion'];
+                        $opc = $opcion['nombre_opcion'];
                     }
                     $listaMenu.=CampoHTML::crearSelectorHTMLSimple("li",array("class"=>$cssli),$opc.$submenu,2,true);
                 }else{
@@ -175,7 +176,7 @@ class MenuHTML extends DBContainer{
     private function armarMenuRecursivoHijos($opciones,$config,$padre,$nivel=1){
         
         if($padre==12){
-    	 //Arrays::mostrarArray($opciones);
+         //Arrays::mostrarArray($opciones);
         }
          $ident = $this->identacion+$nivel+2;
          if(array_key_exists($nivel, $config['ul'])){

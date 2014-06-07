@@ -172,6 +172,7 @@
     function validacion(){
         
         try{
+            
             $acl = new ACL();
 			
             $acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
@@ -268,17 +269,7 @@
                     }
                     $this->controlador=$nameControl;
                     $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
-                    // if(is_callable($controlador,$this->validarNombre($this->controlador,2))){
-                        // echo $this->controlador."<hr>";                     
-                        // $this->metodo = $this->controlador;
-                        // 
-//                         
-                        // //$this->validacion();
-//                         
-                    // }else{
-                        // if(entorno_app=='dev')
-                            // echo "no se consigue la ruta $rutaArchivo";exit;
-                    // }
+
                 }//fin validacion de existencia del controlador.
            }else{
                  
@@ -293,17 +284,12 @@
             }
             
             
-             }catch(Exception $e){
-                 
-                #$data = array('title'=>"Error 403");
-                #$this->mostrarContenido($data,'403');
-                Excepcion::controlExcepcion($e);
-            }  
+         }catch(Exception $e){
+            Excepcion::controlExcepcion($e);
+        }  
        
     
     }//final funcion validacion
-    
-
     
     /**
      * Obtiene el controlador requerido de un modulo especifico
@@ -358,8 +344,9 @@
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
+        
         $this->vista->layout = $controlador->layout;
-        $this->vista->obtenerDirectorioPlantillas();
+        $this->vista->definirDirectorios();
         
         $this->vista->checkHeader($controlador->header);
         $this->vista->checkFooter($controlador->footer);

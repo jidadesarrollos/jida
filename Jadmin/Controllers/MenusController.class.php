@@ -20,8 +20,8 @@ class MenusController extends Controller {
 
     function __construct(){
         try{
-            $this->header="jadminDefault/header.php";
-            $this->footer="jadminDefault/footer.php";
+            
+            $this->layout="jadmin.tpl.php";
               $jctrl = new JidaControl();
             $tablas = $jctrl->obtenerTablasBD();
                 
