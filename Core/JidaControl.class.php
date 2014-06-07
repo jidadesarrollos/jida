@@ -125,21 +125,13 @@ class JidaControl extends DBContainer{
     
     /**
 	 * Crea una lista con los campos de un formlario creado, asociando un evento javascript
-	 * 
+	 * @method vistaCamposFormulario
 	 */
-    function vistaCamposFormulario(){
+    function getCamposFormulario(){
         
         $query = "select id_campo,name from $this->tablaCampos where id_form=$this->id_form order by orden asc";
         $data = $this->bd->obtenerDataCompleta($query);
-        
-        $vista = "<ol id=\"listaCampos\" style='width:200px;'>";
-        foreach ($data as $key => $value) {
-            $vista.="   <li data-id-campo=\"$value[id_campo]\">$value[name]</li>
-                      ";  
-        }//fin foreach
-        $vista.="</ul>";
-        
-        return $vista;
+        return $data;
 
     }//fin funcion
     /**
@@ -323,5 +315,19 @@ class JidaControl extends DBContainer{
                 return false;
             }
         }
-    } 
+    }
+    
+    
+    /**
+     * Modifica el orden de los campos de un formulario
+     * @method setOrdenCamposForm
+     */ 
+    public function setOrdenCamposForm($arrayCampos,$form){
+        $update="";
+        foreach ($arrayCampos as $key => $campo) {
+            $update .= "update $this->tablaCampos set orden=".$campo['orden']." where id_campo=".$campo['id_campo'].";";            
+        }//fin foreach
+        $this->bd->ejecutarQuery($update,2);
+        
+    }
 }

@@ -1,0 +1,20 @@
+"validaciones":[
+	"obligatorio",
+	"numerico",
+	"decimal",
+	"fecha",
+	"caracteres",
+	"celular",
+	"telefono",
+	"caracteresEspeciales",
+	"tiny",
+	"alfanumerico",
+	"documentacion",
+	"programa",
+	"minuscula",
+	"mayuscula",
+	"numero",
+	"caracteresEsp",
+	"coordenada",
+	"internacional"
+]

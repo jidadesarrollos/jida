@@ -34,6 +34,7 @@
         <script src="/htdocs/js/ajaxupload.js"></script>    
 
         <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
+        <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">

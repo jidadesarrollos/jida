@@ -126,9 +126,11 @@ class Pagina{
      */
     function validarDefiniciones($controlador,$metodo="",$modulo=""){
         if(!defined('DIR_LAYOUT_JIDA')){
-            define('DIR_LAYOUT_JIDA',framework_dir."layout/");
+            define('DIR_LAYOUT_JIDA',framework_dir."Layout/");
         }
-        
+        if(!defined('DIR_LAYOUT_APP')){
+            define('DIR_LAYOUT_APP',app_dir.'/Layout');
+        }
         if(defined('jida_admin_vistas_dir')){
             $this->rutaFramework=jida_admin_vistas_dir;
             

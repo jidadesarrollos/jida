@@ -32,7 +32,7 @@ class FormsController extends Controller{
         
     }
     
-     private function mostrarVistaForms(){
+    private function mostrarVistaForms(){
         $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\", clave_primaria_f as \"Clave Primaria\",
                     nombre_identificador as \"Identificador\" from s_formularios
                     ";
@@ -57,7 +57,7 @@ class FormsController extends Controller{
 	 * @method gestionFormulario
 	 * @access public
 	 */
-     function gestionFormulario(){
+    function gestionFormulario(){
         try{
             $tipoForm = 1;
             $id_form="";
@@ -112,7 +112,7 @@ class FormsController extends Controller{
 	  * @access private
 	  */
 	  
-	 private function armarNombreIdentificador($nombre){
+	private function armarNombreIdentificador($nombre){
     	$nombreIdentificador = ucwords(strtolower($nombre));
 		$nombreIdentificador = str_replace(" ", "", $nombreIdentificador);
 		return $nombreIdentificador;
@@ -127,10 +127,10 @@ class FormsController extends Controller{
 	 * @access private
 	 * @param array Accion Arreglo resultado de gestion de formulario (result dbContainer)
 	 */
-	 private function validarCamposFormulario($accion){
+	private function validarCamposFormulario($accion){
 	 
 	 }
-     function eliminarFormulario(){
+    function eliminarFormulario(){
         try{
             $ids = $_GET['id'];
             $arrayIds = explode(",",$ids);
@@ -179,35 +179,55 @@ class FormsController extends Controller{
 			}else{
 				redireccionar($this->url);
 			}
-	        $vista = $jctrl->vistaCamposFormulario();
+	        $camposFormulario = $jctrl->getCamposFormulario();
 	        //echo $vista;
-	        $dataArray['vistaCampos'] = $vista;
+	        $dataArray['camposFormulario'] =$camposFormulario;
 	        $this->data = $dataArray;
     	}catch(Exception $e){
     		Excepcion::controlExcepcion($e);
     	}
     }
-
-
-
+    /**
+     * Ordena los campos a partir del orden pasado via post
+     * @method ordenarCampos
+     */
+    function ordernarCampos(){
+        
+        if(isset($_POST['s-ajax'])){
+            $campos = explode(",", $_POST['campos']);
+            $orden = 1;
+            $arrayOrden=array();
+            foreach($campos as $campo){
+                $idCampo = explode("-", $campo);
+                $arrayOrden[]=array('id_campo'=>$idCampo[1],'orden'=>$orden);
+                $orden++;
+            }
+            $this->jctrl->setOrdenCamposForm($arrayOrden,$form="");
+            $msj = Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
+            respuestaAjax(json_encode(array("ejecutado"=>TRUE,'msj'=>$msj)));
+        }
+    }
+    /**
+     * Formulario para configuración del campo del formulario
+     * @method configuracionCampo
+     */
 
     function configuracionCampo(){
        $campo = new CampoHTML();
-       $this->vista = "configuracionFormulario";
-       try{
-            if(isset($_POST['idCampo'])){
-                $idCampo = $_POST['idCampo'];
-                $dataArray['formCampo'] = $campo->formCampo($_POST['accion'],$idCampo);    
-            }else{
-                throw new Exception("No se ha obtenido el id del campo", 1);
+        $this->layout="ajax.tpl.php";
+   
+        if(isset($_POST['idCampo'])){
+            $idCampo = $_POST['idCampo'];
+            $this->data['formCampo'] = $campo->formCampo($_POST['accion'],$idCampo);
                 
-            }
+        }else{
+            throw new Exception("No se ha obtenido el id del campo", 1);
             
-            respuestaAjax($dataArray['formCampo']);
-                
-       }catch(Exception $e){
-           controlExcepcion($e->getMessage());
-       }
+        }
+        
+        
+            
+   
        
     }
 

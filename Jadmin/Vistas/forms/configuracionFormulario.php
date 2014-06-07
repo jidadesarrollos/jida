@@ -1,16 +1,10 @@
-
-<h1>Configuracion de Formularios...</h1>
-<?PHP
-    echo Mensajes::imprimirMsjSesion();
+<?PHP 
+ /**
+ * 
+ */
+ $data =& $dataArray;
 ?>
 <style>
-    
-   
-    #jidaCampos li:hover{
-        cursor:pointer;
-        font-weight: bolder;
-    }
-   
     textarea{
         min-width: 500px;
         height:150px;
@@ -23,10 +17,43 @@
         clear:both;
     }
 </style>
+<h1>Configuracion de Formularios...</h1>
+<div class="alert alert-info">
+    <h3>Ten en cuenta:</h3>
+    <ol>
+        <li><strong>Si deseas editar el orden de los campos</strong> Haz click en el bot&oacute;n <strong>Editar Orden</strong> que se
+            encuentra al final de la lista de campos y luego haciendo click en cada campo colocalo en la posicion que deseas.</li>
+        <li><strong>Si deseas editar la conf. del campo</strong> Debes hacer <i>doble click</i> sobre el elemento</li>
+    </ol>
+</div>
+<?PHP
+    echo Mensajes::imprimirMsjSesion();
+?>
+
 <article id="jidaConfiguracion">
+    
     <div class="row">
         <section id="jidaCampos" class="col-lg-3">
-          <?= $dataArray['vistaCampos']?>
+            
+            <div class="row top-15">
+              
+                <div class="col-md-6">
+                    <h4>Campos</h4>        
+                </div>
+                  <div class="col-md-6">
+                    <button id="btnEditOrden" title="editar orden" class="btn btn-primary pull-right" value="1">
+                        <span class="fa fa-edit fa-lg"></span>Editar orden</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="list-form-item" id="listCamposFormulario">
+                    <?PHP foreach($data['camposFormulario'] as $key =>$campo):?>
+                        <li id="campoform-<?=$campo['id_campo']?>" data-id-campo="<?=$campo['id_campo']?>"><?=$campo['name']?></li>
+                    <?PHP endforeach; ?>
+                    </ul>
+                </div>
+            </div>
         </section>
         <section id="jidaFormConfiguracion" class="col-lg-9">
             <?PHP 
@@ -40,9 +67,51 @@
      
 </article>
 <script>
+
+function addSortable(){
+     $("#listCamposFormulario > li").addClass('selecionable');
+     $("#listCamposFormulario").sortable();
+}
+
+
+function guardarOrden(){
+        var orden = $("#listCamposFormulario").sortable('toArray').toString();
+            
+        data = "s-ajax=true&campos="+orden;
+        console.log(data);
+        
+        new jd.ajax({
+            url:"/jadmin/forms/ordernar-campos/",
+            parametros:data,
+            respuesta:'json',
+            funcionCarga:function(){
+                $("#jidaFormConfiguracion").html(this.respuesta);
+                if(this.respuesta.ejecutado==true){
+                    $("#jidaFormConfiguracion").html(this.respuesta.msj);
+                    $("#listCamposFormulario > li").removeClass('selecionable');
+                    $("#listCamposFormulario").sortable("destroy");
+                }else{
+                    
+                }
+            }
+        });
+        return true;
+        
+}//fin guardarOrden
+
 $( document ).ready(function(){
-    
-    $("#listaCampos li").on('click',function(){
+   $("#btnEditOrden").on('click',function(){
+       if(this.value==1){
+        addSortable();
+        $(this).html("<span class=\"fa fa-save fa-lg\"></span> Finalizar").val(2);        
+       }else if(this.value==2){
+           
+           $(this).val(1).html('<span class=\"fa fa-edit fa-lg\"></span> Editar Orden');
+           guardarOrden();
+       }
+       
+   })
+    $("#listCamposFormulario li").on('dblclick',function(){
         
         var valorSeleccion = $( this ).data('id-campo');
         var accion = $( this ).attr('name');

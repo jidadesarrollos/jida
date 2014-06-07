@@ -9,6 +9,7 @@
  * @package Framework
  * @category Setting
  */
+
 /**
  * Arreglo globla para manejo de css en las vistas
  */ 
