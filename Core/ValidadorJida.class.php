@@ -93,7 +93,7 @@ class ValidadorJida {
                                             "mensaje"   =>  "solo puede contener caractares"),
                     'alfanumerico'  =>array("expresion" =>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ ]*$/",
                                             "mensaje"   =>  "no puede contener caracteres especiales"),
-                    'programa'      =>array("expresion" =>  "/^[\/\.A-Za-z_-]*$/",
+                    'programa'      =>array("expresion" =>  "/^[\/\.A-Za-z_-\d]*$/",
                                             "mensaje"   =>  "Solo puede poseer caracteres alfanumericos,underscore o guion"),
                     'email'         =>array("expresion" =>  "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
                                             "mensaje"   =>  "El formato del email no es valido"),
@@ -135,41 +135,7 @@ class ValidadorJida {
                 );
     }//fin funcion getDataValidaciones()
   
-    private function obtenerExpresiones() {
-        $exp = array(
-                        //"caracteres" => "/^[A-ZñÑa-záéíóúÁÉÍÓÚ ]*$/",
-                        // "programa" => "/^[A-Za-z_-]*$/",
-                        // "alfanumerico" => "",
-                        // #"alfanumerico" => "/^[\s\w]*$/",
-                        // "programa"=>"/^[\/\.A-Za-z_-]*$/",
-                        // "seguridad"      => "/^([^(;\'\|\*\"\/\\)])*$/",
-                        // "seguridad2" => "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
-                        // #"email"         => "/^[A-Za-z0-9._-]*@[A-Za-z]*\.[A-Za-z]*$/",
-                        // #"email"         => "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/",
-                        // "email"          => "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
-                        // #"email"         => "/^[A-Za-z0-9._-]*@[A-Za-z]*\.[A-Za-z]{4}\.[A-Za-z]{2}|[A-Za-z0-9._-]*@[A-Za-z]*\.[A-Za-z]{2}$/",
-                        // "cedula"     => "/^[0-9]{6,8}$/",
-                        // "celular"        => "/^(412|416|414|424|426)\d{7}$/",
-                        // "internacional" => "/^[0-9]{9,18}$/",
-                        // "telefono"       =>  "/^2[0-9]{9,13}$/",
-                        // "twitter"        => "/^[A-Za-z0-9._-]*$/",
-                        // "url"            => "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
-                        // "minuscula"      => "/[a-z]/",
-                        // "mayuscula"      => "/[A-Z]/",
-                        // "numero"     => "/[0-9]/",
-                        // "caracteresEsp"  => "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
-                        // "coordenada"    =>  "/^\-?[0-9]{2}\.[0-9]{3,15}/"
-                
-                /**
-                 * Entradas que pueden tener los campos "ojo" para futuras validaciones y mejoras
-                 * Ejemplos:
-                 * O' connors   - Mcdonald's   -   www.facebook.com/mipagina
-                 *    celular:{expr:/^4\d{9}$/,mensajtruee:"El formato del celular no es valido"},
-                 *    telefono:{expr:/^2[0-9]{13}|[2|4][0-9]{9}$/,mensaje:"El formato del telefono no es valido"},
-                 */
-                     );
-        $this -> expresiones = $exp;
-    }//final funcion
+    
 
     /**
      * Verifica si una cadena tiene el formato requerido

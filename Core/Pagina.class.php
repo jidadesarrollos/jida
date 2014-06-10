@@ -129,7 +129,7 @@ class Pagina{
             define('DIR_LAYOUT_JIDA',framework_dir."Layout/");
         }
         if(!defined('DIR_LAYOUT_APP')){
-            define('DIR_LAYOUT_APP',app_dir.'/Layout');
+            define('DIR_LAYOUT_APP',app_dir.'Layout/');
         }
         if(defined('jida_admin_vistas_dir')){
             $this->rutaFramework=jida_admin_vistas_dir;

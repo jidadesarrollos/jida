@@ -90,6 +90,22 @@ class JAdminController extends controller{
             
         }
     }
+    
+    
+    function json(){
+        if(isset($_GET['file'])){
+            if(file_exists(framework_dir.'json/validaciones.json')){
+                $data = file_get_contents(framework_dir.'json/validaciones.json');
+                respuestaAjax($data);    
+            }else{
+                throw new Exception("No se consigue el archivo solicidado o no existe", 1);
+                
+            }
+        }else{
+            throw new Exception("Pagina no encontrada", 404);
+            
+        }   
+    } 
   
 
    

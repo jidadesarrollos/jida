@@ -6,11 +6,10 @@
 ?>
 <style>
     textarea{
-        min-width: 500px;
-        height:150px;
-        resize:both!important;
-        max-width:500px;
      
+        height:150px;     
+        width:100%;
+        resize: vertical;
     }
     .enlace-form{
         position:relative;

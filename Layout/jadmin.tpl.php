@@ -20,7 +20,7 @@
         </title>
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
-        
+                 
 
         <script src="/htdocs/js/jq2.0.3.js"></script>
         <script src="/htdocs/js/jqui1.10.3.js"></script>

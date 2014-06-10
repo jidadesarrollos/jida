@@ -165,14 +165,13 @@ class FormsController extends Controller{
 	        
 	        if(isset($_POST['btnCamposFormulario'])){
 	            $proceso = $jctrl->procesarCampos($_POST);
-	            $dataArray['formCampo'] = $campoHtml->formCampo(2,$_POST['id_campo'],$proceso);            
-	            if($proceso!==true and is_array($proceso)){
-	                $dataArray['erroresForm'] = $proceso;
-	                #Se devuelve el formulario con los errores obtenidos
-	                
-	            }else{
-	                $_SESSION['__msj'] = Mensajes::mensajeInformativo("Campo $_POST[name] ha sido modificado exitosamente");
-	            }//fin if
+                $formCampo = $this->getFormCampo($_POST['id_campo']);
+                if($formCampo->validarFormulario()===TRUE){
+                    $_SESSION['__msj'] = Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente");
+                }else{
+                    Session::set('__msj',Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));                    
+                }
+              $this->data['formCampo']=$formCampo->armarFormularioEstructura();
 	        }
 			if(isset($_GET['formulario']) and $this->getEntero($_GET['formulario'])>0){
 				$jctrl->id_form=$_GET['formulario'];
@@ -181,8 +180,8 @@ class FormsController extends Controller{
 			}
 	        $camposFormulario = $jctrl->getCamposFormulario();
 	        //echo $vista;
-	        $dataArray['camposFormulario'] =$camposFormulario;
-	        $this->data = $dataArray;
+	        $this->data['camposFormulario'] =$camposFormulario;
+	        
     	}catch(Exception $e){
     		Excepcion::controlExcepcion($e);
     	}
@@ -207,6 +206,18 @@ class FormsController extends Controller{
             respuestaAjax(json_encode(array("ejecutado"=>TRUE,'msj'=>$msj)));
         }
     }
+    
+    /**
+     * Arma el formulario de un campo HTML
+     * @method getFormCampo
+     */
+    private function getFormCampo($idCampo=""){
+        $form = new Formulario ( 'CamposFormulario',2,$idCampo );
+        $form->action = "#";
+        $form->tipoBoton = "submit";
+        $form->valueBotonForm="Guardar Configuración";
+        return $form;
+    }
     /**
      * Formulario para configuración del campo del formulario
      * @method configuracionCampo
@@ -215,20 +226,16 @@ class FormsController extends Controller{
     function configuracionCampo(){
        $campo = new CampoHTML();
         $this->layout="ajax.tpl.php";
-   
+        
         if(isset($_POST['idCampo'])){
             $idCampo = $_POST['idCampo'];
-            $this->data['formCampo'] = $campo->formCampo($_POST['accion'],$idCampo);
-                
+            $form=$this->getFormCampo($idCampo);
+            
+            $this->data['formCampo'] = $form->armarFormularioEstructura();
         }else{
             throw new Exception("No se ha obtenido el id del campo", 1);
             
         }
-        
-        
-            
-   
-       
     }
 
 }

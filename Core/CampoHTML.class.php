@@ -447,24 +447,29 @@ class CampoHTML extends DBContainer {
             
             
             $opciones = $this->opciones;
-            
+            /**
+             * Arreglo que registra las opciones a mostrar en el campo de selecíon a crear
+             * @var $arrop
+             */
             $arrOp = array ();
             $i = 0;
             $ar = explode ( ";", $opciones );
-            
+            /**
+             * Primera separación por ; pues se pueden manejar multiples formatos para llenar el array
+             */
             foreach( $ar as $value => $opcion ) {
                 
                 $esSelect = strpos(strtolower($opcion), "select" );
                 $esSelectExterno = strpos(trim($opcion), "externo" );
                 $esArraySesion = strpos(trim($opcion), "session" );
-                
+                $esJson= strpos(trim($opcion), "json" );
                 if ($esSelect === FALSE and $esSelectExterno === FALSE and $esArraySesion === FALSE) {
-                    // ntra aqui si las opciones son definidas manualmente
+                    // entra aqui si las opciones son definidas manualmente
                     $data = explode("=", $opcion );
                 
                         $arrOp[$data[0]] = $data[1];
                 } elseif ($esArraySesion !== false) {
-                    // ntra aqui si las opciones son pasadas por medio de una variable de session
+                    // entra aqui si las opciones son pasadas por medio de una variable de session
                     $arr = explode ( "=", $opcion );
                     $var = $_SESSION [$arr [1]];
     
@@ -474,23 +479,37 @@ class CampoHTML extends DBContainer {
                         }
                     }
                     
-                } else {
+                }elseif($esJson===TRUE){
+                    throw new Exception("No se encuentra disponible el uso de archivos json", 1);
+                    
+                }else {
                     
                     if ($esSelect !== FALSE) {
                             
                         $data = $this->bd->ejecutarQuery ( $opcion );
                     } elseif ($esSelectExterno !== FALSE) {
-                        // entra aqui cuando las opciones son definidas por un query que pasara externamente.
-                        
-                        $data = $this->bd->ejecutarQuery ( $this->externo[$this->name] );
-                    }
-                    
-                    if ($this->bd->totalRegistros > 0) {
-    
-                        while ( $result = $this->bd->obtenerArray ( $data ) ) {
-                            $arrOp [$result [0]] = $result [1];
+                        // entra aqui cuando las opciones son definidas por un query o arreglo externo
+                        /**
+                         * En caso de que sea un arreglo
+                         */
+                          
+                        if(is_array($this->externo[$this->name])){
+                            $arrOp =$this->externo[$this->name];
+                        }else{
+                            /**
+                             * Caso de que sea un query
+                             */
+                            $data = $this->bd->ejecutarQuery ( $this->externo[$this->name] );
+                            if ($this->bd->totalRegistros > 0):
+                                while ( $result = $this->bd->obtenerArray ( $data ) ):
+                                    $arrOp [$result [0]] = $result [1];
+                                endwhile;
+                            endif;    
                         }
-                    }
+                        
+                    }//fin if;
+                    
+    
                 }
             }
             
@@ -531,28 +550,6 @@ class CampoHTML extends DBContainer {
         
         return $control;
     }
-    
-    
-    
-    /**
-     * Retorna un formulario para registro o modificación del campo de un formulario especifico
-     *
-     * Instancia la clase Formulario
-     *
-     * @param int $accion
-     *          1, nuevo 2, modificar
-     */
-    public function formCampo($accion, $idCampo = "", $errores = "") {
-        $form = new Formulario ( 'CamposFormulario' );
-        $form->action = "#";
-        $form->campoUpdate = ($accion == 1) ? "" : $idCampo;
-        $form->tipoF = ($accion == 1) ? 1 : 2;
-        $form->errores = $errores;
-        $form->tipoBoton = "submit";
-        $form->valueSubmit = ($accion == 1) ? "Registrar Configuraci&oacute;n" : "Modificar Configuraci&oacute;n";
-        return $form->armarFormulario ();
-    }
-    
     /**
      * Guarda la configurción de un campo de formulario html
      */

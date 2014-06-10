@@ -44,8 +44,24 @@ class Formulario extends DBContainer {
      * Es utilizada para traer formularios en modo update
      */
     public $clave_primaria_f;
-    
+    /**
+     * Define la estructura de un formulario a renderizar por medio del metodo armarFormularioEstructura
+     * La estructura se define colocando el numero de campos que se desean por culumnas, teniendo en cuenta
+     * que se utiliza el sistema grid de bootstrap y q el max. de columnas es 12.
+     * Si se desea emplear el mismo grid de columnas en varias filas se puede usar el simbolo "x" de modo que
+     * "3x5" repetirá 5 filas de 3 columnas
+     * @var string $estructura
+     * @example 1;3;2x4;3;1  
+     * @access public
+     * @see @armarFormularioEstructura 
+     */
     public $estructura;
+    /**
+     * Permite personalizar la division de las filas declaradas en la estructura del formulario
+     * @var array $estructuraFilas
+     * @access public
+     */
+    public $estructuraFilas =array();
     
     /**
      * Indica forma del formulario a crear.
@@ -590,10 +606,6 @@ class Formulario extends DBContainer {
      */
     public function validarFormulario(&$datos="") {
         Session::destroy ( '__erroresForm' );
-//         if (! isset ( $datos ['readonly'] ))
-//             $datos ['readonly'] = FALSE;
-//         if (! isset ( $datos ['disable'] ))
-//             $datos ['disable'] = FALSE;
         if(empty($datos)){
             $datos =& $_POST;
         }
@@ -652,20 +664,24 @@ class Formulario extends DBContainer {
         }
     }
 
-
+    /**
+     * Arma un formulario a partir de la estructura programada
+     * @method armarFormularioEstructura
+     */
     function armarFormularioEstructura($titulos=array(),$label=TRUE){
         
         $camposForm = $this->armarFormularioArray ( $this->campoUpdate );   
         $estructura = $this->estructura;
         
         
-        $formularioisiones = explode(";", $estructura);
+        $formularioRepeticiones = explode(";", $estructura);
+        $totalColumnas=count($formularioRepeticiones);
         $formulario="";
         
         $totalDivisiones = 0;
         $validacion ="";
         $form = $this->armarFormularioArray();
-        #Arrays::mostrarArray($form);
+        
         if(isset($form['validacion'])){
             $validacion=$form['validacion'];
             unset($form['validacion']);
@@ -697,22 +713,22 @@ class Formulario extends DBContainer {
         $limiteCampos=0;
         $camposInFieldset=0;
         $contador=0;
-        foreach ($formularioisiones as $key => $value) {
-            
-            if(is_numeric($value)){
+        foreach ($formularioRepeticiones as $key => $value) {
                 
+            if(is_numeric($value)){
                 $repeticiones = 1;
                 $columnas = $value;
             }else{
-                
                 $array = explode("x",strtolower($value));
-                
-                $repeticiones = $array[1];
-                $columnas = $array[0];
-                
-                #Arrays::mostrarArray($array);
-            }
-            
+                if(count($array)>1){
+                    $repeticiones = $array[1];
+                    $totalColumnas=$totalColumnas+$repeticiones-1;
+                    $columnas = $array[0];    
+                }else{
+                    throw new Exception("No se encuentra definida la estructura en $value correctamente", 210);
+                    
+                }
+            }//fin validacion value numerico
             
             for($i=1;$i<=$repeticiones;$i++){
                 if(array_key_exists($contador, $titulos)){
@@ -728,11 +744,15 @@ class Formulario extends DBContainer {
                 for($e=1;$e<=$columnas;$e++){
                     
                     
+                    if(array_key_exists($contador,$this->estructuraFilas)){
+                        
+                    }
                     /**
                      * Se calcula el numero de layout para la columna, la misma
                      * no puede ser superior a 12 (Basado en bootstrap3)
                      */
-                    $col = (12/(int)$columnas); 
+                    $col = (12/(int)$columnas);
+                     
                     $formulario.="\n\t\t\t<div class=\"col-lg-$col\">\n\t\t\t\t<div class=\"form-group\">";
                     if(isset($form[$formKeys[$contador]]['label']) and $label===TRUE){
                         $formulario.="\n\t\t\t\t".$form[$formKeys[$contador]]['label'];

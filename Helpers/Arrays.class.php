@@ -17,6 +17,21 @@ class Arrays {
 		echo "</pre>";
 		
 	}
+    /**
+     * Recorre un arreglo multidimensional buscando las columnas solicitadas y devuelve
+     * un nuevo arreglo solo con esos valores
+     * @method getColummnasArray
+     * @param array $array Arreglo a recorrer
+     * @param array $columnas Arreglo con columnas deseadas
+     * @return array $data Arreglo creado solo con los valores solicitados
+     */
+    static function getColumnasArray($array,$columnas){
+        $datos=array();
+        foreach ($array as $key => $columna) {
+            
+        }
+        
+    }
     
     static function recorrerArray(){}
     
