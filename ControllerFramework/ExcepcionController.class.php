@@ -10,8 +10,8 @@
 class ExcepcionController extends Controller{
     
     function __construct(){
-        $this->header="plantillas/error/headerError.php";
-        $this->footer="plantillas/error/footerError.php";
+        $this->header="/error/headerError.php";
+        $this->footer="/error/footerError.php";
     }
     /**
      * Funcion por defecto para manejar

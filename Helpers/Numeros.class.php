@@ -16,11 +16,13 @@ class Numeros{
     public static function moneda($numero,$decimales=2,$type="bolivar"){
         switch ($type) {
             case 'dolar':
-                return number_format($numero,$decimales,".",",");
+                $numero =($numero=="")?"":number_format($numero,$decimales,".",",");
+                return $numero;
                 break;
             
             default:
-                return number_format($numero,$decimales,",",".");
+                $numero =($numero=="")?"":number_format($numero,$decimales,",",".");
+                return $numero;
                 break;
         }
     }
