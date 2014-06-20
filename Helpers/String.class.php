@@ -33,20 +33,15 @@ class String {
 	 * @return string $upperC
 	 */
 	static function lowerCamelCase($cadena,$espacios=true){
-        try{
-            if(!empty($cadena)){
-                
-        		$strLowerCase = self::upperCamelCase($cadena);
-                
-        		$strLowerCase[0] = strtolower($strLowerCase[0]);
-        		return $strLowerCase;
-            }else{
-                throw new Exception("La cadena " . $cadena ." esta vacia");
-                
-            }   
-        }catch (Exception $e){
-            controlExcepcion($e->getMessage());
-        }
+    
+        if(!empty($cadena)){
+            
+    		$strLowerCase = self::upperCamelCase($cadena);
+            
+    		$strLowerCase[0] = strtolower($strLowerCase[0]);
+    		return $strLowerCase;
+        }  
+    
 	}
         /**
      * Función que corta el texto de una vista y coloca tres puntos suspensivos.

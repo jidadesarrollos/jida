@@ -426,6 +426,7 @@ class DBContainer {
                             $campoValor=$valor;
                             break;
                         default:
+                            
                             $campoValor="'".$valor."'";
                             break;
                     }

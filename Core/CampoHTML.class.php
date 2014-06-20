@@ -486,7 +486,13 @@ class CampoHTML extends DBContainer {
                     
                     if ($esSelect !== FALSE) {
                             
+                        
                         $data = $this->bd->ejecutarQuery ( $opcion );
+                        if ($this->bd->totalRegistros > 0):
+                            while ( $result = $this->bd->obtenerArray ( $data ) ):
+                                $arrOp [$result [0]] = $result [1];
+                            endwhile;
+                        endif;
                     } elseif ($esSelectExterno !== FALSE) {
                         // entra aqui cuando las opciones son definidas por un query o arreglo externo
                         /**
@@ -504,10 +510,13 @@ class CampoHTML extends DBContainer {
                                 while ( $result = $this->bd->obtenerArray ( $data ) ):
                                     $arrOp [$result [0]] = $result [1];
                                 endwhile;
-                            endif;    
+                            endif;
                         }
                         
                     }//fin if;
+                    
+                    
+                    
                     
     
                 }

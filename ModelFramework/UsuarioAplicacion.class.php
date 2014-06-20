@@ -74,7 +74,7 @@ class UsuarioAplicacion extends DBContainer{
      */
     function validarLogin($usuario,$clave){
         try{
-            $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and clave_usuario='$clave'";
+            $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and clave_usuario='$clave' and validacion=1";
 			
             $result = $this->bd->ejecutarQuery($query);
             if($this->bd->totalRegistros>0){

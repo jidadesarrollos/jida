@@ -91,7 +91,7 @@ class ValidadorJida {
                                             "mensaje"   =>  "Debe ser decimal y los decimales deben estar separados por coma"),
                     'caracteres'    =>array("expresion" =>  "/^[A-ZñÑa-záéíóúÁÉÍÓÚ ]*$/",
                                             "mensaje"   =>  "solo puede contener caractares"),
-                    'alfanumerico'  =>array("expresion" =>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ ]*$/",
+                    'alfanumerico'  =>array("expresion" =>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ., ]*$/",
                                             "mensaje"   =>  "no puede contener caracteres especiales"),
                     'programa'      =>array("expresion" =>  "/^[\/\.A-Za-z_-\d]*$/",
                                             "mensaje"   =>  "Solo puede poseer caracteres alfanumericos,underscore o guion"),
