@@ -227,6 +227,7 @@ class MenusController extends Controller {
             }
             $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$id);
             $formulario->externo['padre']="select id_opcion,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
+            
             $formulario->action='/jadmin/menus/set-opcion/menu/' . $menu -> id_menu . "/";
             $dataArray['formOpcion'] = $formulario->armarFormulario();
             return $dataArray;    
@@ -294,17 +295,19 @@ class MenusController extends Controller {
      * @access public
      */
     private function vistaOpciones($idMenu = "") {
-        try {
+    
             if (!empty($idMenu)) {
                 $this -> id_menu = $idMenu;
             }else{
                 throw new Exception("Se debe seleccionar un menu", 1);
                 
             }
-            $query = "select a.id_opcion,a.nombre_opcion as \"Nombre\",a.url_opcion as \"Url\",b.nombre_opcion,a.hijo
-                     
+            $query = "select a.id_opcion,a.nombre_opcion as \"Nombre\",a.url_opcion as \"Url\",a.hijo,a.orden,
+                       c.estatus
                     from s_opciones_menu a 
+                    join s_estatus c on (a.id_estatus=c.id_estatus)
                     left join s_opciones_menu b on (a.padre=b.id_opcion) where
+                    
                     a.id_menu=$this->id_menu";
             
             $vista = new Vista($query, $GLOBALS['configPaginador'], 'Opciones');
@@ -324,11 +327,9 @@ class MenusController extends Controller {
             $vista->setParametrosVista($GLOBALS['configVista']);
             $vista->mensajeError="No hay opciones <a href=\"/jadmin/menus/procesar-opciones/menu/".$this->id_menu."\" class=\"btn\">Registar Opci&oacute;n</a>";
             $dataArray['vista'] = $vista -> obtenerVista();
-			
+    		
             return $dataArray['vista'];
-        } catch(Exception $e) {
-            controlExcepcion($e -> getMessage(), $e -> getCode());
-        }
+
     }
     /**
      * Devuelde un menu armado

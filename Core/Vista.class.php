@@ -803,6 +803,7 @@ class Vista extends DBContainer{
         $seccionBusqueda="";
         if($this->seccionBusqueda===TRUE){
               $seccionBusqueda.="
+                
                   <section id=\"seccionBusqueda\" class=\"$this->cssSectionBusqueda\">
                       <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
                           <div class=\"form-group\">
@@ -810,6 +811,8 @@ class Vista extends DBContainer{
                               <input type=\"$this->typeBotonBusqueda\" name=\"$this->nombreBotonBusqueda\" id=\"$this->nombreBotonBusqueda\" value=\"$this->valueBotonBusqueda\" class=\"$this->cssBotonBusqueda\" data-jvista=\"busqueda\">
                           </div>
                       </form>
+                  </section>
+                
               ";
                 
         }

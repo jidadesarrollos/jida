@@ -148,6 +148,9 @@ class MenuHTML extends DBContainer{
                     $submenu = $this->armarMenuRecursivoHijos($opciones,$cssMenu,$opcion['id_opcion']);
                     if($this->tagAdicionalLIpadre!==False){
                         $this->identacion=4;
+                        if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
+                            $this->tagAdicionalLIpadre['atributos']=array();
+                        endif;
                         $opc = CampoHTML::crearSelectorHTMLSimple($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$opcion['nombre_opcion'],3,true);
                     }else{
                         $opc = $opcion['nombre_opcion'];
