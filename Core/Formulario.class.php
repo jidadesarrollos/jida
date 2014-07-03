@@ -634,9 +634,6 @@ class Formulario extends DBContainer {
         $dataCampos=array_merge($dataCampos,$this->dataPost);
         
         $this->valoresUpdate=$dataCampos;
-        
-        #$dataCampos = $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($query));
-        
         return $dataCampos;
     }
     
@@ -781,8 +778,7 @@ class Formulario extends DBContainer {
                      * Se calcula el numero de layout para la columna, la misma
                      * no puede ser superior a 12 (Basado en bootstrap3)
                      */
-                    $col = (12/(int)$columnas);
-                     
+                    $col = (12/(int)$columnas); 
                     $formulario.="\n\t\t\t<div class=\"col-lg-$col\">\n\t\t\t\t<div class=\"form-group\">";
                     if(isset($form[$formKeys[$contador]]['label']) and $label===TRUE){
                         $formulario.="\n\t\t\t\t".$form[$formKeys[$contador]]['label'];
@@ -831,8 +827,14 @@ class Formulario extends DBContainer {
     private function crearBotonesFormulario(){
         $botones="";
         if(is_array($this->botonesMultiples)){
-            foreach($this->botonesMultiples as $key => $valores):
-                $botones.=Selector::crearInput($key,$valores);
+            
+            foreach(array_reverse($this->botonesMultiples) as $key => $valores):
+                if(!is_array($valores)){$key=$valores;$valores=array();}
+                 $valoresXDefecto = array (  'type' => 'submit',);
+                 $arrAtributos = (is_array ( $valores )) ? array_merge ( $valoresXDefecto, $valores ) : $valoresXDefecto;
+                if(!array_key_exists('class', $arrAtributos)) 
+                    $arrAtributos['class']= $this->classBotonForm;
+                $botones.=Selector::crearInput($key,$arrAtributos);
             endforeach;
         }else
         if($this->botonGuardado===TRUE){
