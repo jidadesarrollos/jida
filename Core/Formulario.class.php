@@ -640,8 +640,12 @@ class Formulario extends DBContainer {
     /**
      * Valida un formulario.
      */
-    public function validarFormulario(&$datos="") {
+   public function validarFormulario(&$datos="") {
         Session::destroy ( '__erroresForm' );
+//         if (! isset ( $datos ['readonly'] ))
+//             $datos ['readonly'] = FALSE;
+//         if (! isset ( $datos ['disable'] ))
+//             $datos ['disable'] = FALSE;
         if(empty($datos)){
             $datos =& $_POST;
         }
@@ -651,7 +655,7 @@ class Formulario extends DBContainer {
         
         foreach ( $this->camposFormulario as $key => $campo ) {
             
-            if(isset($campo['name']) and array_key_exists($campo['name'], $datos) and !is_array($datos[$campo['name']])){
+            if(isset($datos[$campo['name']]) && !is_array($datos[$campo['name']])){
                 $datos[$campo['name']] = trim($datos[$campo['name']]);
             }
             
@@ -665,27 +669,23 @@ class Formulario extends DBContainer {
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
                     
-                    if ($resultadoValidacion['validacion'] !== true) {
-                        $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
-                    }elseif($resultadoValidacion['validacion']===true){
+                    if ($resultadoValidacion !== true) {
+                        $arrErrores [$campo ['name']] = $resultadoValidacion;
+                    }elseif($resultadoValidacion===true){
                         
                         //Se connvierten los datos especiales del post
-                        if(!is_array($resultadoValidacion['campo'])){
-                            $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);    
-                        }else{
-                            $datos[$campo['name']]= $resultadoValidacion['campo'];
-                        }
-                        
+                        $datos[$campo['name']]= htmlspecialchars($valorCampo);
                     }
                 } else {
-                    
+                    // cho "<hr>$datos[eventos] ------------ $campo[name] No funciona.<hr>";
                 }
             }else{
-                if(!is_array($valorCampo)){
-                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                if($this->htmlSpecialChars===TRUE){
+                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);   
                 }else{
-                     $datos[$campo['name']]= $valorCampo;
+                    $datos[$campo['name']]= $valorCampo;
                 }
+                
             }
         }
         
