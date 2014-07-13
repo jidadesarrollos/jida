@@ -1,7 +1,4 @@
-<?PHP 
-
-//include_once 'Helpers/ajaxHelper.php';
-
+<?PHP
 /**
  * Genera Vistas Dinamicas en HTML
  * 
@@ -198,8 +195,8 @@ class Vista extends DBContainer{
      * Arreglo que define las opciones para el breadcrumb
      * Por defecto se encuentra inicializado en false para que no aparezca
      * @var $opcionesBreadCrumb
-	 * 
-	 * array("selector"=>"a",data,etiqueta)
+     * 
+     * array("selector"=>"a",data,etiqueta)
      */
     var $opcionesBreadCrumb=FALSE; 
      /**
@@ -229,7 +226,12 @@ class Vista extends DBContainer{
      * @var string $seccionBusqueda
      * @access private
      */
-    private $cssSectionBusqueda="";
+    private $cssSectionBusqueda="row";
+    /**
+     * Define el estilo para el div correspondiente a la columna de la busqueda, por defecto es
+     * col-md-12
+     */
+    private $cssColBusqueda="col-md-12";
     /**
      * Define estilo para el <div> De la sección de busqueda de la vista
      * @var $cssDivBusqueda
@@ -315,8 +317,15 @@ class Vista extends DBContainer{
     private $nombreBotonBusqueda="";
     /**
      * Define el nombre del campo de texto para la busqueda de la vista
+     * @var $nombreInputTextBusqueda
      */
     private $nombreInputTextBusqueda;
+    /**
+     * Define el contenido que puede tener el boton de la sección
+     * de busqueda
+     * @var $htmlButtonBusqueda
+     */
+    private $htmlButtonBusqueda="Buscar";
     /**
      * Define los campos posibles de busqueda para la vista
      * @var array $camposBusqueda
@@ -390,7 +399,6 @@ class Vista extends DBContainer{
      */
      
     private function obtenerTitulos() {
-        
         $titulos = "<TR class=\"$this->cssFilaTitulos\">\n\t\t\t\t\t";
         $i=0;
         while($i< $this->bd->totalField($this->resultQuery)){
@@ -509,7 +517,7 @@ class Vista extends DBContainer{
              $botones = $this->obtenerAccionesVista($totalColumnas);
     
              $vista.="\n
-                        <section id=\"tablaVista\" class=\"row\">
+                        <article id=\"tablaVista\" class=\"row\">
                             <div class=\"col-lg-12\">
              
                             
@@ -519,7 +527,7 @@ class Vista extends DBContainer{
                                         ".$botones."
                                     </table>
                             </div>
-                        </section>
+                        </article>
                     ";
              
          }else{
@@ -536,7 +544,7 @@ class Vista extends DBContainer{
                     })
                     </script>
                     
-                </section>
+                
                 ";
          return $vista;
          
@@ -706,15 +714,12 @@ class Vista extends DBContainer{
         $control=array(1=>'radio',2=>'checkbox',3=>'txt');
         $nombreControl = ($tipocontrol==1)?"seleccionar":"seleccionar[]";
         if($tipocontrol==3){
-        $columnaControl="<td style=\"display:none\">
-                            $valorC
-                        </td>"; 
+            
+        $columnaControl = Selector::crear('TH',array('style'=>'display:none'),$valorC); 
         }else{
-            $columnaControl="<td style=\"width:30px\">
-                            <input type=\"$control[$tipocontrol]\" name=\"$nombreControl\" value=\"$valorC\">
-                        </td>"; 
+            $input = CampoHTML::crearBoton($valorC,array('type'=>$control[$tipocontrol],'name'=>$nombreControl));
+            $columnaControl=Selector::crear('TH',array('style'=>'width:30px'),$input);
         }
-        
         return $columnaControl;
             
     }
@@ -804,14 +809,23 @@ class Vista extends DBContainer{
         if($this->seccionBusqueda===TRUE){
               $seccionBusqueda.="
                 
-                  <section id=\"seccionBusqueda\" class=\"$this->cssSectionBusqueda\">
-                      <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
-                          <div class=\"form-group\">
-                              <input type=\"text\" name=\"$this->nombreInputTextBusqueda\" id=\"$this->nombreInputTextBusqueda\" class=\"$this->cssInputTextBusqueda\">
-                              <input type=\"$this->typeBotonBusqueda\" name=\"$this->nombreBotonBusqueda\" id=\"$this->nombreBotonBusqueda\" value=\"$this->valueBotonBusqueda\" class=\"$this->cssBotonBusqueda\" data-jvista=\"busqueda\">
-                          </div>
-                      </form>
-                  </section>
+                 <section id=\"seccionBusqueda".$this->nombreVistaSinEspacios."\" class=\"$this->cssSectionBusqueda\">
+                    <article class=\"$this->cssColBusqueda\">
+                        <div class=\"$this->cssDivBusqueda\">
+                          <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
+                              <div class=\"form-group\">
+                                  <input type=\"text\" name=\"$this->nombreInputTextBusqueda\" id=\"$this->nombreInputTextBusqueda\" class=\"$this->cssInputTextBusqueda\">
+                                  <button 
+                                    type=\"$this->typeBotonBusqueda\" 
+                                    name=\"$this->nombreBotonBusqueda\" id=\"$this->nombreBotonBusqueda\" value=\"$this->valueBotonBusqueda\" 
+                                    class=\"$this->cssBotonBusqueda\" data-jvista=\"busqueda\">
+                                    $this->htmlButtonBusqueda
+                                   </button>
+                              </div>
+                          </form>
+                        </div>
+                    </article>
+                 </section>
                 
               ";
                 
@@ -912,47 +926,37 @@ class Vista extends DBContainer{
      * 
      * Utiliza estilo css del bootstrap-breadcrumb por defecto, puede ser modificado a partir del
      * arreglo pasado a la funcion setParametrosVista, pasando un key "cssBreadcrumb".
-	 * 
-	 * @param array opcionesBreadcumb
-	 * @return string breadcumb
+     * 
+     * @param array opcionesBreadcumb
+     * @return string breadcumb
      * 
      * 
      */
     private function agregarBreadCrumb(){
-    
-            // if(isset($this->opcionesBreadCrumb) and is_array($this->opcionesBreadCrumb)){
-                // $arreglo = $this->opcionesBreadCrumb['data'];
-//                 
-            // }else{
-                // throw new Exception("Las opciones del breadcrumb no se han definido correctamente", 1);
-//                 
-            // }
-//          
-            //arrays::mostrarArray($this->opcionesBreadCrumb);exit;
-            
+
             if(is_array($this->opcionesBreadCrumb)){
-            	if(array_key_exists("selector",$this->opcionesBreadCrumb)){
-            		$selector = $this->opcionesBreadCrumb['selector'];
-					unset($this->opcionesBreadCrumb['selector']);
-            	}
-	            $breadcrumb="\n<section class=\"row\">";
-	            $breadcrumb.="\n\t\t<div class=\"col-lg-12\">";
-	            $breadcrumb.="\n\t\t\t<ol class=\"$this->cssBreadcrumb\">";
-					
-	            foreach($this->opcionesBreadCrumb as $campo => $valor){
-	            	
-	          
-	                $breadcrumb.="\n\t\t\t<li>";
-					if(isset($selector))
-						$breadcrumb.="\n\t\t\t\t<a href=\"$valor[enlace]\">";
-	                    $breadcrumb.="\n\t\t\t\t\t<span data-id=\"$valor[enlace]\">$valor[nombreLink]</span>";
-	                if(isset($selector))
-						$breadcrumb.="\n\t\t\t\t</a>";
-					    $breadcrumb.="\n\t\t\t</li>\n";     
-	            }
-	            $breadcrumb.="\n\t\t\t</ol>\n\t\t</div>\n</section>";
-	            return $breadcrumb;
-			}
+                if(array_key_exists("selector",$this->opcionesBreadCrumb)){
+                    $selector = $this->opcionesBreadCrumb['selector'];
+                    unset($this->opcionesBreadCrumb['selector']);
+                }
+                $breadcrumb="\n<section class=\"row\">";
+                $breadcrumb.="\n\t\t<div class=\"col-lg-12\">";
+                $breadcrumb.="\n\t\t\t<ol class=\"$this->cssBreadcrumb\">";
+                    
+                foreach($this->opcionesBreadCrumb as $campo => $valor){
+                    
+              
+                    $breadcrumb.="\n\t\t\t<li>";
+                    if(isset($selector))
+                        $breadcrumb.="\n\t\t\t\t<a href=\"$valor[enlace]\">";
+                        $breadcrumb.="\n\t\t\t\t\t<span data-id=\"$valor[enlace]\">$valor[nombreLink]</span>";
+                    if(isset($selector))
+                        $breadcrumb.="\n\t\t\t\t</a>";
+                        $breadcrumb.="\n\t\t\t</li>\n";     
+                }
+                $breadcrumb.="\n\t\t\t</ol>\n\t\t</div>\n</section>";
+                return $breadcrumb;
+            }//fin if
     }//final funcion
     
 }//final clase

@@ -143,6 +143,15 @@ class MenuHTML extends DBContainer{
                     $cssli =end($cssMenu['li']);
                     
                 }
+            $icono="";
+             if(!empty($opcion['icono'])):
+                
+                if($opcion['selector_icono']==2){
+                    $icono = Selector::crear("img",array('src'=>$opcion['icono']));
+                }else{
+                    $icono = Selector::crear("span",array('class'=>$opcion['icono']));
+                }
+            endif;
                 if($opcion['hijo']==1){
                     $submenu=""; 
                     $submenu = $this->armarMenuRecursivoHijos($opciones,$cssMenu,$opcion['id_opcion']);
@@ -151,18 +160,18 @@ class MenuHTML extends DBContainer{
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
                             $this->tagAdicionalLIpadre['atributos']=array();
                         endif;
-                        $opc = CampoHTML::crearSelectorHTMLSimple($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$opcion['nombre_opcion'],3,true);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$opcion['nombre_opcion'],3,true);
                     }else{
                         $opc = $opcion['nombre_opcion'];
                     }
-                    $listaMenu.=CampoHTML::crearSelectorHTMLSimple("li",array("class"=>$cssli),$opc.$submenu,2,true);
+                    $listaMenu.=Selector::crear("li",array("class"=>$cssli),$icono.$opc.$submenu,2,true);
                 }else{
                     
-                    //$span = CampoHTML::crearSelectorHTMLSimple("span",array(),$opcion['nombre_opcion'],4);
+                    //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
                     $span =$opcion['nombre_opcion'];
                     
-                    $enlace = CampoHTML::crearSelectorHTMLSimple("a",array('href'=>$opcion['url_opcion']),$span,3);
-                    $listaMenu.=CampoHTML::crearSelectorHTMLSimple("li",array('class'=>$cssli),$enlace,2,true);
+                    $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$span,3);
+                    $listaMenu.=Selector::crear("li",array('class'=>$cssli),$icono.$enlace,2,true);
                 }
                 
             }else{
@@ -171,7 +180,7 @@ class MenuHTML extends DBContainer{
                 
             }
         }//fin foreach
-        $listaMenu= CampoHTML::crearSelectorHTMLSimple("ul",array("class"=>"$cssUl"),$listaMenu,1,true);
+        $listaMenu= Selector::crear("ul",array("class"=>"$cssUl"),$listaMenu,1,true);
         //$listaMenu.="\n\t\t</ul>";
         return $listaMenu;
     }
@@ -190,31 +199,42 @@ class MenuHTML extends DBContainer{
         }
         $listaMenu="";
         foreach ($opciones as $key => $subopcion) {
-             if(in_array($nivel, $config['ul'])){
+            if(in_array($nivel, $config['ul'])){
                 $cssli['class'] = $config['li'][$nivel];
             }else{
                 $cssli['class'] ="";
                 
             }
+            $icono="";
+            if(!empty($subopcion['icono'])):
+           
+                if($subopcion['selector_icono']==2){
+                    $icono = Selector::crear("img",array('src'=>$subopcion['icono']));
+                }else{
+                    $icono = Selector::crear("class",array('src'=>$subopcion['icono']));
+                }
+            endif;
             if($subopcion['padre']==$padre){
                 if($subopcion['hijo']==1){
                     
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
                     if(is_array($this->tagAdicionalLIpadre)){
-                        $opc = CampoHTML::crearSelectorHTMLSimple($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
                     }else{
                         $opc = $subopcion['nombre_opcion'];
-                    }
-                    $listaMenu .= CampoHTML::crearSelectorHTMLSimple("li",$cssli,$opc.$submenus,$nivel+1);
+                    }    
+                    $listaMenu .= Selector::crear("li",$cssli,$icono.$opc.$submenus,$nivel+1);
                 }else{
                     $span = $subopcion['nombre_opcion'];
-                    $enlace = CampoHTML::crearSelectorHTMLSimple("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);
-                    $listaMenu.=CampoHTML::crearSelectorHTMLSimple("li",$cssli,$enlace,$nivel+2,true);   
+                    $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);
+                    $listaMenu.=Selector::crear("li",$cssli,$icono.$enlace,$nivel+2,true);   
                 }
+              
+                
             }
             
         }//fin foreach
-        $submenu=CampoHTML::crearSelectorHTMLSimple("ul",$cssUl,$listaMenu,$this->identacion,true);
+        $submenu=Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true);
         return $submenu;
     }
 }

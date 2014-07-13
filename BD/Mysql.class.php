@@ -84,7 +84,7 @@ class Mysql extends ConexionBD{
       * Ejecuta una consulta a base de datos
       * 
       * @param $query Consulta SQL a ejecutar
-      * @param $tipoQuery [Opcional] Indica si es un query unico o una consulta multiple, 
+      * @param $tipoQuery Indica si es un query unico o una consulta multiple, 
       * por defecto es 1 
       * En caso de ser una consulta multiple no se devuelve el total de registros
       * 

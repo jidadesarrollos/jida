@@ -50,8 +50,16 @@ class OpcionMenu extends DBContainer {
     var $id_estatus;
     var $orden;
 	/**
-     * Arreglo de opciones de un menu
+     * Icono para agregar al menu
+     * @var $icono_span
      */
+    var $icono;
+    /**
+     * Define el selector del icono agregado a la opción del menú.
+     * @var $selector_icono;
+     */
+    var $selector_icono;
+    
 	/**
 	 * Funcion constructora de opción menu
      
