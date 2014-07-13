@@ -5,7 +5,7 @@
  * 
  * 
  */
-class JAdminController extends controller{
+class JadminController extends Controller{
     /**
      * objeto modelo jidaControl
      * @access private

@@ -11,7 +11,7 @@
  
  
  
-class Selector extends DBContainer{
+class Selector{
      /**
       * Define el selector a crear
       * @var $selector
@@ -94,6 +94,36 @@ class Selector extends DBContainer{
             }
                  
         }
+    }
+      /**
+     * Crea Un boton Input
+     *
+     * El valor por defecto es un submit, permite modificar los atributos
+     * del control a crear por medio de un arreglo asociativo con los
+     * datos que se desean.
+     *
+     * @param string $value
+     *          Va a ser el valor mostrado en el "value" del boton
+     * @param array $valores
+     *          arreglo de atributos personalizados.
+     *          
+     */
+    public static function crearInput($value, $valores = "") {
+        $valoresXDefecto = array (
+            'type' => 'submit',
+            'name' => "btn" . ucwords ( str_replace ( " ", "", $value ) ),
+            'id' => "btn" . ucwords ( str_replace ( " ", "", $value ) ),
+            'value' => $value 
+        );
+        $arrAtributos = (is_array ( $valores )) ? array_merge ( $valoresXDefecto, $valores ) : $valoresXDefecto;
+        
+        $control = "<input";
+        foreach ( $arrAtributos as $atributo => $valorAtributo ) {
+            $control .= " $atributo=\"$valorAtributo\"";
+        }
+        $control .= ">";
+        
+        return $control;
     }
     
 }

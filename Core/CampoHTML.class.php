@@ -540,6 +540,7 @@ class CampoHTML extends DBContainer {
      *          Va a ser el valor mostrado en el "value" del boton
      * @param array $valores
      *          arreglo de atributos personalizados.
+     * @deprecated @see Selector::crearInput
      *          
      */
     public static function crearBoton($value, $valores = "") {

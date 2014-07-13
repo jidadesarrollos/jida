@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Clase manejadora de Formularios dinamicos en HTML
  *
@@ -150,7 +151,7 @@ class Formulario extends DBContainer {
      * 
      * @var string $estiloErrorCampo
      */
-    var $estiloErrorCampo = "error-formcampo";
+    var $cssDivErrorCampo = "error-formcampo";
     private $tablaCampos = "s_campos_f";
     /**
      * Hace referencia al valor de busqueda del formulario, puede ser un
@@ -204,7 +205,16 @@ class Formulario extends DBContainer {
      * @var boolean  $botonGuardado  
      */
     var $botonGuardado = TRUE;
-        /**
+    
+    
+    /**
+     * Permite definir multiples botones a mostrar en el formulario, se encuentra en FALSe por defecto
+     * 
+     * @var array $botonesMultiples
+     * 
+     */
+     var $botonesMultiples=FALSE;
+     /**
      * Define si el boton del formulario tiene una funcion onclick asociada
      */
     var $funcionOnclick;
@@ -212,7 +222,7 @@ class Formulario extends DBContainer {
      * Estilo del Botón del formulario
      * @var string $classBotonForm
      */
-    var $classBotonForm = "btn btn-primary";
+    var $classBotonForm = "pull-right btn btn-primary";
     /**
      * String a Imprimir en el boton del Formulario
      * @var string $valueBotonForm
@@ -243,6 +253,27 @@ class Formulario extends DBContainer {
      * @var boolean $validacionForm
      */
      var $validacionForm=TRUE;
+     
+     /**
+      * Determina si se deben tildar los campos obligatorios
+      * @var boolean $mostrarCamposObligatorios 
+      */
+     private $mostrarCamposObligatorios=TRUE;
+     /**
+      * Selector usado para tildar los campos obligatorios
+      * @var string $selectorCampoObligatorio
+      */
+     private $selectorCampoObligatorio="span";
+     /**
+      * Clase css para el $selectorCampoObligatorio 
+      * @var string $cssCampoObligatorio
+      */
+     private $cssCampoObligatorio="control-obligatorio";
+     /**
+      * Contenido HTML del selector $selectorCampoObligatorio
+      * @var $htmlSelectorCampoObligatorio;
+      */
+     private $htmlSelectorCampoObligatorio="*";
     /**
      * Funcion constructora del formulario
      *
@@ -390,9 +421,7 @@ class Formulario extends DBContainer {
         }
 
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
-        $formulario .= "\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
-        $formulario.="\n\t\t\t\t<input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\" name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\">";
-        $formulario.="\n\t\t\t</div>\n\t\t</div>\n\t</form>";
+        $formulario.=$this->crearBotonesFormulario();
         return $formulario;
     }
     
@@ -526,12 +555,11 @@ class Formulario extends DBContainer {
         }else{
             $dataUpdate="";    
         }
-        
         $vuelta = 0;
         $javascript = "";
          
         if ($this->tipoF == 2) {
-            //echo "aqui";
+            
             $dataUpdate = $this->obtenerValuesForUpdate($this->id_form );
         }
        
@@ -546,19 +574,30 @@ class Formulario extends DBContainer {
             $controlHTML = new CampoHTML ( $arr, $dataUpdate, $this->externo );
             // i es agregado un query a la clase formulario es pasado a la clase campo en el momento de creacion del control.
             
-            $control = $controlHTML->crearControl ();
+            $control = $controlHTML->crearControl();
+            
+            $validaciones = json_decode("{".$arr['eventos']."}",true);
             
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
-                $control .= "<DIV class=\"$this->estiloErrorCampo\">" . $this->errores [$arr ['name']] . "</div>";
+                $contorl.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
             }
             
             $formulario [$arr ['name']] = array (
                     "control" => $control 
             );
+            /*Se intenta colocar el label si el tipo de control!=hidden*/
             if ($arr ['control'] != 1) {
-                $label = "<label for=\"$arr[name]\">$arr[label]</label>";
-                $formulario [$arr ['name']] ['label'] = $label;
+                $label = Selector::crear('label',array('for'=>$arr['name']),$arr['label']);
+                if($this->mostrarCamposObligatorios===TRUE){
+                    if(is_array($validaciones) and array_key_exists('obligatorio', $validaciones)):
+                        $tildeObligatorio = Selector::crear($this->selectorCampoObligatorio,array('class'=>$this->cssCampoObligatorio),$this->htmlSelectorCampoObligatorio);
+                        $label=$label.$tildeObligatorio;                                
+                    endif;
+                }
+                    
+                
+                $formulario [$arr ['name']] ['label'] =$label;
             }
         }
         
@@ -595,9 +634,6 @@ class Formulario extends DBContainer {
         $dataCampos=array_merge($dataCampos,$this->dataPost);
         
         $this->valoresUpdate=$dataCampos;
-        
-        #$dataCampos = $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($query));
-        
         return $dataCampos;
     }
     
@@ -689,17 +725,8 @@ class Formulario extends DBContainer {
         $formulario="";
         if($this->validacionForm===TRUE){
             $formulario .= $validacion;    
-        }else{
-            
         }
-        
-        /**
-         * Se valida q se incluya el boton de guardado, caso contrario el formulario debe ser encapsulado en el tag <form> en la vista
-         */
-        if($this->botonGuardado===TRUE){
-            $formulario.="<form name=\"$this->nameTagForm\" method=\"$this->metodo\"  enctype=\"$this->enctype\" action=\"$this->action\" id=\"$this->idTagForm\" class=\"$this->cssTagForm\" role=\"form\">";
-        }
-        
+                
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
             $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
@@ -751,8 +778,7 @@ class Formulario extends DBContainer {
                      * Se calcula el numero de layout para la columna, la misma
                      * no puede ser superior a 12 (Basado en bootstrap3)
                      */
-                    $col = (12/(int)$columnas);
-                     
+                    $col = (12/(int)$columnas); 
                     $formulario.="\n\t\t\t<div class=\"col-lg-$col\">\n\t\t\t\t<div class=\"form-group\">";
                     if(isset($form[$formKeys[$contador]]['label']) and $label===TRUE){
                         $formulario.="\n\t\t\t\t".$form[$formKeys[$contador]]['label'];
@@ -777,9 +803,6 @@ class Formulario extends DBContainer {
                         $totalCamposInFieldset = 0;
                         $camposInFieldset=0;
                         $formulario.="\n\n\t\t</fieldset>\n\t</div>\n</div>";
-                    }else{
-                    #   echo "$camposInFieldset == $limiteCampos<hr>";
-                    #   $camposInFieldset++;
                     }
                 }   
             }
@@ -787,13 +810,44 @@ class Formulario extends DBContainer {
             
         }
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
-        $formulario .= "<div class=\"row\">";
+        if($this->botonGuardado or $this->botonesMultiples){
+            $formulario.=$this->crearBotonesFormulario();
+            $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class',$this->cssTagForm,'role'=>'form');
+            $formulario=Selector::crear('form',$attrForm,$formulario);
+        }
+
+        return $formulario;
+    }
+
+    /**
+     * Genera el o los botones del formulario
+     * @method crearBotonesFormulario
+     * 
+     */
+    private function crearBotonesFormulario(){
+        $botones="";
+        if(is_array($this->botonesMultiples)){
+            
+            foreach(array_reverse($this->botonesMultiples) as $key => $valores):
+                if(!is_array($valores)){$key=$valores;$valores=array();}
+                 $valoresXDefecto = array (  'type' => 'submit',);
+                 $arrAtributos = (is_array ( $valores )) ? array_merge ( $valoresXDefecto, $valores ) : $valoresXDefecto;
+                if(!array_key_exists('class', $arrAtributos)) 
+                    $arrAtributos['class']= $this->classBotonForm;
+                $botones.=Selector::crearInput($key,$arrAtributos);
+            endforeach;
+        }else
         if($this->botonGuardado===TRUE){
-            $formulario.="<div class=\"col-md-12\"><input $onclick type=\"$this->tipoBoton\" class=\"$this->classBotonForm pull-right\" name=\"$this->nombreSubmit\" value=\"$this->valueBotonForm\" id=\"$this->idBotonForm\"></div></form>";    
+            $atributosInput=array('class'=>$this->classBotonForm,'type'=>$this->tipoBoton,'name'=>$this->nombreSubmit,'id'=>$this->idBotonForm);
+            if(!empty($this->funcionOnclick))$atributosInput['onclick']=$this->funcionOnclick;
+            $btn = Selector::crearInput($this->valueBotonForm,$atributosInput);
+            $botones=Selector::crear('section',array('class'=>'row'),Selector::crear('div',array('class'=>'col-md-12 col-xs-12'),$btn));
+            
+            
         }
         
-        $formulario.="</div>";
-        return $formulario;
+            
+        return $botones;
     }
     function setParametrosFormulario($configuracion){
         $this->establecerAtributos($configuracion, __CLASS__);
