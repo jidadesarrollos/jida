@@ -32,5 +32,10 @@ class RedSocial{
         ';
         return $metaTags;
     }
+    
+    
+    static function fbPost(){
+        
+    }
 }
 ?>
