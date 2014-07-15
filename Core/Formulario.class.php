@@ -580,7 +580,8 @@ class Formulario extends DBContainer {
             
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
-                $contorl.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
+                
+                $control.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
             }
             
             $formulario [$arr ['name']] = array (
@@ -640,12 +641,11 @@ class Formulario extends DBContainer {
     /**
      * Valida un formulario.
      */
-   public function validarFormulario(&$datos="") {
+   /**
+     * Valida un formulario.
+     */
+    public function validarFormulario(&$datos="") {
         Session::destroy ( '__erroresForm' );
-//         if (! isset ( $datos ['readonly'] ))
-//             $datos ['readonly'] = FALSE;
-//         if (! isset ( $datos ['disable'] ))
-//             $datos ['disable'] = FALSE;
         if(empty($datos)){
             $datos =& $_POST;
         }
@@ -655,7 +655,7 @@ class Formulario extends DBContainer {
         
         foreach ( $this->camposFormulario as $key => $campo ) {
             
-            if(isset($datos[$campo['name']]) && !is_array($datos[$campo['name']])){
+            if(isset($campo['name']) and array_key_exists($campo['name'], $datos) and !is_array($datos[$campo['name']])){
                 $datos[$campo['name']] = trim($datos[$campo['name']]);
             }
             
@@ -669,23 +669,27 @@ class Formulario extends DBContainer {
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
                     
-                    if ($resultadoValidacion !== true) {
-                        $arrErrores [$campo ['name']] = $resultadoValidacion;
-                    }elseif($resultadoValidacion===true){
+                    if ($resultadoValidacion['validacion'] !== true) {
+                        $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
+                    }elseif($resultadoValidacion['validacion']===true){
                         
                         //Se connvierten los datos especiales del post
-                        $datos[$campo['name']]= htmlspecialchars($valorCampo);
+                        if(!is_array($resultadoValidacion['campo'])){
+                            $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);    
+                        }else{
+                            $datos[$campo['name']]= $resultadoValidacion['campo'];
+                        }
+                        
                     }
                 } else {
-                    // cho "<hr>$datos[eventos] ------------ $campo[name] No funciona.<hr>";
+                    
                 }
             }else{
-                if($this->htmlSpecialChars===TRUE){
-                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);   
+                if(!is_array($valorCampo)){
+                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
                 }else{
-                    $datos[$campo['name']]= $valorCampo;
+                     $datos[$campo['name']]= $valorCampo;
                 }
-                
             }
         }
         

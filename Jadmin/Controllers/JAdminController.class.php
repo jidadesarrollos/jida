@@ -55,11 +55,11 @@ class JadminController extends Controller{
                         Session::set('__idVista','formularios');
                         redireccionar('/jadmin/forms/');
                     }
-                    Arrays::mostrarArray($checkUser);
+                    
                       
                 }else{
                     Session::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
-                    Arrays::mostrarArray($validacion);
+                    
                 }
             }//fin validación post
             

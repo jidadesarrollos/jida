@@ -810,6 +810,7 @@ class Vista extends DBContainer{
               $seccionBusqueda.="
                 
                  <section id=\"seccionBusqueda".$this->nombreVistaSinEspacios."\" class=\"$this->cssSectionBusqueda\">
+<<<<<<< HEAD
                     <div class=\"$this->cssDivBusqueda\">
                       <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
                           <div class=\"form-group\">
@@ -823,6 +824,23 @@ class Vista extends DBContainer{
                           </div>
                       </form>
                     </div>
+=======
+                    <article class=\"$this->cssColBusqueda\">
+                        <div class=\"$this->cssDivBusqueda\">
+                          <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
+                              <div class=\"form-group\">
+                                  <input type=\"text\" name=\"$this->nombreInputTextBusqueda\" id=\"$this->nombreInputTextBusqueda\" class=\"$this->cssInputTextBusqueda\">
+                                  <button 
+                                    type=\"$this->typeBotonBusqueda\" 
+                                    name=\"$this->nombreBotonBusqueda\" id=\"$this->nombreBotonBusqueda\" value=\"$this->valueBotonBusqueda\" 
+                                    class=\"$this->cssBotonBusqueda\" data-jvista=\"busqueda\">
+                                    $this->htmlButtonBusqueda
+                                   </button>
+                              </div>
+                          </form>
+                        </div>
+                    </article>
+>>>>>>> 34cd0f7f25eb4beb9ae94a3d183a38bc9fc66fae
                  </section>
                 
               ";

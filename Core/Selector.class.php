@@ -44,6 +44,7 @@ class Selector{
             }    
         }
         if(!in_array($selector,array('img','hr','br'))){
+            
             $selectorHTML .= ">$content";
             $selectorHTML .= "</$selector>";    
         }else{
