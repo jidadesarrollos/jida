@@ -108,6 +108,8 @@ class Formulario extends DBContainer {
     public $funcionAfterValidadorJida="";
     // Propiedades del formulario
     private $nameTagForm;
+    
+    public $targetForm="";
     private $idTagForm;
     private $metodo = "POST";
     /**
@@ -384,8 +386,9 @@ class Formulario extends DBContainer {
         if (isset ( $camposForm ['validacion'] )) {
             $validacion = $camposForm ['validacion'];
         }
-        $formulario = $validacion . "<form name=\"$this->nameTagForm\" method=\"$this->metodo\"  enctype=\"$this->enctype\" action=\"$this->action\" id=\"$this->idTagForm\" class=\"$this->cssTagForm\" role=\"form\">
-        ";
+        #$formulario = $validacion . "<form name=\"$this->nameTagForm\" method=\"$this->metodo\"  enctype=\"$this->enctype\" action=\"$this->action\" id=\"$this->idTagForm\" class=\"$this->cssTagForm\" role=\"form\">
+        $formulario=$validacion;
+        #";
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
             $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
@@ -422,7 +425,10 @@ class Formulario extends DBContainer {
 
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario.=$this->crearBotonesFormulario();
-        return $formulario;
+        $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class'=>$this->cssTagForm,'role'=>'form','target'=>$this->targetForm);
+        $form = Selector::crear('form',$attrForm,$formulario);
+        
+        return $form;
     }
     
     /**
@@ -580,7 +586,7 @@ class Formulario extends DBContainer {
             
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
-                $contorl.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
+                $control.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
             }
             
             $formulario [$arr ['name']] = array (
@@ -812,7 +818,7 @@ class Formulario extends DBContainer {
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         if($this->botonGuardado or $this->botonesMultiples){
             $formulario.=$this->crearBotonesFormulario();
-            $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class',$this->cssTagForm,'role'=>'form');
+            $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class'=>$this->cssTagForm,'role'=>'form','target'=>$this->targetForm);
             $formulario=Selector::crear('form',$attrForm,$formulario);
         }
 

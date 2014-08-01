@@ -93,16 +93,9 @@ class Mensajes {
     /**
      * Imprime un mensaje si existe
      */
-    static function imprimirMensaje($msj=""){
-        if(empty($msj)){
-            if(isset($_SESSION['__msj'])){
-                $msj = $_SESSION['__msj']; 
-            }else{
-                $msj="";
-            }
-        }
-        
-        echo $msj;
+    static function imprimirMensaje($msj="__msj"){
+                
+        self::imprimirMsjSesion($msj);
     }
     /**
      * Imprime el mensaje guardado en una variable de sesión y luego es destruida la variable

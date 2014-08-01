@@ -162,7 +162,20 @@ class ValidadorJida {
            throw new Exception("Se llama a una expresion $nombreValidacion, la cual se encuentra indefinida", 1);
             
         }
-        if (preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $this -> valorCampo)) {
+        
+        if(is_array($this -> valorCampo)){
+            $band = TRUE;
+            foreach ($this->valorCampo as $key => $value) {
+                $result=preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $value);
+                if($result!=1){
+                    $band=FALSE;
+                }
+            }
+            $resultValidacion=($band===TRUE)?TRUE:FALSE;
+        }else{
+            $resultValidacion=(preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $this -> valorCampo))?TRUE:FALSE;
+        }
+        if ($resultValidacion===TRUE) {
             /**
              * En caso de que sea decimal o numerico se reemplaza el valor formateado por el requerido 
              * para el registro en base de datos
