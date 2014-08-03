@@ -21,25 +21,24 @@
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
                  
-
-        <script src="/htdocs/js/jq2.0.3.js"></script>
-        <script src="/htdocs/js/jqui1.10.3.js"></script>
-        <script src="/htdocs/js/bootstrap.min.js"></script>
-        <script src="/htdocs/js/objetoAjax.js"></script>
-        <script src="/htdocs/js/validadorJida.js"></script>
-        <script src="/htdocs/js/jidaPlugs.js"></script>
-        <script src="/htdocs/js/jidaControlCampos.js"></script>
+        <!--libs-->
+        <script src="/htdocs/js/libs/jq2.0.3.js"></script>
+        <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
+        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
+        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
+        <script src="/htdocs/js/libs/ajaxupload.js"></script>
+        <!--jidalibs-->
+        <script src="/htdocs/js/jida/objetoAjax.js"></script>
+        <script src="/htdocs/js/jida/validadorJida.js"></script>
+        <script src="/htdocs/js/jida/jidaPlugs.js"></script>
+        <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
+        <!--custom files-->
         <script src="/htdocs/js/funcionesGenerales.js"></script>
-        <script src="/htdocs/js/bootstrap.min.js"></script>
-        <script src="/htdocs/js/ajaxupload.js"></script>    
-
         <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     </head>
 
     <body>

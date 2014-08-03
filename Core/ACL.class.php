@@ -67,38 +67,34 @@ class ACL extends DBContainer{
      * @method obtenerAccesoComponentes
      */
     private function obtenerAccesoComponentes(){
-       # try{
-            $query = "select id_componente,componente from v_acceso_componentes where clave_perfil in (";
-            $i=0;
+       
+        $query = "select id_componente,componente from v_acceso_componentes where clave_perfil in (";
+        $i=0;
+        
+        foreach ($this->perfiles as $key => $value) {
+            ($i==0)?$i++:$query.=",";
+            $query.="'$value'";
             
-            foreach ($this->perfiles as $key => $value) {
-                ($i==0)?$i++:$query.=",";
-                $query.="'$value'";
-                
-            }
-            
-            $query.=") group by componente;";
-            
-            
-            $result = $this->bd->ejecutarQuery($query);
-            $componentes = array();
-            $access = array();
-            while($data = $this->bd->obtenerArrayAsociativo($result)){
-                $access[$data['componente']] =array(); 
-                $componentes[$data['id_componente']] = array(
-                                                              'componente'=>$data['componente']  
-             
-                                                            );           
-            }
-            
-            //EL componente PRINCIPAL siempre es visible;
-            $componentes[1]=array('componente'=>'principal');
-            $this->componentes = $componentes;
-            $this->acl = $access;
-            
-        // }catch(Exception $e){
-            // Excepcion::controlExcepcion($e);
-        // } 
+        }
+        
+        $query.=") group by componente;";
+        
+        #echo $query."<hr>";exit;
+        $result = $this->bd->ejecutarQuery($query);
+        $componentes = array();
+        $access = array();
+        while($data = $this->bd->obtenerArrayAsociativo($result)){
+            $access[$data['componente']] =array(); 
+            $componentes[$data['id_componente']] = array(
+                                                          'componente'=>$data['componente']  
+         
+                                                        );           
+        }
+        
+        //EL componente PRINCIPAL siempre es visible;
+        $componentes[1]=array('componente'=>'principal');
+        $this->componentes = $componentes;
+        $this->acl = $access;
     }
     
     /**
@@ -111,54 +107,49 @@ class ACL extends DBContainer{
      * @access private 
      */
     private function obtenerAccesoObjetos(){
-        // try{
-            #if(Session::get('id_acl')!=Session::getIdSession()){
-            if(!isset($_SESSION['acl'])){
+        Session::destroy('acl');
+        if(!isset($_SESSION['acl'])){
+            
+            $perfiles ="";
+             $i=0;
+            foreach ($this->perfiles as $key => $value) {
+                ($i==0)?$i++:$perfiles.=",";
+                $perfiles.="'$value'";
                 
-                $perfiles ="";
-                 $i=0;
-                foreach ($this->perfiles as $key => $value) {
-                    ($i==0)?$i++:$perfiles.=",";
-                    $perfiles.="'$value'";
-                    
-                }
-                $query = sprintf("select * from v_acceso_objetos where id_componente in(%s)
-                                and clave_perfil in (%s)
-                                ",
-                                    implode(",",array_keys($this->componentes)),
-                                    $perfiles
-                                    );
+            }
+            $query = sprintf("select * from v_acceso_objetos where id_componente in(%s)
+                            and clave_perfil in (%s)
+                            ",
+                                implode(",",array_keys($this->componentes)),
+                                $perfiles
+                                );
+            
+            $objetos = $this->bd->obtenerDataCompleta($query);
+            $accesoObjetos=array();
+            $accesoMetodos = $this->obtenerAccesoMetodos();
+            
+            foreach($objetos as $key =>$dataObjeto){
                 
-                $objetos = $this->bd->obtenerDataCompleta($query);
-                $accesoObjetos=array();
-                $accesoMetodos = $this->obtenerAccesoMetodos();
+                $componente = $this->componentes[$dataObjeto['id_componente']]['componente'];
+                $perfil = $dataObjeto['clave_perfil'];
                 
-                foreach($objetos as $key =>$dataObjeto){
-                    
-                    $componente = $this->componentes[$dataObjeto['id_componente']]['componente'];
-                    $perfil = $dataObjeto['clave_perfil'];
-                    
-                    $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
-                    
-                    $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
-                    foreach ($accesoMetodos as $key => $dataMetodo) {
-                        if($dataMetodo['objeto']==$dataObjeto['objeto'] and $dataObjeto['clave_perfil']==$dataMetodo['clave_perfil']){
-                                
-                            $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
-                            $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
-                        }
+                $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
+                
+                $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
+                foreach ($accesoMetodos as $key => $dataMetodo) {
+                    if($dataMetodo['objeto']==$dataObjeto['objeto'] and $dataObjeto['clave_perfil']==$dataMetodo['clave_perfil']){
+                            
+                        $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
+                        $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
                     }
                 }
-                /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
-                
-                Session::set('acl',$this->acl);
-                $this->accesos  =  $accesoObjetos;
-                
-            }//fin validacion existencia
+            }
+            /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
-        // }catch(Exception $e){
-            // Excepcion::controlExcepcion($e);
-        // }
+            Session::set('acl',$this->acl);
+            $this->accesos  =  $accesoObjetos;
+            
+        }//fin validacion existencia
         
     }
     
@@ -171,14 +162,9 @@ class ACL extends DBContainer{
      */
     
     private function obtenerAccesoMetodos(){
-         // try{
-            $query ="select * from v_acceso_metodos";
-            $accesoMetodos = $this->bd->obtenerDataCompleta($query);
-            return $accesoMetodos;
-             //Arrays::mostrarArray($accesoMetodos);
-         // }catch(Exception $e){
-             // Excepcion::controlExcepcion($e);
-         // }
+        $query ="select * from v_acceso_metodos";
+        $accesoMetodos = $this->bd->obtenerDataCompleta($query);
+        return $accesoMetodos;
     }
     /**
      * Verifica si el perfil tiene acceso a la url requerida
@@ -193,24 +179,22 @@ class ACL extends DBContainer{
      * @return boolean TRUE or FALSE
      */
     function validarAcceso($controlador,$metodo,$componente=""){
-        
-        // $user = Session::get('usuario');
-        // $perfilesUser = $perfilesUser['perfiles'];
+                    
         $perfilesUser = $this->perfiles;
-        //Arrays::mostrarArray($perfilesUser);
         if(empty($componente)){
             $componente = "principal";
         }
-        
         $listaAcl  = Session::get('acl');
-        #Arrays::mostrarArray($listaAcl);
+        
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
-         //Arrays::mostrarArray($listaAcl);
+         
         #while($acceso == FALSE and $i<count($perfilesUser)){
             
             $perfil = $perfilesUser[$i];
+                // echo "$componente<hr>";
+                 #Arrays::mostrarArray($listaAcl);
                 if(isset($listaAcl[$componente])){
                     $arrComponentes = $listaAcl[$componente];
                     
@@ -218,6 +202,7 @@ class ACL extends DBContainer{
                      //   echo "acceso a todo el componente<hr>";
                         $acceso=TRUE;
                     }else{
+                        
                         #echo "acceso al componente<hr>";
                         $arrObjetos =$arrComponentes['objetos'];
                                 

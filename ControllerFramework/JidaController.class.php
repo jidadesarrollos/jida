@@ -42,6 +42,10 @@
      */
     private $modulo="";
     /**
+     * Nombre del subdominio en uso si existe;
+     */
+    private $subdominio;
+    /**
      * Arreglo de modulos existentes
      * 
      * El arreglo se obtiene por medio de la funcion obtenerModulos, la cual debe
@@ -59,6 +63,7 @@
                 
             }
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
+			
             $_SESSION['urlActual'] = $_GET['url'];
              
             if(isset($_GET['url'])){
@@ -72,11 +77,27 @@
 			 */
             $GLOBALS['arrayParametros'] = $url;
             $this->controlador = $this->validarNombre(array_shift($url),1);
+            $this->checkSubdominio();
             
             if(in_array($this->controlador,$this->modulosExistentes)){
                 $this->modulo = $this->controlador;
                 $this->controlador = $this->validarNombre(array_shift($url),1);
                 
+            }else
+            /**
+             * En caso de existir un subdominio, con el nombre igual a un modulo desarrollado, se accederá 
+             * directamente al módulo
+             */
+            
+            
+            if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+                
+                $this->modulo=$this->validarNombre($this->subdominio,1);
+                //Si se está accediendo a un modulo por medio de un subdominio, el controlador por
+                //defecto debe tener el mismo nombre que el modulo
+                if($this->controlador=='Index'){
+                    $this->controlador=$this->validarNombre($this->subdominio,1);
+                }
             }
              
             $this->metodo = $this->validarNombre(array_shift($url),2);
@@ -107,6 +128,24 @@
         }
             
     }//fin constructor
+    
+    /**
+     * Verifica si se encuentra un modulo definido para un subdominio de la aplicación
+     * @method checkModulo
+     * @access private
+     * 
+     */
+    private function checkSubdominio(){
+        
+        $divisionUrlArray = explode('.', $_SERVER['SERVER_NAME']);
+        if(count($divisionUrlArray)>0){
+            $this->subdominio = $divisionUrlArray[0];    
+        }else{
+            $this->subdominio="";
+        }
+        
+        
+    }
     
     
     private function validarExistenciaController(){
@@ -144,9 +183,6 @@
 			
 			$_GET = $gets;
 			
-			
-            
-            
         }catch(Exception $e){
             Excepcion::controlExcepcion($e);
         }
@@ -272,7 +308,6 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
-                 
                  $this->vista->rutaPagina=3;
                  $this->controlador="Excepcion";
                  $controlador = $this->controlador."Controller";
