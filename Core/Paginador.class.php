@@ -131,7 +131,7 @@ class Paginador extends DBContainer{
         $this->obtenerConsultaPaginada();
     }//fin funcion constructora
     
-      /**
+    /**
      * Establece los atributos de una clase.
      * 
      * Valida si los valores pasados en el arreglo corresponden a los atributos de la clase en uso

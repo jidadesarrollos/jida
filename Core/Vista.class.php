@@ -9,7 +9,6 @@
  * 
  * @package Framework
  * @category JIDA
- //~ * 
  * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * @version 1.2  
  */
@@ -20,9 +19,25 @@ class Vista extends DBContainer{
     /**
      * Define consulta a la base de datos a partir de la cual
      * se generará la vista o grid
+     * @var $query
      */
     private $query;
-    
+    /**
+     * Filtro aplicado al query de la vista
+     * @var string $where
+     * 
+     */
+    var $where;
+    /**
+     * Limit aplicado al query de la vista
+     * @var $limit
+     */
+    var $limit;
+    /**
+     * Order by aplicado al query de la vista
+     * @var $order;
+     */
+    var $order;
     private $vista;
     private $titulos;
     private $resultQuery;
