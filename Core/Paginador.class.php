@@ -33,6 +33,16 @@ class Paginador extends DBContainer{
      */
     private $queryReal;
     /**
+     * Arreglo que contiene las distintas sentencias del query posibles
+     * <ul>
+     * <li>WHERE</li> 
+     * <li>ORDER</li> 
+     * <li>LIMIT</li> 
+     * <li>DISTINCT</li>
+     * @var array $sentenciasQuery; 
+     */
+    private $sentenciasQuery=array();
+    /**
      * Indica el registro inicial de la página actual
      * @var int $inicio
      */
@@ -115,18 +125,20 @@ class Paginador extends DBContainer{
 	 */
 	private $contenidoPrevBtn="&laquo";
     
-    function __construct($query,$arr=""){
+    function __construct($query,$arr="",$arrayConsulta=array()){
         
         $this->queryReal=$query;
         parent::__construct();
+        if(is_array($arrayConsulta)){
+            $this->sentenciasQuery=$arrayConsulta;
+        }
         if(!empty($this->queryReal)){
-        	
             if(is_array($arr)){
-            	
             	$this->establecerAtributos($arr, __CLASS__);
 				
         	}//fin if    
         }
+        $this->estructurarQuery();
         $this->inicializarPagina();
         $this->obtenerConsultaPaginada();
     }//fin funcion constructora
@@ -152,10 +164,23 @@ class Paginador extends DBContainer{
 
         }//final foreach
     }//final funcion establer atributos.
+    /**
+     * Arma la consulta sql a ejecutar
+     * @method estructurarQuery
+     */
+    private function estructurarQuery(){
+        if(array_key_exists('where',$this->sentenciasQuery)){
+            $this->queryReal.=" where ".$this->sentenciasQuery['query'];
+        }
+        if(array_key_exists('order',$this->sentenciasQuery)){
+            $this->queryReal.=" order by ".$this->sentenciasQuery['order'];
+        }
+    }
     
     function armarPaginador(){
         $seccionPaginador="";
           if($this->query!=""){
+            
             $result = $this->bd->ejecutarQuery($this->queryReal);
             $this->totalRegistros = $this->bd->totalRegistros;
 			$division=  $this->totalRegistros/$this->filasPorPagina;
@@ -193,11 +218,7 @@ class Paginador extends DBContainer{
 							$seccionPaginador.="<$selector>$this->contenidoPrevBtn</$selector>";
 							break;		
 					}
-					
-					
-					
 				}
-			
 			/**
 			 * Recorrido de las páginas
 			 */
@@ -212,8 +233,6 @@ class Paginador extends DBContainer{
 						$content = "href=\"$this->paginaConsulta?pagina=$i\"";
 						
 	            	}
-					
-						
 		                if($i==$this->paginaActual){
 		                    if($this->tipoPaginador=='lista'){
 		                        $seccionPaginador.="<li class=\"$this->cssPaginaActual\" id=\"linkPages$i\" >

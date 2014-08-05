@@ -23,21 +23,11 @@ class Vista extends DBContainer{
      */
     private $query;
     /**
-     * Filtro aplicado al query de la vista
-     * @var string $where
+     * Arreglo asociativo para almacenar sentencias adicionales para el query
+     * @var array $sentenciasQuery
      * 
      */
-    var $where;
-    /**
-     * Limit aplicado al query de la vista
-     * @var $limit
-     */
-    var $limit;
-    /**
-     * Order by aplicado al query de la vista
-     * @var $order;
-     */
-    var $order;
+    var $sentenciasQuery=array();
     private $vista;
     private $titulos;
     private $resultQuery;
@@ -384,7 +374,8 @@ class Vista extends DBContainer{
             #$paginador['paginaConsulta']=str_replace("/","", $_SERVER['REQUEST_URI']);
             $this->paginador['paginaConsulta']=$_SERVER['REQUEST_URI'];
             $this->paginador['selectorVista']=$this->idDivVista;
-            $this->paginador = new Paginador($this->query,$this->paginador);
+
+            $this->paginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
             $this->query=$this->paginador->query;
             
     }
@@ -746,74 +737,64 @@ class Vista extends DBContainer{
      */
     protected function procesarAccion($post){
         $vistaArmada="";
-        try{
-            if($post){
+    
+        if($post){
+            
+            if(isset($post['jvista'])){
                 
-                if(isset($post['jvista'])){
-                    
-                    switch($post['jvista']){
-                        case 'paginador':
+                switch($post['jvista']){
+                    case 'paginador':
+                        
+                        $vistaArmada = $this->crearVista();
                             
-                            $vistaArmada = $this->crearVista();
-                                
-                            break;
-                        case 'orden':
-                            $this->agregarOrderConsulta($post['numeroCampo'],$post['order']);
-                            #echo $this->query;exit;
-                            $vistaArmada=$this->crearVista();
-                            break;
-                        case 'busqueda':
-                            $vistaArmada = $this->buscadorVista($post[$this->nombreBotonBusqueda]);
-                    }
-                    respuestaAjax($vistaArmada);
-                }elseif(isset($post[$this->nombreBotonBusqueda])){
-                        $vistaArmada = $this->buscadorVista($post[$this->nombreInputTextBusqueda]);
-                        return $vistaArmada;
-                }else{
-                    $vistaArmada = $this->crearVista();
-                    
-                }//fin if
+                        break;
+                    case 'orden':
+                        $this->agregarOrderConsulta($post['numeroCampo'],$post['order']);
+                        #echo $this->query;exit;
+                        $vistaArmada=$this->crearVista();
+                        break;
+                    case 'busqueda':
+                        $vistaArmada = $this->buscadorVista($post[$this->nombreBotonBusqueda]);
+                }
+                respuestaAjax($vistaArmada);
+            }elseif(isset($post[$this->nombreBotonBusqueda])){
+                    $vistaArmada = $this->buscadorVista($post[$this->nombreInputTextBusqueda]);
+                    return $vistaArmada;
             }else{
+                $vistaArmada = $this->crearVista();
                 
-                throw new Exception("Debe existir un post para validar la accion de la vista", 1);
-                
-            }
-                
+            }//fin if
+        }else{
             
+            throw new Exception("Debe existir un post para validar la accion de la vista", 1);
             
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
         }
     }//fin funcion procesarAccion
     /**
      * Ajusta query de la vista para filtrar por la busqueda solicitada
      */
     private function buscadorVista($busqueda){
-        try{
-            $where = " where ";
-            if(is_array($this->camposBusqueda)){
-                if(count($this->camposBusqueda)>0){
-                    $i=0;
-                    foreach ($this->camposBusqueda as $key => $campo) {
-                        if($i>0)
-                            $where.=" or ";
-                        $where.=" $campo like '%$busqueda%' ";
-                        $i++;
-                    }
-                }else{
-                    throw new Exception("No se han definido campos de busqueda para la vista $this->nombreVista", 1);
-                    
+        
+        $where = " where ";
+        if(is_array($this->camposBusqueda)){
+            if(count($this->camposBusqueda)>0){
+                $i=0;
+                foreach ($this->camposBusqueda as $key => $campo) {
+                    if($i>0)
+                        $where.=" or ";
+                    $where.=" $campo like '%$busqueda%' ";
+                    $i++;
                 }
             }else{
-                throw new Exception("El atributo camposBusqueda no está definido como arreglo", 1);
+                throw new Exception("No se han definido campos de busqueda para la vista $this->nombreVista", 1);
                 
             }
-            $this->query = $this->query." ".$where;
-            return $this->crearVista(); 
-        
-        }catch(Exception $e){
-            procesarCatch($e->getMessage());
+        }else{
+            throw new Exception("El atributo camposBusqueda no está definido como arreglo", 1);
+            
         }
+        $this->query = $this->query." ".$where;
+        return $this->crearVista();
     }
     /**
      * Agrega sección de busqueda a la vista
@@ -849,12 +830,16 @@ class Vista extends DBContainer{
         
     }//fin seccionBusqueda
     /**
-     * Agrega un orden a la 
+     * Agrega un orden a la consulta de la vista
+     * @method agregarOrderConsulta
+     * @param int $numeroCampo Indice del campo por el cual  realizar el order
+     * @param int $orden 1 asc 2 desc
      */
     private function agregarOrderConsulta($numeroCampo,$orden){
         $orderBy =($orden==1)?"asc":"desc";
         $this->orderBy=($orden==1)?2:1;
-        $this->query=trim($this->query). " order by $numeroCampo $orderBy ";
+        $this->sentenciasQuery['order'] = " $numeroCampo $orderBy ";
+        
 
     }
     /**
