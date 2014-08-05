@@ -33,10 +33,17 @@ class FormsController extends Controller{
     }
     
     private function mostrarVistaForms(){
-        $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\", clave_primaria_f as \"Clave Primaria\",
-                    nombre_identificador as \"Identificador\" from s_formularios
-                    ";
         
+        if(isset($_GET['filter']) and $_GET['filter']=='jida'){
+        $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\", clave_primaria_f as \"Clave Primaria\",
+                    nombre_identificador as \"Identificador\" from s_formularios where id_form < 20 
+                    ";    
+        }else{
+            
+        $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\", clave_primaria_f as \"Clave Primaria\",
+                    nombre_identificador as \"Identificador\" from s_formularios where id_form >20
+                    ";    
+        }
         $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
         
         $vForms->acciones=array(

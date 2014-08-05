@@ -20,6 +20,7 @@
         <script src="/htdocs/js/libs/bootstrap.min.js"></script>
         <script src="/htdocs/js/libs/bootstrap.min.js"></script>
         <script src="/htdocs/js/libs/ajaxupload.js"></script>
+        <script src="/htdocs/js/libs/less.js"></script>
         <!--jidalibs-->
         <script src="/htdocs/js/jida/objetoAjax.js"></script>
         <script src="/htdocs/js/jida/validadorJida.js"></script>
@@ -35,8 +36,7 @@
         <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="stylesheet/less" type="text/css" href="/htdocs/css/adm.less">
     </head>
 
     <body class="full-container">

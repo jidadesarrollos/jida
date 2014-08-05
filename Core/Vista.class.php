@@ -288,7 +288,7 @@ class Vista extends DBContainer{
     
     
     /**
-     * Define estilo para btones de accion por defecto
+     * Define estilo para botones de accion por defecto
      * @var string $cssBtnAccion;
      * @access private
      */
@@ -621,7 +621,7 @@ class Vista extends DBContainer{
                     $atributos['content'] = $accion;
                     //Definicion de selector
                     $selector = "a";
-                    if(!isset($atributos['class']))$atributos['class']='btn btn-primary';
+                    if(!isset($atributos['class']))$atributos['class']=$this->cssBtnAccion;
                     if(!isset($atributos['data-multiple'])){
                         $atributos['data-multiple']='false';
                         
