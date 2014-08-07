@@ -372,9 +372,18 @@ class Vista extends DBContainer{
             $total = $this->bd->ejecutarQuery($this->query);
             
             #$paginador['paginaConsulta']=str_replace("/","", $_SERVER['REQUEST_URI']);
-            $this->paginador['paginaConsulta']=$_SERVER['REQUEST_URI'];
+            $requestUri=explode("?",$_SERVER['REQUEST_URI']);
+            $ar = explode("/",$_SERVER['REQUEST_URI']);
+            if(in_array('pagina', $ar)){
+                $pos = array_search('pagina', $ar);
+                unset($ar[$pos+1]);unset($ar[$pos]);
+                
+            }
+            
+            $this->paginador['paginaConsulta']=implode("/", $ar);
+            
             $this->paginador['selectorVista']=$this->idDivVista;
-
+            $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
             $this->paginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
             $this->query=$this->paginador->query;
             
