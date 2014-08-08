@@ -181,7 +181,10 @@ class Paginador extends DBContainer{
             $this->queryReal.=" order by ".$this->sentenciasQuery['order'];
         }
     }
-    
+    /**
+     * Arma el HTML necesario para el páginador
+     * @method armarPaginador
+     */
     function armarPaginador(){
         $seccionPaginador="";
           if($this->query!=""){
@@ -255,58 +258,25 @@ class Paginador extends DBContainer{
 			                                             ,$seccionPaginador);
             //----------------------------------------
             $seccionPaginador=Selector::crear('section',array('id'=>"paginador"),$seccionPaginador);                              
-            $seccionPaginador.=$this->funcionAjax();
+            
         }//fin if
         return $seccionPaginador;
     }//fin funcion
     
-    private function funcionAjax(){
-    	$funcionAjax = "";
-		if($this->ajax===TRUE){
-			
-			// $funcionAjax.="<SCRIPT>
-							// function mostrarVistaPaginador(){
-								// $(\"#$this->selectorVista\" ).html(this.respuesta);
-// 								
-							// }//fin funcion
-							// $( document ).ready(function(){
-// 								
-								// $( \"[data-paginador]\").on('click',function(e){
-								    // e.preventDefault();
-									// datos = \"jvista=paginador&pagina=\"+encodeURIComponent($(this).data(\"paginador\"));
-									// //console.log(datos);
-									// //return false;	
-									// console.log('$this->paginaActual')
-									// console.log(\"$this->selectorVista\");
-									// llamadaAjax = new jd.ajax({
-										// metodo:\"POST\",
-									    // funcionCarga:mostrarVistaPaginador,
-									    // respuesta:\"html\",
-									    // parametros:datos,
-									    // cargando:console.log(\"cargando\"),
-									    // url : \"$this->paginaConsulta\"
-									// })	
-								// })	
-							// })
-// 								
-							// ";
-// 			
-			// $funcionAjax.="</SCRIPT>";
-			
-		}
-		return $funcionAjax;
-    }
     /**
      * Obtiene la página actual pasada por parametro get o post
+     * @method inicializarPagina
      */
     private function inicializarPagina(){
-        $this->parametrosGet=$_REQUEST;
+        $this->parametrosGet=array_merge($_GET,$_POST);
+        
         $this->paginaActual=isset($this->parametrosGet['pagina'])?$this->parametrosGet['pagina']:1;
         #echo $this->paginaActual;
     }
     /**
      * ejecuta la consulta de la vista agregando el limite de registros
      * requeridos.
+     * @method obtenerConsultaPaginada
      */
     private function obtenerConsultaPaginada(){
     	$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->filasPorPagina);
