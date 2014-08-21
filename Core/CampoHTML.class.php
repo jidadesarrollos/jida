@@ -44,6 +44,7 @@ class CampoHTML extends DBContainer {
     var $data_atributo = "";
     var $title = "";
     var $class = "";
+    var $ayuda="";
     
     /**
      * Registra si el campo debe ser mostrado de forma normal, disabled o readonly
@@ -99,28 +100,53 @@ class CampoHTML extends DBContainer {
      * @param string $arr
      * @param string $arrValue
      * @param string $campoExterno
+     * @example new CampoHTML($numeroTabla,$arrayDatos);
+     * @example new CampoHTML($arrayDatos,$arrayValues,$campoExterno);
      */
     public function __construct($arr = "", $arrValue = "", $campoExterno = "") {
-        parent::__construct ();
+        $totalParametros = func_num_args();
         $this->externo = $campoExterno;
-        $this->nombreTabla = "s_campos_f";
         $this->momentoSalvado=FALSE;
-        if(!empty($this->esquema)){
-            $this->nombreTabla= $this->esquema .".". $this->nombreTabla;
-        }
-        
-        $this->clavePrimaria = "id_campo";
-        if (is_array($arrValue)) {
-            $this->typeForm = 2;
-            if(is_array($arrValue) and count($arrValue)>0){
-                //Validar si el campo update es multi-selección.
-                if(isset($arrValue[0]))
-                    $this->valueUpdate=$arrValue[0];
-                $this->valueUpdateMultiple=$arrValue;    
+        /**
+         * Entra aqui si solo son pasados 2 parametros
+         * 1. tipo de tabla : 1 Campos Aplicacion 2. campos Forms framework
+         * 2. id del campo
+         */
+        if($totalParametros==2 and !is_array(func_get_arg(0))){
+            $numeroTabla = func_get_arg(0);
+            if($numeroTabla==2){
+                $this->nombreTabla = "s_jida_campos_f";
+                $this->clavePrimaria="id_campo";
+            }else{
+                $this->nombreTabla = "s_campos_f";
             }
+            parent::__construct(__CLASS__,func_get_arg(1));
+            $this->establecerAtributos($arr);
         }
-        $this->establecerAtributos ( $arr, __CLASS__ );
-        $this->cn = $this->bd;
+        /**
+         * Entra aqui si se ejecuta la clase sin instanciar objeto desde la bd.
+         * 
+         */
+        else{
+            
+            $this->nombreTabla = "s_campos_f";
+            parent::__construct ();
+            if(!empty($this->esquema)){
+                $this->nombreTabla= $this->esquema .".". $this->nombreTabla;
+            }
+            $this->clavePrimaria = "id_campo";
+            if (is_array($arrValue)) {
+                $this->typeForm = 2;
+                if(is_array($arrValue) and count($arrValue)>0){
+                    //Validar si el campo update es multi-selección.
+                    if(isset($arrValue[0]))
+                        $this->valueUpdate=$arrValue[0];
+                    $this->valueUpdateMultiple=$arrValue;    
+                }
+            }
+            $this->establecerAtributos ( $arr, __CLASS__ );
+            $this->cn = $this->bd;
+        }
     }
     
     /**
@@ -443,89 +469,80 @@ class CampoHTML extends DBContainer {
      * funcion que arma las opciones de un "Select".
      */
     private function armarOpciones() {
-        try{
             
+        $opciones = $this->opciones;
+        /**
+         * Arreglo que registra las opciones a mostrar en el campo de selecíon a crear
+         * @var $arrop
+         */
+        $arrOp = array ();
+        $i = 0;
+        $ar = explode ( ";", $opciones );
+        /**
+         * Primera separación por ; pues se pueden manejar multiples formatos para llenar el array
+         */
+        foreach( $ar as $value => $opcion ) {
             
-            $opciones = $this->opciones;
-            /**
-             * Arreglo que registra las opciones a mostrar en el campo de selecíon a crear
-             * @var $arrop
-             */
-            $arrOp = array ();
-            $i = 0;
-            $ar = explode ( ";", $opciones );
-            /**
-             * Primera separación por ; pues se pueden manejar multiples formatos para llenar el array
-             */
-            foreach( $ar as $value => $opcion ) {
-                
-                $esSelect = strpos(strtolower($opcion), "select" );
-                $esSelectExterno = strpos(trim($opcion), "externo" );
-                $esArraySesion = strpos(trim($opcion), "session" );
-                $esJson= strpos(trim($opcion), "json" );
-                if ($esSelect === FALSE and $esSelectExterno === FALSE and $esArraySesion === FALSE) {
-                    // entra aqui si las opciones son definidas manualmente
-                    $data = explode("=", $opcion );
-                    if(count($data)>1)
-                     $arrOp[$data[0]] = $data[1];
-                } elseif ($esArraySesion !== false) {
-                    // entra aqui si las opciones son pasadas por medio de una variable de session
-                    $arr = explode ( "=", $opcion );
-                    $var = $_SESSION [$arr [1]];
-    
-                    if (is_array($var)) {
-                        foreach( $var as $k => $result ) {
-                            $arrOp[$k] = $result;
-                        }
+            $esSelect = strpos(strtolower($opcion), "select" );
+            $esSelectExterno = strpos(trim($opcion), "externo" );
+            $esArraySesion = strpos(trim($opcion), "session" );
+            $esJson= strpos(trim($opcion), "json" );
+            if ($esSelect === FALSE and $esSelectExterno === FALSE and $esArraySesion === FALSE) {
+                // entra aqui si las opciones son definidas manualmente
+                $data = explode("=", $opcion );
+                if(count($data)>1)
+                 $arrOp[$data[0]] = $data[1];
+            } elseif ($esArraySesion !== false) {
+                // entra aqui si las opciones son pasadas por medio de una variable de session
+                $arr = explode ( "=", $opcion );
+                $var = $_SESSION [$arr [1]];
+
+                if (is_array($var)) {
+                    foreach( $var as $k => $result ) {
+                        $arrOp[$k] = $result;
                     }
-                    
-                }elseif($esJson===TRUE){
-                    throw new Exception("No se encuentra disponible el uso de archivos json", 1);
-                    
-                }else {
-                    
-                    if ($esSelect !== FALSE) {
-                            
+                }
+                
+            }elseif($esJson===TRUE){
+                throw new Exception("No se encuentra disponible el uso de archivos json", 1);
+                
+            }else {
+                
+                if ($esSelect !== FALSE) {
                         
-                        $data = $this->bd->ejecutarQuery ( $opcion );
+                    
+                    $data = $this->bd->ejecutarQuery ( $opcion );
+                    if ($this->bd->totalRegistros > 0):
+                        while ( $result = $this->bd->obtenerArray ( $data ) ):
+                            $arrOp [$result [0]] = $result [1];
+                        endwhile;
+                    endif;
+                } elseif ($esSelectExterno !== FALSE) {
+                    // entra aqui cuando las opciones son definidas por un query o arreglo externo
+                    /**
+                     * En caso de que sea un arreglo
+                     */
+                      
+                    if(is_array($this->externo[$this->name])){
+                        $arrOp =$this->externo[$this->name];
+                    }else{
+                        /**
+                         * Caso de que sea un query
+                         */
+                        $data = $this->bd->ejecutarQuery ( $this->externo[$this->name] );
                         if ($this->bd->totalRegistros > 0):
                             while ( $result = $this->bd->obtenerArray ( $data ) ):
                                 $arrOp [$result [0]] = $result [1];
                             endwhile;
                         endif;
-                    } elseif ($esSelectExterno !== FALSE) {
-                        // entra aqui cuando las opciones son definidas por un query o arreglo externo
-                        /**
-                         * En caso de que sea un arreglo
-                         */
-                          
-                        if(is_array($this->externo[$this->name])){
-                            $arrOp =$this->externo[$this->name];
-                        }else{
-                            /**
-                             * Caso de que sea un query
-                             */
-                            $data = $this->bd->ejecutarQuery ( $this->externo[$this->name] );
-                            if ($this->bd->totalRegistros > 0):
-                                while ( $result = $this->bd->obtenerArray ( $data ) ):
-                                    $arrOp [$result [0]] = $result [1];
-                                endwhile;
-                            endif;
-                        }
-                        
-                    }//fin if;
+                    }
                     
-                    
-                    
-                    
-    
-                }
+                }//fin if;
             }
-            
-            $this->opciones = $arrOp;
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
         }
+        
+        $this->opciones = $arrOp;
+    
     }
     
     
@@ -563,8 +580,10 @@ class CampoHTML extends DBContainer {
     /**
      * Guarda la configurción de un campo de formulario html
      */
-    public function procesarCampo() {
-        $valor = $this->salvarObjeto ( __CLASS__ );
+    public function procesarCampo($data="") {
+        
+        $valor = $this->salvar($data);
+        return $valor;
     }
     
     /**

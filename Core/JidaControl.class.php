@@ -2,6 +2,8 @@
 
 /**
  * Controlador de Funcionamiento del JIDA
+ * 
+ * Clase Modelo para manejar los formularios del framework.
  *
  * @package FRAMEWORK
  * @subpackage JIDA
@@ -22,20 +24,29 @@ class JidaControl extends DBContainer{
     private $tablaCampos = "s_campos_f";
 	
 	
-	
-    function __construct($id_form=""){
-
-        $this->nombreTabla="s_formularios";
+	/**
+     * Funcion constructora del modelo JidaControl
+     * 
+     * @method __construct
+     * @param int $id_form Id del formulario a modificar, no obligatorio
+     * @param int $tabla Tabla de Formularios a manejar 1. Formularios Aplicacion 2. Formularios Framework
+     */
+    function __construct($id_form="",$tabla=1){
+        
+        if($tabla==2){
+            $this->nombreTabla="s_jida_formularios";
+            $this->tablaCampos="s_jida_campos_f";
+            
+        }else{
+            $this->nombreTabla="s_formularios";    
+        }
+        
         
         $this->clavePrimaria="id_form";
         $this->unico=array('nombre_identificador');
-        parent::__construct(__CLASS__);
-		if($id_form!=""){
-			$this->id_form = $id_form;
-			$formulario = $this->obtenerDatosFormulario();
-			
-			
-		}
+        
+        parent::__construct(__CLASS__,$id_form);
+		
     }
     
 	/**
@@ -55,6 +66,7 @@ class JidaControl extends DBContainer{
  
     /**
      * Registra Campos Nuevos del Formulario
+     *  @method validarCamposFormulario
      */
      private function validarCamposFormulario(){
          $query=$this->query_f." limit 1 offset 1";
@@ -82,7 +94,10 @@ class JidaControl extends DBContainer{
 	 */
     function procesarCamposFormulario($accion){
 		$resultDatos = $this->bd->ejecutarQuery($this->query_f);
-		$totalColumnas = $this->bd->totalField($resultDatos);
+        
+        
+		$totalColumnas = $this->bd->totalField($this->bd->result);
+        
         if($accion['accion']=='Insertado'){
             
             $campos = array();
@@ -97,21 +112,27 @@ class JidaControl extends DBContainer{
         elseif($accion['accion']=='Modificado'){
             
             $camposActuales = array();
+            
 			for($i=0;$i<$totalColumnas;$i++){
 			    
 				$nombreCampo =  $this->bd->obtenerNombreCampo($resultDatos, $i);
+                
 				$query = "select * from $this->tablaCampos where id_form=$this->id_form and name='$nombreCampo'";
+                
         		$this->bd->ejecutarQuery($query);
 				$total=	$this->bd->totalRegistros;
 				
 				if($total == 0){
-					$campo = new campoHTML(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
-                    $campo->procesarCampo();
+					$campo = new CampoHTML(2,null);
+                    $campo->procesarCampo(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
 				}
 				
 				$camposActuales[]="'$nombreCampo'";
                 
 			}//final for
+			/**
+             * Se eliminan los campos borrados del formulario
+             */
 			$queryCheck = sprintf("delete from $this->tablaCampos where id_form=%d and name not in(%s)",
 								$this->id_form,
 								implode(",", $camposActuales)
@@ -136,21 +157,19 @@ class JidaControl extends DBContainer{
     }//fin funcion
     /**
      * Valida y procesa el formulario de campos
-     * 
+     * @method procesarcampos
      * 
      */
     function procesarCampos($post){
-        $form = new Formulario(2);
-        $validacion = $form->validarFormulario($post);
         
-        if($validacion===true){
-            $claseCampo = new campoHTML($_POST);
-            $claseCampo->procesarCampo();
+        $claseCampo = new CampoHTML(2,$post['id_campo']);
+        $guardado = $claseCampo->procesarCampo($_POST);
+        if($guardado['ejecutado']===TRUE){
             return true;    
-        }else{
-            return $validacion;
-        }
-        
+        }else{   
+            return FALSE;
+            
+        }    
     }//fin funcion
     #===================================================
     
@@ -193,8 +212,9 @@ class JidaControl extends DBContainer{
 	 * @return int $result Total de campos del formulario
 	 */
     function obtenerTotalCamposFormulario($id){
-		
-		$query = "select count(*) from s_campos_f where id_form=$id";
+	    
+		$query = "select count(*) from $this->tablaCampos where id_form=$id";
+        
 		$result = $this->bd->obtenerArray($this->bd->ejecutarQuery($query));
 		return $result[0];
 		

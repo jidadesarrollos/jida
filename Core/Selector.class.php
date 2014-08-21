@@ -12,15 +12,98 @@
  
  
 class Selector{
+    
+    
+        
      /**
       * Define el selector a crear
       * @var $selector
       * @access public
       */
-     var $selector="";   
-    function __construct($selector){
+    var $selector="";
+    var $id="";
+    var $class="";
+    var $style="";
+    /**
+     * Atributos data para el selector
+     * @var array $data
+     */
+    var $data=array();
+    /**
+     * Arreglo para agregar atributos adicionales al selector
+     * @var array $attr
+     */
+    var $attr=array();
+    /**
+     * Contenido del selector
+     * @var mixed $contenido
+     */
+    var $contenido;
+    /**
+     * Contiene el HTML que se genera al crear el selector
+     * @var string $selectorCreado;
+     * 
+     */
+    private $selectorCreado;
+    /**
+     * Permite agregar propiedades adicionales al selector
+     */
+    private $propiedades=array();
+    function __construct($selector=""){
         $this->selector=$selector;
     }
+    /**
+     * Genera el HTML del selector instanciado
+     * @method getSelector
+     * @access public
+     */
+    function getSelector(){
+        $s =& $this->selectorCreado;
+        $s="<".$this->selector;
+        
+        if(!empty($this->id)){
+            $s.=" id=\"".$this->id."\"";
+        }
+        if(!empty($this->class)){
+            $s.=" class=\"".$this->class."\"";
+        }
+        if(!empty($this->style)){
+            
+            $s.=" style=\"".$this->style."\"";
+        }        
+        $this->getElementosData();
+        $this->getAttr();
+        $s.=">\n\t".$this->contenido."\n</$this->selector>";
+        
+        return $this->selectorCreado;
+        
+    }//fin funcion
+    /**
+     * Verifica si existen elementos datas que deban ser agregados al selector
+     * y los agrega
+     * @method getElementosData
+     * @access private;
+     */
+    private function getElementosData(){
+        if(count($this->data)>0){
+            foreach ($this->data as $key => $value) {
+                $this->selectorCreado.=" $key=\"$value\"";
+            }
+        }
+    }//fin funcion
+    /**
+     * Verifica si existen elementos datas que deban ser agregados al selector
+     * y los agrega
+     * @method getElementosData
+     * @access private;
+     */
+    private function getAttr(){
+        if(count($this->attr)>0){
+            foreach ($this->attr as $key => $value) {
+                $this->selectorCreado.=" $key=\"$value\"";
+            }
+        }
+    }//fin funcion
     /**
      * Genera un selector HTML
      * @method crear
@@ -124,6 +207,20 @@ class Selector{
         $control .= ">";
         
         return $control;
+    }
+    protected function establecerAtributos($arr, $clase="") {
+        if(empty($clase)){
+            $clase=__CLASS__;
+        }
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
+            }
+        }
+    
     }
     
 }

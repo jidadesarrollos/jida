@@ -46,7 +46,10 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <ul class="list-form-item" id="listCamposFormulario">
+                    
+                    
+                    <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data['formFramework']?>">
+                     
                     <?PHP foreach($data['camposFormulario'] as $key =>$campo):?>
                         <li id="campoform-<?=$campo['id_campo']?>" data-id-campo="<?=$campo['id_campo']?>"><?=$campo['name']?></li>
                     <?PHP endforeach; ?>
@@ -114,8 +117,10 @@ $( document ).ready(function(){
         
         var valorSeleccion = $( this ).data('id-campo');
         var accion = $( this ).attr('name');
+        var form =  $( "#listCamposFormulario" ).data('form');
         if(valorSeleccion){
-            data = "accion=2&idCampo="+encodeURIComponent(valorSeleccion);
+            
+            data = "accion=2&idCampo="+encodeURIComponent(valorSeleccion)+"&form="+form;
             var jdajax = new jd.ajax(
                 {
                     url:'/jadmin/forms/configuracion-campo/',

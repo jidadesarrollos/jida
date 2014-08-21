@@ -10,7 +10,10 @@ class Excepcion {
     
     
     /**
-     * 
+     * Función manejadora de excepciones
+     * @method controlExcepción
+     * @param object $e Objeto de clase Excepción
+     * @param mixed $type
      */
     static function controlExcepcion(Exception $e,$type=1){
         

@@ -293,12 +293,20 @@ class Formulario extends DBContainer {
      * @param string $metodo
      *          Indica el metodo a usar en el formulario, por defecto es post.
      */
-    public function __construct($claveFormulario, $tipoForm = 1, $campoUpdate = "", $metodo = "post") {
+    public function __construct($claveFormulario, $tipoForm = 1, $campoUpdate = "", $tipoFormulario=1) {
         $this->tipoF = $tipoForm;
         $this->action=$_SERVER['PHP_SELF'];
         $this->campoUpdate = $campoUpdate;
-        $this->nombreTabla = "s_formularios";
-        $this->tablaCampos = "s_campos_f";
+        if($tipoFormulario==2){
+            
+            $this->nombreTabla = "s_jida_formularios";
+            $this->tablaCampos = "s_jida_campos_f";
+        }else{
+            $this->nombreTabla = "s_formularios";
+            $this->tablaCampos = "s_campos_f";    
+        }
+        
+        
         $this->dataPost =& $_POST;
         $this->momentoSalvado=FALSE;
             
@@ -321,7 +329,7 @@ class Formulario extends DBContainer {
             $this->claveFormulario = "'$claveFormulario'";
         }
         
-        $this->metodo = $metodo;
+        $this->metodo = 'POST';
         
         $this->obtenerDatosFormulario ();
         $this->obtenerCamposFormulario ();
@@ -334,7 +342,7 @@ class Formulario extends DBContainer {
      */
     protected function obtenerDatosFormulario() {
         $query = "select * from $this->nombreTabla where $this->campoBusquedaFormulario=$this->claveFormulario";
-        
+            
         $formulario = $this->bd->obtenerArrayAsociativo ( $this->bd->ejecutarQuery ( $query ) );
         
         $this->establecerAtributos ( $formulario, __CLASS__ );
@@ -350,6 +358,7 @@ class Formulario extends DBContainer {
      */
     protected function obtenerCamposFormulario() {
         $query = "select * from $this->tablaCampos where id_form=$this->id_form order by orden asc";
+        
         $result = $this->bd->ejecutarQuery($query);
         $campos = array();
         
@@ -630,7 +639,7 @@ class Formulario extends DBContainer {
             $this->campoUpdate = $this->campoUpdate[0];
         }
         $query= $this->query_f." where $this->clave_primaria_f=$this->campoUpdate";
-        
+            
         $result = $this->bd->ejecutarQuery($query);
         $dataCampos=array();
         while($data =$this->bd->obtenerArrayAsociativo($result)){

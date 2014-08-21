@@ -29,7 +29,7 @@ class JadminController extends Controller{
         if($jctrl->testBD()){
             $dataArray['testBD'] = "Conexión establecida";
             
-            $form =  new Formulario('Login');
+            $form =  new Formulario('Login',null,null,2);
             $form->valueSubmit="Iniciar Sesi&oacute;n";
             $form->nombreSubmit="btnJidaAdminLogin";
             $form->action=$this->url;

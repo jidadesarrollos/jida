@@ -148,6 +148,30 @@ class Controller {
        }
        return 0;
     }
+    
+    /**
+     * Ejecuta un formulario de manera generica
+     * 
+     * El formulario debe ser pasado por medio de un parametro get "form". Si el formulario
+     * debe ejecutarse en modo de edición se debe pasar un parametro get "id"
+     * 
+     * @method process
+     */
+    function process(){
+       if(isset($_GET['form'])){
+           $nombreForm = String::upperCamelCase($_GET['form']);
+           $tipoForm=1;
+           $pk="";
+           if(isset($_GET['id'])){
+               $tipoForm=2;$pk=$_GET['id'];
+           }
+           $formulario = new Formulario($nombreForm,$tipoForm,$pk);
+           
+       }else{
+           throw new Exception("No se ha definido el formulario a ejecutar", 100);
+           
+       }
+    }
 
 } // END
 

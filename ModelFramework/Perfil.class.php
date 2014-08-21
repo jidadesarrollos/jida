@@ -8,18 +8,11 @@
  * @version 0.1 02/01/2014
  */
 class Perfil extends DBContainer{
-	
-	/**
-	 * 
-	 */
-	var $something;
-	
-	/**
-	 * 
-	 */
+
 	function __construct(){
 		$this->nombreTabla="s_perfiles";
         $this->clavePrimaria="id_perfil";
+        parent::__construct(__CLASS__);
 	}//final constructor
 	
 	function obtenerPerfil(){
@@ -27,7 +20,9 @@ class Perfil extends DBContainer{
 	}
     
     function obtenerAllPerfiles(){
-        $query = "select * form $this->nombreTabla";
+        
+        $query = "select * from $this->nombreTabla";
+        
         $perfiles = $this->bd->obtenerDataCompleta($query);
         return $perfiles;
         

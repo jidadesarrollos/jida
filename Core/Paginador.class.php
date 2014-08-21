@@ -175,7 +175,8 @@ class Paginador extends DBContainer{
      */
     private function estructurarQuery(){
         if(array_key_exists('where',$this->sentenciasQuery)){
-            $this->queryReal.=" where ".$this->sentenciasQuery['query'];
+            
+            $this->queryReal.=" where ".$this->sentenciasQuery['where'];
         }
         if(array_key_exists('order',$this->sentenciasQuery)){
             $this->queryReal.=" order by ".$this->sentenciasQuery['order'];

@@ -8,8 +8,8 @@
  * 
  * 
  * @package Framework
- * @category JIDA
- * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
+ * @category Core
+ * @author Julio Rodriguez <jirc48@gmail.com>
  * @version 1.2  
  */
 
@@ -22,6 +22,12 @@ class Vista extends DBContainer{
      * @var $query
      */
     private $query;
+    /**
+     * Instancia de objeto Tabla para crear Vista
+     * @var object $tabla Objeto tipo Table
+     * 
+     */
+    var $tabla;
     /**
      * Arreglo asociativo para almacenar sentencias adicionales para el query
      * @var array $sentenciasQuery
@@ -222,9 +228,9 @@ class Vista extends DBContainer{
     var $cssFilaTitulos="opciones-row-titulo";
     /**
      * Define el estilo de clase css para la fila con botones de la vista
-     * @var string $cssFilaBotones;
+     * @var string $cssFilaAcciones;
      */
-     var $cssFilaBotones="botonForm";
+     var $cssFilaAcciones="botonForm";
     /*
      * Define el estilo css para la sección busqueda
      * 
@@ -347,52 +353,52 @@ class Vista extends DBContainer{
      var $columnasOcultas="";
      
      private $nombreVistaSinEspacios="";
-    
+    private $data;
     function __construct($query,$paginador=false,$nombreVista="Vista"){
+        $totalParametros = func_num_args();
         $this->query=$query;
-        parent::__construct();
+        
+        parent::__construct(__CLASS__);
         $this->bd->ejecutarQuery($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
         $this->nombreVista = $nombreVista;
-        
         $this->paginador=$paginador;
         $this->inicializarValoresVista();
+        $this->addPaginador();
+        /*Ejecución del query para la vista*/
+        $this->data = $this->bd->obtenerDataCompleta($this->query);
+        /*Creación de objeto tabla*/
+        
     }
     /**
      * Agrega paginador a la vista
+     * 
+     * Modifica la consulta SQL de la vista para que funcione en base a la configuración del Paginador agregado
      * @method agregarPaginador 
      */    
- 
-    
-    private function agregarPaginador(){
+    private function addPaginador(){
         if(!is_array($this->paginador)){
-                $this->paginador = array();
-            }
-        
-            $total = $this->bd->ejecutarQuery($this->query);
+            $this->paginador=array();
+        }
+        $ar = explode("/",$_SERVER['REQUEST_URI']);
+        if(in_array('pagina', $ar)){
+            $pos = array_search('pagina', $ar);
+            unset($ar[$pos+1]);unset($ar[$pos]);
             
-            #$paginador['paginaConsulta']=str_replace("/","", $_SERVER['REQUEST_URI']);
-            $requestUri=explode("?",$_SERVER['REQUEST_URI']);
-            $ar = explode("/",$_SERVER['REQUEST_URI']);
-            if(in_array('pagina', $ar)){
-                $pos = array_search('pagina', $ar);
-                unset($ar[$pos+1]);unset($ar[$pos]);
-                
-            }
-            
-            $this->paginador['paginaConsulta']=implode("/", $ar);
-            
-            $this->paginador['selectorVista']=$this->idDivVista;
-            $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
-            $this->paginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
-            $this->query=$this->paginador->query;
-            
+        }
+        $this->paginador['paginaConsulta']=implode("/", $ar);
+        $this->paginador['selectorVista']=$this->idDivVista;
+        $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
+        $this->paginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
+        $this->query=$this->paginador->query;
     }
+   
     /**
      * Define los valores identificadores de la vista
      * 
      * Crea los nombres para los atributos html genericos identificadores para la vista como
      * el id del DIV padre, nombre y id del formulario vista.
+     * @method inicializarValoresVista
      */
     private function inicializarValoresVista(){
         $nombreVistaSinEspacios = str_replace(" ", "",$this->nombreVista);
@@ -406,40 +412,38 @@ class Vista extends DBContainer{
         $this->nombreInputTextBusqueda="txtBusq".ucwords($nombreVistaSinEspacios);
         $this->mensajeError=(!empty($this->mensajeError))?$this->mensajeError:"No hay registros <a href=\"$_SERVER[PHP_SELF]\">volver</a>";;
     }
+    
+  
     /**
      * Crea los titulos para la vista o grid
-     *
+     * @method obtenerTitulos
+     * @access private
      * @return string $titulos
-     * @author  Julio Rodriguez <jirodriguez@sundecop.gob.ve>
+     
      */
      
     private function obtenerTitulos() {
-        $titulos = "<TR class=\"$this->cssFilaTitulos\">\n\t\t\t\t\t";
+        
         $i=0;
+        $titulos=array();
         while($i< $this->bd->totalField($this->resultQuery)){
             if($i==0 and $this->controlFila==TRUE){
                 if($this->tipoControl==2){
-                    $titulos.="<TH style=\"width:30px\"><input type=\"checkbox\" data-jvista=\"seleccionarTodas\" name=\"obtTotalColm\" id=\"obtTotalColm\">";   
+                    $titulos[$i]="<input type=\"checkbox\" data-jvista=\"seleccionarTodas\" name=\"obtTotalColm\" id=\"obtTotalColm\"";
+                       
                 }else{
                     if($this->tipoControl==3){
-                    $titulos.="<TH style=\"display:none\"></th>\n\t\t\t\t\t";   
-                    }else{
-                        $titulos.="<TH style=\"width:30px\"></th>\n\t\t\t\t\t";  
+                        $titulos[$i]="";    
+                    }else{  
+                        $titulos[$i]="";
                     }
                     
                 }
             }else{
-                
-                $nombreTitulo = $this->bd->obtenerNombreCampo($this->resultQuery, $i);
-                $titulos.="<TH data-jvista=\"orden\" data-order-celda=\"$this->orderBy\" data-indice=\"".($i+1)."\" data-name=\"$nombreTitulo\">$nombreTitulo</TH>\n\t\t\t\t\t";
+                $titulos[$i]=$this->bd->obtenerNombreCampo($this->resultQuery, $i);
             }//fin if
             $i++;
-        }//fin while
-        
-        if($this->filaOpciones == TRUE){
-            $titulos.="<TH id=\"filaOpcion\">Opciones</th>\n\t\t\t\t\t";
-        }//final if
-        $titulos.="\r\t\t\t\t</TR>\n";
+        }
         return $titulos;
     }//final funcion
     
@@ -455,9 +459,8 @@ class Vista extends DBContainer{
         if(isset($_POST) and !empty($_POST)){
             return $this->procesarAccion($_POST);
         }else{
-            $vista = "\n\t\t<section id=\"$this->idDivVista\" data-sitio=\"$_SERVER[REQUEST_URI]\" class=\"$this->cssSection\">";
-            $vista .=  $this->crearVista();
-            $vista .="\n\t\t</section>\n";
+            $data = array('id'=>$this->idDivVista,'data-sitio'=>"$_SERVER[REQUEST_URI]","class"=>$this->cssSection);
+            $vista = Selector::crear('SECTION',$data,$this->crearVista());
             return $vista;
         }
     }//fin funcion
@@ -481,140 +484,69 @@ class Vista extends DBContainer{
      * @author  Julio Rodriguez <jirodriguez@sundecop.gob.ve>
      */
      protected function crearVista(){
-        
-         $vista="";
+        $vista="";
+
+            
         if(!empty($this->tituloVista)){
-            $vista.="\n\t 
-                <$this->selectorTitulo class=\"$this->cssTituloVista\">
-                    $this->tituloVista</$this->selectorTitulo>";
+            $vista.=Selector::crear($this->selectorTitulo,array('class'=>$this->cssTituloVista),$this->tituloVista);
         }
         
-            
-        if($this->paginador!==false){
-            $this->agregarPaginador();
-            
-        }
         
-         $this->resultQuery = $this->bd->ejecutarQuery($this->query);
-         $totalRegistros = $this->bd->totalRegistros;
-         $seccionPaginador="";
-         $seccionBusqueda = $this->agregarSeccionBusqueda();
-         $vista.="\n$seccionBusqueda";
-         if($this->opcionesBreadCrumb and is_array($this->opcionesBreadCrumb)){
-             $bc = $this->agregarBreadCrumb();
-             $vista.="\n$bc";
-         }
-         
-         if(isset($_SESSION['__msjVista'])){
-            //--------------------------------------------------------------------
-            if((isset($_SESSION['__idVista']) and strtolower($this->nombreVistaSinEspacios) ==strtolower($_SESSION['__idVista'])) or 
-                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista) ==strtolower($_SESSION['__idVista'])))
-            {
-                $vista.= $_SESSION['__msjVista'];
-                unset($_SESSION['__msjVista']);
-                unset($_SESSION['__idVista']);  
+        if($this->totalRegistros>0){
+        
+            $this->tabla = new Table($this->data,$this->obtenerTitulos());
+            $this->agregarOpcionesFila();
+            $this->addControlFila();
+            /* Obtener Acciones de la vista*/
+            $acciones = $this->obtenerAccionesVista($this->bd->totalField($this->resultQuery));            
+            $this->tabla->class=$this->cssTable;
+            //Se agrega la sección de busqueda
+            if($this->seccionBusqueda===TRUE){
+                $vista.=$this->agregarSeccionBusqueda();
             }
-            //-------------------------------------------------------------------- 
-         }
-         if($totalRegistros>0){
-         
-             $totalColumnas = $this->bd->totalField($this->resultQuery);
-             
-             
-             if($this->paginador!==false){
-                 $seccionPaginador = $this->paginador->armarPaginador();
-             }else{
-                 $seccionPaginador="";
-             }
-             
-             $titulos = $this->obtenerTitulos();
-             $cuerpo = $this->obtenerCuerpoVista();
-             $botones = $this->obtenerAccionesVista($totalColumnas);
-    
-             $vista.="\n
-                        <article id=\"tablaVista\" class=\"row\">
-                            <div class=\"col-lg-12\">
-             
-                            
-                                    <table class=\"$this->cssTable\">
-                                     ".$titulos."
-                                        ".$cuerpo."
-                                        ".$botones."
-                                    </table>
-                            </div>
-                        </article>
-                    ";
-             
-         }else{
-             $vista.=$this->obtenerMsjNoRegistros();
-             
-         }//fin if
-         $vista.="
-                    $seccionPaginador
-                    
-                    <script>
-                    $( document ).ready(function(){
-                        vista = new jd.vista(\"$this->idDivVista\",$this->tipoControl);
-                        vista.armarVista();
-                    })
-                    </script>
-                    
+            //Se valida si existe un mensaje a mostrar
+            if(Session::get('__msjVista')):
+                if( Session::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Session::get('__idVista')) or
+                    (isset($_SESSION['__idVista']) and strtolower($this->idDivVista)== strtolower(Session::get('__idVista')))
+                   ){
+                       
+                     $vista.=Session::get('__msjVista');   
+                     Session::destroy('__idVista');
+                    }
+            endif;
+            $vista.=$this->tabla->getTabla();
+            $vista = Selector::crear('div',array('class'=>'col-md-12'),$vista);
+            $vista = Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);
+            
+            
+            if($this->paginador!==FALSE)
+                $vista.= $this->paginador->armarPaginador();
+            
+            $vista .= "
+                <script>
+                $( document ).ready(function(){
+                    vista = new jd.vista(\"$this->idDivVista\",$this->tipoControl);
+                    vista.armarVista();
+                })
+                </script>
                 
-                ";
-         return $vista;
+            </section>
+            ";
+            return $vista;
+        }else{
+            return $vista.Selector::crear('div',array('class'=>$this->cssMensajeError),$this->mensajeError);
+        }
+        
+            
          
     }//fin funcion crearVista
     
-    private function obtenerMsjNoRegistros(){
-        $msj = "
-             <div class=\"$this->cssMensajeError\">
-                $this->mensajeError
-             </div>";
 
-        return $msj;
-        
-    }
+ 
     /**
-     * Genera las filas y columnas pertenecientes a la fila creada
-     *
-     * @return string $titulos
-     * @author  Julio Rodriguez <jirodriguez@sundecop.gob.ve>
-     */
-    private function obtenerCuerpoVista(){
-         $filas="";
-         
-         while($datos = $this->bd->fetchRow($this->resultQuery)){
-             
-             #Agregar control si es requerido
-             $estilo = ($this->setEstiloFila($datos));
-             $estilo = (!empty($estilo))?" class=\"$estilo\"":"";
-             $filas.="\r\n\t\t\t\t<tr$estilo>\n\t\t\t\t\t";
-             $i = 0;
-             
-             foreach ($datos as $campo) {
-                 if($this->controlFila==TRUE and $i==$this->nroControl){
-                     $filas.=$this->controlFila($campo,$this->tipoControl);
-                 }else{
-                     $filas .="\n\t\t\t\t\t<td>$campo</td>\n\t";
-                 }//fin if
-                 
-                //-----------
-                $i++;
-             }//fin foreach
-             if($this->filaOpciones==TRUE){
-                    $filas.=$this->agregarOpcionesFila($datos[0]);
-                }http://sigefor.minamb.gob.ve/datos/pgAccess.php?id=10
-             $filas.="\r\n\t\t\t\t</tr>\r\n";
-         //--------------------------------------
-         
-         }//fin while
-         
-         return $filas;
-    }//fin funcion
-         
-    /**
-     * Agrega los botones especificados a la vista
-     * 
+     * Agrega los botones para las acciones especificadas a la vista
+     * @method obtenerAccionesVista
+     * @access private
      * @return string $botones
      */
     private function obtenerAccionesVista($totalColumnas){
@@ -648,23 +580,18 @@ class Vista extends DBContainer{
                 
                $acciones.=$campo;
             }
-            $botones .= "<TR class=\"$this->cssFilaBotones\">
-                            <td colspan=\"$totalColumnas\">"
-                              .$acciones."
-                            </td>
-                         </tr>";
             
+            $totalFilas=$this->tabla->getTotalFilas();
+            $this->tabla->tr[$totalFilas]=new Selector('TR');
+            $this->tabla->tr[$totalFilas]->class=$this->cssFilaAcciones;
+            $filaAcciones =& $this->tabla->tr[$totalFilas];
+            $columnaAcciones = new Selector('TD');
+            $columnaAcciones->contenido=$acciones;
+            $columnaAcciones->attr['colspan']=$totalColumnas;
+            $filaAcciones->td[0]=$columnaAcciones;
+            $filaAcciones->contenido=$filaAcciones->td[0]->getSelector();            
         }//final if acciones
-        
-         
-       if($i>0){
-           $botones = "<TR class=\"botonForm\">
-                            <td colspan=\"$totalColumnas\">
-                                ".$botones."
-                            </td>
-                       </TR>";
-       }//fin if
-        return $botones;        
+                
     }//fin funcion obtenerBotonesVista
     /**
      * Agrega opciones a cada fila del grid las opciones que se deseen agregar.
@@ -674,54 +601,109 @@ class Vista extends DBContainer{
      * @see @var $dataOpcionFila
      * @param string $campo Cadena con botones adicionales agregados.
      */
-    private function agregarOpcionesFila($campo){
-        try{
-            $opciones="<td class=\"$this->cssFilaOpciones \">";
-            $opciones.="<input type=\"hidden\" name='clave' value=\"$campo\"/>";
-            $arrayExample = array('atributos'=>array(),'html'=>false);
-            
-            foreach ($this->filaOpciones as $key => $dataSelector) {
-                #--------------------------------------------------------------
-                foreach($dataSelector as $selector => $props){
-                    #--------------------------------------------------------------
+     private function agregarOpcionesFila($campo=""){
+         $tabla =& $this->tabla;
+         $totalCols = $this->tabla->getTotalColumnas();
+         
+         if($this->filaOpciones==TRUE):
+             
+            for($i=0;$i<$this->tabla->getTotalFilas();$i++){
+                
+                $campo = $tabla->tr[$i]->td[0]->contenido;
+                $opciones = $this->setOpcionesFila($campo);
+                $tabla->tr[$i]->td[$totalCols]= new Selector('TD');
+                $tabla->tr[$i]->td[$totalCols]->class=$this->cssFilaOpciones;
+                $tabla->tr[$i]->td[$totalCols]->contenido=$opciones;
+                
+            }//fin for
+         endif;
+         
+     }
+
+    private function setOpcionesFila($campo){
+        $opciones = Selector::crearInput('hidden',array('type'=>'hidden','name'=>'clave','value'=>$campo));
+        $arrayExample=array ('atributos' => array (),'html' => false);
+        foreach ( $this->filaOpciones as $key => $dataSelector ) {
+                // -------------------------------------------------------------
+                foreach ( $dataSelector as $selector => $props ) {
+                    // -------------------------------------------------------------
                     
-                    
-                    $data = array_merge($arrayExample,$props);
-                    $html="";
-                    //Arrays::verArray($data);
-                    if(is_array($data['html'])){
-                        foreach($data['html'] as $key => $value){
-                            //Verificar si se ha pasado la palabra {clave} para uso del id de la vista
-                            //y hacer el reemplazo por el id actual de la columna
-                            $dataHtml=array_merge($arrayExample,$value);
-                            $implode = implode(',', $dataHtml['atributos']);
-                            $implode = str_replace('{clave}', "$campo", $implode);
-                            $dataHtml['atributos'] = array_combine(array_keys($dataHtml['atributos']), explode(",",$implode));
-                            $content = (!is_array($dataHtml['html']))?$dataHtml['html']:"";                              
-                            $html.=CampoHTML::crearSelectorHTMLSimple($key,$dataHtml['atributos'],$content);
+                    $data = array_merge ( $arrayExample, $props );
+                    $html = "";
+                    // Arrays::verArray($data);
+                    if (is_array ( $data ['html'] )) {
+                        foreach ( $data ['html'] as $key => $value ) {
+                            // Verificar si se ha pasado la palabra {clave} para uso del id de la vista
+                            // y hacer el reemplazo por el id actual de la columna
+                            $dataHtml = array_merge ( $arrayExample, $value );
+                            $implode = implode ( ',', $dataHtml ['atributos'] );
+                            $implode = str_replace ( '{clave}', "$campo", $implode );
+                            $dataHtml ['atributos'] = array_combine ( array_keys ( $dataHtml ['atributos'] ), explode ( ",", $implode ) );
+                            $content = (! is_array ( $dataHtml ['html'] )) ? $dataHtml ['html'] : "";
+                            $html .= Selector::crear ( $key, $dataHtml ['atributos'], $content );
                         }
                     }
                     
-                    if(is_array($data['atributos'])){
-                        $implode = implode('||', $data['atributos']);
+                    if (is_array ( $data ['atributos'] )) {
+                        $implode = implode ( ',', $data ['atributos'] );
                         
-                        $implode = str_replace('{clave}', "$campo", $implode);
+                        $implode = str_replace ( '{clave}', "$campo", $implode );
                     }
-                    
-                    $data['atributos'] = array_combine(array_keys($data['atributos']), explode("||",$implode));
-                    $content = (!is_array($data['html']))?$data['html']:"";
-                    $opciones.=CampoHTML::crearSelectorHTMLSimple($selector, $data['atributos'],$html.$content);
-                    #--------------------------------------------------------------
-                }//final primer foreach
-                #--------------------------------------------------------------
-            }//final segundo foreach
-            $opciones.="</td>";
-            return $opciones;    
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
-        
-    }#Fin funcion opciones Fila
+                    $data ['atributos'] = array_combine ( array_keys ( $data ['atributos'] ), explode ( ",", $implode ) );
+                    $content = (! is_array ( $data ['html'] )) ? $data ['html'] : "";
+                    $opciones .= Selector::crear( $selector, $data ['atributos'], $html . $content );
+                    // -------------------------------------------------------------
+                } // final primer foreach
+            } // final segundo foreach
+        return $opciones;
+    }
+     
+    // private function agregarOpcionesFila($campo){
+//         
+        // $opciones="<td class=\"$this->cssFilaOpciones \">";
+        // $opciones.="<input type=\"hidden\" name='clave' value=\"$campo\"/>";
+        // $arrayExample = array('atributos'=>array(),'html'=>false);
+//         
+        // foreach ($this->filaOpciones as $key => $dataSelector) {
+            // #--------------------------------------------------------------
+            // foreach($dataSelector as $selector => $props){
+                // #--------------------------------------------------------------
+//                 
+//                 
+                // $data = array_merge($arrayExample,$props);
+                // $html="";
+                // //Arrays::verArray($data);
+                // if(is_array($data['html'])){
+                    // foreach($data['html'] as $key => $value){
+                        // //Verificar si se ha pasado la palabra {clave} para uso del id de la vista
+                        // //y hacer el reemplazo por el id actual de la columna
+                        // $dataHtml=array_merge($arrayExample,$value);
+                        // $implode = implode(',', $dataHtml['atributos']);
+                        // $implode = str_replace('{clave}', "$campo", $implode);
+                        // $dataHtml['atributos'] = array_combine(array_keys($dataHtml['atributos']), explode(",",$implode));
+                        // $content = (!is_array($dataHtml['html']))?$dataHtml['html']:"";                              
+                        // $html.=CampoHTML::crearSelectorHTMLSimple($key,$dataHtml['atributos'],$content);
+                    // }
+                // }
+//                 
+                // if(is_array($data['atributos'])){
+                    // $implode = implode('||', $data['atributos']);
+//                     
+                    // $implode = str_replace('{clave}', "$campo", $implode);
+                // }
+//                 
+                // $data['atributos'] = array_combine(array_keys($data['atributos']), explode("||",$implode));
+                // $content = (!is_array($data['html']))?$data['html']:"";
+                // $opciones.=CampoHTML::crearSelectorHTMLSimple($selector, $data['atributos'],$html.$content);
+                // #--------------------------------------------------------------
+            // }//final primer foreach
+            // #--------------------------------------------------------------
+        // }//final segundo foreach
+        // $opciones.="</td>";
+        // return $opciones;    
+//     
+//         
+    // }#Fin funcion opciones Fila
     /**
      * Crea el control de la fila
      */
@@ -738,11 +720,50 @@ class Vista extends DBContainer{
         return $columnaControl;
             
     }
+    /**
+     * Agrega un control a la fila
+     * 
+     * Los controles pueden ser 1) Radio 2) Checkbox 3)Input oculto
+     * 
+     */
+    private function addControlFila(){
+        $control = array (1 => 'radio',2 => 'checkbox',3 => 'txt');
+        
+        switch ($this->tipoControl) {
+            case 1:
+            case 2:
+                $control = ($this->tipoControl==1)?'radio':'checkbox';
+                $nombreControl = ($this->tipoControl == 1) ? "seleccionar" : "seleccionar[]";
+             #   Arrays::mostrarArray($this->tabla);Exit;
+                for($i=0;$i<$this->tabla->getTotalFilas();$i++){
+                    
+                    $col =& $this->tabla->tr[$i]->td[0];
+                    
+                    $col->contenido=Selector::crearInput($col->contenido,
+                                            array(  'name'=>$nombreControl,
+                                                    'type'=>$control,
+                                                    $col->contenido
+                                                    )
+                                            );
+                }//fin for
+                 
+                break;
+            case 3:
+                
+                $this->tabla->setColumna(0, 'style', 'display:none');
+                break;
+            
+        }
+    }
+    
+    
+    
     //---------------------------------------------------
     /**
      * Arma la vista a partir de una solicitud ajax.
      * 
      * La funcion debe ser llamada por medio de solicitudes ajax y el parametro post "jvista"
+     * @method procesarAccion
      */
     protected function procesarAccion($post){
         $vistaArmada="";
@@ -781,33 +802,44 @@ class Vista extends DBContainer{
     }//fin funcion procesarAccion
     /**
      * Ajusta query de la vista para filtrar por la busqueda solicitada
+     * @method buscadorVista;
      */
     private function buscadorVista($busqueda){
         
-        $where = " where ";
+        $band = 0;
+        if(!array_key_exists('where',$this->sentenciasQuery)){
+            
+            $this->sentenciasQuery['where']="where ";
+        }else{
+            $band=1;
+            $this->sentenciasQuery['where']="(".$this->sentenciasQuery['where'].") and (";
+        }
         if(is_array($this->camposBusqueda)){
             if(count($this->camposBusqueda)>0){
                 $i=0;
                 foreach ($this->camposBusqueda as $key => $campo) {
                     if($i>0)
-                        $where.=" or ";
-                    $where.=" $campo like '%$busqueda%' ";
+                        $this->sentenciasQuery['where'].=" or ";
+                    $this->sentenciasQuery['where'].=" $campo like '%$busqueda%' ";
                     $i++;
                 }
             }else{
                 throw new Exception("No se han definido campos de busqueda para la vista $this->nombreVista", 1);
                 
             }
+            if($band==1){
+                $this->sentenciasQuery['where'].=")";
+            }
         }else{
             throw new Exception("El atributo camposBusqueda no está definido como arreglo", 1);
             
         }
-        $this->query = $this->query." ".$where;
+        $this->query = $this->query;
         return $this->crearVista();
     }
     /**
      * Agrega sección de busqueda a la vista
-     * 
+     * @method agregarSeccionBusqueda
      */
     private function agregarSeccionBusqueda(){
         $seccionBusqueda="";
@@ -851,36 +883,7 @@ class Vista extends DBContainer{
         
 
     }
-    /**
-     * Agrega estilo a una fila especificada
-     */
-    private function setEstiloFila($datosFila){
-        //print_r($this->cssPorFila);echo"<hr>";
-        try{
-            if(!empty($this->cssPorFila)){
-                if(is_array($this->cssPorFila)){
-                    $arrayColumnaCondicion = array_keys($this->cssPorFila);
-                    $estilo = "";
-                    #------------------------------------------
-                    foreach($datosFila as $numeroColumna => $valor){
-                        $nombreColumna = $this->bd->obtenerNombreCampo($this->resultQuery, $numeroColumna);
-                        if(in_array($nombreColumna, $arrayColumnaCondicion)){
-                            $estilo =(isset($this->cssPorFila[$nombreColumna][$datosFila[$numeroColumna]])) ?$this->cssPorFila[$nombreColumna][$datosFila[$numeroColumna]]:"";
-                            
-                        }
-                    }//fin foreach
-                    #------------------------------------------
-                }else{
-                    throw new Exception("El atributo cssPorFila debe ser un array");
-                }   
-                return $estilo; 
-            }   
-            
-        }catch(Exception $e){
-            echo $e->getMessage()."<hr>";
-        }
-            
-    }
+    
     /**
      * Agrega estilo a una columna especificada
      */

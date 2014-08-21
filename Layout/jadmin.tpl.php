@@ -41,6 +41,7 @@
         <link href="/htdocs/css/jida.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
         <link rel="stylesheet/less" type="text/css" href="/htdocs/css/adm.less">
+        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
     </head>
 
     <body>
