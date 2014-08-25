@@ -151,6 +151,7 @@ class JidaControl extends DBContainer{
     function getCamposFormulario(){
         
         $query = "select id_campo,name from $this->tablaCampos where id_form=$this->id_form order by orden asc";
+        #echo $query;exit;
         $data = $this->bd->obtenerDataCompleta($query);
         return $data;
 
@@ -160,9 +161,9 @@ class JidaControl extends DBContainer{
      * @method procesarcampos
      * 
      */
-    function procesarCampos($post){
+    function procesarCampos($post,$form){
         
-        $claseCampo = new CampoHTML(2,$post['id_campo']);
+        $claseCampo = new CampoHTML($form,$post['id_campo']);
         $guardado = $claseCampo->procesarCampo($_POST);
         if($guardado['ejecutado']===TRUE){
             return true;    

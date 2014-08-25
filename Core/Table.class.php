@@ -206,7 +206,7 @@ class Table extends Selector{
          $col =& $this->thead->tr;
          
          if(count($this->dataTitulos)>0){
-             for($i=0;$i<$this->totalTD;$i++){
+             for($i=0;$i<$this->getTotalColumnas();$i++){
                  
                  $col->contenido.=$col->th[$i]->getSelector();
              }

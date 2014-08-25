@@ -116,10 +116,11 @@ class CampoHTML extends DBContainer {
             $numeroTabla = func_get_arg(0);
             if($numeroTabla==2){
                 $this->nombreTabla = "s_jida_campos_f";
-                $this->clavePrimaria="id_campo";
+                
             }else{
                 $this->nombreTabla = "s_campos_f";
             }
+            $this->clavePrimaria="id_campo";
             parent::__construct(__CLASS__,func_get_arg(1));
             $this->establecerAtributos($arr);
         }
