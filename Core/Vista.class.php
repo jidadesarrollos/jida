@@ -797,7 +797,7 @@ class Vista extends DBContainer{
             return $this->crearVista(); 
         
         }catch(Exception $e){
-            procesarCatch($e->getMessage());
+            Excepcion::controlExcepcion($e);
         }
     }
     /**
