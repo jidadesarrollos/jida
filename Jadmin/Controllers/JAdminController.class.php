@@ -24,6 +24,7 @@ class JadminController extends Controller{
         
     }
     function index(){
+        
 		$this->tituloPagina = "Jida Framework - Formularios";        
         $jctrl= new JidaControl();
         if($jctrl->testBD()){
@@ -105,6 +106,11 @@ class JadminController extends Controller{
             throw new Exception("Pagina no encontrada", 404);
             
         }   
+    }
+    function phpInfo(){
+        echo "aki";Exit;
+        echo phpinfo();
+        exit;
     } 
   
 

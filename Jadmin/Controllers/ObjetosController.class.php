@@ -32,7 +32,7 @@ class ObjetosController extends Controller{
 			$vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos");
 			$vista->setParametrosVista($GLOBALS['configVista']);
             $vista->seccionBusqueda=true;
-            
+            $vista->camposBusqueda=array('objeto','componente');
             $vista->tipoControl=2;
 			$vista->filaOpciones=array(0=>array('a'=>array(
 															'atributos'=>array(	'class'=>'btn',
