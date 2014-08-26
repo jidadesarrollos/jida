@@ -50,7 +50,7 @@ class Mysql extends ConexionBD{
      * Resultado retornado de una sentencia a base de datos
      * @var string $result
      */
-    private $result;
+    public $result;
     protected $idCampo;
     
     /**
@@ -112,7 +112,7 @@ class Mysql extends ConexionBD{
         
         
         if(!$this->result){
-            throw new Exception("No se pudo ejecutar el query $query (".$this->mysqli->errno.") ".$this->mysqli->error, 200);       
+            throw new Exception("No se pudo ejecutar el query <br/> <strong>$query</strong><br/> (".$this->mysqli->errno.") ".$this->mysqli->error, 200);       
         }
         
         $this->totalCampos = $this->mysqli->field_count;
@@ -218,12 +218,18 @@ class Mysql extends ConexionBD{
     }
     function obtenerDataCompleta($query=""){
         
-        $this->query = ($query=="")?$this->query:$query;
-        $this->ejecutarQuery($this->query);
+        if(is_string($query)){
+                   
+            $this->query = ($query=="")?$this->query:$query;
+            $this->ejecutarQuery($this->query);    
+        }else
+        if(is_object($query)){
+            $this->result=$query;
+        }
         $dataCompleta = array();
         if($this->result){
             
-        
+             
             while($data = $this->result->fetch_assoc()){
                 $dataCompleta[]=String::codificarArrayToHTML($data);
                 
@@ -254,20 +260,14 @@ class Mysql extends ConexionBD{
         return $arr;
     }
     function obtenerArrayAsociativo($result=""){
-        try{
-           
-              if($result){
-                $this->result = $result;
-              }
-              
-              $arr = String::codificarArrayToHTML($this->result->fetch_assoc());
-              
-              return $arr;
-                 
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
-
+        
+          if($result){
+            $this->result = $result;
+          }
+          
+          $arr = String::codificarArrayToHTML($this->result->fetch_assoc());
+          
+          return $arr;
     }  
     /**
      * undocumented function

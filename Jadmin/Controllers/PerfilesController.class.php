@@ -37,8 +37,19 @@ class PerfilesController extends Controller{
 		$this->data['vistaPerfiles'] = $vista->obtenerVista();
 	}
 	
-	
-	
+	/**
+     * Procesar un perfil
+     * @method process
+     */
+	function process(){
+	    $pk="";$tipoForm=1;
+        if(isset($_GET['id']) and $this->getEntero($_GET['id'])){
+            $pk=$_GET['id'];$tipoForm=2;
+        }
+        
+        $form=new Formulario('Perfiles',$tipoForm,$pk);
+        $this->data['form']=$form->armarFormulario();
+	}//final funcion
 	
 }
 

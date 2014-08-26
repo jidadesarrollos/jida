@@ -33,6 +33,16 @@ class Paginador extends DBContainer{
      */
     private $queryReal;
     /**
+     * Arreglo que contiene las distintas sentencias del query posibles
+     * <ul>
+     * <li>WHERE</li> 
+     * <li>ORDER</li> 
+     * <li>LIMIT</li> 
+     * <li>DISTINCT</li>
+     * @var array $sentenciasQuery; 
+     */
+    private $sentenciasQuery=array();
+    /**
      * Indica el registro inicial de la página actual
      * @var int $inicio
      */
@@ -44,6 +54,11 @@ class Paginador extends DBContainer{
     /**
      * Arreglo get capturado
      */
+    /**
+     * Nombre de la vista a la que pertenece el paginador
+     * @var string $nombreVista
+     */
+    private $nombreVista;
     private $parametrosGet;
     /**
      * Indica el total de páginas mostradas en el paginador
@@ -89,7 +104,7 @@ class Paginador extends DBContainer{
 	 * Nombre del div de la vista
 	 * 
 	 * En caso de que $ajax sea true, el paginador tomará este div para recargar la vista
-	 * @var selectorVista
+	 * @var string selectorVista
 	 */
 	private $selectorVista;
 	/**
@@ -115,23 +130,25 @@ class Paginador extends DBContainer{
 	 */
 	private $contenidoPrevBtn="&laquo";
     
-    function __construct($query,$arr=""){
+    function __construct($query,$arr="",$arrayConsulta=array()){
         
         $this->queryReal=$query;
         parent::__construct();
+        if(is_array($arrayConsulta)){
+            $this->sentenciasQuery=$arrayConsulta;
+        }
         if(!empty($this->queryReal)){
-        	
             if(is_array($arr)){
-            	
             	$this->establecerAtributos($arr, __CLASS__);
 				
         	}//fin if    
         }
+        $this->estructurarQuery();
         $this->inicializarPagina();
         $this->obtenerConsultaPaginada();
     }//fin funcion constructora
     
-      /**
+    /**
      * Establece los atributos de una clase.
      * 
      * Valida si los valores pasados en el arreglo corresponden a los atributos de la clase en uso
@@ -152,15 +169,31 @@ class Paginador extends DBContainer{
 
         }//final foreach
     }//final funcion establer atributos.
-    
+    /**
+     * Arma la consulta sql a ejecutar
+     * @method estructurarQuery
+     */
+    private function estructurarQuery(){
+        if(array_key_exists('where',$this->sentenciasQuery)){
+            
+            $this->queryReal.=" where ".$this->sentenciasQuery['where'];
+        }
+        if(array_key_exists('order',$this->sentenciasQuery)){
+            $this->queryReal.=" order by ".$this->sentenciasQuery['order'];
+        }
+    }
+    /**
+     * Arma el HTML necesario para el páginador
+     * @method armarPaginador
+     */
     function armarPaginador(){
         $seccionPaginador="";
           if($this->query!=""){
+            
             $result = $this->bd->ejecutarQuery($this->queryReal);
             $this->totalRegistros = $this->bd->totalRegistros;
 			$division=  $this->totalRegistros/$this->filasPorPagina;
-			#echo $this->totalRegistros." ".$this->filasPorPagina."<hr>";
-			#echo $division;exit;
+            
             $this->totalPaginas=is_float($division)?ceil($division):$this->totalRegistros/$this->filasPorPagina;
             /**
 			 * Se saca un numero medio sobre el total de
@@ -170,149 +203,81 @@ class Paginador extends DBContainer{
 			$ultimaPaginaMostrada=(($this->paginaActual+$medioPaginas)< $this->totalPaginas)?$this->paginaActual+$medioPaginas:$this->totalPaginas;
 			
 			$primeraPaginaMostrada=($this->paginaActual>$medioPaginas)?$this->paginaActual-$medioPaginas:1;
-            $seccionPaginador = "<div id=\"paginador\">";
-            if($this->tipoPaginador=='lista')
-                $seccionPaginador.="<ul class=\"$this->cssListaPaginador\">";
+            
             //----------------------------------------
 			if($this->paginaActual>1 and $this->usoBtnsNextPrev===TRUE){
 				$link=$this->paginaActual-1;
-				if($this->ajax===TRUE){
-	            		$selector = "span";
-						$content ="data-paginador=\"$link\""; 
-	            	}else{
-	            		$selector = "a";
-						$content = "href=\"$this->paginaConsulta?pagina=$link\"";
-						
-	            	}
-					switch($this->tipoPaginador){
-						case 'lista':
-							
-							$seccionPaginador.="<li><$selector $content>$this->contenidoPrevBtn</$selector></li>";
-							break;
-						default:
-							$seccionPaginador.="<$selector>$this->contenidoPrevBtn</$selector>";
-							break;		
-					}
-					
-					
-					
-				}
-			
+				$data= array('data-paginador'=>$link,'href'=>"$this->paginaConsulta/pagina/$link/" );	
+                $seccionPaginador.=Selector::crear('li',null,Selector::crear('a',$data,$this->contenidoPrevBtn));	
+				
+			}
 			/**
 			 * Recorrido de las páginas
 			 */
 			 
             for($i=$primeraPaginaMostrada;$i<=$ultimaPaginaMostrada;$i++){
             	#El contenido de la etiqueta varia según el tipo de paginador, en caso de ser ajax se usa una etiqueta span, sino una a.
-	            	if($this->ajax===TRUE){
-	            		$selector = "span";
-						$content ="data-paginador=\"$i\""; 
-	            	}else{
-	            		$selector = "a";
-						$content = "href=\"$this->paginaConsulta?pagina=$i\"";
-						
-	            	}
+            	if($this->ajax===TRUE){
+            		$selector = "span";
+					$content ="data-paginador=\"$i\" data-page=\"$this->paginaConsulta\""; 
+            	}else{
+            		$selector = "a";
+					$content = "href=\"$this->paginaConsulta/pagina/$i/\"";
 					
-						
-		                if($i==$this->paginaActual){
-		                    if($this->tipoPaginador=='lista'){
-		                        $seccionPaginador.="<li class=\"$this->cssPaginaActual\" id=\"linkPages$i\" >
-		                        					<span>$i</span>
-		                        					</li>";								
-							}else{
-								
-		                        $seccionPaginador.="<span class=\"$this->cssPaginaActual\" id=\"linkPages$i\" >$i</span>";
-							}
-		                }else{
-		                    if($this->tipoPaginador=='lista'){
-		                        $seccionPaginador.="<li class=\"$this->cssLinkPaginas\">
-		                                                <$selector $content id=\"linkPages$i\">$i</$selector>
-		                                            </li>";
-		                    }else{
-		                        $seccionPaginador.="<$selector $content id=\"linkPages$i\" class=\"$this->cssLinkPaginas\">$i</$selector>";
-		                    }    
-		                }
+            	}
+                if($i==$this->paginaActual){    
+                   $data = array('class'=>$this->cssPaginaActual,'id'=>"linkPages$i","data-paginador"=>$i,'href'=>"$this->paginaConsulta/pagina/$i/");                        
+				   $link  = Selector::crear("a",$data,$i);
+			       $seccionPaginador.=Selector::crear("li",null,$link);
 					
-	                    
+                }else{
+                   $data = array('class'=>$this->cssLinkPaginas,'id'=>"linkPages$i","data-paginador"=>$i, 'href'=>"$this->paginaConsulta/pagina/$i");
+                   $link  = Selector::crear("a",$data,$i);
+                   $seccionPaginador.=Selector::crear("li",null,$link);
+                    
+                }   
             }//fin recorrido filas
+                
             
+                
             if($this->paginaActual<$this->totalPaginas and $this->usoBtnsNextPrev===TRUE){
             	
 				$link=$this->paginaActual+1;
 				if($this->ajax===TRUE){
-	            		$selector = "span";
-						$content ="data-paginador=\"$link\""; 
-	            	}else{
-	            		$selector = "a";
-						$content = "href=\"$this->paginaConsulta?pagina=$link\"";
-						
-	            	}
-					switch($this->tipoPaginador){
-						case 'lista':
-							
-							$seccionPaginador.="<li><$selector $content>$this->contenidoNextBtn</$selector></li>";
-							break;
-						default:
-							$seccionPaginador.="<$selector>$this->contenidoNextBtn</$selector>";
-							break;		
-					}
+            		$selector = "span";
+					$content ="data-paginador=\"$link\"  data-page=\"$this->paginaConsulta\""; 
+            	}else{
+            		$selector = "a";
+					$content = "href=\"$this->paginaConsulta/pagina/$i/\"";
+					
+            	}
+				$seccionPaginador.=Selector::crear("li",null,Selector::crear('a',array("data-paginador=\"$link\""),$this->contenidoNextBtn));
 			}
-			
-            //----------------------------------------
             
-            $seccionPaginador.="</ul>
-                              </div>";
-            $seccionPaginador.=$this->funcionAjax();
+			$seccionPaginador=Selector::crear("ul",array('class'=>$this->cssListaPaginador,'id'=>'listPaginador'.$this->nombreVista,
+			                                             'data-page'=>$this->paginaConsulta,'data-selector'=>$this->selectorVista)
+			                                             ,$seccionPaginador);
+            //----------------------------------------
+            $seccionPaginador=Selector::crear('section',array('id'=>"paginador"),$seccionPaginador);                              
+            
         }//fin if
         return $seccionPaginador;
     }//fin funcion
     
-    private function funcionAjax(){
-    	$funcionAjax = "";
-		if($this->ajax===TRUE){
-			
-			$funcionAjax.="<SCRIPT>
-							function mostrarVistaPaginador(){
-								$(\"#$this->selectorVista\" ).html(this.respuesta);
-								
-							}//fin funcion
-							$( document ).ready(function(){
-								
-								$( \"[data-paginador]\").on('click',function(){
-									datos = \"jvista=paginador&pagina=\"+encodeURIComponent($(this).data(\"paginador\"));
-									//console.log(datos);
-									//return false;	
-									console.log('$this->paginaActual')
-									console.log(\"$this->selectorVista\");
-									llamadaAjax = new jd.ajax({
-										metodo:\"POST\",
-									    funcionCarga:mostrarVistaPaginador,
-									    respuesta:\"html\",
-									    parametros:datos,
-									    cargando:console.log(\"cargando\"),
-									    url : \"$this->paginaConsulta\"
-									})	
-								})	
-							})
-								
-							";
-			
-			$funcionAjax.="</SCRIPT>";
-			
-		}
-		return $funcionAjax;
-    }
     /**
      * Obtiene la página actual pasada por parametro get o post
+     * @method inicializarPagina
      */
     private function inicializarPagina(){
-        $this->parametrosGet=$_REQUEST;
+        $this->parametrosGet=array_merge($_GET,$_POST);
+        
         $this->paginaActual=isset($this->parametrosGet['pagina'])?$this->parametrosGet['pagina']:1;
         #echo $this->paginaActual;
     }
     /**
      * ejecuta la consulta de la vista agregando el limite de registros
      * requeridos.
+     * @method obtenerConsultaPaginada
      */
     private function obtenerConsultaPaginada(){
     	$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->filasPorPagina);

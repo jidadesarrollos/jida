@@ -44,44 +44,41 @@ class ComponentesController extends Controller{
         $this->data['vista'] = $vista->obtenerVista();
     }
     function setComponente(){
-        try{
-            $tipoForm=1;
-            $idComponente = "";
-            if(Globals::obtGet('comp')){
-                $idComponente = Globals::obtGet('comp');
-                $tipoForm=2;
-            }
-
-             $F = new Formulario('Componente',$tipoForm,$idComponente);
-             $F->action=$this->url.'set-componente';
-             $F->valueSubmit = "Guardar Componente";
-             
-             if(Globals::obtPost('btnComponente')){
-                 $this->getEntero(Globals::obtPost('id_componente'));
-				 
-				 if($this->validarComponente(Globals::obtPost('componente'))){
-	                 $comp = new Componente($idComponente);
-	                 $validacion = $F->validarFormulario($_POST);
-	                 if($validacion===TRUE){
-	                     $guardado  = $comp->guardarComponente($_POST);
-	                     if($guardado['ejecutado']==1){
-	                         Session::set('__idVista', 'componentes');
-	                         Session::set('__msjVista',Mensajes::mensajeSuceso('Componente <strong>'.Globals::obtPost('componente').'</strong> guardado'));
-	                         redireccionar($this->url."");    
-	                     }else{
-	                         Session::set('__msjForm', Mensajes::mensajeError('No se pudo registrar el componente'));
-	                     }
-	                     
-	                 }
-				 }else{
-			         Session::set('__msjForm', Mensajes::mensajeError('El componente no existe'));	 	
-				 }   
-             }
-
-             $this->data['fComponente'] = $F->armarFormulario();
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+        
+        $tipoForm=1;
+        $idComponente = "";
+        if(Globals::obtGet('comp')){
+            $idComponente = Globals::obtGet('comp');
+            $tipoForm=2;
         }
+
+         $F = new Formulario('Componente',$tipoForm,$idComponente);
+         $F->action=$this->url.'set-componente';
+         $F->valueSubmit = "Guardar Componente";
+         
+         if(Globals::obtPost('btnComponente')){
+             $this->getEntero(Globals::obtPost('id_componente'));
+			 
+			 if($this->validarComponente(Globals::obtPost('componente'))){
+                 $comp = new Componente($idComponente);
+                 $validacion = $F->validarFormulario($_POST);
+                 if($validacion===TRUE){
+                     $guardado  = $comp->guardarComponente($_POST);
+                     if($guardado['ejecutado']==1){
+                         Session::set('__idVista', 'componentes');
+                         Session::set('__msjVista',Mensajes::mensajeSuceso('Componente <strong>'.Globals::obtPost('componente').'</strong> guardado'));
+                         redireccionar($this->url."");    
+                     }else{
+                         Session::set('__msjForm', Mensajes::mensajeError('No se pudo registrar el componente'));
+                     }
+                     
+                 }
+			 }else{
+		         Session::set('__msjForm', Mensajes::mensajeError('El componente no existe'));	 	
+			 }   
+         }
+
+         $this->data['fComponente'] = $F->armarFormulario();
     }
 
 

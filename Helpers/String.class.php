@@ -148,22 +148,30 @@ class String {
                 'ñ' => "&ntilde;",
                 '¿' => '&iquest;' 
         );
-        $cadena = explode ( " ", $cadena );
-        $arrCadena = array ();
+        if(!empty($cadena) and is_string($cadena)){
+            
+            
         
-        foreach ( $cadena as $valor ) {
-            $band = 0;
-            foreach ( $arrAcentos as $key => $value ) {
-                
-                if (strpos ( $valor, $key ) !== false) {
-                    $valor = str_replace ( $key, $value, $valor );
-                    $band = 2;
-                }
-            } // fin foreach interno
-            $arrCadena [] = trim ( $valor );
-        } // fin foreach
-        $cadenaFinal = implode ( " ", $arrCadena );
-        return $cadenaFinal;
+        
+            $cadena = explode ( " ", $cadena );
+            $arrCadena = array ();
+            
+            foreach ( $cadena as $valor ) {
+                $band = 0;
+                foreach ( $arrAcentos as $key => $value ) {
+                    
+                    if (strpos ( $valor, $key ) !== false) {
+                        $valor = str_replace ( $key, $value, $valor );
+                        $band = 2;
+                    }
+                } // fin foreach interno
+                $arrCadena [] = trim ( $valor );
+            } // fin foreach
+            $cadenaFinal = implode ( " ", $arrCadena );
+            return $cadenaFinal;
+        }else{
+            return $cadena;
+        }
     } // fin función
     
         

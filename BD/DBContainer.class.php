@@ -135,38 +135,35 @@ class DBContainer {
      * @param object $clase Objeto clase que hereda del DBContainer
      */
     public function __construct($clase = "", $id = "") {
-        try {
-            if (!defined('manejadorBD')) {
-                throw new Exception("No se encuentra definido el manejador de base de datos", 1);
-            }
-            
-            $this->manejadorBD = manejadorBD;
-            $this->clavePrimaria = $this->obtenerClavePrimaria();
-            
-            switch ($this->manejadorBD) {
-                case 'PSQL' :
-                    
-                    include_once 'Psql.class.php';
-                    $this->bd = new PSQLConexion ($this->configuracionBD);
-                    break;
-                case 'MySQL' :
-                    
-                    // include_once 'Mysql.class.php';
-                    $this->bd = new Mysql ();
-                    break;
-            }
-            if(!empty($clase)){
-                
-                $this->propiedadesBD = $this->obtenerPropiedadesObjeto();
-                $this->clase = $clase;
-            }
-            if (!empty($id)) {
-                $this->inicializarObjeto($id, $clase);
-            }
-            
-        } catch (Exception $e) {
-            Excepcion::controlExcepcion($e);
+    
+        if (!defined('manejadorBD')) {
+            throw new Exception("No se encuentra definido el manejador de base de datos", 1);
         }
+        
+        $this->manejadorBD = manejadorBD;
+        $this->clavePrimaria = $this->obtenerClavePrimaria();
+        
+        switch ($this->manejadorBD) {
+            case 'PSQL' :
+                
+                include_once 'Psql.class.php';
+                $this->bd = new PSQLConexion ($this->configuracionBD);
+                break;
+            case 'MySQL' :
+                
+                // include_once 'Mysql.class.php';
+                $this->bd = new Mysql ();
+                break;
+        }
+        if(!empty($clase)){
+            
+            $this->propiedadesBD = $this->obtenerPropiedadesObjeto();
+            $this->clase = $clase;
+        }
+        if (!empty($id)) {
+            $this->inicializarObjeto($id, $clase);
+        }
+        
     }
     /**
      * Inicializa un objeto a partir de Base de Datos
@@ -176,14 +173,13 @@ class DBContainer {
      */
     
     protected function inicializarObjeto($id, $clase = "") {
-        try {
-        	$clase = (empty($clase)) ? $this->clase : $clase;
-            $query = "select * from $this->nombreTabla where $this->clavePrimaria=$id";
-            $result = $this->bd->obtenerArrayAsociativo ( $this->bd->ejecutarQuery ( $query ) );
-            $this->establecerAtributos ( $result, $clase );
-        } catch ( Exception $e ) {
-            Excepcion::controlExcepcion ( $e );
-        }
+        
+    	$clase = (empty($clase)) ? $this->clase : $clase;
+        $query = "select * from $this->nombreTabla where $this->clavePrimaria=$id";
+    
+        $result = $this->bd->obtenerArrayAsociativo ( $this->bd->ejecutarQuery ( $query ) );
+        $this->establecerAtributos ( $result, $clase );
+    
     }
     
     /**
@@ -354,47 +350,44 @@ class DBContainer {
      * @return unknown 
      */
     private function insertarObjeto($momentoGuardado = false) {
-        try {
-            $campos = array();
-            $valores = array();
+    
+        $campos = array();
+        $valores = array();
+        
+        foreach($this->propiedadesPublicas as $campo => $valor) {
             
-            foreach($this->propiedadesPublicas as $campo => $valor) {
+            if ($campo != $this->clavePrimaria) {
                 
-                if ($campo != $this->clavePrimaria) {
-                    
-                    $campos[] = $campo;
-                    switch ($valor) {
-                        case '':
-                            if(!is_numeric($valor)){
-                                $valores[]="null";
-                            } else {
-                                $valores[]=$valor;
-                            }
-                            break;
-                        case 'fn_unix_actual()':
+                $campos[] = $campo;
+                switch ($valor) {
+                    case '':
+                        if(!is_numeric($valor)){
+                            $valores[]="null";
+                        } else {
                             $valores[]=$valor;
-                            break;
-                        default:
-                            $valores[]="'".$valor."'";
-                            break;
-                    }
-					
-					
+                        }
+                        break;
+                    case 'fn_unix_actual()':
+                        $valores[]=$valor;
+                        break;
+                    default:
+                        $valores[]="'".$valor."'";
+                        break;
                 }
             }
-            if($momentoGuardado===true){
-						$campos[]='fecha_creacion';
-						$campos[]='fecha_modificacion';
-						$valores[]= "'".FechaHora::datetime()."'";
-						$valores[]= "'".FechaHora::datetime()."'";
-					}
-            $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria,$this->unico);
-			Session::destroy('__queryInsert');
-            return $result;
-        } catch(Exception $e) {
-            Excepcion::controlExcepcion($e);
         }
-    }
+        if($momentoGuardado===true){
+					$campos[]='fecha_creacion';
+					$campos[]='fecha_modificacion';
+					$valores[]= "'".FechaHora::datetime()."'";
+					$valores[]= "'".FechaHora::datetime()."'";
+				}
+        
+        $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria,$this->unico);
+		Session::destroy('__queryInsert');
+        return $result;
+        
+    }//fin funcion insertarObjeto
     
 
     /**
