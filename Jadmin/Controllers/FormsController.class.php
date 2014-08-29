@@ -109,13 +109,13 @@ class FormsController extends Controller{
 	 * @method gestionFormulario
 	 * @access public
 	 */
-    function gestionFormulario($form=""){
+    function gestionFormulario($ambito=1){
         
         $tipoForm = 1;
         $id_form=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$_GET['id']:"";
 		$this->tituloPagina="Registro de Formulario";
 		$this->data['totalCampos'] =0;
-        $jctrol =  new JidaControl($id_form,$form);
+        $jctrol =  new JidaControl($id_form,$ambito);
         
         if(isset($_GET['id']) and $this->getEntero($_GET['id'])){
             
@@ -123,16 +123,16 @@ class FormsController extends Controller{
     		$this->data['totalCampos'] = $jctrol->obtenerTotalCamposFormulario($_GET['id']);        
             $tipoForm = 2;    
         }else{
-                $tipoForm=1;
-            }
+            $tipoForm=1;
+        }
         
-		$formulario = new Formulario('Formularios',$tipoForm,$id_form,2);
-        if(!empty($form)){
+        
+		$formulario = new Formulario('Formularios',$tipoForm,$id_form,$ambito);
+        if($ambito==2){
             $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->url."gestion-jida-form/id/$id_form":$this->url."gestion-jida-form/";
         }else{
             $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->url."gestion-formulario/id/$id_form":$this->url."gestion-formulario/";    
         }
-		
         
 		if(isset($_POST['btnFormularios'])){
 			$validacion = $formulario->validarFormulario($_POST);
@@ -147,7 +147,7 @@ class FormsController extends Controller{
 					if($guardado['ejecutado']==1){
 						$jctrol->procesarCamposFormulario($guardado);
 						Session::set('__msjForm', Mensajes::mensajeInformativo("El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente"));
-                        if($form==2){
+                        if($ambito==2){
                             redireccionar('/jadmin/forms/configuracion-jida-form/formulario/'.$guardado['idResultado']);
                         }else{
                             redireccionar('/jadmin/forms/configuracion-formulario/formulario/'.$guardado['idResultado']);    
@@ -229,21 +229,24 @@ class FormsController extends Controller{
      * @param int $tabla Si el parametro es pasado se buscará editar un formulario perteneciente a la tabla
      * s_jida_formularios.
      */
-    function configuracionFormulario($form=""){
+    function configuracionFormulario($form=1){
         if($form==2){
             $this->data['formFramework']=2;   
         }else{
             $this->data['formFramework']=1;
         }
-    	$jctrl = new JidaControl(null,2);
+    	$jctrl = new JidaControl(null,$form);
         
         $this->tituloPagina="Configuracion de Formulario";
-        
+        /**
+         * Entra aqui al ser enviado un formulario de configuración
+         * 
+         */
         if(isset($_POST['btnCamposFormulario'])){
             
             $formCampo = $this->getFormCampo($_POST['id_campo'],$form);
             if($formCampo->validarFormulario()===TRUE){
-                $proceso = $jctrl->procesarCampos($_POST);
+                $proceso = $jctrl->procesarCampos($_POST,$form);
                 Session::set('__msj',Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
             }else{
                 Session::set('__msj',Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));                    

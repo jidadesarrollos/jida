@@ -10,7 +10,7 @@
 class MenusController extends Controller {
 
     function __construct(){
-        $this->layout="jadmin.tpl.php";
+        #$this->layout="jadmin.tpl.php";
         $jctrl = new JidaControl();
         $tablas = $jctrl->obtenerTablasBD();        
     }

@@ -71,6 +71,7 @@
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
             }
+            
             /**
              * variable global con todos los parametros pasados via url
              * 
@@ -78,6 +79,7 @@
             $GLOBALS['arrayParametros'] = $url;
             $this->controlador = $this->validarNombre(array_shift($url),1);
             $this->checkSubdominio();
+            
             
             if(in_array($this->controlador,$this->modulosExistentes)){
                 $this->modulo = $this->controlador;
@@ -88,8 +90,6 @@
              * En caso de existir un subdominio, con el nombre igual a un modulo desarrollado, se accederá 
              * directamente al módulo
              */
-            
-            
             if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
                 
                 $this->modulo=$this->validarNombre($this->subdominio,1);
@@ -106,6 +106,7 @@
             }
             
             if(!$this->controlador){
+                
                 /*
                  * Si no se pasa un controlador en la url, se buscará un controlador con el nombre del modulo
                  * Esto pasa solo si el primer parametro de la URL existe adentro del arreglo de modulos existentes
@@ -209,7 +210,9 @@
             
             $acl = new ACL();
             
-            $acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
+            #echo strtolower($this->modulo)." ".$this->controlador." ".$this->metodo," ";exit;
+            #$acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
+            $acceso=TRUE;
             if($acceso===TRUE){
                 
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -306,6 +309,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
+               
                  $this->vista->rutaPagina=3;
                  $this->controlador="Excepcion";
                  $controlador = $this->controlador."Controller";

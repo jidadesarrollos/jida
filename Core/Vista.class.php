@@ -32,7 +32,8 @@ class Vista extends DBContainer{
      * Arreglo asociativo para almacenar sentencias adicionales para el query
      * @var array $sentenciasQuery
      * 
-     */
+    */
+    var $tituloColumnaOpciones="";
     var $sentenciasQuery=array();
     private $vista;
     private $titulos;
@@ -135,6 +136,16 @@ class Vista extends DBContainer{
      * @access private
      */
     private $cssFormBusqueda="navbar-form navbar-right";
+    /**
+     * Instancia del objeto paginador
+     * @var object $paginador
+     */
+    
+    private $objetoPaginador=false;
+    /**
+     * Uso paginador
+     * @var mixed $configPaginador
+     */
     private $paginador=false;
     /**
      * Define el Id del div de la vista.
@@ -354,15 +365,42 @@ class Vista extends DBContainer{
      
      private $nombreVistaSinEspacios="";
     private $data;
-    function __construct($query,$paginador=false,$nombreVista="Vista"){
+       /**
+     * Metodo constructor para clase vista
+     * @param string $query Consulta SQL a ejecutar para crear el grid
+     * @param array $arregloConfiguracion Puede ser pasado el arreglo de configuración de la vista completo el cual debe tener un key
+     * 'paginador' para la configuración del mismo, caso contrario será tomado como el arreglo de configuración del paginador
+     * @param string $nombreVista Nombre de la vista
+     * @param mixed $global Arreglo o nombre del key del arreglo global para la configuración de la vista 
+     */
+    function __construct($query,$arregloConfiguracion=false,$nombreVista="Vista",$global=null){
+        
+        $totalParametros=func_num_args();
         $totalParametros = func_num_args();
         $this->query=$query;
         
+        if(!is_null($global) and is_string($global)){
+            $arrayConfiguracion=$GLOBALS[$global];
+        }elseif(is_array($global)){
+            $arrayConfiguracion=$global;    
+        }
+        
         parent::__construct(__CLASS__);
+        
         $this->bd->ejecutarQuery($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
         $this->nombreVista = $nombreVista;
-        $this->paginador=$paginador;
+        /**
+         * Si $arregloConfiguracion no tiene un key paginador es porque se ha pasado el arreglo de
+         * configuración del Paginador
+         */
+        if(!array_key_exists('paginador', $arregloConfiguracion)):
+            $this->paginador=$arregloConfiguracion;
+        else:
+            $this->establecerAtributos($arregloConfiguracion);
+        
+        endif;
+        
         $this->inicializarValoresVista();
         $this->addPaginador();
         /*Ejecución del query para la vista*/
@@ -389,8 +427,8 @@ class Vista extends DBContainer{
         $this->paginador['paginaConsulta']=implode("/", $ar);
         $this->paginador['selectorVista']=$this->idDivVista;
         $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
-        $this->paginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
-        $this->query=$this->paginador->query;
+        $this->objetoPaginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
+        $this->query=$this->objetoPaginador->query;
     }
    
     /**
@@ -421,7 +459,6 @@ class Vista extends DBContainer{
      * @return string $titulos
      
      */
-     
     private function obtenerTitulos() {
         
         $i=0;
@@ -429,8 +466,8 @@ class Vista extends DBContainer{
         while($i< $this->bd->totalField($this->resultQuery)){
             if($i==0 and $this->controlFila==TRUE){
                 if($this->tipoControl==2){
-                    $titulos[$i]="<input type=\"checkbox\" data-jvista=\"seleccionarTodas\" name=\"obtTotalColm\" id=\"obtTotalColm\"";
-                       
+                    $titulos[$i]=Selector::crearInput(null,array('data-jvista'=>"seleccionarTodas",'name'=>"obtTotalCol","id"=>'obtTotalColm','type'=>'checkbox'));
+                    
                 }else{
                     if($this->tipoControl==3){
                         $titulos[$i]="";    
@@ -520,7 +557,7 @@ class Vista extends DBContainer{
             
             
             if($this->paginador!==FALSE)
-                $vista.= $this->paginador->armarPaginador();
+                $vista.= $this->objetoPaginador->armarPaginador();
             
             $vista .= "
                 <script>
@@ -606,6 +643,9 @@ class Vista extends DBContainer{
          $totalCols = $this->tabla->getTotalColumnas();
          
          if($this->filaOpciones==TRUE):
+            $tabla->thead->tr->th[$totalCols]=new Selector('TH');
+            $tabla->thead->tr->th[$totalCols]->class=$this->cssFilaOpciones;
+            $tabla->thead->tr->th[$totalCols]->contenido=$this->tituloColumnaOpciones;
              
             for($i=0;$i<$this->tabla->getTotalFilas();$i++){
                 
@@ -623,14 +663,16 @@ class Vista extends DBContainer{
     private function setOpcionesFila($campo){
         $opciones = Selector::crearInput('hidden',array('type'=>'hidden','name'=>'clave','value'=>$campo));
         $arrayExample=array ('atributos' => array (),'html' => false);
+        //Se recorren los indices
         foreach ( $this->filaOpciones as $key => $dataSelector ) {
                 // -------------------------------------------------------------
+                //se obtiene el selector y recorren las propiedades
                 foreach ( $dataSelector as $selector => $props ) {
                     // -------------------------------------------------------------
                     
                     $data = array_merge ( $arrayExample, $props );
                     $html = "";
-                    // Arrays::verArray($data);
+                    //Se valida si el HTML es otro selector a crear
                     if (is_array ( $data ['html'] )) {
                         foreach ( $data ['html'] as $key => $value ) {
                             // Verificar si se ha pasado la palabra {clave} para uso del id de la vista
@@ -645,16 +687,20 @@ class Vista extends DBContainer{
                     }
                     
                     if (is_array ( $data ['atributos'] )) {
-                        $implode = implode ( ',', $data ['atributos'] );
+                        $implode = implode('||', $data['atributos']);
                         
                         $implode = str_replace ( '{clave}', "$campo", $implode );
+                    }else{
+                        echo "no es un array";Exit;
                     }
-                    $data ['atributos'] = array_combine ( array_keys ( $data ['atributos'] ), explode ( ",", $implode ) );
+                    
+                    $data ['atributos'] = array_combine ( array_keys ( $data ['atributos'] ), explode("||",$implode));
                     $content = (! is_array ( $data ['html'] )) ? $data ['html'] : "";
                     $opciones .= Selector::crear( $selector, $data ['atributos'], $html . $content );
                     // -------------------------------------------------------------
                 } // final primer foreach
             } // final segundo foreach
+            
         return $opciones;
     }
      
