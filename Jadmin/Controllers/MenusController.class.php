@@ -9,38 +9,21 @@
  */
 class MenusController extends Controller {
 
-    /**
-     *
-     */
-    var $menu;
-
-    /**
-     *
-     */
-
     function __construct(){
-        try{
-            
-            $this->layout="jadmin.tpl.php";
-              $jctrl = new JidaControl();
-            $tablas = $jctrl->obtenerTablasBD();
-                
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
-        
-        
+        $this->layout="jadmin.tpl.php";
+        $jctrl = new JidaControl();
+        $tablas = $jctrl->obtenerTablasBD();        
     }
+    
     function index() {
         $query = "select * from s_menus";
         $this -> vista = 'menus';
+        
         $dataArray = array();
         $vistaMenu = new Vista($query, true, 'Menus');
         $vistaMenu -> setParametrosVista($GLOBALS['configVista']);
         $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
-        $vistaMenu -> tipoControl = 2;
-        
-        
+        $vistaMenu -> tipoControl = 2;        
         $vistaMenu -> filaOpciones = array('0' => array
                                                     ('a' => array('atributos' =>array(
                                                                     'class'=>'btn',
