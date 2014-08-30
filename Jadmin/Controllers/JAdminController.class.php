@@ -111,7 +111,23 @@ class JadminController extends Controller{
         echo "aki";Exit;
         echo phpinfo();
         exit;
-    } 
+    }
+    
+    function testingFiles(){
+        $cadena="hola mundo";
+        $cadena1="\t\t\t\t\thola mundo\t\t\t";
+        echo strspn($cadena1, "\t")."<hr>";
+        echo strlen($cadena)."<hr>";
+        echo strlen($cadena1)."<hr>";exit;
+        Arrays::mostrarArray(file(framework_dir.'Jadmin/Controllers/JadminController.class.php'));exit;
+        $file = new PHPFile(app_dir.'Controller/algo/','test.php');
+        if($file->crear()){
+            echo "aki se creo<hr>";    
+        }else{
+            echo "no se creo<hr>";
+        }
+        exit;
+    }
   
 
    
