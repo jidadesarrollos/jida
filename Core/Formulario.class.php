@@ -23,7 +23,11 @@ class Formulario extends DBContainer {
      * @var string $private
      */
     private $esquema="";
-    
+    /**
+     * Determina si los valores del formulario deben ser validados o cambiados a entidades HTML
+     * @var $setHtmlEntities
+     */
+    public $setHtmlEntities=TRUE;
     /**
      * Id del formulario
      */
@@ -657,12 +661,16 @@ class Formulario extends DBContainer {
     
     /**
      * Valida un formulario.
+     * @method validarFormulario
+     * @param array $datos
+     * @return mixed [boolean,array] True si la validacion es correcta, caso contrario arreglo con los errores
      */
     public function validarFormulario(&$datos="") {
         Session::destroy ( '__erroresForm' );
         if(empty($datos)){
             $datos =& $_POST;
         }
+        
         $arrErrores = array ();
         // ----------------------------------------------
         $a = 0;
@@ -677,36 +685,45 @@ class Formulario extends DBContainer {
             $valorCampo =& $datos [$campo ['name']];
             if ($campo ['eventos'] != "") {
                 $validaciones = json_decode ( '{' . $campo ['eventos'] . '}', true );
-                
+            
                 if (is_array ( $validaciones )) {
+                  
                     $a ++;
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
+                    
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
                     
                     if ($resultadoValidacion['validacion'] !== true) {
                         $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
-                    }elseif($resultadoValidacion['validacion']===true){
-                        
+                    }else
+                    if($resultadoValidacion['validacion']===true){
+                     
                         //Se connvierten los datos especiales del post
                         if(!is_array($resultadoValidacion['campo'])){
-                            $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);    
+                            if($this->setHtmlEntities===TRUE)
+                                $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);
+                            else
+                                $datos[$campo['name']]= $resultadoValidacion['campo'];
                         }else{
                             $datos[$campo['name']]= $resultadoValidacion['campo'];
                         }
                         
                     }
-                } else {
-                    
                 }
+
             }else{
                 if(!is_array($valorCampo)){
-                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                    if($this->setHtmlEntities===TRUE){
+                        $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                    }else{
+                        $datos[$campo['name']]= $valorCampo;    
+                    }
                 }else{
                      $datos[$campo['name']]= $valorCampo;
                 }
             }
-        }
-        
+        }//final foreach
+
         if (count ( $arrErrores ) > 0) {
             $this->errores = $arrErrores;
             Session::set ( '__erroresForm', $this->errores );

@@ -52,7 +52,7 @@ class ComponentesController extends Controller{
             $tipoForm=2;
         }
 
-         $F = new Formulario('Componente',$tipoForm,$idComponente);
+         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
          

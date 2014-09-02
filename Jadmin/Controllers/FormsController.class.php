@@ -230,6 +230,7 @@ class FormsController extends Controller{
      * s_jida_formularios.
      */
     function configuracionFormulario($form=1){
+        
         if($form==2){
             $this->data['formFramework']=2;   
         }else{
@@ -245,7 +246,9 @@ class FormsController extends Controller{
         if(isset($_POST['btnCamposFormulario'])){
             
             $formCampo = $this->getFormCampo($_POST['id_campo'],$form);
+            $formCampo->setHtmlEntities=FALSE;
             if($formCampo->validarFormulario()===TRUE){
+                
                 $proceso = $jctrl->procesarCampos($_POST,$form);
                 Session::set('__msj',Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
             }else{

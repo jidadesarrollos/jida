@@ -201,16 +201,15 @@ class ValidadorJida {
         }else{
             $this->mensajeError = "El campo ".$this->campo['label'] ." ".$this->dataValidaciones[$validacion]["mensaje"];
         }
-    }
+    }//fin función
+    
     /**
-     * Valida un campo
      *
-     * Funcion controladora que verifica las validacionesexit
+     * Funcion controladora que verifica las validaciones
      *  que debe tener un campo
      * @param string $campo Campo a validar
      */
     function validarCampo($campo) {
-
         $this->valorCampo =& $campo;
         
         //En caso de haber un error la variable bandera debe ser modificada a 1.
@@ -278,6 +277,7 @@ class ValidadorJida {
 
     /**
      * Valida un campo obligatorio
+     * @method validarCampoLleno
      */
     private function validarCampoLleno(){
         
@@ -305,6 +305,7 @@ class ValidadorJida {
     }
     /**
      * Valida un campo del editor de texto TINY
+     * @method validarTiny
      */
     private function validarTiny($validacion,$detalle){
         if(array_key_exists('obligatorio', $detalle)){
