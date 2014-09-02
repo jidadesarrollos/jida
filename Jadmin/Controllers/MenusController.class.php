@@ -117,7 +117,7 @@ class MenusController extends Controller {
             $seleccion = $get['menu'];    
         }
         $dataArray = array();
-        $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion);
+        $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $form -> action = '/jadmin/menus/set-menu/';
         $dataArray['tituloForm'] = ($tipoForm == 1) ? 'Registrar Menu' : 'Modificar Menu';
         $dataArray['formMenu'] = $form -> armarFormulario();
