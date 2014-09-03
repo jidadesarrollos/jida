@@ -20,7 +20,13 @@
         </title>
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
-                 
+        <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
+        <link href="/htdocs/css/f-a.css" rel="stylesheet">
+        <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
+        <link href="/htdocs/css/jida.css" rel="stylesheet">
+        <link href="/htdocs/css/jida-common.css" rel="stylesheet">
+        <link rel="stylesheet/less" type="text/css" href="/htdocs/less/menu.less">
+        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
         <!--libs-->
         <script src="/htdocs/js/libs/jq2.0.3.js"></script>
         <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
@@ -35,13 +41,7 @@
         <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
         <!--custom files-->
         <script src="/htdocs/js/funcionesGenerales.js"></script>
-        <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
-        <link href="/htdocs/css/f-a.css" rel="stylesheet">
-        <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
-        <link href="/htdocs/css/jida.css" rel="stylesheet">
-        <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link rel="stylesheet/less" type="text/css" href="/htdocs/css/adm.less">
-        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
+        
     </head>
 
     <body>
@@ -55,9 +55,9 @@
             <aside class="col-md-2 aside">
                     <?PHP 
                     $menuControl  = new MenuHTML('principal');
-                    $menuControl->configuracion['ul'][0]="nav nav-aside";
-                    $menuControl->configuracion['ul'][1]="";
-                    
+                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
+                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
+                    $menuControl->configuracion['li']['caret']="li-caret";
                      echo $menuControl->showMenu();
                     ?>
                 

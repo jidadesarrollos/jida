@@ -20,8 +20,9 @@ class MenusController extends Controller {
         $this -> vista = 'menus';
         
         $dataArray = array();
-        $vistaMenu = new Vista($query, true, 'Menus');
-        $vistaMenu -> setParametrosVista($GLOBALS['configVista']);
+        
+        $vistaMenu = new Vista($query, $GLOBALS['configVista'], 'Menus');
+        
         $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
         $vistaMenu -> tipoControl = 2;        
         $vistaMenu -> filaOpciones = array('0' => array

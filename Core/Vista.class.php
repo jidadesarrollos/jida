@@ -390,23 +390,27 @@ class Vista extends DBContainer{
         $this->bd->ejecutarQuery($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
         $this->nombreVista = $nombreVista;
-        /**
-         * Si $arregloConfiguracion no tiene un key paginador es porque se ha pasado el arreglo de
-         * configuración del Paginador
-         */
-        if(!array_key_exists('paginador', $arregloConfiguracion)):
-            $this->paginador=$arregloConfiguracion;
-        else:
-            $this->establecerAtributos($arregloConfiguracion);
         
-        endif;
+         if(is_array($arregloConfiguracion)){
+             /**
+             * Si $arregloConfiguracion no tiene un key paginador es porque se ha pasado el arreglo de
+             * configuración del Paginador
+             */
+            if(!array_key_exists('paginador', $arregloConfiguracion)):
+        
+            $this->paginador=$arregloConfiguracion;
+            else:
+                $this->establecerAtributos($arregloConfiguracion);
+        
+            endif;     
+         }
+        
         
         $this->inicializarValoresVista();
         $this->addPaginador();
         /*Ejecución del query para la vista*/
         $this->data = $this->bd->obtenerDataCompleta($this->query);
         /*Creación de objeto tabla*/
-        
     }
     /**
      * Agrega paginador a la vista
@@ -1016,6 +1020,23 @@ class Vista extends DBContainer{
                 return $breadcrumb;
             }//fin if
     }//final funcion
+    /**
+     * @see @parent establecerAtributos
+     */
+    protected function establecerAtributos($arr,$class="") {
+        if(empty($clase)){
+            $clase=__CLASS__;
+        }
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
+            }
+        }
+        
+    }
     
 }//final clase
 ?>

@@ -35,11 +35,9 @@ class JadminController extends Controller{
             $form->nombreSubmit="btnJidaAdminLogin";
             $form->action=$this->url;
             if(isset($_POST["btnJidaAdminLogin"])){
-                
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
-                    
-                    $User = new UsuarioAplicacion();
+                    $User = new User();
                     $clave = md5(Globals::obtPost('clave_usuario'));
                     $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
                     if($checkUser===FALSE){

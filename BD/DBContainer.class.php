@@ -196,17 +196,15 @@ class DBContainer {
         if(empty($clase)){
             $clase=$this->clase;
         }
-        try {
-            $metodos = get_class_vars($clase);
-            foreach($metodos as $k => $valor) {
-                
-                if (isset($arr[$k])) {
-                    $this->$k = $arr[$k];
-                }
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
             }
-        } catch (Exception $e) {
-            Excepcion::controlExcepcion($e);
         }
+        
     }
     
     /**

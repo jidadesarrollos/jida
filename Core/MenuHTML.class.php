@@ -29,7 +29,7 @@ class MenuHTML extends DBContainer{
      * Define el tipo de selector para una opcion de la lista
      * con submenu 
      */
-    var $tagAdicionalLIpadre=FALSE;
+    var $tagAdicionalLIpadre=array('selector'=>'a',array('href'=>"#"));
     
     /**
      * Define el nivel de identacion
@@ -37,10 +37,16 @@ class MenuHTML extends DBContainer{
      */
     private $identacion=2;
     /**
+     * Opciones del menu
+     * @var array $opciones
+     */
+    private $opciones;
+    /**
      * Funcion constructora de menus
      * @param int $id Clave del menu
      * @param int $tipo Determina si el menu será buscado en la tabla s_menus o en otra. 1)[por defecto] Tabla menus 2)otra 
      */
+     
     function __construct($id="",$tipo=1){
         $this->nombreTabla="s_opciones_menu";
         $this->clavePrimaria="id_opcion";
@@ -50,7 +56,10 @@ class MenuHTML extends DBContainer{
             
         }
         
-        parent::__construct();
+        parent::__construct(__CLASS__);
+        $menu = $this->menu;
+        $this->opciones = $menu->obtenerOpcionesMenu();
+        
     }
     /**
      * Arma un menu a partir de una tabla distinta a s_menus
@@ -82,37 +91,26 @@ class MenuHTML extends DBContainer{
      * 
      * Obtiene el menu solicitado consultando el modelo y arma una lista
      * HTML con las opciones del menu.
-     * 
+     * @method showMenu
      * @param string $nombre Nombre del menu a consultar
      * @param array $config Arreglo Css para el menu [opcional], debe tener formato de array(ul=>array(),li=>array()) 
      * donde cada posición de los sub-arreglos son las clases a agregar por nivel. si hay mas niveles q los colocados en el arreglo los ultimos
      * niveles tomarán la misma clase que el último pasado
      */
     function showMenu(){
-            $config = $this->configuracion;
-            
-        try{
-            
-            
-            $menu = $this->menu;
-            $opciones = $menu->obtenerOpcionesMenu();
-            
-            if(count($opciones)>0){
-                
-                if(!array_key_exists("li", $config)){
-                    $config['li']=array(0=>"");
-                }
-                $listaMenu = $this->armarListaMenuRecursivo($opciones,$config);
-                return $listaMenu;    
-            }else{
-                return true;
-            }
-            
-            
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
+        $config = $this->configuracion;
+
+        $opciones=& $this->opciones;
         
+        if(count($opciones)>0){
+            if(!array_key_exists("li", $config)){
+                $config['li']=array(0=>array());
+            }
+            $listaMenu = $this->armarListaMenuRecursivo($opciones,$config);
+            return $listaMenu;    
+        }else{
+            return true;
+        }
     }
     /**
      * Arma un menu
@@ -122,39 +120,46 @@ class MenuHTML extends DBContainer{
      * @param array $config Arreglo Css para el menu [opcional], debe tener formato de array(ul=>array(),li=>array()) 
      * donde cada posición de los sub-arreglos son las clases a agregar por nivel. si hay mas niveles q los colocados en el arreglo los ultimos
      * niveles tomarán la misma clase que el último pasado
-     * @param int $nivelPadre Nivel del menu a armar (uso recursivo)
      */
-    private function armarListaMenuRecursivo($opciones,$cssMenu){
+    private function armarListaMenuRecursivo($opciones,$config){
         $nivel=0;
         
-        if(array_key_exists($nivel, $cssMenu['ul'])){
-            $cssUl = $cssMenu['ul'][$nivel];
+        if(array_key_exists($nivel, $config['ul'])){
+            
+            $atributosUL = $config['ul'][$nivel];
+            if(!is_array($atributosUL))
+                $atributosUL = array('class'=>$atributosUL);
         }else{
-            
-            $cssUl ="";
-            
+            $atributosUL ="";
         }
         $listaMenu="";
         foreach ($opciones as $key => $opcion) {
             if($opcion['padre']==0){
-                if(array_key_exists($nivel, $cssMenu['li'])){
-                    $cssli = $cssMenu['li'][$nivel];
+                if(array_key_exists($nivel, $config['li'])){
+                    $atributos = $config['li'][$nivel];
                 }else{
-                    $cssli =end($cssMenu['li']);
+                    $atributos =end($config['li']);
                     
                 }
-            $icono="";
-             if(!empty($opcion['icono'])):
-                
-                if($opcion['selector_icono']==2){
-                    $icono = Selector::crear("img",array('src'=>$opcion['icono']));
-                }else{
-                    $icono = Selector::crear("span",array('class'=>$opcion['icono']));
+                //Se valida si en $config se paso una clase css o un arreglo de atributos
+                if(!is_array($atributos)){
+                    $atributos=array('class'=>$atributos);
                 }
-            endif;
+                $icono="";
+                 if(!empty($opcion['icono'])):
+                    
+                    if($opcion['selector_icono']==2){
+                        $icono = Selector::crear("img",array('src'=>$opcion['icono']));
+                    }else{
+                        $icono = Selector::crear("span",array('class'=>$opcion['icono']));
+                    }
+                endif;
                 if($opcion['hijo']==1){
                     $submenu=""; 
-                    $submenu = $this->armarMenuRecursivoHijos($opciones,$cssMenu,$opcion['id_opcion']);
+                    $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion']);
+                    //Se agrega separador para lis padres si existe;
+                    if(array_key_exists('caret', $config['li']))
+                        $atributos['class']=$atributos['class']." ".$config['li']['caret'];
                     if($this->tagAdicionalLIpadre!==False){
                         $this->identacion=4;
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
@@ -164,14 +169,15 @@ class MenuHTML extends DBContainer{
                     }else{
                         $opc = $opcion['nombre_opcion'];
                     }
-                    $listaMenu.=Selector::crear("li",array("class"=>$cssli),$icono.$opc.$submenu,2,true);
+                    
+                    $listaMenu.=Selector::crear("li",$atributos,$icono.$opc.$submenu,2,true);
                 }else{
                     
                     //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
                     $span =$opcion['nombre_opcion'];
                     
                     $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$span,3);
-                    $listaMenu.=Selector::crear("li",array('class'=>$cssli),$icono.$enlace,2,true);
+                    $listaMenu.=Selector::crear("li",$atributos,$icono.$enlace,2,true);
                 }
                 
             }else{
@@ -180,7 +186,7 @@ class MenuHTML extends DBContainer{
                 
             }
         }//fin foreach
-        $listaMenu= Selector::crear("ul",array("class"=>"$cssUl"),$listaMenu,1,true);
+        $listaMenu= Selector::crear("ul",$atributosUL,$listaMenu,1,true);
         //$listaMenu.="\n\t\t</ul>";
         return $listaMenu;
     }
@@ -215,8 +221,7 @@ class MenuHTML extends DBContainer{
                 }
             endif;
             if($subopcion['padre']==$padre){
-                if($subopcion['hijo']==1){
-                    
+                if($subopcion['hijo']==1){   
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
@@ -228,11 +233,8 @@ class MenuHTML extends DBContainer{
                     $span = $subopcion['nombre_opcion'];
                     $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);
                     $listaMenu.=Selector::crear("li",$cssli,$icono.$enlace,$nivel+2,true);   
-                }
-              
-                
+                }   
             }
-            
         }//fin foreach
         $submenu=Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true);
         return $submenu;
