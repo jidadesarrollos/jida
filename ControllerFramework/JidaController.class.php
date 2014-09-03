@@ -12,10 +12,14 @@
      * Define el nombre del Controlador requerido
      * @var string $controlador
      * @access private
-     * 
-     * 
      */
     private $controlador;
+    /**
+     * Objeto controlador instanciado
+     * @var object $controladorObject
+     * @access private
+     */
+    private $controladorObject;
     /**
      * Metodo a ejecutar del controlador solicitado
      * @var string $metodo
@@ -28,7 +32,7 @@
      * @access private
      * 
      */
-    private $args;
+    private $args=array();
     /**
      * Instancia de objeto vista
      * @var object vista
@@ -54,71 +58,30 @@
      */
      private $modulosExistentes=array();
     function __construct(){
-        
         try{
+            
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
-                
             }
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-            
             $_SESSION['urlActual'] = $_GET['url'];
-             
             if(isset($_GET['url'])){
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
             }
-            
             /**
              * variable global con todos los parametros pasados via url
-             * 
              */
             $GLOBALS['arrayParametros'] = $url;
-            $this->controlador = $this->validarNombre(array_shift($url),1);
-            $this->checkSubdominio();
-            
-            
-            if(in_array($this->controlador,$this->modulosExistentes)){
-                $this->modulo = $this->controlador;
-                $this->controlador = $this->validarNombre(array_shift($url),1);
-                
-            }else
-            /**
-             * En caso de existir un subdominio, con el nombre igual a un modulo desarrollado, se accederá 
-             * directamente al módulo
-             */
-            if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-                
-                $this->modulo=$this->validarNombre($this->subdominio,1);
-                if($this->controlador=='Index'){
-                    $this->controlador=$this->validarNombre($this->subdominio,1);
-                }
-            }
-             
-            $this->metodo = $this->validarNombre(array_shift($url),2);
-            $this->args = $url;
-            
+            $this->getSubdominio($url);
+            $this->procesarURL($url);
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
-            
-            if(!$this->controlador){
-                
-                /*
-                 * Si no se pasa un controlador en la url, se buscará un controlador con el nombre del modulo
-                 * Esto pasa solo si el primer parametro de la URL existe adentro del arreglo de modulos existentes
-                 * */
-                $this->controlador = $this->modulo;
-            }
-            if(!$this->metodo){
-                $this->metodo = 'index';
-            }
-            
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
-            
             $this->validacion();
         
         }catch(Exception $e){
@@ -127,14 +90,96 @@
         }
             
     }//fin constructor
-    
+    /**
+     * Procesa el contenido de la url
+     * Valida los modulos, controladores y metodos a consultar
+     * @method procesarURL
+     */
+    private function procesarURL($url){
+        
+        $param = $this->validarNombre(array_shift($url),1);
+        if(!in_array($param,$this->modulosExistentes)){
+            //Se valida si se ha solicitado un modulo por medio de un subdominio
+            if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+                $this->modulo=$this->validarNombre($this->subdominio,1);   
+            }
+            //Se verifica si existe el controlador
+            if($this->checkController($param."Controller")){
+                $this->controlador=$param;
+                if(count($url)>0 ){
+                    $this->checkMetodo($param);
+                }else{
+                    $this->metodo='index';
+                }
+            }else{
+                /**
+                 * Si entra aqui el controlador a ejecutar es el Index publico
+                 * */
+                $this->controlador='Index';
+                $this->checkMetodo($param);
+                #String::test("No existe el controlador  $param");
+            }
+            
+        }else{
+            $this->modulo=$param;
+            if(count($url)>0){
+                $param =$this->validarNombre(array_shift($url),1);
+                //Se valida si existe un controlador en la url
+                if($this->checkController($param."Controller")){
+                    $this->controlador=$param;
+                    if(count($url)>0){
+                        $param =$this->validarNombre(array_shift($url),1);
+                        
+                    }
+                    $this->checkMetodo($param);
+                }else{
+                    $this->controlador=$this->modulo;
+                    $this->checkMetodo($param,TRUE);    
+                }
+            }else{
+                $this->controlador=$this->modulo;
+                $this->metodo='index';
+            }
+        }
+        
+        $this->args = array_merge($this->args, $url);
+    }
+    /**
+     * Verifica la existencia de un metodo solicitado
+     * @method checkMetodo
+     * @param string $metodo Nombre del metodo a consultar
+     */
+    private function checkMetodo($metodo='index',$insertArg=FALSE){
+        
+        if(method_exists($this->controlador."Controller", $this->validarNombre($metodo,2))){
+            $this->metodo=$metodo;
+        }else{
+            $this->metodo="index";
+            if($insertArg){
+                $this->args[]=$metodo;
+            }
+        }
+    }
+    /**
+     * Verifica si existe un controlador
+     * @method checkController
+     * @param string $controller Nombre del controlador a consultar
+     * @return boolean True si existe false caso contrario
+     */
+    private function checkController($controller){
+        if(class_exists($controller)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Verifica si se encuentra un modulo definido para un subdominio de la aplicación
      * @method checkModulo
      * @access private
      * 
      */
-    private function checkSubdominio(){
+    private function getSubdominio(){
         
         $divisionUrlArray = explode('.', $_SERVER['SERVER_NAME']);
         if(count($divisionUrlArray)>0){
@@ -204,15 +249,13 @@
      * @return void
      * 
      */
-    function validacion(){
-        
+    function validacion(){ 
         try{
-            
             $acl = new ACL();
-            
-            #echo strtolower($this->modulo)." ".$this->controlador." ".$this->metodo," ";exit;
-            #$acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
-            $acceso=TRUE;
+#            echo $this->controlador," ",$this->metodo," ",strtolower($this->modulo);exit;
+            $acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
+            $accesi=TRUE;
+            #exit;
             if($acceso===TRUE){
                 
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -221,6 +264,7 @@
                  * Si es llamado el modulo interno "jadmin" el valor de rutaVista = 2, excepcion=3 default=1
                  */
                 if(strtolower($this->controlador)=='jadmin' or strtolower($this->modulo)=='jadmin'){
+                    
                    $this->vista->rutaPagina=2;
                    $rutaArchivo=framework_dir.'Jadmin/Controllers/'.$nombreArchivo;
                    
@@ -309,11 +353,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
-               
-                 $this->vista->rutaPagina=3;
-                 $this->controlador="Excepcion";
-                 $controlador = $this->controlador."Controller";
-                 $this->metodo = 'error403';
+                 throw new Exception("No tiene permisos", 403);
                  
              }        
             if(isset($controlador)){
@@ -322,7 +362,9 @@
             
             
          }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+             
+            $this->procesarExcepcion($e);
+            #Excepcion::controlExcepcion($e);
         }  
        
     
@@ -332,23 +374,15 @@
      * Obtiene el controlador requerido de un modulo especifico
      */
     private function obtenerControladorModulo($nombreArchivo){
-        try{
             
-            $rutaModulo="";
-            if(!empty($this->modulo)){
-                $rutaModulo =app_dir . "Modulos/" .$this->modulo."/Controller/".$nombreArchivo;
-                 
-            }else{
-                
-                $rutaModulo = app_dir.'Controller/'.$nombreArchivo;
-            }
-            
-            return $rutaModulo;
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+        $rutaModulo="";
+        if(!empty($this->modulo)){
+            $rutaModulo =app_dir . "Modulos/" .$this->modulo."/Controller/".$nombreArchivo;
+        }else{
+            $rutaModulo = app_dir.'Controller/'.$nombreArchivo;
         }
-
         
+        return $rutaModulo;    
         $this->mostrarContenido($retorno,$controlador->vista);
     }
     /**
@@ -363,36 +397,70 @@
      * @access private
      */
     private function ejecucion($controlador){
-            
-        $args = $this->args;
-        $metodo = $this->metodo;
-        $retorno= array();
-        #se instancia el controlador solicitado
         
-        $controlador = new $controlador;
-        #llamada al metodo solicitado via url
-        $controlador->$metodo();
+        $controlador = $this->ejecutarController($controlador);
         #retorno del metodo ejecutado
-        $retorno=$controlador->data;
-        
-        
+        $retorno=$controlador->data;        
         /**
          * Se define el titulo para tag titile de la página
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
-        
-        $this->vista->layout = $controlador->layout;
-        $this->vista->definirDirectorios();
-        
-        $this->vista->checkHeader($controlador->header);
-        $this->vista->checkFooter($controlador->footer);
-
-        
         $this->mostrarContenido($retorno,$controlador->vista);
         
+        
     }//fin funcion ejecucion
+    /**
+     * Verifica las propiedades de los directorios Layout,header y footer para la vista
+     * @method checkDirectoriosView
+     */
+    private function checkDirectoriosView(){
+        if(is_object($this->controladorObject)):
+            $this->vista->layout = $this->controladorObject->layout;
+            $this->vista->definirDirectorios();
+            if(!$this->vista->layout){
+                $this->vista->checkHeader($this->controladorObject->header);
+                $this->vista->checkFooter($this->controladorObject->footer);    
+            }
+        endif;
+    }
+    /**
+     * Realiza la ejecución del Controlador a instanciar
+     * @method ejecutarController
+     */
+    private function ejecutarController($controlador,$params=null,$checkDirs=true){
+        
+        $args = $this->args;
+        $metodo = $this->metodo;
+        $retorno= array();
+        #se instancia el controlador solicitado
+        
+        $this->controladorObject = new $controlador;
+        $controlador=& $this->controladorObject;
+        if($checkDirs)
+            $this->checkDirectoriosView();
+        #llamada al metodo solicitado via url
+        $controlador->$metodo($params);        
+        return $controlador;
+    }
     
+    private function procesarExcepcion($excepcion){
+        
+        $ctrlError = $this->controlador."Controller";
+        $this->controladorObject = new $ctrlError;
+        $this->checkDirectoriosView();
+        $this->controlador='ExcepcionController';
+        $this->metodo='error';
+        
+        $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
+        $this->vista->definirDirectorios();
+        $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
+        $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
+        #retorno del metodo ejecutado
+        $retorno=$ctrl->data;
+        #Arrays::mostrarArray($this->vista);
+        $this->mostrarContenido($retorno,$ctrl->vista);
+    }
     /**
      * Muestra contenido de la vista y controlador requeridos
      * 
@@ -411,18 +479,13 @@
         $this->vista->renderizar($retorno,$vista);
         
     }
-    
-    private function manejarError($archivo){
-        echo "No existe el archivo controlador requerido : $archivo";
-    }
-    
     /**
      * Ajusta el nombre de los Controladores y Metodos
      * 
      * Realiza una modificación del string para crear nombres
      * de clases controladoras y metodos validas
-     * @param int $tipoCamelCase Indica si el string a modificar debe ir en upper o lower CamelCase
      * @param string $str Cadena a formatear
+     * @param int $tipoCamelCase 1 Upper 2 Lower
      */
     private function validarNombre($str,$tipoCamelCase){
         if(!empty($str)){

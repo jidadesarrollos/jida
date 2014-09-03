@@ -75,8 +75,12 @@ class UsersController extends Controller{
     }//fin función
 	
 	function cierreSesion(){
-	    Session::destroy();
-        redireccionar('/jadmin/');
+	    if(Session::destroy()){
+	       redireccionar('/jadmin/');    
+	    }else{
+	        echo "no";exit;
+	    }
+        
 	}
 }//fin metodo
 ?>

@@ -185,16 +185,15 @@ class ACL extends DBContainer{
             $componente = "principal";
         }
         $listaAcl  = Session::get('acl');
-        
+        #Arrays::mostrarArray($listaAcl);
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
          
-        #while($acceso == FALSE and $i<count($perfilesUser)){
+        while($acceso == FALSE and $i<count($perfilesUser)){
             
             $perfil = $perfilesUser[$i];
-                // echo "$componente<hr>";
-                 #Arrays::mostrarArray($listaAcl);
+                
                 if(isset($listaAcl[$componente])){
                     $arrComponentes = $listaAcl[$componente];
                     
@@ -227,11 +226,8 @@ class ACL extends DBContainer{
                 }else{
                    $acceso=FALSE;
                 }
-            
-         #   $i++;
-        #}
-        
-        // Arrays::mostrarArray($listaAcl);
+            $i++;    
+        }
         return $acceso;
     }
 }

@@ -20,6 +20,7 @@ class FormsController extends Controller{
      * Funcion constructora
      */
     function __construct(){
+        
         $this->jctrl = new JidaControl();
         $this->url="/jadmin/forms/";
         $this->layout="jadmin.tpl.php";

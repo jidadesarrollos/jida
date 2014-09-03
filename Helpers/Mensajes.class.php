@@ -115,6 +115,7 @@ class Mensajes {
     
     static function msjExcepcion($msj,$ruta){
         $_SESSION['__excepcion'] = $msj;
+        
         echo $_SESSION['__excepcion'];
   //      redireccionar($ruta);
     }

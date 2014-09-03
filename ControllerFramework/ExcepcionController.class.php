@@ -9,10 +9,6 @@
  */
 class ExcepcionController extends Controller{
     
-    function __construct(){
-        $this->header="/error/headerError.php";
-        $this->footer="/error/footerError.php";
-    }
     /**
      * Funcion por defecto para manejar
      * las excepciones existentes en el entorno de desarrollo
@@ -20,11 +16,20 @@ class ExcepcionController extends Controller{
      * @param object $message
      * @return boolean true
      */
+     
+    function error($e){
+        
+        $this->data['msjError'] =  Excepcion::controlExcepcion($e);
+        $this->vista="500";
+        
+       
+    }
     function index(){
         
         $this->vista = 'excepcion';
     }
-    function error500(){   
+    function error500($msj){
+        $this->data['__msjError']=$msj;   
         $this->vista='500';
     }
     

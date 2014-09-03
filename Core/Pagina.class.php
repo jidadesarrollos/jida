@@ -108,12 +108,8 @@ class Pagina{
     
     
     function __construct($controlador,$metodo="",$modulo=""){
-        try{
-           $this->validarDefiniciones($controlador,$metodo,$modulo);
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
         
+       $this->validarDefiniciones($controlador,$metodo,$modulo);
     }
     /**
      * Verifica todos los datos pasados a la clase para la carga
@@ -131,23 +127,18 @@ class Pagina{
         if(!defined('DIR_LAYOUT_APP')){
             define('DIR_LAYOUT_APP',app_dir.'Layout/');
         }
-        if(defined('jida_admin_vistas_dir')){
-            $this->rutaFramework=jida_admin_vistas_dir;
+        if(defined('framework_dir')){
+            $this->rutaFramework=framework_dir."Jadmin/Vistas/";
             
         }else{
             throw new Exception("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
             
         }
-        if(defined('plantillas_framework_dir')){
-            $this->rutaPlantillasFramework = plantillas_framework_dir;
-        }else{
-            throw new Exception("No se encuentra definida la ruta de las plantillas del framework. verifique las configuraciones", 1);
-        }
         
         if(defined('DIR_EXCEPCION_PLANTILLAS')){
             $this->rutaExcepciones = DIR_EXCEPCION_PLANTILLAS;
         }else{
-            $this->rutaExcepciones = plantillas_framework_dir."error/";
+            $this->rutaExcepciones = DIR_PLANTILLAS_FRAMEWORK."error/";
         }
         #Ruta para vistas de la aplicacion
         if(!empty($modulo)){
@@ -162,14 +153,22 @@ class Pagina{
             $this->nombreVista=$metodo;
         }
     }
-    
+
+    /**
+     * Define los directorios por defecto a manejar
+     * 
+     * Los tipos de directorio son : 
+     * <ul> <li>1 Aplicación</li> <li>2Jida </li> <li>3 Excepciones</li></ul>
+     * @method definirDirectorios
+     */
     function definirDirectorios(){
          /*Verificación de ruta de plantillas*/
         if($this->rutaPagina==1  or $this->rutaPagina==3){
+            
             $this->urlPlantilla=directorio_plantillas;
             $this->directorioLayout=DIR_LAYOUT_APP;
         }elseif($this->rutaPagina==2){
-            $this->urlPlantilla=plantillas_framework_dir;
+            $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
         
@@ -189,37 +188,44 @@ class Pagina{
      */
     
     function renderizar($data,$nombreVista=""){
-       try{
-           
-            if(!empty($nombreVista)){
-                $this->nombreVista = $nombreVista;
-            }
+        
+        if(!empty($nombreVista)){
+            $this->nombreVista = $nombreVista;
+        }
+        #String::test($this->nombreVista);
+        $rutaVista = $this->obtenerRutaVista();
+        #String::test($rutaVista);
+        
+        if($this->rutaPagina==3){
             
-            $rutaVista = $this->obtenerRutaVista();
+            $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
+        }else{
             
-            if($this->rutaPagina==3){
-                $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
+            if($this->controlador=='Excepcion'){
+                $rutaVista=$this->rutaFramework."error/".String::lowerCamelCase($this->nombreVista).".php";
             }else{
+                #echo "ney";
                 $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";
-            }
-            if(!is_readable($rutaVista)){
-                $paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";
-                $rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
-                
-            }
-            $this->vista=$rutaVista;
-            
-            if(!empty($this->layout) or $this->layout!==FALSE){
-                $this->renderizarLayout($data);
-            }else{
-                
-               $this->renderizarPlantilla($data); 
+                   
             }
             
+        }
+        #String::test($rutaVista);
+        #Arrays::mostrarArray($this);
+        if(!is_readable($rutaVista)){
                
-       }catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       }
+            $paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";
+            $rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
+            
+        }
+        $this->vista=$rutaVista;
+        
+        if(!empty($this->layout) or $this->layout!==FALSE){
+            $this->renderizarLayout($data);
+        }else{
+            
+           $this->renderizarPlantilla($data); 
+        }
     }//final funcion
     
     /**
@@ -231,6 +237,7 @@ class Pagina{
     private function renderizarPlantilla($data){
         global $dataArray;
         $dataArray = $data;
+        
         include_once $this->header;
         include_once $this->vista;
         include_once $this->footer;   
@@ -245,24 +252,28 @@ class Pagina{
         global $dataArray ;
         
         $dataArray = $data;
-         
+        
         /* Permitimos almacenamiento en bufer */
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
-           #if(!empty($this->nombreVista) and file_exists($this->ru))
-            
+           
            include_once $this->vista;
            $contenido = ob_get_clean();
            
            include_once $this->directorioLayout.$this->layout;
            $layout = ob_get_clean();
            echo $layout;
+        else:
+            
+            $b = String::test($this->directorioLayout);
         endif;
         
         if (ob_get_length()) ob_end_clean();
-    }
+        
+        
     
+    }
     /**
      * Muestra una página de error
      * 
@@ -277,9 +288,7 @@ class Pagina{
         try{
             $directorioError="";
             $_SESSION['ruta'] = $rutaVista;
-            
             $directorioError = $this->rutaExcepciones."$vistaError.php";
-            
             return $directorioError;
             
         }catch(Exception $e){
@@ -301,11 +310,10 @@ class Pagina{
             
             case 2:
                 $rutaVista = $this->rutaFramework;
-                    
                 break;
-            
             default:
                 $rutaVista = $this->rutaExcepciones;
+                
                 break;
         }
         
@@ -327,7 +335,16 @@ class Pagina{
         
     }
     
-    function pagina403(){
+    function establecerAtributos($arr) {
+        $clase=__CLASS__;
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
+            }
+        }
         
     }
 }

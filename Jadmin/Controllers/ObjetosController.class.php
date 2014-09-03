@@ -21,7 +21,7 @@ class ObjetosController extends Controller{
     }
 	
 	function index(){
-		try{
+		
   			$this->vista="lista";
 			$this->tituloPagina="Objetos del Sistema";   
 			$idComponente = $this->getEntero(Globals::obtGet('comp'));
@@ -60,13 +60,11 @@ class ObjetosController extends Controller{
            
            
            
-       	}catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       	}
+       	
 	}
     
     function lista(){
-      	try{
+      	
   			
 			$this->tituloPagina="jida-Registro Componentes";
            if(isset($_GET['comp'])){
@@ -97,13 +95,11 @@ class ObjetosController extends Controller{
            }
            
            
-       	}catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       	}
+       	
    }
 
     function setObjetoComp(){
-        try{
+        
         	$this->tituloPagina="Registro de objetos";
             if(isset($_GET['comp'])){
                 $tipoForm=1;$campoUpdate="";
@@ -152,9 +148,7 @@ class ObjetosController extends Controller{
             	Session::set('__msjVista', Mensajes::mensajeAlerta("Debe seleccionar un componente"));
 				Session::set('__idVista','componentes');
             }
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
+        
 		
     }// final funcion setObjetoCompo
     
@@ -166,7 +160,7 @@ class ObjetosController extends Controller{
 	 * @access public
 	 */
     function setObjeto(){
-        try{
+        
         	$this->tituloPagina="Registro de objetos";
         
             $tipoForm=1;$campoUpdate="";
@@ -208,9 +202,7 @@ class ObjetosController extends Controller{
 			}
 			$this->data['formObj']   = $form->armarFormulario();
 			
-		}catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
+		
     } 
     
     
@@ -225,28 +217,25 @@ class ObjetosController extends Controller{
 	
 	
 	function metodos(){
-		try{
-			$this->vista ="listaMetodos";
+		$this->vista ="listaMetodos";
+		
+		if(isset($_GET['obj'])){
+			$objeto = new Objeto($this->getEntero(Globals::obtGet('obj')));
 			
-			if(isset($_GET['obj'])){
-				$objeto = new Objeto($this->getEntero(Globals::obtGet('obj')));
-				
-				$this->tituloPagina="Objeto $objeto->objeto - Metodos";
-				$clase = new ReflectionClass($objeto->objeto."Controller");
-				$metodos = $clase->getMethods(ReflectionMethod::IS_PUBLIC);
-				$arrayMetodos =array();
-				foreach ($metodos as $key => $value) {
-					if($value->name!='__construct')
-						$arrayMetodos[$key]=$value->name;
-				}
-				$claseMetodo = new Metodo();
-				$claseMetodo->validarMetodosExistentes($arrayMetodos, $objeto->id_objeto);
-				$this->data['vistaMetodos'] = $this->vistaMetodos($objeto);
-				
+			$this->tituloPagina="Objeto $objeto->objeto - Metodos";
+			$clase = new ReflectionClass($objeto->objeto."Controller");
+			$metodos = $clase->getMethods(ReflectionMethod::IS_PUBLIC);
+			$arrayMetodos =array();
+			foreach ($metodos as $key => $value) {
+				if($value->name!='__construct')
+					$arrayMetodos[$key]=$value->name;
 			}
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);
+			$claseMetodo = new Metodo();
+			$claseMetodo->validarMetodosExistentes($arrayMetodos, $objeto->id_objeto);
+			$this->data['vistaMetodos'] = $this->vistaMetodos($objeto);
+			
 		}
+
 	}
 	
 	private function vistaMetodos(Objeto $obj){
@@ -265,7 +254,7 @@ class ObjetosController extends Controller{
 	
 	
 	function accesoPerfiles(){
-		try{
+		
 			if(isset($_GET['metodo'])){
 				
 			
@@ -300,55 +289,45 @@ class ObjetosController extends Controller{
 				Session::set('__idVista','objetos');
 				redireccionar($this->url);	
 			}
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);
-		}
+		
 	}
     /**
      * Asignar acceso a objetos
      */
     function asignarAcceso(){
-        try{
-            if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])!=""){            
-                $this->vista="accesoPerfiles";
-                $form = new Formulario('PerfilesAObjetos',2,Globals::obtGet('obj'));
-                $obj = new Objeto($this->getEntero(Globals::obtGet('obj')));
-                $form->action=$this->url."asignar-acceso/obj/".Globals::obtGet('obj');
-                $form->valueSubmit="Asignar Perfiles a Objeto";
-                $form->tituloFormulario="Asignar acceso de perfiles al objeto $obj->objeto";
-                if(isset($_POST['btnPerfilesAObjetos'])){
-                    $validacion = $form->validarFormulario($_POST);
-                    if($validacion===TRUE){
-                        
-                        $accion = $obj->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
-                        if($accion['ejecutado']==1){
-                            Session::set('__idVista', 'objetos');
-                            $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al objeto '.$obj->objeto);
-                            Session::set('__msjVista',$msj);
-                            redireccionar($this->url);
-                        }else{
-                            $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                            Session::set('__msjForm', $msj);
-                        }
+        
+        if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])!=""){            
+            $this->vista="accesoPerfiles";
+            $form = new Formulario('PerfilesAObjetos',2,Globals::obtGet('obj'));
+            $obj = new Objeto($this->getEntero(Globals::obtGet('obj')));
+            $form->action=$this->url."asignar-acceso/obj/".Globals::obtGet('obj');
+            $form->valueSubmit="Asignar Perfiles a Objeto";
+            $form->tituloFormulario="Asignar acceso de perfiles al objeto $obj->objeto";
+            if(isset($_POST['btnPerfilesAObjetos'])){
+                $validacion = $form->validarFormulario($_POST);
+                if($validacion===TRUE){
+                    
+                    $accion = $obj->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    if($accion['ejecutado']==1){
+                        Session::set('__idVista', 'objetos');
+                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al objeto '.$obj->objeto);
+                        Session::set('__msjVista',$msj);
+                        redireccionar($this->url);
                     }else{
-                        
-                        Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
+                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                        Session::set('__msjForm', $msj);
                     }
+                }else{
+                    
+                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
                 }
-                $this->data['formAcceso'] =$form->armarFormulario();
-            }else{
-                Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
-                Session::set('__idVista','objetos');
-                redireccionar($this->url);  
             }
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }       
-        
-        
-        
-        
-        
+            $this->data['formAcceso'] =$form->armarFormulario();
+        }else{
+            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
+            Session::set('__idVista','objetos');
+            redireccionar($this->url);  
+        }    
     }
 
 	

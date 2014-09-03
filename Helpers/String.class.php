@@ -174,7 +174,9 @@ class String {
         }
     } // fin función
     
-        
+    static function test($content,$tag="hr"){
+        echo $content."<$tag/>";
+    }
 } // END 
 
 
