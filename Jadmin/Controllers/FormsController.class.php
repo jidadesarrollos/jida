@@ -277,12 +277,14 @@ class FormsController extends Controller{
             $campos = explode(",", $_POST['campos']);
             $orden = 1;
             $arrayOrden=array();
+            $jctrl = new JidaControl(null,2);
             foreach($campos as $campo){
                 $idCampo = explode("-", $campo);
                 $arrayOrden[]=array('id_campo'=>$idCampo[1],'orden'=>$orden);
                 $orden++;
             }
-            $this->jctrl->setOrdenCamposForm($arrayOrden,$form="");
+            
+            $jctrl->setOrdenCamposForm($arrayOrden,$form="");
             $msj = Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
             respuestaAjax(json_encode(array("ejecutado"=>TRUE,'msj'=>$msj)));
         }
@@ -314,8 +316,9 @@ class FormsController extends Controller{
 
     function configuracionCampo(){
        $campo = new CampoHTML();
+       
         $this->layout="ajax.tpl.php";
-        
+         
         if(isset($_POST['idCampo'])){
             $idCampo = $_POST['idCampo'];
             

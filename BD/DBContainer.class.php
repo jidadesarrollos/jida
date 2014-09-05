@@ -240,35 +240,33 @@ class DBContainer {
      *          salvarObjeto(__CLASS__);
      */
     function salvarObjeto($clase, $datos = "", $momentoGuardado = FALSE) {
-        try {
-            if (gettype ( $this->bd ) != 'object') {
-                throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
-            }
-            // si se pasan los datos se establecen los
-            // valores en las propiedades de la clase
-            if (is_array ( $datos )) {
-                $this->establecerAtributos ( $datos, $clase );
-            }
-            
-            $propiedades = $this->obtenerPropiedadesObjeto ();
-            $accion = "";
-            
-            if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
-                
-                $result = $this->insertarObjeto($momentoGuardado);
-                $accion = "Insertado";
-            } else {
-                
-                $result = $this->modificarObjeto($momentoGuardado);
-                $accion = "Modificado";
-            }
-            $retorno = $result;
-            $retorno['result'] = $result;
-            $retorno['accion'] =  $accion; 
-            return $retorno;
-        } catch ( Exception $e ) {
-            Excepcion::controlExcepcion ( $e );
+        
+        if (gettype ( $this->bd ) != 'object') {
+            throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
         }
+        // si se pasan los datos se establecen los
+        // valores en las propiedades de la clase
+        if (is_array ( $datos )) {
+            $this->establecerAtributos ( $datos, $clase );
+        }
+        
+        $propiedades = $this->obtenerPropiedadesObjeto ();
+        $accion = "";
+        
+        if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
+            
+            $result = $this->insertarObjeto($momentoGuardado);
+            $accion = "Insertado";
+        } else {
+            
+            $result = $this->modificarObjeto($momentoGuardado);
+            $accion = "Modificado";
+        }
+        $retorno = $result;
+        $retorno['result'] = $result;
+        $retorno['accion'] =  $accion; 
+        return $retorno;
+    
     }
     /**
      * Salva un objeto instanciado
@@ -288,39 +286,35 @@ class DBContainer {
      */
     
     function salvar($datos = "", $momentoGuardado = FALSE) {
-        try {
             
-            if($momentoGuardado==FALSE){
-                $momentoGuardado = ($this->registroMomentoGuardado===TRUE || $this->momentoSalvado===TRUE) ?TRUE:FALSE;
-            }
-            if (gettype ( $this->bd ) != 'object') {
-                throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
-            }
-            // si se pasan los datos se establecen los
-            // valores en las propiedades de la clase
-            if (is_array ( $datos )) {
-                $this->establecerAtributos ( $datos, $this->clase );
-            }
-            
-            $propiedades = $this->obtenerPropiedadesObjeto ();
-            $accion = "";
-            
-            if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
-                
-                $result = $this->insertarObjeto($momentoGuardado);
-                $accion = "Insertado";
-            } else {
-                
-                $result = $this->modificarObjeto($momentoGuardado);
-                $accion = "Modificado";
-            }
-            $retorno = $result;
-            $retorno['result'] = $result;
-            $retorno['accion'] =  $accion; 
-            return $retorno;
-        } catch ( Exception $e ) {
-            Excepcion::controlExcepcion ( $e );
+        if($momentoGuardado==FALSE){
+            $momentoGuardado = ($this->registroMomentoGuardado===TRUE || $this->momentoSalvado===TRUE) ?TRUE:FALSE;
         }
+        if (gettype ( $this->bd ) != 'object') {
+            throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
+        }
+        // si se pasan los datos se establecen los
+        // valores en las propiedades de la clase
+        if (is_array ( $datos )) {
+            $this->establecerAtributos ( $datos, $this->clase );
+        }
+        
+        $propiedades = $this->obtenerPropiedadesObjeto ();
+        $accion = "";
+        
+        if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
+            
+            $result = $this->insertarObjeto($momentoGuardado);
+            $accion = "Insertado";
+        } else {
+            
+            $result = $this->modificarObjeto($momentoGuardado);
+            $accion = "Modificado";
+        }
+        $retorno = $result;
+        $retorno['result'] = $result;
+        $retorno['accion'] =  $accion; 
+        return $retorno;
     }
     /**
      * Obtiene todas las propiedades públicas de un objeto instanciado.

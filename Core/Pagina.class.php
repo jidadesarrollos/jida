@@ -136,8 +136,10 @@ class Pagina{
         }
         
         if(defined('DIR_EXCEPCION_PLANTILLAS')){
+            
             $this->rutaExcepciones = DIR_EXCEPCION_PLANTILLAS;
         }else{
+            
             $this->rutaExcepciones = DIR_PLANTILLAS_FRAMEWORK."error/";
         }
         #Ruta para vistas de la aplicacion
@@ -202,20 +204,21 @@ class Pagina{
         }else{
             
             if($this->controlador=='Excepcion'){
-                $rutaVista=$this->rutaFramework."error/".String::lowerCamelCase($this->nombreVista).".php";
+                
+                $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
             }else{
-                #echo "ney";
                 $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";
                    
             }
             
         }
-        #String::test($rutaVista);
-        #Arrays::mostrarArray($this);
+        
         if(!is_readable($rutaVista)){
+            echo "$rutaVista";exit;
+            throw new Exception("Pagina no conseguida", 404);
                
-            $paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";
-            $rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
+            #$paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";
+            #$rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
             
         }
         $this->vista=$rutaVista;
@@ -286,6 +289,7 @@ class Pagina{
     }
     private function obtenerVistaError($rutaVista,$vistaError="404"){
         try{
+            
             $directorioError="";
             $_SESSION['ruta'] = $rutaVista;
             $directorioError = $this->rutaExcepciones."$vistaError.php";

@@ -708,51 +708,7 @@ class Vista extends DBContainer{
         return $opciones;
     }
      
-    // private function agregarOpcionesFila($campo){
-//         
-        // $opciones="<td class=\"$this->cssFilaOpciones \">";
-        // $opciones.="<input type=\"hidden\" name='clave' value=\"$campo\"/>";
-        // $arrayExample = array('atributos'=>array(),'html'=>false);
-//         
-        // foreach ($this->filaOpciones as $key => $dataSelector) {
-            // #--------------------------------------------------------------
-            // foreach($dataSelector as $selector => $props){
-                // #--------------------------------------------------------------
-//                 
-//                 
-                // $data = array_merge($arrayExample,$props);
-                // $html="";
-                // //Arrays::verArray($data);
-                // if(is_array($data['html'])){
-                    // foreach($data['html'] as $key => $value){
-                        // //Verificar si se ha pasado la palabra {clave} para uso del id de la vista
-                        // //y hacer el reemplazo por el id actual de la columna
-                        // $dataHtml=array_merge($arrayExample,$value);
-                        // $implode = implode(',', $dataHtml['atributos']);
-                        // $implode = str_replace('{clave}', "$campo", $implode);
-                        // $dataHtml['atributos'] = array_combine(array_keys($dataHtml['atributos']), explode(",",$implode));
-                        // $content = (!is_array($dataHtml['html']))?$dataHtml['html']:"";                              
-                        // $html.=CampoHTML::crearSelectorHTMLSimple($key,$dataHtml['atributos'],$content);
-                    // }
-                // }
-//                 
-                // if(is_array($data['atributos'])){
-                    // $implode = implode('||', $data['atributos']);
-//                     
-                    // $implode = str_replace('{clave}', "$campo", $implode);
-                // }
-//                 
-                // $data['atributos'] = array_combine(array_keys($data['atributos']), explode("||",$implode));
-                // $content = (!is_array($data['html']))?$data['html']:"";
-                // $opciones.=CampoHTML::crearSelectorHTMLSimple($selector, $data['atributos'],$html.$content);
-                // #--------------------------------------------------------------
-            // }//final primer foreach
-            // #--------------------------------------------------------------
-        // }//final segundo foreach
-        // $opciones.="</td>";
-        // return $opciones;    
-//     
-//         
+   
     // }#Fin funcion opciones Fila
     /**
      * Crea el control de la fila

@@ -30,7 +30,16 @@ class MenuHTML extends DBContainer{
      * con submenu 
      */
     var $tagAdicionalLIpadre=array('selector'=>'a',array('href'=>"#"));
-    
+    /**
+     * Define el estilo para un li seleccionado o abierto por selección de un hijo
+     * @var $cssLiSeleccionado
+     */
+    var $cssLiSeleccionado='selected';
+    /**
+     * Define el estilo para un ul hijo abierto en caso de se encuentre seleccionada una subopción
+     * @var $cssUlChildOpen
+     */
+    var $cssUlChildOpen='show';
     /**
      * Define el nivel de identacion
      * @var $identacion
@@ -133,6 +142,7 @@ class MenuHTML extends DBContainer{
             $atributosUL ="";
         }
         $listaMenu="";
+        
         foreach ($opciones as $key => $opcion) {
             if($opcion['padre']==0){
                 if(array_key_exists($nivel, $config['li'])){
@@ -157,6 +167,9 @@ class MenuHTML extends DBContainer{
                 if($opcion['hijo']==1){
                     $submenu=""; 
                     $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion']);
+                    if($submenu['open']===TRUE){
+                        $atributos['class'] =$atributos['class'] ." ". $this->cssLiSeleccionado; 
+                    }
                     //Se agrega separador para lis padres si existe;
                     if(array_key_exists('caret', $config['li']))
                         $atributos['class']=$atributos['class']." ".$config['li']['caret'];
@@ -170,7 +183,7 @@ class MenuHTML extends DBContainer{
                         $opc = $opcion['nombre_opcion'];
                     }
                     
-                    $listaMenu.=Selector::crear("li",$atributos,$icono.$opc.$submenu,2,true);
+                    $listaMenu.=Selector::crear("li",$atributos,$icono.$opc.$submenu['html'],2,true);
                 }else{
                     
                     //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
@@ -192,7 +205,7 @@ class MenuHTML extends DBContainer{
     }
 
     private function armarMenuRecursivoHijos($opciones,$config,$padre,$nivel=1){
-        
+        $ulOpen=FALSE;
         if($padre==12){
          //Arrays::mostrarArray($opciones);
         }
@@ -223,21 +236,32 @@ class MenuHTML extends DBContainer{
             if($subopcion['padre']==$padre){
                 if($subopcion['hijo']==1){   
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
+                    
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
                     }else{
                         $opc = $subopcion['nombre_opcion'];
                     }    
-                    $listaMenu .= Selector::crear("li",$cssli,$icono.$opc.$submenus,$nivel+1);
+                    $ulOpen=$submenus['ulOpen'];
+                    $listaMenu .= Selector::crear("li",$cssli,$icono.$opc.$submenus['html'],$nivel+1);
                 }else{
+                    /**
+                     * Entra aqui si es un link o enlace del menu
+                     */
                     $span = $subopcion['nombre_opcion'];
+                    if($subopcion['url_opcion']==$_SERVER['REQUEST_URI']){
+                        $ulOpen=TRUE;
+                        $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
+                    }
                     $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);
                     $listaMenu.=Selector::crear("li",$cssli,$icono.$enlace,$nivel+2,true);   
                 }   
             }
         }//fin foreach
+        if($ulOpen)
+            $cssUl['class'] = $cssUl['class']." ".$this->cssUlChildOpen;
         $submenu=Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true);
-        return $submenu;
+        return array('html'=>$submenu,'open'=>$ulOpen);
     }
 }
 

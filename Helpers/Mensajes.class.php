@@ -25,8 +25,18 @@ class Mensajes {
      * Las clases css a aplicar deben estar definidas en las constantes
      * usadas.
      */
+     
+    static function crear($tipo,$msj,$hidden='true'){
+        $css = self::obtenerEstiloMensaje($tipo);
+        $mensaje = "
+                    <DIV class=\"$css\">
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                        $msj
+                    </DIV>";
+        return $mensaje;
+    }
     static function obtenerEstiloMensaje($clave){
-        try{
+        
             
         $estilo=array();
         // if(defined(cssMsjError) and defined(cssMsjAlerta) 
@@ -42,9 +52,7 @@ class Mensajes {
         // }
         
         return $estilo[$clave];
-        }catch(Exception $e){
-            controlExcepcion($e->getMessage(),$e->getCode());
-        }
+
     }
     
     static function mensajeError($mensaje){
@@ -68,6 +76,7 @@ class Mensajes {
         return $mensaje;
         
     }
+    
     
     static function mensajeSuceso($mensaje){
        $css = self::obtenerEstiloMensaje('suceso');
@@ -119,6 +128,8 @@ class Mensajes {
         echo $_SESSION['__excepcion'];
   //      redireccionar($ruta);
     }
+    
+    
 } // END
 
 ?>

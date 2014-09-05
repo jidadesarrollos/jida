@@ -437,9 +437,17 @@ class Formulario extends DBContainer {
                 }
             }
         }
-
+         if(isset($form['validacion'])){
+                    $validacion=$form['validacion'];
+                    unset($form['validacion']);
+                }
+        
+        if($this->validacionForm===TRUE){
+            $formulario .= $validacion;    
+        }
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario.=$this->crearBotonesFormulario();
+        
         $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class'=>$this->cssTagForm,'role'=>'form','target'=>$this->targetForm);
         $form = Selector::crear('form',$attrForm,$formulario);
         
@@ -529,6 +537,7 @@ class Formulario extends DBContainer {
      * @return string $js cadena que será interpretada como codigo JS para instanciar el validadorJida
      */
     private function armarfuncionJs($json) {
+        
         $nameBotonJs = $this->idBotonForm;
         $js = "\n\r<SCRIPT>\n\t
         
@@ -567,6 +576,7 @@ class Formulario extends DBContainer {
      
      */
     public function armarFormularioArray($campoUpdate = "") {
+        
         if ($campoUpdate != "")
             $this->campoUpdate = $campoUpdate;
         

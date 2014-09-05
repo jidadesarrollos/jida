@@ -252,9 +252,9 @@
     function validacion(){ 
         try{
             $acl = new ACL();
-#            echo $this->controlador," ",$this->metodo," ",strtolower($this->modulo);exit;
-            $acceso = $acl->validarAcceso($this->controlador,$this->metodo,strtolower($this->modulo));
-            $accesi=TRUE;
+            
+            $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+            
             #exit;
             if($acceso===TRUE){
                 
@@ -353,6 +353,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
+               #Arrays::mostrarArray(Session::get('acl','jadmin'));exit;
                  throw new Exception("No tiene permisos", 403);
                  
              }        
@@ -362,9 +363,9 @@
             
             
          }catch(Exception $e){
-             
+            
             $this->procesarExcepcion($e);
-            #Excepcion::controlExcepcion($e);
+            ;
         }  
        
     
@@ -417,12 +418,14 @@
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
             $this->vista->layout = $this->controladorObject->layout;
+        
             $this->vista->definirDirectorios();
             if(!$this->vista->layout){
                 $this->vista->checkHeader($this->controladorObject->header);
                 $this->vista->checkFooter($this->controladorObject->footer);    
             }
         endif;
+        
     }
     /**
      * Realiza la ejecución del Controlador a instanciar
@@ -437,10 +440,12 @@
         
         $this->controladorObject = new $controlador;
         $controlador=& $this->controladorObject;
+        
+        $controlador->$metodo($params);
         if($checkDirs)
             $this->checkDirectoriosView();
         #llamada al metodo solicitado via url
-        $controlador->$metodo($params);        
+                
         return $controlador;
     }
     
@@ -455,10 +460,11 @@
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
         $this->vista->definirDirectorios();
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
+        
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        #retorno del metodo ejecutado
+        
         $retorno=$ctrl->data;
-        #Arrays::mostrarArray($this->vista);
+        
         $this->mostrarContenido($retorno,$ctrl->vista);
     }
     /**

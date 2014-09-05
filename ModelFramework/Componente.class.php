@@ -26,6 +26,7 @@ class Componente extends DBContainer{
         $this->nombreTabla="s_componentes";
         $this->clavePrimaria="id_componente";
         parent::__construct(__CLASS__,$id);
+        
     }
     
     

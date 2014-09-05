@@ -169,7 +169,7 @@ class ObjetosController extends Controller{
 			$tipoForm=2;
 			$campoUpdate=Globals::obtGet('obj');	
 			}
-			$form = new Formulario('RegistroObjetos',$tipoForm,$campoUpdate);
+			$form = new Formulario('RegistroObjetos',$tipoForm,$campoUpdate,2);
 			$form->valueSubmit = "Guardar Objeto";
 			$form->tituloFormulario = "Gesti&oacute;n de Objetos";
 			$form->action=$this->url . "set-objeto/";
@@ -259,7 +259,7 @@ class ObjetosController extends Controller{
 				
 			
 				$metodo = new Metodo(Globals::obtGet('metodo'));
-				$form = new Formulario('PerfilesAMetodos',2,Globals::obtGet('metodo'));
+				$form = new Formulario('PerfilesAMetodos',2,Globals::obtGet('metodo'),2);
 				
 				$form->action=$this->url."acceso-perfiles/metodo/".Globals::obtGet('metodo');
 				$form->valueSubmit="Asignar Perfiles";
@@ -298,7 +298,7 @@ class ObjetosController extends Controller{
         
         if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])!=""){            
             $this->vista="accesoPerfiles";
-            $form = new Formulario('PerfilesAObjetos',2,Globals::obtGet('obj'));
+            $form = new Formulario('PerfilesAObjetos',2,Globals::obtGet('obj'),2);
             $obj = new Objeto($this->getEntero(Globals::obtGet('obj')));
             $form->action=$this->url."asignar-acceso/obj/".Globals::obtGet('obj');
             $form->valueSubmit="Asignar Perfiles a Objeto";
