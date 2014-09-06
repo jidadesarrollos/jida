@@ -98,6 +98,7 @@
     private function procesarURL($url){
         
         $param = $this->validarNombre(array_shift($url),1);
+        
         if(!in_array($param,$this->modulosExistentes)){
             //Se valida si se ha solicitado un modulo por medio de un subdominio
             if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
@@ -117,13 +118,13 @@
                  * */
                 $this->controlador='Index';
                 $this->checkMetodo($param);
-                #String::test("No existe el controlador  $param");
             }
             
         }else{
             $this->modulo=$param;
             if(count($url)>0){
                 $param =$this->validarNombre(array_shift($url),1);
+
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
@@ -131,7 +132,7 @@
                         $param =$this->validarNombre(array_shift($url),1);
                         
                     }
-                    $this->checkMetodo($param);
+                    $this->checkMetodo($param,true);
                 }else{
                     $this->controlador=$this->modulo;
                     $this->checkMetodo($param,TRUE);    
@@ -153,11 +154,13 @@
         
         if(method_exists($this->controlador."Controller", $this->validarNombre($metodo,2))){
             $this->metodo=$metodo;
+            return true;
         }else{
             $this->metodo="index";
             if($insertArg){
-                $this->args[]=$metodo;
+                $this->args[]=strtolower($metodo);
             }
+            return false;
         }
     }
     /**
