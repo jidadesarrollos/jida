@@ -10,7 +10,7 @@
  */
 
  
-class UsuarioAplicacion extends DBContainer{
+class User extends DBContainer{
     
     
     /**
@@ -33,11 +33,12 @@ class UsuarioAplicacion extends DBContainer{
      * @access public 
      */
     var $clave_usuario;
- 
+    var $nombres;
+    var $apellidos;
+    var $correo;
     /**
      * @var boolean activo
-     */
-     
+     */ 
     var $activo;
     /**
      * @var $id_estatus Estatus del usuario
@@ -60,6 +61,7 @@ class UsuarioAplicacion extends DBContainer{
      * @var $perfiles
      * @access private
      */
+    
     protected $perfiles=array();
     function __construct($id=""){
         $this->nombreTabla="s_usuarios";

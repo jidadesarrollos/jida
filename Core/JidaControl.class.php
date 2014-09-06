@@ -11,8 +11,7 @@
  * @author  Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * Fecha : 23/10/2013
  */
-#require_once 'BD/DBContainer.class.php';
-#require_once 'Formulario.class.php';
+
 class JidaControl extends DBContainer{
     
     var $id_form;

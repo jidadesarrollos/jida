@@ -189,32 +189,33 @@ class ACL extends DBContainer{
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
-         
-        #while($acceso == FALSE and $i<count($perfilesUser)){
+        while($acceso == FALSE and $i<count($perfilesUser)){
             
             $perfil = $perfilesUser[$i];
-                // echo "$componente<hr>";
-                 #Arrays::mostrarArray($listaAcl);
+                //Se valida acceso al componente        
                 if(isset($listaAcl[$componente])){
                     $arrComponentes = $listaAcl[$componente];
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
-                     //   echo "acceso a todo el componente<hr>";
+                        //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
                         $acceso=TRUE;
                     }else{
-                        
-                        #echo "acceso al componente<hr>";
                         $arrObjetos =$arrComponentes['objetos'];
+                        
                                 
                         if(array_key_exists($controlador,$arrObjetos)){
-                            #echo "acceso al objeto<hr>";
+                              
                             $arObjeto = $arrObjetos[$controlador];
-                               
+                            /**
+                             * Validación de los metodos, si no existe un arreglo de metodos, el usuario tiene acceso
+                             * a todos los metodos del objeto
+                             */
                             if(!array_key_exists('metodos',$arObjeto)){
-                            #    echo "acceso a todos los metodos";
+                            
                                 $acceso=TRUE;
-                            }elseif(isset($arObjeto['metodos'][$metodo])){
-                           #     echo "acceso al metodo";
+                            }else
+                            if(isset($arObjeto['metodos'][$metodo])){
+                           
                                 $acceso=TRUE;
                             }else{
                                 $acceso=FALSE;
@@ -227,13 +228,11 @@ class ACL extends DBContainer{
                 }else{
                    $acceso=FALSE;
                 }
-            
-         #   $i++;
-        #}
-        
-        // Arrays::mostrarArray($listaAcl);
+            $i++;    
+        }
+  
         return $acceso;
-    }
-}
+    }//fin funcion
+}//fin clase
 
 ?>

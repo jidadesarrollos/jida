@@ -61,14 +61,18 @@ class Archivo {
         if(is_array($this->type)){
             $i=0;
             foreach ($this->type as $key ) {
-                $this->extension[$i] = explode("/",$key)[1];
+                $explode= explode("/",$key);
+                $this->extension[$i] = $explode[1];
                 $i++;
             }
         }else{
-		  $this->extension = explode("/",$this->type)[1];
+          $explode = explode("/",$this->type);
+		  $this->extension = $explode[1];
         }
 		
 	}
+    
+    
     /**
      * Permite redimensionar una imagen sin quitar la calidad de la misma
      * Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada

@@ -14,6 +14,14 @@
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @version 1.8
  * 
+ * Dependencias : 
+ * BD/DBContainer
+ * ModelFramework/JidaControl.class.php
+ * ModelFramework/JidaFormularios.class.php
+ * Core/CampoHTML.class.php
+ * Helpers/Arrays
+ * 
+ * 
  */
 
 class Formulario extends DBContainer {
@@ -23,7 +31,11 @@ class Formulario extends DBContainer {
      * @var string $private
      */
     private $esquema="";
-    
+    /**
+     * Determina si los valores del formulario deben ser validados o cambiados a entidades HTML
+     * @var $setHtmlEntities
+     */
+    public $setHtmlEntities=TRUE;
     /**
      * Id del formulario
      */
@@ -276,6 +288,21 @@ class Formulario extends DBContainer {
       * @var $htmlSelectorCampoObligatorio;
       */
      private $htmlSelectorCampoObligatorio="*";
+     /** 
+      * @var $totalForms Numero de Formularios Instanciados
+      */
+     private $totalForms;
+     /**
+      * @var array $formularios Arreglo contenedor de los objetos tipo Formulario
+      * 
+      */
+     private $formularios = array();
+     /**
+      * @var int ambito Ambito de la tabla 1 Aplicacion 2 JidaFramework
+      * 
+      */
+     private $ambito;
+     
     /**
      * Funcion constructora del formulario
      *
@@ -284,8 +311,8 @@ class Formulario extends DBContainer {
      * de ser un formulario para modificación y prepara los estados necesarios para la creación.
      *
      *
-     * @param int $id_form
-     *          Id del formulario registrado en BD ES OBLIGATORIO
+     * @param mixed $id_form
+     *          Id o arreglo de ids del formulario registrado en BD ES OBLIGATORIO 
      * @param int 
      *          Indica si el formulario viene en 1)Insert o 2)Update.
      * @param int $campoUpdate
@@ -295,9 +322,14 @@ class Formulario extends DBContainer {
      *
      */
     public function __construct($claveFormulario, $tipoForm = 1, $campoUpdate = "", $ambito=1) {
+        if(is_string($claveFormulario)){
+            $claveFormulario=array($claveFormulario);
+        }
+        
         $this->tipoF = $tipoForm;
         $this->action=$_SERVER['PHP_SELF'];
         $this->campoUpdate = $campoUpdate;
+        
         if($ambito==2){
             
             $this->nombreTabla = "s_jida_formularios";
@@ -307,8 +339,6 @@ class Formulario extends DBContainer {
             $this->tablaCampos = "s_campos_f";   
              
         }
-        
-        
         $this->dataPost =& $_POST;
         $this->momentoSalvado=FALSE;
             
@@ -321,54 +351,119 @@ class Formulario extends DBContainer {
         }
         
         $this->clavePrimaria = 'id_form';
-        parent::__construct ();
+        parent::__construct (__CLASS__);
         
-        if (is_int ( $claveFormulario )) {
+        $this->claveFormulario = $claveFormulario;
+        if (is_int ( $this->claveFormulario )) {
+            
             $this->campoBusquedaFormulario = "id_form";
-            $this->claveFormulario = $claveFormulario;
-        } else {
+        }else{
+            
             $this->campoBusquedaFormulario = "nombre_identificador";
-            $this->claveFormulario = "'$claveFormulario'";
+            
+            
         }
-        
         $this->metodo = 'POST';
-        
         $this->obtenerDatosFormulario ();
         $this->obtenerCamposFormulario ();
         
     }
+    private function obtenerDatosMultiplesForm($lista){
+        $query.="";
+        
+        for($i=0;$i<count($lista);$i++){
+            if($i>0)
+                $query.=" union ";
+            $query .= "select * from $this->nombreTabla where $this->campoBusquedaFormulario=$lista[$i]";
+            
+        }//fin for
+    }
     /**
-     * Obtiene los datos del formulario instanciado
-     * 
+     * Obtiene los datos del formulario instanciado 
      * Busca en base de datos la clave del formulario y el query de consulta
+     * @method obtenerDatosFormulario
+     * 
      */
     protected function obtenerDatosFormulario() {
-        $query = "select * from $this->nombreTabla where $this->campoBusquedaFormulario=$this->claveFormulario";
-     #   echo $query."<hr/>";        
-        $formulario = $this->bd->obtenerArrayAsociativo ( $this->bd->ejecutarQuery ( $query ) );
         
-        $this->establecerAtributos ( $formulario, __CLASS__ );
+        if(is_array($this->claveFormulario)){
+            $campos = "";
+                
+            for($i=0;$i<count($this->claveFormulario);++$i){
+                if($i>0)
+                    $campos.=",";
+                $campos .="'".$this->claveFormulario[$i]."'";
+            }
+        }else{
+            $campos = "'$this->claveFormulario'";
+            
+        }
+        $query = "select * from $this->nombreTabla where $this->campoBusquedaFormulario in ($campos)";
+        $formularios = $this->bd->obtenerDataCompleta( $this->bd->ejecutarQuery ( $query ) );
+        $this->totalForms = $this->bd->totalRegistros;
         
+        foreach ($formularios as $key => $formulario) {
+            
+            $form  = new JidaFormulario($this->ambito);
+            $form->inicializarForm($formulario);
+            $this->formularios[$form->nombre_identificador]=$form;
+            
+        }
         $this->inicializarValoresForm ();
     }
+    
     
     /**
      * Obtiene los campos que conforman el formulario a crear
      *
      * Consulta la tabla de campos en base de datos y arma un arreglo con la configuración
      * de cada campo
+     * @method obtenerCamposFormulario
      */
     protected function obtenerCamposFormulario() {
-        $query = "select * from $this->tablaCampos where id_form=$this->id_form order by orden asc";
-    #    echo $query."<hr/>";
+        if($this->totalForms==1){
+            $clave = (is_array($this->claveFormulario))?$this->claveFormulario[0]:$this->claveFormulario;
+            
+            $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";    
+        }elseIf($this->totalForms>1){
+            
+            $claves = Arrays::obtenerKey('id_form', array_reverse($this->formularios));
+            
+            $query = sprintf("select * from %s where id_form in (%s) order by orden asc ",$this->tablaCampos,implode(',', $claves)); 
+        }else{
+            throw new Exception("No se ha obtenido el formulario solicitado", 1);
+            
+        }
         $result = $this->bd->ejecutarQuery($query);
         $campos = array();
+         while ($value = $this->bd->obtenerArrayAsociativo($result)) {
+             
+                if($this->totalForms>1){
+                    $campos[$value['id_form']][$value['name']] = $value;
+                }else{
+                    $campos[$value["name"]] = $value;
+                }
+         }
         
-        while ($value = $this->bd->obtenerArrayAsociativo($result)) {
-            
-            $campos[$value["name"]] = $value;
-        }
+        
+        if($this->totalForms>1)
+            $campos = $this->ordenarCamposMultipleArray($campos);
+      
         $this->camposFormulario = $campos;
+    }
+
+    private function ordenarCamposMultipleArray($campos){
+        $camposOrdered=array();
+        foreach ($this->claveFormulario as $key => $form) {
+          
+            $arrayForm = $campos[$this->formularios[$form]->id_form];
+            foreach ($arrayForm as $camposForm) {
+                $camposOrdered[]=$camposForm;
+            }
+            
+        }
+        return $camposOrdered;
+        
     }
     
     /**
@@ -377,7 +472,10 @@ class Formulario extends DBContainer {
      * Crea los atributos nombre,id y tabla para el formulario.
      */
     protected function inicializarValoresForm() {
-        $nombreFormSinEspacios = str_replace ( " ", "", ucwords ( $this->nombre_f ) );
+        
+        $data  = $this->formularios[$this->claveFormulario[0]];
+        
+        $nombreFormSinEspacios = str_replace ( " ", "", ucwords ( $data->nombre_f ) );
         $this->nameTagForm = "form" . $nombreFormSinEspacios;
         $this->idTagForm = $this->nameTagForm;
         $this->nombreSubmit = "btn" . $nombreFormSinEspacios;
@@ -433,9 +531,17 @@ class Formulario extends DBContainer {
                 }
             }
         }
-
+         if(isset($form['validacion'])){
+                    $validacion=$form['validacion'];
+                    unset($form['validacion']);
+                }
+        
+        if($this->validacionForm===TRUE){
+            $formulario .= $validacion;    
+        }
         $onclick = ($this->funcionOnclick == "") ? "" : "onclick=\"$this->funcionOnclick\"";
         $formulario.=$this->crearBotonesFormulario();
+        
         $attrForm=array('name'=>$this->nameTagForm,'method'=>$this->metodo,'enctype'=>$this->enctype,'action'=>$this->action,'id'=>$this->idTagForm,'class'=>$this->cssTagForm,'role'=>'form','target'=>$this->targetForm);
         $form = Selector::crear('form',$attrForm,$formulario);
         
@@ -525,6 +631,7 @@ class Formulario extends DBContainer {
      * @return string $js cadena que será interpretada como codigo JS para instanciar el validadorJida
      */
     private function armarfuncionJs($json) {
+        
         $nameBotonJs = $this->idBotonForm;
         $js = "\n\r<SCRIPT>\n\t
         
@@ -563,6 +670,7 @@ class Formulario extends DBContainer {
      
      */
     public function armarFormularioArray($campoUpdate = "") {
+        
         if ($campoUpdate != "")
             $this->campoUpdate = $campoUpdate;
         
@@ -641,8 +749,16 @@ class Formulario extends DBContainer {
             $this->campoUpdate = $this->campoUpdate[0];
         }
         
-        $query= $this->query_f." where $this->clave_primaria_f=$this->campoUpdate";
-        #echo $query;Exit;
+        if($this->totalForms>1){
+            
+        }else{
+            $query = sprintf("%s where %s=%s",
+                                $this->formularios[$this->claveFormulario[0]]->query_f,
+                                $this->formularios[$this->claveFormulario[0]]->clave_primaria_f,
+                                $this->campoUpdate
+                            );
+                
+        }
         $result = $this->bd->ejecutarQuery($query);
         $dataCampos=array();
         while($data =$this->bd->obtenerArrayAsociativo($result)){
@@ -657,12 +773,16 @@ class Formulario extends DBContainer {
     
     /**
      * Valida un formulario.
+     * @method validarFormulario
+     * @param array $datos
+     * @return mixed [boolean,array] True si la validacion es correcta, caso contrario arreglo con los errores
      */
     public function validarFormulario(&$datos="") {
         Session::destroy ( '__erroresForm' );
         if(empty($datos)){
             $datos =& $_POST;
         }
+        
         $arrErrores = array ();
         // ----------------------------------------------
         $a = 0;
@@ -677,36 +797,45 @@ class Formulario extends DBContainer {
             $valorCampo =& $datos [$campo ['name']];
             if ($campo ['eventos'] != "") {
                 $validaciones = json_decode ( '{' . $campo ['eventos'] . '}', true );
-                
+            
                 if (is_array ( $validaciones )) {
+                  
                     $a ++;
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
+                    
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
                     
                     if ($resultadoValidacion['validacion'] !== true) {
                         $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
-                    }elseif($resultadoValidacion['validacion']===true){
-                        
+                    }else
+                    if($resultadoValidacion['validacion']===true){
+                     
                         //Se connvierten los datos especiales del post
                         if(!is_array($resultadoValidacion['campo'])){
-                            $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);    
+                            if($this->setHtmlEntities===TRUE)
+                                $datos[$campo['name']]= htmlspecialchars($resultadoValidacion['campo']);
+                            else
+                                $datos[$campo['name']]= $resultadoValidacion['campo'];
                         }else{
                             $datos[$campo['name']]= $resultadoValidacion['campo'];
                         }
                         
                     }
-                } else {
-                    
                 }
+
             }else{
                 if(!is_array($valorCampo)){
-                    $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                    if($this->setHtmlEntities===TRUE){
+                        $datos[$campo['name']]= htmlspecialchars($valorCampo,ENT_QUOTES);
+                    }else{
+                        $datos[$campo['name']]= $valorCampo;    
+                    }
                 }else{
                      $datos[$campo['name']]= $valorCampo;
                 }
             }
-        }
-        
+        }//final foreach
+
         if (count ( $arrErrores ) > 0) {
             $this->errores = $arrErrores;
             Session::set ( '__erroresForm', $this->errores );
@@ -717,7 +846,22 @@ class Formulario extends DBContainer {
             return TRUE;
         }
     }
-
+    /**
+     * Devuelve la estructura de uno o multiples formularios
+     * @method getEstructura
+     * @return string Estructura del formularios o multiples formularios integrada
+     */
+    private function getEstructura(){
+        $estructura = "";
+        $i=0;
+        foreach ($this->formularios as $key => $formulario) {
+            if($i>0)
+                $estructura.=";";
+            $estructura .= $formulario->estructura;
+            ++$i;
+        }
+        return $estructura;
+    }
     /**
      * Arma un formulario a partir de la estructura programada
      * @method armarFormularioEstructura
@@ -725,7 +869,7 @@ class Formulario extends DBContainer {
     function armarFormularioEstructura($titulos=array(),$label=TRUE){
         
         $camposForm = $this->armarFormularioArray ( $this->campoUpdate );   
-        $estructura = $this->estructura;
+        $estructura = $this->getEstructura();
         
         
         $formularioRepeticiones = explode(";", $estructura);

@@ -390,23 +390,27 @@ class Vista extends DBContainer{
         $this->bd->ejecutarQuery($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
         $this->nombreVista = $nombreVista;
-        /**
-         * Si $arregloConfiguracion no tiene un key paginador es porque se ha pasado el arreglo de
-         * configuración del Paginador
-         */
-        if(!array_key_exists('paginador', $arregloConfiguracion)):
-            $this->paginador=$arregloConfiguracion;
-        else:
-            $this->establecerAtributos($arregloConfiguracion);
         
-        endif;
+         if(is_array($arregloConfiguracion)){
+             /**
+             * Si $arregloConfiguracion no tiene un key paginador es porque se ha pasado el arreglo de
+             * configuración del Paginador
+             */
+            if(!array_key_exists('paginador', $arregloConfiguracion)):
+        
+            $this->paginador=$arregloConfiguracion;
+            else:
+                $this->establecerAtributos($arregloConfiguracion);
+        
+            endif;     
+         }
+        
         
         $this->inicializarValoresVista();
         $this->addPaginador();
         /*Ejecución del query para la vista*/
         $this->data = $this->bd->obtenerDataCompleta($this->query);
         /*Creación de objeto tabla*/
-        
     }
     /**
      * Agrega paginador a la vista
@@ -704,51 +708,7 @@ class Vista extends DBContainer{
         return $opciones;
     }
      
-    // private function agregarOpcionesFila($campo){
-//         
-        // $opciones="<td class=\"$this->cssFilaOpciones \">";
-        // $opciones.="<input type=\"hidden\" name='clave' value=\"$campo\"/>";
-        // $arrayExample = array('atributos'=>array(),'html'=>false);
-//         
-        // foreach ($this->filaOpciones as $key => $dataSelector) {
-            // #--------------------------------------------------------------
-            // foreach($dataSelector as $selector => $props){
-                // #--------------------------------------------------------------
-//                 
-//                 
-                // $data = array_merge($arrayExample,$props);
-                // $html="";
-                // //Arrays::verArray($data);
-                // if(is_array($data['html'])){
-                    // foreach($data['html'] as $key => $value){
-                        // //Verificar si se ha pasado la palabra {clave} para uso del id de la vista
-                        // //y hacer el reemplazo por el id actual de la columna
-                        // $dataHtml=array_merge($arrayExample,$value);
-                        // $implode = implode(',', $dataHtml['atributos']);
-                        // $implode = str_replace('{clave}', "$campo", $implode);
-                        // $dataHtml['atributos'] = array_combine(array_keys($dataHtml['atributos']), explode(",",$implode));
-                        // $content = (!is_array($dataHtml['html']))?$dataHtml['html']:"";                              
-                        // $html.=CampoHTML::crearSelectorHTMLSimple($key,$dataHtml['atributos'],$content);
-                    // }
-                // }
-//                 
-                // if(is_array($data['atributos'])){
-                    // $implode = implode('||', $data['atributos']);
-//                     
-                    // $implode = str_replace('{clave}', "$campo", $implode);
-                // }
-//                 
-                // $data['atributos'] = array_combine(array_keys($data['atributos']), explode("||",$implode));
-                // $content = (!is_array($data['html']))?$data['html']:"";
-                // $opciones.=CampoHTML::crearSelectorHTMLSimple($selector, $data['atributos'],$html.$content);
-                // #--------------------------------------------------------------
-            // }//final primer foreach
-            // #--------------------------------------------------------------
-        // }//final segundo foreach
-        // $opciones.="</td>";
-        // return $opciones;    
-//     
-//         
+   
     // }#Fin funcion opciones Fila
     /**
      * Crea el control de la fila
@@ -1016,6 +976,23 @@ class Vista extends DBContainer{
                 return $breadcrumb;
             }//fin if
     }//final funcion
+    /**
+     * @see @parent establecerAtributos
+     */
+    protected function establecerAtributos($arr,$class="") {
+        if(empty($clase)){
+            $clase=__CLASS__;
+        }
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
+            }
+        }
+        
+    }
     
 }//final clase
 ?>

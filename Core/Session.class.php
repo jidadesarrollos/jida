@@ -59,10 +59,13 @@ class Session {
                    unset($_SESSION[$key]);
                 }
             }
+
         }else{
             session_destroy();
             session_unset();
+
         }
+        return true;        
     }
     
     /**

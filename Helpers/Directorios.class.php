@@ -25,6 +25,20 @@ class Directorios {
 	static function validarExistenciaFile($archivo){
 		
 	}
+    /**
+     * Crea un directorio
+     * @method crear
+     * @param mixed $directorio String o Arreglo de Directorios a crear
+     */
+    static function crear($directorio,$mode=0777){
+        if(is_array($directorio)){
+            
+        }else{
+            if(!file_exists($directorio)){
+                mkdir($directorio,$mode,TRUE);
+            }
+        }
+    }
 } // END
 
 ?>

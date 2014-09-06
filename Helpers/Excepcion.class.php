@@ -28,14 +28,13 @@ class Excepcion {
                             $msj.="<strong>L&iacute;nea : </strong>".$e->getLine()."<br>";
                             $msj.="<strong>Archivo : </strong>".$e->getFile()."<br>";
                             $msj.="<strong>C&oacute;digo : </strong>".$e->getCode()."<br>";
-                            $msj.="<hr/><div style=\"font-size:10px\">Traza</br>";
-                            #$msj.="<strong>Traza : </strong>".implode(",",$e->getTrace())."<br>";
+                            $msj.="<hr/><div style=\"font-size:11px\">Traza</br>";
+                            
                             foreach($e->getTrace() as $key =>$traza){
                                 $msj.="<strong>Archivo</strong> ". $traza['file']."<br>";
                                 $msj.="<strong>Linea</strong> ".$traza['line']."<br>";
                                 $msj.="<strong>Funcion</strong> ".$traza['function']."<br>";
-#                                $msj.="<strong>Tipo</strong>".$traza['type']."<br>";
-                                #$msj.="<hr>";
+
                             }
                             $msj.="</div>";
                             
@@ -44,7 +43,8 @@ class Excepcion {
                             // echo Mensajes::mensajeError($msj);exit;
                             if($type==1){
                           
-                                Mensajes::msjExcepcion(Mensajes::mensajeError($msj),'/excepcion/'); 
+                                #Mensajes::msjExcepcion(Mensajes::mensajeError($msj),'/excepcion/');
+                                return Mensajes::mensajeError($msj); 
                             }elseif($type==2){
                                if(!isset($_SESSION['__msjExcepcion']) or Session::get('__msjExcepcion')!=$e->getMessage()){
                                    

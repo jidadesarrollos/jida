@@ -10,7 +10,6 @@
 class MenusController extends Controller {
 
     function __construct(){
-            
         $this->layout="jadmin.tpl.php";
         $jctrl = new JidaControl();
         $tablas = $jctrl->obtenerTablasBD();        
@@ -19,11 +18,13 @@ class MenusController extends Controller {
     function index() {
         $query = "select * from s_menus";
         $this -> vista = 'menus';
+        
         $dataArray = array();
-        $vistaMenu = new Vista($query, true, 'Menus');
-        $vistaMenu -> setParametrosVista($GLOBALS['configVista']);
+        
+        $vistaMenu = new Vista($query, $GLOBALS['configVista'], 'Menus');
+        
         $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
-        $vistaMenu -> tipoControl = 2;
+        $vistaMenu -> tipoControl = 2;        
         $vistaMenu -> filaOpciones = array('0' => array
                                                     ('a' => array('atributos' =>array(
                                                                     'class'=>'btn',
@@ -55,7 +56,12 @@ class MenusController extends Controller {
     }
 
     function procesarMenu() {
-            $this->data = $this->formMenu();
+        try{
+            
+            $this->data = $this->formMenu();    
+        }catch(Exception $e){
+            Excepcion::controlExcepcionUser($e);
+        }
     }
 
     /**
@@ -64,45 +70,47 @@ class MenusController extends Controller {
      * @method setMenu
      */
     function setMenu() {
-        
-        $post = $_POST;
-        $form = new Formulario('ProcesarMenus', 1,null,2);
-        $validacion = $form->validarFormulario($post);
-        if(!is_array($validacion) and $validacion==TRUE){
-            $idMenu = isset($post['id_menu']) ? $post['id_menu'] : '';
-            $classMenu = new Menu($idMenu);
-            
-            $valor = $classMenu->procesarMenu($post);
-            if(isset($valor['result']['ejecutado']) and $valor['result']['ejecutado']==1){
-                $msj = Mensajes::mensajeSuceso('Menu <strong>'.$valor['accion'].'</strong> exitosamente');
-                Session::set('__msjVista',$msj);
-                Session::set('__idVista','menus');
-                redireccionar('/jadmin/menus/');
+        try{
+            $post = $_POST;
+            $form = new Formulario('ProcesarMenus', 1);
+            $validacion = $form->validarFormulario($post);
+            if(!is_array($validacion) and $validacion==TRUE){
+                $idMenu = isset($post['id_menu']) ? $post['id_menu'] : '';
+                $classMenu = new Menu($idMenu);
+                
+                $valor = $classMenu->procesarMenu($post);
+                if(isset($valor['result']['ejecutado']) and $valor['result']['ejecutado']==1){
+                    $msj = Mensajes::mensajeSuceso('Menu <strong>'.$valor['accion'].'</strong> exitosamente');
+                    Session::set('__msjVista',$msj);
+                    Session::set('__idVista','menus');
+                    redireccionar('/jadmin/menus/');
+                }else{
+                    
+                    $msj= Mensajes::mensajeError($valor);
+                    
+                    Session::set('__msjForm',$msj);
+                    
+                    Session::set('__dataPostForm',$post);
+                    redireccionar('/jadmin/menus/procesar-menu/');    
+                }
+                
             }else{
                 
-                $msj= Mensajes::mensajeError($valor);
-                
+                $msj= Mensajes::mensajeError('No se ha podido procesar el menu');
                 Session::set('__msjForm',$msj);
-                
-                Session::set('__dataPostForm',$post);
-                redireccionar('/jadmin/menus/procesar-menu/');    
+                Session::set('__DataPostForm',$post);
+                redireccionar('/jadmin/procesar-menu/');
             }
-            
-        }else{
-            
-            $msj= Mensajes::mensajeError('No se ha podido procesar el menu');
-            Session::set('__msjForm',$msj);
-            Session::set('__DataPostForm',$post);
-            redireccionar('/jadmin/procesar-menu/');
+        }catch(Exception $e){
+            Excepcion::controlExcepcion($e);
         }
-    
     }//final funcion
 
     /**
      * Devuelve el formulario para registro y modificación de menues.
      */
     private function formMenu() {
-        $get =& $_GET;
+        $get = $_GET;
         $tipoForm = 1;
         $seleccion = "";
         if(isset($get['menu'])){
@@ -118,37 +126,44 @@ class MenusController extends Controller {
     }
 
     function eliminarMenu() {
-        
-        if (isset($_GET['menu'])) {
-            $seleccion = $_GET['menu'];
-            if(!is_array($seleccion)){
-                $seleccion = $this->getEntero($seleccion);
+        try {
+            if (isset($_GET['menu'])) {
+                $seleccion = $_GET['menu'];
+                if(!is_array($seleccion)){
+                    $seleccion = $this->getEntero($seleccion);
+                }
+                $cMenu = new Menu();
+                
+                if ($cMenu -> eliminarMenu($seleccion)) {
+                    $_SESSION['__msjVista'] = Mensajes::mensajeSuceso("Menu <strong>$cMenu->nombre_menu</strong> Eliminado");
+                    Session::set('__idVista', 'menus');
+                    header('location:/jadmin/menus/');
+                }
+            } else {
+                throw new Exception("Debe seleccionar un menu", 1);
             }
-            $cMenu = new Menu();
-            
-            if ($cMenu -> eliminarMenu($seleccion)) {
-                $_SESSION['__msjVista'] = Mensajes::mensajeSuceso("Menu <strong>$cMenu->nombre_menu</strong> Eliminado");
-                Session::set('__idVista', 'menus');
-                header('location:/jadmin/menus/');
-            }
-        } else {
-            throw new Exception("Debe seleccionar un menu", 1);
-        }
 
-    }//fin funcion
+        } catch(Exception $e) {
+            Excepcion::controlExcepcion($e);
+        }
+    }
 
     function opciones() {
-    
-        $this->vista = "opcionesMenu";
-        if (isset($_GET['menu'])) {
-            $menu = new Menu($_GET['menu']);
-            $idMenu = $_GET['menu'];
-            $dataArray['vistaOpciones'] = $this -> vistaOpciones($idMenu);
-        } else {
-            throw new Exception("No ha seleccionado menu para ver opciones", 1);
+        try {
+            $this->vista = "opcionesMenu";
+            if (isset($_GET['menu'])) {
+                $menu = new Menu($_GET['menu']);
+                $idMenu = $_GET['menu'];
+                $dataArray['vistaOpciones'] = $this -> vistaOpciones($idMenu);
+            } else {
+                throw new Exception("No ha seleccionado menu para ver opciones", 1);
 
+            }
+
+        } catch(Exception $e) {
+            
+           Excepcion::controlExcepcion($e);
         }
-
         $this->data=  $dataArray;
     }
 
@@ -184,35 +199,36 @@ class MenusController extends Controller {
      */
     private function formularioOpcion($idMenu,$mod=""){
         
-        try{
-            $menu = new Menu($idMenu);
-            $dataArray['titulo'] = "Registro de Opción para menu $menu->nombre_menu";
-            $tipoForm=1;
-            $id="";
-            if(isset($mod) and !empty($mod)){
-                    $tipoForm=2;
-                    $dataArray['titulo'] = "Modificar Opción de menu $menu->nombre_menu";
-                    $id=$mod;        
-            }
-            $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$id,2);
-            $formulario->externo['padre']="select id_opcion,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
-            
-            $formulario->action='/jadmin/menus/set-opcion/menu/' . $menu -> id_menu . "/";
-            $dataArray['formOpcion'] = $formulario->armarFormulario();
-            return $dataArray;    
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }     
+        
+        $menu = new Menu($idMenu);
+        $dataArray['titulo'] = "Registro de Opción para menu $menu->nombre_menu";
+        $tipoForm=1;
+        $id="";
+        if(isset($mod) and !empty($mod)){
+                $tipoForm=2;
+                $dataArray['titulo'] = "Modificar Opción de menu $menu->nombre_menu";
+                $id=$mod;        
+        }
+        $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$id,2);
+        $formulario->externo['padre']="select id_opcion,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
+        
+        $formulario->action='/jadmin/menus/set-opcion/menu/' . $menu -> id_menu . "/";
+        $dataArray['formOpcion'] = $formulario->armarFormulario();
+        return $dataArray;    
+         
         
     }
+    /**
+     * Muestra formulario para gestión de opciones
+     * @method setOpcion
+     */
     function setOpcion() {
-        
         
         if(isset($_GET['menu'])){
             $post = $_POST;
             $idMenu = $_GET['menu'];
             $opMenu = new OpcionMenu();
-            $campoUpdate="";
+            $campoUpdate=(isset($post['opcion']) and $this->getEntero($post['opcion'])>0)?$post['opcion']:"";
             $form = new Formulario('ProcesarOpcionMenu',1,$campoUpdate,2);
             $form->externo['padre']="select id_opcion,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
 
@@ -224,14 +240,12 @@ class MenusController extends Controller {
                 if($guardado['ejecutado']==1){
                     Session::set('__msjVista',Mensajes::mensajeSuceso("Se ha registrado la opci&oacute;n <strong>$opMenu->nombre_opcion</strong>"));
                     Session::set('__idVista','opciones');
-                    redireccionar('/jadmin/menus/opciones/menu/'.$idMenu.'/');
-                    
+                    redireccionar('/jadmin/menus/opciones/menu/'.$idMenu.'/');      
                 }
             }else{
                 Session::set('__msjForm',Mensajes::mensajeError("No se ha podio registrar la opci&oacute;n"));
                 redireccionar('/jadmin/menus/procesar-opciones/menu/'.$idMenu);    
-            }; 
-            
+            };
             $this->data = $dataArray;  
         }else{
            Session::set('__msjVista', Mensajes::mensajeError("Debe seleccionar un menu para procesar opciones"));
@@ -241,20 +255,18 @@ class MenusController extends Controller {
         }    
     }
     function eliminarOpcion(){
-        try{
-            if(isset($_GET['menu']) and isset($_GET['opcion'])){
-                $idmenu = $this->getEntero($_GET['menu']);
-                $idOpcion = $this->getEntero($_GET['opcion']);
-                $Opcion = new OpcionMenu($idOpcion);
-                $Opcion->eliminarOpcion();
-                Session::set('__idVista','opciones');
-                Session::set('__msjVista',Mensajes::mensajeInformativo("La opci&oacute;n <strong> $Opcion->nombre_opcion </strong> ha sido eliminada"));
-                redireccionar('/jadmin/menus/opciones/menu/'.$idmenu);
-            }
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+        
+        if(isset($_GET['menu']) and isset($_GET['opcion'])){
+            $idmenu = $this->getEntero($_GET['menu']);
+            $idOpcion = $this->getEntero($_GET['opcion']);
+            $Opcion = new OpcionMenu($idOpcion);
+            $Opcion->eliminarOpcion();
+            Session::set('__idVista','opciones');
+            Session::set('__msjVista',Mensajes::mensajeInformativo("La opci&oacute;n <strong> $Opcion->nombre_opcion </strong> ha sido eliminada"));
+            redireccionar('/jadmin/menus/opciones/menu/'.$idmenu);
         }
-    }
+    }//fin funcion
+    
     /**
      * Crea una vista con las opciones de un menu
      * @method vistaOpciones
@@ -291,7 +303,7 @@ class MenusController extends Controller {
                                     );
             $vista -> tipoControl = 1;
             $vista->setParametrosVista($GLOBALS['configVista']);
-            $vista->mensajeError=Mensajes::mensajeAlerta("<h4>No hay opciones</h4> <a href=\"/jadmin/menus/procesar-opciones/menu/".$this->id_menu."\" class=\"btn\">Registar Opci&oacute;n</a>");
+            $vista->mensajeError="No hay opciones <a href=\"/jadmin/menus/procesar-opciones/menu/".$this->id_menu."\" class=\"btn\">Registar Opci&oacute;n</a>";
             $dataArray['vista'] = $vista -> obtenerVista();
     		
             return $dataArray['vista'];

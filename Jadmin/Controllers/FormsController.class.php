@@ -20,6 +20,7 @@ class FormsController extends Controller{
      * Funcion constructora
      */
     function __construct(){
+        
         $this->jctrl = new JidaControl();
         $this->url="/jadmin/forms/";
         $this->layout="jadmin.tpl.php";
@@ -230,6 +231,7 @@ class FormsController extends Controller{
      * s_jida_formularios.
      */
     function configuracionFormulario($form=1){
+        
         if($form==2){
             $this->data['formFramework']=2;   
         }else{
@@ -245,7 +247,9 @@ class FormsController extends Controller{
         if(isset($_POST['btnCamposFormulario'])){
             
             $formCampo = $this->getFormCampo($_POST['id_campo'],$form);
+            $formCampo->setHtmlEntities=FALSE;
             if($formCampo->validarFormulario()===TRUE){
+                
                 $proceso = $jctrl->procesarCampos($_POST,$form);
                 Session::set('__msj',Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
             }else{
@@ -273,12 +277,14 @@ class FormsController extends Controller{
             $campos = explode(",", $_POST['campos']);
             $orden = 1;
             $arrayOrden=array();
+            $jctrl = new JidaControl(null,2);
             foreach($campos as $campo){
                 $idCampo = explode("-", $campo);
                 $arrayOrden[]=array('id_campo'=>$idCampo[1],'orden'=>$orden);
                 $orden++;
             }
-            $this->jctrl->setOrdenCamposForm($arrayOrden,$form="");
+            
+            $jctrl->setOrdenCamposForm($arrayOrden,$form="");
             $msj = Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
             respuestaAjax(json_encode(array("ejecutado"=>TRUE,'msj'=>$msj)));
         }
@@ -310,8 +316,9 @@ class FormsController extends Controller{
 
     function configuracionCampo(){
        $campo = new CampoHTML();
+       
         $this->layout="ajax.tpl.php";
-        
+         
         if(isset($_POST['idCampo'])){
             $idCampo = $_POST['idCampo'];
             

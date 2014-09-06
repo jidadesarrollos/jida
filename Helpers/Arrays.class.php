@@ -10,13 +10,7 @@
 class Arrays {
 	
 	
-	
-	static function mostrarArray($ar){
-		echo "<pre style=\"background:black;color:#dcdcdc\">";
-		print_r($ar);
-		echo "</pre>";
-		
-	}
+
     /**
      * Recorre un arreglo multidimensional buscando las columnas solicitadas y devuelve
      * un nuevo arreglo solo con esos valores
@@ -66,6 +60,33 @@ class Arrays {
             return false;
         }
         
+    }
+    /**
+     * Devuelve un arreglo con los valores extraidos de un arreglo multidimensional
+     * @method obtenerKey
+     * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arregloa  buscar
+     * @param array $array Arreglo multidimensional a filtrar
+     */
+    static function obtenerKey($clave,$array){
+        $arrayResult = array();
+        foreach ($array as $key => $fila) {
+            if(is_array($fila)){
+                if(array_key_exists($clave, $fila)){
+                     
+                      $arrayResult[]=$fila[$key];
+                }
+            }elseif(is_object($fila)){
+                if(property_exists($fila, $clave) and !empty($fila->$clave)){
+                    $arrayResult[]=$fila->$clave;
+                }
+            }
+                    
+        }
+        if(count($array)>0){
+            return $arrayResult;
+        }else{
+            return false;
+        }
     }
     
 } // END

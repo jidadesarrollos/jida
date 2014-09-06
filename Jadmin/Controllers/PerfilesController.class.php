@@ -47,7 +47,7 @@ class PerfilesController extends Controller{
             $pk=$_GET['id'];$tipoForm=2;
         }
         
-        $form=new Formulario('Perfiles',$tipoForm,$pk);
+        $form=new Formulario('Perfiles',$tipoForm,$pk,2);
         $this->data['form']=$form->armarFormulario();
 	}//final funcion
 	

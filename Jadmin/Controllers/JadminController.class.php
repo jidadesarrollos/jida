@@ -35,11 +35,9 @@ class JadminController extends Controller{
             $form->nombreSubmit="btnJidaAdminLogin";
             $form->action=$this->url;
             if(isset($_POST["btnJidaAdminLogin"])){
-                
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
-                    
-                    $User = new UsuarioAplicacion();
+                    $User = new User();
                     $clave = md5(Globals::obtPost('clave_usuario'));
                     $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
                     if($checkUser===FALSE){
@@ -110,6 +108,7 @@ class JadminController extends Controller{
     function phpInfo(){
         echo phpinfo();
         exit;
+
     } 
     
     function testPost(){
@@ -126,6 +125,25 @@ class JadminController extends Controller{
         echo $curl->post(array('prueba'=>'vemos algo','otra'=>'algo distinto','dime'=>'algo más'));
         exit;   
     }
+
+    }
+    
+    function testingFiles(){
+        $cadena="hola mundo";
+        $cadena1="\t\t\t\t\thola mundo\t\t\t";
+        echo strspn($cadena1, "\t")."<hr>";
+        echo strlen($cadena)."<hr>";
+        echo strlen($cadena1)."<hr>";exit;
+        Arrays::mostrarArray(file(framework_dir.'Jadmin/Controllers/JadminController.class.php'));exit;
+        $file = new PHPFile(app_dir.'Controller/algo/','test.php');
+        if($file->crear()){
+            echo "aki se creo<hr>";    
+        }else{
+            echo "no se creo<hr>";
+        }
+        exit;
+    }
+
   
 
    

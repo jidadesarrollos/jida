@@ -12,6 +12,7 @@
 class ComponentesController extends Controller{
     
     function __construct($id=""){
+        #Arrays::mostrarArray($_SERVER);exit;
         $this->url="/jadmin/componentes/";
         $this->layout="jadmin.tpl.php";        
         
@@ -52,7 +53,7 @@ class ComponentesController extends Controller{
             $tipoForm=2;
         }
 
-         $F = new Formulario('Componente',$tipoForm,$idComponente);
+         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
          
@@ -90,45 +91,43 @@ class ComponentesController extends Controller{
 		}
 	}
     function asignarAcceso(){
-        try{
-            if(isset($_GET['comp']) and $this->getEntero($_GET['comp'])!=""){
-                            
-                $this->vista="accesoPerfiles";
-                $form = new Formulario('PerfilesAComponentes',2,Globals::obtGet('comp'));
-                $comp = new Componente($this->getEntero(Globals::obtGet('comp')));
-                
-                $form->action=$this->url."asignar-acceso/comp/".Globals::obtGet('comp');
-                $form->valueSubmit="Asignar Perfiles a Objeto";
-                $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
-                if(isset($_POST['btnPerfilesAComponentes'])){
-                    $validacion = $form->validarFormulario($_POST);
-                    if($validacion===TRUE){
+        
+        if(isset($_GET['comp']) and $this->getEntero($_GET['comp'])!=""){
                         
-                        $accion = $comp->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
-                        if($accion['ejecutado']==1){
-                            Session::set('__idVista', 'componentes');
-                            $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al componente '.$comp->componente);
-                            Session::set('__msjVista',$msj);
-                            redireccionar($this->url);
-                        }else{
-                        
-                            $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                            Session::set('__msjForm', $msj);
-                        }
+            $this->vista="accesoPerfiles";
+            $form = new Formulario('PerfilesAComponentes',2,Globals::obtGet('comp'),2);
+            $comp = new Componente($this->getEntero(Globals::obtGet('comp')));
+            
+            $form->action=$this->url."asignar-acceso/comp/".Globals::obtGet('comp');
+            $form->valueSubmit="Asignar Perfiles a Objeto";
+            $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
+            if(isset($_POST['btnPerfilesAComponentes'])){
+                $validacion = $form->validarFormulario($_POST);
+                if($validacion===TRUE){
+                    
+                    $accion = $comp->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    if($accion['ejecutado']==1){
+                        Session::set('__idVista', 'componentes');
+                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al componente '.$comp->componente);
+                        Session::set('__msjVista',$msj);
+                        redireccionar($this->url);
                     }else{
-                        
-                        Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
+                    
+                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                        Session::set('__msjForm', $msj);
                     }
+                }else{
+                    
+                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
                 }
-                $this->data['formAcceso'] =$form->armarFormulario();
-            }else{
-                Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
-                Session::set('__idVista','componentes');
-                redireccionar($this->url);  
             }
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+            $this->data['formAcceso'] =$form->armarFormulario();
+        }else{
+            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
+            Session::set('__idVista','componentes');
+            redireccionar($this->url);  
         }
+    
     }
 }
 
