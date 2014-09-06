@@ -29,7 +29,7 @@ class MenuHTML extends DBContainer{
      * Define el tipo de selector para una opcion de la lista
      * con submenu 
      */
-    var $tagAdicionalLIpadre=array('selector'=>'a',array('href'=>"#"));
+    var $tagAdicionalLIpadre=array('selector'=>'a','atributos'=>array('href'=>"#"));
     /**
      * Define el estilo para un li seleccionado o abierto por selección de un hijo
      * @var $cssLiSeleccionado
@@ -203,7 +203,10 @@ class MenuHTML extends DBContainer{
         //$listaMenu.="\n\t\t</ul>";
         return $listaMenu;
     }
-
+    /**
+     * Crea la lista de un submenu perteneciente a un menu principal
+     * @method armarMenuRecursivoHijos
+     */
     private function armarMenuRecursivoHijos($opciones,$config,$padre,$nivel=1){
         $ulOpen=FALSE;
         if($padre==12){
@@ -242,7 +245,7 @@ class MenuHTML extends DBContainer{
                     }else{
                         $opc = $subopcion['nombre_opcion'];
                     }    
-                    $ulOpen=$submenus['ulOpen'];
+                    $ulOpen=$submenus['open'];
                     $listaMenu .= Selector::crear("li",$cssli,$icono.$opc.$submenus['html'],$nivel+1);
                 }else{
                     /**
