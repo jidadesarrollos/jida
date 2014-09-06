@@ -108,10 +108,24 @@ class JadminController extends Controller{
         }   
     }
     function phpInfo(){
-        echo "aki";Exit;
         echo phpinfo();
         exit;
     } 
+    
+    function testPost(){
+        echo "<h3>Testing post</h3>";
+        if(isset($_POST['prueba'])){
+            Arrays::mostrarArray($_POST);
+        }
+        exit;
+    }
+    
+    function testingCurl(){
+             
+        $curl = new Curl('http://dev.electron.local/jadmin/test-post');
+        echo $curl->post(array('prueba'=>'vemos algo','otra'=>'algo distinto','dime'=>'algo más'));
+        exit;   
+    }
   
 
    

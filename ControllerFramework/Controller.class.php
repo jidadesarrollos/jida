@@ -136,7 +136,7 @@ class Controller {
         
     } 
     /**
-     * Valida y flintra el contenido de una variable como Entero
+     * Valida y filtra el contenido de una variable como Entero
      * 
      * @param $string $valor
      * @return int $valor;
@@ -148,7 +148,18 @@ class Controller {
        }
        return 0;
     }
-    
+    /**
+     * Valida y filta el contenido de una variable como Float
+     * @method getDecimal
+     * @param $string $valor
+     * @return flaot $valor;
+     */
+    protected function getDecimal($valor){
+       if(!empty($valor) and is_float($valor)){
+           return $valor;
+       }
+       return 0; 
+    }
     /**
      * Ejecuta un formulario de manera generica
      * 
