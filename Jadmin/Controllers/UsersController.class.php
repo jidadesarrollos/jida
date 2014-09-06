@@ -62,8 +62,6 @@ class UsersController extends Controller{
 	    $datosForm =  $this->formGestionUser($id);
         $form=& $datosForm['form'];
         $form->tituloFormulario="Gesti&oacute;n de Usuarios";
-        $formPerfiles = $this->formAsignacionPerfiles($id);
-        #$formAsignacionPerfiles = $formPerfiles['form'];
         if(isset($_POST['btnRegistroUsuarios'])):
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
                 Session::set('__msjVista',Mensajes::crear('suceso', 'El usuario '.$_POST['nombre_usuario']." ha sido creado exitosamente"));
@@ -75,7 +73,7 @@ class UsersController extends Controller{
             }
         endif;
         $this->data['form'] = $form->armarFormulario();
-        #$this->data['formPerfiles'] = $formAsignacionPerfiles->armarFormulario();
+        
 	}
     /**
      * Devuelve el formulario para gestion de usuarios
@@ -90,7 +88,8 @@ class UsersController extends Controller{
     protected function formGestionUser($campoUpdate=""){
         
         $tipoForm=(!empty($campoUpdate))?2:1;
-        $form = new Formulario('RegistroUsuarios',$tipoForm,$campoUpdate,2);
+        $form = new Formulario(array('RegistroUsuarios','PerfilesAUsuario'),$tipoForm,$campoUpdate,2);
+        
         $form->valueBotonForm=(!is_null($campoUpdate))?'Actualizar Datos':'Registrar Usuario';
         $form->action=$this->url.'/set-usuario';
         $retorno=array('guardado'=>'','form'=>'');
@@ -101,11 +100,16 @@ class UsersController extends Controller{
                 
                 $user = new User();
                 $guardado = $user->salvar($_POST,true);
-                
+                if($guardado['ejecutado']==1){
+                    $user->id_usuario=$guardado['idResultado'];
+                    $user->asociarPerfiles($_POST['id_perfil']);
+                }else{
+                    Debug::mostrarArray($guardado);
+                }
                 $retorno['guardado']=$guardado;
                  
             }else{
-                
+                Debug::mostrarArray($validacion);
                 $retorno['guardado'] =$validacion; 
             }
             
