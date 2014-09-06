@@ -28,7 +28,7 @@ class Excepcion {
                             $msj.="<strong>L&iacute;nea : </strong>".$e->getLine()."<br>";
                             $msj.="<strong>Archivo : </strong>".$e->getFile()."<br>";
                             $msj.="<strong>C&oacute;digo : </strong>".$e->getCode()."<br>";
-                            $msj.="<hr/><div style=\"font-size:10px\">Traza</br>";
+                            $msj.="<hr/><div style=\"font-size:11px\">Traza</br>";
                             
                             foreach($e->getTrace() as $key =>$traza){
                                 $msj.="<strong>Archivo</strong> ". $traza['file']."<br>";
