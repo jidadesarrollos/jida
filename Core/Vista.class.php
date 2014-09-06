@@ -545,6 +545,11 @@ class Vista extends DBContainer{
             if($this->seccionBusqueda===TRUE){
                 $vista.=$this->agregarSeccionBusqueda();
             }
+             if($this->opcionesBreadCrumb and is_array($this->opcionesBreadCrumb)){
+                 $bc = $this->agregarBreadCrumb();
+                 
+                 $vista.="\n$bc";
+             }
             //Se valida si existe un mensaje a mostrar
             if(Session::get('__msjVista')):
                 if( Session::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Session::get('__idVista')) or
@@ -740,7 +745,6 @@ class Vista extends DBContainer{
             case 2:
                 $control = ($this->tipoControl==1)?'radio':'checkbox';
                 $nombreControl = ($this->tipoControl == 1) ? "seleccionar" : "seleccionar[]";
-             #   Arrays::mostrarArray($this->tabla);Exit;
                 for($i=0;$i<$this->tabla->getTotalFilas();$i++){
                     
                     $col =& $this->tabla->tr[$i]->td[0];
@@ -946,7 +950,7 @@ class Vista extends DBContainer{
      * arreglo pasado a la funcion setParametrosVista, pasando un key "cssBreadcrumb".
      * 
      * @param array opcionesBreadcumb
-     * @return string breadcumb
+     * @return string breadcumb HTML renderizado 
      * 
      * 
      */
@@ -957,23 +961,18 @@ class Vista extends DBContainer{
                     $selector = $this->opcionesBreadCrumb['selector'];
                     unset($this->opcionesBreadCrumb['selector']);
                 }
-                $breadcrumb="\n<section class=\"row\">";
-                $breadcrumb.="\n\t\t<div class=\"col-lg-12\">";
-                $breadcrumb.="\n\t\t\t<ol class=\"$this->cssBreadcrumb\">";
-                    
-                foreach($this->opcionesBreadCrumb as $campo => $valor){
-                    
-              
-                    $breadcrumb.="\n\t\t\t<li>";
-                    if(isset($selector))
-                        $breadcrumb.="\n\t\t\t\t<a href=\"$valor[enlace]\">";
-                        $breadcrumb.="\n\t\t\t\t\t<span data-id=\"$valor[enlace]\">$valor[nombreLink]</span>";
-                    if(isset($selector))
-                        $breadcrumb.="\n\t\t\t\t</a>";
-                        $breadcrumb.="\n\t\t\t</li>\n";     
+                $lis="";
+                foreach ($this->opcionesBreadCrumb as $campo => $valor) {
+                    $span = Selector::crear('span',array('data-id'=>"$valor[enlace]"),$valor['nombreLink'],5);
+                    $link = Selector::crear('a',array('href'=>$valor['enlace']),$span,5);
+                    $lis .= Selector::crear('li',null,$link,4);
                 }
-                $breadcrumb.="\n\t\t\t</ol>\n\t\t</div>\n</section>";
-                return $breadcrumb;
+                $ol = Selector::crear('ol',array('class'=>$this->cssBreadcrumb),$lis,3);
+                $div = Selector::crear('div',array('class'=>'col-lg-12 col-md-12'),$ol,2);
+                $bc = Selector::crear('section',array('class'=>'row'),$div);
+                return $bc;
+
+                return $bc;
             }//fin if
     }//final funcion
     /**
