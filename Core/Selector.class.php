@@ -56,10 +56,13 @@ class Selector{
      * Genera el HTML del selector instanciado
      * @method getSelector
      * @access public
+     * @param int $tabs Numero de tabulaciones ha imprimir
      */
-    function getSelector(){
+    function getSelector($tabs=0){
         $s =& $this->selectorCreado;
-        $s="<".$this->selector;
+        $tabulaciones = self::addTabs($tabs);
+        $s = "\n".$tabulaciones;
+        $s .="<".$this->selector;
         
         if(!empty($this->id)){
             $s.=" id=\"".$this->id."\"";
@@ -73,7 +76,7 @@ class Selector{
         }        
         $this->getElementosData();
         $this->getAttr();
-        $s.=">\n\t".$this->contenido."\n</$this->selector>";
+        $s.=">\n".$tabulaciones."\t".$this->contenido."\n".$tabulaciones."</$this->selector>";
         
         return $this->selectorCreado;
         
@@ -113,8 +116,10 @@ class Selector{
      *          Arreglo de atributos para el selector
      * @param string $content Contenido del selector
      */
-    public static function crear($selector, $atributos = array(), $content = "") {
-       $selectorHTML = "<$selector";
+    public static function crear($selector, $atributos = array(), $content = "",$tabs=0) {
+        $tabulaciones = self::addTabs($tabs);
+        $selectorHTML ="".$tabulaciones;
+        $selectorHTML .= "<$selector";
         if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
             
             $content = $atributos ['content'];
@@ -127,8 +132,8 @@ class Selector{
             }    
         }
         if(!in_array($selector,array('img','hr','br'))){
-            $selectorHTML .= ">\n\t$content";
-            $selectorHTML .= "\n</$selector>";    
+            $selectorHTML .= ">\n".$tabulaciones."$content";
+            $selectorHTML .= "\n".$tabulaciones."</$selector>";    
         }else{
             $selectorHTML.="/>";
         }
@@ -222,7 +227,13 @@ class Selector{
         }
     
     }
-    
+    static function addTabs($nums){
+        $tabs = "";
+        for($i=0;$i<$nums;++$i):
+            $tabs.="\t";
+        endfor;
+        return $tabs;
+    }
 }
 
 
