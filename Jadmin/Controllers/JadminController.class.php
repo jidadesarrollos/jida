@@ -125,8 +125,6 @@ class JadminController extends Controller{
         echo $curl->post(array('prueba'=>'vemos algo','otra'=>'algo distinto','dime'=>'algo más'));
         exit;   
     }
-
-    }
     
     function testingFiles(){
         $cadena="hola mundo";
@@ -142,10 +140,6 @@ class JadminController extends Controller{
             echo "no se creo<hr>";
         }
         exit;
-    }
-
-  
-
-   
+    }   
 }
 ?>

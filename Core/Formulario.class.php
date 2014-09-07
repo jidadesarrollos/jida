@@ -401,7 +401,10 @@ class Formulario extends DBContainer {
         $query = "select * from $this->nombreTabla where $this->campoBusquedaFormulario in ($campos)";
         $formularios = $this->bd->obtenerDataCompleta( $this->bd->ejecutarQuery ( $query ) );
         $this->totalForms = $this->bd->totalRegistros;
-        
+        if($this->totalForms<1){
+            throw new Exception("No se han obtenido formularios de la consulta <br/> $query", 1);
+            
+        }
         foreach ($formularios as $key => $formulario) {
             
             $form  = new JidaFormulario($this->ambito);
@@ -1013,6 +1016,24 @@ class Formulario extends DBContainer {
     }
     function setParametrosFormulario($configuracion){
         $this->establecerAtributos($configuracion, __CLASS__);
+    }
+    
+    /**
+     * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
+     * 
+     * Define valores para las variables de sesion __msjVista e __idVista
+     * @method msjVista
+     * @param string $type Tipo de mensaje, puede ser: success,error,alert,info
+     * @param string $msj Contenido del mensaje
+     * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
+     */
+    static function msj($type,$msj,$redirect=false){
+        $msj = Mensajes::crear($type, $msj);
+        Session::set('__msjForm',$msj);
+        
+        if($redirect){
+            redireccionar($redirect);
+        }
     }
 } // fin clase formulario
 

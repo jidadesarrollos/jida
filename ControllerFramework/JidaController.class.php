@@ -81,6 +81,7 @@
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
+            
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->validacion();
         
@@ -108,6 +109,7 @@
             if($this->checkController($param."Controller")){
                 $this->controlador=$param;
                 if(count($url)>0 ){
+                    $param =$this->validarNombre(array_shift($url),1);
                     $this->checkMetodo($param);
                 }else{
                     $this->metodo='index';
@@ -156,6 +158,7 @@
             $this->metodo=$metodo;
             return true;
         }else{
+            
             $this->metodo="index";
             if($insertArg){
                 $this->args[]=strtolower($metodo);
@@ -236,7 +239,7 @@
         
     }
     function get(){
-        Arrays::mostrarArray($this);
+        Debug::mostrarArray($this);
     }
     /**
      * Ejecuta la solicitud realizada

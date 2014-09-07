@@ -990,7 +990,24 @@ class Vista extends DBContainer{
                 $this->$k = $arr[$k];
             }
         }
-        
+    }
+    /**
+     * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
+     * 
+     * Define valores para las variables de sesion __msjVista e __idVista
+     * @method msjVista
+     * @param string $idVista valor del atributo id del seccion de la vista en la cual se mostrará el msj
+     * @param string $type Tipo de mensaje, puede ser: success,error,alert,info
+     * @param string $msj Contenido del mensaje
+     * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
+     */
+    static function msj($idVista,$type,$msj,$redirect=false){
+        $msj = Mensajes::crear($type, $msj);
+        Session::set('__msjVista',$msj);
+        Session::set('__idVista',$idVista);
+        if($redirect){
+            redireccionar($redirect);
+        }
     }
     
 }//final clase
