@@ -66,15 +66,10 @@ class OpcionMenu extends DBContainer {
      * @param $id valor de la clave a instanciar 
      */
     function __construct($id=""){
-        try{
-            $this->nombreTabla = 's_opciones_menu';
-            $this->clavePrimaria = 'id_opcion';
-            
-            parent::__construct(__CLASS__,$id);        
-        }catch(Exception $e){
-            controlExcepcion($e->getMessage());
-        }
         
+            $this->nombreTabla = 's_opciones_menu';
+            $this->clavePrimaria = 'id_opcion';    
+            parent::__construct(__CLASS__,$id);
     }//final constructor
     
     function setOpcion($post){
@@ -85,31 +80,23 @@ class OpcionMenu extends DBContainer {
         if($this->padre!=0){
             $this->setHijoPadre(1);
         }
-        
         return $proceso;
-        
-        
     }
     /**
      * Elimina una opción de menu
      */
     function eliminarOpcion($id=""){
-        try{
-            if(!empty($id)){
-                $this->id_opcion = $id;
-                $this->inicializarObjeto($this->id_opcion);
-                
-            }
-            $this->eliminarObjeto();
-            $this->verificarHermanosAntesEliminar();
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }    
-    }
     
+        if(!empty($id)){
+            $this->id_opcion = $id;
+            $this->inicializarObjeto($this->id_opcion);       
+        }
+        $this->eliminarObjeto();
+        $this->verificarHermanosAntesEliminar();
+    }
     /**
      * Verifica que la opción padre tenga la propiedad hijo en 1, si se encuentra en 0 la modifica.
-     * 
+     * @method setHijoPadre
      *  
      */
     private function setHijoPadre($valor=1){
@@ -120,23 +107,26 @@ class OpcionMenu extends DBContainer {
      * valida si la opción tiene padre y hermanos
      * 
      * En caso de que la opción tenga padres y no hermanos modifica el valor "hijo" a la opción padre a 0
+     * @method verificarHermanosAntesEliminar
      */
      
      private function verificarHermanosAntesEliminar(){
-         try{
-            if($this->padre>0){
-                $query = "select * from $this->nombreTabla where padre=$this->padre";
-                $result = $this->bd->ejecutarQuery($query);
-                if($this->bd->totalRegistros==0){
-                    $this->setHijoPadre(0);
-                }
-                
-             }
-             
-         }catch(Exception $e){
-             Excepcion::controlExcepcion($e);
+     
+        if($this->padre>0){
+            $query = "select * from $this->nombreTabla where padre=$this->padre";
+            $result = $this->bd->ejecutarQuery($query);
+            if($this->bd->totalRegistros==0){
+                $this->setHijoPadre(0);
+            }
+            
          }
-         
+     
+     }//fin methodo
+     function getOpcionesByMenu($idMenu=""){
+         if(empty($idMenu))
+            $idMenu=$this->id_menu;
+         $query = "select * from s_opciones_menu where id_menu=$idMenu";
+         return $this->bd->obtenerDataCompleta($query);
      } 
      
 } // END
