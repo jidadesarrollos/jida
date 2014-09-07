@@ -159,7 +159,8 @@ class JidaControl extends DBContainer{
     /**
      * Valida y procesa el formulario de campos
      * @method procesarcampos
-     * 
+     * @param array $post Data post a guardar
+     * @param int $form 2 Formulario Framework 1 Aplicacion
      */
     function procesarCampos($post,$form){
         

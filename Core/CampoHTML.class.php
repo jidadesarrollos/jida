@@ -584,6 +584,7 @@ class CampoHTML extends DBContainer {
     public function procesarCampo($data="") {
         
         $valor = $this->salvar($data);
+        
         return $valor;
     }
     

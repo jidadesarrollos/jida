@@ -297,8 +297,10 @@ class FormsController extends Controller{
      * @param int $tipoForm Tipo del Formulario a editar : 1 Aplicación, 2 Framework;
      */
     private function getFormCampo($idCampo="",$tipoForm=1){
-        $form = new Formulario ( 'CamposFormulario',2,$idCampo,2 );
+        
+        $form = new Formulario ( 'CamposFormulario',2,$idCampo,$tipoForm );
         if($tipoForm==2){
+            
             $form->query_f="select id_campo, id_form, label, name, maxlength, size,
                             eventos, 1 clave_evento, 2 valor_evento, control,  opciones, orden, id_propiedad, placeholder,
                             class, data_atributo, title, visibilidad from s_jida_campos_f";
@@ -320,11 +322,13 @@ class FormsController extends Controller{
         $this->layout="ajax.tpl.php";
          
         if(isset($_POST['idCampo'])){
+            
             $idCampo = $_POST['idCampo'];
             
             $form=$this->getFormCampo($idCampo,$_POST['form']);
             
             $this->data['formCampo'] = $form->armarFormularioEstructura();
+            
         }else{
             throw new Exception("No se ha obtenido el id del campo", 1);
             

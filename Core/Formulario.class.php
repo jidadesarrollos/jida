@@ -762,6 +762,7 @@ class Formulario extends DBContainer {
                             );
                 
         }
+        $this->queryDatosUpdate=$query;
         $result = $this->bd->ejecutarQuery($query);
         $dataCampos=array();
         while($data =$this->bd->obtenerArrayAsociativo($result)){
