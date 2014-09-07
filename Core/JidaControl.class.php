@@ -150,8 +150,6 @@ class JidaControl extends DBContainer{
     function getCamposFormulario(){
         
         $query = "select id_campo,name from $this->tablaCampos where id_form=$this->id_form order by orden asc";
-        #echo $query;exit;
-        #Debug::string($query);
         $data = $this->bd->obtenerDataCompleta($query);
         return $data;
 
