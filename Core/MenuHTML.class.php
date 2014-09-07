@@ -178,19 +178,19 @@ class MenuHTML extends DBContainer{
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
                             $this->tagAdicionalLIpadre['atributos']=array();
                         endif;
-                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$opcion['nombre_opcion'],3,true);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$opcion['nombre_opcion'],3,true);
                     }else{
-                        $opc = $opcion['nombre_opcion'];
+                        $opc = $icono.$opcion['nombre_opcion'];
                     }
                     
-                    $listaMenu.=Selector::crear("li",$atributos,$icono.$opc.$submenu['html'],2,true);
+                    $listaMenu.=Selector::crear("li",$atributos,$opc.$submenu['html'],2,true);
                 }else{
                     
                     //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
                     $span =$opcion['nombre_opcion'];
                     
-                    $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$span,3);
-                    $listaMenu.=Selector::crear("li",$atributos,$icono.$enlace,2,true);
+                    $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$icono.$span,3);
+                    $listaMenu.=Selector::crear("li",$atributos,$enlace,2,true);
                 }
                 
             }else{
@@ -214,19 +214,21 @@ class MenuHTML extends DBContainer{
         }
          $ident = $this->identacion+$nivel+2;
          if(array_key_exists($nivel, $config['ul'])){
+            
             $cssUl['class'] = $config['ul'][$nivel];
         }else{
             $cssUl['class'] ="";
             
         }
+        
         $listaMenu="";
+        
         foreach ($opciones as $key => $subopcion) {
-            if(in_array($nivel, $config['ul'])){
-                $cssli['class'] = $config['li'][$nivel];
+            if(array_key_exists($nivel, $config['li'])){        
+                $cssli['class'] = $config['li'][$nivel]['class'];
             }else{
-                $cssli['class'] ="";
-                
-            }
+                $cssli['class'] ="";                
+            }    
             $icono="";
             if(!empty($subopcion['icono'])):
            
@@ -241,12 +243,12 @@ class MenuHTML extends DBContainer{
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
                     
                     if(is_array($this->tagAdicionalLIpadre)){
-                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$subopcion['nombre_opcion'],$ident+3);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['nombre_opcion'],$ident+3);
                     }else{
-                        $opc = $subopcion['nombre_opcion'];
+                        $opc = $icono.$subopcion['nombre_opcion'];
                     }    
                     $ulOpen=$submenus['open'];
-                    $listaMenu .= Selector::crear("li",$cssli,$icono.$opc.$submenus['html'],$nivel+1);
+                    $listaMenu .= Selector::crear("li",$cssli,$opc.$submenus['html'],$nivel+1);
                 }else{
                     /**
                      * Entra aqui si es un link o enlace del menu
@@ -256,8 +258,8 @@ class MenuHTML extends DBContainer{
                         $ulOpen=TRUE;
                         $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
                     }
-                    $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$span,$ident+3);
-                    $listaMenu.=Selector::crear("li",$cssli,$icono.$enlace,$nivel+2,true);   
+                    $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$icono.$span,$ident+3);
+                    $listaMenu.=Selector::crear("li",$cssli,$enlace,$nivel+2,true);   
                 }   
             }
         }//fin foreach
