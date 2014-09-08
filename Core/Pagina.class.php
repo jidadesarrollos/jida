@@ -214,7 +214,7 @@ class Pagina{
         }
         
         if(!is_readable($rutaVista)){
-            echo "$rutaVista";exit;
+            
             throw new Exception("Pagina no conseguida", 404);
                
             #$paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";

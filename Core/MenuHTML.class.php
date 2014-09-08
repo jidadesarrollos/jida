@@ -36,6 +36,11 @@ class MenuHTML extends DBContainer{
      */
     var $cssLiSeleccionado='selected';
     /**
+     * Atributos en común que se vayan a agregar a una lista de subopciones
+     * @var array $atributosULParent;
+     */
+    var $atributosLIParent = array('data-liparent'=>'true');
+    /**
      * Define el estilo para un ul hijo abierto en caso de se encuentre seleccionada una subopción
      * @var $cssUlChildOpen
      */
@@ -50,6 +55,7 @@ class MenuHTML extends DBContainer{
      * @var array $opciones
      */
     private $opciones;
+    
     /**
      * Funcion constructora de menus
      * @param int $id Clave del menu
@@ -139,8 +145,9 @@ class MenuHTML extends DBContainer{
             if(!is_array($atributosUL))
                 $atributosUL = array('class'=>$atributosUL);
         }else{
-            $atributosUL ="";
+            $atributosUL =array();
         }
+        
         $listaMenu="";
         
         foreach ($opciones as $key => $opcion) {
@@ -165,6 +172,8 @@ class MenuHTML extends DBContainer{
                     }
                 endif;
                 if($opcion['hijo']==1){
+                    $atributos = array_merge($atributos,$this->atributosLIParent);
+                    
                     $submenu=""; 
                     $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion']);
                     if($submenu['open']===TRUE){
@@ -221,6 +230,7 @@ class MenuHTML extends DBContainer{
             
         }
         
+        
         $listaMenu="";
         
         foreach ($opciones as $key => $subopcion) {
@@ -239,9 +249,12 @@ class MenuHTML extends DBContainer{
                 }
             endif;
             if($subopcion['padre']==$padre){
-                if($subopcion['hijo']==1){   
+                if($subopcion['hijo']==1){
+                   $cssli = array_merge($cssli,$this->atributosLIParent);
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
-                    
+                    //Se agrega separador para lis padres si existe;
+                    if(array_key_exists('caret', $config['li']))
+                        $cssli['class']=$cssli['class']." ".$this->configuracion['li']['caret'];
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['nombre_opcion'],$ident+3);
                     }else{

@@ -20,7 +20,7 @@
         </title>
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
-        <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
+        <link href="/htdocs/css/bootstrapDefault.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida.css" rel="stylesheet">

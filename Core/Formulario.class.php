@@ -426,7 +426,7 @@ class Formulario extends DBContainer {
     protected function obtenerCamposFormulario() {
         if($this->totalForms==1){
             $clave = (is_array($this->claveFormulario))?$this->claveFormulario[0]:$this->claveFormulario;
-            
+            $clave = String::upperCamelCase($clave);
             $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";    
         }elseIf($this->totalForms>1){
             
@@ -475,8 +475,15 @@ class Formulario extends DBContainer {
      * Crea los atributos nombre,id y tabla para el formulario.
      */
     protected function inicializarValoresForm() {
+        #Debug::mostrarArray($this->formularios,false);
+        if(array_key_exists(String::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
+            $data  = $this->formularios[String::upperCamelCase($this->claveFormulario[0])];    
+        }else{
+            
+            throw new Exception("No existe la clave del formulario ".$this->claveFormulario[0], 1);
+            
+        }
         
-        $data  = $this->formularios[$this->claveFormulario[0]];
         
         $nombreFormSinEspacios = str_replace ( " ", "", ucwords ( $data->nombre_f ) );
         $this->nameTagForm = "form" . $nombreFormSinEspacios;
@@ -703,9 +710,7 @@ class Formulario extends DBContainer {
             // i es agregado un query a la clase formulario es pasado a la clase campo en el momento de creacion del control.
             
             $control = $controlHTML->crearControl();
-            
             $validaciones = json_decode("{".$arr['eventos']."}",true);
-            
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
                 $control.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
@@ -723,8 +728,6 @@ class Formulario extends DBContainer {
                         $label=$label.$tildeObligatorio;                                
                     endif;
                 }
-                    
-                
                 $formulario [$arr ['name']] ['label'] =$label;
             }
         }
@@ -733,7 +736,6 @@ class Formulario extends DBContainer {
         // Se valida que existan validaciones para armar la función js que llama al validador
         $js = (! empty ( $javascript )) ? $this->armarfuncionJs ( $javascript ) : "";
         $formulario ['validacion'] = $js;
-        
         // ------------------------------------------
         return $formulario;
     }
@@ -751,26 +753,79 @@ class Formulario extends DBContainer {
         if(is_array($this->campoUpdate)){
             $this->campoUpdate = $this->campoUpdate[0];
         }
-        
+        $multiQuery = FALSE;
         if($this->totalForms>1){
-            
+           $query = "";
+           foreach ($this->formularios as $key => $form) {
+                $q= sprintf("%s where %s=%s;",
+                                                $form->query_f,
+                                                $form->clave_primaria_f,
+                                                $this->campoUpdate
+                                            );
+               
+               $query.=$q;
+           }
+           $multiQuery = TRUE;
+        $this->queryDatosUpdate=$query;   
         }else{
             $query = sprintf("%s where %s=%s",
                                 $this->formularios[$this->claveFormulario[0]]->query_f,
                                 $this->formularios[$this->claveFormulario[0]]->clave_primaria_f,
                                 $this->campoUpdate
                             );
+                $this->queryDatosUpdate=$query;
+        }
+        if($multiQuery===TRUE){
+            $result = $this->bd->ejecutarQuery($query,true);
+            $data = $this->bd->obtenerDataMultiQuery();
+            $dataCampos=array();
+            $form=0;
+            // Debug::mostrarArray($data,false);
+            $Multiple=FALSE;
+            $vueltas = 0;
+            foreach ($data as $key => $dataForm) {
                 
+                $totalRegistros = $dataForm['totalRegistros'];
+                if($totalRegistros==1){
+                    if($form>0){
+                        foreach ($dataForm as $key => $value) {
+                            if(is_array($value)){
+                                foreach ($value as $key => $value) {
+                                    $dataCampos[0][$key]=$value;    
+                                }    
+                            }else{
+                                    $dataCampos[0][$key]=$value;
+                            }
+                        }
+                    }else{
+                        $dataCampos[0]=$dataForm[0];    
+                    }
+                    
+                }else{
+                    $Multiple=TRUE;
+                    for($i=0;$i<$totalRegistros;$i++){
+                        if(count($dataCampos)>=1){
+                            
+                            $pos =($Multiple==TRUE)?count($dataCampos)+1:count($dataCampos);
+                            $dataCampos[$pos]=$dataForm[$i];    
+                        }else{
+                            $dataCampos[1]=$dataForm[$i];
+                        }
+                    }    
+                }
+                
+                ++$form;
+            }
+            // exit;
+        }else{
+            $result = $this->bd->ejecutarQuery($query);
+            $dataCampos=array();
+            while($data =$this->bd->obtenerArrayAsociativo($result)){
+               $dataCampos[]= $data;
+            }
         }
-        $this->queryDatosUpdate=$query;
-        $result = $this->bd->ejecutarQuery($query);
-        $dataCampos=array();
-        while($data =$this->bd->obtenerArrayAsociativo($result)){
-            
-           $dataCampos[]= $data;
-        }
-        $dataCampos=array_merge($dataCampos,$this->dataPost);
         
+        $dataCampos=array_merge($dataCampos,$this->dataPost);
         $this->valoresUpdate=$dataCampos;
         return $dataCampos;
     }

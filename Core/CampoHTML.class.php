@@ -104,6 +104,7 @@ class CampoHTML extends DBContainer {
      * @example new CampoHTML($arrayDatos,$arrayValues,$campoExterno);
      */
     public function __construct($arr = "", $arrValue = "", $campoExterno = "") {
+        
         $totalParametros = func_num_args();
         $this->externo = $campoExterno;
         $this->momentoSalvado=FALSE;
@@ -136,16 +137,19 @@ class CampoHTML extends DBContainer {
                 $this->nombreTabla= $this->esquema .".". $this->nombreTabla;
             }
             $this->clavePrimaria = "id_campo";
+            $this->establecerAtributos ( $arr, __CLASS__ );
             if (is_array($arrValue)) {
+            
                 $this->typeForm = 2;
                 if(is_array($arrValue) and count($arrValue)>0){
                     //Validar si el campo update es multi-selección.
-                    if(isset($arrValue[0]))
-                        $this->valueUpdate=$arrValue[0];
+                    
+                    $this->valueUpdate=$arrValue;    
                     $this->valueUpdateMultiple=$arrValue;    
                 }
+                
             }
-            $this->establecerAtributos ( $arr, __CLASS__ );
+            
             $this->cn = $this->bd;
         }
     }
@@ -154,17 +158,25 @@ class CampoHTML extends DBContainer {
      * 
      */
     private function setValueProperty() {
-        if (isset ( $this->valueUpdate [$this->name] )){
-            $validacion = json_decode("{".$this->eventos."}");
-            
-            if($validacion!==null and array_key_exists("decimal", $validacion) and !empty($this->valueUpdate[$this->name])){
-                
-                $this->value = number_format($this->valueUpdate[$this->name],2,",",".");
-            }else{
-                $this->value = $this->valueUpdate[$this->name]; 
-            }
-            
+        $existe=FALSE;
+        
+        foreach ($this->valueUpdate as $key => $value) {
+            if($existe==FALSE){
+                if (isset ( $value [$this->name] )){
+                    $existe=TRUE;
+                    $validacion = json_decode("{".$this->eventos."}");
+                    
+                    if($validacion!==null and array_key_exists("decimal", $validacion) and !empty($this->valueUpdate[$this->name])){
+                        
+                        $this->value = number_format($value[$this->name],2,",",".");
+                    }else{
+                        $this->value = $value[$this->name]; 
+                    }
+                    
+                }
+            }//fin if existe;    
         }
+        
     }
     
     /**
