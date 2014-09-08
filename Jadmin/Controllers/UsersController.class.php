@@ -53,20 +53,29 @@ class UsersController extends Controller{
 
 	/**
      * Muestra formulario de gestión de usuarios
+     * 
+     * El metodo puede ser configurado en controladores que hereden de UsersControllers por
+     * medio de los parametros que solo son pasados al ser llamado explicitamente
+     * @param string $url Url del metodo que hereda
+     * @param $externo Consulta sql para filtrar los perfiles a mostrar
+     * @param $idVista Id de la vista en la cual mostrar mensaje de suceso
+     * @param $urlVista Url de la vista a la cual redireccionar
+     * @method setUsuario
      */
-	function setUsuario(){
+	function setUsuario($url="",$externo="",$idVista='usuarios',$urlVista=""){
+	    $urlVista =(empty($urlVista))?$this->url:$urlVista;
 	    $id ="";
 	    if(isset($_GET['u']) and $this->getEntero($_GET['u']))
 	       $id = $_GET['u'];
         
-	    $datosForm =  $this->formGestionUser($id);
+	    $datosForm =  $this->formGestionUser($id,$url,$externo);
         $form=& $datosForm['form'];
         $form->tituloFormulario="Gesti&oacute;n de Usuarios";
         if(isset($_POST['btnRegistroUsuarios'])):
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
-                Session::set('__msjVista',Mensajes::crear('suceso', 'El usuario '.$_POST['nombre_usuario']." ha sido creado exitosamente"));
-                Session::set('__idvista','usuarios');
-                redireccionar($this->url);
+                $msj = 'El usuario '.$_POST['nombre_usuario']." ha sido creado exitosamente";
+                
+                Vista::msj($idVista, 'suceso', $msj,$urlVista);
             }else{
                 
                 Session::set('__msjForm',Mensajes::crear('error',"No se ha podido registrar el usuario, vuelva a intentarlo"),false);
@@ -85,13 +94,14 @@ class UsersController extends Controller{
      * @param $campoUpdate
      * @return array $form Arreglo asociativo con dos posiciones 'guardado' result del save de DBContainer 'form' Objeto Formulario
      */
-    protected function formGestionUser($campoUpdate=""){
-        
+    protected function formGestionUser($campoUpdate="",$metodo='set-usuario',$externo=""){
+        $metodo = (empty($metodo))?'set-usuario':$metodo;
         $tipoForm=(!empty($campoUpdate))?2:1;
         $form = new Formulario(array('RegistroUsuarios','PerfilesAUsuario'),$tipoForm,$campoUpdate,2);
         
+        $form->externo['id_perfil']=(!empty($externo))?$externo:"select id_perfil, nombre_perfil from s_perfiles";
         $form->valueBotonForm=(!is_null($campoUpdate))?'Actualizar Datos':'Registrar Usuario';
-        $form->action=$this->url.'/set-usuario';
+        $form->action=$this->url.'/'.$metodo;
         $retorno=array('guardado'=>'','form'=>'');
         if(isset($_POST['btnRegistroUsuarios'])):
             $validacion  = $form->validarFormulario();
@@ -104,7 +114,7 @@ class UsersController extends Controller{
                     $user->id_usuario=$guardado['idResultado'];
                     $user->asociarPerfiles($_POST['id_perfil']);
                 }else{
-                    Debug::mostrarArray($guardado);
+                    
                 }
                 $retorno['guardado']=$guardado;
                  
