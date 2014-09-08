@@ -44,7 +44,7 @@ class Mensajes {
             $estilo['error']=cssMsjError;
             $estilo['alerta']=cssMsjAlerta;
             $estilo['suceso']=cssMsjSuccess;
-            $estilo['informacion']=cssMsjInformacion;    
+            $estilo['info']=cssMsjInformacion;    
         // }else{
             // $excepcion = "No se encuentran definidas las constantes css para los mensajes, verifique
             // el archivo de configuración";

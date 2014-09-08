@@ -8,11 +8,14 @@
  * @version 0.1 02/01/2014
  */
 class Perfil extends DBContainer{
-
-	function __construct(){
+    var $id_perfil;
+    var $nombre_perfil;
+    var $clave_perfil;
+	function __construct($id){
 		$this->nombreTabla="s_perfiles";
         $this->clavePrimaria="id_perfil";
-        parent::__construct(__CLASS__);
+        $this->unico=array('nombre_perfil');
+        parent::__construct(__CLASS__,$id);
 	}//final constructor
 	
 	function obtenerPerfil(){
