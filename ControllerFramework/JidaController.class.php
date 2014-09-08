@@ -110,7 +110,7 @@
                 $this->controlador=$param;
                 if(count($url)>0 ){
                     $param =$this->validarNombre(array_shift($url),1);
-                    $this->checkMetodo($param);
+                    $this->checkMetodo($param,TRUE);
                 }else{
                     $this->metodo='index';
                 }
@@ -119,7 +119,7 @@
                  * Si entra aqui el controlador a ejecutar es el Index publico
                  * */
                 $this->controlador='Index';
-                $this->checkMetodo($param);
+                $this->checkMetodo($param,TRUE);
             }
             
         }else{
