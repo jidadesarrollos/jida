@@ -65,18 +65,14 @@ class Mysql extends ConexionBD{
      * Establece la conexión a base de datos
      */
     function establecerConexion(){
-        try{
-          $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
-          
-            if($this->mysqli->connect_error){
-                throw new Exception("No se establecio la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
-                
-            }else{
-                return true;
-            }
-        }catch(Exception $e){
+        
+        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+      
+        if($this->mysqli->connect_error){
+            throw new Exception("No se establecio la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
             
-            Excepcion::controlExcepcion($e);
+        }else{
+            return true;
         }
         
     }// final funcion establecerConexión
@@ -380,14 +376,14 @@ class Mysql extends ConexionBD{
     /**
      * DEvuelve un arreglo asociativo con los results de queries realizados
      * en una multiConsulta
+     * @method obtenerDataMultiQuery
      */
-    function obtenerDataMultiQuery($result){
-        try{
-            $arrayResult = array();
-            $i=0;
-            do{
-            
-            
+    function obtenerDataMultiQuery($result=""){
+        if(empty($result))
+        $result = $this->result;
+        $arrayResult = array();
+        $i=0;
+        do{
             if($result = $this->mysqli->store_result()){
                 
                 $e=0;
@@ -399,13 +395,9 @@ class Mysql extends ConexionBD{
                     
             }
              $i++;
-            }while($this->mysqli->more_results() and $this->mysqli->next_result());
-            
-            return $arrayResult;
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
+        }while($this->mysqli->more_results() and $this->mysqli->next_result());
         
+        return $arrayResult;
     }
 }//final clase Mysql
 
