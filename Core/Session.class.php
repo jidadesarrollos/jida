@@ -129,7 +129,8 @@ class Session {
         if(Session::get('isLoggin'))
             return true;
         else {
-            return false;
+            throw new Exception("sitio no encontrado", 404);
+            
         }
     }
     
