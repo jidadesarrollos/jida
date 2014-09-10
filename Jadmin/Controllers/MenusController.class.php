@@ -17,12 +17,12 @@ class MenusController extends Controller {
     }
     
     function index() {
-        $query = "select * from s_menus";
+        $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
         $this -> vista = 'menus';
         
         $dataArray = array();
-        $vistaMenu = new Vista($query, $GLOBALS['configVista'], 'Menus');
-        
+        $vistaMenu = new Vista($query, $GLOBALS['configPaginador'], 'Menus');
+        $vistaMenu->setParametrosVista($GLOBALS['configVista']);
         
         $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
         $vistaMenu -> tipoControl = 2;        

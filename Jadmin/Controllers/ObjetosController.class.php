@@ -17,7 +17,7 @@ class ObjetosController extends Controller{
         $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
 		$this->modelo = new Objeto();		
-        $this->Mperfil = new Perfil();
+        
     }
 	
 	function index(){

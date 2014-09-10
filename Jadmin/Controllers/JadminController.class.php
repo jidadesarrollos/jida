@@ -17,9 +17,7 @@ class JadminController extends Controller{
     function __construct(){
         
         $this->jctrl = new JidaControl();
-        
-        $this->footer="login/FLogin.php";
-        $this->header="login/HLogin.php";
+        $this->layout="jadmin.tpl.php";
         $this->url = "/jadmin/";
         
     }

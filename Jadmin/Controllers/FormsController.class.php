@@ -138,16 +138,22 @@ class FormsController extends Controller{
 		if(isset($_POST['btnFormularios'])){
 			$validacion = $formulario->validarFormulario($_POST);
 			if($validacion===true){
-				
-		        if($jctrol->validarQuery($_POST['query_f'])===TRUE){		
+			    if(CURL_USE===TRUE){
+				    $_POST['query_f'] = stripcslashes($_POST['query_f']);
+                }
+                
+		        if($jctrol->validarQuery($_POST['query_f'])===TRUE){
+		            $_POST['query_f'] = addslashes($_POST['query_f']);		
 					if($_POST['btnFormularios']!='Modificar'){
 						$_POST['nombre_identificador'] = $this->armarNombreIdentificador($_POST['nombre_f']);
 					}
                     
 					$guardado = $jctrol->salvar($_POST);
+                    $jctrol->query_f=stripslashes($jctrol->query_f);
 					if($guardado['ejecutado']==1){
 						$jctrol->procesarCamposFormulario($guardado);
-						Session::set('__msjForm', Mensajes::mensajeInformativo("El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente"));
+						Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
+                        
                         if($ambito==2){
                             redireccionar('/jadmin/forms/configuracion-jida-form/formulario/'.$guardado['idResultado']);
                         }else{
@@ -156,6 +162,7 @@ class FormsController extends Controller{
 						
 					}
                 }else{
+                    
                     Session::set('__msjForm',Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
                 }
 			}else{
