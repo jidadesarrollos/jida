@@ -291,32 +291,30 @@ class JidaControl extends DBContainer{
      * 
      */
     function eliminarFormulario($ids){
-        try{
-            if(is_array($ids)){
-                
-                //verificar campos
-                $delete = sprintf("delete from %s where id_form in(%s)",$this->tablaCampos,implode(",",$ids));
-                
-                if($this->bd->ejecutarQuery($delete)){
-                    $this->eliminarMultiplesDatos($ids, 'id_form');        
-                }else{
-                 throw new Exception("No se pueden eliminar los campos del formulario $this->id_form", 1);
-                    
-                }
+        
+        if(is_array($ids)){
+            
+            //verificar campos
+            $delete = sprintf("delete from %s where id_form in(%s)",$this->tablaCampos,implode(",",$ids));
+            
+            if($this->bd->ejecutarQuery($delete)){
+                $this->eliminarMultiplesDatos($ids, 'id_form');        
             }else{
-                $delete = "delete from $this->tablaCampos where id_form=$ids";
-                if($this->bd->ejecutarQuery($delete)){
-                    $this->eliminarDatos(array('id_form'=>$ids));        
-                }else{
-                 throw new Exception("No se pueden eliminar los campos del formulario $this->id_form", 1);
-                    
-                }
+             throw new Exception("No se pueden eliminar los campos del formulario $this->id_form", 1);
                 
             }
-            return true;
-        }catch(Exception $e){
+        }else{
+            $delete = "delete from $this->tablaCampos where id_form=$ids";
+            if($this->bd->ejecutarQuery($delete)){
+                $this->eliminarDatos(array('id_form'=>$ids));        
+            }else{
+             throw new Exception("No se pueden eliminar los campos del formulario $this->id_form", 1);
+                
+            }
             
         }
+        return true;
+        
     }
     /**
      * Verifica el query de un formulario
@@ -331,6 +329,7 @@ class JidaControl extends DBContainer{
             }
             
         }catch(Exception $e){
+            Debug::mostrarArray($e);
             if($e->getCode()=='200'){
                 return false;
             }
