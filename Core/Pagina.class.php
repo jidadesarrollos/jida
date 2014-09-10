@@ -257,10 +257,11 @@ class Pagina{
         $dataArray = $data;
         
         /* Permitimos almacenamiento en bufer */
+        
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
-           
+
            include_once $this->vista;
            $contenido = ob_get_clean();
            
@@ -268,8 +269,8 @@ class Pagina{
            $layout = ob_get_clean();
            echo $layout;
         else:
+            throw new Exception("No se encuentra definido el layout para $this->vista, controlador $this->controlador", 110);
             
-            $b = String::test($this->directorioLayout);
         endif;
         
         if (ob_get_length()) ob_end_clean();
