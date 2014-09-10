@@ -145,7 +145,8 @@ class CampoHTML extends DBContainer {
                     //Validar si el campo update es multi-selección.
                     
                     $this->valueUpdate=$arrValue;    
-                    $this->valueUpdateMultiple=$arrValue;    
+                    $this->valueUpdateMultiple=$arrValue;
+                     
                 }
                 
             }
@@ -162,6 +163,7 @@ class CampoHTML extends DBContainer {
         
         foreach ($this->valueUpdate as $key => $value) {
             if($existe==FALSE){
+                 
                 if (isset ( $value [$this->name] )){
                     $existe=TRUE;
                     $validacion = json_decode("{".$this->eventos."}");
@@ -170,9 +172,9 @@ class CampoHTML extends DBContainer {
                         
                         $this->value = number_format($value[$this->name],2,",",".");
                     }else{
-                        $this->value = $value[$this->name]; 
+                        $this->value = $value[$this->name];
+         
                     }
-                    
                 }
             }//fin if existe;    
         }
@@ -294,8 +296,11 @@ class CampoHTML extends DBContainer {
              */
           $eventos = json_decode("{".$this->eventos."}");
           $tipoTelefono="normal";
-          if(is_object($eventos) and property_exists($eventos->{'telefono'}, 'tipo')){
-              $tipoTelefono = $eventos->{'telefono'}->{'tipo'};
+          if(is_object($eventos) and property_exists($eventos, 'telefono')){
+              
+              if(property_exists($eventos->{'telefono'}, 'tipo')){
+                  $tipoTelefono = $eventos->{'telefono'}->{'tipo'};
+              }
           }
           $valorCodigo="";$valorTelf="";$valorExtension="";
              if(!empty($this->value)){
@@ -305,7 +310,7 @@ class CampoHTML extends DBContainer {
                     $valorExtension=($tipoTelefono=='internacional')?substr($this->value,13):substr($this->value,10);
                 }
              }
-             $this->control="<div class=\"form-inline btn-group box-ctrl-tlf\">";
+             $this->control="<div class=\"ctrl-multiple\">";
              if($tipoTelefono!='internacional'){
                 #$this->control.="<div class=\"text-muted ctrl-number\">(+58) </div>";
                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"cod.\">";     
@@ -347,7 +352,7 @@ class CampoHTML extends DBContainer {
     }
 
     private function crearControlIdentificacion(){
-            $this->control="<div class=\"form-inline\">";
+            $this->control="<div class=\"ctrl-multiple\">";
             $this->control.="<select name=\"".$this->name."-tipo-doc\" class=\"$this->ccsControlRequerida ctrl-documentacion \" id=\"".$this->id_propiedad."-tipo-doc\">";
             $tipoDoc="";
             $this->armarOpciones();
@@ -365,10 +370,10 @@ class CampoHTML extends DBContainer {
                 
             }
             $this->control.="</select>";
-            $this->control .= "<input type=\"text\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
+            $this->control .= "<input type=\"text\" data-jidacontrol=\"numerico\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
             $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
             $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
-            $this->control .= ($this->maxlength != "") ? " maxlength=\"$this->maxlength\" " : "";
+            $this->control .= ($this->maxlength != "") ? " maxlength=\"$this->maxlength\" " : " maxlength=\"9\" ";
             $this->control .= ($this->size != "") ? "size=\"$this->size\"" : "";                
             $this->control .= ">";
             
@@ -380,6 +385,7 @@ class CampoHTML extends DBContainer {
      * @return string
      */
     private function crearSelect() {
+        
         $this->control = "<select id=\"$this->id_propiedad\" name=\"$this->name\" " . trim ( $this->atributosAdicionales ) . ">";
         $this->armarOpciones ();
         
@@ -387,7 +393,7 @@ class CampoHTML extends DBContainer {
             $selected = "";
             if ($this->typeForm == 2) {
                  
-                if (array_key_exists($this->name,$this->valueUpdate) and $this->valueUpdate [$this->name] == $valor){
+                if (array_key_exists($this->name,$this->valueUpdate[0]) and $this->valueUpdate[0] [$this->name] == $valor){
                     $selected = "selected=\"selected\"";
                 }
             }
