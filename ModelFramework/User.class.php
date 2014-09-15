@@ -75,24 +75,19 @@ class User extends DBContainer{
      * Verifica que los datos para iniciar session sean validos
      */
     function validarLogin($usuario,$clave){
-        try{
-            $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and clave_usuario='$clave' and validacion=1";
-			
-            $result = $this->bd->ejecutarQuery($query);
-            if($this->bd->totalRegistros>0){
-                
-                $datos = $this->bd->obtenerArrayAsociativo($result);
-                $this->establecerAtributos($datos, __CLASS__);
-                $this->obtenerPerfiles();
-				
-                return $datos;
-            }else{
-                return false;
-            }
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
         
+        $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and clave_usuario='$clave' and validacion=1";
+        $result = $this->bd->ejecutarQuery($query);
+        if($this->bd->totalRegistros>0){
+            
+            $datos = $this->bd->obtenerArrayAsociativo($result);
+            $this->establecerAtributos($datos, __CLASS__);
+            $this->obtenerPerfiles();
+			
+            return $datos;
+        }else{
+            return false;
+        }
     }
     /**
      * Obtiene los perfiles asociados a un usuario de base de datos

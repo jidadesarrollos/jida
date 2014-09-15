@@ -45,8 +45,10 @@
     </head>
 
     <body>
+        
      <div  class="jida-container">
          <div class="container-fluid">
+             
              <div class="row">
                 <nav id="nav-top" class="navbar bg-jida navbar-fixed-top">    
                     <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>

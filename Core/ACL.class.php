@@ -70,7 +70,7 @@ class ACL extends DBContainer{
        
         $query = "select id_componente,componente from v_acceso_componentes where clave_perfil in (";
         $i=0;
-        
+
         foreach ($this->perfiles as $key => $value) {
             ($i==0)?$i++:$query.=",";
             $query.="'$value'";
@@ -79,7 +79,7 @@ class ACL extends DBContainer{
         
         $query.=") group by componente;";
         
-        #echo $query."<hr>";exit;
+        
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
@@ -90,11 +90,12 @@ class ACL extends DBContainer{
          
                                                         );           
         }
-        
+                
         //EL componente PRINCIPAL siempre es visible;
         $componentes[1]=array('componente'=>'principal');
         $this->componentes = $componentes;
         $this->acl = $access;
+        
     }
     
     /**
@@ -108,8 +109,9 @@ class ACL extends DBContainer{
      */
     private function obtenerAccesoObjetos(){
         Session::destroy('acl');
+
         if(!isset($_SESSION['acl'])){
-            
+                    
             $perfiles ="";
              $i=0;
             foreach ($this->perfiles as $key => $value) {
@@ -127,7 +129,7 @@ class ACL extends DBContainer{
             $objetos = $this->bd->obtenerDataCompleta($query);
             $accesoObjetos=array();
             $accesoMetodos = $this->obtenerAccesoMetodos();
-            
+     
             foreach($objetos as $key =>$dataObjeto){
                 
                 $componente = $this->componentes[$dataObjeto['id_componente']]['componente'];
@@ -139,15 +141,38 @@ class ACL extends DBContainer{
                 foreach ($accesoMetodos as $key => $dataMetodo) {
                     if($dataMetodo['objeto']==$dataObjeto['objeto'] and $dataObjeto['clave_perfil']==$dataMetodo['clave_perfil']){
                             
-                        $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
+ 
                         $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
                     }
                 }
-            }
+                
+            }//fin foreach recorrido de objetos
+            /**
+             * Se recorren solo los metodos para validar la existencia de metodos que no requieran validación de sesion y perfiles
+             */
+            #Debug::mostrarArray($this->componentes);
+           
+            foreach($accesoMetodos as $key=>$dataMetodo){
+                    #Debug::string("pasa");
+                    $componente = $dataMetodo['componente'];
+                    $soloElMetodo=false;
+                     if($dataMetodo['loggin']==0){
+                        
+                        if(!array_key_exists($componente, $this->acl)){
+                            $this->acl[$componente]=array();
+                            $soloElMetodo=TRUE;
+                        }
+                        if(array_key_exists('objetos', $this->acl[$componente]) or $soloElMetodo===TRUE)
+                            $this->acl[$componente]['objetos'][$dataMetodo['objeto']]['metodos'][$dataMetodo['nombre_metodo']]=$dataMetodo['nombre_metodo'];
+                    }
+                }//fin foreach
+            
+            
+            
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
             Session::set('acl',$this->acl);
-            $this->accesos  =  $accesoObjetos;
+#            $this->accesos  =  $accesoObjetos;
             
         }//fin validacion existencia
         
@@ -162,7 +187,7 @@ class ACL extends DBContainer{
      */
     
     private function obtenerAccesoMetodos(){
-        $query ="select * from v_acceso_metodos";
+        $query ="select * from vj_acceso_metodos";
         $accesoMetodos = $this->bd->obtenerDataCompleta($query);
         return $accesoMetodos;
     }
@@ -184,8 +209,10 @@ class ACL extends DBContainer{
         if(empty($componente)){
             $componente = "principal";
         }
-        $listaAcl  = Session::get('acl');
         
+        $listaAcl  = Session::get('acl');
+        // Debug::mostrarArray($perfilesUser,false);
+        // Debug::mostrarArray($listaAcl);
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;

@@ -72,6 +72,7 @@ class UsersController extends Controller{
         $form=& $datosForm['form'];
         $form->tituloFormulario="Gesti&oacute;n de Usuarios";
         if(isset($_POST['btnRegistroUsuarios'])):
+            $_POST['clave_usuario']=md5($_POST['clave_usuario']);
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
                 $msj = 'El usuario '.$_POST['nombre_usuario']." ha sido creado exitosamente";
                 
@@ -109,6 +110,8 @@ class UsersController extends Controller{
             if($validacion===TRUE){
                 
                 $user = new User();
+                $user->validacion=1;
+                $_POST['clave_usuario'] = md5($_POST['clave_usuario']);
                 $guardado = $user->salvar($_POST,true);
                 if($guardado['ejecutado']==1){
                     $user->id_usuario=$guardado['idResultado'];
@@ -208,6 +211,7 @@ class UsersController extends Controller{
 	
 	 
 	function cierresesion(){
+	    
 	    if(Session::destroy()){
 	       redireccionar('/jadmin/');    
 	    }

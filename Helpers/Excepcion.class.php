@@ -59,8 +59,7 @@ class Excepcion {
                                                  
                             break;
                         case 'prod':
-                            self::sendExecpcionMail($e);
-                            redireccionar('/excepcion/error500');                            
+                                                        
                             break;
                         
                         default:
@@ -89,7 +88,7 @@ class Excepcion {
      * Envia un error capturado via mail
      * @method sendExecpcionMail
      */
-    static function sendExecpcionMail(Exception $e){
+    static function mailError(Exception $e){
          $msj = '<h3>Error Capturado!</h3><hr>';
             $msj.="<strong>Mensaje : </strong>".$e->getMessage()."<br>";
             $msj.="<strong>L&iacute;nea : </strong>".$e->getLine()."<br>";
@@ -104,7 +103,16 @@ class Excepcion {
                 #$msj.="<hr>";
             }
             $msj.="</div>";
-        error_log($msj,1,MAIL_ERROR_APP);
+            return $msj;
+        
+        if(defined('MAIL_ADMIN')){
+            // $mail = new EmailComponente();
+            // $mail->setTemplatePath('jidaPlantillas/mail/');
+            // $data=array(':detalle_error'=>$msj,':aplicacion'=>'Electron C.A');
+            // $mail->enviarEmail(MAIL_ADMIN, $e->getMessage(), $data,'error.tpl.php' );
+        }
+        
+        //error_log($msj,1,MAIL_ERROR_APP);
     }
     
 } // END

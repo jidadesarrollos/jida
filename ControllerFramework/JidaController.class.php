@@ -260,8 +260,6 @@
             $acl = new ACL();
             
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
-            
-            #exit;
             if($acceso===TRUE){
                 
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -445,6 +443,7 @@
         #se instancia el controlador solicitado
         
         $this->controladorObject = new $controlador;
+        $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         
         $controlador->$metodo($params);
@@ -460,11 +459,15 @@
         $ctrlError = $this->controlador."Controller";
         $this->controladorObject = new $ctrlError;
         $this->checkDirectoriosView();
-        $this->controlador='ExcepcionController';
+        if(!defined('EXCEPCION_CONTROLLER'))
+            $this->controlador='ExcepcionController';
+        else 
+            $this->controlador=EXCEPCION_CONTROLLER;
         $this->metodo='error';
         
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
         $this->vista->definirDirectorios();
+        
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);

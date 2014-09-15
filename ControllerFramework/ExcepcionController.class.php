@@ -8,7 +8,11 @@
  * @version 0.1 02/01/2014
  */
 class ExcepcionController extends Controller{
-    
+
+    /**
+     * @var object $excepcion Objeto con excepción capturada
+     */
+    var $excepcion;    
     /**
      * Funcion por defecto para manejar
      * las excepciones existentes en el entorno de desarrollo
@@ -18,26 +22,98 @@ class ExcepcionController extends Controller{
      */
      
     function error($e){
+        $this->excepcion=$e;
+         
+        $this->data['msjError'] = $this->procesarError();
         
-        $this->data['msjError'] =  Excepcion::controlExcepcion($e);
         $this->vista="500";
+     
         
        
     }
-    function index(){
-        
-        $this->vista = 'excepcion';
-    }
-    function error500($msj){
-        $this->data['__msjError']=$msj;   
-        $this->vista='500';
+    
+
+    protected function procesarError($view=""){
+        if(!empty($view)){
+               $this->vista=$view;        
+         }else{
+             switch ($this->excepcion->getCode()) {
+                 case 404:
+                    $this->vista="404";
+                 
+                     break;
+                    
+                 default:
+                    $this->vista="500"; 
+                     break;
+             }
+         }
+         $msj  = $this->getDetalleExcepcion();
+         return $msj; 
+        //Excepcion::mailError($this->excepcion);
+            
     }
     
-    function error403(){
-        $this->vista='403';
+    private function getDetalleExcepcion(){
+        switch (entorno_app) {
+             case 'dev':
+                    
+                    $msj = $this->getHTMLMessage();
+                    
+                 break;
+             
+             case 'prod':
+                 
+                    $msj = $this->excepcionProduccion();
+                 break;
+        }//fin switch
+        return $msj;   
     }
-    function error404(){
-        $this->vista='404';
+    private function getHTMLMessage(){
+        $e =& $this->excepcion;
+        $msj = '<h3>Error Capturado!</h3><hr>';
+            $msj.="<strong>Mensaje : </strong>".$e->getMessage()."<br/>";
+            $msj.="<strong>L&iacute;nea : </strong>".$e->getLine()."<br/>";
+            $msj.="<strong>Archivo : </strong>".$e->getFile()."<br/>";
+            $msj.="<strong>C&oacute;digo : </strong>".$e->getCode()."<br/>";
+            $msj.="<hr/><div style=\"font-size:12px\"><h4>Traza</h4><br/>";
+            #$msj.="<strong>Traza : </strong>".implode(",",$e->getTrace())."<br>";
+            foreach($e->getTrace() as $key =>$traza){
+                $msj.="<strong>Archivo</strong> ". $traza['file']."<br/>";
+                $msj.="<div style=\"padding-left:20px\">";
+                $msj.="<strong>Linea</strong> ".$traza['line']."<br/>";
+                $msj.="<strong>Funcion</strong> ".$traza['function']."<br/>";
+                $msj.="</div>";
+                #$msj.="<hr>";
+            }
+            $msj.="</div>";
+        return $msj;
     }
+    /**
+     * Maneja las excepciones en entorno de producción
+     * 
+     * Registra el error en el log y si se ha definido un correo administrador es enviado
+     * un mail de notificacion
+     * @method excepcionProduccion
+     */
+    private function excepcionProduccion(){
+        $msj = $this->getHTMLMessage();
+
+        if(defined('MAIL_ADMIN') and defined('mailNoResponder') and defined('passwordNoResponder')){
+            
+            $mail = new EmailComponente(mailNoResponder,passwordNoResponder);
+            $mail->setTemplatePath('jidaPlantillas/mail/');
+            $data=array(':detalle_error'=>$msj,':aplicacion'=>'Electron C.A');
+            $title = 'Error en aplicacion';
+            if(defined('APP_NAME')) $title.=" ".APP_NAME;
+            $mail->enviarEmail(MAIL_ADMIN, $title, $data,'error.tpl.php' );
+            
+        }else{
+            Debug::string("ney",true);
+        }
+        return $msj;
+    }
+    
+    
 }
 ?>

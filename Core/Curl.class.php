@@ -26,11 +26,7 @@ class Curl extends Controller{
      * @var $curl
      */
     var $curl;
-    /**
-     * Define si se pasan parametros post en la peticion cURL
-     * @var $post
-     */
-    var $post=FALSE;
+    
     /**
      * Funcion constructora para una llamada via curl
      * @param $url

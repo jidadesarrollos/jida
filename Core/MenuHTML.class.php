@@ -23,7 +23,7 @@ class MenuHTML extends DBContainer{
     /**
      * Objeto Menu a manejar
      */
-    private $menu ="";
+    private $menu ="show";
     
     /**
      * Define el tipo de selector para una opcion de la lista
@@ -44,7 +44,7 @@ class MenuHTML extends DBContainer{
      * Define el estilo para un ul hijo abierto en caso de se encuentre seleccionada una subopción
      * @var $cssUlChildOpen
      */
-    var $cssUlChildOpen='show';
+    var $cssUlChildOpen='';
     /**
      * Define el nivel de identacion
      * @var $identacion
