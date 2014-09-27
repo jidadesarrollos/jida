@@ -57,11 +57,16 @@ class User extends DBContainer{
      */
     var $validacion;
     /**
+     * Codigo creado para recuperación de clave
+     * @var $codigo_recuperacion
+     * @access public
+     */
+    var $codigo_recuperacion;
+    /**
      * Perfiles asociados al usuario
      * @var $perfiles
      * @access private
      */
-    
     protected $perfiles=array();
     function __construct($id=""){
         $this->nombreTabla="s_usuarios";
@@ -198,6 +203,19 @@ class User extends DBContainer{
             $this->validacion=1;
             $guardado = $this->salvar();
             return $guardado;
+        }else{
+            return false;
+        }
+    }
+    
+    function obtenerUsuarioByEmail($correo){
+        $query = "Select * from $this->nombreTabla where correo='$correo'";
+        $result = $this->bd->ejecutarQuery($query);
+        
+        if($this->bd->totalRegistros>0){
+            $data = $this->bd->obtenerArray($result);
+            $this->establecerAtributos($data);
+            return true;
         }else{
             return false;
         }

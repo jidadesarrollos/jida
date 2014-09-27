@@ -48,64 +48,69 @@ class Metodo extends DBContainer{
         $this->clavePrimaria="id_metodo";
         parent::__construct(__CLASS__,$id);
     }
-	
+	/**
+     * Registra un metodo en base de datos
+     * @method guardarMetodo
+     */
 	function guardarMetodo($data=""){
 		if(!empty($data) and is_array($data)){
-			$this->establecerAtributos($data,__CLASS__);
-			$accion = $this->salvarObjeto(__CLASS__);
+			$this->establecerAtributos($data);
+			$accion = $this->salvar();
 			return $accion;
 		}
 	}
 	/**
 	 * Verifica que los metodos de una clase se encuentren registrados en base de datos
+     * 
+     * Si los metodos del controlador no existen los registra, sin en la BD existen metodos
+     * que ya no están disponibles en el controlador estos son eliminados
 	 * 
 	 * @param array $metodos Arreglo de metodos actuales de la clase
 	 * @param int $idObjeto ID del objeto (clase) al que pertenecen los metodos
 	 * @return boolean true
 	 */
 	function validarMetodosExistentes($metodosClase,$idObjeto){
-		try{
-			if(is_array($metodosClase)){
-				
-				$query = "select nombre_metodo from $this->nombreTabla where id_objeto = $idObjeto";
-				$result = $this->bd->ejecutarQuery($query);
-				//$data = $this->bd->obtenerDataCompleta($query);
-				
-				if($this->bd->totalRegistros>0){
-					$metodosNuevos = array();
-					$metodosEnBD = array();
-					while($data = $this->bd->obtenerArrayAsociativo()){
-						$metodosEnBD[] = $data['nombre_metodo'];
-					}
-					
-					foreach($metodosClase as $key =>$metodo){
-						if(!in_array($metodo, $metodosEnBD)){
-							$nuevoMetodo = new Metodo();
-							$nuevoMetodo->guardarMetodo(array('id_objeto'=>$idObjeto,'nombre_metodo'=>$metodo));
-						}
-					}
-					/* Validar metodos que ya no existan*/
-					$metodosEliminados =array();
-					foreach($metodosEnBD as $key =>$metodo){
-						if(!in_array($metodo, $metodosClase)){
-							$metodosEliminados[]=$metodo;
-						}
-					}
-					if(count($metodosEliminados)>0){
-						$this->eliminarMetodos($metodosEliminados);
-					}
-				}else{
-					$this->registrarMultiplesMetodos($metodosClase, $idObjeto);
+	
+		if(is_array($metodosClase)){
+			
+			$query = "select nombre_metodo from $this->nombreTabla where id_objeto = $idObjeto";
+			$result = $this->bd->ejecutarQuery($query);
+			//$data = $this->bd->obtenerDataCompleta($query);
+			
+			if($this->bd->totalRegistros>0){
+				$metodosNuevos = array();
+				$metodosEnBD = array();
+				while($data = $this->bd->obtenerArrayAsociativo()){
+					$metodosEnBD[] = $data['nombre_metodo'];
 				}
 				
-				
+				foreach($metodosClase as $key =>$metodo){
+					if(!in_array($metodo, $metodosEnBD)){
+						$nuevoMetodo = new Metodo();
+						$nuevoMetodo->guardarMetodo(array('id_objeto'=>$idObjeto,'nombre_metodo'=>$metodo));
+					}
+				}
+				/* Validar metodos que ya no existan*/
+				$metodosEliminados =array();
+				foreach($metodosEnBD as $key =>$metodo){
+					if(!in_array($metodo, $metodosClase)){
+						$metodosEliminados[]=$metodo;
+					}
+				}
+                
+				if(count($metodosEliminados)>0){
+					$this->eliminarMetodos($metodosEliminados);
+				}
 			}else{
-				throw new Exception("Se espera un arreglo con los metodos de la clase", 1);
-				
+				$this->registrarMultiplesMetodos($metodosClase, $idObjeto);
 			}
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);
+			
+			
+		}else{
+			throw new Exception("Se espera un arreglo con los metodos de la clase", 1);
+			
 		}
+
 	}//final funcioon
 	
 	/**

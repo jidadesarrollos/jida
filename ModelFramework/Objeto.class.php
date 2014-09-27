@@ -27,6 +27,14 @@ class Objeto extends DBContainer{
      * @var int $id_componente
      */
      var $id_componente;
+    /**
+     * @var string $descripcion Registra una descripcion o nombre entendible para el usuario
+     */
+    var $descripcion;
+    /**
+     * Clase constructora
+     * @method __construct
+     */
     function __construct($id=""){
         $this->nombreTabla="s_objetos";
         $this->clavePrimaria="id_objeto";
@@ -35,16 +43,17 @@ class Objeto extends DBContainer{
     
     /**
      * Registra un objeto en base de datos
+     * 
+     * @method setObjeto
+     * @param array $data $_POST capturado del formulario
+     * @return array $accion Arreglo $guardado en caso de que se realice el registro, arreglo con msj de error caso contrario
+     * @see DBContainer::salvar
      */
     function setObjeto($data){
-    	$this->establecerAtributos($data, __CLASS__);
-		if(!$this->obtenerObjetoByName()){
-			$accion =  $this->salvarObjeto(__CLASS__,$data);
-			return $accion;	
-		}else{
-			
-			return array('ejecutado'=>0,'msj'=>Mensajes::mensajeError("Ya existe el objeto <strong>$this->objeto </strong>"));
-		}
+    	$this->establecerAtributos($data, __CLASS__);	
+		$accion =  $this->salvar($data);
+		return $accion;	
+		
 		
         
     }
@@ -66,7 +75,6 @@ class Objeto extends DBContainer{
 		}else{
 			return false;
 		}
-		
 	}
     
     /**
@@ -77,28 +85,24 @@ class Objeto extends DBContainer{
      * @return boolean true or false 
      */
     function asignarAccesoPerfiles($perfiles){
-        try{    
-            $insert="insert into s_objetos_perfiles values ";
-            $i=0;
-            
-            $componente = new Componente($this->id_componente);
-            
-#            $componente->validarAccesoComponente($perfiles);
-            
-            foreach ($perfiles as $key => $idPerfil) {
-                if($i>0)$insert.=",";
-                $insert.="(null,$idPerfil,$this->id_objeto)";
-                $i++;
-            }
-            
-            $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto";
-            $this->bd->ejecutarQuery($delete);
-            $this->bd->ejecutarQuery($insert);
-            return array('ejecutado'=>1);
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
+        
+        $insert="insert into s_objetos_perfiles values ";
+        $i=0;
+        
+        $componente = new Componente($this->id_componente);
+        
+        foreach ($perfiles as $key => $idPerfil) {
+            if($i>0)$insert.=",";
+            $insert.="(null,$idPerfil,$this->id_objeto)";
+            $i++;
         }
-    }
+        
+        $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto";
+        $this->bd->ejecutarQuery($delete);
+        $this->bd->ejecutarQuery($insert);
+        return array('ejecutado'=>1);
+    
+    }//fin función
 }
 
 
