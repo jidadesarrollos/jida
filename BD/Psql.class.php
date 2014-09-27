@@ -1,360 +1,450 @@
-<?PHP 
-
+<?php
 /**
- * Clase para RDBMS PostgreSQL
- * 
- * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
- * @version 0.2
- * @package framework
- * @category Base de Datos
- * 
+ * Clase RDBMS PostgreSQL
+ *
+ * @category    framework
+ * @package     BD
+ *
+ * @author      Julio Rodriguez <jirodriguez@sundecop.gob.ve>
+ * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
+ * @version     0.1 - 09/09/2013
+ *
  */
-// include_once 'ConexionBD.class.php';
-// require_once 'Helpers/String.class.php';
-#require_once 'baseDeDatos.interface.php';
-class PSQLConexion extends ConexionBD{
-	var $enTransaccion=false;
-	private $transaccionIniciada=false;
-	/**
-	 * Contabiliza total de errores en ejecucion de una transaccion
-	 * @var Error
-	 * 
-	 */
-	    /**
-     * Indica si se debe codificar los valores del query para cambiar los acentos y caracteres
-     * especiales al momento de ejecutar la consulta, el valor por defecto es TRUE, sin embargo
-     * el DBContainer lo coloca en FALSE para hacer las inserciones
-     * @var boolean $codificarHTML
-     * @access public;
-     * 
-     */
-    var $codificarHTML=TRUE;
-	private $errorTransaccion=0;
-	private $detalleError=array();
-    var $totalRegistros;
+class PSQLConexion extends ConexionBD {
+    public $ejecucionQuery = TRUE;
     /**
-     * Define la consulta a realizar en base de datos
+     * 
+     * @var boolean
      */
-    var $query;
+    public $enTransaccion = false;
+    
+    /**
+     * Total de los Registro
+     * @var int total registro
+     */
+    public $totalRegistros;
+    
+    /**
+     * Consulta SQL
+     * 
+     * @var string query
+     */
+    public $query;
+    
+    /**
+     * Indica si se ha iniciado una Transaccion
+     * @var unknown
+     */
+    private $transaccionIniciada = false;
+    
+    /**
+     * Contabiliza total de errores en
+     * ejecucion de una transaccion
+     * 
+     * @var int $errorTransaccion numero de errores
+     */
+    private $errorTransaccion = 0;
+    
+    /**
+     * Detalle de los Errores Generados
+     * 
+     * @var array $detalleError 
+     */
+    private $detalleError = array();
+
+    /**
+     * 
+     * @var int id campos
+     */
     protected $idCampo;
-	/**
-	 * Establece la conexion a la base de datos de PSQL
-	 * @return result $conexionID
-	 */
-	function insert($nombreTabla,$camposTabla,$valoresCampos,$id){
-	    try{
-	       $this->codificarHTML=FALSE;
-			$queryCheck = "select $id from $nombreTabla where ";
-			for($i=0;$i<count($camposTabla);$i++){
-				if($i>0){
-					$queryCheck.= " and ";
-				}
-				$queryCheck.=" $camposTabla[$i]=$valoresCampos[$i]";
-				
-			}
-			
-			$total  = $this->obtenerArray($this->ejecutarQuery($queryCheck));
-			
-			if($this->totalRegistros==0){
-				
-			
-	            $insert = sprintf("insert into %s (%s) VALUES (%s) returning %s",
-	                                $nombreTabla,
-	                                implode(', ',$camposTabla),
-	                                implode(', ',$valoresCampos),
-	                                $id
-	                               );
-	            
-				$id = $this->ejecutarQuery($insert);
-				$resultado = $this->obtenerArray($id);
-				if(is_array($resultado)){$ejecutado=1;}else{$ejecutado=0;}
-	    		$result = array(
-	    							"idResultado"=>$resultado[0],
-	    							"query"=>$insert,
-	    							"ejecutado"=>$ejecutado,
-	    						);
-			}else{
-				$ejecutado=1;
-			$result = array(
-    							"idResultado"=>$total[0],
-    							"query"=>$queryCheck,
-    							"ejecutado"=>$ejecutado,
-    						);	
-			}
-			
-			
-    		
-    		return $result;
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
-	}
-	function establecerConexion(){
-		try{
-			
-			
-			$stringConexion="host=$this->servidorBD port=$this->puerto user=$this->usuarioBD password=$this->claveBD dbname=$this->BD";
-			$this->conexionID = @pg_connect($stringConexion);
-			
-			if(!$this->conexionID){
-				throw new Exception("No se realizó la conexión a base de datos", 10);
-				
-			}
-	
-			return $this->conexionID;
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);
-		}
-	
-	}//fin funcion BDConect
-	#---------------------------------------------------
-	/**
-	 * 
-	 * @see 
-	 * 
+    
+    
+    function __construct($configuracion){
+        parent::__construct($configuracion);
+    }
+    /**
+     * Establece la Conexion a la Base de Datos
+     * 
+     * @return int id conexion
      */
-	function addLimit($limit,$offset,$query=""){
-	    
-	    $this->query=(!empty($query))?$query:$this->query;
-	    $this->query="$this->query limit $limit offset $offset";
+    public function establecerConexion() {
+        $stringConexion = "host=$this->servidor port=$this->puerto user=$this->usuario password=$this->clave dbname=$this->bd";         
+        $this->conexionID = @pg_connect ( $stringConexion );
+            
+        if (! $this->conexionID) {
+            throw new Exception ( "No se realiza la conexion a base de datos", 10 );
+        }
+            
+        return $this->conexionID;
+
+    }
+
+    /**
+     * Cierra una conexion establecida a la Base de Datos
+     *
+     * @return void
+     */
+    private function cerrarConexion() {
+        pg_close($this->conexionID);
+    }
+    
+    /**
+     * Metodo para Realizar Insert en Base de Datos
+     * 
+     * @param string $nombreTabla
+     * @param array $camposTabla
+     * @param array $valoresCampos
+     * @param id $id
+     * @return mixed retorna un array o un boolean
+     */
+    public function insert($nombreTabla, $camposTabla, $valoresCampos, $id,$unico) {
+        
+            $validadoUnico=FALSE;
+            $queryCheck = "select $id from $nombreTabla where ";
+            /**
+             * @var $nivelCheck
+             * Identifica el nivel de chequeo realizado 1 si es un query igual 0 en caso de aplicarse
+             * validacion sobre el arreglo "unico" del objeto
+             */
+            $nivelCheck=1;
+            if(count($unico)<1){
+                for($i = 0; $i < count($camposTabla); $i ++) {
+                    if ($i > 0) {
+                        $queryCheck .= " and ";
+                    }
+                    if($camposTabla[$i]!='id_usuario_creador' or $camposTabla[$i]!='id_usuario_modificador' or
+                        $camposTabla[$i]!='fecha_creacion' or $camposTabla[$i]!='fecha_modificacion'){
+                            $queryCheck .= " $camposTabla[$i]=$valoresCampos[$i]";      
+                    }
+                    
+                }
+                $nivelCheck=1;
+                
+            }else{
+                $validadoUnico=TRUE;
+                $i=0;
+                
+                foreach ($unico as $campo) {
+                        $valor = array_search($campo, $camposTabla);
+                        if($i>0){
+                            $queryCheck.=" and ";
+                        }
+                        if(array_key_exists($valor, $valoresCampos) and 
+                        (is_null($valoresCampos[$valor]) or $valoresCampos[$valor]=="" or $valoresCampos[$valor]=='null')){
+                            $queryCheck.="$campo is $valoresCampos[$valor]";
+                        }else{
+                            $queryCheck.="$campo = $valoresCampos[$valor]"; 
+                        }
+                        
+                        $i++;
+                }
+                
+                $nivelCheck=0;
+            }
+            
+            $resultado = $this->ejecutarQuery($queryCheck);
+            
+            if ($this->totalRegistros == 0) {
+                
+                $insert = sprintf("insert into %s (%s) VALUES (%s) returning %s", $nombreTabla, implode(', ', $camposTabla),implode(', ',$valoresCampos), $id);
+                
+                $id = $this->ejecutarQuery($insert);
+                $resultado = $this->obtenerArray($id);
+                if (is_array($resultado)) {
+                    $ejecutado = 1;
+                } else {
+                    $ejecutado = 0;
+                }
+                $result = array (
+                        "idResultado" => $resultado[0],
+                        "query" => $insert,
+                        "ejecutado" => $ejecutado,
+                        "unico"=>0 
+                );
+            } else {
+                $total = $this->obtenerArray($resultado);
+                $ejecutado = 1;
+                
+                $result = array (
+                        "idResultado" => $resultado[0],
+                        "query" => $queryCheck,
+                        "ejecutado" =>$nivelCheck,
+                        "unico"=>($nivelCheck==0)?1:0, 
+                );
+            }
+            
+            return $result;
+        
+    }
+
+    /**
+     * 
+     * @param unknown $limit
+     * @param unknown $offset
+     * @param string $query
+     * @return string
+     */
+    public function addLimit($limit, $offset, $query = "") {
+        $this->query = (! empty ( $query )) ? $query : $this->query;
+        $this->query = "$this->query limit $limit offset $offset";
         
         return $this->query;
-	}
-	 /**
+    }
+    
+    /**
      * Ejecuta un query a base de datos y retorna el resultado
-     * 
+     *
      * La funcion apertura la conexión a base de datos, ejecuta el query y posteriormente
      * cierra la conexión
+     * 
      * @return object result de la consulta
-	 * @return int $this->totalRegistros Total de registros de un query
-	  *  
-     * @param string $query consulta a ejecutar
-	  * @param int $tipoQuery  En caso de ser una consulta multiple no se devuelve el total de registros
-      * 
-      * <ul>
-      * <li> 1: Unica Consulta</li>
-      * <li>2 : Consulta Multiple</li>
-      * </ul>
+     * @return int $this->totalRegistros Total de registros de un query
+     *        
+     * @param string $query
+     *          consulta a ejecutar
+     * @param int $tipoQuery
+     *          En caso de ser una consulta multiple no se devuelve el total de registros
+     *          
+     *          <ul>
+     *          <li> 1: Unica Consulta</li>
+     *          <li>2 : Consulta Multiple</li>
+     *          </ul>
      */
-	function ejecutarQuery($query="",$tipoquery=2){
-		try{
-			if(!empty($query)){
-				$this->query=$query;
-			}
-            if($this->codificarHTML===TRUE){
-                $this->query = String::codificarHTML($this->query);    
-            }
-			//Establece la conexion solo si no existe transaccion
-			if(!$this->enTransaccion){
-				$this->con=$this->establecerConexion();
-			}
-				
-			//-------------------------$this->cerrarConexion($this->idConexion);
-			
-			$this->result=@pg_query($this->conexionID,$this->query);
-			
-			if(!$this->result){
-				$error= "No se pudo ejecutar la consulta : <br>
-				$this->query";
-				
-				error_log($error);
-				error_log(pg_errormessage($this->conexionID));
-				if($this->enTransaccion){
-					$this->detalleError[]="<p>$error</p><p>".pg_errormessage($this->conexionID)."</p>";
-				}
-			
-				$this->errorTransaccion=$this->errorTransaccion+1;
-				
-					
-			}else{
-	
-				$this->totalRegistros=@pg_num_rows($this->result);	
-			}//fin if				
-			
-			//-------------------------
-			#Cierra la conexion solo si no existe transaccion
-			if(!$this->enTransaccion){
-				
-				$this->cerrarConexion($this->con);
-			}
+    public function ejecutarQuery($query = "", $tipoquery = 2) {
+        if (! empty ( $query )) {
+            $this->query = $query;
+        }
+        
+        $this->query =$this->query;
+        // Establece la conexion solo si no existe transaccion
+        if (! $this->enTransaccion) {
+            $this->con = $this->establecerConexion ();
+        }
+        
+        $this->result = @pg_query ( $this->conexionID, $this->query );
+        
+        if (! $this->result) {
+            $error = "No se pudo ejecutar la consulta : <br>
+            $this->query";
             
-			return $this->result;
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);	
-		}
-	}//fin funcion ejecutarQuery
-	/**
-	 * Cierra una conexión establecida
-	 */
-	 #=======================================================
-	/**
-	 * Devuelve un array asociativo multinivel con data de base de datos
-	 * @param string $query Consulta a 
-	 *
-	 * @return array $data Mapa ordenado de datos de la consulta a bd.
-	 * 
-	 */
-	function obtenerDataCompleta($query=""){
-	    try{
-	    	$this->ejecutarQuery($query);
-			$result = $this->result;
-			
-			$data = pg_fetch_all($result);	
-	    }catch(Exception $e){
-	    	Excepcion::controlExcepcion($e);
-	    }
-		$this->query=($query=="")?$this->query:$query;
-		
-		
-		
-		
-		return $data;
-	}//fin funcion
-	#=======================================================
-	/**
-	 * Obtener todal de columnas de una consulta
-	 */
-	function obtenerTotalCampos($query){
-		$total = pg_num_fields($q);
-		return $total;
-	} //fin function totalDatos 
-	/**
-	 * Devuelve un array con data de una fila deñl registro de bd.
-	 * 
-	 * @param resultset $result Resultado de consulta de base de datos
-	 * @return array $arr Data del registro de una columna del result
-	 * 
-	 */
-	function obtenerArray($result=""){
-		if($result!=""){
-			$this->result = $result;
-		}
-		$arr  = pg_fetch_array($this->result);
-		
-		return $arr;
-	}//fn funcion
-	/**
-	 * Recuperda una fila del result de BD como un array Asociativo
-	 */
-	function obtenerArrayAsociativo($result=""){
-		if($result!=""){
-			$this->result = $result;
-		}
-		
-		$arr  = pg_fetch_assoc($result);
-	
-		return $arr;
-	}//fn funcion
-	/**
-	 * Cierra una conexion a base de datos establecida
-	 */
-	private function cerrarConexion(){
-		pg_close($this->conexionID);
-	}//fin funcion cerrarConexion
-	/**
-	 * Inicializa una transaccion
-	 * como estas tu
-	 */
-	function comenzarTransaccion(){
-		$this->establecerConexion();
-		$this->enTransaccion=true;
-		$this->ejecutarQuery("BEGIN");
-			
-		
-		return true;$cn->bd->comenzarTransaccion();
-	}
-	/**
-	 * Ejecuta commit sobre una transaccion
-	 */
-	private function commit(){
-		$this->ejecutarQuery('COMMIT;');
-		$this->cerrarConexion($this->idConexion);
-		$this->enTransaccion=false;
-		return true; 
-	}
-	/**
-	 * Ejecuta rollback sobre una transaccion
-	 */
-	private function rollback($nombrePunto=""){
-		$rollback=($nombrePunto=="")?"ROLLBACK;":"ROLLBACK TO $nombrePunto;COMMIT;";
-		#echo "<br>entro al $rollback<hr>";
-		$this->ejecutarQuery($rollback);
-		$this->cerrarConexion($this->idConexion);
-		$this->enTransaccion=false;
-		if(ERROR_PHP=='dev'){
-			foreach ($this->detalleError as $key => $value) {
-				echo $value;
-			}	
-		}
-		return true; 
-	}
-	/**
-	 * Establece un punto de control (SAVEPOINT) dentro de una transacccion
-	 * 
-	 * Los savepoint son utilizados para devolver una transaccion fallida hasta 
-	 * el lugar donde se registro el savepoint si se desea.
-	 */
-	function establecerPuntoControl($nombrePunto){
-		$this->ejecutarQuery("SAVEPOINT $nombrePunto;");
-		return true;
-	}
-	/**
-	 * Verifica el estatus de una transaccion y ejecuta la accion correspondiente
-	 * 
-	 * (COMMIT o ROLLBACK según sea el caso)
-	 * @param string $punto Nombre de savepoint creado si desea hacerse un rollback hasta el.
-	 * 
-	 */
-	function finalizarTransaccion($punto=""){
-		if($this->errorTransaccion==0){
-			$this->commit();
-		}else{
-			$this->rollback($punto);
-		}
-	}//fin funcion finalizarTransaccion
-	
-	/**
-	 * Devuelve una fila de resultados como un array numerico
-	 *
-	 * @return array $fetch
-	 * @author  
-	 */
-	function fetchRow($result){
-        $fetch=pg_fetch_row($result); 
-        return $fetch;
-    }//fin function fetchRow
+            error_log($error);
+            error_log(pg_errormessage($this->conexionID ));
+            
+            if ($this->enTransaccion) {
+                $this->detalleError [] = "<p>$error</p><p>" . pg_errormessage ( $this->conexionID ) . "</p>";
+            }
+            
+            $this->errorTransaccion = $this->errorTransaccion + 1;
+        } else {
+            
+            $this->totalRegistros = @pg_num_rows ( $this->result );
+        }
+        
+        //Cierra la Conexion
+        if (! $this->enTransaccion) {
+            
+            $this->cerrarConexion($this->con);
+        }
+        $this->ejecucionQuery =(!$this->result)?FALSE:TRUE;
+        return $this->result;
+        
+        
+    }
+
+    /**
+     * Devuelve un array asociativo multinivel con data de base de datos
+     * 
+     * @param string $query Consulta a SQL
+     * @return array $data Mapa ordenado de datos de la consulta a bd
+     */
+    public function obtenerDataCompleta($query = "",$mayus=false) {
+    
+        $this->ejecutarQuery ( $query );
+        $result = $this->result;
+        $data = array();
+        
+        while($row = $this->obtenerArrayAsociativo($result,$mayus)){
+            $data[]=$row;
+        }
+    
+        $this->query = ($query == "") ? $this->query : $query;
+        
+        return $data;
+    }
     
     /**
-     * Retorna el total de columnas de un result
-     */    
-    function totalField($q){
+     * Obtener todal de columnas de una consulta
+     */
+    public function obtenerTotalCampos($query) {
         $total = pg_num_fields($q);
         return $total;
-    } //fin function totalDatos
+    }
     
     /**
-     * Retorna el nombre de un campo del query
-	 * @param object $q Result de la consulta a base de datos
-	 * @param int $i Numero del campo 
+     * Devuelve un array con data de una fila deñl registro de bd.
+     *
+     * @param resultset $result
+     *          Resultado de consulta de base de datos
+     * @return array $arr Data del registro de una columna del result
+     *        
      */
-    function obtenerNombreCampo($q,$i){
-        $fetch=pg_field_name($q,$i); 
-
-        return $fetch;
-    }//fin function NombreCampo
-    
-    	/***
-     * Devuelve un arreglo con todas las tablas de la base de datos
-     * 
-     * @param string esquema (opcional)
-     * 
-     */
-	function obtenerTablasBD($esquema=""){
-	    $tablasBDResult = $this->ejecutarQuery("select * from pg_tables where tablename='s_formularios'");
-		$tablasBD['s_formularios']='s_formularios';
-        if($this->totalRegistros>0){
-        	$tablasBD['s_formularios']='s_formularios';
+    public function obtenerArray($result = "",$mayus=false) {
+            
+        if ($result != "") {
+            $this->result = $result;
         }
-		return $tablasBD;
-	}
+        if($this->result){
+            $arr = String::codificarArrayToHTML(pg_fetch_array ( $this->result ),$mayus);   
+        }else{
+            throw new Exception("El query $this->query no retorna valor", 1);
+            
+        }
+        
+        
+        return $arr;
+    }
+    
+    /**
+     * Recuperda una fila del result de BD como un array Asociativo
+     */
+    public function obtenerArrayAsociativo($result = "",$mayus=false) {
+        
+        if ($result != "") {
+            $this->result = $result;
+        }
+        if($this->result){
+            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ),$mayus);
+            return $arr;
+        }else{
+            return False;
+        }
+        
+    }
+
+    /**
+     * Inicializa una Transaccion
+     * 
+     * @return boolean true
+     */
+    public function comenzarTransaccion() {
+        $this->establecerConexion ();
+        $this->enTransaccion = true;
+        $this->ejecutarQuery ( "BEGIN" );
+        
+        return true;
+        $cn->bd->comenzarTransaccion ();
+    }
+    
+    /**
+     * Ejecuta commit sobre una transaccion
+     * 
+     * @return boolean true
+     */
+    private function commit() {
+        $this->ejecutarQuery('COMMIT;');
+        $this->cerrarConexion($this->idConexion);
+        $this->enTransaccion = false;
+        return true;
+    }
+
+    /**
+     * Ejecuta rollback sobre una transaccion
+     * 
+     * @param string $nombrePunto
+     * @return boolean true
+     */
+    private function rollback($nombrePunto = "") {
+        $rollback = ($nombrePunto == "") ? "ROLLBACK;" : "ROLLBACK TO $nombrePunto;COMMIT;";
+
+        $this->ejecutarQuery ( $rollback );
+        $this->cerrarConexion ( $this->idConexion );
+        $this->enTransaccion = false;
+        if (ERROR_PHP == 'dev') {
+            foreach($this->detalleError as $key => $value ) {
+                echo $value;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Establece un punto de control (SAVEPOINT) dentro de una transacccion
+     *
+     * Los savepoint son utilizados para devolver una transaccion fallida hasta
+     * el lugar donde se registro el savepoint si se desea.
+     * 
+     * @param string $nombrePunto
+     * @return boolean true
+     */
+    public function establecerPuntoControl($nombrePunto) {
+        $this->ejecutarQuery("SAVEPOINT $nombrePunto;");
+        return true;
+    }
+
+    /**
+     * Verifica el estatus de una transaccion y ejecuta la accion correspondiente
+     *
+     * (COMMIT o ROLLBACK según sea el caso)
+     * 
+     * @param string $punto Nombre de savepoint creado si desea hacerse un rollback hasta el.
+     *          
+     */
+    public function finalizarTransaccion($punto = "") {
+        if ($this->errorTransaccion == 0) {
+            $this->commit ();
+        } else {
+            $this->rollback ( $punto );
+        }
+    }
+    
+    /**
+     * Devuelve una fila de resultados como un array numerico
+     * 
+     * @param unknown $result
+     * @return multitype:
+     */
+    public function fetchRow($result,$mayus=false) {
+        $fetch = String::codificarArrayToHTML(pg_fetch_row($result),$mayus);
+        return $fetch;
+    }
+    
+    /**
+     * Retorna el Total de Columna de una Tabla
+     * 
+     * @param string 
+     * @return int Numero de Columna
+     */
+    public function totalField($q) {
+        $total = pg_num_fields($q);
+        return $total;
+    }
+    
+    /**
+     * Retorna el nombre de un Campo del Query
+     * 
+     * @param Object $q Result de la Consulta
+     * @param int $i Numero del Campo
+     * @return string
+     */
+    public function obtenerNombreCampo($q, $i) {
+        $fetch = pg_field_name($q, $i);
+        
+        return $fetch;
+    }
+    
+    /**
+     * Devuelve un arreglo con todas las tablas
+     * de un determinado esquema de base de datos
+     * 
+     * @param string $esquema
+     * @return array lista de Esquemas
+     */
+    public function obtenerTablasBD($esquema = "") {
+        $tablasBDResult = $this->ejecutarQuery("select * from pg_tables where tablename='s_formularios'");
+        $tablasBD['s_formularios'] = 's_formularios';
+        if ($this->totalRegistros > 0) {
+            $tablasBD['s_formularios'] = 's_formularios';
+        }
+        return $tablasBD;
+    }
 }
