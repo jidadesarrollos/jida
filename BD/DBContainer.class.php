@@ -164,6 +164,7 @@ class DBContainer {
             $this->inicializarObjeto($id, $clase);
         }
         
+        $this->crearMetodos();
     }
     /**
      * Inicializa un objeto a partir de Base de Datos
@@ -538,33 +539,94 @@ class DBContainer {
         
     }
     /**
+     * Devuelve los datos de la tabla
+     * @method getTabla
+     * @deprecated Esta función será reemplazada posteriormente por el metodo $get
      * 
      */
-    function obtenerTabla($campos=null,$where){
+    function getTabla($campos=null,$where){
         if(!is_array($campos)){
             $campos = $this->propiedadesPublicas;
+            
             $selectCompleto=TRUE;
         }
         
         $query ="Select ";
-        $where=" ";
         $cont=0;
         foreach ($campos as $key => $value) {
-            if($selectCompleto!==TRUE){
-                if(!is_numeric($key)){
-                    if($cont>0){
-                        $query.=",";
-                    }
-                    $query.="$key";
-                    
-                    
+            
+            if(!is_numeric($key)){
+                if($cont>0){
+                    $query.=",";
                 }
+                $query.="$key"; 
             }
-            $cont++;
-        }//fin
         
+            $cont++; 
+        }//fin
+        $query.=" from $this->nombreTabla";
+        if(is_array($where)){
+            $i=0;
+            $query.=" where";
+            foreach ($where as $campo => $valor) {
+                if($i>0)
+                    $query.=" and ";
+                $query.=" $campo = '$valor'";
+                $i++;
+            }
+        } 
+        #Debug::string($query);
+        return $this->bd->obtenerDataCompleta($query);
     }//fin
+    /**
+     * Registra objetos a partir de los valores pasados
+     * @method insert
+     * @var mixed $campos String de campo a pasar por valor o arreglo de multiples campos
+     * @var array $valores Matriz Que permite pasar multiples valores a insertar, la función intentara
+     * insertar un valor por cada posición del arreglo
+     * @example $objeto->insert('campo1',array(1,2,3,4,5)). Esto creara 5 registros donde la columna campo1 tendra 
+     * los valores pasados por el array sucesivamente
+     */
+    function insert($campos,$valores){
+        $insert = "insert into $this->nombreTabla";
+        if(is_array($campos) or is_null($campo)){
+            if(is_null($campos))
+                $campos = $this->propiedadesPublicas;
+            $insert.="(".implode(", ", $campos).")";
+        }elseif(is_string($campos)){
+            $insert.=" ( $campos )";
+        }
+        $insert.= "values ";
+        $i=0;
+        foreach ($valores as $key => $value) {
+            if($i>0)$insert.=",";
+            $insert.="(";
+            if(is_array($value)){
+                $cont=0;
+                foreach($value  as $key => $v){
+                    if($cont>0) $insert.=",";
+                    $insert.="'$v'";
+                    ++$cont;
+                }
+            }else{
+                $insert.="'$value'";
+            }
+            $insert.=")";
+            $i++;
+        }
+        
+        return $this->bd->ejecutarQuery($insert);
+    }//final funcion insert
+    /**
+     * 
+     */
+    function get(){
+        
+        
+    }
     
-    
+    private function crearMetodos(){
+        
+    }   
     
 }
