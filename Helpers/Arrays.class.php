@@ -89,6 +89,42 @@ class Arrays {
         }
     }
     
+    /**
+     * Agrega una columna a todos los valores de una matriz
+     * @method addColumn
+     * @param array $arr Arreglo a modificar
+     * @param mixed $valores Arreglo o string de valores a insertar
+     * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
+     */
+    function addColumna($matriz,$valores,$usoKeyValores=FALSE){
+        
+        if(is_array($valores)){
+            foreach($matriz as $key =>&$vector){
+                if(is_string($vector)){
+                 $vector = array($vector);   
+                }
+                foreach($valores as $clave =>$valor){        
+                    if($usoKeyValores==TRUE){
+                        $vector[$clave]=$valor;
+                    }else{
+                        $vector[]=$valor;
+                    }
+                }
+            }
+        }else{
+            foreach($matriz as $key =>&$vector){
+                if(is_string($vector)){
+                    $vector = array($vector,$valores);   
+                }else{
+                    $vector[]=$valores;    
+                }
+            }
+        }
+            
+        
+        return $matriz;
+    }
+    
 } // END
 
 
