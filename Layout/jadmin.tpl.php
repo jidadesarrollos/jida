@@ -31,7 +31,8 @@
         <script src="/htdocs/js/libs/jq2.0.3.js"></script>
         <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
         <script src="/htdocs/js/libs/bootstrap.min.js"></script>
-        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
+        <script src="/htdocs/js/libs/bootbox.min.js"></script>
+        <script src="/htdocs/js/libs/tipsy.js"></script>
         <script src="/htdocs/js/libs/ajaxupload.js"></script>
         <script src="/htdocs/js/libs/less.js"></script>
         <!--jidalibs-->

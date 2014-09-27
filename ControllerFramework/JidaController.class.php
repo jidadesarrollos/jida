@@ -341,15 +341,15 @@
                         $this->metodo = $this->controlador;
                         
                     }else{
-                        
-                        $this->vista->rutaPagina=3;
-                        if(!defined('CONTROLADOR_EXCEPCIONES'))
-                            throw new Exception("No se encuentra definido el controlador de excepciones", 10);
-                            
-                        $this->controlador=CONTROLADOR_EXCEPCIONES;
-                        
-                        $controlador = $this->controlador."Controller";
-                        $this->metodo = 'error404';
+                        $this->controlador=str_replace("Controller", "", $controlador);
+                        // $this->vista->rutaPagina=3;
+                        // if(!defined('CONTROLADOR_EXCEPCIONES'))
+                            // $this->controlador="ExcepcionController";
+//                             
+                        // $this->controlador=CONTROLADOR_EXCEPCIONES;
+                        throw new Exception("No se encuentra definido el controlador o metodo solicitado", 10);
+                        // $controlador = $this->controlador."Controller";
+                        // $this->metodo = 'error';
                         
                     }
                     $this->controlador=$nameControl;
@@ -457,9 +457,10 @@
     private function procesarExcepcion($excepcion){
         
         $ctrlError = $this->controlador."Controller";
+        
         $this->controladorObject = new $ctrlError;
         $this->checkDirectoriosView();
-        if(!defined('EXCEPCION_CONTROLLER'))
+        if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else 
             $this->controlador=EXCEPCION_CONTROLLER;

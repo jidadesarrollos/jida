@@ -90,7 +90,7 @@ class Mensajes {
     }
     
     static function mensajeInformativo($mensaje){
-       $css = self::obtenerEstiloMensaje('informacion');
+       $css = self::obtenerEstiloMensaje('info');
        $mensaje = "
                     <DIV class=\"$css\">
                         <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>

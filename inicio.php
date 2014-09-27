@@ -20,7 +20,7 @@ include_once 'Helpers/FuncionesBasicas.php';
 /**
  * Directorio del directorio de aplicación.
  */
-define ('app_dir', ROOT. 'Aplicacion' . DS);
+define ('app_dir', ROOT. 'Aplicacion/');
 
 /**
  * Directorio del directorio del framework
@@ -30,7 +30,6 @@ define ('framework_dir', ROOT . 'Framework' . "/");
 
 define ('libs_dir', ROOT . 'libs' . DS);
 
-//define ('web_root','http://workspace/jidaFramework/');
 /**
  * Directorio publico de HTDOCS completo
  * 

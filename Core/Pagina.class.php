@@ -170,7 +170,7 @@ class Pagina{
             $this->urlPlantilla=directorio_plantillas;
             $this->directorioLayout=DIR_LAYOUT_APP;
         }elseif($this->rutaPagina==2){
-            $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
+            $this->urlPlantilla=DIR_LAYOUT_JIDA;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
         
