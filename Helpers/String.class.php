@@ -175,6 +175,11 @@ class String {
     } // fin función
     
     
+    public static function guionCase($string){
+        
+        return strtolower(str_replace(" ", "-", $string)); 
+    }
+    
 } // END 
 
 
