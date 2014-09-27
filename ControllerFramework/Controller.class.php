@@ -46,6 +46,8 @@ class Controller {
      */
      var $footer="";
      
+     
+     protected $helpers = array();
      /**
       * Define el Modelo a usar en el controlador;
 	  * 
@@ -104,9 +106,16 @@ class Controller {
     
     
     function __construct(){
-        $this->requireCSS=$GLOBALS['requireCSS'];
-        $this->requireJS=$GLOBALS['requireJS'];
+        $this->instanciarHelpers();
         
+    }
+    
+    private function instanciarHelpers(){
+        if(count($this->helpers)>0){
+            foreach ($this->helpers as $key => $propiedad) {
+                $this->$propiedad = new $propiedad();
+            }
+        }
     }
     
     
