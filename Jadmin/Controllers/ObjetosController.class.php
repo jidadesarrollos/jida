@@ -14,6 +14,8 @@ class ObjetosController extends Controller{
 	
 	var $Mperfil = "";
     function __construct($id=""){
+        $this->helpers=array('Arrays');
+        parent::__construct();
         $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
 		$this->modelo = new Objeto();		
@@ -23,12 +25,12 @@ class ObjetosController extends Controller{
 	function index(){
 		
   			$this->vista="lista";
-			$this->tituloPagina="Objetos del Sistema";   
-			$idComponente = $this->getEntero(Globals::obtGet('comp'));
-			$comp = new Componente($idComponente);
-			$query = "select id_objeto,objeto as \"Objeto\", componente  as Componente
+			$this->tituloPagina="Objetos del Sistema";
+            
+			$query = "select id_objeto,objeto as \"Objeto\",a.descripcion \"Descripci&oacute;n\", componente  as Componente
 						from s_objetos a 
 						join s_componentes b on (b.id_componente = a.id_componente)";
+                        
 			$vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos");
 			$vista->setParametrosVista($GLOBALS['configVista']);
             $vista->seccionBusqueda=true;
@@ -49,12 +51,11 @@ class ObjetosController extends Controller{
 												);
 	        				
 			$vista->acciones=array(
-			                    'Nuevo'=>array('href'=>'/jadmin/objetos/set-objeto/comp/'.$idComponente),
-								'Modificar'=>array('href'=>'/jadmin/objetos/set-objeto/comp/'.$idComponente,
+								'Agregar Descripci&oacute;n'=>array('href'=>'/jadmin/objetos/set-objeto',
 								            		'data-jvista'=>'seleccion',
-								    		        'data-multiple'=>'true','data-jkey'=>'comp'),
+								    		        'data-multiple'=>'false','data-jkey'=>'obj'),
 								 	                 );
-			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
+			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto\">Agregar objeto</a>";
 			$vista->mensajeError= Mensajes::mensajeAlerta($msjError);
 			$this->data['vista'] = $vista->obtenerVista();
            
@@ -62,14 +63,58 @@ class ObjetosController extends Controller{
            
        	
 	}
-    
+    /**
+     * Verifica los objetos existentes en un directorio especificado o en todos.
+     * 
+     * Si la funcion consigue nuevos controladores Los registra en base de datos, si valida que se encuentran
+     * registrados controladores que ya no existen, los elimina 
+     * 
+     * @method validarObjetos
+     * @access private
+     */
+    private function validarObjetos(Componente  $componente){
+        $objetosInexistentes =array();
+        $objetosNuevos=array();
+        $nombreComponente = String::upperCamelCase($componente->componente);
+        $rutaComponente = ($nombreComponente=='Jadmin')?framework_dir.'Jadmin/Controllers/':app_dir."Modulos/".$nombreComponente."/Controller/";
+        if($nombreComponente=='Principal')$rutaComponente=str_replace("Principal/", "",$rutaComponente);
+        $objetosCarpeta =array();
+        # "/^(?:\+|-)?\d+$/"
+        Directorios::listarDirectoriosRuta($rutaComponente,$objetosCarpeta,"/^.*Controller.class.php$/");
+        array_walk($objetosCarpeta,function(&$objeto,$key){
+                     $objeto =str_replace("Controller.class.php", "", $objeto);
+                });
+                
+        $objetos = new Objeto();
+        $dataBD = $objetos->getTabla(null,array('id_componente'=>$componente->id_componente));
+        $objetosBD=array();
+        //Recorro los objetos de la bd
+        foreach($dataBD as $key=>$valor){    
+            $objetosBD[]=$valor['objeto'];
+        }
+        
+        $nuevos = array_diff($objetosCarpeta, $objetosBD);
+        $inexistentes = array_diff($objetosBD, $objetosCarpeta);
+
+        if(count($nuevos)>0){
+            $objetos->insert(array('objeto','id_componente'), $this->Arrays->addColumna($nuevos,$componente->id_componente));
+        }
+        
+        if(count($inexistentes)>0){
+            $objetos->eliminarMultiplesDatos($inexistentes, 'objeto');
+        }
+    }
+    /**
+     * Lista los objetos registrados
+     * @method lista
+     * 
+     */
     function lista(){
-      	
-  			
-			$this->tituloPagina="jida-Registro Componentes";
-           if(isset($_GET['comp'])){
+		  $this->tituloPagina="jida-Registro Componentes";   
+          if(isset($_GET['comp'])){
                $idComponente = $this->getEntero(Globals::obtGet('comp'));
                $comp = new Componente($idComponente);
+               $this->validarObjetos($comp);
                $query = "select id_objeto,objeto as \"Objeto\" from s_objetos where id_componente = $idComponente";
                $vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos del Componente $comp->componente");
 			   $vista->setParametrosVista(array('idDivVista'=>'objetos'));
@@ -82,8 +127,7 @@ class ObjetosController extends Controller{
 															'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open')))))
 												);
                $vista->acciones=array(
-                                'Nuevo'=>array('href'=>'/jadmin/objetos/set-objeto-comp/comp/'.$idComponente),
-                                'Modificar'=>array('href'=>'/jadmin/objetos/set-objeto-comp/comp/'.$idComponente,
+                                'Agregar Descripci&oacute;n'=>array('href'=>'/jadmin/objetos/set-objeto-comp/comp/'.$idComponente,
                                                                 'data-jvista'=>'seleccion',
                                                                 'data-multiple'=>'true','data-jkey'=>'comp'),
                                 );
@@ -169,16 +213,19 @@ class ObjetosController extends Controller{
 			$tipoForm=2;
 			$campoUpdate=Globals::obtGet('obj');	
 			}
-			$form = new Formulario('RegistroObjetos',$tipoForm,$campoUpdate,2);
+            $obj = new Objeto($campoUpdate);
+            $formulario = ($tipoForm==2)?'SistemaObjetos':'RegistroObjetos';
+			$form = new Formulario($formulario,$tipoForm,$campoUpdate,2);
 			$form->valueSubmit = "Guardar Objeto";
 			$form->tituloFormulario = "Gesti&oacute;n de Objetos";
 			$form->action=$this->url . "set-objeto/";
-			
-			if(isset($_POST['btnRegistroObjetos'])){
+			if($tipoForm==2)
+                $form->action .= 'obj/'.$obj->id_objeto;
+			if(isset($_POST['btnRegistroObjetos']) or isset( $_POST['btnSistemaObjetos'])){
 				$post = $_POST;
 				$validacion = $form->validarFormulario($post);
 				if($validacion===TRUE){
-					$obj = new Objeto();
+					
 					if($this->validarNombreObjeto(Globals::obtPost('objeto'))){
 						$post['objeto'] = String::upperCamelCase($post['objeto']);
 						$accion = $obj->setObjeto($post);
@@ -205,7 +252,10 @@ class ObjetosController extends Controller{
 		
     } 
     
-    
+    /**
+     * Valida la estructura del nombre de un objeto
+     * @method validarNombreObjeto
+     */
 	private function validarNombreObjeto($nombre){
 		$nombreClase = String::upperCamelCase($nombre."Controller");
 		if(class_exists($nombreClase)){
@@ -215,44 +265,25 @@ class ObjetosController extends Controller{
 		}
 	}
 	
-	
+	/**
+     * Permite visualizar los metodos de un controlador
+     * 
+     * @see MetodosController::vistaMetodos();
+     * @method metodos
+     * @access public
+     */
 	function metodos(){
 		$this->vista ="listaMetodos";
-		
-		if(isset($_GET['obj'])){
-			$objeto = new Objeto($this->getEntero(Globals::obtGet('obj')));
-			
-			$this->tituloPagina="Objeto $objeto->objeto - Metodos";
-			$clase = new ReflectionClass($objeto->objeto."Controller");
-			$metodos = $clase->getMethods(ReflectionMethod::IS_PUBLIC);
-			$arrayMetodos =array();
-			foreach ($metodos as $key => $value) {
-				if($value->name!='__construct')
-					$arrayMetodos[$key]=$value->name;
-			}
-			$claseMetodo = new Metodo();
-			$claseMetodo->validarMetodosExistentes($arrayMetodos, $objeto->id_objeto);
-			$this->data['vistaMetodos'] = $this->vistaMetodos($objeto);
-			
-		}
-
+        $controladorMetodos = new MetodosController();
+        $this->data = $controladorMetodos->metodosObjeto();
 	}
-	
-	private function vistaMetodos(Objeto $obj){
-		$query = "select id_metodo,nombre_metodo as \"Metodo\" from s_metodos where id_objeto=$obj->id_objeto";
-		$vista = new Vista($query,$GLOBALS['configPaginador']);
-		$vista->tituloVista="Metodos del objeto ".$obj->objeto;
-		$vista->setParametrosVista(array('idDivVista'=>'metodosObjeto'));
-		$vista->acciones=array(
-                                'Asignar perfiles de acceso'=>array('href'=>'/jadmin/objetos/acceso-perfiles/',
-                                                                'data-jvista'=>'seleccion',
-                                                                'data-multiple'=>'true','data-jkey'=>'metodo'),
-                                );
-		$vista->setParametrosVista($GLOBALS['configVista']);
-		return $vista->obtenerVista();
-	}
-	
-	
+	/**
+     * Muestra un formulario para dar acceso de los perfiles registrados al metodo de un objeto
+     * 
+     * @method accesoPerfiles
+     * @access public
+     * 
+     */
 	function accesoPerfiles(){
 		
 			if(isset($_GET['metodo'])){
@@ -292,7 +323,10 @@ class ObjetosController extends Controller{
 		
 	}
     /**
-     * Asignar acceso a objetos
+     * Muestra un formulario para asignar el acceso de los perfiles del sistema a un objeto determinado
+     * @method asignarAcceso
+     * @access public 
+     *
      */
     function asignarAcceso(){
         
