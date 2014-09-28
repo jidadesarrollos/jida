@@ -112,6 +112,7 @@ class FormsController extends Controller{
 	 */
     function gestionFormulario($ambito=1){
         
+        
         $tipoForm = 1;
         $id_form=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$_GET['id']:"";
 		$this->tituloPagina="Registro de Formulario";
@@ -284,7 +285,7 @@ class FormsController extends Controller{
             $campos = explode(",", $_POST['campos']);
             $orden = 1;
             $arrayOrden=array();
-            $jctrl = new JidaControl(null,2);
+            $jctrl = new JidaControl(null,$_POST['ambito']);
             foreach($campos as $campo){
                 $idCampo = explode("-", $campo);
                 $arrayOrden[]=array('id_campo'=>$idCampo[1],'orden'=>$orden);

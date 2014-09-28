@@ -29,7 +29,7 @@
     echo Mensajes::imprimirMsjSesion();
 ?>
 
-<article id="jidaConfiguracion">
+<article id="jidaConfiguracion" data-formulario="<?=$data['formFramework']?>">
     
     <div class="row">
         <section id="jidaCampos" class="col-lg-3">
@@ -80,11 +80,11 @@ function guardarOrden(){
         var orden = $("#listCamposFormulario").sortable('toArray').toString();
             
         data = "s-ajax=true&campos="+orden;
-        console.log(data);
+        
         
         new jd.ajax({
             url:"/jadmin/forms/ordernar-campos/",
-            parametros:data,
+            parametros:{'campos':orden,'ambito':$("#jidaConfiguracion").data('formulario')},
             respuesta:'json',
             funcionCarga:function(){
                 $("#jidaFormConfiguracion").html(this.respuesta);
