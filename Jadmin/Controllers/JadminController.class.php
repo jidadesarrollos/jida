@@ -22,41 +22,49 @@ class JadminController extends Controller{
         
     }
     function index(){
-        
+        $this->layout="unaColumna.tpl.php";
 		$this->tituloPagina = "Jida Framework - Formularios";        
         $jctrl= new JidaControl();
+        if(Session::checkLogg()){
+            $a=0;
+        }
         if($jctrl->testBD()){
-            $dataArray['testBD'] = "Conexión establecida";
             
-            $form =  new Formulario('Login',null,null,2);
-            $form->valueSubmit="Iniciar Sesi&oacute;n";
-            $form->nombreSubmit="btnJidaAdminLogin";
-            $form->action=$this->url;
-            if(isset($_POST["btnJidaAdminLogin"])){
-                $validacion = $form->validarFormulario($_POST);
-                if($validacion===TRUE){
-                    $User = new User();
-                    $clave = md5(Globals::obtPost('clave_usuario'));
-                    $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
-                    if($checkUser===FALSE){
-                        Session::set('__msjForm',Mensajes::mensajeError("Usuario o clave invalidos"));
-                    }else{
-                        /*** Habilitar datos de usuario*/
-                        $perfiles = $User->getPerfiles();
-                        Session::sessionLogin();
-                        Session::set('usuario',$checkUser);
-                        Session::set('usuario','perfiles',$perfiles);
+            if(Session::checkPerfilAcceso('jidaAdministrador')){
+                redireccionar("/jadmin/forms/");
+            }else{
+                
+                $form =  new Formulario('Login',null,null,2);
+                $form->valueSubmit="Iniciar Sesi&oacute;n";
+                $form->nombreSubmit="btnJidaAdminLogin";
+                $form->action=$this->url;
+                $form->valueBotonForm="Iniciar Session";
+                if(isset($_POST["btnJidaAdminLogin"])){
+                    $validacion = $form->validarFormulario($_POST);
+                    if($validacion===TRUE){
+                        $User = new User();
+                        $clave = md5(Globals::obtPost('clave_usuario'));
+                        $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
+                        if($checkUser===FALSE){
+                            Session::set('__msjForm',Mensajes::mensajeError("Usuario o clave invalidos"));
+                        }else{
+                            /*** Habilitar datos de usuario*/
+                            $perfiles = $User->getPerfiles();
+                            Session::sessionLogin();
+                            Session::set('usuario',$checkUser);
+                            Session::set('usuario','perfiles',$perfiles);
+                            
+                            /*fin variables de usuario*/
+                            Session::set('__msjVista',Mensajes::mensajeInformativo('Bienvenido '.$User->nombre_usuario));
+                            Session::set('__idVista','formularios');
+                            redireccionar('/jadmin/forms/');
+                        }
                         
-                        /*fin variables de usuario*/
-                        Session::set('__msjVista',Mensajes::mensajeInformativo('Bienvenido '.$User->nombre_usuario));
-                        Session::set('__idVista','formularios');
-                        redireccionar('/jadmin/forms/');
+                          
+                    }else{
+                        Session::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
+                        
                     }
-                    
-                      
-                }else{
-                    Session::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
-                    
                 }
             }//fin validación post
             

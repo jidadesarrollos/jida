@@ -179,7 +179,20 @@ class Archivo {
         }
        return $imagen;
     }
-	function moverDirectorio($directorio,$nombreArchivo){
+	/**
+     * Carga un archivo o directorio
+     * @method moverDirectorio
+     */
+    function moverDirectorio($directorio,$nombreArchivo){
+        self::moverArchivo($directorio,$nombreArchivo);
+    }
+    /**
+     * Carga un archivo o directorio
+     * @method moverArchivo
+     * @param string $directorio Url en la cual se movera el archivo
+     * @param mixed $nombreArchivo Archivo a mover
+     */
+    function moverArchivo($directorio,$nombreArchivo){
 		if(move_uploaded_file($nombreArchivo, $directorio)){
 			return true;
 		}else{
@@ -191,15 +204,24 @@ class Archivo {
     
     function moverArchivosCargados($directorio,$archivos){
         $bandera=TRUE;
-        foreach ($archivos as $key => $archivo) {
-            
-            $file = new Archivo($archivo);
-            if($this->moverDirectorio($directorio, $file->tmp_name)){
+        if(is_array($archivos)){
+            foreach ($archivos as $key => $archivo) {
+                
+                $file = new Archivo($archivo);
+                if($this->moverDirectorio($directorio, $file->tmp_name)){
+                    continue;
+                }else{
+                    $bandera=FALSE;
+                }
+            }//final foreach    
+        }else{
+            if($this->moverDirectorio($directorio, $archivo->tmp_name)){
                 continue;
             }else{
                 $bandera=FALSE;
             }
-        }//final foreach
+        }
+        
         return $bandera;
     }
     /**
