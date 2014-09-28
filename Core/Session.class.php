@@ -129,7 +129,7 @@ class Session {
         if(Session::get('isLoggin'))
             return true;
         else {
-            throw new Exception("sitio no encontrado", 404);
+            return false;
             
         }
     }
@@ -147,8 +147,17 @@ class Session {
     /**
      * Verifica que el usuario actual tenga exactamente el mimso perfil
      * que el perfil requerido
+     * @method checkPerfilAcceso
+     * @param string $perfil Clave del perfil a consultar
+     * @return boolean TRUE si es conseguida o FALSE si no se consigue
      */
-    static function checkAccesoUnico(){
+    static function checkPerfilAcceso($perfil){;
+        $perfiles = Session::get('usuario','perfiles');
+        if(in_array(String::upperCamelCase($perfil),$perfiles)){
+            return true;
+        }else{
+            return false;
+        }
         
     }
 } // END
