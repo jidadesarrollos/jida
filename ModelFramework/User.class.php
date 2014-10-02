@@ -126,6 +126,7 @@ class User extends DBContainer{
 	
 	function registrarSesion(){
 		$query = "update s_usuarios set ultima_session =current_timestamp where id_usuario=$this->id_usuario";
+        
 		$this->bd->ejecutarQuery($query);
 		
 	}
