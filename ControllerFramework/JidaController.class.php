@@ -58,6 +58,7 @@
      */
      private $modulosExistentes=array();
     function __construct(){
+        
         try{
             
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
@@ -257,9 +258,11 @@
      */
     function validacion(){ 
         try{
+            
             $acl = new ACL();
             
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+            
             if($acceso===TRUE){
                 
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -421,10 +424,16 @@
      */
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
+            
             $this->vista->layout = $this->controladorObject->layout;
         
             $this->vista->definirDirectorios();
+            
             if(!$this->vista->layout){
+                if(defined('LAYOUT_DEFAULT')){
+                    $this->vista->layout=LAYOUT_DEFAULT;
+                }
+                
                 $this->vista->checkHeader($this->controladorObject->header);
                 $this->vista->checkFooter($this->controladorObject->footer);    
             }
@@ -455,10 +464,11 @@
     }
     
     private function procesarExcepcion($excepcion){
-        
+            
         $ctrlError = $this->controlador."Controller";
         
         $this->controladorObject = new $ctrlError;
+        
         $this->checkDirectoriosView();
         if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
