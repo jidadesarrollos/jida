@@ -92,11 +92,12 @@ class Mysql extends ConexionBD{
       */
     function ejecutarQuery($query="",$tipoQuery=1){
         
-            
+        
         if(!empty($query)){
             $this->query=$query;    
         }
         $this->establecerConexion();
+        
         $this->mysqli->query("SET NAMES 'utf8'");
         if($this->codificarHTML===TRUE)
             $this->query=String::codificarHTML($this->query);
@@ -108,9 +109,9 @@ class Mysql extends ConexionBD{
         
         
         if(!$this->result){
+            
             throw new Exception("No se pudo ejecutar el query <br/> <strong>$query</strong><br/> (".$this->mysqli->errno.") ".$this->mysqli->error, 200);       
         }
-        
         $this->totalCampos = $this->mysqli->field_count;
         
         if(isset($this->result->num_rows))
