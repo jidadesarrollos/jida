@@ -253,6 +253,9 @@ class ValidadorJida {
                         case "limitecaracteres":
                             $CheckValor = $this->limiteCaracteres($validacion,$detalle);
                             break;
+                        case "igualdad":
+                            $CheckValor = $this->igualdad($validacion, $detalle);
+                            break;
                         default :
                             $CheckValor = $this->validarCadena($validacion, $detalle);
                             break;
@@ -356,7 +359,18 @@ class ValidadorJida {
                     return false;
                 }
     }
-    
+   private function igualdad($validacion,$detalle){
+    if(isset($this->dataValidaciones['campo'])){
+        if($this->valorCampo==$_POST[$this->dataValidaciones['campo']]){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return true;
+    }
+            
+   }
     /**
      * Valida un campo de contraseña segura
      * @method validarContrasenia
@@ -409,4 +423,5 @@ class ValidadorJida {
             return true;
         }
     }
+
 }//fin Class ValidadorJida

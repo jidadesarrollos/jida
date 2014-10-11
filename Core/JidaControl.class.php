@@ -92,6 +92,7 @@ class JidaControl extends DBContainer{
 	 * @param array Accion Arreglo resultado de gestion de formulario (result dbContainer)
 	 */
     function procesarCamposFormulario($accion){
+        
 		$resultDatos = $this->bd->ejecutarQuery($this->query_f);
         
         
@@ -122,7 +123,8 @@ class JidaControl extends DBContainer{
 				$total=	$this->bd->totalRegistros;
 				
 				if($total == 0){
-					$campo = new CampoHTML(2,null);
+				    
+					$campo = new CampoHTML($ambito);
                     $campo->procesarCampo(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
 				}
 				
@@ -329,7 +331,7 @@ class JidaControl extends DBContainer{
             }
             
         }catch(Exception $e){
-            Debug::mostrarArray($e);
+            
             if($e->getCode()=='200'){
                 return false;
             }

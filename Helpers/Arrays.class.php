@@ -62,18 +62,19 @@ class Arrays {
         
     }
     /**
-     * Devuelve un arreglo con los valores extraidos de un arreglo multidimensional
+     * Devuelve un arreglo con los valores extraidos de una matriz
      * @method obtenerKey
      * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arregloa  buscar
      * @param array $array Arreglo multidimensional a filtrar
      */
     static function obtenerKey($clave,$array){
         $arrayResult = array();
+        
         foreach ($array as $key => $fila) {
             if(is_array($fila)){
                 if(array_key_exists($clave, $fila)){
                      
-                      $arrayResult[]=$fila[$key];
+                      $arrayResult[]=$fila[$clave];
                 }
             }elseif(is_object($fila)){
                 if(property_exists($fila, $clave) and !empty($fila->$clave)){

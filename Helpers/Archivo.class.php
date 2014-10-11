@@ -184,7 +184,7 @@ class Archivo {
      * @method moverDirectorio
      */
     function moverDirectorio($directorio,$nombreArchivo){
-        self::moverArchivo($directorio,$nombreArchivo);
+        return self::moverArchivo($directorio,$nombreArchivo);
     }
     /**
      * Carga un archivo o directorio

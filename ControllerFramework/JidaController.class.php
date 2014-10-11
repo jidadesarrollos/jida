@@ -106,6 +106,7 @@
                 /**
                  * Entra aca si es una app nueva
                  */
+                Debug::mostrarArray("k");
                 $this->controlador="Jadmin";
                 $this->metodo = 'initApp';
             else:

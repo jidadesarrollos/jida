@@ -165,7 +165,7 @@ class Formulario extends DBContainer {
      * 
      * @var string $estiloErrorCampo
      */
-    var $cssDivErrorCampo = "error-formcampo";
+    var $cssDivErrorCampo = "div-error";
     private $tablaCampos = "s_campos_f";
     /**
      * Hace referencia al valor de busqueda del formulario, puede ser un
@@ -713,7 +713,7 @@ class Formulario extends DBContainer {
             $validaciones = json_decode("{".$arr['eventos']."}",true);
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
-                $control.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
+                $control.=Selector::crear('div',array('class'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
             }
             
             $formulario [$arr ['name']] = array (
@@ -908,17 +908,24 @@ class Formulario extends DBContainer {
     /**
      * Devuelve la estructura de uno o multiples formularios
      * @method getEstructura
+     * @param int $totalCampos Numero Total de campos del formulario
      * @return string Estructura del formularios o multiples formularios integrada
      */
-    private function getEstructura(){
+    private function getEstructura($totalCampos){
         $estructura = "";
         $i=0;
         foreach ($this->formularios as $key => $formulario) {
             if($i>0)
                 $estructura.=";";
-            $estructura .= $formulario->estructura;
+            if(empty($formulario->estructura)){
+                $estructura.=$totalCampos ."x1";
+            }else{
+                $estructura .= $formulario->estructura;    
+            }
+            
             ++$i;
         }
+        
         return $estructura;
     }
     /**
@@ -928,14 +935,9 @@ class Formulario extends DBContainer {
     function armarFormularioEstructura($titulos=array(),$label=TRUE){
         
         $camposForm = $this->armarFormularioArray ( $this->campoUpdate );   
-        $estructura = $this->getEstructura();
         
         
-        $formularioRepeticiones = explode(";", $estructura);
-        $totalColumnas=count($formularioRepeticiones);
-        $formulario="";
         
-        $totalDivisiones = 0;
         $validacion ="";
         $form = $this->armarFormularioArray();
         
@@ -943,6 +945,13 @@ class Formulario extends DBContainer {
             $validacion=$form['validacion'];
             unset($form['validacion']);
         }
+        $estructura = $this->getEstructura(count($form));
+        $formularioRepeticiones = explode(";", $estructura);
+        $totalColumnas=count($formularioRepeticiones);
+        $formulario="";
+        
+        $totalDivisiones = 0;
+        
         $formulario="";
         if($this->validacionForm===TRUE){
             $formulario .= $validacion;    
