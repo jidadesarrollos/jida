@@ -44,6 +44,11 @@ class PHPFile extends File{
     }
     
     
+    function agregarSaltoLinea(){
+        return $this->content.="\n";
+    }
+    
+    
 }//fin clase
 
 ?>

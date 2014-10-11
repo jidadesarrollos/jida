@@ -99,28 +99,38 @@
     private function procesarURL($url){
         
         $param = $this->validarNombre(array_shift($url),1);
-        
+            
         if(!in_array($param,$this->modulosExistentes)){
-            //Se valida si se ha solicitado un modulo por medio de un subdominio
-            if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-                $this->modulo=$this->validarNombre($this->subdominio,1);   
-            }
-            //Se verifica si existe el controlador
-            if($this->checkController($param."Controller")){
-                $this->controlador=$param;
-                if(count($url)>0 ){
-                    $param =$this->validarNombre(array_shift($url),1);
-                    $this->checkMetodo($param,TRUE);
-                }else{
-                    $this->metodo='index';
-                }
-            }else{
+            
+            if(!Directorios::validarDirectorio(app_dir)):
                 /**
-                 * Si entra aqui el controlador a ejecutar es el Index publico
-                 * */
-                $this->controlador='Index';
-                $this->checkMetodo($param,TRUE);
-            }
+                 * Entra aca si es una app nueva
+                 */
+                $this->controlador="Jadmin";
+                $this->metodo = 'initApp';
+            else:
+                //Se valida si se ha solicitado un modulo por medio de un subdominio
+                if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+                    $this->modulo=$this->validarNombre($this->subdominio,1);   
+                }
+                //Se verifica si existe el controlador
+                if($this->checkController($param."Controller")){
+                    $this->controlador=$param;
+                    if(count($url)>0 ){
+                        $param =$this->validarNombre(array_shift($url),1);
+                        $this->checkMetodo($param,TRUE);
+                    }else{
+                        $this->metodo='index';
+                    }
+                }else{
+                    /**
+                     * Si entra aqui el controlador a ejecutar es el Index publico
+                     * */
+                    $this->controlador='Index';
+    
+                    $this->checkMetodo($param,TRUE);
+                }
+            endif;
             
         }else{
             $this->modulo=$param;
@@ -425,8 +435,7 @@
         
             $this->vista->definirDirectorios();
             if(!$this->vista->layout){
-                $this->vista->checkHeader($this->controladorObject->header);
-                $this->vista->checkFooter($this->controladorObject->footer);    
+                    
             }
         endif;
         
