@@ -180,10 +180,9 @@ class User extends DBContainer{
         $this->establecerAtributos($datos);
         $codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
         $this->validacion=$codigo;
-        $this->id_estatus=1;
+        $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
         $this->activo=0;
         $guardado = $this->salvar();
-        
         $guardado['codigo']=$codigo;
         if($guardado['ejecutado']==1){
             $this->id_usuario=$guardado['idResultado'];
