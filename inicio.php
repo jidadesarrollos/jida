@@ -17,6 +17,7 @@
  */
 
 include_once 'Helpers/FuncionesBasicas.php';
+set_time_limit(180);
 /**
  * Directorio del directorio de aplicación.
  */

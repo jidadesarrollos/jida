@@ -132,6 +132,10 @@ class JadminController extends Controller{
         exit;   
     }
     
+    function initApp(){
+        
+    }
+    
     function testingFiles(){
         $cadena="hola mundo";
         $cadena1="\t\t\t\t\thola mundo\t\t\t";

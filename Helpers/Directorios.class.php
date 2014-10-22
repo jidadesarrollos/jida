@@ -20,7 +20,19 @@ class Directorios {
 		
 	}//final constructor
 	
-	
+	/**
+     * Verifica si un directorio existe, hace uso de funcion file_exists de PHP
+     * @method validarDirectorio
+     * @param string $dir Ubicacion de la carpeta o archivo
+     * @see PHP file_exists
+     */
+	static function validarDirectorio($dir){
+	    if(file_exists($dir)){
+	        return true;
+	    }else{
+	        return false;
+	    }
+	}
 	
 	static function validarExistenciaFile($archivo){
 		

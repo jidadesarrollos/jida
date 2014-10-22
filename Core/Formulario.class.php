@@ -165,7 +165,7 @@ class Formulario extends DBContainer {
      * 
      * @var string $estiloErrorCampo
      */
-    var $cssDivErrorCampo = "error-formcampo";
+    var $cssDivErrorCampo = "div-error";
     private $tablaCampos = "s_campos_f";
     /**
      * Hace referencia al valor de busqueda del formulario, puede ser un
@@ -713,7 +713,7 @@ class Formulario extends DBContainer {
             $validaciones = json_decode("{".$arr['eventos']."}",true);
             /* Agregar error si existe */
             if (isset ( $this->errores [$arr ['name']] )) {
-                $control.=Selector::crear('div',array('css'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
+                $control.=Selector::crear('div',array('class'=>$this->cssDivErrorCampo),$this->errores [$arr ['name']]);
             }
             
             $formulario [$arr ['name']] = array (

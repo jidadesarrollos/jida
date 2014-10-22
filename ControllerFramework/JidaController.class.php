@@ -58,7 +58,6 @@
      */
      private $modulosExistentes=array();
     function __construct(){
-        
         try{
             
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
@@ -100,28 +99,39 @@
     private function procesarURL($url){
         
         $param = $this->validarNombre(array_shift($url),1);
-        
+            
         if(!in_array($param,$this->modulosExistentes)){
-            //Se valida si se ha solicitado un modulo por medio de un subdominio
-            if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-                $this->modulo=$this->validarNombre($this->subdominio,1);   
-            }
-            //Se verifica si existe el controlador
-            if($this->checkController($param."Controller")){
-                $this->controlador=$param;
-                if(count($url)>0 ){
-                    $param =$this->validarNombre(array_shift($url),1);
-                    $this->checkMetodo($param,TRUE);
-                }else{
-                    $this->metodo='index';
-                }
-            }else{
+            
+            if(!Directorios::validarDirectorio(app_dir)):
                 /**
-                 * Si entra aqui el controlador a ejecutar es el Index publico
-                 * */
-                $this->controlador='Index';
-                $this->checkMetodo($param,TRUE);
-            }
+                 * Entra aca si es una app nueva
+                 */
+                Debug::mostrarArray("k");
+                $this->controlador="Jadmin";
+                $this->metodo = 'initApp';
+            else:
+                //Se valida si se ha solicitado un modulo por medio de un subdominio
+                if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+                    $this->modulo=$this->validarNombre($this->subdominio,1);   
+                }
+                //Se verifica si existe el controlador
+                if($this->checkController($param."Controller")){
+                    $this->controlador=$param;
+                    if(count($url)>0 ){
+                        $param =$this->validarNombre(array_shift($url),1);
+                        $this->checkMetodo($param,TRUE);
+                    }else{
+                        $this->metodo='index';
+                    }
+                }else{
+                    /**
+                     * Si entra aqui el controlador a ejecutar es el Index publico
+                     * */
+                    $this->controlador='Index';
+    
+                    $this->checkMetodo($param,TRUE);
+                }
+            endif;
             
         }else{
             $this->modulo=$param;
@@ -258,11 +268,9 @@
      */
     function validacion(){ 
         try{
-            
             $acl = new ACL();
             
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
-            
             if($acceso===TRUE){
                 
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -345,15 +353,7 @@
                         
                     }else{
                         $this->controlador=str_replace("Controller", "", $controlador);
-                        // $this->vista->rutaPagina=3;
-                        // if(!defined('CONTROLADOR_EXCEPCIONES'))
-                            // $this->controlador="ExcepcionController";
-//                             
-                        // $this->controlador=CONTROLADOR_EXCEPCIONES;
                         throw new Exception("No se encuentra definido el controlador o metodo solicitado", 10);
-                        // $controlador = $this->controlador."Controller";
-                        // $this->metodo = 'error';
-                        
                     }
                     $this->controlador=$nameControl;
                     $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
@@ -424,18 +424,11 @@
      */
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
-            
             $this->vista->layout = $this->controladorObject->layout;
         
             $this->vista->definirDirectorios();
-            
             if(!$this->vista->layout){
-                if(defined('LAYOUT_DEFAULT')){
-                    $this->vista->layout=LAYOUT_DEFAULT;
-                }
-                
-                $this->vista->checkHeader($this->controladorObject->header);
-                $this->vista->checkFooter($this->controladorObject->footer);    
+                    
             }
         endif;
         
@@ -464,25 +457,29 @@
     }
     
     private function procesarExcepcion($excepcion){
-            
+        
         $ctrlError = $this->controlador."Controller";
         
         $this->controladorObject = new $ctrlError;
         
-        $this->checkDirectoriosView();
         if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else 
             $this->controlador=EXCEPCION_CONTROLLER;
+		
+		
         $this->metodo='error';
-        
+        $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
         $this->vista->definirDirectorios();
         
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        
+        if($this->controlador->layoutPropio===TRUE){
+        	
+			$this->vista->layout=$this->controlador->layout;
+		}
         $retorno=$ctrl->data;
         
         $this->mostrarContenido($retorno,$ctrl->vista);

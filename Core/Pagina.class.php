@@ -39,18 +39,7 @@ class Pagina{
      */
     private $modulo;
     /**
-     * Archivo de encabezado de la vista
-     * @var $header;
-     */
-    var $header="";
-    
-    
-    /**
-     * Archivo de cierre de la vista
-     */
-    var $footer="";
-    
-    /**
+
      * Define la ubicación de las plantillas HEADER y FOOTER
      * a utilizar en la pagina
      * @var string $urlPlantilla
@@ -61,7 +50,8 @@ class Pagina{
      * @var $directorioLayout
      * @access private
      */
-     
+
+          
     private $directorioLayout;
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
@@ -226,25 +216,11 @@ class Pagina{
         if(!empty($this->layout) or $this->layout!==FALSE){
             $this->renderizarLayout($data);
         }else{
-            
-           $this->renderizarPlantilla($data); 
+            throw new Exception("No se encuentra definida la plantilla", 120);
         }
     }//final funcion
     
-    /**
-     * Renderiza una vista haciendo uso de un archivo HEADER y un FOOTER
-     * @method renderizarPlantilla
-     * @access private
-     */
     
-    private function renderizarPlantilla($data){
-        global $dataArray;
-        $dataArray = $data;
-        
-        include_once $this->header;
-        include_once $this->vista;
-        include_once $this->footer;   
-    }
     
     /**
      * Renderiza una vista en un layout definido
@@ -324,22 +300,7 @@ class Pagina{
         
         return $rutaVista;
     }
-    
-    function checkHeader($data){
-    
-        if(!empty($data)){
-            $this->header=$this->urlPlantilla.$data;
-            
-        }
-    }
-    
-    function checkFooter($data){
-        if(!empty($data)){
-            $this->footer=$this->urlPlantilla.$data;
-        }
         
-    }
-    
     function establecerAtributos($arr) {
         $clase=__CLASS__;
         
