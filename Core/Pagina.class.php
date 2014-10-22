@@ -42,13 +42,13 @@ class Pagina{
      * Archivo de encabezado de la vista
      * @var $header;
      */
-    var $header=header_default;
+    var $header="";
     
     
     /**
      * Archivo de cierre de la vista
      */
-    var $footer=footer_default;
+    var $footer="";
     
     /**
      * Define la ubicación de las plantillas HEADER y FOOTER

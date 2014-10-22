@@ -221,6 +221,7 @@ class ACL extends DBContainer{
             $perfil = $perfilesUser[$i];
                 //Se valida acceso al componente        
                 if(isset($listaAcl[$componente])){
+                	
                     $arrComponentes = $listaAcl[$componente];
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
@@ -238,7 +239,7 @@ class ACL extends DBContainer{
                              * a todos los metodos del objeto
                              */
                             if(!array_key_exists('metodos',$arObjeto)){
-                            
+                            	
                                 $acceso=TRUE;
                             }else
                             if(isset($arObjeto['metodos'][$metodo])){
