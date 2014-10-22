@@ -461,7 +461,7 @@
         $ctrlError = $this->controlador."Controller";
         
         $this->controladorObject = new $ctrlError;
-        
+
         if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else 
@@ -476,8 +476,7 @@
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        if($this->controlador->layoutPropio===TRUE){
-        	
+        if($this->controlador->layoutPropio===TRUE){	
 			$this->vista->layout=$this->controlador->layout;
 		}
         $retorno=$ctrl->data;

@@ -39,7 +39,6 @@ class Pagina{
      */
     private $modulo;
     /**
-
      * Define la ubicación de las plantillas HEADER y FOOTER
      * a utilizar en la pagina
      * @var string $urlPlantilla
