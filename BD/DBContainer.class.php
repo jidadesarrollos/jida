@@ -95,7 +95,7 @@ class DBContainer {
     /**
      * Define las propiedades del objeto que sean columnas de la tabla en base
      * de datos, por defecto son las propiedades publicas
-     * @var $propiedadesBD
+     * @var $array $propiedadesBD
      */
     private $propiedadesBD;
     /**
@@ -627,6 +627,11 @@ class DBContainer {
     
     private function crearMetodos(){
         
+    }
+    
+    function getPropiedadesPublicas(){
+        
+        return $this->propiedadesPublicas;
     }   
     
 }

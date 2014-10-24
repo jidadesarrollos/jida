@@ -414,6 +414,7 @@
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
+        
         $this->mostrarContenido($retorno,$controlador->vista);
         
         
@@ -476,9 +477,7 @@
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        if($this->controlador->layoutPropio===TRUE){	
-			$this->vista->layout=$this->controlador->layout;
-		}
+
         $retorno=$ctrl->data;
         
         $this->mostrarContenido($retorno,$ctrl->vista);

@@ -203,13 +203,11 @@ class MenuHTML extends DBContainer{
                 }
                 
             }else{
-                
-                
-                
+            	        
             }
         }//fin foreach
         $listaMenu= Selector::crear("ul",$atributosUL,$listaMenu,1,true);
-        //$listaMenu.="\n\t\t</ul>";
+        
         return $listaMenu;
     }
     /**

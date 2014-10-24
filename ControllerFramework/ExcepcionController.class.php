@@ -36,11 +36,15 @@ class ExcepcionController extends Controller{
     
 
     protected function procesarError($view=""){
+        
         if(!empty($view)){
                $this->vista=$view;        
          }else{
+         	$this->tituloPagina="Error ".$this->excepcion->getCode();
              switch ($this->excepcion->getCode()) {
                  case 404:
+				 case 403:
+					 
                     $this->vista="404";
                  
                      break;

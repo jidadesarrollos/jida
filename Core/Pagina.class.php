@@ -213,6 +213,7 @@ class Pagina{
         $this->vista=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
+            
             $this->renderizarLayout($data);
         }else{
             throw new Exception("No se encuentra definida la plantilla", 120);
