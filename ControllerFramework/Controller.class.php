@@ -192,6 +192,20 @@ class Controller {
            
        }
     }
+	
+	/**
+	 * Valida si se ha realizado una solicitud ajax (se debe usar el plugin javascript jd.ajax)
+	 * 
+	 * Verifica la existencia del post s-ajax
+	 * @method solicitudAjax
+	 * @return boolean 
+	 */
+	function solicitudAjax(){
+		if(isset($_POST['s-ajax']))
+			return true;
+		else
+			return false;
+	}
 
 } // END
 

@@ -92,6 +92,3 @@ class Directorios {
             return $arr;
         }
 } // END
-
-?>
-

@@ -36,7 +36,7 @@
         <script src="/htdocs/js/libs/ajaxupload.js"></script>
         <script src="/htdocs/js/libs/less.js"></script>
         <!--jidalibs-->
-        <script src="/htdocs/js/jida/objetoAjax.js"></script>
+        <script src="/htdocs/js/jida/jd.ajax.js"></script>
         <script src="/htdocs/js/jida/validadorJida.js"></script>
         <script src="/htdocs/js/jida/jidaPlugs.js"></script>
         <script src="/htdocs/js/jida/jidaControlCampos.js"></script>

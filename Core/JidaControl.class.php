@@ -21,6 +21,10 @@ class JidaControl extends DBContainer{
     var $clave_primaria_f;
 	var $estructura;
     private $tablaCampos = "s_campos_f";
+    /**
+     * @var int Tabla a usar
+     */
+    private $ambito;
 	
 	
 	/**
@@ -31,7 +35,7 @@ class JidaControl extends DBContainer{
      * @param int $tabla Tabla de Formularios a manejar 1. Formularios Aplicacion 2. Formularios Framework
      */
     function __construct($id_form="",$tabla=1){
-        
+        $this->ambito=$tabla;
         if($tabla==2){
             $this->nombreTabla="s_jida_formularios";
             $this->tablaCampos="s_jida_campos_f";
@@ -124,7 +128,7 @@ class JidaControl extends DBContainer{
 				
 				if($total == 0){
 				    
-					$campo = new CampoHTML($ambito);
+					$campo = new CampoHTML($this->ambito);
                     $campo->procesarCampo(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
 				}
 				

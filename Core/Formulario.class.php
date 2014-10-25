@@ -352,7 +352,7 @@ class Formulario extends DBContainer {
         
         $this->clavePrimaria = 'id_form';
         parent::__construct (__CLASS__);
-        
+        $this->momentoSalvado=FALSE;
         $this->claveFormulario = $claveFormulario;
         if (is_int ( $this->claveFormulario )) {
             

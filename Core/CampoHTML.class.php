@@ -132,7 +132,7 @@ class CampoHTML extends DBContainer {
         else{
             
             $this->nombreTabla = "s_campos_f";
-            parent::__construct ();
+            parent::__construct (__CLASS__);
             if(!empty($this->esquema)){
                 $this->nombreTabla= $this->esquema .".". $this->nombreTabla;
             }
@@ -153,6 +153,7 @@ class CampoHTML extends DBContainer {
             
             $this->cn = $this->bd;
         }
+		$this->momentoSalvado=FALSE;
     }
     
     /**
@@ -195,7 +196,8 @@ class CampoHTML extends DBContainer {
             7 => "select",
             8 => "identificacion",
             9 => "Telefono",
-            10=>"Fecha"
+            10=>"Fecha",
+            11=>'Captcha'
             
              
         );
@@ -258,6 +260,8 @@ class CampoHTML extends DBContainer {
             case 10:
                 $this->control = $this->crearInputDate();
                 break;
+			case 11:
+				$this->control = $this->crearCaptcha();
             default :
                 $this->control = "<input type=\"$this->type\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
                 $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
@@ -289,6 +293,22 @@ class CampoHTML extends DBContainer {
         return $this->control;
         
     }
+	/**
+	 * Crea un campo CAPTCHA
+	 * Hace uso de la libreria de google Recaptcha
+	 * @method crearCaptcha
+	 * 
+	 */
+ 	private function crearCaptcha(){
+ 		if(!defined('RECAPTCHA_PUBLIC_KEY')){
+ 			throw new Exception("No se encuentra definida la clave publica para la libreria recaptcha, por favor valide
+ 			 constante RECAPTCHA_PUBLIC_KEY en archivos initConfig o appConfig", 1);
+			 
+ 		}
+ 		require_once 'Componentes/recaptcha/recaptchalib.php';
+		$publicKey="6LfugPwSAAAAAK1myUT9QcJhw2Z0DuvpW_okQZdp";
+		return recaptcha_get_html($publickey);
+ 	}
     private function crearTelefono(){
             /**
              * Sección de valores update

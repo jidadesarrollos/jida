@@ -151,6 +151,7 @@ class FormsController extends Controller{
                     
 					$guardado = $jctrol->salvar($_POST);
                     $jctrol->query_f=stripslashes($jctrol->query_f);
+                    
 					if($guardado['ejecutado']==1){
 						$jctrol->procesarCamposFormulario($guardado);
 						Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
