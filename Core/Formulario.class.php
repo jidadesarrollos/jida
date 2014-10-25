@@ -931,6 +931,12 @@ class Formulario extends DBContainer {
     /**
      * Arma un formulario a partir de la estructura programada
      * @method armarFormularioEstructura
+     * @param array $titulos Matriz para manejo de titulos. si es pasada, crea un fieldset por cada configuracíon. el key es tomado como el 
+     * numero del campo en el cual comienza el fieldset, el value debe ser un array con dos key "limite" para indicar el numero de campos 
+     * que deben ser abarcados y "titulo" para colocar un legend 
+     * 
+     * @param boolean $label Permite ocultar los labels si es pasado como false, por defecto es true
+     * @example $titulos = array(0=>array('limite'=>10,'titulo'=>'Titulo del fieldset'))
      */
     function armarFormularioEstructura($titulos=array(),$label=TRUE){
         

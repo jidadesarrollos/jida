@@ -76,8 +76,14 @@ class ObjetosController extends Controller{
         $objetosInexistentes =array();
         $objetosNuevos=array();
         $nombreComponente = String::upperCamelCase($componente->componente);
-        $rutaComponente = ($nombreComponente=='Jadmin')?framework_dir.'Jadmin/Controllers/':app_dir."Modulos/".$nombreComponente."/Controller/";
-        if($nombreComponente=='Principal')$rutaComponente=str_replace("Principal/", "",$rutaComponente);
+		if($nombreComponente=='Principal'){
+			$rutaComponente= app_dir."Controller/";
+		}else{
+			$rutaComponente = ($nombreComponente=='Jadmin')?framework_dir.'Jadmin/Controllers/':app_dir."Modulos/".$nombreComponente."/Controller/";	
+		}
+        
+        
+        
         $objetosCarpeta =array();
         # "/^(?:\+|-)?\d+$/"
         Directorios::listarDirectoriosRuta($rutaComponente,$objetosCarpeta,"/^.*Controller.class.php$/");

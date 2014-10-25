@@ -12,7 +12,8 @@ class ExcepcionController extends Controller{
     /**
      * @var object $excepcion Objeto con excepción capturada
      */
-    var $excepcion;    
+    var $excepcion;
+	var $layoutPropio =FALSE;    
     /**
      * Funcion por defecto para manejar
      * las excepciones existentes en el entorno de desarrollo
@@ -21,6 +22,7 @@ class ExcepcionController extends Controller{
      * @return boolean true
      */
      
+    
     function error($e){
         $this->excepcion=$e;
          
@@ -34,11 +36,15 @@ class ExcepcionController extends Controller{
     
 
     protected function procesarError($view=""){
+        
         if(!empty($view)){
                $this->vista=$view;        
          }else{
+         	$this->tituloPagina="Error ".$this->excepcion->getCode();
              switch ($this->excepcion->getCode()) {
                  case 404:
+				 case 403:
+					 
                     $this->vista="404";
                  
                      break;

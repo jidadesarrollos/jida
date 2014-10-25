@@ -353,15 +353,7 @@
                         
                     }else{
                         $this->controlador=str_replace("Controller", "", $controlador);
-                        // $this->vista->rutaPagina=3;
-                        // if(!defined('CONTROLADOR_EXCEPCIONES'))
-                            // $this->controlador="ExcepcionController";
-//                             
-                        // $this->controlador=CONTROLADOR_EXCEPCIONES;
                         throw new Exception("No se encuentra definido el controlador o metodo solicitado", 10);
-                        // $controlador = $this->controlador."Controller";
-                        // $this->metodo = 'error';
-                        
                     }
                     $this->controlador=$nameControl;
                     $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
@@ -422,6 +414,7 @@
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
+        
         $this->mostrarContenido($retorno,$controlador->vista);
         
         
@@ -469,20 +462,22 @@
         $ctrlError = $this->controlador."Controller";
         
         $this->controladorObject = new $ctrlError;
-        $this->checkDirectoriosView();
+
         if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else 
             $this->controlador=EXCEPCION_CONTROLLER;
+		
+		
         $this->metodo='error';
-        
+        $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
         $this->vista->definirDirectorios();
         
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        
+
         $retorno=$ctrl->data;
         
         $this->mostrarContenido($retorno,$ctrl->vista);

@@ -49,7 +49,8 @@ class Pagina{
      * @var $directorioLayout
      * @access private
      */
-     
+
+          
     private $directorioLayout;
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
@@ -212,6 +213,7 @@ class Pagina{
         $this->vista=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
+            
             $this->renderizarLayout($data);
         }else{
             throw new Exception("No se encuentra definida la plantilla", 120);

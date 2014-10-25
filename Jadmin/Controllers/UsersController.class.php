@@ -210,10 +210,12 @@ class UsersController extends Controller{
 	
 	
 	 
-	function cierresesion(){
-	    
+	function cierresesion($url=""){
+	    if(empty($url)){
+	    	 $url='/jadmin/';
+		}
 	    if(Session::destroy()){
-	       redireccionar('/jadmin/');    
+	       redireccionar($url);    
 	    }
         
 	}
