@@ -55,7 +55,8 @@ class Session {
                     }
                 }
             }else{
-                if(isset($_SESSION[$key])){
+                
+                if(array_key_exists($key, $_SESSION)){
                    unset($_SESSION[$key]);
                 }
             }

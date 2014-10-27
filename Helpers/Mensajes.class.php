@@ -26,13 +26,22 @@ class Mensajes {
      * usadas.
      */
      
-    static function crear($tipo,$msj,$hidden='true'){
+    static function crear($tipo,$msj,$hidden=true){
         $css = self::obtenerEstiloMensaje($tipo);
-        $mensaje = "
+        if($hidden==true){
+            $mensaje = "
                     <DIV class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                        <button type=\"button\" class=\"close pull-right\" data-dismiss=\"alert\">
+                        <span aria-hidden=\"true\">&times;</span></button>
+                        $msj
+                    </DIV>";    
+        }else{
+            $mensaje = "
+                    <DIV class=\"$css\">
                         $msj
                     </DIV>";
+        }
+        
         return $mensaje;
     }
     static function obtenerEstiloMensaje($clave){
@@ -125,7 +134,9 @@ class Mensajes {
      * 
      */
     static function imprimirMsjSesion($msj="__msj"){
-       if(isset($_SESSION[$msj])){ 
+        
+       if(isset($_SESSION[$msj])){
+           
             echo $_SESSION[$msj];
             Session::destroy($msj);
         }

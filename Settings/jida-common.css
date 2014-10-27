@@ -77,7 +77,6 @@ textarea{
 	margin-top:60px;
 	margin-bottom:60px;
 }
-
 a{
 	cursor: pointer;
 }
@@ -220,13 +219,19 @@ span.fa{
 
 
 /*Controles compuestos de formularios*/
-
-select.ctrl-documentacion{
-	width: 15%!important;
-	min-width: 60px;
+.control-multiple{
+    position:relative;
 }
-.ctrl-documentacion{
-	width: 80%!important;
+select.ctrl-documentacion{
+	width: 80px!important;
+	min-width: 60px;
+	position:absolute;
+}
+
+select.ctrl-documentacion + .form-control{
+    
+    padding-left:90px!important;
+    
 	
 }
 div.ctrl-number{
@@ -237,22 +242,13 @@ div.ctrl-number{
 }
 
 input.ctrl-number-code{
-	width: 10%!important;
+	width: 80px!important;
 	min-width: 50px!important;
+	position:absolute;
 }
 input.ctrl-number-code + input[type=text]{
-	min-width: 82%!important;
-	max-width: 90%!important;
-
+    padding-left:90px;
 	margin-right:0%;
-}
-
-.box-ctrl-number{
-	position:relative!important;
-	width: 100%!important;
-}
-.box-ctrl-tlf{
-	width: 100%;
 }
 
 .radio-on-list{
@@ -260,4 +256,14 @@ position:absolute;
 	margin-top:30px;
 }
 
+
+.box-140{
+    width: 140px;height: 140px;   
+}
+a > img{
+    opacity: .8;   
+}
+a:hover > img{
+    opacity:1;
+}
 

@@ -262,6 +262,7 @@ class CampoHTML extends DBContainer {
                 break;
 			case 11:
 				$this->control = $this->crearCaptcha();
+                break;
             default :
                 $this->control = "<input type=\"$this->type\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
                 $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
@@ -305,9 +306,12 @@ class CampoHTML extends DBContainer {
  			 constante RECAPTCHA_PUBLIC_KEY en archivos initConfig o appConfig", 1);
 			 
  		}
- 		require_once 'Componentes/recaptcha/recaptchalib.php';
-		$publicKey="6LfugPwSAAAAAK1myUT9QcJhw2Z0DuvpW_okQZdp";
-		return recaptcha_get_html($publickey);
+ 		// require_once 'Componentes/recaptcha/recaptchalib.php';
+		// $publicKey=RECAPTCHA_PUBLIC_KEY;
+		// return recaptcha_get_html($publicKey);
+		return "<div id=\"recaptcha_div\"></div>
+		<input type=\"button\" value=\"Show reCAPTCHA\" onclick=\"showRecaptcha('recaptcha_div');\"></input>";
+		
  	}
     private function crearTelefono(){
             /**
@@ -330,12 +334,12 @@ class CampoHTML extends DBContainer {
                     $valorExtension=($tipoTelefono=='internacional')?substr($this->value,13):substr($this->value,10);
                 }
              }
-             $this->control="<div class=\"ctrl-multiple\">";
+             $this->control="<div class=\"ctrl-multiple\" id=\"box".$this->id_propiedad."\">";
              if($tipoTelefono!='internacional'){
                 #$this->control.="<div class=\"text-muted ctrl-number\">(+58) </div>";
-                $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"cod.\">";     
+                $this->control.="<input title=\"C&oacute;digo sin cero(0) inicial\" type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"4xx.\">";     
              }else{
-                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\">";
+                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->ccsControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\" data-jidacontrol=\"numerico\">";
              }
             
             
