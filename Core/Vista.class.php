@@ -498,7 +498,8 @@ class Vista extends DBContainer{
      */
     function obtenerVista(){
         if(isset($_POST) and !empty($_POST)){
-            return $this->procesarAccion($_POST);
+            $a= $this->procesarAccion($_POST);
+            
         }else{
             $data = array('id'=>$this->idDivVista,'data-sitio'=>"$_SERVER[REQUEST_URI]","class"=>$this->cssSection);
             $vista = Selector::crear('SECTION',$data,$this->crearVista());
@@ -796,7 +797,7 @@ class Vista extends DBContainer{
                     case 'busqueda':
                         $vistaArmada = $this->buscadorVista($post[$this->nombreBotonBusqueda]);
                 }
-                respuestaAjax($vistaArmada);
+                respuestaAjax($vistaArmada,2);
             }elseif(isset($post[$this->nombreBotonBusqueda])){
                     $vistaArmada = $this->buscadorVista($post[$this->nombreInputTextBusqueda]);
                     return $vistaArmada;
