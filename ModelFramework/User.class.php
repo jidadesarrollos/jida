@@ -103,7 +103,7 @@ class User extends DBContainer{
         if($idUser!=""){
             $this->id_usuario = $idUser;
         }
-        $query = "select * from v_perfiles_usuario where id_usuario=$this->id_usuario";
+        $query = "select * from vj_perfiles_usuario where id_usuario=$this->id_usuario";
         
         $data  = $this->bd->ejecutarQuery($query);
         if(count($data)>1){

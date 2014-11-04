@@ -257,16 +257,14 @@ class Archivo {
      * Usa file_get_contents para devolver el archivo como un string
      */
     static function obtArchivo($rutaArchivo){
-        try{
-            if(is_readable($rutaArchivo)){
-                
-            }else{
-                throw new Exception("La ruta del archivo no es legible : ".$rutaArchivo);
-                
-            }
-        }catch(Exception $e){
-            controlExcepcion($e->getMessage());
+        
+        if(is_readable($rutaArchivo)){
+            
+        }else{
+            throw new Exception("La ruta del archivo no es legible : ".$rutaArchivo);
+            
         }
+        
     }
     
     /**

@@ -13,7 +13,7 @@
  * @param mixed $respuesta Respuesta de la solicitud ajax
  * @param int tipo 1 json, 2 html. 
  */
-function respuestaAjax($respuesta,$tipo=1){
+function respuestaAjax($respuesta,$tipo=2){
     if($tipo==2){
         echo $respuesta;
     }else{

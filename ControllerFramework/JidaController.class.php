@@ -102,7 +102,7 @@
             
         if(!in_array($param,$this->modulosExistentes)){
             
-            if(!Directorios::validarDirectorio(app_dir)):
+            if(!Directorios::validar(app_dir)):
                 /**
                  * Entra aca si es una app nueva
                  */
