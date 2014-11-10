@@ -125,6 +125,20 @@ class Arrays {
         
         return $matriz;
     }
+    /**
+     * Convierte un arreglo en un objeto tipo stdClass
+     * @method convertirAObjeto
+     * @param array $array Arreglo a convertir
+     * @return object $objeto Arreglo convertido en objeto
+     */
+    static function convertirAObjeto($array){
+        $objeto = new stdClass();
+        foreach ($array as $key => $value) {
+            $objeto->$key=$value;
+        }
+        return $objeto;
+        
+    }
     
 } // END
 
