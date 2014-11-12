@@ -14,8 +14,8 @@ class Table extends Selector{
      * Arreglo de Filas
      * @var array $tr
      */
-    var $tr;
-    var $th;
+    var $tr=array();
+    var $th=array();
     /**
      * Arreglo de columnas
      * @var array $td
@@ -81,26 +81,32 @@ class Table extends Selector{
      * @access private
      */
     private function initTablaByArray(){
-        $this->totalTR=count($this->dataArrayTabla);
-        $this->totalTD=count($this->dataArrayTabla[0]);
-        /**
-         * Se instancian los TD de forma individual para poder agregar atributos que sean globales
-         * para TDs en multiples filas
-         */
-        for($i=0;$i<$this->totalTD;$i++){
-            $this->td[$i]=new Selector('TD');
+        if(is_array($this->dataArrayTabla) and count($this->dataArrayTabla)>0){
+            $this->totalTR=count($this->dataArrayTabla);
+            $this->totalTD=count($this->dataArrayTabla[0]);    
+        }else{
+            $this->totalTR=0;
+            $this->totalTD=0;
         }
-        /**
-         * Instanciación de filas y columnas internas
-         */
-        for($i=0;$i<$this->totalTR;$i++){
-            $this->tr[$i]=new Selector('TR');
-            for($a=0;$a<$this->totalTD;$a++){
-                $this->tr[$i]->td[$a]=new Selector('TD');
-                $this->tr[$i]->td[$a]->establecerAtributos(get_object_vars($this->td[$a]));
-                #$this->tr[$i]->td[$a]->contenido=$this->dataArrayTabla[$i][$a];
-            }//final construcción TDs
-        }//final Construccion TDs
+        
+            /**
+             * Se instancian los TD de forma individual para poder agregar atributos que sean globales
+             * para TDs en multiples filas
+             */
+            for($i=0;$i<$this->totalTD;$i++){
+                $this->td[$i]=new Selector('TD');
+            }
+            /**
+             * Instanciación de filas y columnas internas
+             */
+            for($i=0;$i<$this->totalTR;$i++){
+                $this->tr[$i]=new Selector('TR');
+                for($a=0;$a<$this->totalTD;$a++){
+                    $this->tr[$i]->td[$a]=new Selector('TD');
+                    $this->tr[$i]->td[$a]->establecerAtributos(get_object_vars($this->td[$a]));
+                    #$this->tr[$i]->td[$a]->contenido=$this->dataArrayTabla[$i][$a];
+                }//final construcción TDs
+            }//final Construccion TDs
         
       
     }
@@ -262,7 +268,7 @@ class Table extends Selector{
         }
     }
     function getTotalColumnas(){
-        if(is_array($this->tr[0]->td)){
+        if(array_key_exists(0, $this->tr) and is_array($this->tr[0]->td)){
             $this->totalTD=count($this->tr[0]->td);
                 
         }
