@@ -414,7 +414,7 @@
          */
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
-        
+        $retorno['urlCanonical'] = $controlador->urlCanonical;
         $this->mostrarContenido($retorno,$controlador->vista);
         
         

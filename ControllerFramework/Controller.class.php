@@ -10,6 +10,7 @@
  */
 class Controller {
 
+    var $urlCanonical=url_sitio;
     /**
      *  Define el layout a usar por el controlador
      *  @var $layout
