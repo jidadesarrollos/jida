@@ -395,9 +395,6 @@ class Vista extends DBContainer{
         }
         
         parent::__construct(__CLASS__);
-        
-        $this->bd->ejecutarQuery($this->query);
-        $this->totalRegistros = $this->bd->totalRegistros;
         $this->nombreVista = $nombreVista;
         
          if(is_array($arregloConfiguracion)){
@@ -446,6 +443,7 @@ class Vista extends DBContainer{
         $this->addPaginador();
         /*Ejecución del query para la vista*/
         $this->data = $this->bd->obtenerDataCompleta($this->query);
+        $this->totalRegistros = $this->bd->totalRegistros;
     }
    
     /**
@@ -510,6 +508,7 @@ class Vista extends DBContainer{
      * 
      */
     function obtenerVista(){
+        
         if(isset($_POST) and !empty($_POST)){
             
             $vista= $this->procesarAccion($_POST);
@@ -552,6 +551,7 @@ class Vista extends DBContainer{
         
         
         if($this->totalRegistros>0){
+
             //Creacion de la tabla--------------------------------------
             $this->tabla = new Table($this->data,$this->obtenerTitulos());
             $this->agregarOpcionesFila();
@@ -807,20 +807,16 @@ class Vista extends DBContainer{
         if($post){
             
             if(isset($post['jvista'])){
-                
+                $this->prepareConsulta();
                 switch($post['jvista']){
                     case 'paginador':
-                        $this->prepareConsulta();
                         $vistaArmada = $this->crearVista();
-                            
                         break;
                     case 'orden':
                         $this->agregarOrderConsulta($post['numeroCampo'],$post['order']);
-                        $this->prepareConsulta();
                         $vistaArmada=$this->crearVista();
                         break;
                     case 'busqueda':
-                        
                         $vistaArmada = $this->buscadorVista($post[$this->nombreBotonBusqueda]);
                 }
                 respuestaAjax($vistaArmada,2);
