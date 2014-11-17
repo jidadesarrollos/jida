@@ -232,6 +232,7 @@ class MenuHTML extends DBContainer{
         $listaMenu="";
         
         foreach ($opciones as $key => $subopcion) {
+            
             if(array_key_exists($nivel, $config['li'])){        
                 $cssli['class'] = $config['li'][$nivel]['class'];
             }else{
@@ -241,9 +242,10 @@ class MenuHTML extends DBContainer{
             if(!empty($subopcion['icono'])):
            
                 if($subopcion['selector_icono']==2){
+                    
                     $icono = Selector::crear("img",array('src'=>$subopcion['icono']));
                 }else{
-                    $icono = Selector::crear("class",array('src'=>$subopcion['icono']));
+                    $icono = Selector::crear("span",array('class'=>$subopcion['icono']));
                 }
             endif;
             if($subopcion['padre']==$padre){
