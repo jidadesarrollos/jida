@@ -92,6 +92,7 @@ class ValidadorJida extends Validador{
             $this->valorCampo = str_replace(".","",$this->valorCampo);
             $this->valorCampo = str_replace(",",".",$this->valorCampo);
             
+            
         }
         
         if($this -> dataValidaciones[$nombreValidacion]["expresion"]!=""){
@@ -119,6 +120,7 @@ class ValidadorJida extends Validador{
              * para el registro en base de datos
              */
                 if(array_key_exists($this->campo['name'], $_POST)){
+                    
                     $_POST[$this->campo['name']] = $this->valorCampo;
                 }
             return true;
