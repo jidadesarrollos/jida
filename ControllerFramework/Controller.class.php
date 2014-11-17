@@ -94,7 +94,6 @@ class Controller {
     /**
      *
      * Define la URL principal de acceso para el controlador (En caso de ser usada)
-     * 
      * Puede ser instanciada en el controlador con la URL principal
      * @var $url
      * @access protected
@@ -210,6 +209,13 @@ class Controller {
 		else
 			return false;
 	}
+    /**
+     * Setter para propiedad url
+     * @method setUrl
+     */
+    function _setUrl($url){
+        $this->url = $url;
+    }
 
 } // END
 

@@ -12,30 +12,31 @@
 class ComponentesController extends Controller{
     
     function __construct($id=""){
-        #Arrays::mostrarArray($_SERVER);exit;
+        
         $this->url="/jadmin/componentes/";
-        $this->layout="jadmin.tpl.php";        
+        $this->layout="jadmin.tpl.php";
+        if($this->solicitudAjax()){
+            $this->layout="ajax.tpl.php";
+        }        
         
     }
     function index(){
+        
         $this->vista="vistaComponentes";
         $query = "select id_componente, Componente as \"Componente\" from s_componentes";
         $vista = new Vista($query,$GLOBALS['configPaginador'],'Componentes');
 		$vista->setParametrosVista($GLOBALS['configVista']);
-        $vista->acciones=array(
-                                'Registrar Componente'=>array('href'=>'/jadmin/componentes/set-componente'),
-                                'Modificar Componente'=>array('href'=>'/jadmin/componentes/set-componente',
-                                                                'data-jvista'=>'seleccion',
-                                                                'data-multiple'=>'true','data-jkey'=>'comp'),
-                                );
         $vista->filaOpciones=array(0=>array('a'=>array('atributos' =>array(
                                                                     'class'=>'btn','title'=>'Ver objetos del componente',
-                                                                    'href'=>"/jadmin/objetos/lista/comp/{clave}"),
+                                                                    'href'=>"/jadmin/objetos/lista/comp/{clave}",
+                                                                    'data-jvista'=>'modal'),
                                                         'html'=>array('span'=>array('atributos'=>array('class' => 'glyphicon glyphicon-folder-open'))))),
                                   1=>array('a'=>array(
                                                             'atributos'=>array( 'class'=>'btn',
                                                                                 'title'=>'Asignar perfiles de acceso',
-                                                                                'href'=>"/jadmin/componentes/asignar-acceso/comp/{clave}"
+                                                                                'href'=>"/jadmin/componentes/asignar-acceso/comp/{clave}",
+                                                                        
+                                                                                'data-jvista'=>'modal'
                                                                                 ),
                                                             'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit')))))
                                                 );
@@ -121,11 +122,16 @@ class ComponentesController extends Controller{
                     Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
                 }
             }
+
             $this->data['formAcceso'] =$form->armarFormulario();
         }else{
-            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
-            Session::set('__idVista','componentes');
-            redireccionar($this->url);  
+            
+            Vista::msj('componentes', 'error', "Debe seleccionar un componente");
+            if(!$this->solicitudAjax())
+                redireccionar($this->url);
+            else{
+                echo Mensajes::mensajeError("Debe seleccionar un componente");
+            }  
         }
     
     }

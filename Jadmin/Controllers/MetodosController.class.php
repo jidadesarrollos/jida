@@ -21,8 +21,8 @@ class MetodosController	 extends Controller{
     /**
      * Funcion controladora de metodos de un objeto
      */
-    function metodosObjeto(){
-        
+    function metodosObjeto($url=""){
+        $url = (empty($url))?$this->url:$url;
         
         if(isset($_GET['obj'])){
             $objeto = new Objeto($this->getEntero(Globals::obtGet('obj')));
@@ -81,7 +81,7 @@ class MetodosController	 extends Controller{
         }
         
     }
-	static function vistaMetodos(Objeto $obj){
+	protected function vistaMetodos(Objeto $obj){
         $query = "select id_metodo,nombre_metodo as \"Metodo\",descripcion as \"Descripci&oacute;n\" from s_metodos where id_objeto=$obj->id_objeto";
         $vista = new Vista($query,$GLOBALS['configPaginador'],'metodos');
         $vista->tituloVista="Metodos del objeto ".$obj->objeto;
@@ -90,7 +90,7 @@ class MetodosController	 extends Controller{
         $vista->filaOpciones=array(1=>array('a'=>array(
                                                 'atributos'=>array( 'class'=>'btn',
                                                                     'title'=>'Agregar Descripci&oacute;n',
-                                                                    'data-link'=>"/jadmin/metodos/add-descripcion/metodo/{clave}",
+                                                                    'data-link'=>$this->url."add-descripcion/metodo/{clave}",
                                                                     'data-jvista'=>'modal'
                                                                     ),
                                                 'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-edit fa-lg'))))
@@ -98,13 +98,13 @@ class MetodosController	 extends Controller{
                                     2=>array('a'=>array(
                                                 'atributos'=>array( 'class'=>'btn',
                                                                     'title'=>'Editar Perfiles',
-                                                                    'data-link'=>"/jadmin/metodos/acceso-perfiles/metodo/{clave}",
+                                                                    'data-link'=>$this->url."asignar-acceso/metodo/{clave}",
                                                                     'data-jvista'=>'modal'
                                                                     ),
                                                 'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users fa-lg'))))
                                                 ),
                                     );
-        $vista->acciones=array( 'Asignar perfiles de acceso'=>array('href'=>'/jadmin/objetos/acceso-perfiles/',
+        $vista->acciones=array( 'Asignar perfiles de acceso'=>array('href'=>$this->url.'asignar-acceso/',
                                                                 'data-jvista'=>'seleccion',
                                                                 'data-multiple'=>'true','data-jkey'=>'metodo'),
                                 
@@ -113,13 +113,44 @@ class MetodosController	 extends Controller{
         $vista->setParametrosVista($GLOBALS['configVista']);
         return $vista->obtenerVista();
     }
+	 /**
+     * Muestra un formulario para asignar el acceso de los perfiles del sistema a un metodo
+     * @method asignarAcceso
+     * @access public 
+     *
+     */
+    function asignarAcceso(){
+        if(isset($_GET['metodo']) and $this->getEntero($_GET['metodo'])!=""){            
+            $this->vista="accesoPerfiles";
+            
+            $form = new Formulario('PerfilesAMetodos',2,Globals::obtGet('metodo'),2);
+            $metodo = new Metodo($this->getEntero($_GET['metodo']));
+            
+            $form->action=$this->url."asignar-acceso/metodo/".$_GET['metodo'];
+            $form->valueSubmit="Asignar Perfiles a Metodo";
+            $form->tituloFormulario="Asignar acceso de perfiles al Metodo ".$metodo->nombre_metodo;
+            if(isset($_POST['btnPerfilesAMetodos'])){
+                $validacion = $form->validarFormulario($_POST);
+                if($validacion===TRUE){
+                    
+                    $accion = $obj->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    if($accion['ejecutado']==1){
+                        Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$obj->objeto);
+                        redireccionar($this->url);
+                    }else{
+                        Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                    }
+                }else{
+                    Formulario::msj('error', "No se han asignado perfiles");
+                }
+            }
+            $this->data['formAcceso'] =$form->armarFormulario();
+        }else{
+            Vista::msj('metodos', 'error',"Debe seleccionar un objeto");
+            redireccionar($this->url);  
+        }    
+    }
 
-    
-    
-	
-	static function obtenerMetodos($clase){
-		
-	}
 }
 
 
