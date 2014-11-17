@@ -108,6 +108,9 @@ class Controller {
     
     function __construct(){
         $this->instanciarHelpers();
+        if($this->solicitudAjax()){
+            $this->layout="ajax.tpl.php";
+        }
         
     }
     

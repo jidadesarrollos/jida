@@ -160,7 +160,9 @@ class MenusController extends Controller {
             $post =&  $_POST;
             
             
-            $tipoForm=1;$campoUpdate="";
+            $tipoForm=1;
+            $campoUpdate=(isset($_GET['opcion']) and $this->getEntero($_GET['opcion'])>0)?$_GET['opcion']:"";
+            
             $idMenu  =$_GET['menu'];
             $idOpcion="";
             $menu = new Menu($idMenu);

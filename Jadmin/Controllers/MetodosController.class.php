@@ -15,6 +15,7 @@ class MetodosController	 extends Controller{
         
         $this->layout="jadmin.tpl.php";
         $this->url="/jadmin/metodos/";
+        parent::__construct();
     }
     
     /**
@@ -92,7 +93,16 @@ class MetodosController	 extends Controller{
                                                                     'data-link'=>"/jadmin/metodos/add-descripcion/metodo/{clave}",
                                                                     'data-jvista'=>'modal'
                                                                     ),
-                                                'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-edit fa-lg'))))),
+                                                'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-edit fa-lg'))))
+                                                ),
+                                    2=>array('a'=>array(
+                                                'atributos'=>array( 'class'=>'btn',
+                                                                    'title'=>'Editar Perfiles',
+                                                                    'data-link'=>"/jadmin/metodos/acceso-perfiles/metodo/{clave}",
+                                                                    'data-jvista'=>'modal'
+                                                                    ),
+                                                'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users fa-lg'))))
+                                                ),
                                     );
         $vista->acciones=array( 'Asignar perfiles de acceso'=>array('href'=>'/jadmin/objetos/acceso-perfiles/',
                                                                 'data-jvista'=>'seleccion',

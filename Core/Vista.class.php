@@ -481,6 +481,7 @@ class Vista extends DBContainer{
         while($i< $this->bd->totalField($this->resultQuery)){
             if($i==0 and $this->controlFila==TRUE){
                 if($this->tipoControl==2){
+                    
                     $titulos[$i]=Selector::crearInput(null,array('data-jvista'=>"seleccionarTodas",'name'=>"obtTotalCol","id"=>'obtTotalColm','type'=>'checkbox'));
                     
                 }else{
@@ -492,7 +493,9 @@ class Vista extends DBContainer{
                     
                 }
             }else{
-                $titulos[$i]=$this->bd->obtenerNombreCampo($this->resultQuery, $i);
+                
+                $titulos[$i]=
+                $this->bd->obtenerNombreCampo($this->resultQuery, $i);
             }//fin if
             $i++;
         }
@@ -536,6 +539,27 @@ class Vista extends DBContainer{
         $this->selectorTitulo = $selector;
     }
     /**
+     * Agrega los datas parametrizados a los titulos para ordenamiento
+     * @method setDataTitulos
+     * 
+     */
+    private function setDataTitulos(){
+        $i=0;
+        foreach($this->tabla->thead->tr->th as $key => $columna){
+            if($i>0){
+                $columna->data=array(
+                    "data-jvista"=>"orden",
+                    "data-order-celda"=>$this->orderBy,
+                    "data-indice"=>($i+1),   
+                    "data-name"=>$columna->contenido,
+                );
+            }
+            ++$i;
+            
+        }
+        
+    }
+    /**
      * Genera una vista o grid HTML a partir de un query
      *
      * @return string $titulos
@@ -554,6 +578,7 @@ class Vista extends DBContainer{
 
             //Creacion de la tabla--------------------------------------
             $this->tabla = new Table($this->data,$this->obtenerTitulos());
+            $this->setDataTitulos();
             $this->agregarOpcionesFila();
             $this->addControlFila();
             /* Obtener Acciones de la vista*/
@@ -606,6 +631,7 @@ class Vista extends DBContainer{
             ";
             return $vista;
         }else{
+            $vista .=$headGrid;
             return $vista.Selector::crear('div',array('class'=>$this->cssMensajeError),$this->mensajeError);
         }
         
@@ -807,13 +833,17 @@ class Vista extends DBContainer{
         if($post){
             
             if(isset($post['jvista'])){
-                $this->prepareConsulta();
+                
                 switch($post['jvista']){
                     case 'paginador':
+                        $this->prepareConsulta();
                         $vistaArmada = $this->crearVista();
+                        
                         break;
                     case 'orden':
+                        
                         $this->agregarOrderConsulta($post['numeroCampo'],$post['order']);
+                        $this->prepareConsulta();
                         $vistaArmada=$this->crearVista();
                         break;
                     case 'busqueda':
