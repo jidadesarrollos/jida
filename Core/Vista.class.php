@@ -34,6 +34,11 @@ class Vista extends DBContainer{
      * 
     */
     var $tituloColumnaOpciones="";
+    /**
+     * Permite agregar sentencias adicionales al query como Where,order by, entre otros.
+     * 
+     * @var array $sentenciasQuery
+     */
     var $sentenciasQuery=array();
     private $cssFiltro=array('class'=>'col-filtro col-md-2');
     private $vista;
