@@ -101,8 +101,6 @@ class Validador{
             for($i=0;$i<count($validacion);++$i){
                 if(!$error):
                     if(!$this->validarCadena($validacion[$i], $datosValidacion)){
-                        
-                        
                         $this->errors=$validacion[$i];
                         $this->validacion=FALSE;
                         $error=TRUE;
@@ -112,7 +110,7 @@ class Validador{
             }//fin for
         }else{
             
-            if(!$this->validarCadena($validacion, $datosValidacion)){
+            if(!empty($cadena) and !$this->validarCadena($validacion, $datosValidacion)){
                 
                 $this->validacion=FALSE;
                 $this->errors=$validacion;   
