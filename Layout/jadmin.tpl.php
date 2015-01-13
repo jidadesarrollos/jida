@@ -23,9 +23,9 @@
         <link href="/htdocs/css/bootstrap.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
-        <link href="/htdocs/css/jida.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link rel="stylesheet/less" type="text/css" href="/htdocs/less/menu.less">
+        <link href="/htdocs/css/jida.css" rel="stylesheet">
+        
         <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
         <!--libs-->
         <script src="/htdocs/js/libs/jq2.0.3.js"></script>

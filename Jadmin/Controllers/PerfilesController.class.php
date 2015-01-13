@@ -22,9 +22,10 @@ class PerfilesController extends Controller{
     }
 	
 	function index(){
+	    
 		$this->tituloPagina = "Lista de Perfiles";
 		$this->vista="vistaPerfiles";
-		$qVista = "select id_perfil,nombre_perfil  \"Perfil\" from s_perfiles";
+		$qVista = "select id_perfil,perfil  \"Perfil\" from s_perfiles";
 		$vista = new Vista($qVista,$GLOBALS['configPaginador'],'Perfiles');
 		$vista->setParametrosVista($GLOBALS['configVista']);
 		

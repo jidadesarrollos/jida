@@ -360,7 +360,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
-               #Arrays::mostrarArray(Session::get('acl','jadmin'));exit;
+               //Debug::mostrarArray(Session::get('acl','jadmin'));
                  throw new Exception("No tiene permisos", 403);
                  
              }        
@@ -372,7 +372,7 @@
          }catch(Exception $e){
             
             $this->procesarExcepcion($e);
-            ;
+            
         }  
        
     

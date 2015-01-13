@@ -189,23 +189,16 @@ class FechaHora {
 	 * @return string
 	 * @example Caracas, 02 de Enero de 2013
 	 */
-	static function fechaCertificados($fecha = '') {
+	static function FechaCompleta($fecha = '') {
 		if ($fecha == '') {
 			$diaHoy = self::diaSemanaNumero ();
-			
-			if ($diaHoy >= 10) {
-				$stringCiudad = 'Caracas, a los';
-			} else {
-				$stringCiudad = 'Caracas, al';
-			}
-			
 			$stringMes = 'Dias del mes de';
 			$diaHoy = self::diaSemanaNumero ();
 			$mesActual = self::mes ();
 			$anioActual = self::anioCuatroDigitos ();
 			$arrayDias = self::formatoDias ();
 			
-			return $stringCiudad . ' ' . $arrayDias [$diaHoy] . '(' . $diaHoy . ') ' . $stringMes . ' ' . $mesActual . ' de ' . $anioActual . '<br>';
+			return $arrayDias [$diaHoy] . '(' . $diaHoy . ') ' . $stringMes . ' ' . $mesActual . ' de ' . $anioActual . '<br>';
 		} else {
 			
 			$fechaBaseDatos = date ( 'd/m/Y', $fecha );
@@ -360,5 +353,9 @@ class FechaHora {
             return date ( 'Y-m-d H:i:s' );
         }
         
+    }
+    static function fechaToDateTime($fecha){
+        $datetime = new DateTime($fecha);
+        return $datetime->format('d-m-Y');
     }
 }

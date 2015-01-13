@@ -18,6 +18,7 @@ class ObjetosController extends Controller{
         parent::__construct();
         $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
+        
 		$this->modelo = new Objeto();		
         
     }
@@ -26,35 +27,13 @@ class ObjetosController extends Controller{
 		
   			$this->vista="lista";
 			$this->tituloPagina="Objetos del Sistema";
-            
-			$query = "select id_objeto,objeto as \"Objeto\",a.descripcion \"Descripci&oacute;n\", componente  as Componente
-						from s_objetos a 
-						join s_componentes b on (b.id_componente = a.id_componente)";
+            $query = "select id_objeto,objeto as \"Objeto\",a.descripcion \"Descripci&oacute;n\", componente  as Componente
+                        from s_objetos a 
+                        join s_componentes b on (b.id_componente = a.id_componente)";
                         
-			$vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos");
-			$vista->setParametrosVista($GLOBALS['configVista']);
-            $vista->seccionBusqueda=true;
-            $vista->camposBusqueda=array('objeto','componente');
-            $vista->tipoControl=2;
-			$vista->filaOpciones=array(0=>array('a'=>array(
-															'atributos'=>array(	'class'=>'btn',
-																				'title'=>'ver metodos',
-																				'href'=>"/jadmin/objetos/metodos/obj/{clave}"
-																				),
-															'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
-									   1=>array('a'=>array(
-                                                            'atributos'=>array( 'class'=>'btn',
-                                                                                'title'=>'Asignar perfiles de acceso',
-                                                                                'href'=>"/jadmin/objetos/asignar-acceso/obj/{clave}"
-                                                                                ),
-                                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit')))))
-												);
-	        				
-			$vista->acciones=array(
-								'Agregar Descripci&oacute;n'=>array('href'=>'/jadmin/objetos/set-objeto',
-								            		'data-jvista'=>'seleccion',
-								    		        'data-multiple'=>'false','data-jkey'=>'obj'),
-								 	                 );
+			
+			$vista = $this->vistaObjetos($query);
+            $vista->tituloVista="Objetos";
 			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto\">Agregar objeto</a>";
 			$vista->mensajeError= Mensajes::mensajeAlerta($msjError);
 			$this->data['vista'] = $vista->obtenerVista();
@@ -121,143 +100,94 @@ class ObjetosController extends Controller{
                $idComponente = $this->getEntero(Globals::obtGet('comp'));
                $comp = new Componente($idComponente);
                $this->validarObjetos($comp);
-               $query = "select id_objeto,objeto as \"Objeto\" from s_objetos where id_componente = $idComponente";
-               $vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos del Componente $comp->componente");
-			   $vista->setParametrosVista(array('idDivVista'=>'objetos'));
-			   $vista->setParametrosVista($GLOBALS['configVista']);
-			   $vista->filaOpciones=array(0=>array('a'=>array(
-															'atributos'=>array(	'class'=>'btn',
-																				'title'=>'ver metodos',
-																				'href'=>"/jadmin/objetos/metodos/obj/{clave}"
-																				),
-															'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open')))))
-												);
-               $vista->acciones=array(
-                                'Agregar Descripci&oacute;n'=>array('href'=>'/jadmin/objetos/set-objeto-comp/comp/'.$idComponente,
-                                                                'data-jvista'=>'seleccion',
-                                                                'data-multiple'=>'true','data-jkey'=>'comp'),
-                                );
+               $query = "select id_objeto,objeto as \"Objeto\",descripcion \"Descripci&oacute;n\" from s_objetos where id_componente = $idComponente";
+               $vista =$this->vistaObjetos($query);
+               $vista->tituloVista="Objetos del Componente ".$comp->componente;
                $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
                $this->data['vista'] = $vista->obtenerVista();
            }else{
                Session::set('__idVista','componentes');
                Session::set('__msjVista',Mensajes::mensajeAlerta("Debe seleccionar un componente"));
            }
-           
-           
-       	
    }
 
-    function setObjetoComp(){
-        
-        	$this->tituloPagina="Registro de objetos";
-            if(isset($_GET['comp'])){
-                $tipoForm=1;$campoUpdate="";
-				
-				if(isset($_GET['obj'])){
-				$tipoForm=2;
-				$campoUpdate=Globals::obtGet('obj');	
-				}
-				$form = new Formulario('SistemaObjetos',$tipoForm,$campoUpdate);
-				$form->valueSubmit = "Guardar Objeto";
-				$form->tituloFormulario = "Gesti&oacute;n de Objetos";
-				$form->action=$this->url . "set-objeto/comp/".Globals::obtGet('comp');
-				
-				if(isset($_POST['btnSistemaObjetos'])){
-					$post = $_POST;
-					$validacion = $form->validarFormulario($post);
-					if($validacion===TRUE){
-						$obj = new Objeto();
-						$post['id_componente'] = $this->getEntero(Globals::obtGet('comp'));
-						if($this->validarNombreObjeto(Globals::obtPost('objeto'))){
-						$post['objeto'] = String::upperCamelCase($post['objeto']);
-							$accion = $obj->setObjeto($post);
-							if($accion['ejecutado']==1){
-								Session::set('__msjVista', Mensajes::mensajeSuceso("Se registro el objeto ". $obj->objeto.""));
-								Session::set('__idVista','objetos');
-								redireccionar($this->url."lista/comp/".Globals::obtGet('comp'));
-							}else{
-								$msj = Mensajes::mensajeError("No se pudo registrar el objeto");
-								if(isset($accion['msj'])){
-									$msj = $accion['msj'];
-								}
-								Session::set('__msjForm',$msj);	
-							}
-						}else{
-							Session::set('__msjForm', Mensajes::mensajeError("No existe el objeto <strong>".Globals::obtPost('objeto')."</strong>"));
-						}
-					}else{
-						Session::set('__msjForm', Mensajes::mensajeError("No se pudo registrar el objeto"));
-					}
-				}
-				
-				$this->data['formObj']   = $form->armarFormulario();
-				
-				
-            }else{
-            	Session::set('__msjVista', Mensajes::mensajeAlerta("Debe seleccionar un componente"));
-				Session::set('__idVista','componentes');
-            }
-        
-		
-    }// final funcion setObjetoCompo
-    
+
+   protected function vistaObjetos($query){
+       
+       $vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos");
+       $vista->setParametrosVista(array('idDivVista'=>'objetos'));
+       $vista->setParametrosVista($GLOBALS['configVista']);
+       $vista->filaOpciones=array(0=>array('a'=>array(
+                                                    'atributos'=>array( 'class'=>'btn',
+                                                                        'title'=>'ver metodos',
+                                                                        'href'=>$this->url."metodos/obj/{clave}"
+                                                                        ),
+                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
+                                    1=>array('a'=>array(
+                                                    'atributos'=>array( 'class'=>'btn',
+                                                                        'title'=>'Agregar Descripci&oacute;n',
+                                                                        'href'=>$this->url."/add-descripcion/obj/{clave}"
+                                                                        ),
+                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-info'))))),
+                                    2=>array('a'=>array(
+                                                    'atributos'=>array( 'class'=>'btn',
+                                                                        'title'=>'Asignar Accesos',
+                                                                        'href'=>$this->url."asignar-acceso/obj/{clave}"
+                                                                        ),
+                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users'))))),
+                                                                    
+                                        );
+       $vista->acciones=array(
+                        'Agregar Descripci&oacute;n'=>array('href'=>$this->url.'set-objeto/obj/',
+                                                        'data-jvista'=>'seleccion',
+                                                        'data-multiple'=>'true','data-jkey'=>'obj'),
+                        );
+       $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/\">Agregar objeto</a>";
+       return $vista;
+   }
+
     /**
-	 * Crea formulario para registrar un objeto solicitando la selección del 
-	 * componente al que pertenece
-	 * 
-	 * @method setObjeto
-	 * @access public
-	 */
-    function setObjeto(){
+     * Permite agregar un nombre descriptivo a un objeto
+     * 
+     * La descripción del objeto es usada para que un usuario final pueda visualizar un nombre entendible
+     * @method addDescripcion
+     */
+    function addDescripcion(){
+        if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])){
+                
+            if(isset($_POST['s-ajax'])){
+                $this->layout='ajax.tpl.php';
+            }
+            
+            $form = new Formulario('DescripcionMetodo',2,$_GET['obj'],2);
+            $Objeto = new Objeto($_GET['obj']);
+            
+            $form->action="$this->url".'add-descripcion/obj/'.$Objeto->id_objeto;
+            $form->tituloFormulario="Agregar Descripci&oacute;n del Objeto ".$Objeto->objeto;
+            if(isset($_POST['btnDescripcionMetodo'])){
+                $validacion = $form->validarFormulario();
+                if($validacion===TRUE){
+                    $guardado = $Objeto->salvar($_POST);
+                    
+                    if($guardado['ejecutado']==1){
+                        Vista::msj('objetos', 'suceso', "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
+                    }else{
+                        Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
+                    }
+                }else{
+                    Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
+                }
+                redireccionar('/jadmin/objetos/lista/comp/'.$Objeto->id_componente);
+            }
+            
+            $this->data['form'] = $form->armarFormulario();
+        }else{
+            
+            throw new Exception("Pagina no conseguida", 404);
+        }
         
-        	$this->tituloPagina="Registro de objetos";
-        
-            $tipoForm=1;$campoUpdate="";
-			
-			if(isset($_GET['obj'])){
-			$tipoForm=2;
-			$campoUpdate=Globals::obtGet('obj');	
-			}
-            $obj = new Objeto($campoUpdate);
-            $formulario = ($tipoForm==2)?'SistemaObjetos':'RegistroObjetos';
-			$form = new Formulario($formulario,$tipoForm,$campoUpdate,2);
-			$form->valueSubmit = "Guardar Objeto";
-			$form->tituloFormulario = "Gesti&oacute;n de Objetos";
-			$form->action=$this->url . "set-objeto/";
-			if($tipoForm==2)
-                $form->action .= 'obj/'.$obj->id_objeto;
-			if(isset($_POST['btnRegistroObjetos']) or isset( $_POST['btnSistemaObjetos'])){
-				$post = $_POST;
-				$validacion = $form->validarFormulario($post);
-				if($validacion===TRUE){
-					
-					if($this->validarNombreObjeto(Globals::obtPost('objeto'))){
-						$post['objeto'] = String::upperCamelCase($post['objeto']);
-						$accion = $obj->setObjeto($post);
-						if($accion['ejecutado']==1){
-							Session::set('__msjVista', Mensajes::mensajeSuceso("Se registro el objeto ". $obj->objeto.""));
-							Session::set('__idVista','objetos');
-							redireccionar($this->url);
-						}else{
-							$msj = Mensajes::mensajeError("No se pudo registrar el objeto");
-								if(isset($accion['msj'])){
-									$msj = $accion['msj'];
-								}
-							Session::set('__msjForm', $msj);	
-						}
-					}else{
-						Session::set('__msjForm', Mensajes::mensajeError("No existe el objeto <strong>".Globals::obtPost('objeto')."</strong>"));	
-					}
-				}else{
-					Session::set('__msjForm', Mensajes::mensajeError("No se pudo registrar el objeto"));
-				}
-			}
-			$this->data['formObj']   = $form->armarFormulario();
-			
-		
-    } 
-    
+    }
+
     /**
      * Valida la estructura del nombre de un objeto
      * @method validarNombreObjeto

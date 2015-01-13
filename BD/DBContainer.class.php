@@ -134,6 +134,8 @@ class DBContainer {
      * @param int $id Identificador del objeto modelo
      * @param object $clase Objeto clase que hereda del DBContainer
      */
+    protected $fecha_creacion;
+    protected $fecha_modificacion;
     public function __construct($clase = "", $id = "") {
     
         if (!defined('manejadorBD')) {
@@ -637,6 +639,12 @@ class DBContainer {
     function getPropiedadesPublicas(){
         
         return $this->propiedadesPublicas;
-    }   
+    }
+    function getFechaCreacion(){
+        return $this->fecha_creacion;
+    }
+    function getFechaModificacion(){
+        return $this->fecha_modificacion;
+    }
     
 }

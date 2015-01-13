@@ -12,7 +12,7 @@ class OpcionMenu extends DBContainer {
      * @var integer $id_opcion
      * @access public 
      */
-    var $id_opcion;
+    var $id_opcion_menu;
     /**
      * Id del menu al que pertenece la opcion
      * @var integer $id_menu
@@ -68,7 +68,7 @@ class OpcionMenu extends DBContainer {
     function __construct($id=""){
         
             $this->nombreTabla = 's_opciones_menu';
-            $this->clavePrimaria = 'id_opcion';    
+            $this->clavePrimaria = 'id_opcion_menu';    
             parent::__construct(__CLASS__,$id);
     }//final constructor
     

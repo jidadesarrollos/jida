@@ -34,6 +34,11 @@ class Vista extends DBContainer{
      * 
     */
     var $tituloColumnaOpciones="";
+    /**
+     * Permite agregar sentencias adicionales al query como Where,order by, entre otros.
+     * 
+     * @var array $sentenciasQuery
+     */
     var $sentenciasQuery=array();
     
     private $cssFiltro=array('class'=>'col-filtro col-md-2');
@@ -466,7 +471,7 @@ class Vista extends DBContainer{
         /*Ejecución del query para la vista*/
         $this->data = $this->bd->obtenerDataCompleta($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
-        #Debug::string($this->query,true);   
+           
     }
    
     /**
@@ -504,6 +509,7 @@ class Vista extends DBContainer{
         while($i< $this->bd->totalField($this->resultQuery)){
             if($i==0 and $this->controlFila==TRUE){
                 if($this->tipoControl==2){
+                    
                     $titulos[$i]=Selector::crearInput(null,array('data-jvista'=>"seleccionarTodas",'name'=>"obtTotalCol","id"=>'obtTotalColm','type'=>'checkbox'));
                     
                 }else{
@@ -515,7 +521,9 @@ class Vista extends DBContainer{
                     
                 }
             }else{
-                $titulos[$i]=$this->bd->obtenerNombreCampo($this->resultQuery, $i);
+                
+                $titulos[$i]=
+                $this->bd->obtenerNombreCampo($this->resultQuery, $i);
             }//fin if
             $i++;
         }
@@ -596,6 +604,27 @@ class Vista extends DBContainer{
        return $this->tabla;
     }
     /**
+     * Agrega los datas parametrizados a los titulos para ordenamiento
+     * @method setDataTitulos
+     * 
+     */
+    private function setDataTitulos(){
+        $i=0;
+        foreach($this->tabla->thead->tr->th as $key => $columna){
+            if($i>0){
+                $columna->data=array(
+                    "data-jvista"=>"orden",
+                    "data-order-celda"=>$this->orderBy,
+                    "data-indice"=>($i+1),   
+                    "data-name"=>$columna->contenido,
+                );
+            }
+            ++$i;
+            
+        }
+        
+    }
+    /**
      * Genera una vista o grid HTML a partir de un query
      *
      * @return string $titulos
@@ -614,7 +643,11 @@ class Vista extends DBContainer{
 
             //Creacion de la tabla--------------------------------------
             $this->tabla = new Table($this->data,$this->obtenerTitulos());
+
             $this->tabla->attr['id']=$this->idTablaVista;
+
+            $this->setDataTitulos();
+
             $this->agregarOpcionesFila();
             $this->addControlFila();
             /* Obtener Acciones de la vista*/
@@ -672,6 +705,7 @@ class Vista extends DBContainer{
             ";
             return $vista;
         }else{
+            $vista .=$headGrid;
             return $vista.Selector::crear('div',array('class'=>$this->cssMensajeError),$this->mensajeError);
         }
         
@@ -873,8 +907,10 @@ class Vista extends DBContainer{
         if($post){
             
             if(isset($post['jvista'])){
+
                 $this->solicitudAjax=TRUE;
                 $this->prepareConsulta();
+
                 switch($post['jvista']){
                     case 'paginador':
                         $vistaArmada = $this->crearVista();
