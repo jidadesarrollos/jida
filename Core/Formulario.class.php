@@ -166,6 +166,7 @@ class Formulario extends DBContainer {
      * @var string $estiloErrorCampo
      */
     var $cssDivErrorCampo = "div-error";
+    var $cssControlForm = "";
     private $tablaCampos = "s_campos_f";
     /**
      * Hace referencia al valor de busqueda del formulario, puede ser un
@@ -707,6 +708,8 @@ class Formulario extends DBContainer {
             } 
             
             $controlHTML = new CampoHTML ( $arr, $dataUpdate, $this->externo );
+            if(!empty($this->cssControlForm))
+                $controlHTML->setAtributosCampoHTML(['cssControlForm'=>$this->cssControlForm]);
             // i es agregado un query a la clase formulario es pasado a la clase campo en el momento de creacion del control.
             
             $control = $controlHTML->crearControl();

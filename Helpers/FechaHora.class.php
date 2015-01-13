@@ -361,6 +361,9 @@ class FechaHora {
         }
         
     }
+    static function Fecha(){
+        return date('d-m-Y');
+    }
     static function fechaToDateTime($fecha){
         $datetime = new DateTime($fecha);
         return $datetime->format('d-m-Y');

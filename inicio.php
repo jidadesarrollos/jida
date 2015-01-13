@@ -65,9 +65,10 @@ include_once 'Settings/jidaConfiguracion.php';
 /**
  * Incluir archivo de configuración general del framework
  */
-include_once 'Config/initConfig.php';
-include_once 'Config/BDConfig.php';
 
+include_once 'Config/BDConfig.php';
+include_once 'Config/appConfig.php';
+include_once 'Config/initConfig.php';
 #=======================================================================
 #=======================================================================
 #=======================================================================

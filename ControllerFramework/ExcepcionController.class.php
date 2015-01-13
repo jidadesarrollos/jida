@@ -25,13 +25,8 @@ class ExcepcionController extends Controller{
     
     function error($e){
         $this->excepcion=$e;
-         
         $this->data['msjError'] = $this->procesarError();
         
-        $this->vista="500";
-     
-        
-       
     }
     
 
@@ -40,6 +35,7 @@ class ExcepcionController extends Controller{
         if(!empty($view)){
                $this->vista=$view;        
          }else{
+             
          	$this->tituloPagina="Error ".$this->excepcion->getCode();
              switch ($this->excepcion->getCode()) {
                  case 404:
@@ -105,17 +101,17 @@ class ExcepcionController extends Controller{
     private function excepcionProduccion(){
         $msj = $this->getHTMLMessage();
 
-        if(defined('MAIL_ADMIN') and defined('mailNoResponder') and defined('passwordNoResponder')){
+        if(defined('MAIL_ADMIN') and defined('MAIL_NO_RESPONDER') and defined('MAIL_NO_RESPONDER')){
             
-            $mail = new EmailComponente(mailNoResponder,passwordNoResponder);
+            $mail = new EmailComponente(MAIL_NO_RESPONDER,MAIL_NO_RESPONDER);
             $mail->setTemplatePath('jidaPlantillas/mail/');
-            $data=array(':detalle_error'=>$msj,':aplicacion'=>'Electron C.A');
-            $title = 'Error en aplicacion';
-            if(defined('APP_NAME')) $title.=" ".APP_NAME;
+            $data=array(':detalle_error'=>$msj,':aplicacion'=>'Junquito En Línea');
+            $title = 'Error en aplicacion '.NOMBRE_APP;
+            if(defined('APP_NAME')) $title.=" ".NOMBRE_APP;
             $mail->enviarEmail(MAIL_ADMIN, $title, $data,'error.tpl.php' );
             
         }else{
-            Debug::string("ney",true);
+            Debug::string("Ups, lo sentimos. Comuniquese con el Administrador",true);
         }
         return $msj;
     }

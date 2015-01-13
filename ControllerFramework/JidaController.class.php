@@ -59,7 +59,7 @@
      private $modulosExistentes=array();
     function __construct(){
         try{
-            
+            Session::destroy('__formValidacion');
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
@@ -425,6 +425,7 @@
      */
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
+            
             $this->vista->layout = $this->controladorObject->layout;
         
             $this->vista->definirDirectorios();
@@ -463,10 +464,10 @@
         
         $this->controladorObject = new $ctrlError;
 
-        if(!defined('EXCEPCION_CONTROLLER') or $this->modulo=='jadmin')
+        if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else 
-            $this->controlador=EXCEPCION_CONTROLLER;
+            $this->controlador=CONTROLADOR_EXCEPCIONES;
 		
 		
         $this->metodo='error';
@@ -477,9 +478,11 @@
         $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-
-        $retorno=$ctrl->data;
         
+        $retorno=$ctrl->data;
+        $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
+        $retorno['metaDescripcion']=$ctrl->metaDescripcion;
+        $retorno['urlCanonical'] = $ctrl->urlCanonical;
         $this->mostrarContenido($retorno,$ctrl->vista);
     }
     /**
@@ -520,4 +523,4 @@
         
     }
  } // END
-?>
+
