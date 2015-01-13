@@ -33,7 +33,7 @@ class Metodo extends DBContainer{
 	 * @var string $nombre_metodo
 	 * @access public 
      */
-    var $nombre_metodo;
+    var $metodo;
 	/**
 	 * Descrición de la funcionalidad del metodo
 	 * 
@@ -73,7 +73,7 @@ class Metodo extends DBContainer{
 	
 		if(is_array($metodosClase)){
 			
-			$query = "select nombre_metodo from $this->nombreTabla where id_objeto = $idObjeto";
+			$query = "select metodo from $this->nombreTabla where id_objeto = $idObjeto";
 			$result = $this->bd->ejecutarQuery($query);
 			//$data = $this->bd->obtenerDataCompleta($query);
 			
@@ -81,13 +81,13 @@ class Metodo extends DBContainer{
 				$metodosNuevos = array();
 				$metodosEnBD = array();
 				while($data = $this->bd->obtenerArrayAsociativo()){
-					$metodosEnBD[] = $data['nombre_metodo'];
+					$metodosEnBD[] = $data['metodo'];
 				}
 				
 				foreach($metodosClase as $key =>$metodo){
 					if(!in_array($metodo, $metodosEnBD)){
 						$nuevoMetodo = new Metodo();
-						$nuevoMetodo->guardarMetodo(array('id_objeto'=>$idObjeto,'nombre_metodo'=>$metodo));
+						$nuevoMetodo->guardarMetodo(array('id_objeto'=>$idObjeto,'metodo'=>$metodo));
 					}
 				}
 				/* Validar metodos que ya no existan*/
@@ -120,7 +120,7 @@ class Metodo extends DBContainer{
 	 * 
 	 */
 	private function eliminarMetodos($metodos){
-			$this->eliminarMultiplesDatos($metodos, 'nombre_metodo');
+			$this->eliminarMultiplesDatos($metodos, 'metodo');
 	}
 	/**
 	 * Registra multiples metodos de un mismo objeto en base de datos
@@ -129,7 +129,7 @@ class Metodo extends DBContainer{
 	 * @param int $idObjeto IDentificador del objeto al que pertenecen los metodos
 	 */
 	private function registrarMultiplesMetodos($metodos,$idObjeto){
-		$insert= "insert into $this->nombreTabla (id_objeto,nombre_metodo,descripcion) values ";
+		$insert= "insert into $this->nombreTabla (id_objeto,metodo,descripcion) values ";
 		$i=0;
 		foreach ($metodos as $key => $value) {
 			if($i>0)

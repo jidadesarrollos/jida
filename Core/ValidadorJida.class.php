@@ -162,7 +162,8 @@ class ValidadorJida extends Validador{
                    
                     switch ($validacion) {
                         case "obligatorio" :
-                            $nada="";
+                        case "externa":
+                            $CheckValor=true;
                             break;
                         
                         case "telefono" :

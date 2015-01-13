@@ -58,13 +58,13 @@ class MetodosController	 extends Controller{
             $form = new Formulario('DescripcionMetodo',2,$_GET['metodo'],2);
             $metodo = new Metodo($_GET['metodo']);
             $form->action="$this->url".'add-descripcion/metodo/'.$metodo->id_metodo;
-            $form->tituloFormulario="Agregar Descripci&oacute;n del metodo ".$metodo->nombre_metodo;
+            $form->tituloFormulario="Agregar Descripci&oacute;n del metodo ".$metodo->metodo;
             if(isset($_POST['btnDescripcionMetodo'])){
                 $validacion = $form->validarFormulario();
                 if($validacion===TRUE){
                     $guardado = $metodo->salvar($_POST);
                     if($guardado['ejecutado']==1){
-                        Vista::msj('metodos', 'suceso', "La descripci&oacute;n del Metodo <strong>$metodo->nombre_metodo</strong> ha sido registrada exitosamente");
+                        Vista::msj('metodos', 'suceso', "La descripci&oacute;n del Metodo <strong>$metodo->metodo</strong> ha sido registrada exitosamente");
                     }else{
                         Vista::msj('metodos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
                     }
@@ -82,7 +82,7 @@ class MetodosController	 extends Controller{
         
     }
 	protected function vistaMetodos(Objeto $obj){
-        $query = "select id_metodo,nombre_metodo as \"Metodo\",descripcion as \"Descripci&oacute;n\" from s_metodos where id_objeto=$obj->id_objeto";
+        $query = "select id_metodo,metodo as \"Metodo\",descripcion as \"Descripci&oacute;n\" from s_metodos where id_objeto=$obj->id_objeto";
         $vista = new Vista($query,$GLOBALS['configPaginador'],'metodos');
         $vista->tituloVista="Metodos del objeto ".$obj->objeto;
         $vista->setParametrosVista(array('idDivVista'=>'metodosObjeto'));
@@ -128,7 +128,7 @@ class MetodosController	 extends Controller{
             
             $form->action=$this->url."asignar-acceso/metodo/".$_GET['metodo'];
             $form->valueSubmit="Asignar Perfiles a Metodo";
-            $form->tituloFormulario="Asignar acceso de perfiles al Metodo ".$metodo->nombre_metodo;
+            $form->tituloFormulario="Asignar acceso de perfiles al Metodo ".$metodo->metodo;
             if(isset($_POST['btnPerfilesAMetodos'])){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){

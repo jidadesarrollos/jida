@@ -45,6 +45,11 @@ class Mysql extends ConexionBD{
      * Define la consulta a realizar en base de datos
      */
     var $query;
+    /**
+     * Arreglo que contiene el resultado del query ejecutado
+     * @var $dataResult
+     */
+    var $dataResult;
     
     /**
      * Resultado retornado de una sentencia a base de datos
@@ -120,6 +125,11 @@ class Mysql extends ConexionBD{
         return $this->result;
         
     }
+    
+    
+    private function validarUnicidad(){
+        
+    }
     /**
      * Ejecuta una inserción en Base de datos
      * @param string $nombreTabla
@@ -142,11 +152,13 @@ class Mysql extends ConexionBD{
                 $validadoUnico=FALSE;
                 $validarExistencia=0;
                 if(count($unico)>=1){
+                    Debug::mostrarArray($unico,false);
                     
                     $queryCheck = "select $id from $nombreTabla where ";
                     $validadoUnico=TRUE;
                     $i=0;
                     foreach ($unico as $campo) {
+                        
                         $valor = array_search($campo, $camposTabla);
                         if($i>0){
                             $queryCheck.=" and ";
@@ -154,7 +166,6 @@ class Mysql extends ConexionBD{
                         $queryCheck.="$campo = $valoresCampos[$valor]";
                         $i++;
                     }//fin foreach
-                    
                     $resultUnico = $this->ejecutarQuery($queryCheck);
                     $validarExistencia  = $this->totalRegistros;
                     

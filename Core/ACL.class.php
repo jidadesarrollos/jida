@@ -49,6 +49,7 @@ class ACL extends DBContainer{
         parent::__construct();
         
         if(!isset($_SESSION['usuario']['perfiles'])){
+            
             Session::set('usuario', 'perfiles',array('UsuarioPublico'));
             Session::set('acl_default',true);
         }
@@ -56,9 +57,7 @@ class ACL extends DBContainer{
         
         
         $this->perfiles = $_SESSION['usuario']['perfiles'];
-        
         $this->obtenerAccesoComponentes();
-        
         $this->obtenerAccesoObjetos();
     }
     /**
@@ -140,8 +139,6 @@ class ACL extends DBContainer{
                 $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
                 foreach ($accesoMetodos as $key => $dataMetodo) {
                     if($dataMetodo['objeto']==$dataObjeto['objeto'] and $dataObjeto['clave_perfil']==$dataMetodo['clave_perfil']){
-                            
- 
                         $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
                     }
                 }
@@ -159,11 +156,27 @@ class ACL extends DBContainer{
                      if($dataMetodo['loggin']==0){
                         
                         if(!array_key_exists($componente, $this->acl)){
-                            $this->acl[$componente]=array();
+                            
+                            $this->acl[$componente]=['objetos'=>[]];
                             $soloElMetodo=TRUE;
                         }
-                        if(array_key_exists('objetos', $this->acl[$componente]) or $soloElMetodo===TRUE)
-                            $this->acl[$componente]['objetos'][$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
+                        
+                        if(array_key_exists('objetos', $this->acl[$componente]) or $soloElMetodo===TRUE){
+                            
+                            $objetosComponente =& $this->acl[$componente]['objetos'];
+                            if(!array_key_exists($dataMetodo['objeto'],$objetosComponente)){
+                                $objetosComponente[]= $dataMetodo['objeto'];
+                                $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
+                            }elseif(array_key_exists('metodos', $objetosComponente[$dataMetodo['objeto']])){
+                                $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];    
+                                
+                            }
+                           // if(!array_key_exists('metodos',$objetosComponente['objetos'] )){
+                                // $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
+                           // }         1
+//                             
+                            // $this->acl[$componente]['objetos'][$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
+                        }
                     }
                 }//fin foreach
             
@@ -204,7 +217,7 @@ class ACL extends DBContainer{
      * @return boolean TRUE or FALSE
      */
     function validarAcceso($controlador,$metodo,$componente=""){
-                    
+                  
         $perfilesUser = $this->perfiles;
         if(empty($componente)){
             $componente = "principal";

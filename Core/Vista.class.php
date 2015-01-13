@@ -40,6 +40,7 @@ class Vista extends DBContainer{
      * @var array $sentenciasQuery
      */
     var $sentenciasQuery=array();
+    
     private $cssFiltro=array('class'=>'col-filtro col-md-2');
     private $vista;
     private $titulos;
@@ -79,6 +80,10 @@ class Vista extends DBContainer{
      * @see $botones
      */ 
     var $botonEliminar=FALSE;
+    /**
+     * var mixed $filtroFecha FALSE si no es utilizado, caso contrario debe llevar el nombre del campo por el cual se filtra
+     */
+    var $filtroFecha=FALSE;
     /**
      * 
      * 
@@ -143,7 +148,11 @@ class Vista extends DBContainer{
      * @var string $nombreFormVista
      */
     private $nombreFormVista;
-    
+    /**
+     * Atributo HTML id de la tabla vista
+     * @var sting $idTablaVista
+     */
+    private $idTablaVista;
     /**
      * Define el estilo css del formulario de busqueda
      * @var $cssFormBusqueda
@@ -356,6 +365,8 @@ class Vista extends DBContainer{
      * @var $nombreInputTextBusqueda
      */
     private $nombreInputTextBusqueda;
+    
+    public $altInputTxtBusqueda;
     /**
      * Define el contenido que puede tener el boton de la sección
      * de busqueda
@@ -377,8 +388,18 @@ class Vista extends DBContainer{
      
      var $columnasOcultas="";
      
-     private $nombreVistaSinEspacios="";
+    private $nombreVistaSinEspacios="";
+    /**
+     * ID HTML del div que contiene la tabla y el paginador de la vista
+     * @var $idSeccionCuerpoVista
+     */
+    private $idSeccionCuerpoVista;
     private $data;
+    /**
+     * Deterimina si se realiza una solicitud por medio de ajax
+     * @var boolean $solicitudAjax
+     */
+    private $solicitudAjax=false;
        /**
      * Metodo constructor para clase vista
      * @param string $query Consulta SQL a ejecutar para crear el grid
@@ -439,6 +460,7 @@ class Vista extends DBContainer{
         $this->paginador['paginaConsulta']=implode("/", $ar);
         $this->paginador['selectorVista']=$this->idDivVista;
         $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
+        #Debug::mostrarArray($this->paginador);
         $this->objetoPaginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
         $this->query=$this->objetoPaginador->query;
         
@@ -449,6 +471,7 @@ class Vista extends DBContainer{
         /*Ejecución del query para la vista*/
         $this->data = $this->bd->obtenerDataCompleta($this->query);
         $this->totalRegistros = $this->bd->totalRegistros;
+           
     }
    
     /**
@@ -468,9 +491,10 @@ class Vista extends DBContainer{
         $this->idFormVista="vista".ucwords($nombreVistaSinEspacios);
         $this->nombreBotonBusqueda="btnBusq".ucwords($nombreVistaSinEspacios);
         $this->nombreInputTextBusqueda="txtBusq".ucwords($nombreVistaSinEspacios);
+        $this->idSeccionCuerpoVista="cuerpo".ucwords($nombreVistaSinEspacios);
         $this->mensajeError=(!empty($this->mensajeError))?$this->mensajeError:"No hay registros <a href=\"$_SERVER[PHP_SELF]\">volver</a>";;
     }
-    
+
   
     /**
      * Crea los titulos para la vista o grid
@@ -479,8 +503,7 @@ class Vista extends DBContainer{
      * @return string $titulos
      
      */
-    private function obtenerTitulos() {
-        
+    private function obtenerTitulos() { 
         $i=0;
         $titulos=array();
         while($i< $this->bd->totalField($this->resultQuery)){
@@ -518,14 +541,16 @@ class Vista extends DBContainer{
     function obtenerVista(){
         
         if(isset($_POST) and !empty($_POST)){
-            
             $vista= $this->procesarAccion($_POST);
-            
-            
         }else{
             $data = array('id'=>$this->idDivVista,'data-sitio'=>"$_SERVER[REQUEST_URI]","class"=>$this->cssSection);
             $this->prepareConsulta();
-            $vista = Selector::crear('SECTION',$data,$this->crearVista());
+            if(isset($_GET['report']) and $_GET['report']=='pdf'){
+                $this->pdf();
+            }else{    
+                $vista = Selector::crear('SECTION',$data,$this->crearVista());    
+            }
+            
             
         }
         return $vista;
@@ -542,6 +567,41 @@ class Vista extends DBContainer{
         $this->tituloVista = $tituloVista;
         $this->cssTituloVista = $cssTitulo;
         $this->selectorTitulo = $selector;
+    }
+    
+    function getAsPDF($titulo,$css="",$img=""){
+       $css = "<style>table{padding:0;margin:0;}table td{ margin:0; padding:20px;}</style>";
+       
+       $vista=$this->tabla->getTabla();
+       $vista=Selector::crear('h1',null,$titulo).$vista;
+       $mpdF= new mPDF();
+       $cont=1;
+       if(!empty($css)){
+           ++$cont;
+           $stylesheet=file_get_contents($css);
+            $mpdF->WriteHTML($stylesheet,1);
+        }
+       if(!empty($img)){
+           $encabezado="<img src='$img' class=\"banner\">";
+           $mpdF->SetHTMLHeader($encabezado);
+       }
+       $mpdF->WriteHTML($vista,$cont);
+       $mpdF->Output();
+    }
+        #=================================================
+    function setEncabezado($img){
+        $encabezado="<img src=\"$img\" class=\"banner\">";
+        $this->header=$encabezado;
+    }
+    /**
+     * Requiere la libreria MDPF
+     * @method pdf
+     */
+    function crearPdf(){
+       include_once 'Componentes/mpdf/mpdf.php';
+       $this->prepareConsulta();
+       $this->tabla = new Table($this->data,$this->obtenerTitulos());
+       return $this->tabla;
     }
     /**
      * Agrega los datas parametrizados a los titulos para ordenamiento
@@ -574,7 +634,7 @@ class Vista extends DBContainer{
         $vista="";
         $headGrid="";
         $this->filtroAgregado = (count($this->filtro)>0)?TRUE:FALSE;
-        if(!empty($this->tituloVista)){
+        if(!empty($this->tituloVista) and !$this->solicitudAjax){
             $headGrid.=Selector::crear($this->selectorTitulo,array('class'=>$this->cssTituloVista),$this->tituloVista);
         }
         
@@ -583,7 +643,11 @@ class Vista extends DBContainer{
 
             //Creacion de la tabla--------------------------------------
             $this->tabla = new Table($this->data,$this->obtenerTitulos());
+
+            $this->tabla->attr['id']=$this->idTablaVista;
+
             $this->setDataTitulos();
+
             $this->agregarOpcionesFila();
             $this->addControlFila();
             /* Obtener Acciones de la vista*/
@@ -592,7 +656,7 @@ class Vista extends DBContainer{
             //Fin tabla-------------------------------
             //Se agrega la sección de busqueda
             
-            if($this->seccionBusqueda===TRUE){
+            if($this->seccionBusqueda===TRUE and !$this->solicitudAjax){
                 $headGrid.=$this->agregarSeccionBusqueda();
             }
              if($this->opcionesBreadCrumb and is_array($this->opcionesBreadCrumb)){
@@ -618,12 +682,17 @@ class Vista extends DBContainer{
             }else{
                 $vista = Selector::crear('div',array('class'=>'col-md-12'),$vista);
             }
-            $vista = $headGrid.Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);    
-            
+            //$vista = $headGrid.Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);
+                
+            $cuerpoVista = Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);
             
             if($this->paginador!==FALSE)
-                $vista.= $this->objetoPaginador->armarPaginador();
+                $cuerpoVista.= $this->objetoPaginador->armarPaginador();
             
+            $cuerpoVista = Selector::crear('section',['id'=>$this->idSeccionCuerpoVista],$cuerpoVista);
+            #Debug::string($cuerpoVista,true);
+            $vista = $headGrid.$cuerpoVista;
+            #Debug::string($vista,true);
             $vista .= "
                 <script>
                 $( document ).ready(function(){
@@ -838,17 +907,16 @@ class Vista extends DBContainer{
         if($post){
             
             if(isset($post['jvista'])){
-                
+
+                $this->solicitudAjax=TRUE;
+                $this->prepareConsulta();
+
                 switch($post['jvista']){
                     case 'paginador':
-                        $this->prepareConsulta();
                         $vistaArmada = $this->crearVista();
-                        
                         break;
                     case 'orden':
-                        
                         $this->agregarOrderConsulta($post['numeroCampo'],$post['order']);
-                        $this->prepareConsulta();
                         $vistaArmada=$this->crearVista();
                         break;
                     case 'busqueda':
@@ -878,6 +946,7 @@ class Vista extends DBContainer{
     private function buscadorVista($busqueda){
         
         $band = 0;
+        $_SERVER['REQUEST_URI'] = str_replace("pagina","", $_SERVER['REQUEST_URI'] );        
         if(!array_key_exists('where',$this->sentenciasQuery)){
             
             $this->sentenciasQuery['where']=" ";
@@ -885,8 +954,29 @@ class Vista extends DBContainer{
             $band=1;
             $this->sentenciasQuery['where']="(".$this->sentenciasQuery['where'].") and (";
         }
+        $contadorFiltroFecha=0;
+        if($this->filtroFecha){
+            if(is_string($this->filtroFecha)){
+                
+                if(!empty($_POST['ctrlBusqDesde'])){
+                    
+                    $this->sentenciasQuery['where'].="".$this->filtroFecha." >= '".FechaHora::fechaInvertida($_POST['ctrlBusqDesde'])."'";
+                    ++$contadorFiltroFecha;
+                }
+                
+                if(!empty($_POST['ctrlBusqHasta'])){
+                    if($contadorFiltroFecha>0) $this->sentenciasQuery['where'].=" and ";
+                    $this->sentenciasQuery['where'].=$this->filtroFecha." <= '".FechaHora::fechaInvertida($_POST['ctrlBusqHasta'])."'";
+                    ++$contadorFiltroFecha;
+                }
+            }
+            
+        }
         if(is_array($this->camposBusqueda)){
             if(count($this->camposBusqueda)>0){
+                if($contadorFiltroFecha>0){
+                    $this->sentenciasQuery['where'] .=" and (";
+                }
                 $i=0;
                 foreach ($this->camposBusqueda as $key => $campo) {
                     if($i>0)
@@ -901,6 +991,9 @@ class Vista extends DBContainer{
             if($band==1){
                 $this->sentenciasQuery['where'].=")";
             }
+            if($contadorFiltroFecha>0){
+                    $this->sentenciasQuery['where'] .=")";
+            }     
         }else{
             throw new Exception("El atributo camposBusqueda no está definido como arreglo", 1);
             
@@ -910,6 +1003,8 @@ class Vista extends DBContainer{
         $this->prepareConsulta();
         return $this->crearVista();
     }
+    
+    
     /**
      * Agrega sección de busqueda a la vista
      * @method agregarSeccionBusqueda
@@ -917,28 +1012,27 @@ class Vista extends DBContainer{
     private function agregarSeccionBusqueda(){
         $seccionBusqueda="";
         if($this->seccionBusqueda===TRUE){
-              $seccionBusqueda.="
-                
-                 <section id=\"seccionBusqueda".$this->nombreVistaSinEspacios."\" class=\"$this->cssSectionBusqueda\">
-                    <article class=\"$this->cssColBusqueda\">
-                        <div class=\"$this->cssDivBusqueda\">
-                          <form name=\"busq".$this->nombreFormVista ."\" id=\"busq".$this->nombreFormVista ."\" method=\"POST\" class=\"$this->cssFormBusqueda\"  role=\"search\">
-                              <div class=\"form-group\">
-                                  <input type=\"text\" name=\"$this->nombreInputTextBusqueda\" id=\"$this->nombreInputTextBusqueda\" class=\"$this->cssInputTextBusqueda\">
-                                  <button 
-                                    type=\"$this->typeBotonBusqueda\" 
-                                    name=\"$this->nombreBotonBusqueda\" id=\"$this->nombreBotonBusqueda\" value=\"$this->valueBotonBusqueda\" 
-                                    class=\"$this->cssBotonBusqueda\" data-jvista=\"busqueda\">
-                                    $this->htmlButtonBusqueda
-                                   </button>
-                              </div>
-                          </form>
-                        </div>
-                    </article>
-                 </section>
-                
-              ";
-                
+            $btn  = Selector::crear('input',['type'=>$this->typeBotonBusqueda,'name'=>$this->nombreBotonBusqueda,
+                                            'id'=>$this->nombreBotonBusqueda,'class'=>$this->cssBotonBusqueda,'value'=>$this->valueBotonBusqueda,'data-jvista'=>'busqueda'],null);
+            $inputText = Selector::crear('input',['alt'=>$this->altInputTxtBusqueda,'type'=>'text','name'=>$this->nombreInputTextBusqueda,'id'=>$this->nombreInputTextBusqueda,'class'=>$this->cssInputTextBusqueda]);
+            $contentDiv = $inputText.$btn;
+            $divCampos  = Selector::crear('div',['class'=>'form-group'],$contentDiv);
+            if($this->filtroFecha){
+                $desde = Selector::crearInput(null,["placeholder"=>'Buscar desde',"class"=>'form-control','type'=>'text','name'=>'ctrlBusqDesde','id'=>'ctrlBusqDesde','data-control'=>'datepicker']);
+                $hasta = Selector::crearInput(null,["placeholder"=>"Buscar Hasta","class"=>'form-control','type'=>'text','name'=>'ctrlBusqHasta','id'=>'ctrlBusqHasta','data-control'=>'datepicker']);
+                $divCampos =    Selector::crear('div',['class'=>'col-md-2 col-md-offset-1'],$desde).
+                                Selector::crear('div',['class'=>'col-md-2'],$hasta).
+                                Selector::crear('div',['class'=>'col-md-7'],$divCampos);
+            }
+            
+            $form = Selector::crear('form',['name'=>'busq'.$this->nombreFormVista,'id'=>'busq'.$this->nombreFormVista,'method'=>'post',"class"=>$this->cssFormBusqueda,
+                                            "role"=>'search'],$divCampos);
+            
+            $div =  Selector::crear('div',['class'=>$this->cssDivBusqueda],$form);
+            $columna =  Selector::crear('article',['class'=>$this->cssColBusqueda],$div);
+            $seccionBusqueda = Selector::crear('section',['id'=>'seccionBusqueda'.$this->nombreVistaSinEspacios,'class'=>$this->cssSectionBusqueda],$columna);
+            
+
         }
         return $seccionBusqueda;
         
@@ -988,7 +1082,7 @@ class Vista extends DBContainer{
      * @param array Parametros Arreglo asociativo con los valores que se desean modificar
      */
     function setPaginador($valores){
-        $this->paginador->establecerAtributos($valores);
+        $this->objetoPaginador->establecerAtributos($valores);
         
     }
     /**

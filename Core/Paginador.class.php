@@ -178,9 +178,13 @@ class Paginador extends DBContainer{
             
             $this->queryReal.=" where ".$this->sentenciasQuery['where'];
         }
+        if(array_key_exists('group',$this->sentenciasQuery)){
+            $this->queryReal.=" group by ".$this->sentenciasQuery['group'];
+        }
         if(array_key_exists('order',$this->sentenciasQuery)){
             $this->queryReal.=" order by ".$this->sentenciasQuery['order'];
         }
+        
     }
     /**
      * Arma el HTML necesario para el páginador
@@ -284,6 +288,9 @@ class Paginador extends DBContainer{
        $this->query=$this->bd->addLimit($this->filasPorPagina, $offset,$this->queryReal);
        
        
+    }
+    public function getQueryReal(){
+        return $this->queryReal;
     }
 } // END
 

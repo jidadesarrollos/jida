@@ -177,7 +177,7 @@ class MenusController extends Controller {
                 $dataArray['titulo'] = "Modificar Opción de menu $menu->nombre_menu";
             }
             $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
-            $formulario->externo['padre']="select id_opcion,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
+            $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
             $formulario->action=$this->url.'procesar-opciones/menu/' . $menu -> id_menu . "/";
             
             if(isset($_GET['padre']) and $this->getEntero($_GET['padre'])>0){
@@ -237,7 +237,7 @@ class MenusController extends Controller {
         }else{
             throw new Exception("Se debe seleccionar un menu", 1);   
         }
-        $query = "select a.id_opcion,a.nombre_opcion as \"Nombre\",a.url_opcion as \"Url\",a.hijo,a.orden,
+        $query = "select a.id_opcion_menu,a.nombre_opcion as \"Nombre\",a.url_opcion as \"Url\",a.hijo,a.orden,
                    c.estatus
                 from s_opciones_menu a 
                 join s_estatus c on (a.id_estatus=c.id_estatus) 
@@ -250,7 +250,7 @@ class MenusController extends Controller {
             $opcionesMenu = $omObject->getOpcionesByMenu($idMenu);
             $arbolObject = new Arbol($opcionesMenu);
             
-            $arbolObject->estructurarArbolById('id_opcion'); 
+            $arbolObject->estructurarArbolById('id_opcion_menu'); 
             $arbol = $arbolObject->obtenerArbol($_GET['padre']);
             $dataBC = array();
             $dataBC['selector']="a";

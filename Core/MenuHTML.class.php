@@ -82,7 +82,6 @@ class MenuHTML extends DBContainer{
      * 
      */
     function showMenuPersonalizado($data){
-       try{
            $config = $this->configuracion;
          
             if(count($data)>0){
@@ -94,10 +93,6 @@ class MenuHTML extends DBContainer{
                 return $listaMenu;    
                 
             }
-
-       } catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       }
         
         
     }
@@ -175,7 +170,7 @@ class MenuHTML extends DBContainer{
                     $atributos = array_merge($atributos,$this->atributosLIParent);
                     
                     $submenu=""; 
-                    $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion']);
+                    $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion_menu']);
                     if($submenu['open']===TRUE){
                         $atributos['class'] =$atributos['class'] ." ". $this->cssLiSeleccionado; 
                     }
@@ -251,7 +246,7 @@ class MenuHTML extends DBContainer{
             if($subopcion['padre']==$padre){
                 if($subopcion['hijo']==1){
                    $cssli = array_merge($cssli,$this->atributosLIParent);
-                    $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion'],$nivel+1);
+                    $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcio_menu'],$nivel+1);
                     //Se agrega separador para lis padres si existe;
                     if(array_key_exists('caret', $config['li']))
                         $cssli['class']=$cssli['class']." ".$this->configuracion['li']['caret'];

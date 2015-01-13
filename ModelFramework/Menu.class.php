@@ -25,6 +25,9 @@ class Menu extends DBContainer {
 	/**
 	 * Funcion constructora
 	 */
+	 
+	private $tablaOpcionesAcceso = 's_opciones_menu_perfiles';
+    private $tablaOpciones = 's_opciones_menu';
 	function __construct($id_menu = ''){
 		
         $this->clavePrimaria = 'id_menu';
@@ -121,13 +124,22 @@ class Menu extends DBContainer {
          }else{
          	#throw new Exception("Menu no definido", 1); 	
          }
-         $query  = "select * from s_opciones_menu where id_menu = $this->id_menu 
-          and  (id_estatus=1 or id_estatus=null)
-          order by padre,orden,nombre_opcion";
-		
+         #Debug::mostrarArray(Session::get('usuario','perfiles'),false);
+         
+         $perfilesUser = "'".implode("','", Session::get('usuario','perfiles'))."'";
+         $query  = "
+                    select a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
+                    selector_icono, id_metodo
+                    from 
+                    $this->tablaOpciones a
+                    join $this->tablaOpcionesAcceso b on (a.id_opcion_menu = b.id_opcion_menu)
+                    join s_perfiles c on(b.id_perfil=c.id_perfil)
+                    where id_menu = $this->id_menu
+                    and c.clave_perfil in($perfilesUser)
+                    and  (id_estatus=1 or id_estatus=null)
+                    order by padre,orden,nombre_opcion";
+         #Debug::string($query);
          $data = $this->bd->obtenerDataCompleta($query);
-		 
-          #Arrays::mostrarArray($data);
          return $data;     
      }
     

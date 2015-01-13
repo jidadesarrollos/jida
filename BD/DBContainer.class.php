@@ -209,7 +209,9 @@ class DBContainer {
         }
         
     }
-    
+    function setEstablecerAtributos($arr,$clase=""){
+        $this->establecerAtributos($arr,$clase);
+    }
     /**
      * Convierte la data obtenida de un formulario en un Array Asociativo
      *
@@ -546,7 +548,7 @@ class DBContainer {
      * @deprecated Esta función será reemplazada posteriormente por el metodo $get
      * 
      */
-    function getTabla($campos=null,$where){
+    function getTabla($campos=null,$where,$order=""){
         if(!is_array($campos)){
             $campos = $this->propiedadesPublicas;
             
@@ -576,8 +578,11 @@ class DBContainer {
                 $query.=" $campo = '$valor'";
                 $i++;
             }
-        } 
-        #Debug::string($query);
+        }
+        if(!empty($order)){
+            $query.="order by ".$order;
+        }
+        
         return $this->bd->obtenerDataCompleta($query);
     }//fin
     /**
