@@ -70,7 +70,8 @@ class User extends DBContainer{
     protected $perfiles=array();
     function __construct($id=""){
         $this->nombreTabla="s_usuarios";
-        $this->registroMomentoGuardado=TRUE;
+        
+        $this->momentoSalvado=TRUE;
         $this->clavePrimaria="id_usuario";
         $this->unico=array('nombre_usuario');
         parent::__construct(__CLASS__,$id);

@@ -9,27 +9,14 @@
  * @author      Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
  * @version     0.1 - 09/09/2013
- *
+ * @required String.class
  */
 
 
-class DBContainer {
-    /**
-     * Define si deben guardarse los campos "fecha_creacion" y "fecha_modificacion";
-     * @var boolean $registroMomentoGuardado 
-     */
-    protected $registroMomentoGuardado = FALSE;    
-    /**
-     * 
-     * @var unknown
-     */
-    private $result;
+class DBContainer {   
     
-    /**
-     * Define el manejador de base de datos (mysql o psql)
-     * @var string $manejadorBD
-     */
-    private $manejadorBD;
+    protected $fecha_creacion;
+    protected $fecha_modificacion;
     
     /**
      * Instancia del manejador de base de datos
@@ -40,12 +27,6 @@ class DBContainer {
     protected $bd;
     
     /**
-     *
-     * @var $con id de la conexión establecida
-     */
-    private $con;
-    
-    /**
      * Nombre de la tabla instanciada
      * 
      * @var $nombretabla
@@ -54,6 +35,8 @@ class DBContainer {
     
     /**
      * Propiedades publicas de la clase
+     * @var array $propiedadesPublicas
+     * @access protected
      */
     protected $propiedadesPublicas = array();
     
@@ -85,7 +68,12 @@ class DBContainer {
      */
     protected $unico=array();
     
-    
+    /**
+     * Objeto para realizar consultas
+     * @var $query
+     * @access protected
+     */
+    protected $query;
     /**
      * Define la conexion a base de datos a utilizar
      * @var string $configuracionBD
@@ -93,20 +81,28 @@ class DBContainer {
      */
     protected $configuracionBD="default";
     /**
-     * Define las propiedades del objeto que sean columnas de la tabla en base
-     * de datos, por defecto son las propiedades publicas
-     * @var $array $propiedadesBD
+     * Define el manejador de base de datos (mysql o psql)
+     * @var string $manejadorBD
      */
-    private $propiedadesBD;
+    private $manejadorBD;
     /**
      * Define la clase u objeto Instanciado
      * @var $clase
      * @access private
      */
     private $clase;
+    /**
+     * Define el nivel de navegación entre objetos al ser instanciado
+     * @var int $nivelORM
+     * @see DBCONTAINER_NIVEL_ORM
+     */
+    private $nivelORM = DBCONTAINER_NIVEL_ORM;
     
-    
-    
+    /**
+     * Registra las propiedades del objeto que tambien son objetos
+     * @var $propiedadesObjetos
+     */
+    private $propiedadesObjetos =array();
     /**
      * Define si se deben convertir los caractes especiales HTML en su código ascii
      * al momento de guardar en base de datos
@@ -126,64 +122,98 @@ class DBContainer {
      */
     private $convertAsciiFromBD=TRUE;
     /**
+     * Define las propiedades del objeto que son referencias a otro objeto
+     * @var array $referenciasObjeto
+     * @access private
+     */
+    private $referenciasObjeto = array();
+    /**
      * Contructor del BDContainer
      *
      * Inicializa el objeto de conexión a base de datos para
      * la funcionalidad completa de la clase.
-     * 
-     * @param int $id Identificador del objeto modelo
+     * @method __construct()
+     * @param mixed $id Identificador del objeto modelo si es instanciado por el usuario, Array con propiedades
+     * si es llamado por el ORM
      * @param object $clase Objeto clase que hereda del DBContainer
      */
-    protected $fecha_creacion;
-    protected $fecha_modificacion;
     public function __construct($clase = "", $id = "") {
-    
+        //instanciar objeto de base de datos
+        
+        $this->initBD();
+        if(!empty($clase)){    
+            $this->obtenerPropiedadesObjeto();
+            $this->clase = $clase;
+        }
+        $this->clavePrimaria = $this->obtenerClavePrimaria();
+        if (!empty($id)) {
+            $this->inicializarObjeto($id);
+        }
+    }
+    /**
+     * Permite realizar consultas de base de datos
+     * @method obt
+     * @access protected
+     */
+    protected function consulta($campos=""){
+        
+        $query  = new Query($this->nombreTabla,$this->propiedadesPublicas);
+        return $query->consulta($campos);
+    }
+    /**
+     * Inicializa el objeto correspondiente para el manejo de la base de datos
+     * @method initBD
+     */
+    private function initBD(){
         if (!defined('manejadorBD')) {
             throw new Exception("No se encuentra definido el manejador de base de datos", 1);
         }
-        
         $this->manejadorBD = manejadorBD;
-        $this->clavePrimaria = $this->obtenerClavePrimaria();
-        
         switch ($this->manejadorBD) {
             case 'PSQL' :
-                
                 include_once 'Psql.class.php';
                 $this->bd = new PSQLConexion ($this->configuracionBD);
                 break;
             case 'MySQL' :
-                
                 // include_once 'Mysql.class.php';
                 $this->bd = new Mysql ();
                 break;
         }
-        if(!empty($clase)){
-            
-            $this->propiedadesBD = $this->obtenerPropiedadesObjeto();
-            $this->clase = $clase;
-        }
-        if (!empty($id)) {
-            $this->inicializarObjeto($id, $clase);
-        }
-        
-        $this->crearMetodos();
     }
+    private function _activarORM(){
+        
+    }
+    /**
+     * Verifica que clases son identificadas como
+     */
+    private function identificarReferencias(){
+        foreach ($this->propiedadesPublicas as $prop => $val) {
+            
+            if (substr($prop, 0,2)=='id' and $prop!=$this->clavePrimaria){
+                $propiedad = str_replace("id_", "", $prop);
+                $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
+                if($propiedad!=$this->clase and class_exists($objeto,FALSE))
+                    $this->propiedadesObjetos[$propiedad]=new $objeto(); 
+            }   
+        }
+    }
+    
     /**
      * Inicializa un objeto a partir de Base de Datos
      * @method inicializarObjeto
-     * @param $id Identificador de la clase
      * @param $clase metodo magico __CLASS__
      */
-    
-    protected function inicializarObjeto($id, $clase = "") {
-        
-    	$clase = (empty($clase)) ? $this->clase : $clase;
-        $query = "select * from $this->nombreTabla where $this->clavePrimaria=$id";
-    
-        $result = $this->bd->obtenerArrayAsociativo ( $this->bd->ejecutarQuery ( $query ) );
-        $this->establecerAtributos ( $result, $clase );
-    
-    }
+    protected function inicializarObjeto($id) {
+        if(is_array($id)){
+            #Debug::string("voy por el camino",true);
+        }else{
+            $this->identificarReferencias();
+            $data = $this->consulta()
+                    ->filtro([$this->clavePrimaria=>$id])
+                    ->obtFila();
+            $this->establecerAtributos ( $data, $this->clase );    
+        }
+    }//fin función inicializaarObjeto
     
     /**
      * Establece los atributos de una clase.
@@ -459,9 +489,12 @@ class DBContainer {
      * @return string Nombre de clave primaria de la clase
      */
     private function obtenerClavePrimaria() {
-        $clase = $this->nombreTabla;
-        $clavePrimaria = ($this->clavePrimaria != "") ? $this->clavePrimaria : "id_" . $clase;
-        return strtolower($clavePrimaria);
+        $clase = $this->clase;
+        if(!empty($clase)){
+            $clavePrimaria = ($this->clavePrimaria != "") ? $this->clavePrimaria : "id_" . $clase;
+            return strtolower($clavePrimaria);
+        }
+            
     }
     
     /**
@@ -624,13 +657,6 @@ class DBContainer {
         
         return $this->bd->ejecutarQuery($insert);
     }//final funcion insert
-    /**
-     * 
-     */
-    function get(){
-        
-        
-    }
     
     private function crearMetodos(){
         

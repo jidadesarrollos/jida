@@ -69,6 +69,7 @@ include_once 'Settings/jidaConfiguracion.php';
 include_once 'Config/BDConfig.php';
 include_once 'Config/appConfig.php';
 include_once 'Config/initConfig.php';
+include_once 'Settings/jConstantes.php';
 #=======================================================================
 #=======================================================================
 #=======================================================================
