@@ -152,8 +152,6 @@ class Mysql extends ConexionBD{
                 $validadoUnico=FALSE;
                 $validarExistencia=0;
                 if(count($unico)>=1){
-                    Debug::mostrarArray($unico,false);
-                    
                     $queryCheck = "select $id from $nombreTabla where ";
                     $validadoUnico=TRUE;
                     $i=0;

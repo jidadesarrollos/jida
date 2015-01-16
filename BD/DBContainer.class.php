@@ -52,9 +52,9 @@ class DBContainer {
      * define si se deben registrar las fechas de guardado fecha_creacion
      * y fecha_modificacion
      * 
-     * @var boolean $momentoSalvado
+     * @var boolean $registroMomentoGuardado
      */
-    protected $momentoSalvado = FALSE;
+    protected $registroMomentoGuardado = FALSE;
     
     /**
      * 
@@ -67,13 +67,7 @@ class DBContainer {
      * @var array $unico
      */
     protected $unico=array();
-    
-    /**
-     * Objeto para realizar consultas
-     * @var $query
-     * @access protected
-     */
-    protected $query;
+
     /**
      * Define la conexion a base de datos a utilizar
      * @var string $configuracionBD
@@ -323,7 +317,7 @@ class DBContainer {
     function salvar($datos = "", $momentoGuardado = FALSE) {
             
         if($momentoGuardado==FALSE){
-            $momentoGuardado = ($this->registroMomentoGuardado===TRUE || $this->momentoSalvado===TRUE) ?TRUE:FALSE;
+            $momentoGuardado = ($this->registroMomentoGuardado===TRUE) ?TRUE:FALSE;
         }
         if (gettype ( $this->bd ) != 'object') {
             throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
