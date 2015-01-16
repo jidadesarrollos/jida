@@ -341,7 +341,7 @@ class Formulario extends DBContainer {
              
         }
         $this->dataPost =& $_POST;
-        $this->momentoSalvado=FALSE;
+        
             
         /**
          * Se valida el nombre de las tablas en base de datos.
@@ -353,7 +353,7 @@ class Formulario extends DBContainer {
         
         $this->clavePrimaria = 'id_form';
         parent::__construct (__CLASS__);
-        $this->momentoSalvado=FALSE;
+        $this->registroMomentoGuardado=FALSE;
         $this->claveFormulario = $claveFormulario;
         if (is_int ( $this->claveFormulario )) {
             

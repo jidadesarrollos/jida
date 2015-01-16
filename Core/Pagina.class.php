@@ -154,6 +154,7 @@ class Pagina{
      */
     function definirDirectorios(){
          /*Verificación de ruta de plantillas*/
+         
         if($this->rutaPagina==1  or $this->rutaPagina==3){
             
             $this->urlPlantilla=directorio_plantillas;

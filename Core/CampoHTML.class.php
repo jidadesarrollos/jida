@@ -28,7 +28,7 @@ class CampoHTML extends DBContainer {
      * @var string $private
      */ 
     private $esquema="";  
-        
+            
 
     var $id_campo = "";
     var $id_form = "";
@@ -107,7 +107,7 @@ class CampoHTML extends DBContainer {
         
         $totalParametros = func_num_args();
         $this->externo = $campoExterno;
-        $this->momentoSalvado=FALSE;
+        $this->registroMomentoGuardado=FALSE;
         /**
          * Entra aqui si solo son pasados 2 parametros
          * 1. tipo de tabla : 1 Campos Aplicacion 2. campos Forms framework
@@ -153,7 +153,6 @@ class CampoHTML extends DBContainer {
             
             $this->cn = $this->bd;
         }
-		$this->momentoSalvado=FALSE;
     }
     
     /**
