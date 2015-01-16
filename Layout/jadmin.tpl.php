@@ -55,7 +55,7 @@
                     <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
                 </nav>
             </div>
-            <aside class="col-md-2 aside">
+            <aside class="col-md-8 aside">
                     <?PHP 
                     
                     $menuControl  = new MenuHTML('principal');
@@ -78,13 +78,7 @@
                     
                 </div>
             </div><!--Cierre div full-container-->
-        </div>                
-        <?PHP
-        
-        if(entorno_app =='dev'){
-          #  echo debug();
-        }
-        ?>    
+        </div>
         <footer class="footer container-fluid">
             <p>
                 &copy; Copyright  by jirc Prueba
