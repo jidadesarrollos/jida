@@ -246,7 +246,7 @@ class MenuHTML extends DBContainer{
             if($subopcion['padre']==$padre){
                 if($subopcion['hijo']==1){
                    $cssli = array_merge($cssli,$this->atributosLIParent);
-                    $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcio_menu'],$nivel+1);
+                    $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion_menu'],$nivel+1);
                     //Se agrega separador para lis padres si existe;
                     if(array_key_exists('caret', $config['li']))
                         $cssli['class']=$cssli['class']." ".$this->configuracion['li']['caret'];

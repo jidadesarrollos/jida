@@ -128,7 +128,7 @@ class Menu extends DBContainer {
          
          $perfilesUser = "'".implode("','", Session::get('usuario','perfiles'))."'";
          $query  = "
-                    select a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
+                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
                     selector_icono, id_metodo
                     from 
                     $this->tablaOpciones a
@@ -138,7 +138,7 @@ class Menu extends DBContainer {
                     and c.clave_perfil in($perfilesUser)
                     and  (id_estatus=1 or id_estatus=null)
                     order by padre,orden,nombre_opcion";
-         #Debug::string($query);
+         
          $data = $this->bd->obtenerDataCompleta($query);
          return $data;     
      }

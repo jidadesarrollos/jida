@@ -581,7 +581,6 @@ class DBContainer {
             
             $selectCompleto=TRUE;
         }
-        
         $query ="Select ";
         $cont=0;
         foreach ($campos as $key => $value) {
@@ -666,5 +665,16 @@ class DBContainer {
     function getFechaModificacion(){
         return $this->fecha_modificacion;
     }
-    
+    /**
+     * Permite acceder a propiedades privadas o protegidas del objeto instanciado
+     * @method _get()
+     * @param string $propiedad Nombre de la propiedad a obtener
+     */
+    function _get($propiedad){
+        if(property_exists($this, $propiedad)){
+            return $this->$propiedad;
+        }else{        
+            throw new Exception("La propiedad solicitada no existe", 123);   
+        }
+    }
 }
