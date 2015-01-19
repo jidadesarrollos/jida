@@ -272,14 +272,12 @@
             
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
             if($acceso===TRUE){
-                
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
                  * Se verifica si es llamado el controlador principal del framework.
                  * Si es llamado el modulo interno "jadmin" el valor de rutaVista = 2, excepcion=3 default=1
                  */
                 if(strtolower($this->controlador)=='jadmin' or strtolower($this->modulo)=='jadmin'){
-                    
                    $this->vista->rutaPagina=2;
                    $rutaArchivo=framework_dir.'Jadmin/Controllers/'.$nombreArchivo;
                    
@@ -291,7 +289,6 @@
                 else{
                     $rutaArchivo = $this->obtenerControladorModulo($nombreArchivo);    
                 }
-                
                 $metodo = $this->metodo;
                 /**
                  * Se valida la existencia del archivo, 
@@ -307,13 +304,11 @@
                     
                     $instancia = new $controlador;
                     if(!is_callable(array($controlador,$metodo))){
-                        
                         /*En caso de que no se consiga metodo en la url
                          * Se llama un metodo por default llamado index y se agrega el
                          * valor metodo como un parametro get clave
                          * 
                          */
-                         
                         array_unshift($this->args,$this->metodo);
                         
                         if(count($this->args)>0){
@@ -367,12 +362,8 @@
             if(isset($controlador)){
                 $this->ejecucion($controlador);
             }
-            
-            
          }catch(Exception $e){
-            
             $this->procesarExcepcion($e);
-            
         }  
        
     
@@ -388,8 +379,7 @@
             $rutaModulo =app_dir . "Modulos/" .$this->modulo."/Controller/".$nombreArchivo;
         }else{
             $rutaModulo = app_dir.'Controller/'.$nombreArchivo;
-        }
-        
+        }        
         return $rutaModulo;    
         $this->mostrarContenido($retorno,$controlador->vista);
     }
@@ -427,11 +417,8 @@
         if(is_object($this->controladorObject)):
             
             $this->vista->layout = $this->controladorObject->layout;
-        
             $this->vista->definirDirectorios();
-            if(!$this->vista->layout){
-                    
-            }
+            
         endif;
         
     }
@@ -451,34 +438,37 @@
         $controlador=& $this->controladorObject;
         
         $controlador->$metodo($params);
-        if($checkDirs)
+        if($checkDirs){
             $this->checkDirectoriosView();
+        }
         #llamada al metodo solicitado via url
                 
         return $controlador;
     }
     
-    private function procesarExcepcion($excepcion){
-        
+    private function procesarExcepcion(Exception $excepcion){
         $ctrlError = $this->controlador."Controller";
         
+                
         $this->controladorObject = new $ctrlError;
 
         if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
-        else 
+        else {
             $this->controlador=CONTROLADOR_EXCEPCIONES;
-		
-		
+        }
         $this->metodo='error';
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
+        
         $this->vista->definirDirectorios();
         
-        $this->vista->establecerAtributos(array('controlador'=>'Excepcion','modulo'=>$this->modulo));
+        $this->vista->establecerAtributos(array($this->controlador=>'Excepcion','modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        
+        if(empty($this->vista->layout)){
+            $this->vista->layout=LAYOUT_DEFAULT;
+        }
         $retorno=$ctrl->data;
         $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$ctrl->metaDescripcion;
