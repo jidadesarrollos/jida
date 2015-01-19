@@ -57,6 +57,7 @@ class MenusController extends Controller {
     }
 
     function procesarMenu() {
+            
             $this->data = $this->formMenu();
     }
 
@@ -169,8 +170,7 @@ class MenusController extends Controller {
             
             $dataArray['titulo'] = "Registro de Opción para menu $menu->nombre_menu";
             $padre=0;
-            if(isset($_GET['padre']))
-                $post['padre']=$this->getEntero($_GET['padre']);
+            
             if(isset($_GET['opcion']) and $this->getEntero($_GET['opcion'])){
                 $idOpcion=$_GET['opcion'];
                 $tipoForm=2;
@@ -178,11 +178,16 @@ class MenusController extends Controller {
             }
             $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
             $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
-            $formulario->action=$this->url.'procesar-opciones/menu/' . $menu -> id_menu . "/";
-            
+            $formulario->action=$this->url.'procesar-opciones/menu/' . $menu -> id_menu ;
+            if(!empty($idOpcion)){
+                $formulario->action.="/opcion/".$idOpcion;
+            }
+
             if(isset($_GET['padre']) and $this->getEntero($_GET['padre'])>0){
+                $post['padre']=$this->getEntero($_GET['padre']);
                 $opcionPadre = new OpcionMenu($_GET['padre']);
                 $dataArray['subtitulo'] = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
+                $formulario->action.="/padre/".$_GET['padre'];
             }
             if(isset($_POST['btnProcesarOpcionMenu'])){
                 $validacion = $formulario->validarFormulario();
@@ -205,7 +210,9 @@ class MenusController extends Controller {
             
             
             $dataArray['formOpcion'] = $formulario->armarFormulario();
-            $this->data = $dataArray;    
+            
+            $this->data = $dataArray;
+                
          }else{
             throw new Exception("No se ha seleccionado menu para agregar opciones", 1);
         }

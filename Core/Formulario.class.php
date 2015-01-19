@@ -857,12 +857,14 @@ class Formulario extends DBContainer {
             
             //obtengo el valor del campo ingresado en el post
             $valorCampo =& $datos [$campo ['name']];
-            if ($campo ['eventos'] != "") {
+            if (!empty($campo ['eventos'])) {
+                
                 $validaciones = json_decode ( '{' . $campo ['eventos'] . '}', true );
-            
+                
                 if (is_array ( $validaciones )) {
                   
                     $a ++;
+                    
                     $validador = new ValidadorJida ( $campo, $validaciones, $campo['opciones']);
                     
                     $resultadoValidacion = $validador->validarCampo ( $valorCampo );
@@ -871,7 +873,7 @@ class Formulario extends DBContainer {
                         $arrErrores [$campo ['name']] = $resultadoValidacion['validacion'];
                     }else
                     if($resultadoValidacion['validacion']===true){
-                     
+                    
                         //Se connvierten los datos especiales del post
                         if(!is_array($resultadoValidacion['campo'])){
                             if($this->setHtmlEntities===TRUE)
@@ -897,7 +899,6 @@ class Formulario extends DBContainer {
                 }
             }
         }//final foreach
-
         if (count ( $arrErrores ) > 0) {
             $this->errores = $arrErrores;
             Session::set ( '__erroresForm', $this->errores );

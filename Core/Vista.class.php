@@ -21,7 +21,7 @@ class Vista extends DBContainer{
      * se generará la vista o grid
      * @var $query
      */
-    private $query;
+    private $consultaBD;
     /**
      * Instancia de objeto Tabla para crear Vista
      * @var object $tabla Objeto tipo Table
@@ -412,7 +412,7 @@ class Vista extends DBContainer{
         
         $totalParametros=func_num_args();
         $totalParametros = func_num_args();
-        $this->query=$query;
+        $this->consultaBD=$query;
         
         if(!is_null($global) and is_string($global)){
             $arrayConfiguracion=$GLOBALS[$global];
@@ -461,15 +461,15 @@ class Vista extends DBContainer{
         $this->paginador['selectorVista']=$this->idDivVista;
         $this->paginador['nombreVista']=$this->nombreVistaSinEspacios;
         #Debug::mostrarArray($this->paginador);
-        $this->objetoPaginador = new Paginador($this->query,$this->paginador,$this->sentenciasQuery);
-        $this->query=$this->objetoPaginador->query;
+        $this->objetoPaginador = new Paginador($this->consultaBD,$this->paginador,$this->sentenciasQuery);
+        $this->consultaBD=$this->objetoPaginador->query;
         
     }
     
     private function prepareConsulta(){
         $this->addPaginador();
         /*Ejecución del query para la vista*/
-        $this->data = $this->bd->obtenerDataCompleta($this->query);
+        $this->data = $this->bd->obtenerDataCompleta($this->consultaBD);
         $this->totalRegistros = $this->bd->totalRegistros;
            
     }
@@ -999,7 +999,7 @@ class Vista extends DBContainer{
             
         }
         
-        $this->query = $this->query;
+        $this->consultaBD = $this->consultaBD;
         $this->prepareConsulta();
         return $this->crearVista();
     }

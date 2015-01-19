@@ -49,7 +49,7 @@ class ValidadorJida extends Validador{
      * @opciones string $opciones [opcional] Las opciones asociadas al campo a validar
      */
     function __construct($campo, $validaciones,$opciones="") {
-        $this -> campo = $campo;
+        $this -> campo =& $campo;
                 
         $this->getDataValidaciones();
         $this -> validaciones = array_merge($this -> validacionesDefault,$validaciones);

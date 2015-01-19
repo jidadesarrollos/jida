@@ -36,6 +36,7 @@ class User extends DBContainer{
     var $nombres;
     var $apellidos;
     var $correo;
+    var $sexo;
     /**
      * @var boolean activo
      */ 
@@ -179,6 +180,7 @@ class User extends DBContainer{
             
         }
         $this->establecerAtributos($datos);
+        
         $codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
         $this->validacion=$codigo;
         $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
