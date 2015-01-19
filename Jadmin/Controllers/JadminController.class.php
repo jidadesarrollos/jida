@@ -46,7 +46,7 @@ class JadminController extends Controller{
                         $clave = md5(Globals::obtPost('clave_usuario'));
                         $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
                         if($checkUser===FALSE){
-                            Session::set('__msjForm',Mensajes::mensajeError("Usuario o clave invalidos"));
+                           Formulario::msj('error',"Usuario o clave invalidos");
                         }else{
                             /*** Habilitar datos de usuario*/
                             $perfiles = $User->getPerfiles();
@@ -55,8 +55,7 @@ class JadminController extends Controller{
                             Session::set('usuario','perfiles',$perfiles);
                             
                             /*fin variables de usuario*/
-                            Session::set('__msjVista',Mensajes::mensajeInformativo('Bienvenido '.$User->nombre_usuario));
-                            Session::set('__idVista','formularios');
+                            Vista::msj(formularios, 'info', 'Bienvenido '.$User->nombre_usuario,'/jadmin/forms/');
                             redireccionar('/jadmin/forms/');
                         }
                         
