@@ -166,8 +166,17 @@
     private function checkMetodo($metodo='index',$insertArg=FALSE){
         
         if(method_exists($this->controlador."Controller", $this->validarNombre($metodo,2))){
-            $this->metodo=$metodo;
-            return true;
+            $clase = new ReflectionClass($this->controlador."Controller");
+            if($clase->getMethod($this->validarNombre($metodo,2))->isPublic()){
+                $this->metodo=$metodo;
+                return true;    
+            }else{
+                 $this->metodo="index";
+                if($insertArg){
+                    $this->args[]=strtolower($metodo);
+                }   
+            }
+            
         }else{
             
             $this->metodo="index";

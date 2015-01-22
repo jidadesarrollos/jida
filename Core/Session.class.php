@@ -91,7 +91,9 @@ class Session {
      * @var string $param3 Si es pasado, el parametro dos será tomado como una segunda clave de la variable de sessión
      * y este será el valor de la variable.
      */
-    static function set($clave,$param2,$param3=""){
+    static function set($clave,$param2,$param3="")
+        {
+            
         if(!empty($param3)){
             
             $_SESSION[$clave][$param2]=$param3;
