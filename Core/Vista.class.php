@@ -543,7 +543,11 @@ class Vista extends DBContainer{
         if(isset($_POST) and !empty($_POST)){
             $vista= $this->procesarAccion($_POST);
         }else{
-            $data = array('id'=>$this->idDivVista,'data-sitio'=>"$_SERVER[REQUEST_URI]","class"=>$this->cssSection);
+            $data = [   'id'=>$this->idDivVista,
+                        'data-sitio'=>"$_SERVER[REQUEST_URI]",
+                        "class"=>$this->cssSection,
+                        'data-jida'=>'vista',
+                        'data-tipocontrol'=>$this->tipoControl];
             $this->prepareConsulta();
             if(isset($_GET['report']) and $_GET['report']=='pdf'){
                 $this->pdf();
@@ -681,9 +685,7 @@ class Vista extends DBContainer{
                 $vista = $vista.=Selector::crear('section',$this->cssFiltro);
             }else{
                 $vista = Selector::crear('div',array('class'=>'col-md-12'),$vista);
-            }
-            //$vista = $headGrid.Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);
-                
+            }    
             $cuerpoVista = Selector::crear('article',array('id'=>'art'.$this->nombreVistaSinEspacios,'class'=>'row'),$vista);
             
             if($this->paginador!==FALSE)
@@ -693,16 +695,7 @@ class Vista extends DBContainer{
             #Debug::string($cuerpoVista,true);
             $vista = $headGrid.$cuerpoVista;
             #Debug::string($vista,true);
-            $vista .= "
-                <script>
-                $( document ).ready(function(){
-                    vista = new jd.vista(\"$this->idDivVista\",$this->tipoControl);
-                    vista.armarVista();
-                })
-                </script>
-                
-            </section>
-            ";
+            
             return $vista;
         }else{
             $vista .=$headGrid;

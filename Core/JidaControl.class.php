@@ -22,7 +22,8 @@ class JidaControl extends DBContainer{
 	var $estructura;
     private $tablaCampos = "s_campos_f";
     /**
-     * @var int Tabla a usar
+     * @var int $ambito Tabla a usar 1) Aplicacioon 2) JIDA
+     * 
      */
     private $ambito;
 	
@@ -125,10 +126,14 @@ class JidaControl extends DBContainer{
                 
         		$this->bd->ejecutarQuery($query);
 				$total=	$this->bd->totalRegistros;
-				
+                
 				if($total == 0){
-				    
-					$campo = new CampoHTML($this->ambito);
+				    if($this->ambito==2){
+				        $campo = new CampoHTML($this->ambito,null);
+				    }else{
+				        $campo = new CampoHTML($this->ambito);    
+				    }
+					
                     $campo->procesarCampo(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
 				}
 				
