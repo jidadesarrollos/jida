@@ -669,15 +669,7 @@ class Vista extends DBContainer{
                  $headGrid.="\n$bc";
              }
             //Se valida si existe un mensaje a mostrar
-            if(Session::get('__msjVista')):
-                if( Session::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Session::get('__idVista')) or
-                    (isset($_SESSION['__idVista']) and strtolower($this->idDivVista)== strtolower(Session::get('__idVista')))
-                   ){
-                       
-                     $headGrid.=Session::get('__msjVista');   
-                     Session::destroy('__idVista');
-                    }
-            endif;
+            $headGrid .=$this->getMensajeSesion();
             $headGrid = Selector::crear('article',array('class'=>'row'),Selector::crear('section',array('class'=>'col-md-12'),$headGrid));
             $vista.=$this->tabla->getTabla();
             if($this->filtroAgregado){
@@ -699,12 +691,25 @@ class Vista extends DBContainer{
             return $vista;
         }else{
             $vista .=$headGrid;
-            return $vista.Selector::crear('div',array('class'=>$this->cssMensajeError),$this->mensajeError);
-        }
-        
-            
-         
+            return $vista.$this->getMensajeSesion().Selector::crear('div',array('class'=>$this->cssMensajeError),$this->mensajeError);
+        } 
     }//fin funcion crearVista
+    
+    function getMensajeSesion(){
+         if(Session::get('__msjVista')):
+            if( Session::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Session::get('__idVista')) or
+                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista)== strtolower(Session::get('__idVista')))
+               ){
+                 Session::destroy('__idVista');  
+                 return Session::get('__msjVista');
+                }else{
+                    return "";
+                }
+        else:
+            return "";
+        endif;
+    }
+        
     
 
  
