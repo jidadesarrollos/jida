@@ -50,6 +50,11 @@
      */
     private $subdominio;
     /**
+     * Define si se accede a un modulo a partir de un subdominio
+     * @var $moduloSubdominio
+     */
+    private $moduloSubdominio=FALSE;
+    /**
      * Arreglo de modulos existentes
      * 
      * El arreglo se obtiene por medio de la funcion obtenerModulos, la cual debe
@@ -99,21 +104,22 @@
     private function procesarURL($url){
         
         $param = $this->validarNombre(array_shift($url),1);
-            
-        if(!in_array($param,$this->modulosExistentes)){
+       //Se valida si se ha solicitado un modulo por medio de un subdominio
+        if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+            $this->modulo=$this->validarNombre($this->subdominio,1);
+            $this->moduloSubdominio=TRUE;   
+        }
+         
+        if(!in_array($param,$this->modulosExistentes) or $this->moduloSubdominio===TRUE){
             
             if(!Directorios::validar(app_dir)):
                 /**
                  * Entra aca si es una app nueva
                  */
-                Debug::mostrarArray("k");
                 $this->controlador="Jadmin";
                 $this->metodo = 'initApp';
             else:
-                //Se valida si se ha solicitado un modulo por medio de un subdominio
-                if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-                    $this->modulo=$this->validarNombre($this->subdominio,1);   
-                }
+                
                 //Se verifica si existe el controlador
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
@@ -127,7 +133,11 @@
                     /**
                      * Si entra aqui el controlador a ejecutar es el Index publico
                      * */
-                    $this->controlador='Index';
+                    if($this->moduloSubdominio===TRUE){
+                        $this->controlador =$this->validarNombre($this->modulo, 1);
+                    }else
+                        $this->controlador='Index';
+                    
     
                     $this->checkMetodo($param,TRUE);
                 }
@@ -184,6 +194,7 @@
      * @return boolean True si existe false caso contrario
      */
     private function checkController($controller){
+        
         if(class_exists($controller)){
             return true;
         }else{
@@ -294,7 +305,6 @@
                  * Se valida la existencia del archivo, 
                  * @deprecated Este lógica será cambiada proximamente debido a que el "autoload debe encargarse de validar existencia".
                  */
-                
                 if(file_exists($rutaArchivo) and is_readable($rutaArchivo)){
                     
                     if(!empty($this->modulo)){
@@ -405,6 +415,7 @@
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
         $retorno['urlCanonical'] = $controlador->urlCanonical;
+        
         $this->mostrarContenido($retorno,$controlador->vista);
         
         
@@ -447,6 +458,7 @@
     }
     
     private function procesarExcepcion(Exception $excepcion){
+        Debug::mostrarArray($excepcion);
         $ctrlError = $this->controlador."Controller";
         
                 
@@ -489,7 +501,7 @@
      * 
      */
     private function mostrarContenido($retorno,$vista=""){
-        
+        $this->vista->data = $this->controladorObject->dv;
         $this->vista->renderizar($retorno,$vista);
         
     }

@@ -30,36 +30,14 @@ class Controller {
      * @var $metaDescripcion;
      */
     var $metaDescripcion=meta_descripcion;
-	/**
-	 * Define la ruta del archivo header  a usar en la vista del controlador, 
-     * en caso de no encontrarse definido se usa el header por defecto
-     * @var $header
-     * @access public
-	 */
-	var $header="";
-	
-    /**
-     * Define la ruta del archivo Footer de la vista del controlador, 
-     * en caso de no encontrarse definido se usa el header por defecto
-     * 
-     * @var $footer
-     * @access public
-     */
-     var $footer="";
-     
-     
-     protected $helpers = array();
+    protected $helpers = array();
      /**
       * Define el Modelo a usar en el controlador;
 	  * 
 	  * @var $modelo
 	  * @access protected
       */
-     protected $modelo="";
-	 
-    	 
-   
-          
+    protected $modelo="";
      /**
       * Permite especificar una vista para el metodo
       * 
@@ -97,16 +75,29 @@ class Controller {
      * Puede ser instanciada en el controlador con la URL principal
      * @var $url
      * @access protected
-     *  
-     *  
      */
     protected $url; 
-    
-    
-    
-    
+    /**
+     * Data POST de Formulario
+     * @var array $post
+     */
+    protected $post;
+    /**
+     * Data Get pasada por url
+     * @var array $get;
+     */
+    protected $get;
+    /**
+     * Objeto DataVista
+     * @var object $dv;
+     */
+    var $dv;
     function __construct(){
         $this->instanciarHelpers();
+        $this->post=& $_POST;
+        $this->get =& $_GET;
+        $this->dv = new DataVista();
+        
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
@@ -180,7 +171,7 @@ class Controller {
      * 
      * @method process
      */
-    function process(){
+    protected function process(){
        if(isset($_GET['form'])){
            $nombreForm = String::upperCamelCase($_GET['form']);
            $tipoForm=1;
@@ -203,7 +194,7 @@ class Controller {
 	 * @method solicitudAjax
 	 * @return boolean 
 	 */
-	function solicitudAjax(){
+	protected function solicitudAjax(){
 		if(isset($_POST['s-ajax']))
 			return true;
 		else
@@ -213,8 +204,20 @@ class Controller {
      * Setter para propiedad url
      * @method setUrl
      */
-    function _setUrl($url){
+    protected function _setUrl($url){
         $this->url = $url;
+    }
+    
+    protected function obtPost($param){
+        
+        if(isset($this->post[$param])){
+            
+            return $this->post[$param];
+        }else{
+        
+            return FALSE;
+        }
+        
     }
 
 } // END
