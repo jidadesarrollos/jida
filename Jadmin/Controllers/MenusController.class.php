@@ -184,18 +184,37 @@ class MenusController extends Controller {
             }
 
             if(isset($_GET['padre']) and $this->getEntero($_GET['padre'])>0){
+                
                 $post['padre']=$this->getEntero($_GET['padre']);
                 $opcionPadre = new OpcionMenu($_GET['padre']);
                 $dataArray['subtitulo'] = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
                 $formulario->action.="/padre/".$_GET['padre'];
             }
             if(isset($_POST['btnProcesarOpcionMenu'])){
+                
                 $validacion = $formulario->validarFormulario();
                 if($validacion===TRUE){
                     $post['id_menu'] = $idMenu;
                     $opcionMenu = new OpcionMenu($idOpcion);
                     $guardado = $opcionMenu->setOpcion($post);
                     if($guardado['ejecutado']==1){
+                        if(is_array($_POST['id_perfil'])){
+                            $perfiles = array();
+                            foreach ($_POST['id_perfil'] as $key => $idPerfil) {
+                                $perfiles[] = [ 'id_opcion_menu'=>$guardado['idResultado'],
+                                                'id_perfil'=>$idPerfil,
+                                                'id_opcion_menu_perfil'=>'null'
+                                                ];
+                            }
+                            $opcionesPerfil = new OpcionMenuPerfil();
+                            
+                            $opcionesPerfil->eliminarAccesos($guardado['idResultado'])->crearTodo($perfiles);
+                        }else{
+                            Debug::mostrarArray($this->obtPost('id_perfil'));
+                            Debug::string("No entramos",true);
+                        }
+                        
+                        
                         
                         Vista::msj('opciones', 'sucess', $msj,$this->url.'opciones/menu/'.$idMenu.'/padre/'.$post['padre']);
                     }else{

@@ -15,3 +15,7 @@
 if(!defined('DB_PREFIJOS')){
     define('DB_PREFIJOS',TRUE);
 }
+if(!defined('titulo_sistema'))
+    define ('titulo_sistema','Jida');
+if(!defined('NOMBRE_APP'))
+    define('NOMBRE_APP','Aplicación de JidaFramework');
