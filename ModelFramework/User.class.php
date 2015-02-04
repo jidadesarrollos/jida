@@ -38,7 +38,7 @@ class User extends DBContainer{
     var $correo;
     var $sexo;
     /**
-     * @var boolean activo
+     * @var boolean activo Indica si el usuario se encuentra conectado
      */ 
     var $activo;
     /**
@@ -83,7 +83,8 @@ class User extends DBContainer{
      */
     function validarLogin($usuario,$clave){
         
-        $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and clave_usuario='$clave' and validacion=1";
+        $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and 
+        clave_usuario='$clave' and validacion=1";
         $result = $this->bd->ejecutarQuery($query);
         if($this->bd->totalRegistros>0){
             
@@ -127,7 +128,9 @@ class User extends DBContainer{
     }
 	
 	function registrarSesion(){
-		$query = "update s_usuarios set ultima_session =current_timestamp where id_usuario=$this->id_usuario";
+		$query = "update s_usuarios set ultima_session =current_timestamp, activo=1 
+		where id_usuario=$this->id_usuario 
+		";
         
 		$this->bd->ejecutarQuery($query);
 		
@@ -222,6 +225,16 @@ class User extends DBContainer{
         }else{
             return false;
         }
+    }
+    
+    function cerrarSesion($idUser=""){
+        if(empty($idUser))
+            $idUser=$this->id_usuario;
+        $query = "update $this->nombreTabla set activo=0 where $this->clavePrimaria=".$idUser;
+        $this->bd->ejecutarQuery($query);
+        
+        
+        
     }
 
 }
