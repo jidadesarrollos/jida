@@ -15,3 +15,11 @@
 if(!defined('DB_PREFIJOS')){
     define('DB_PREFIJOS',TRUE);
 }
+
+if(!defined('APP_MANTENIMIENTO')){
+    define('APP_MANTENIMIENTO',FALSE);
+}
+if(!defined('TPL_MANTENIMIENTO')){
+    define('TPL_MANTENIMIENTO','Framework/jidaPlantillas/mantenimiento.tpl.php');
+}
+

@@ -59,6 +59,9 @@
      private $modulosExistentes=array();
     function __construct(){
         try{
+            if(APP_MANTENIMIENTO===TRUE){
+                include_once TPL_MANTENIMIENTO;exit;
+            }
             Session::destroy('__formValidacion');
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
@@ -106,7 +109,7 @@
                 /**
                  * Entra aca si es una app nueva
                  */
-                Debug::mostrarArray("k");
+                
                 $this->controlador="Jadmin";
                 $this->metodo = 'initApp';
             else:
@@ -137,7 +140,6 @@
             $this->modulo=$param;
             if(count($url)>0){
                 $param =$this->validarNombre(array_shift($url),1);
-
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
@@ -278,7 +280,7 @@
     function validacion(){ 
         try{
             $acl = new ACL();
-            
+            $GLOBALS['_moduloActual'] = $this->modulo;
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
             if($acceso===TRUE){
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -364,7 +366,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
-               //Debug::mostrarArray(Session::get('acl','jadmin'));
+                
                  throw new Exception("No tiene permisos", 403);
                  
              }        
@@ -427,7 +429,7 @@
             
             $this->vista->layout = $this->controladorObject->layout;
             $this->vista->definirDirectorios();
-            
+            return $this->vista->layout;
         endif;
         
     }
@@ -454,7 +456,12 @@
                 
         return $controlador;
     }
-    
+    /**
+     *  Procesa las excepciones capturadas en el sistema
+     * @param object Exception Objeto de tipo Clase Excepction
+     * @see php::Exception
+     * 
+     */
     private function procesarExcepcion(Exception $excepcion){
         $ctrlError = $this->controlador."Controller";
         
@@ -467,14 +474,14 @@
             $this->controlador=CONTROLADOR_EXCEPCIONES;
         }
         $this->metodo='error';
-        $this->checkDirectoriosView();
+        
+        $layoutInicial = $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
-        
-        $this->vista->definirDirectorios();
-        
         $this->vista->establecerAtributos(array($this->controlador=>'Excepcion','modulo'=>$this->modulo));
-        
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
+        if($ctrl->layoutPropio){
+            $this->checkDirectoriosView();
+        }
         if(empty($this->vista->layout)){
             $this->vista->layout=LAYOUT_DEFAULT;
         }
