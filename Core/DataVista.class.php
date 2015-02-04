@@ -27,8 +27,20 @@ class DataVista{
      * @param mixed $css Arreglo o string con ubicación del js 
      * @param string ambito Usado para agregar el js solo para prod o dev
      */
-    function addJs($js){
-        
+    function addJs($js,$ambito=""){
+        if(is_array($js)){
+            foreach ($js as $key => $archivo) {
+                if(!empty($ambito))
+                    $this->js[$ambito] = $archivo;
+                else 
+                    $this->js[]=$archivo;
+            }
+        }else{
+            if(!empty($ambito))
+                    $this->js[$ambito] = $js;
+            else 
+                $this->js[]=$js;
+        }
     }
     /**
      * Agrega un css a la hoja de estilo global

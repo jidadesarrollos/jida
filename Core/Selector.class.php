@@ -88,9 +88,15 @@ class Selector{
      * @access private;
      */
     private function getElementosData(){
+        
         if(count($this->data)>0){
+            
+            if($this->selector=='TABLE'){
+                #Debug::mostrarArray($this->data);
+            }
             foreach ($this->data as $key => $value) {
-                $this->selectorCreado.=" $key=\"$value\"";
+                
+                $this->selectorCreado.=" $key='".$value."'";
             }
         }
     }//fin funcion

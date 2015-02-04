@@ -27,8 +27,56 @@
         <link href="/htdocs/css/jida.css" rel="stylesheet">
         
         <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
-        <!--libs-->
-        <script src="/htdocs/js/libs/jq2.0.3.js"></script>
+        <!--libs--> 
+    </head>
+
+    <body>
+        
+     <div  class="jida-container">
+         <div class="container-fluid">
+             
+             <div class="row">
+                <nav id="nav-top" class="navbar bg-jida navbar-fixed-top">    
+                    <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
+                </nav>
+            </div>
+            <div class="row">
+            <aside class="col-md-2 aside">
+                    <?PHP 
+                    
+                    $menuControl  = new MenuHTML('principal');
+                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
+                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
+                    $menuControl->configuracion['li']['caret']="li-caret";
+                     echo $menuControl->showMenu();
+                    ?>
+                
+            </aside>
+            <div class="col-md-offset-2 col-lg-10 col-md-10 contenido-principal">
+                <!-- <div class="row"> -->
+        
+                 <?=$contenido?>
+            
+                <!-- </div> -->
+                <!--Cierre col-lg-9 del contenido-->
+            </div><!--Cierre col-lg-9 del contenido-->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <a class="pull-right" href="#" data-jida="goback">P&aacute;gina Anterior</a>
+                </div>
+            </div>                    
+            <div class="separador-footer"></div>
+            </div><!--Cierre div full-container-->
+        </div>
+        <footer class="footer container-fluid">
+            
+            <p>
+                &copy; Copyright  by jirc Prueba
+            </p>
+        </footer>
+         <script src="/htdocs/js/libs/jq2.0.3.js"></script>
         <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
         <script src="/htdocs/js/libs/bootstrap.min.js"></script>
         <script src="/htdocs/js/libs/bootbox.min.js"></script>
@@ -42,47 +90,5 @@
         <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
         <!--custom files-->
         <script src="/htdocs/js/funcionesGenerales.js"></script>
-        
-    </head>
-
-    <body>
-        
-     <div  class="jida-container">
-         <div class="container-fluid">
-             
-             <div class="row">
-                <nav id="nav-top" class="navbar bg-jida navbar-fixed-top">    
-                    <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
-                </nav>
-            </div>
-            <aside class="col-md-2 aside">
-                    <?PHP 
-                    
-                    $menuControl  = new MenuHTML('principal');
-                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
-                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
-                    $menuControl->configuracion['li']['caret']="li-caret";
-                     echo $menuControl->showMenu();
-                    ?>
-                
-            </aside>
-                <div class="col-md-offset-2 col-lg-10 col-md-10 contenido-principal">
-                    <!-- <div class="row"> -->
-            
-                     <?=$contenido?>
-        
-                    <!-- </div> -->
-                    <!--Cierre col-lg-9 del contenido-->
-                </div><!--Cierre col-lg-9 del contenido-->                    
-                <div class="separador-footer">
-                    
-                </div>
-            </div><!--Cierre div full-container-->
-        </div>
-        <footer class="footer container-fluid">
-            <p>
-                &copy; Copyright  by jirc Prueba
-            </p>
-        </footer>
     </body>
 </html>

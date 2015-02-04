@@ -1,4 +1,5 @@
-<?PHP 
+<?PHP
+include_once framework_dir.'Clases/DomNodeRecursiveIterator.class.php'; 
 /**
  * Clase Vista
  * 
@@ -9,7 +10,6 @@
  * @category Router
  * 
  */
-
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar
@@ -76,11 +76,11 @@ class Pagina{
     private $controlador;
     /**
      * Archivo vista a renderizar
-     * @var $vista
+     * @var $template
      * @access private
      */
      
-    private $vista;
+    private $template;
     /**
      * Nombre de la vista requerida
      * 
@@ -178,7 +178,7 @@ class Pagina{
      */
     
     function renderizar($data,$nombreVista=""){
-        
+        Debug::string($this->template);
         if(!empty($nombreVista)){
             $this->nombreVista = $nombreVista;
         }
@@ -204,7 +204,7 @@ class Pagina{
         if(!is_readable($rutaVista)){
             throw new Exception("Pagina no conseguida", 404);
         }
-        $this->vista=$rutaVista;
+        $this->template=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
             
@@ -225,21 +225,21 @@ class Pagina{
         global $dataArray ;
         
         $dataArray = $data;
-        
         /* Permitimos almacenamiento en bufer */
         
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
 
-           include_once $this->vista;
+           include_once $this->template;
+           #$this->obtenerBloquesJS();
            $contenido = ob_get_clean();
            
            include_once $this->directorioLayout.$this->layout;
            $layout = ob_get_clean();
            echo $layout;
         else:
-            throw new Exception("No se encuentra definido el layout para $this->vista, controlador $this->controlador", 110);
+            throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
             
         endif;
         
@@ -248,17 +248,7 @@ class Pagina{
         
     
     }
-    
-    private function tidy(){
-        $Tidy = tidy_parse_string($this->vista);
-        Debug::mostrarArray($Tidy->body());
-    }
-    /**
-     * Muestra una página de error
-     * 
-     * 
-     */
-     
+
      
     private function requiresJs(){
         
@@ -323,10 +313,12 @@ class Pagina{
                     foreach ($archivo as $key => $value){
                         $js.=Selector::crear('script',['src'=>$value],null,$cont);
                         if($cont==0) $cont=2;
+                    }           
+                }elseif($key=='code'){
+                    foreach ($archivo as $key => $value){
+                        $js.=Selector::crear('script',null,$value,$cont);
                     }
-                        
                 }
-                
             }
             else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
             if($cont==0) $cont=2;
@@ -355,8 +347,7 @@ class Pagina{
                 }else{
                     $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
                 }
-                if($cont==0) $cont=2;
-                
+                if($cont==0) $cont=2;       
             }
         }
         return $css;
@@ -366,8 +357,24 @@ class Pagina{
             throw new Exception("No se ha instanciado correctamente el objeto DataVista", 201);            
         }
     }
+    /**
+     * Verifica el DOM HTML de la vista y valida si existe código JS incrustado
+     * @method obtenerBloquesJS
+     */
+    private function obtenerBloquesJS(){
+        $dom = new DOMDocument();
+        $dom->loadHTMLFile($this->template);
+        
+        $dtaScript = new DOMNodeRecursiveIterator($dom->getElementsByTagName('script'));
+        $dom->removeChild($dtaScript);
+        $dom->save();
+        for($i=0;$i<count($dtaScript);++$i){
+            $this->data->js['code'][] =$dtaScript[$i]->nodeValue;    
+            
+       }
+        
+
+    }
+    
+    
 }
-
-
-
-?>

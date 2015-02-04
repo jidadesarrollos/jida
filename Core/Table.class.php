@@ -25,6 +25,7 @@ class Table extends Selector{
     var $titulos=TRUE;    
     private $totalTR;
     private $totalTD;
+    
     /**
      * Data a renderizar en la Tabla HTML generada
      * @var array $dataArrayTabla

@@ -9,14 +9,12 @@
  * 
  */
 class Controller {
-
     var $urlCanonical=url_sitio;
     /**
      *  Define el layout a usar por el controlador
      *  @var $layout
      */
     var $layout=FALSE;
-    
 	/**
 	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
 	  * 
@@ -24,7 +22,6 @@ class Controller {
 	  * @access public
 	  */
 	var $tituloPagina="";
-    
     /**
      * Define el contenido de la meta-etiqueta description para uso de los buscadores
      * @var $metaDescripcion;
@@ -47,8 +44,6 @@ class Controller {
       * @var string $vista
       */
      var $vista="";
-     
-     
      /**
       * Arreglo que contiene la información que desee pasarse a la vista
       * 
@@ -112,17 +107,7 @@ class Controller {
         }
     }
     
-    
-    /**
-     * Metodo por defecto
-     * 
-     * Es ejecutado en caso de que no se haya pasado un metodo
-     * al controlador
-     */
-    function index(){
-        
-    }
-    
+     
     /**
      * Filtra contenido de Texto
      * 
@@ -180,10 +165,8 @@ class Controller {
                $tipoForm=2;$pk=$_GET['id'];
            }
            $formulario = new Formulario($nombreForm,$tipoForm,$pk);
-           
        }else{
            throw new Exception("No se ha definido el formulario a ejecutar", 100);
-           
        }
     }
 	
@@ -214,11 +197,23 @@ class Controller {
             
             return $this->post[$param];
         }else{
-        
             return FALSE;
-        }
-        
+        }   
     }
+    
+    /**
+     * obtiene la url correspondiente al metodo que hace la llamada
+     * 
+     * @method getUrl
+     */
+    function getUrlActual(){
+        $quienLlama = debug_backtrace(null,2)[1]['function'];
+        $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $quienLlama, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $url = strtolower(implode("-",$coincidencias));
+        return $this->url.$url;
+    }
+    
+    
 
 } // END
 

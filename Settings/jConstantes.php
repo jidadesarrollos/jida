@@ -19,3 +19,11 @@ if(!defined('titulo_sistema'))
     define ('titulo_sistema','Jida');
 if(!defined('NOMBRE_APP'))
     define('NOMBRE_APP','Aplicación de JidaFramework');
+if(!defined('PLURAL_A')){
+    define('PLURAL_A','s');
+}
+if(!defined('PLURAL_B')){
+    define('PLURAL_B','es');
+}
+
+

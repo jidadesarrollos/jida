@@ -371,7 +371,7 @@ class DataModel{
         }else{
             $this->modificar();
         }
-        return $this->result->setValores($this);
+        return $this->result->setValores($data);
     }
     /**
      * Crea un registro
@@ -411,7 +411,7 @@ class DataModel{
      * @method crearTodo
      * @param array $data Data a insertar
      */
-    function crearTodo($data){
+    function salvarTodo($data){
         if(is_array($data)){
             $insert = "INSERT INTO ".$this->tablaBD." ";
 

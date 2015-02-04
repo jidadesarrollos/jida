@@ -387,7 +387,11 @@ class Vista extends DBContainer{
      
      
      var $columnasOcultas="";
-     
+     /**
+     * Atributos Data para agregar a la tabla
+     * @var $attrDataTabla
+     */
+    private $attrDataTabla=array();
     private $nombreVistaSinEspacios="";
     /**
      * ID HTML del div que contiene la tabla y el paginador de la vista
@@ -647,7 +651,7 @@ class Vista extends DBContainer{
 
             //Creacion de la tabla--------------------------------------
             $this->tabla = new Table($this->data,$this->obtenerTitulos());
-
+            $this->tabla->data=$this->attrDataTabla;
             $this->tabla->attr['id']=$this->idTablaVista;
 
             $this->setDataTitulos();
