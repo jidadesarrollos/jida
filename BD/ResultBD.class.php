@@ -5,9 +5,8 @@
  * Permite acceder y manejar la matriz resultado de una consulta a base de datos
  * 
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package 
- * @subpackage 
- * @category Modelo
+ * @package Framework 
+ * @subpackage BD
  * @version 1.0
  */
 
@@ -16,18 +15,50 @@ class ResultBD{
     /**
      * @var object $bd Objeto Instanciado manejador de base de datos
      */
-    private $bd;
+    private $dataModel; 
     /**
      * @var $result Resultado obtenido de la consulta de base de datos
      */
-    private $result ; 
-    function __construct($result){
+    
+    private $result;
+    private $bdObject;
+    protected $query;
+    protected $idResultado;
+    protected $unico;
+    private $ejecutado=FALSE;
+    
+    function __construct(DataModel $DataModel){
+        $this->setValores($DataModel);
         
-        $this->result=$result;
     }
     
+    function setValores(DataModel $DataModel){
+        $this->dataModel = $DataModel;
+        $this->bdObject = $this->dataModel->__get('bd');
+        $this->idResultado= $this->bdObject->__get('idResult');
+        $this->result = $this->dataModel->bd->result;
+        if(!empty($this->idResultado) or $this->result)
+            $this->ejecutado=TRUE;
+        return $this;
+    }
     function getData(){
         return $this->result;
+    }
+    /**
+     * Valida si se ejecuto la consulta a base de datos
+     * @method ejecutado
+     */
+    function ejecutado(){
+        return $this->ejecutado;
+    }
+    function idResult(){
+        return $this->idResultado;
+    }
+    function esUnico(){
+        
+    }
+    function query(){
+        return $this->dataModel->bd->query;
     }
 }
 

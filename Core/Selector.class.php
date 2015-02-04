@@ -131,15 +131,21 @@ class Selector{
                 $selectorHTML .= " $key=\"$value\"";
             }    
         }
-        if(!in_array($selector,array('img','hr','br'))){
-            $selectorHTML .= ">\n".$tabulaciones."$content";
-            $selectorHTML .= "\n".$tabulaciones."</$selector>";    
+        if(!in_array($selector,array('img','hr','br','link'))){
+            
+            if(!empty($content)){
+                $selectorHTML .= ">\n".$tabulaciones."$content";
+                $selectorHTML .= "\n".$tabulaciones."</$selector>";    
+            }else{
+                $selectorHTML.=">$content</$selector>";
+            }
+                
         }else{
             $selectorHTML.="/>";
         }
         
         
-        return $selectorHTML;
+        return $selectorHTML."\n";
     }
     
     /**

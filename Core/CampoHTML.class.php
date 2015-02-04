@@ -93,7 +93,7 @@ class CampoHTML extends DBContainer {
     
     private $valueUpdate = array ();
     private $valueUpdateMultiple=array();
-    
+    protected $attrData = array();
     /**
      * Constructor
      * 
@@ -110,7 +110,7 @@ class CampoHTML extends DBContainer {
         $this->registroMomentoGuardado=FALSE;
         /**
          * Entra aqui si solo son pasados 2 parametros
-         * 1. tipo de tabla : 1 Campos Aplicacion 2. campos Forms framework
+         * 1. tipo de tabla : 1) Campos Aplicacion 2) campos Forms framework
          * 2. id del campo
          */
         if($totalParametros==2 and !is_array(func_get_arg(0))){
@@ -144,7 +144,7 @@ class CampoHTML extends DBContainer {
                 if(is_array($arrValue) and count($arrValue)>0){
                     //Validar si el campo update es multi-selección.
                     
-                    $this->valueUpdate=$arrValue;    
+                    $this->valueUpdate=$arrValue;
                     $this->valueUpdateMultiple=$arrValue;
                      
                 }
@@ -237,6 +237,11 @@ class CampoHTML extends DBContainer {
         $class = (!empty($this->class)) ? "class=\"$this->cssControlRequerida $this->class\"" : "class=\"$this->cssControlRequerida\"";
         $this->attrTitle = (!empty($this->title)) ? " title=\"$this->title\" " : "";
         $data = ($this->data_atributo != "") ? " $this->data_atributo" : "";
+        if(is_array($this->attrData) and count($this->attrData)>0){
+            foreach ($this->attrData as $key => $value) {
+                $data.=" $key='".$value."'";
+            }
+        }
         $this->atributosAdicionales = " " . $this->attrTitle . " " . $class . " " . $data . " " . $this->attrVisibilidad . " ";
         
         switch ($this->control) {
@@ -417,8 +422,8 @@ class CampoHTML extends DBContainer {
         foreach ( $this->opciones as $valor => $dato ) {
             $selected = "";
             if ($this->typeForm == 2) {
-                 
-                if (array_key_exists($this->name,$this->valueUpdate[0]) and $this->valueUpdate[0] [$this->name] == $valor){
+                
+                if (is_array($this->valueUpdate[0]) and array_key_exists($this->name,$this->valueUpdate[0]) and $this->valueUpdate[0] [$this->name] == $valor){
                     $selected = "selected=\"selected\"";
                 }
             }

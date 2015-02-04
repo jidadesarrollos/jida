@@ -11,47 +11,18 @@
  */
 
 class Pagina{
-    
     /**
-     * Define el nombre del controlador requerido
-     * @var $controlador
+     * Información pasada al layout y vista a renderizar
+     * @param mixed $data
      */
-    private $controlador;
-    /**
-     * Archivo vista a renderizar
-     * @var $vista
-     * @access private
-     */
-     
-    private $vista;
-    /**
-     * Nombre de la vista requerida
-     * 
-     * Por defecto el nombre de la vista es el mismo nombre
-     * que el metodo solicitado
-     * @var $nombreVista
-     * @access private;
-     */
-    private $nombreVista;
-    
-    /**
-     * Nombre del Modulo o componente al que pertenece el controlador
-     */
-    private $modulo;
+    var $data;
     /**
      * Define la ubicación de las plantillas HEADER y FOOTER
      * a utilizar en la pagina
      * @var string $urlPlantilla
      */
     var $directorioPlantillas="";
-    /**
-     * Define directorio de layout a usar
-     * @var $directorioLayout
-     * @access private
-     */
-
-          
-    private $directorioLayout;
+    
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
      * en desarrollo o, si es una plantilla prederminada del framework
@@ -81,6 +52,12 @@ class Pagina{
      * @var $rutaApp
      */
     /**
+     * Define directorio de layout a usar
+     * @var $directorioLayout
+     * @access private
+     */
+    private $directorioLayout;
+    /**
      * Define la ruta de los modulos del framework;
      * @var $rutaFramework
      * @access private
@@ -92,7 +69,32 @@ class Pagina{
      * @access private
      */
     private $rutaPlantillasFramework = "";
+        /**
+     * Define el nombre del controlador requerido
+     * @var $controlador
+     */
+    private $controlador;
+    /**
+     * Archivo vista a renderizar
+     * @var $vista
+     * @access private
+     */
+     
+    private $vista;
+    /**
+     * Nombre de la vista requerida
+     * 
+     * Por defecto el nombre de la vista es el mismo nombre
+     * que el metodo solicitado
+     * @var $nombreVista
+     * @access private;
+     */
+    private $nombreVista;
     
+    /**
+     * Nombre del Modulo o componente al que pertenece el controlador
+     */
+    private $modulo;
     private $rutaExcepciones="";
     
     
@@ -123,12 +125,9 @@ class Pagina{
             throw new Exception("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
             
         }
-        
-        if(defined('DIR_EXCEPCION_PLANTILLAS')){
-            
+        if(defined('DIR_EXCEPCION_PLANTILLAS')){   
             $this->rutaExcepciones = DIR_EXCEPCION_PLANTILLAS;
         }else{
-            
             $this->rutaExcepciones = DIR_PLANTILLAS_FRAMEWORK."error/";
         }
         #Ruta para vistas de la aplicacion
@@ -203,12 +202,7 @@ class Pagina{
         }
         
         if(!is_readable($rutaVista)){
-            
             throw new Exception("Pagina no conseguida", 404);
-               
-            #$paginaError=($this->rutaPagina==3)?$this->nombreVista:"404";
-            #$rutaVista = $this->obtenerVistaError($rutaVista,$paginaError);
-            
         }
         $this->vista=$rutaVista;
         
@@ -253,6 +247,11 @@ class Pagina{
         
         
     
+    }
+    
+    private function tidy(){
+        $Tidy = tidy_parse_string($this->vista);
+        Debug::mostrarArray($Tidy->body());
     }
     /**
      * Muestra una página de error
@@ -306,12 +305,66 @@ class Pagina{
         
         $metodos = get_class_vars($clase);
         foreach($metodos as $k => $valor) {
-            
             if (isset($arr[$k])) {
                 $this->$k = $arr[$k];
             }
         }
         
+    }
+    
+    function printJS(){
+        $js="";
+        $this->checkData();
+        $cont=0;
+        foreach ($this->data->js as $key => $archivo) {
+            
+            if(is_string($key)){
+                if($key==ENTORNO_APP){
+                    foreach ($archivo as $key => $value){
+                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                        if($cont==0) $cont=2;
+                    }
+                        
+                }
+                
+            }
+            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+            if($cont==0) $cont=2;
+        }
+        return $js;
+    }
+    function printCSS(){
+        $css = "";
+        $this->checkData();
+        $cont=0;
+        foreach ($this->data->css as $key => $files) {
+            
+            if(is_string($key)){
+                if($key==ENTORNO_APP){
+                    foreach ($files as $key => $value) {
+                        if(is_array($value)) 
+                            $css.=Selector::crear('link',$value,null,$cont);
+                        else 
+                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
+                        if($cont==0) $cont=2;
+                    }    
+                }   
+            }else{
+                if(is_array($files)){
+                    $css.=Selector::crear('link',$files,null,$cont);
+                }else{
+                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
+                }
+                if($cont==0) $cont=2;
+                
+            }
+        }
+        return $css;
+    }
+    private function checkData(){
+        if(!$this->data instanceof DataVista){
+            throw new Exception("No se ha instanciado correctamente el objeto DataVista", 201);            
+        }
     }
 }
 

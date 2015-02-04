@@ -50,7 +50,10 @@ class Mysql extends ConexionBD{
      * @var $dataResult
      */
     var $dataResult;
-    
+    /**
+     * Guarda el id resultante de la consulta ejecutada
+     */
+    var $idResult;
     /**
      * Resultado retornado de una sentencia a base de datos
      * @var string $result
@@ -96,8 +99,6 @@ class Mysql extends ConexionBD{
       * 
       */
     function ejecutarQuery($query="",$tipoQuery=1){
-        
-        
         if(!empty($query)){
             $this->query=$query;    
         }
@@ -112,22 +113,16 @@ class Mysql extends ConexionBD{
             $this->result  = $this->mysqli->query($this->query);    
         }
         
-        
         if(!$this->result){
             
             throw new Exception("No se pudo ejecutar el query <br/> <strong>$query</strong><br/> (".$this->mysqli->errno.") ".$this->mysqli->error, 200);       
         }
         $this->totalCampos = $this->mysqli->field_count;
-        
+        $this->idResult = $this->mysqli->insert_id;
         if(isset($this->result->num_rows))
             $this->totalRegistros = $this->result->num_rows;
         
         return $this->result;
-        
-    }
-    
-    
-    private function validarUnicidad(){
         
     }
     /**
@@ -136,6 +131,9 @@ class Mysql extends ConexionBD{
      * @param array  $camposTabla
      * @param array  $valoresCampos
      * @return array $result
+     * @deprecated Solo debe ser usado si se trabaja con clase DBContainer
+     * 
+     * @see self::insertar
      * 
      */
     function insert($nombreTabla,$camposTabla,$valoresCampos,$id,$unico){
@@ -180,7 +178,7 @@ class Mysql extends ConexionBD{
                     $result['ejecutado']=0;
                     $result['unico'] = 1;
                 }                       
-            }else{
+            }else{   
                 /**
                  * Este else se ejecuta cuando se esta volviendo a realizar la peticion (reenvio de petición)
                  */
@@ -191,18 +189,17 @@ class Mysql extends ConexionBD{
         return $result;
     }
 
-
     /**
-     * Realiza inserciones multiples en una tabla de base de datos
-     * 
-     * @param string $nombreTabla Tabla en la que se realiza la inserción
+     * Realiza la inserción de un nuevo registro en base de datos
+     * @method insertar
      */
-    function insertMultiple($nombreTabla,$campos,$valores,$id=""){
-        array_unshift($camposTabla, $id);
-        array_unshift($valoresCampos, 'null');
-        $queryCheck="";
-        
+    function insertar($insert){
+        $this->ejecutarQuery($insert);
+        $this->idResult = $this->mysqli->insert_id;
+        return $this->result;
     }
+
+
     /**
      * Cierra una conexión a Base de Datos
      */
@@ -408,6 +405,14 @@ class Mysql extends ConexionBD{
         }while($this->mysqli->more_results() and $this->mysqli->next_result());
         
         return $arrayResult;
+   }
+    
+    function __get($propiedad){
+        if(property_exists($this, $propiedad)){
+            return $this->$propiedad;
+        }else{
+            return false;
+        }
     }
 }//final clase Mysql
 

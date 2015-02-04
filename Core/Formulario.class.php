@@ -91,7 +91,6 @@ class Formulario extends DBContainer {
      * @example $_SESSION['__msjForm']="Mensaje a mostrar";
      */
     public $mostrarMensajes = TRUE;
-    
     /**
      * Valor o id del objeto a modificar.
      */
@@ -168,6 +167,8 @@ class Formulario extends DBContainer {
     var $cssDivErrorCampo = "div-error";
     var $cssControlForm = "";
     private $tablaCampos = "s_campos_f";
+    
+    private $funcionJidaJs = 'jValidador';
     /**
      * Hace referencia al valor de busqueda del formulario, puede ser un
      * valor entero, en cuyo caso el formulario será buscado por el ID del mismo
@@ -613,19 +614,9 @@ class Formulario extends DBContainer {
      * @return string
      */
     private function llamadaJson($campo, $eventoCampo, $vuelta) {
-        if ($vuelta == 0) {
-            $js = "\n\t\t'$campo':";
-        } else {
-            $js = ",\n\t\t'$campo':";
-        }
-        /*
-        if(strrpos("mensaje",$eventoCampo)!==FALSE){
-            echo "ak<hr>";
-                $js .= "\n\t\t\t\t" . $eventoCampo . "";
-        }else{
-         */
-            $js .= "\n\t\t\t\t{" . $eventoCampo . "}";
-        #}
+        if ($vuelta == 0) $js = "\n\t\t'$campo':";
+        else $js = ",\n\t\t'$campo':";
+        $js .= "\n\t\t\t\t{" . $eventoCampo . "}";
         return $js;
     }
     
@@ -645,12 +636,9 @@ class Formulario extends DBContainer {
         
         $nameBotonJs = $this->idBotonForm;
         $js = "\n\r<SCRIPT>\n\t
-        
         $(document).ready(function(){\n\t";
-        
         $validador = "var validador = new jd.validador(\n\t\t" . "\"" . $nameBotonJs . "\",{";
         $validador .= $json . "\n\t\t\t\t\t}";
-        
         if(!empty($this->funcionPreviaValidadorJida)){
             $validador.=",".$this->funcionPreviaValidadorJida."\n";
         }else{
@@ -682,8 +670,7 @@ class Formulario extends DBContainer {
      */
     public function armarFormularioArray($campoUpdate = "") {
         
-        if ($campoUpdate != "")
-            $this->campoUpdate = $campoUpdate;
+        if ($campoUpdate != "")    $this->campoUpdate = $campoUpdate;
         
         $formulario = array ();
         if(count($this->dataPost)>0){
@@ -693,21 +680,24 @@ class Formulario extends DBContainer {
         }
         $vuelta = 0;
         $javascript = "";
-         
-        if ($this->tipoF == 2) {
-            
-            $dataUpdate = $this->obtenerValuesForUpdate($this->id_form );
-        }
-       
-
+        
+        if ($this->tipoF == 2) $dataUpdate = $this->obtenerValuesForUpdate($this->id_form );
+        
         foreach ( $this->camposFormulario as $posicion => $arr ) {
-            
+            $controlHTML = new CampoHTML ( $arr, $dataUpdate, $this->externo );
             if ($arr ['eventos'] != "") {
-                $javascript .= $this->llamadaJson ( $arr ['id_propiedad'], $arr ['eventos'], $vuelta );
-                $vuelta ++;
+                
+                if($this->funcionJidaJs=='jValidador'){
+                    $data = "{".$arr['eventos']."}";
+                    $controlHTML->setAtributosCampoHTML(['attrData'=>['data-validaciones'=>$data]]);
+                }else{
+                    $javascript .= $this->llamadaJson ( $arr ['id_propiedad'], $arr ['eventos'], $vuelta );
+                    $vuelta ++;    
+                }
+                
             } 
             
-            $controlHTML = new CampoHTML ( $arr, $dataUpdate, $this->externo );
+            
             if(!empty($this->cssControlForm))
                 $controlHTML->setAtributosCampoHTML(['cssControlForm'=>$this->cssControlForm]);
             // i es agregado un query a la clase formulario es pasado a la clase campo en el momento de creacion del control.
@@ -742,7 +732,14 @@ class Formulario extends DBContainer {
         // ------------------------------------------
         return $formulario;
     }
-    
+    /**
+     * Permite borrar la data del formulario
+     * @method borrarDataForm
+     */
+    function borrarDataForm(){
+        $this->dataPost="";
+        
+    }
     /**
      * Funcion que obtiene la data modo update de un formulario dado.
      *
@@ -1010,7 +1007,6 @@ class Formulario extends DBContainer {
                 $formulario.="\n<div class=\"row\">";
                 for($e=1;$e<=$columnas;$e++){
                     
-                    
                     if(array_key_exists($contador,$this->estructuraFilas)){
                         
                     }
@@ -1078,7 +1074,13 @@ class Formulario extends DBContainer {
             endforeach;
         }else
         if($this->botonGuardado===TRUE){
-            $atributosInput=array('class'=>$this->classBotonForm,'type'=>$this->tipoBoton,'name'=>$this->nombreSubmit,'id'=>$this->idBotonForm);
+            $atributosInput=['class'=>$this->classBotonForm,
+                            'type'=>$this->tipoBoton,
+                            'name'=>$this->nombreSubmit,
+                            'id'=>$this->idBotonForm];
+            if($this->funcionJidaJs=='jValidador'){
+                $atributosInput['data-jida']='validador';
+            }
             if(!empty($this->funcionOnclick))$atributosInput['onclick']=$this->funcionOnclick;
             $btn = Selector::crearInput($this->valueBotonForm,$atributosInput);
             $botones=Selector::crear('section',array('class'=>'row'),Selector::crear('div',array('class'=>'col-md-12 col-xs-12'),$btn));

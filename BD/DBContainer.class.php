@@ -174,9 +174,7 @@ class DBContainer {
                 break;
         }
     }
-    private function _activarORM(){
-        
-    }
+    
     /**
      * Verifica que clases son identificadas como
      */
@@ -340,6 +338,9 @@ class DBContainer {
             $result = $this->modificarObjeto($momentoGuardado);
             $accion = "Modificado";
         }
+        $clave=  $this->clavePrimaria;
+        $this->$clave = $result['idResultado'];
+        
         $retorno = $result;
         $retorno['result'] = $result;
         $retorno['accion'] =  $accion; 
@@ -403,7 +404,6 @@ class DBContainer {
 					$valores[]= "'".FechaHora::datetime()."'";
 					$valores[]= "'".FechaHora::datetime()."'";
 				}
-        
         $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria,$this->unico);
 		Session::destroy('__queryInsert');
         return $result;
@@ -676,5 +676,15 @@ class DBContainer {
         }else{        
             throw new Exception("La propiedad solicitada no existe", 123);   
         }
+    }
+    
+    function salvarTodos($array){
+        if(is_array($array)){
+            
+        }else{
+            throw new Exception("El valor pasado debe ser un array", 1);
+            
+        }
+        
     }
 }

@@ -8,27 +8,22 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
 class Arrays {
-	
-	
-
+    
     /**
-     * Recorre un arreglo multidimensional buscando las columnas solicitadas y devuelve
-     * un nuevo arreglo solo con esos valores
-     * @method getColummnasArray
-     * @param array $array Arreglo a recorrer
-     * @param array $columnas Arreglo con columnas deseadas
-     * @return array $data Arreglo creado solo con los valores solicitados
+     * Combina dos arreglos utilizando uno para la
+     * estructura y otro para los valores
+     * @var array $ar1 Arreglo con estructura a usar
+     * @var array $ar2 Arreglo con valores a usar para llenar el array 1
+     * @return array $ar1 arreglo inicial con valores insertados
      */
-    static function getColumnasArray($array,$columnas){
-        $datos=array();
-        foreach ($array as $key => $columna) {
-            
-        }
-        
-    }
-    
-    static function recorrerArray(){}
-    
+    static function combinar($ar1,$ar2){
+      foreach ($ar1 as $key => $value) {
+          if(array_key_exists($key, $ar2)){
+              $ar1[$key]=$ar2[$key];
+          }
+      }
+      return $ar1;
+    } 
     /**
      * Recorre un array recursivo buscando los valores solicitados
      * 

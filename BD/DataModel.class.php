@@ -7,13 +7,16 @@
 * @version 01
 * @category Model
 */
-
+include_once 'ResultBD.class.php';
 class DataModel{
     
     protected $tablaBD;
     protected $prefijo;
     protected $fecha_creacion;
     protected $fecha_modificacion;
+    protected $result;
+    
+    protected $registroMomentoGuardado=TRUE;
     /**
      * Consulta de base de datos construida
      * @var $query
@@ -60,6 +63,13 @@ class DataModel{
      * 
      */
      private $clase;
+     /**
+      * Instancia de objeto para retorno de data de Base de Datos
+      * @param object $resultBD
+      */
+     private $resultBD;
+     
+    
     /**
      * Funcion constructora
      * @method __construct
@@ -74,7 +84,7 @@ class DataModel{
                 
         }
         if(empty($this->pk)){
-            $this->obtenerClavePrimaria();
+            $this->obtenerpk();
         }
         $this->obtenerPropiedadesObjeto();
         if($id and is_int($id)){
@@ -124,7 +134,7 @@ class DataModel{
      * @method _get()
      * @param string $propiedad Nombre de la propiedad a obtener
      */
-    function _get($propiedad){
+    function __get($propiedad){
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
         }else{        
@@ -179,6 +189,7 @@ class DataModel{
                 $this->bd = new Mysql ();
                 break;
         }
+        $this->resultBD=new ResultBD($this);
     }//fin metodo initBD
     /**
      * Obtiene todas las propiedades públicas de un objeto instanciado.
@@ -224,7 +235,7 @@ class DataModel{
                     
                 }elseif(property_exists($object, 'nombreTabla')){
                     $tabla = $object->_get('nombreTabla');
-                    $pk = $object->_get('clavePrimaria');
+                    $pk = $object->_get('pk');
                     $props = $object->_get('propiedadesPublicas');
                 }//fin if
                     $camposTabla = array_keys($props);
@@ -262,13 +273,13 @@ class DataModel{
      * Obtiene el nombre de la clave primaria de la tabla de base de datos
      * 
      * El nombre es construido en base al estandard
-     * @var obtenerClavePrimaria
+     * @var obtenerpk
      */
-    private function obtenerClavePrimaria() {
+    private function obtenerpk() {
         $clase = $this->clase;
         if(!empty($clase)){
-            $clavePrimaria = ($this->pk != "") ? $this->pk : "id_" . $clase;
-            $this->pk = strtolower($clavePrimaria);
+            $pk = ($this->pk != "") ? $this->pk : "id_" . $clase;
+            $this->pk = strtolower($pk);
         }
             
     }
@@ -340,11 +351,123 @@ class DataModel{
         return $this;
     }//final función like
     protected function obt(){
-        Debug::string($this->query);
+        
         return $this->bd->obtenerDataCompleta($this->query);
     }
     protected function obtFila(){
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
     }
+    /**
+     * Permite registrar el objeto actual
+     * @method salvar
+     */
+    function salvar($data=""){
+        if(is_array($data)){
+            $this->establecerAtributos($data);
+        }
+        $this->obtenerPropiedadesObjeto();
+        if(empty($this->propiedades[$this->pk])){
+            $this->insertar();
+        }else{
+            $this->modificar();
+        }
+        return $this->result->setValores($this);
+    }
+    /**
+     * Crea un registro
+     */
+    private function insertar($data=""){
+          $data = $this->estructuraInsert();
+          
+          $insert = sprintf("insert into %s (%s) VALUES (%s)",
+                            $this->tablaBD,
+                            implode(",",$this->obtenerCamposQuery()),
+                            implode(",",$data['valores']));
+        if($this->bd->insertar($insert)){
+            $this->$this->pk = $this->bd->idResult;
+        }
+        
+    }
+    
+    /**
+     * Obtiene los campos de Base de datos utilizados para realizar una inserción
+     * o modificación.
+     * 
+     * @method obtenerCamposQuery
+     * @return array $campos
+     */
+    private function obtenerCamposQuery(){
+        $campos = $this->propiedades;
+        unset($campos[$this->pk]);
+        $campos = array_keys($campos);
+        if($this->registroMomentoGuardado){ 
+            $campos[]='fecha_creacion';
+            $campos[]='fecha_modificacion';
+        }
+        return $campos;
+    }
+    /**
+     * Inserta multiples registros en Base de Datos
+     * @method crearTodo
+     * @param array $data Data a insertar
+     */
+    function crearTodo($data){
+        if(is_array($data)){
+            $insert = "INSERT INTO ".$this->tablaBD." ";
+
+            $insert.="(".implode(",", $this->obtenerCamposQuery()).") VALUES ";
+            $i=0;
+            foreach ($data as $key => $registro) {
+                if($i>0) $insert.=",";
+                $datos = $this->estructuraInsert($registro);
+                $insert.=" (".implode(',', $datos).")";
+                ++$i;
+            }
+            $this->bd->ejecutarQuery($insert);
+            
+            return $this->resultBD->setValores($this);
+        }else{
+            throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
+        }
+    }
+    private function estructuraInsert($data=array()){
+            
+        if(count($data)<1){
+            $data = $this->propiedades;
+            
+        }
+        
+        foreach($data as $campo => $valor) {
+            if ($campo != $this->pk) {
+                
+                switch ($valor) {
+                    case '':
+                        if(!is_numeric($valor)){
+                            $valores[]="null";
+                        } else {
+                            $valores[]=$valor;
+                        }
+                        break;
+                    default:
+                        $valores[]="'".$valor."'";
+                        break;
+                }
+            }
+        }//fin foreach
+        if($this->registroMomentoGuardado===TRUE){
+            $valores[]= "'".FechaHora::datetime()."'";
+            $valores[]= "'".FechaHora::datetime()."'";
+        }
+        return $valores;
+    
+        
+    }//fin crearInsert
+    private function modificar(){
+        
+    }
+    /**
+     * Permite guardar multiples registros
+     * @method guardarTodos
+     */
     
 }
