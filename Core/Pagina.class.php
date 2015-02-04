@@ -178,7 +178,7 @@ class Pagina{
      */
     
     function renderizar($data,$nombreVista=""){
-        Debug::string($this->template);
+        
         if(!empty($nombreVista)){
             $this->nombreVista = $nombreVista;
         }

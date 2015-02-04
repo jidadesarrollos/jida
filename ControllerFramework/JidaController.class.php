@@ -467,7 +467,7 @@
     }
     
     private function procesarExcepcion(Exception $excepcion){
-        Debug::mostrarArray($excepcion);
+        
         $ctrlError = $this->controlador."Controller";
         
                 
