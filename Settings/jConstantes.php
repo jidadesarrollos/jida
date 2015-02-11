@@ -30,9 +30,9 @@ if(!defined('titulo_sistema'))
 if(!defined('NOMBRE_APP'))
     define('NOMBRE_APP','Aplicación de JidaFramework');
 
-if(!defined('PLURAL_A')){
-    define('PLURAL_A','s');
+if(!defined('PLURAL_ATONO')){
+    define('PLURAL_ATONO','s');
 }
-if(!defined('PLURAL_B')){
-    define('PLURAL_B','es');
+if(!defined('PLURAL_CONSONANTE')){
+    define('PLURAL_CONSONANTE','es');
 }

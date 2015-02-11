@@ -15,9 +15,7 @@ class ComponentesController extends Controller{
         
         $this->url="/jadmin/componentes/";
         $this->layout="jadmin.tpl.php";
-        if($this->solicitudAjax()){
-            $this->layout="ajax.tpl.php";
-        }        
+        parent::__construct();        
         
     }
     function index(){

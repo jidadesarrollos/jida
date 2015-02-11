@@ -21,8 +21,6 @@ class ExcepcionController extends Controller{
      * @param object $message
      * @return boolean true
      */
-     
-    
     function error($e){
         $this->excepcion=$e;
         $this->data['msjError'] = $this->procesarError();

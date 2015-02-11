@@ -20,7 +20,7 @@
         </title>
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
-        <link href="/htdocs/css/bootstrap3.3.1.css" rel="stylesheet">
+        <link href="/htdocs/css/bootstrap3.3.2.min.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
@@ -85,10 +85,12 @@
         <script src="/htdocs/js/libs/less.js"></script>
         <!--jidalibs-->
         <script src="/htdocs/js/jida/jd.ajax.js"></script>
-        <script src="/htdocs/js/jida/validadorJida.js"></script>
+        <!-- <script src="/htdocs/js/jida/validadorJida.js"></script> -->
+        <script src="/htdocs/js/jida/validador.js"></script>
         <script src="/htdocs/js/jida/jidaPlugs.js"></script>
         <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
         <!--custom files-->
         <script src="/htdocs/js/funcionesGenerales.js"></script>
+        <script src="/htdocs/js/jida/jadmin.js"></script>
     </body>
 </html>

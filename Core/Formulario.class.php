@@ -689,7 +689,7 @@ class Formulario extends DBContainer {
                 
                 if($this->funcionJidaJs=='jValidador'){
                     $data = "{".$arr['eventos']."}";
-                    $controlHTML->setAtributosCampoHTML(['attrData'=>['data-validaciones'=>$data]]);
+                    $controlHTML->setAtributosCampoHTML(['attrData'=>['data-validacion'=>$data]]);
                 }else{
                     $javascript .= $this->llamadaJson ( $arr ['id_propiedad'], $arr ['eventos'], $vuelta );
                     $vuelta ++;    

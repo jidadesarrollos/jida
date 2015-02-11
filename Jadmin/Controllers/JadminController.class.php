@@ -15,10 +15,12 @@ class JadminController extends Controller{
     
     
     function __construct(){
+        parent::__construct();
+        $this->url = "/jadmin/";
         
         $this->jctrl = new JidaControl();
         $this->layout="jadmin.tpl.php";
-        $this->url = "/jadmin/";
+        
         
     }
     function index(){

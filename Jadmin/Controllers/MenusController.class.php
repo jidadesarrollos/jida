@@ -12,6 +12,7 @@ class MenusController extends Controller {
     function __construct(){
         $this->layout="jadmin.tpl.php";
         $this->url="/jadmin/menus/";
+        parent::__construct();
         $jctrl = new JidaControl();
         $tablas = $jctrl->obtenerTablasBD();        
     }
@@ -208,7 +209,7 @@ class MenusController extends Controller {
                             }
                             $opcionesPerfil = new OpcionMenuPerfil();
                             
-                            $opcionesPerfil->eliminarAccesos($guardado['idResultado'])->crearTodo($perfiles);
+                            $opcionesPerfil->eliminarAccesos($guardado['idResultado'])->salvarTodo($perfiles);
                         }else{
                             Debug::mostrarArray($this->obtPost('id_perfil'));
                             Debug::string("No entramos",true);

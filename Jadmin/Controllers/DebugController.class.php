@@ -8,7 +8,7 @@ class DebugController extends Controller{
     
     function __construct(){
         $this->jctrl = new JidaControl();
-		
+		parent::__construct();
         $this->layout="jadmin.tpl.php";
     }      
     

@@ -412,19 +412,33 @@ class Vista extends DBContainer{
      * @param string $nombreVista Nombre de la vista
      * @param mixed $global Arreglo o nombre del key del arreglo global para la configuración de la vista 
      */
-    function __construct($query,$arregloConfiguracion=false,$nombreVista="Vista",$global=null){
-        
+    function __construct($query,$arregloConfiguracion=false,$nombreVista="Vista"){
+        //Se obtiene el total de parametros para manejar compatibilidad con 
+        //las versiones anteriores
         $totalParametros=func_num_args();
-        $totalParametros = func_num_args();
         $this->consultaBD=$query;
+        parent::__construct(__CLASS__);
+        if($totalParametros==3 or $totalParametros==4){
+            $global = ($totalParametros==4)?func_get_arg(4):null;
+            $this->__oldConstruct(func_get_arg(0),func_get_arg(1),func_get_arg(2),$global);
+        }else{
+            
+        }
+        if(array_key_exists('configVista', $GLOBALS)){
+            $this->setParametrosVista($GLOBALS['configVista']);
+        }
+      
         
+        
+        $this->inicializarValoresVista();
+        /*Creación de objeto tabla*/
+    }
+    private function __oldConstruct($query,$arregloConfiguracion=false,$nombreVista="Vista",$global){
         if(!is_null($global) and is_string($global)){
             $arrayConfiguracion=$GLOBALS[$global];
         }elseif(is_array($global)){
             $arrayConfiguracion=$global;    
         }
-        
-        parent::__construct(__CLASS__);
         $this->nombreVista = $nombreVista;
         
          if(is_array($arregloConfiguracion)){
@@ -440,11 +454,10 @@ class Vista extends DBContainer{
         
             endif;     
          }
-        
-        
-        $this->inicializarValoresVista();
-        /*Creación de objeto tabla*/
     }
+
+
+
     /**
      * Agrega paginador a la vista
      * 
@@ -1095,7 +1108,6 @@ class Vista extends DBContainer{
     function setParametrosVista($arr){
          $metodos=get_class_vars(__CLASS__);
         foreach($metodos as $k => $valor){
-            
             if(isset($arr[$k])){
                 $this->$k=$arr[$k];
             }

@@ -51,15 +51,29 @@ class ResultBD{
     function ejecutado(){
         return $this->ejecutado;
     }
-    function idResult(){
+    /**
+     * Retorna el id obtenido de la última transacción en base de datos
+     * @method idResult
+     * @return int Resultado
+     * @see $this::idResultado
+     */
+    function idResultado(){
         return $this->idResultado;
     }
+    function setUnico($unico){
+        $this->unico=$unico;
+    }
     function esUnico(){
-        
+        return $this->unico;
     }
     function query(){
         return $this->dataModel->bd->query;
     }
+    function __set($property,$valor){
+        if(property_exists($this, $property))
+            $this->$property=$valor;
+    }
+    
 }
 
 ?>
