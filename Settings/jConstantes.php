@@ -26,20 +26,14 @@ if(!defined('NOMBRE_APP'))
 #===============================================================================
 # Constantes de entorno
 #===============================================================================
-/**
- * @constante dev Deterimina si el sistema se entorno de desarrollo
- */
-define('dev','dev');
-/**
- * @constante prod Constante definida para determinar el sistema en entorno de producción
- */
-define('prod','prod');
+
 if(!defined('ENTORNO_APP')){
     /**
      * @constante ENTORNO_APP Define el entorno de la aplicación 
      */
     define('ENTORNO_APP',dev);
 }
+if(!defined('entorno_app'))    define('entorno_app',ENTORNO_APP);
 if(!defined('TEST_PLATFORM')){
     define('TEST_PLATFORM',FALSE);
   

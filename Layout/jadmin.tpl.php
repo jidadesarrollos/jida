@@ -21,7 +21,7 @@
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
         <link href="/htdocs/css/libs/bootstrap.min.css" rel="stylesheet">
-        <link href="/htdocs/css/f-a.css" rel="stylesheet">
+        <link href="/htdocs/css/libs/fa.min.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
         <link href="/htdocs/css/jida.css" rel="stylesheet">

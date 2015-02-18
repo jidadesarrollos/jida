@@ -39,7 +39,14 @@ define ('libs_dir', ROOT . 'libs' . DS);
 define ('HTDOCS_DIR',ROOT.'htdocs/');
 
 define('htdocs_dir',HTDOCS_DIR);
-
+/**
+ * @constante dev Deterimina si el sistema se entorno de desarrollo
+ */
+define('dev','dev');
+/**
+ * @constante prod Constante definida para determinar el sistema en entorno de producción
+ */
+define('prod','prod');
  
 if(function_exists('ini_set')){
 	/**

@@ -91,6 +91,7 @@ class MetodosController	 extends Controller{
                                                 'atributos'=>array( 'class'=>'btn',
                                                                     'title'=>'Agregar Descripci&oacute;n',
                                                                     'data-link'=>$this->url."add-descripcion/metodo/{clave}",
+                                                                    'href'=>$this->url."add-descripcion/metodo/{clave}",
                                                                     'data-jvista'=>'modal'
                                                                     ),
                                                 'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-edit fa-lg'))))
@@ -99,6 +100,7 @@ class MetodosController	 extends Controller{
                                                 'atributos'=>array( 'class'=>'btn',
                                                                     'title'=>'Editar Perfiles',
                                                                     'data-link'=>$this->url."asignar-acceso/metodo/{clave}",
+                                                                     'href'=>$this->url."add-descripcion/metodo/{clave}",  
                                                                     'data-jvista'=>'modal'
                                                                     ),
                                                 'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users fa-lg'))))

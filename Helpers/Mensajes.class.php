@@ -49,18 +49,11 @@ class Mensajes {
             
         $estilo=array();
         if(array_key_exists('configMensajes', $GLOBALS)){
-                foreach ($GLOBALS as $key => $value) {
-                    $estilo[$key]=$value;
-                }
+              $estilo = $GLOBALS['configMensajes'];
         }else{
             
         }
-                
-        // }else{
-            // $excepcion = "No se encuentran definidas las constantes css para los mensajes, verifique
-            // el archivo de configuración";
-            // throw new Exception($excepcion, 1);
-        // }
+        
         if(array_key_exists($clave, $estilo)){
             return $estilo[$clave];
         }
