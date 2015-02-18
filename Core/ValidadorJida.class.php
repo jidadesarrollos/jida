@@ -125,7 +125,8 @@ class ValidadorJida extends Validador{
                 }
             return true;
         } else {
-            
+            Debug::string($this -> dataValidaciones[$nombreValidacion]["expresion"]);
+            Debug::string($this->valorCampo,true);
             $this->obtenerMensajeError($nombreValidacion,$datosValidacion);
             return false;
         }

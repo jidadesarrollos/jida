@@ -88,9 +88,15 @@ class Selector{
      * @access private;
      */
     private function getElementosData(){
+        
         if(count($this->data)>0){
+            
+            if($this->selector=='TABLE'){
+                #Debug::mostrarArray($this->data);
+            }
             foreach ($this->data as $key => $value) {
-                $this->selectorCreado.=" $key=\"$value\"";
+                
+                $this->selectorCreado.=" $key='".$value."'";
             }
         }
     }//fin funcion
@@ -110,10 +116,8 @@ class Selector{
     /**
      * Genera un selector HTML
      * @method crear
-     * @param string $selector
-     *          Nombre Etiqueta HTML a crear
-     * @param array $atributos
-     *          Arreglo de atributos para el selector
+     * @param string $selector Nombre Etiqueta HTML a crear
+     * @param array $atributos Arreglo de atributos para el selector
      * @param string $content Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "",$tabs=0) {

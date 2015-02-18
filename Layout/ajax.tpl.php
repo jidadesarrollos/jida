@@ -1,1 +1,4 @@
 <?=$contenido?>
+
+
+$this->printJSAjax();

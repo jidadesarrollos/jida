@@ -9,14 +9,13 @@
  * 
  */
 class Controller {
-
+    
     var $urlCanonical=url_sitio;
     /**
      *  Define el layout a usar por el controlador
      *  @var $layout
      */
     var $layout=FALSE;
-    
 	/**
 	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
 	  * 
@@ -24,7 +23,6 @@ class Controller {
 	  * @access public
 	  */
 	var $tituloPagina="";
-    
     /**
      * Define el contenido de la meta-etiqueta description para uso de los buscadores
      * @var $metaDescripcion;
@@ -47,8 +45,6 @@ class Controller {
       * @var string $vista
       */
      var $vista="";
-     
-     
      /**
       * Arreglo que contiene la información que desee pasarse a la vista
       * 
@@ -56,6 +52,7 @@ class Controller {
       * una nueva posición asociativa con el nombre escogido por el programador, luego esta podrá
       * ser accedida desde la vista, por medio del arreglo global $dataArray;
 	  * @var $data
+      * @deprecated
       */
      var $data=array();
     /**
@@ -81,26 +78,38 @@ class Controller {
      * Data POST de Formulario
      * @var array $post
      */
-    protected $post;
+    private $post;
     /**
      * Data Get pasada por url
      * @var array $get;
      */
-    protected $get;
+    private $get;
     /**
      * Objeto DataVista
      * @var object $dv;
      */
+     
+    private $_clase;
+    /**
+     * Nombre del controlador
+     */
+    private $_nombreController;
+    private $_modulo;
     var $dv;
     function __construct(){
         $this->instanciarHelpers();
         $this->post=& $_POST;
         $this->get =& $_GET;
-        $this->dv = new DataVista();
         
+        $this->_clase=get_class($this);
+        $this->_nombreController = str_replace("Controller", "", $this->_clase);
+        $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
+        $this->dv = new DataVista();
+        $this->url = $this->urlController();
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
+        $this->getModelo();
         
     }
     
@@ -110,19 +119,7 @@ class Controller {
                 $this->$propiedad = new $propiedad();
             }
         }
-    }
-    
-    
-    /**
-     * Metodo por defecto
-     * 
-     * Es ejecutado en caso de que no se haya pasado un metodo
-     * al controlador
-     */
-    function index(){
-        
-    }
-    
+    } 
     /**
      * Filtra contenido de Texto
      * 
@@ -180,10 +177,8 @@ class Controller {
                $tipoForm=2;$pk=$_GET['id'];
            }
            $formulario = new Formulario($nombreForm,$tipoForm,$pk);
-           
        }else{
            throw new Exception("No se ha definido el formulario a ejecutar", 100);
-           
        }
     }
 	
@@ -214,11 +209,200 @@ class Controller {
             
             return $this->post[$param];
         }else{
-        
             return FALSE;
+        }   
+    }
+     /**
+     * Retorna el valor get solicitado, false si el valor no es conseguido
+     * @method get
+     * @param string $param Dato a solicitar 
+     * 
+     */
+    protected function get($param){
+        if(isset($this->get[$param]))
+            return $this->get[$param];
+        else
+            return false;
+    }
+    /**
+     * Retorna el valor post solicitado, false si el valor no es conseguido
+     * @method post
+     * @param string $param Dato a solicitar 
+     * 
+     */
+    protected function post($param){
+        if(isset($this->post[$param]))
+            return $this->post[$param];
+        else
+            return false;
+    }
+    
+    /**
+     * Devuelve la URL correspondiente al metodo que hace la llamada
+     * 
+     * @method urlActual
+     */
+    protected function urlActual($valor=1){
+        $quienLlama = debug_backtrace(null,$valor+1)[$valor]['function'];
+        return $this->url.$this->convertirNombreAUrl($quienLlama)."/";
+    }
+    
+    /**
+     * Convierte el nombre pasado en la estructura estandard de urls
+     * 
+     * La estructura consiste en todo en minusculas y separado por guiones
+     * @method convertirNombreAUrl
+     * @param string $nombre Nombre a convertir (metodo o controlador);
+     * @return string $url
+     */
+    protected function convertirNombreAUrl($nombre){
+        $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $nombre, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        
+        return strtolower(implode("-",$coincidencias));
+    }
+    /**
+     * Retorna la url del controlador actual
+     * @method urlController
+     */
+    protected function urlController(){
+        if(isset($GLOBALS['_MODULO_ACTUAL'] )){
+            $controller = str_replace("Controller", "", $this->_clase);
+            if(strtolower($this->_modulo)==strtolower($controller)){
+                $this->url = "/".strtolower($this->_modulo)."/";
+            }else{
+                if(empty($this->_modulo)){
+                    $this->url = "/".$this->convertirNombreAUrl($controller)."/";
+                }else{
+                    $this->url = "/".strtolower($this->_modulo)."/".$this->convertirNombreAUrl($controller)."/";    
+                }
+                    
+            }
+               
+        }
+        
+        return $this->url;
+    }
+    protected function urlModulo(){
+          return "/".strtolower($this->_modulo)."/";
+    }
+    /**
+     * Devuelve la estructura de la url solicitada
+     * @method getUrl
+     * @param string $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url actual
+     * @param string $controlador Nombre del controlador [aun no funcional] 
+     * @return string $url
+     */
+    protected function getUrl($metodo="",$data=array(),$controlador=""){
+        if(!empty($metodo)){
+            
+            if(method_exists($this->_clase,$metodo)){
+                $params= "";
+                if(count($data)>0){
+                    foreach ($data as $key => $value) 
+                        $params.="$key/$value/";
+                }
+                
+                return $this->urlController().$this->convertirNombreAUrl($metodo)."/".$params;
+            }else{
+                throw new Exception("El metodo pasado para estructurar la url no existe", 301);
+            }
+            
+        }else{
+            return $this->urlActual(2);
         }
         
     }
+    
+    /**
+     * Verifica si el controlador tiene un modelo correspondiente
+     * 
+     * Para que el modelo del controlador sea conseguido debe tener el nombre del Controlador
+     * en singular
+     * @method getModelo;
+     * 
+     */
+    private function getModelo(){
+        $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $arrayModel=array();
+        foreach ($words as $key => $word) {
+            if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+                $arrayModel[]=substr($word, 0,strlen($word)-2);
+            }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+                $arrayModel[]=substr($word, 0,strlen($word)-1);
+            }
+        }
+        
+        $model = (count($arrayModel)>0)?implode($arrayModel):$this->_nombreController;
+        if(class_exists($model)){
+            $this->modelo = new $model;
+        }
+    }
+    /**
+     * funcion estandard para eliminar registros, funcional solo con modelos que
+     * extiendan del objeto DataModel.
+     * @see DataModel
+     * @method eliminar
+     * @param mixed $id 
+     */
+    protected function eliminarDatos($id){
+        
+            if($this->getEntero($id)==0){
+                $id = $this->obtenerListaGet($id);
+                if(!$id)
+                    throw new Exception("El valor pasado para eliminar el objeto no es valido", 602);
+            }
+            return ($this->modelo->eliminar($id));    
+           
+    }
+    /**
+     * Genera una excepción 404.
+     */
+    protected function _404(){
+        throw new Exception("No se consigue el enlace solicitado", 404);
+        
+    }
+    
+    
+    protected function obtenerListaGet($lista){
+        $arr = explode(",",$lista);
+        $band = true;
+        foreach ($arr as $key => $value) {
+            if($this->getEntero($value)==0){
+                $band=false;
+            }
+        }
+        if($band==FALSE)
+            return $band;
+        else return $arr;
+    }
+    /**
+     * Devuelve contenido para una solicitud via ajax
+     * 
+     * Imprime la respuesta de la solicitud realizada sin esperar llegar a la vista
+     * @param mixed $respuesta Respuesta de la solicitud ajax
+     * @param int tipo 1 json, 2 html. 
+     */
+    protected function respuestaAjax($respuesta,$tipo=2){
+        if($tipo==2){
+            echo $respuesta;
+        }else{
+            print(json_encode($respuesta));    
+        }
+        exit;
+    } 
+    
+    protected function respuestaJson($respuesta){
+        print(json_encode($respuesta));
+        exit;
+    }
+    /**
+     * Realizar una redireccion
+     * @method redireccionar
+     */
+    protected function redireccionar($url){
+        header('location:'.$url.'');exit;
+    }
+    
 
 } // END
 

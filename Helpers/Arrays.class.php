@@ -88,7 +88,7 @@ class Arrays {
     /**
      * Agrega una columna a todos los valores de una matriz
      * @method addColumn
-     * @param array $arr Arreglo a modificar
+     * @param array [,$arr] Arreglo a modificar
      * @param mixed $valores Arreglo o string de valores a insertar
      * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
      */
@@ -125,6 +125,9 @@ class Arrays {
      * @method convertirAObjeto
      * @param array $array Arreglo a convertir
      * @return object $objeto Arreglo convertido en objeto
+     * 
+     * @example ca
+     * 
      */
     static function convertirAObjeto($array){
         $objeto = new stdClass();

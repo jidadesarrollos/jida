@@ -145,10 +145,12 @@ class CampoHTML extends DBContainer {
                     //Validar si el campo update es multi-selección.
                     
                     $this->valueUpdate=$arrValue;
+                    
                     $this->valueUpdateMultiple=$arrValue;
                      
+                }else{
+                    
                 }
-                
             }
             
             $this->cn = $this->bd;
@@ -463,13 +465,16 @@ class CampoHTML extends DBContainer {
         foreach ( $this->opciones as $valor => $dato ) {
             $check = "";
             if ($this->typeForm == 2 ) {
-                if(array_key_exists($this->name, $this->valueUpdate)){
-                    $this->valueUpdate[$this->name]=(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
-                    if ($this->valueUpdate[$this->name] == $valor){
+                
+                if(array_key_exists($this->name, $this->valueUpdate[0])){
+                        
+                    #$this->valueUpdate[$this->name]==(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
+                    if ($this->valueUpdate[0][$this->name] == $valor){
                         $check = "checked=\"checked\"";
                     }
+                    
                 }else{
-                   # throw new Exception("No se encuentra definido un valor update del formulario", 1);
+                 #  throw new Exception("No se encuentra definido un valor update del formulario", 1);
                     
                 }
             }elseif($i==0){

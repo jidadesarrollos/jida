@@ -37,7 +37,7 @@ class Validador{
                                             "mensaje"   =>  "solo puede contener caractares"),
                     'alfanumerico'  =>array("expresion" =>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ., ]*$/",
                                             "mensaje"   =>  "no puede contener caracteres especiales"),
-                    'programa'      =>array("expresion" =>  "/^[\/\.A-Za-z_-\d]*$/",
+                    'programa'      =>array("expresion" =>  "/^[\d\/\.A-Za-z_-]*$/",
                                             "mensaje"   =>  "Solo puede poseer caracteres alfanumericos,underscore o guion"),
                     'email'         =>array("expresion" =>  "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
                                             "mensaje"   =>  "El formato del email no es valido"),

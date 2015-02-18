@@ -23,7 +23,7 @@ class FechaHora {
 	static function diaSemana() {
 		$diaHoy = date ( 'l' );
 		$diasSemanas = array (
-				'Sonday' => 'Domingo',
+				'Sunday' => 'Domingo',
 				'Monday' => 'Lunes',
 				'Tuesday' => 'Martes',
 				'Wednesday' => 'Miércoles',
@@ -219,30 +219,6 @@ class FechaHora {
 			$arrayDias = self::formatoDias ();
 			
 			return $stringCiudad . ' ' . $arrayDias [$fechaSeparacion [0]] . '(' . $fechaSeparacion [0] . ') ' . $stringMes . ' ' . $mesActual . ' de ' . $fechaSeparacion [2] . '<br>';
-		}
-	}
-	/**
-	 * Función que retorna la fecha en Detalle.
-	 * 
-	 * @param string $fecha        	
-	 * @return string
-	 */
-	static function fechaEntradaSistema($fecha = '') {
-		$stringCiudad = 'Caracas,';
-		
-		if ($fecha == '') {
-			$diaHoy = self::diaSemanaNumero ();
-			$mesActual = self::mes ();
-			$anioActual = self::anioCuatroDigitos ();
-			
-			return $stringCiudad . ' ' . $diaHoy . ' de ' . $mesActual . ' de ' . $anioActual;
-		} else {
-			
-			$fechaBaseDatos = date ( 'd/m/Y', $fecha );
-			$fechaSeparacion = explode ( '/', $fechaBaseDatos );
-			$mesActual = self::mes ( $fechaSeparacion [1] );
-			
-			return $stringCiudad . ' ' . $fechaSeparacion [0] . ' de ' . $mesActual . ' de ' . $fechaSeparacion [2];
 		}
 	}
 	

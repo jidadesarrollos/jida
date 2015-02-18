@@ -1,4 +1,5 @@
-<?PHP 
+<?PHP
+include_once framework_dir.'Clases/DomNodeRecursiveIterator.class.php'; 
 /**
  * Clase Vista
  * 
@@ -9,19 +10,12 @@
  * @category Router
  * 
  */
-
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar
      * @param mixed $data
      */
     var $data;
-    /**
-     * Define la ubicación de las plantillas HEADER y FOOTER
-     * a utilizar en la pagina
-     * @var string $urlPlantilla
-     */
-    var $directorioPlantillas="";
     
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
@@ -76,11 +70,11 @@ class Pagina{
     private $controlador;
     /**
      * Archivo vista a renderizar
-     * @var $vista
+     * @var $template
      * @access private
      */
      
-    private $vista;
+    private $template;
     /**
      * Nombre de la vista requerida
      * 
@@ -158,7 +152,7 @@ class Pagina{
             $this->urlPlantilla=directorio_plantillas;
             $this->directorioLayout=DIR_LAYOUT_APP;
         }elseif($this->rutaPagina==2){
-            $this->urlPlantilla=DIR_LAYOUT_JIDA;
+            $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
         
@@ -177,44 +171,48 @@ class Pagina{
      * 
      */
     
-    function renderizar($data,$nombreVista=""){
-        
+    function renderizar($data,$nombreVista="",$urlAbsoluta=""){
         if(!empty($nombreVista)){
             $this->nombreVista = $nombreVista;
         }
-        #String::test($this->nombreVista);
-        $rutaVista = $this->obtenerRutaVista();
-        #String::test($rutaVista);
-        
-        if($this->rutaPagina==3){
+        $DataTpl = $this->data->getTemplate();
+        if(!empty($DataTpl)){
+            $rutaVista = $this->procesarVistaAbsoluta();
             
-            $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
         }else{
-            
-            if($this->controlador=='Excepcion'){
-                
-                $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
+            $rutaVista = $this->obtenerRutaVista();
+            if($this->rutaPagina==3){
+                $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
             }else{
-                $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";
-                   
+                if($this->controlador=='Excepcion'){
+                    $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
+                }else{   
+                    $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";          
+                }   
             }
-            
         }
-        
         if(!is_readable($rutaVista)){
+            
             throw new Exception("Pagina no conseguida", 404);
         }
-        $this->vista=$rutaVista;
+        $this->template=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
-            
             $this->renderizarLayout($data);
         }else{
+            
             throw new Exception("No se encuentra definida la plantilla", 120);
         }
     }//final funcion
     
     
+    private function procesarVistaAbsoluta(){
+        if($this->data->getPath()=="jida"){
+            $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
+             
+        }  
+        return $this->urlPlantilla.String::lowerCamelCase($this->data->getTemplate()).".php";
+    }
     
     /**
      * Renderiza una vista en un layout definido
@@ -225,21 +223,20 @@ class Pagina{
         global $dataArray ;
         
         $dataArray = $data;
-        
         /* Permitimos almacenamiento en bufer */
-        
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
 
-           include_once $this->vista;
+           include_once $this->template;
+           #$this->obtenerBloquesJS();
            $contenido = ob_get_clean();
-           
            include_once $this->directorioLayout.$this->layout;
            $layout = ob_get_clean();
            echo $layout;
         else:
-            throw new Exception("No se encuentra definido el layout para $this->vista, controlador $this->controlador", 110);
+            
+            throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
             
         endif;
         
@@ -248,17 +245,7 @@ class Pagina{
         
     
     }
-    
-    private function tidy(){
-        $Tidy = tidy_parse_string($this->vista);
-        Debug::mostrarArray($Tidy->body());
-    }
-    /**
-     * Muestra una página de error
-     * 
-     * 
-     */
-     
+
      
     private function requiresJs(){
         
@@ -316,6 +303,11 @@ class Pagina{
         $js="";
         $this->checkData();
         $cont=0;
+        $code= array();
+        if(array_key_exists('code',$this->data->js)){
+            $code = $this->data->js['code'];
+            unset($this->data->js['code']);
+        }
         foreach ($this->data->js as $key => $archivo) {
             
             if(is_string($key)){
@@ -323,18 +315,67 @@ class Pagina{
                     foreach ($archivo as $key => $value){
                         $js.=Selector::crear('script',['src'=>$value],null,$cont);
                         if($cont==0) $cont=2;
-                    }
-                        
+                    }           
                 }
-                
             }
             else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
             if($cont==0) $cont=2;
         }
+        if(count($code)>0){
+            foreach ($code as $key => $value){
+                if(array_key_exists('archivo',$value)){
+                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
+                    $js.=Selector::crear('script',null,$contenido,$cont);    
+                }else{
+                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
+                }
+                
+            }
+    
+        }
         return $js;
     }
+
+    function printJSAjax(){
+        $js="";
+        $this->checkData();
+        $cont=0;
+        $code= array();
+        if(array_key_exists('code',$this->data->jsAjax)){
+            $code = $this->data->jsAjax['code'];
+            unset($this->data->jsAjax['code']);
+        }
+        foreach ($this->data->jsAjax as $key => $archivo) {
+            
+            if(is_string($key)){
+                if($key==ENTORNO_APP){
+                    foreach ($archivo as $key => $value){
+                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                        if($cont==0) $cont=2;
+                    }           
+                }
+            }
+            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+            if($cont==0) $cont=2;
+        }
+        if(count($code)>0){
+            foreach ($code as $key => $value){
+                if(array_key_exists('archivo',$value)){
+                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
+                    $js.=Selector::crear('script',null,$contenido,$cont);    
+                }else{
+                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
+                }
+                
+            }
+    
+        }
+        return $js;
+    }
+    
     function printCSS(){
         $css = "";
+        
         $this->checkData();
         $cont=0;
         foreach ($this->data->css as $key => $files) {
@@ -355,19 +396,34 @@ class Pagina{
                 }else{
                     $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
                 }
-                if($cont==0) $cont=2;
-                
+                if($cont==0) $cont=2;       
             }
         }
         return $css;
     }
     private function checkData(){
         if(!$this->data instanceof DataVista){
-            throw new Exception("No se ha instanciado correctamente el objeto DataVista", 201);            
+            $this->data = new DataVista();
+            Debug::string("No se ha instanciado correctamente el objeto Data en el controlador $this->controlador", true);            
         }
     }
+    /**
+     * Verifica el DOM HTML de la vista y valida si existe código JS incrustado
+     * @method obtenerBloquesJS
+     */
+    private function obtenerBloquesJS(){
+        $dom = new DOMDocument();
+        $dom->loadHTMLFile($this->template);
+        
+        $dtaScript = new DOMNodeRecursiveIterator($dom->getElementsByTagName('script'));
+        $dom->removeChild($dtaScript);
+        $dom->save();
+        for($i=0;$i<count($dtaScript);++$i){
+            $this->data->js['code'][] =$dtaScript[$i]->nodeValue;    
+       }
+        
+
+    }
+    
+    
 }
-
-
-
-?>

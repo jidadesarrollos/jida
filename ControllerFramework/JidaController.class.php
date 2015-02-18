@@ -50,6 +50,11 @@
      */
     private $subdominio;
     /**
+     * Define si se accede a un modulo a partir de un subdominio
+     * @var $moduloSubdominio
+     */
+    private $moduloSubdominio=FALSE;
+    /**
      * Arreglo de modulos existentes
      * 
      * El arreglo se obtiene por medio de la funcion obtenerModulos, la cual debe
@@ -59,9 +64,6 @@
      private $modulosExistentes=array();
     function __construct(){
         try{
-            if(APP_MANTENIMIENTO===TRUE){
-                include_once TPL_MANTENIMIENTO;exit;
-            }
             Session::destroy('__formValidacion');
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
@@ -85,6 +87,7 @@
                 $this->procesarArgumentos();
             }
             
+            $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->validacion();
         
@@ -102,21 +105,22 @@
     private function procesarURL($url){
         
         $param = $this->validarNombre(array_shift($url),1);
-            
-        if(!in_array($param,$this->modulosExistentes)){
+       //Se valida si se ha solicitado un modulo por medio de un subdominio
+        if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+            $this->modulo=$this->validarNombre($this->subdominio,1);
+            $this->moduloSubdominio=TRUE;   
+        }
+         
+        if(!in_array($param,$this->modulosExistentes) or $this->moduloSubdominio===TRUE){
             
             if(!Directorios::validar(app_dir)):
                 /**
                  * Entra aca si es una app nueva
                  */
-                
                 $this->controlador="Jadmin";
                 $this->metodo = 'initApp';
             else:
-                //Se valida si se ha solicitado un modulo por medio de un subdominio
-                if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-                    $this->modulo=$this->validarNombre($this->subdominio,1);   
-                }
+                
                 //Se verifica si existe el controlador
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
@@ -130,7 +134,11 @@
                     /**
                      * Si entra aqui el controlador a ejecutar es el Index publico
                      * */
-                    $this->controlador='Index';
+                    if($this->moduloSubdominio===TRUE){
+                        $this->controlador =$this->validarNombre($this->modulo, 1);
+                    }else
+                        $this->controlador='Index';
+                    
     
                     $this->checkMetodo($param,TRUE);
                 }
@@ -140,6 +148,7 @@
             $this->modulo=$param;
             if(count($url)>0){
                 $param =$this->validarNombre(array_shift($url),1);
+
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
@@ -195,6 +204,7 @@
      * @return boolean True si existe false caso contrario
      */
     private function checkController($controller){
+        
         if(class_exists($controller)){
             return true;
         }else{
@@ -280,7 +290,7 @@
     function validacion(){ 
         try{
             $acl = new ACL();
-            $GLOBALS['_moduloActual'] = $this->modulo;
+            
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
             if($acceso===TRUE){
                 $nombreArchivo = $this->controlador . "Controller.class.php";
@@ -305,7 +315,6 @@
                  * Se valida la existencia del archivo, 
                  * @deprecated Este lógica será cambiada proximamente debido a que el "autoload debe encargarse de validar existencia".
                  */
-                
                 if(file_exists($rutaArchivo) and is_readable($rutaArchivo)){
                     
                     if(!empty($this->modulo)){
@@ -359,14 +368,14 @@
                         
                     }else{
                         $this->controlador=str_replace("Controller", "", $controlador);
-                        throw new Exception("No se encuentra definido el controlador o metodo solicitado", 10);
+                        throw new Exception("No se encuentra definido el controlador o metodo ".$controlador."  solicitado", 10);
                     }
                     $this->controlador=$nameControl;
                     $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
 
                 }//fin validacion de existencia del controlador.
            }else{
-                
+               //Debug::mostrarArray(Session::get('acl','jadmin'));
                  throw new Exception("No tiene permisos", 403);
                  
              }        
@@ -392,7 +401,7 @@
             $rutaModulo = app_dir.'Controller/'.$nombreArchivo;
         }        
         return $rutaModulo;    
-        $this->mostrarContenido($retorno,$controlador->vista);
+        
     }
     /**
      * Ejecuta el metodo solicitado
@@ -416,6 +425,7 @@
         $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$controlador->metaDescripcion;
         $retorno['urlCanonical'] = $controlador->urlCanonical;
+        
         $this->mostrarContenido($retorno,$controlador->vista);
         
         
@@ -429,7 +439,7 @@
             
             $this->vista->layout = $this->controladorObject->layout;
             $this->vista->definirDirectorios();
-            return $this->vista->layout;
+            
         endif;
         
     }
@@ -447,7 +457,6 @@
         $this->controladorObject = new $controlador;
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
-        
         $controlador->$metodo($params);
         if($checkDirs){
             $this->checkDirectoriosView();
@@ -456,13 +465,9 @@
                 
         return $controlador;
     }
-    /**
-     *  Procesa las excepciones capturadas en el sistema
-     * @param object Exception Objeto de tipo Clase Excepction
-     * @see php::Exception
-     * 
-     */
+    
     private function procesarExcepcion(Exception $excepcion){
+        
         $ctrlError = $this->controlador."Controller";
         
                 
@@ -473,18 +478,21 @@
         else {
             $this->controlador=CONTROLADOR_EXCEPCIONES;
         }
-        $this->metodo='error';
         
-        $layoutInicial = $this->checkDirectoriosView();
+        $this->metodo='error';
+        $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
-        $this->vista->establecerAtributos(array($this->controlador=>'Excepcion','modulo'=>$this->modulo));
+        
+        $this->vista->definirDirectorios();
+        
+        $this->vista->establecerAtributos(array("controlador"=>$this->controlador,'modulo'=>$this->modulo));
+        
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        if($ctrl->layoutPropio){
-            $this->checkDirectoriosView();
-        }
+        
         if(empty($this->vista->layout)){
             $this->vista->layout=LAYOUT_DEFAULT;
         }
+        
         $retorno=$ctrl->data;
         $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$ctrl->metaDescripcion;
@@ -506,6 +514,8 @@
      */
     private function mostrarContenido($retorno,$vista=""){
         
+        
+        $this->vista->data = $this->controladorObject->dv;
         $this->vista->renderizar($retorno,$vista);
         
     }

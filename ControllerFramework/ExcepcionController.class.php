@@ -21,8 +21,6 @@ class ExcepcionController extends Controller{
      * @param object $message
      * @return boolean true
      */
-     
-    
     function error($e){
         $this->excepcion=$e;
         $this->data['msjError'] = $this->procesarError();
@@ -40,14 +38,14 @@ class ExcepcionController extends Controller{
              switch ($this->excepcion->getCode()) {
                  case 404:
 				 case 403:
-					 
                     $this->vista="404";
-                 
-                     break;
+                    break;
                     
                  default:
-                    $this->vista="500"; 
-                     break;
+                    
+                    $this->vista="500";
+                    
+                    break;
              }
          }
          $msj  = $this->getDetalleExcepcion();

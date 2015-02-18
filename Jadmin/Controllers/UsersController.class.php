@@ -6,8 +6,7 @@ class UsersController extends Controller{
 	
 	function __construct(){
         $this->url='/jadmin/users/';
-        $this->header="jadminDefault/header.php";
-        $this->footer="jadminDefault/footer.php";
+        parent::__construct();
         $this->layout="jadmin.tpl.php";
         
     }

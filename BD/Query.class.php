@@ -143,7 +143,7 @@ class Query{
         Debug::string($this->query);
         return $this->bd->obtenerDataCompleta($this->query);
     }
-    function obtFila(){
+    function fila(){
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
     }
     

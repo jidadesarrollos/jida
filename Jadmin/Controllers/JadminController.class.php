@@ -15,10 +15,12 @@ class JadminController extends Controller{
     
     
     function __construct(){
+        parent::__construct();
+        $this->url = "/jadmin/";
         
         $this->jctrl = new JidaControl();
         $this->layout="jadmin.tpl.php";
-        $this->url = "/jadmin/";
+        
         
     }
     function index(){
@@ -43,8 +45,8 @@ class JadminController extends Controller{
                     $validacion = $form->validarFormulario($_POST);
                     if($validacion===TRUE){
                         $User = new User();
-                        $clave = md5(Globals::obtPost('clave_usuario'));
-                        $checkUser = $User->validarLogin(Globals::obtPost('nombre_usuario'),$clave);
+                        $clave = md5($this->post('clave_usuario'));
+                        $checkUser = $User->validarLogin($this->post('nombre_usuario'),$clave);
                         if($checkUser===FALSE){
                            Formulario::msj('error',"Usuario o clave invalidos");
                         }else{

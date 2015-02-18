@@ -202,7 +202,7 @@ class DBContainer {
             $this->identificarReferencias();
             $data = $this->consulta()
                     ->filtro([$this->clavePrimaria=>$id])
-                    ->obtFila();
+                    ->fila();
             $this->establecerAtributos ( $data, $this->clase );    
         }
     }//fin función inicializaarObjeto
@@ -496,7 +496,7 @@ class DBContainer {
      *
      * Elimina un Registro de Una Tabla
      *
-     * @param array $datos          
+     * @param array $datos el key es el campo el value los balores    
      * @return boolean Retorna True O False si la Consulta se Ejecuta
      */
      function eliminarDatos($datos) {
@@ -530,16 +530,22 @@ class DBContainer {
      * @param array $arrayDatos Arreglo de valores claves para eliminar
      * @param string $campo Nombre del campo en base de datos sobre el cual se realiza el filtro
      * @example eliminarMultiplesDatos(array(1,5,4,10),'id_form')
+     * @return boolean ;
      */
     function eliminarMultiplesDatos($arrayDatos, $campo) {
         $datos = array ();
-        foreach ( $arrayDatos as $key => $value ) {
-            if (is_numeric ( $value )) {
-                $datos [] = "$value";
-            } else {
-                $datos [] = "\"$value\"";
+        if(is_array($arrayDatos)){
+            foreach ( $arrayDatos as $key => $value ) {
+                if (is_numeric ( $value )) {
+                    $datos [] = "$value";
+                } else {
+                    $datos [] = "\"$value\"";
+                }
             }
+        }else{
+            $datos[]=$arrayDatos;
         }
+            
         $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->nombreTabla, implode ( ',', $datos ) );
         if ($this->bd->ejecutarQuery ( $query )) {
             return true;
@@ -674,8 +680,12 @@ class DBContainer {
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
         }else{        
-            throw new Exception("La propiedad solicitada no existe", 123);   
+            throw new Exception("La propiedad solicitada no existe ".$propiedad, 123);   
         }
+    }
+    
+    function __get($propiedad){
+        return $this->_get($propiedad);
     }
     
     function salvarTodos($array){

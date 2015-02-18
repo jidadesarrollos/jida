@@ -14,9 +14,29 @@ class DataModel{
     protected $prefijo;
     protected $fecha_creacion;
     protected $fecha_modificacion;
-    protected $result;
-    
+    /**
+     * Permite registrar validaciones para registros unicos
+     * @var array $unico
+     * @example ['nombre',['valor1','valor2'],'valor3'];
+     */
+    protected $unico=array();
     protected $registroMomentoGuardado=TRUE;
+    protected $registroUser=TRUE;
+    /**
+     * Arreglo que define las relaciones uno a muchos
+     * @var $hasMany
+     * @access protected
+     * 
+     */
+    protected $tieneMuchos=array();
+    /**
+     * Arreglo que define las relaciones muchos a muchos
+     * @var $muchosAMuchos
+     * @access protected
+     * 
+     */
+    protected $muchosAMuchos=array();
+    
     /**
      * Consulta de base de datos construida
      * @var $query
@@ -44,6 +64,9 @@ class DataModel{
      * @var array $propiedades
      */
     private $propiedades=array();
+    
+    
+    
     /**
      * Arreglo que registra las propiedades de la clase que son objetos
      * @var $propiedadesObjetos = array();
@@ -57,17 +80,23 @@ class DataModel{
     private $usoWhere=FALSE;
     
     /**
+     * Registra los valores iniciales al realizar una instancia de base de datos
+     * @var array $valoresIniciales
+     */
+    private $valoresIniciales=array();
+    /**
      * Nombre de la clase instanciada
-     * @var $clase
+     * @var $_clase
      * @access private
      * 
      */
-     private $clase;
+    private $_clase;
      /**
       * Instancia de objeto para retorno de data de Base de Datos
       * @param object $resultBD
       */
-     private $resultBD;
+    private $resultBD;
+     
      
     
     /**
@@ -77,8 +106,9 @@ class DataModel{
     function __construct($id=false){
         $numeroParams = func_num_args();
         $param = func_get_args(0);
-        $this->clase = get_class($this);
+        $this->_clase = get_class($this);
         $this->initBD();
+        
         if(empty($this->tablaBD)){
             throw new Exception("Debe definir el nombre de la tabla de base de datos", 1);
                 
@@ -87,22 +117,35 @@ class DataModel{
             $this->obtenerpk();
         }
         $this->obtenerPropiedadesObjeto();
-        if($id and is_int($id)){
+        
+        if($id){
             $this->instanciarObjeto($id);   
         }
         
+    }
+    /**
+     * Permite instanciar un objeto ya inicializado
+     * @method instanciar
+     * 
+     */
+    function instanciar($id){
+        
+        return $this->instanciarObjeto($id);
     }
     /**
      * Inicializa un objeto a partir de Base de Datos
      * @method inicializarObjeto
      * @param int $id Identificador unico del registro;
      */
-    protected function instanciarObjeto($id) {
+    private function instanciarObjeto($id) {
+        
         $this->identificarPropertyObjects();
-            $data = $this->consulta()
-                    ->filtro([$this->pk=>$id])
-                    ->obtFila();
-            $this->establecerAtributos ( $data, $this->clase );
+        $data = $this->consulta()
+                ->filtro([$this->pk=>$id])
+                ->fila();
+        $this->valoresIniciales = $data;
+        $this->establecerAtributos ( $data, $this->_clase );
+        return $this;
     }//fin función inicializaarObjeto
     /**
      * Identifica el nombre de la tabla de base de datos
@@ -123,7 +166,7 @@ class DataModel{
             if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
                 $propiedad = str_replace("id_", "", $prop);
                 $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
-                if($propiedad!=$this->clase and class_exists($objeto))
+                if($propiedad!=$this->_clase and class_exists($objeto))
                     $this->propiedadesObjetos[$prop]=new $objeto(); 
             }   
         }//fin foreach
@@ -158,7 +201,7 @@ class DataModel{
      */
     protected function establecerAtributos($arr, $clase="") {
         if(empty($clase)){
-            $clase=$this->clase;
+            $clase=$this->_clase;
         }
         
         $metodos = get_class_vars($clase);
@@ -186,7 +229,7 @@ class DataModel{
                 break;
             case 'MySQL' :
                 // include_once 'Mysql.class.php';
-                $this->bd = new Mysql ();
+                $this->bd = new Mysql();
                 break;
         }
         $this->resultBD=new ResultBD($this);
@@ -208,53 +251,63 @@ class DataModel{
             }
         }
         $this->propiedades = $arrayPropiedades;
+        
     }
-    
-    
+    /**
+     * Alias de metodo Consulta
+     * @method select
+     * @see self::consulta
+     */
+    function select($campos=""){
+        $this->consulta($campos);
+        return $this;
+    }
      /**
      * Funcion para obtener datos de una tabla
-     * @method obt
+     * @method consulta
      * 
      */
     protected function consulta($campos=""){
         $banderaJoin = FALSE;
         $join="";
-        if(count($this->propiedadesObjetos)>0){
-            $camposJoin = "";
-            $i=0;
-            foreach ($this->propiedadesObjetos as $campo => $object) {
-                $banderaJoin=TRUE;
-                $tabla = "";
-                $pk="";
-                
-                if(property_exists($object, 'tablaBD')){
-                    
-                    $tabla = $object->_get('tablaBD');
-                    $pk = $object->_get('pk');
-                    $props= $object->_get('propiedades');
-                    
-                }elseif(property_exists($object, 'nombreTabla')){
-                    $tabla = $object->_get('nombreTabla');
-                    $pk = $object->_get('pk');
-                    $props = $object->_get('propiedadesPublicas');
-                }//fin if
-                    $camposTabla = array_keys($props);
-                    array_walk($camposTabla,function(&$ele,$clave,$tabla){
-                                                    $ele = $tabla.".".$ele;
-                                    },$tabla);
-                    if($i>0)
-                        $camposJoin.=",";
-                    $camposJoin .=" ".implode(", ",$camposTabla);
-                if(!empty($tabla) and !empty($pk)){
-                    $join .= sprintf(" JOIN %s on (%s.%s = %s.%s)",$tabla,$this->tablaBD,$this->pk,$tabla,$pk);
-                }
-                ++$i;
-            }//foreach
-        }//fin if para joins
-
+        if(empty($campos)){
+            if(count($this->propiedadesObjetos)>0){
+                $camposJoin = "";
+                $i=0;
+                foreach ($this->propiedadesObjetos as $campo => $object) {
+                    $banderaJoin=TRUE;
+                    $tabla = "";
+                    $pk="";
+                    if(property_exists($object, 'tablaBD')){
+                        
+                        $tabla = $object->__get('tablaBD');
+                        $pk = $object->__get('pk');
+                        $props= $object->__get('propiedades');
+                        
+                    }elseif(property_exists($object, 'nombreTabla')){
+                        $tabla = $object->__get('nombreTabla');
+                        $pk = $object->__get('pk');
+                        $props = $object->__get('propiedadesPublicas');
+                    }//fin if
+                        $camposTabla = array_keys($props);
+                        array_walk($camposTabla,function(&$ele,$clave,$tabla){
+                                                        $ele = $tabla.".".$ele;
+                                        },$tabla);
+                        if($i>0)
+                            $camposJoin.=",";
+                        $camposJoin .=" ".implode(", ",$camposTabla);
+                    if(!empty($tabla) and !empty($pk)){
+                        $join .= sprintf(" LEFT JOIN %s on (%s.%s = %s.%s)",$tabla,$this->tablaBD,$pk,$tabla,$pk);
+                    }
+                    ++$i;
+                }//foreach
+            }//fin if para joins
+        }
+        
         if(empty($campos)){
             $campos =  array_keys($this->propiedades);
         }
+        
         if(is_array($campos)){
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
@@ -262,11 +315,12 @@ class DataModel{
         
             $campos = implode(", ",$campos);
         }
+        
         $this->query="SELECT $campos ";
         if($banderaJoin===TRUE)
             $this->query .=", ".$camposJoin;
         $this->query.=" from $this->tablaBD ".$join;
-        
+        $this->usoWhere=FALSE;
         return $this;
     }
     /**
@@ -276,7 +330,7 @@ class DataModel{
      * @var obtenerpk
      */
     private function obtenerpk() {
-        $clase = $this->clase;
+        $clase = $this->_clase;
         if(!empty($clase)){
             $pk = ($this->pk != "") ? $this->pk : "id_" . $clase;
             $this->pk = strtolower($pk);
@@ -302,8 +356,8 @@ class DataModel{
      * @param array $arrayFiltro el key es el campo y el value el valor a filtrar
      * 
      */
-    protected function filtro($arrayFiltro=array()){
-        $this->where();
+    function filtro($arrayFiltro=array()){
+       $this->where();
        if(is_array($arrayFiltro)){
            $i=0;
            foreach ($arrayFiltro as $key => $value) {
@@ -323,7 +377,7 @@ class DataModel{
      * @param array $filtro
      * @param int $tipo 1=intermedio,2=inicio,3=final
      */
-    protected function like($arrayFiltro,$tipo=1){
+    function like($arrayFiltro,$tipo=1){
         $this->where();
         if(is_array($arrayFiltro)){
            $i=0;
@@ -350,72 +404,123 @@ class DataModel{
         }
         return $this;
     }//final función like
-    protected function obt(){
+    function obt(){
         
         return $this->bd->obtenerDataCompleta($this->query);
     }
-    protected function obtFila(){
+    function fila(){
+        
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
+    }
+    function debug($exit=TRUE){
+        return Debug::string($this->query,$exit);
     }
     /**
      * Permite registrar el objeto actual
      * @method salvar
      */
     function salvar($data=""){
+        
         if(is_array($data)){
             $this->establecerAtributos($data);
         }
         $this->obtenerPropiedadesObjeto();
+        
         if(empty($this->propiedades[$this->pk])){
-            $this->insertar();
+            return $this->insertar();
+            
         }else{
-            $this->modificar();
+            return $this->modificar();
         }
-        return $this->result->setValores($this);
+        //return $this->resultBD->setValores($this);
+    }
+    
+     /**
+     * Elimina uno o multiples registros de base de datos
+     * 
+     * Si no se pasa ningun elemento se eliminará el objeto instanciado.
+     * @method eliminar
+     * @param array [$arrayDatos ] Arreglo de valores a ser eliminados
+     * @param string $campo Campo o propiedad por medio de la cual se eliminaran los objetos, si no es pasado sera usada
+     * la clave primaria.
+     */
+    function eliminar($arrayDatos="",$campo=""){
+        $totalParams = func_num_args();
+        if(empty($campo))
+            $campo = $this->pk;
+        if($totalParams==0){
+            $pk = $this->pk;
+            $datos[]=$this->$pk;
+        }else{
+            $datos = array ();
+            if(is_array($arrayDatos)){
+                foreach ( $arrayDatos as $key => $value ) {
+                    if (is_numeric ( $value )) {
+                        $datos [] = "$value";
+                    } else {
+                        $datos [] = "\"$value\"";
+                    }
+                }
+            }else{
+                $datos[]=$arrayDatos;
+            }
+        }        
+        $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode ( ',', $datos ) );
+        
+        if ($this->bd->ejecutarQuery ( $query ))
+            return true;
+        else 
+            return false;    
     }
     /**
-     * Crea un registro
+     * Permite instanciar el objeto por medio de una propiedad;
+     * @method getBy
+     * @param mixed $valor Patrón de busqueda
+     * @param string $propiedad de busqueda
      */
-    private function insertar($data=""){
-          $data = $this->estructuraInsert();
-          
-          $insert = sprintf("insert into %s (%s) VALUES (%s)",
-                            $this->tablaBD,
-                            implode(",",$this->obtenerCamposQuery()),
-                            implode(",",$data['valores']));
-        if($this->bd->insertar($insert)){
-            $this->$this->pk = $this->bd->idResult;
+    function obtenerBy($valor,$property=""){
+        if(empty($property)) $property=$this->pk;
+        if(array_key_exists($property, $this->propiedades)){
+            $data = $this->consulta()
+                        ->filtro([$property=>$valor])
+                        ->fila();
+            if($this->bd->totalRegistros>0){
+                $this->valoresIniciales = $data;
+                $this->establecerAtributos($data,$this->_clase);
+                
+                return $data;    
+            }else{
+                return false;
+            }
+            
+        }else{
+            throw new Exception("la propiedad pasada para obtener el objeto no existe", 124);
+            
         }
         
     }
+  
+    
     
     /**
-     * Obtiene los campos de Base de datos utilizados para realizar una inserción
-     * o modificación.
-     * 
-     * @method obtenerCamposQuery
-     * @return array $campos
+     * Retorna un arreglo con las propiedades publicas del objeto
+     * @method objectAsArray
+     * @return array 
      */
-    private function obtenerCamposQuery(){
-        $campos = $this->propiedades;
-        unset($campos[$this->pk]);
-        $campos = array_keys($campos);
-        if($this->registroMomentoGuardado){ 
-            $campos[]='fecha_creacion';
-            $campos[]='fecha_modificacion';
-        }
-        return $campos;
+    function objectAsArray(){
+        $this->obtenerPropiedadesObjeto();
+        return $this->propiedades;
     }
     /**
      * Inserta multiples registros en Base de Datos
      * @method crearTodo
      * @param array $data Data a insertar
      */
-    function crearTodo($data){
+    function salvarTodo($data){
         if(is_array($data)){
             $insert = "INSERT INTO ".$this->tablaBD." ";
 
-            $insert.="(".implode(",", $this->obtenerCamposQuery()).") VALUES ";
+            $insert.="(".implode(",", $this->obtenerCamposQuery($data[0])).") VALUES ";
             $i=0;
             foreach ($data as $key => $registro) {
                 if($i>0) $insert.=",";
@@ -430,6 +535,55 @@ class DataModel{
             throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
         }
     }
+    /**
+     * Crea un nuevo registro unico
+     * @method insertar
+     * @param array $data Data a insertar
+     */
+    private function insertar($data=""){
+        if(!$this->verificarUnicos()->esUnico()){
+            
+        
+              $data = $this->estructuraInsert();
+              $insert = sprintf("insert into %s (%s) VALUES (%s)",
+                                $this->tablaBD,
+                                implode(",",$this->obtenerCamposQuery()),
+                                implode(",",$data));
+            if($this->bd->insertar($insert)){
+                $pk = $this->pk;
+                $this->$pk = $this->bd->idResult;
+                $this->resultBD->setValores($this);
+                
+            }
+        }else{
+            $this->resultBD->__set('ejecutado', false);
+        }
+        return $this->resultBD;
+    }
+    
+    /**
+     * Obtiene los campos de Base de datos utilizados para realizar una inserción
+     * o modificación.
+     * 
+     * @method obtenerCamposQuery
+     * @return array $campos
+     */
+    private function obtenerCamposQuery($campos=""){
+        if(empty($campos) or !is_array($campos))
+            $campos = $this->propiedades;
+        
+        unset($campos[$this->pk]);
+        $campos = array_keys($campos);
+        if($this->registroMomentoGuardado){ 
+            $campos[]='fecha_creacion';
+            $campos[]='fecha_modificacion';
+        }if($this->registroUser){
+            $campos[]="id_usuario_creador";
+            $campos[]="id_usuario_modificador";
+        }
+        return $campos;
+    }
+  
     private function estructuraInsert($data=array()){
             
         if(count($data)<1){
@@ -458,16 +612,85 @@ class DataModel{
             $valores[]= "'".FechaHora::datetime()."'";
             $valores[]= "'".FechaHora::datetime()."'";
         }
+        if($this->registroUser){
+            
+            $idUser = (Session::checkLogg())?Session::get('usuario','id_usuario'):0;
+            $valores[] =$idUser;
+            $valores[] =$idUser;
+        };
         return $valores;
     
         
     }//fin crearInsert
     private function modificar(){
         
+        $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
+        
+        if($this->registroUser){
+            $idUser = Session::get('id_usuario');
+            $dataUpdate['id_usuario_modificador'] =(Session::checkLogg())?Session::get('usuario','id_usuario'):0;
+        };
+        
+        $update = "UPDATE $this->tablaBD SET ";
+        $i=0;
+        foreach ($dataUpdate as $campo => $valor) {
+            if($i>0) $update.=",";
+            $update.=" $campo='$valor'";
+            ++$i;
+        }
+        
+        $pk = $this->pk;
+        $update.=" WHERE $this->pk=".$this->$pk;
+        
+        $this->query = $update;
+        
+        if($this->bd->ejecutarQuery($this->query)){
+            $this->resultBD->setValores($this);
+        }
+        return $this->resultBD;
+        
     }
+   
     /**
-     * Permite guardar multiples registros
-     * @method guardarTodos
+     * Valida las restricciones unicas creadas por medio del array unico antes
+     * de realizar una inserción.
+     * @method verificarUnicos
+     * @see self::unicos
+     
      */
-    
-}
+    private function verificarUnicos($datos=""){
+        
+         if(!is_array($this->unico))
+            throw new Exception("No se ha creado correctamente el arreglo unico", 212);
+         if(count($this->unico)>0){
+             $filtro = array();
+             foreach ($this->unico as $key => $valorUnico) {
+                    if(is_array($valorUnico)){
+                        $i=0;
+                        $v="( ";
+                        foreach ($valorUnico as $key => $valor) {
+                            if($i>0)$v.=" and ";
+                            if(!empty($valor)){
+                                $v.= "$valor='".$this->propiedades[$valor]."'";
+                                ++$i;
+                            }
+                        }
+                        $filtro[]=$v." ) ";
+                    }else{
+                        $filtro[]="$valorUnico='".$this->propiedades[$valorUnico]."'";
+                    }
+             }
+             $this->query = "select $this->pk from $this->tablaBD WHERE ".implode("or ",$filtro);
+             $this->bd->ejecutarQuery($this->query);
+             if($this->bd->totalRegistros>0){
+                $this->resultBD->setValores($this)->setUnico(TRUE);    
+             }else{
+                $this->resultBD->setValores($this)->setUnico(false); 
+             }
+             
+             
+         }
+         return $this->resultBD;
+    }//fin función
+
+}//fin clase;

@@ -20,29 +20,14 @@
         </title>
         <meta name="description" content=""  charset="utf-8">
         <meta name="author" content="jirc">
-        <link href="/htdocs/css/bootstrap3.3.1.css" rel="stylesheet">
+        <link href="/htdocs/css/bootstrap3.3.2.min.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
         <link href="/htdocs/css/jida-common.css" rel="stylesheet">
         <link href="/htdocs/css/jida.css" rel="stylesheet">
         
         <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
-        <!--libs-->
-        <script src="/htdocs/js/libs/jq2.0.3.js"></script>
-        <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
-        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
-        <script src="/htdocs/js/libs/bootbox.min.js"></script>
-        <script src="/htdocs/js/libs/tipsy.js"></script>
-        <script src="/htdocs/js/libs/ajaxupload.js"></script>
-        <script src="/htdocs/js/libs/less.js"></script>
-        <!--jidalibs-->
-        <script src="/htdocs/js/jida/jd.ajax.js"></script>
-        <script src="/htdocs/js/jida/validadorJida.js"></script>
-        <script src="/htdocs/js/jida/jidaPlugs.js"></script>
-        <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
-        <!--custom files-->
-        <script src="/htdocs/js/funcionesGenerales.js"></script>
-        
+        <!--libs--> 
     </head>
 
     <body>
@@ -55,6 +40,7 @@
                     <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
                 </nav>
             </div>
+            <div class="row">
             <aside class="col-md-2 aside">
                     <?PHP 
                     
@@ -66,23 +52,45 @@
                     ?>
                 
             </aside>
-                <div class="col-md-offset-2 col-lg-10 col-md-10 contenido-principal">
-                    <!-- <div class="row"> -->
-            
-                     <?=$contenido?>
+            <div class="col-md-offset-2 col-lg-10 col-md-10 contenido-principal">
+                <!-- <div class="row"> -->
         
-                    <!-- </div> -->
-                    <!--Cierre col-lg-9 del contenido-->
-                </div><!--Cierre col-lg-9 del contenido-->                    
-                <div class="separador-footer">
-                    
+                 <?=$contenido?>
+            
+                <!-- </div> -->
+                <!--Cierre col-lg-9 del contenido-->
+            </div><!--Cierre col-lg-9 del contenido-->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <a class="pull-right" href="#" data-jida="goback">P&aacute;gina Anterior</a>
                 </div>
+            </div>                    
+            <div class="separador-footer"></div>
             </div><!--Cierre div full-container-->
         </div>
         <footer class="footer container-fluid">
+            
             <p>
                 &copy; Copyright  by jirc Prueba
             </p>
         </footer>
+         <script src="/htdocs/js/libs/jq2.0.3.js"></script>
+        <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
+        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
+        <script src="/htdocs/js/libs/bootbox.min.js"></script>
+        <script src="/htdocs/js/libs/tipsy.js"></script>
+        <script src="/htdocs/js/libs/ajaxupload.js"></script>
+        <script src="/htdocs/js/libs/less.js"></script>
+        <!--jidalibs-->
+        <script src="/htdocs/js/jida/jd.ajax.js"></script>
+        <!-- <script src="/htdocs/js/jida/validadorJida.js"></script> -->
+        <script src="/htdocs/js/jida/validador.js"></script>
+        <script src="/htdocs/js/jida/jidaPlugs.js"></script>
+        <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
+        <!--custom files-->
+        <script src="/htdocs/js/funcionesGenerales.js"></script>
+        <script src="/htdocs/js/jida/jadmin.js"></script>
     </body>
 </html>

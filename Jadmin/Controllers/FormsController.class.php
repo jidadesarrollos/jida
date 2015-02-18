@@ -23,6 +23,8 @@ class FormsController extends Controller{
         
         $this->jctrl = new JidaControl();
         $this->url="/jadmin/forms/";
+        parent::__construct();
+        $this->dv->addJs('jida/jadmin.js');
         $this->layout="jadmin.tpl.php";
     }
     function index(){
@@ -38,24 +40,36 @@ class FormsController extends Controller{
      * 
      */
     function jidaForms(){
-          $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\", clave_primaria_f as \"Clave Primaria\",
+
+        $conForms = "select id_form,nombre_f as \"Nombre Formulario\",clave_primaria_f as \"Clave Primaria\",
                     nombre_identificador as \"Identificador\" from s_jida_formularios";
                      
-                   #2;3;1;2;1x2;2;1x3;3 
         $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios del Framework");
         
-        $vForms->acciones=array(
-                            'Nuevoo'=>array('href'=>'/jadmin/forms/gestion-jida-form/','class'=>'btn'),
-                            'Modificar'=>array('href'=>'/jadmin/forms/gestion-jida-form/', 'data-jvista'=>'seleccion','class'=>'btn','data-multiple'=>'false'),
-                            'Eliminar'=>array('href'=>'/jadmin/forms/gestion-jida-form/','class'=>'btn','data-jvista'=>'seleccion','data-multiple'=>'true'),
-                                );
-                                
+        $vForms->acciones=[
+        'Nuevoo'=>['href'=>'/jadmin/forms/gestion-jida-form/','class'=>'btn'],
+        'Modificar'=>['href'=>'/jadmin/forms/gestion-jida-form/', 
+        'data-jvista'=>'seleccion','class'=>'btn','data-multiple'=>'false'],
+        'Eliminar'=>['href'=>'/jadmin/forms/gestion-jida-form/','class'=>'btn','data-jvista'=>'seleccion','data-multiple'=>'true'],
+        ];
+         $vForms->filaOpciones=
+        [0=>['a'=>['atributos' =>[
+            'class'=>'btn','title'=>'Eliminar Formulario',
+            'href'=>"/jadmin/forms/eliminar-formulario/id/{clave}"],
+            'html'=>['span'=>['atributos'=>['class' => 'glyphicon glyphicon-trash']]]]],
+            
+        1=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+            'title'=>'Editar',
+            'href'=>"/jadmin/forms/gestion-formulario/id/{clave}"],
+            'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]
+        ];                   
         $vForms->setParametrosVista($GLOBALS['configVista']);
         $vForms->seccionBusqueda=TRUE;
         $vForms->tipoControl=2;
-        $bcArray = array(1=>'prueba',2=>'algo',3=>'otra cosa');
+        $bcArray = [1=>'prueba',2=>'algo',3=>'otra cosa'];
         
-        $vForms->camposBusqueda=array('nombre_f','query_f','clave_primaria_f');
+        $vForms->camposBusqueda=['nombre_f','query_f','clave_primaria_f'];
         $this->data['vista']=$vForms->obtenerVista();
     }
     /**
@@ -75,34 +89,41 @@ class FormsController extends Controller{
     private function mostrarVistaForms(){
         
         
-        $conForms = "select id_form,nombre_f as \"Nombre Formulario\", query_f as \"Query\",
+        $conForms = "select id_form,nombre_f as \"Nombre Formulario\",
                     nombre_identificador as \"Identificador\" from s_formularios";
                      
                     
         $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
         
-        $vForms->acciones=array(
-                            'Nuevoo'=>array('href'=>'/jadmin/forms/gestion-formulario/','class'=>'btn'),
-                            'Modificar'=>array('href'=>'/jadmin/forms/gestion-formulario/', 'data-jvista'=>'seleccion','class'=>'btn','data-multiple'=>'false'),
-                            'Eliminar'=>array('href'=>'/jadmin/forms/eliminar-formulario/','class'=>'btn','data-jvista'=>'seleccion','data-multiple'=>'true'),
-                                );
-        $vForms->filaOpciones=array(0=>array('a'=>array('atributos' =>array(
-                                                            'class'=>'btn','title'=>'Eliminar Formulario',
-                                                            'href'=>"/jadmin/forms/eliminar-formulario/id/{clave}"),
-                                                'html'=>array('span'=>array('atributos'=>array('class' => 'glyphicon glyphicon-trash'))))),
-                          1=>array('a'=>array(
-                                                    'atributos'=>array( 'class'=>'btn',
-                                                                        'title'=>'Editar',
-                                                                        'href'=>"/jadmin/forms/gestion-formulario/id/{clave}"
-                                                                        ),
-                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit')))))
-                                        );
+        $vForms->acciones=[
+        'Nuevoo'=>['href'=>$this->url.'/gestion-formulario/','class'=>'btn btn-adm'],
+        'Modificar'=>[
+            'href'=>'/jadmin/forms/gestion-formulario/',
+            'data-jvista'=>'seleccion',
+            'data-jkey'=>'id', 
+            'class'=>'btn btn-default','data-multiple'=>'false'],
+        'Eliminar'=>[
+            'href'=>$this->url.'/eliminar-formulario/',
+            'class'=>'btn btn-default','data-jvista'=>'seleccion','data-multiple'=>'true'],
+        ];
+        $vForms->filaOpciones=
+        [0=>['a'=>['atributos' =>[
+            'class'=>'btn','title'=>'Eliminar Formulario',
+            'href'=>"/jadmin/forms/eliminar-formulario/id/{clave}"],
+            'html'=>['span'=>['atributos'=>['class' => 'glyphicon glyphicon-trash']]]]],
+            
+        1=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+            'title'=>'Editar',
+            'href'=>"/jadmin/forms/gestion-formulario/id/{clave}"],
+            'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]
+        ];
 
         $vForms->setParametrosVista($GLOBALS['configVista']);
         $vForms->seccionBusqueda=TRUE;
         $vForms->tipoControl=2;
         $vForms->mensajeError="<p>No hay Registro de formularios</p> <a href=\"/jadmin/forms/gestion-formulario/\">Click Aqu&iacute; si desea registrar uno</a>";
-        $vForms->camposBusqueda=array('nombre_f','query_f','clave_primaria_f');
+        $vForms->camposBusqueda=['nombre_f','query_f','clave_primaria_f'];
         return $vForms->obtenerVista();
     }
    	/**
