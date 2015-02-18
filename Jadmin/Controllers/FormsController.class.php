@@ -61,7 +61,7 @@ class FormsController extends Controller{
         1=>['a'=>[
             'atributos'=>[ 'class'=>'btn',
             'title'=>'Editar',
-            'href'=>"/jadmin/forms/gestion-formulario/id/{clave}"],
+            'href'=>"/jadmin/forms/gestion-jida-form/id/{clave}"],
             'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]
         ];                   
         $vForms->setParametrosVista($GLOBALS['configVista']);
@@ -193,6 +193,7 @@ class FormsController extends Controller{
 			}
 		}
         $this->data['formulario'] = $formulario->armarFormulario();
+        
         
      }
 	 /**

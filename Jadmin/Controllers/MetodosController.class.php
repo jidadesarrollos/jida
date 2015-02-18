@@ -87,30 +87,30 @@ class MetodosController	 extends Controller{
         $vista->tituloVista="Metodos del objeto ".$obj->objeto;
         $vista->setParametrosVista(array('idDivVista'=>'metodosObjeto'));
         
-        $vista->filaOpciones=array(1=>array('a'=>array(
-                                                'atributos'=>array( 'class'=>'btn',
-                                                                    'title'=>'Agregar Descripci&oacute;n',
-                                                                    'data-link'=>$this->url."add-descripcion/metodo/{clave}",
-                                                                    'href'=>$this->url."add-descripcion/metodo/{clave}",
-                                                                    'data-jvista'=>'modal'
-                                                                    ),
-                                                'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-edit fa-lg'))))
-                                                ),
-                                    2=>array('a'=>array(
-                                                'atributos'=>array( 'class'=>'btn',
-                                                                    'title'=>'Editar Perfiles',
-                                                                    'data-link'=>$this->url."asignar-acceso/metodo/{clave}",
-                                                                     'href'=>$this->url."add-descripcion/metodo/{clave}",  
-                                                                    'data-jvista'=>'modal'
-                                                                    ),
-                                                'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users fa-lg'))))
-                                                ),
-                                    );
-        $vista->acciones=array( 'Asignar perfiles de acceso'=>array('href'=>$this->url.'asignar-acceso/',
+        $vista->filaOpciones=[1=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                'title'=>'Agregar Descripci&oacute;n',
+                'data-link'=>$this->url."add-descripcion/metodo/{clave}",
+                'href'=>$this->url."add-descripcion/metodo/{clave}",
+                'data-jvista'=>'modal'
+             ],
+            'html'=>['span'=>['atributos'=>['class' =>'fa fa-edit fa-lg']]]]
+            ],
+        2=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                'title'=>'Editar Perfiles',
+                'data-link'=>$this->url."asignar-acceso/metodo/{clave}",
+                 'href'=>$this->url."add-descripcion/metodo/{clave}",  
+                'data-jvista'=>'modal'
+            ],
+            'html'=>['span'=>['atributos'=>['class' =>'fa fa-users fa-lg']]]]
+            ],
+        ];
+        $vista->acciones=[ 'Asignar perfiles de acceso'=>['href'=>$this->url.'asignar-acceso/',
                                                                 'data-jvista'=>'seleccion',
-                                                                'data-multiple'=>'true','data-jkey'=>'metodo'),
+                                                                'data-multiple'=>'true','data-jkey'=>'metodo'],
                                 
-                              );
+                              ];
                               
         $vista->setParametrosVista($GLOBALS['configVista']);
         return $vista->obtenerVista();

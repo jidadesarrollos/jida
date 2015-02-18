@@ -219,7 +219,17 @@ class Mysql extends ConexionBD{
         return $this->totalCampos;
         
     }
-    function obtenerDataCompleta($query=""){
+    /**
+     * Devuelve un arreglo con la información solicitada de base de datos
+     * 
+     * @method obtenerDataCompleta
+     * @param string $query Consulta a base de datos
+     * @param string $key  campo que se desee usar como key de la matriz a devolver, si es omitido los
+     * keys serán autonumericos
+     * @return array $dataCompleta 
+     * 
+     */
+    function obtenerDataCompleta($query="",$key=""){
         
         if(is_string($query)){
                    
@@ -234,7 +244,12 @@ class Mysql extends ConexionBD{
             
              
             while($data = $this->result->fetch_assoc()){
-                $dataCompleta[]=String::codificarArrayToHTML($data);
+                
+                if(!empty($key))
+                    $dataCompleta[$data[$key]]=String::codificarArrayToHTML($data);
+                else {
+                    $dataCompleta[]=String::codificarArrayToHTML($data);
+                }
                 
             }   
         

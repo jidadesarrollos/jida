@@ -221,7 +221,6 @@ class Pagina{
      */
     private function renderizarLayout($data){
         global $dataArray ;
-        
         $dataArray = $data;
         /* Permitimos almacenamiento en bufer */
         ob_start();
@@ -341,23 +340,27 @@ class Pagina{
         $this->checkData();
         $cont=0;
         $code= array();
-        if(array_key_exists('code',$this->data->jsAjax)){
-            $code = $this->data->jsAjax['code'];
-            unset($this->data->jsAjax['code']);
-        }
-        foreach ($this->data->jsAjax as $key => $archivo) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                    foreach ($archivo as $key => $value){
-                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
-                        if($cont==0) $cont=2;
-                    }           
-                }
+        
+        if(is_array($this->data->jsAjax)){
+            if(array_key_exists('code',$this->data->jsAjax)){
+                $code = $this->data->jsAjax['code'];
+                unset($this->data->jsAjax['code']);
             }
-            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
-            if($cont==0) $cont=2;
+            foreach ($this->data->jsAjax as $key => $archivo) {
+                
+                if(is_string($key)){
+                    if($key==ENTORNO_APP){
+                        foreach ($archivo as $key => $value){
+                            $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                            if($cont==0) $cont=2;
+                        }           
+                    }
+                }
+                else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+                if($cont==0) $cont=2;
+            }
         }
+            
         if(count($code)>0){
             foreach ($code as $key => $value){
                 if(array_key_exists('archivo',$value)){

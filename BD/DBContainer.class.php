@@ -581,7 +581,7 @@ class DBContainer {
      * @deprecated Esta función será reemplazada posteriormente por el metodo $get
      * 
      */
-    function getTabla($campos=null,$where,$order=""){
+    function getTabla($campos=null,$where,$order="",$claveArreglo=""){
         if(!is_array($campos)){
             $campos = $this->propiedadesPublicas;
             
@@ -614,8 +614,7 @@ class DBContainer {
         if(!empty($order)){
             $query.="order by ".$order;
         }
-        
-        return $this->bd->obtenerDataCompleta($query);
+        return $this->bd->obtenerDataCompleta($query,$claveArreglo);
     }//fin
     /**
      * Registra objetos a partir de los valores pasados

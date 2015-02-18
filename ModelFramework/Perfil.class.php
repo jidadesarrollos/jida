@@ -9,7 +9,7 @@
  */
 class Perfil extends DBContainer{
     var $id_perfil;
-    var $nombre_perfil;
+    var $perfil;
     var $clave_perfil;
 	function __construct($id){
 		$this->nombreTabla="s_perfiles";
@@ -25,8 +25,8 @@ class Perfil extends DBContainer{
     function obtenerAllPerfiles(){
         
         $query = "select * from $this->nombreTabla";
+        $perfiles = $this->getTabla();
         
-        $perfiles = $this->bd->obtenerDataCompleta($query);
         return $perfiles;
         
     }

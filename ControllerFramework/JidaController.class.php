@@ -488,6 +488,8 @@
         $this->vista->establecerAtributos(array("controlador"=>$this->controlador,'modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
+        if($ctrl->layoutPropio)
+            $this->vista->layout = $ctrl->layout;
         
         if(empty($this->vista->layout)){
             $this->vista->layout=LAYOUT_DEFAULT;
@@ -520,6 +522,7 @@
         if(! $this->vista->data instanceof DataVista){
             $this->vista->data=new DataVista();
         }
+        
         $this->vista->renderizar($retorno,$vista);
         
     }

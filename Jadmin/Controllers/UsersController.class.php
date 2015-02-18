@@ -6,8 +6,9 @@ class UsersController extends Controller{
 	
 	function __construct(){
         $this->url='/jadmin/users/';
-        parent::__construct();
         $this->layout="jadmin.tpl.php";
+        parent::__construct();
+        
         
     }
     
@@ -138,12 +139,18 @@ class UsersController extends Controller{
      * @param int $tipoform
      * @param $campoUpdate Id del usuario al que se asignaran los perfiles
      */
-    protected function formAsignacionPerfiles($campoUpdate=""){
+    protected function formAsignacionPerfiles($campoUpdate="",$perfiles=""){
         
         $tipoForm=(!empty($campoUpdate))?2:1;
         $form = new Formulario('PerfilesAUsuario',$tipoForm,$campoUpdate,2);
         $form->valueBotonForm='Asignar Perfiles';
-        $form->action=$this->url.'asociar-perfiles';    
+        $form->action=$this->url.'asociar-perfiles';
+        
+        if(!empty($perfiles) and is_array($perfiles)){
+            $form->externo['id_perfil']="select id_perfil,perfil from s_perfiles where id_perfil in (".implode(",", $perfiles).") order by perfil";    
+        }else{
+            $form->externo['id_perfil']="select id_perfil,perfil from s_perfiles where id_perfil order by id_perfil";
+        }
         $retorno=array('form'=>'');
         $retorno['form']=$form;
         return $retorno;
