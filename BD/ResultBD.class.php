@@ -66,6 +66,9 @@ class ResultBD{
     function esUnico(){
         return $this->unico;
     }
+    function totalRegistros(){
+        return $this->bdObject->totalRegistros();
+    }
     function query(){
         return $this->dataModel->bd->query;
     }

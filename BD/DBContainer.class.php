@@ -680,8 +680,12 @@ class DBContainer {
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
         }else{        
-            throw new Exception("La propiedad solicitada no existe", 123);   
+            throw new Exception("La propiedad solicitada no existe ".$propiedad, 123);   
         }
+    }
+    
+    function __get($propiedad){
+        return $this->_get($propiedad);
     }
     
     function salvarTodos($array){
