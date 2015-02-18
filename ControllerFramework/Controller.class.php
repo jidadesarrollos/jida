@@ -242,8 +242,8 @@ class Controller {
      * 
      * @method urlActual
      */
-    protected function urlActual(){
-        $quienLlama = debug_backtrace(null,2)[1]['function'];
+    protected function urlActual($valor=1){
+        $quienLlama = debug_backtrace(null,$valor+1)[$valor]['function'];
         return $this->url.$this->convertirNombreAUrl($quienLlama)."/";
     }
     
@@ -308,7 +308,7 @@ class Controller {
             }
             
         }else{
-            return $this->urlActual();
+            return $this->urlActual(2);
         }
         
     }
@@ -345,6 +345,7 @@ class Controller {
      * @param mixed $id 
      */
     protected function eliminarDatos($id){
+        
             if($this->getEntero($id)==0){
                 $id = $this->obtenerListaGet($id);
                 if(!$id)
@@ -373,6 +374,33 @@ class Controller {
         if($band==FALSE)
             return $band;
         else return $arr;
+    }
+    /**
+     * Devuelve contenido para una solicitud via ajax
+     * 
+     * Imprime la respuesta de la solicitud realizada sin esperar llegar a la vista
+     * @param mixed $respuesta Respuesta de la solicitud ajax
+     * @param int tipo 1 json, 2 html. 
+     */
+    protected function respuestaAjax($respuesta,$tipo=2){
+        if($tipo==2){
+            echo $respuesta;
+        }else{
+            print(json_encode($respuesta));    
+        }
+        exit;
+    } 
+    
+    protected function respuestaJson($respuesta){
+        print(json_encode($respuesta));
+        exit;
+    }
+    /**
+     * Realizar una redireccion
+     * @method redireccionar
+     */
+    protected function redireccionar($url){
+        header('location:'.$url.'');exit;
     }
     
 
