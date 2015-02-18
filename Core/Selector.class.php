@@ -116,10 +116,8 @@ class Selector{
     /**
      * Genera un selector HTML
      * @method crear
-     * @param string $selector
-     *          Nombre Etiqueta HTML a crear
-     * @param array $atributos
-     *          Arreglo de atributos para el selector
+     * @param string $selector Nombre Etiqueta HTML a crear
+     * @param array $atributos Arreglo de atributos para el selector
      * @param string $content Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "",$tabs=0) {

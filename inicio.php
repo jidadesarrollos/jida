@@ -36,7 +36,9 @@ define ('libs_dir', ROOT . 'libs' . DS);
  * 
  * Usada para manejo interno en busqueda de archivos.
  */
-define ('htdocs_dir',ROOT.'htdocs/');
+define ('HTDOCS_DIR',ROOT.'htdocs/');
+
+define('htdocs_dir',HTDOCS_DIR);
 
  
 if(function_exists('ini_set')){

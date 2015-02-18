@@ -16,7 +16,10 @@
 class DataVista{
     var $js;
     var $css;
-    
+    /**
+     * @var array $jsAjax Arreglo que registra los js a incluir en llamadas ajax
+     */
+    var $jsAjax;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
@@ -26,48 +29,81 @@ class DataVista{
     private $_path="app";    
     function __construct(){
         if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
-        if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];        
+        if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
+        if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
     }
     /**
      * Agrega un javascript para ser renderizado en el layout
      * @method addjs
-     * @param mixed $css Arreglo o string con ubicación del js 
+     * @param mixed $js Arreglo o string con ubicación del js
+     * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación 
      * @param string ambito Usado para agregar el js solo para prod o dev
      */
-    function addJs($js,$ambito=""){
+    function addJs($js,$dir=TRUE,$ambito=""){
+        if ($dir===TRUE) $dir=URL_JS;
         if(is_array($js)){
             foreach ($js as $key => $archivo) {
                 if(!empty($ambito))
-                    $this->js[$ambito] = $archivo;
+                    $this->js[$ambito] = $dir.$archivo;
                 else 
-                    $this->js[]=$archivo;
+                    $this->js[]=$dir.$archivo;
             }
         }else{
             if(!empty($ambito))
-                    $this->js[$ambito] = $js;
+                    $this->js[$ambito] = $dir.$js;
             else 
-                $this->js[]=$js;
+                $this->js[]=$dir.$js;
         }
     }
+    /**
+     * Agrega un javascript para ser renderizado en el layout
+     * @method addjs
+     * @param mixed $js Arreglo o string con ubicación del js
+     * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación 
+     * @param string ambito Usado para agregar el js solo para prod o dev
+     */
+    function addJsAjax($js,$dir=TRUE,$ambito=""){
+        if ($dir===TRUE) $dir=URL_JS;
+        if(is_array($js)){
+            foreach ($js as $key => $archivo) {
+                if(!empty($ambito))
+                    $this->jsAjax[$ambito] = $dir.$archivo;
+                else 
+                    $this->jsAjax[]=$dir.$archivo;
+            }
+        }else{
+            if(!empty($ambito))
+                    $this->js[$ambito] = $dir.$js;
+            else 
+                $this->jsAjax[]=$dir.$js;
+        }
+    }
+    
+    
+    
     /**
      * Agrega un css a la hoja de estilo global
      * @method addCss
      * @param mixed $css Arreglo o string con ubicación del css 
-     * @param string ambito Usado para agregar css solo para prod o dev
+     * @param boolean $ambito TRUE si se desea usar la constante URL_CSS como ubicacion
+     * @param string $ambito Usado para agregar css solo para prod o dev
      */
-    function addCSS($css,$ambito=""){
+    function addCSS($css,$constante=TRUE,$ambito=""){
+        
+        if($constante===TRUE) $constante=URL_CSS;
+            
         if(is_array($css)){
             foreach ($css as $key => $value) {
                 if(!empty($ambito))
-                    $this->css[$ambito][]=$value;
+                    $this->css[$ambito][]=$constante.$value;
                 else
-                    $this->css[]=$value;
+                    $this->css[]=$constante.$value;
             }            
         }else{
             if(!empty($ambito))
-                $this->css[$ambito]=$css;
+                $this->css[$ambito]=$constante.$css;
             else{
-                $this->css[]=$css;
+                $this->css[]=$constante.$css;
             
             }
         }        
