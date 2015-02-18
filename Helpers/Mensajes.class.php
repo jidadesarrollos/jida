@@ -48,18 +48,13 @@ class Mensajes {
         
             
         $estilo=array();
-        // if(defined(cssMsjError) and defined(cssMsjAlerta) 
-        // and defined(cssMsjSucess) and defined(cssMsjInformacion)){
-            if(defined('cssMsjError')){
-                $estilo['error']=cssMsjError;
-                $estilo['alerta']=cssMsjAlerta;
-                $estilo['suceso']=cssMsjSuccess;
-                $estilo['info']=cssMsjInformacion;    
-            }elseif(array_key_exists('configMensajes', $GLOBALS)){
+        if(array_key_exists('configMensajes', $GLOBALS)){
                 foreach ($GLOBALS as $key => $value) {
                     $estilo[$key]=$value;
                 }
-            }
+        }else{
+            
+        }
                 
         // }else{
             // $excepcion = "No se encuentran definidas las constantes css para los mensajes, verifique

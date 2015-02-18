@@ -516,6 +516,10 @@
         
         
         $this->vista->data = $this->controladorObject->dv;
+        //Compatibilidad con sistemas sin objeto DataVista
+        if(! $this->vista->data instanceof DataVista){
+            $this->vista->data=new DataVista();
+        }
         $this->vista->renderizar($retorno,$vista);
         
     }

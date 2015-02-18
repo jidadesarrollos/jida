@@ -173,17 +173,17 @@ class UsersController extends Controller{
         
         if(isset($_GET['usuario']) and $this->getEntero($_GET['usuario'])!=""){
             
-            $form = new Formulario('PerfilesAUsuario',2,Globals::obtGet('usuario'),2);
-            $user = new User($this->getEntero(Globals::obtGet('usuario')));
+            $form = new Formulario('PerfilesAUsuario',2,$this->get('usuario'),2);
+            $user = new User($this->getEntero($this->get('usuario')));
             
-            $form->action=$this->url."asociar-perfiles/usuario/".Globals::obtGet('usuario');
+            $form->action=$this->url."asociar-perfiles/usuario/".$this->get('usuario');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar perfiles al usuario $user->nombre_usuario";
             
             if(isset($_POST['btnPerfilesAUsuario'])){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
-                    $accion = $user->asociarPerfiles(Globals::obtPost('id_perfil'));
+                    $accion = $user->asociarPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Session::set('__idVista', 'componentes');
                         $msj = Mensajes::mensajeSuceso('Asignados los perfiles al usuario '.$user->nombre_usuario);

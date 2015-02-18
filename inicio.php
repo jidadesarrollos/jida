@@ -80,7 +80,7 @@ include_once 'Settings/jConstantes.php';
  * Manejo de Errores
  * 
  */
-if(entorno_app == 'dev'){
+if(ENTORNO_APP == 'dev'){
 	/* True */
     ini_set("display_errors", 1);
     ini_set("track_errors", 1);

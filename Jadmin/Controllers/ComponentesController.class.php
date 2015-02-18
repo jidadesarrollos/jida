@@ -47,8 +47,8 @@ class ComponentesController extends Controller{
         
         $tipoForm=1;
         $idComponente = "";
-        if(Globals::obtGet('comp')){
-            $idComponente = Globals::obtGet('comp');
+        if($this->get('comp')){
+            $idComponente = $this->get('comp');
             $tipoForm=2;
         }
 
@@ -56,17 +56,17 @@ class ComponentesController extends Controller{
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
          
-         if(Globals::obtPost('btnComponente')){
-             $this->getEntero(Globals::obtPost('id_componente'));
+         if($this->post('btnComponente')){
+             $this->getEntero($this->post('id_componente'));
 			 
-			 if($this->validarComponente(Globals::obtPost('componente'))){
+			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Componente($idComponente);
                  $validacion = $F->validarFormulario($_POST);
                  if($validacion===TRUE){
                      $guardado  = $comp->guardarComponente($_POST);
                      if($guardado['ejecutado']==1){
                          Session::set('__idVista', 'componentes');
-                         Session::set('__msjVista',Mensajes::mensajeSuceso('Componente <strong>'.Globals::obtPost('componente').'</strong> guardado'));
+                         Session::set('__msjVista',Mensajes::mensajeSuceso('Componente <strong>'.$this->post('componente').'</strong> guardado'));
                          redireccionar($this->url."");    
                      }else{
                          Session::set('__msjForm', Mensajes::mensajeError('No se pudo registrar el componente'));
@@ -94,17 +94,17 @@ class ComponentesController extends Controller{
         if(isset($_GET['comp']) and $this->getEntero($_GET['comp'])!=""){
                         
             $this->vista="accesoPerfiles";
-            $form = new Formulario('PerfilesAComponentes',2,Globals::obtGet('comp'),2);
-            $comp = new Componente($this->getEntero(Globals::obtGet('comp')));
+            $form = new Formulario('PerfilesAComponentes',2,$this->get('comp'),2);
+            $comp = new Componente($this->getEntero($this->get('comp')));
             
-            $form->action=$this->url."asignar-acceso/comp/".Globals::obtGet('comp');
+            $form->action=$this->url."asignar-acceso/comp/".$this->get('comp');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
             if(isset($_POST['btnPerfilesAComponentes'])){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     
-                    $accion = $comp->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    $accion = $comp->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Session::set('__idVista', 'componentes');
                         $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al componente '.$comp->componente);

@@ -97,7 +97,7 @@ class ObjetosController extends Controller{
     function lista(){
 		  $this->tituloPagina="jida-Registro Componentes";   
           if(isset($_GET['comp'])){
-               $idComponente = $this->getEntero(Globals::obtGet('comp'));
+               $idComponente = $this->getEntero($this->get('comp'));
                $comp = new Componente($idComponente);
                $this->validarObjetos($comp);
                $query = "select id_objeto,objeto as \"Objeto\",descripcion \"Descripci&oacute;n\" from s_objetos where id_componente = $idComponente";
@@ -123,6 +123,7 @@ class ObjetosController extends Controller{
                                                                         'href'=>$this->url."metodos/obj/{clave}"
                                                                         ),
                                                     'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
+                                    
                                     1=>array('a'=>array(
                                                     'atributos'=>array( 'class'=>'btn',
                                                                         'title'=>'Agregar Descripci&oacute;n',
@@ -225,17 +226,17 @@ class ObjetosController extends Controller{
 			if(isset($_GET['metodo'])){
 				
 			
-				$metodo = new Metodo(Globals::obtGet('metodo'));
-				$form = new Formulario('PerfilesAMetodos',2,Globals::obtGet('metodo'),2);
+				$metodo = new Metodo($this->get('metodo'));
+				$form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
 				
-				$form->action=$this->url."acceso-perfiles/metodo/".Globals::obtGet('metodo');
+				$form->action=$this->url."acceso-perfiles/metodo/".$this->get('metodo');
 				$form->valueSubmit="Asignar Perfiles";
 				$form->tituloFormulario="Asignar acceso de perfiles a metodo $metodo->nombre_metodo";
 				if(isset($_POST['btnPerfilesAMetodos'])){
 					$validacion = $form->validarFormulario($_POST);
 					if($validacion===TRUE){
 						
-						$accion = $metodo->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+						$accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
 						if($accion['ejecutado']==1){
 							Session::set('__idVista', 'metodosObjeto');
 							$msj = Mensajes::mensajeSuceso('Asignado los perfiles de acceso al metodo '.$metodo->nombre_metodo);
@@ -268,16 +269,16 @@ class ObjetosController extends Controller{
         
         if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])!=""){            
             $this->vista="accesoPerfiles";
-            $form = new Formulario('PerfilesAObjetos',2,Globals::obtGet('obj'),2);
-            $obj = new Objeto($this->getEntero(Globals::obtGet('obj')));
-            $form->action=$this->url."asignar-acceso/obj/".Globals::obtGet('obj');
+            $form = new Formulario('PerfilesAObjetos',2,$this->get('obj'),2);
+            $obj = new Objeto($this->getEntero($this->get('obj')));
+            $form->action=$this->url."asignar-acceso/obj/".$this->get('obj');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al objeto $obj->objeto";
             if(isset($_POST['btnPerfilesAObjetos'])){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     
-                    $accion = $obj->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Session::set('__idVista', 'objetos');
                         $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al objeto '.$obj->objeto);

@@ -25,7 +25,7 @@ class MetodosController	 extends Controller{
         $url = (empty($url))?$this->url:$url;
         
         if(isset($_GET['obj'])){
-            $objeto = new Objeto($this->getEntero(Globals::obtGet('obj')));
+            $objeto = new Objeto($this->getEntero($this->get('obj')));
             
             $this->tituloPagina="Objeto $objeto->objeto - Metodos";
             $nombreClase = $objeto->objeto."Controller";
@@ -123,7 +123,7 @@ class MetodosController	 extends Controller{
         if(isset($_GET['metodo']) and $this->getEntero($_GET['metodo'])!=""){            
             $this->vista="accesoPerfiles";
             
-            $form = new Formulario('PerfilesAMetodos',2,Globals::obtGet('metodo'),2);
+            $form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
             $metodo = new Metodo($this->getEntero($_GET['metodo']));
             
             $form->action=$this->url."asignar-acceso/metodo/".$_GET['metodo'];
@@ -133,7 +133,7 @@ class MetodosController	 extends Controller{
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     
-                    $accion = $obj->asignarAccesoPerfiles(Globals::obtPost('id_perfil'));
+                    $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$obj->objeto);
                         redireccionar($this->url);
