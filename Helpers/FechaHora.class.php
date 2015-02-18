@@ -23,7 +23,7 @@ class FechaHora {
 	static function diaSemana() {
 		$diaHoy = date ( 'l' );
 		$diasSemanas = array (
-				'Sonday' => 'Domingo',
+				'Sunday' => 'Domingo',
 				'Monday' => 'Lunes',
 				'Tuesday' => 'Martes',
 				'Wednesday' => 'Miércoles',

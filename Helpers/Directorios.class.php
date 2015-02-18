@@ -8,17 +8,6 @@
  */
 class Directorios extends Directory{
 	
-	/**
-	 * 
-	 */
-	var $something;
-	
-	/**
-	 * 
-	 */
-	function __construct(){
-		
-	}//final constructor
 	
 	/**
      * Verifica si un directorio existe, hace uso de funcion file_exists de PHP
