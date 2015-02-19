@@ -176,15 +176,17 @@ class Pagina{
             $this->nombreVista = $nombreVista;
         }
         $DataTpl = $this->data->getTemplate();
+        
         if(!empty($DataTpl)){
             $rutaVista = $this->procesarVistaAbsoluta();
             
         }else{
+            
             $rutaVista = $this->obtenerRutaVista();
             if($this->rutaPagina==3){
                 $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
             }else{
-                if($this->controlador=='Excepcion'){
+                if($this->controlador=='Excepcion' or $this->controlador==CONTROLADOR_EXCEPCIONES){
                     $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
                 }else{   
                     $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";          
@@ -198,9 +200,9 @@ class Pagina{
         $this->template=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
+            
             $this->renderizarLayout($data);
         }else{
-            
             throw new Exception("No se encuentra definida la plantilla", 120);
         }
     }//final funcion
@@ -223,6 +225,7 @@ class Pagina{
         global $dataArray ;
         $dataArray = $data;
         /* Permitimos almacenamiento en bufer */
+        
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
