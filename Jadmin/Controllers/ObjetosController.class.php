@@ -267,17 +267,17 @@ class ObjetosController extends Controller{
      */
     function asignarAcceso(){
         
-        if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])!=""){            
+        if($this->getEntero($this->get('obj'))>0){            
             $this->vista="accesoPerfiles";
             $form = new Formulario('PerfilesAObjetos',2,$this->get('obj'),2);
             $obj = new Objeto($this->getEntero($this->get('obj')));
-            $form->action=$this->url."asignar-acceso/obj/".$this->get('obj');
-            $form->valueSubmit="Asignar Perfiles a Objeto";
+            
+            $form->action = $this->getUrl('asignarAcceso',['obj'=>$this->get('obj')]);
+            $form->valueBotonForm="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al objeto $obj->objeto";
-            if(isset($_POST['btnPerfilesAObjetos'])){
-                $validacion = $form->validarFormulario($_POST);
+            if($this->post('btnPerfilesAObjetos')){
+                $validacion = $form->validarFormulario();
                 if($validacion===TRUE){
-                    
                     $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Session::set('__idVista', 'objetos');

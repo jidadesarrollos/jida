@@ -88,16 +88,16 @@ class Objeto extends DBContainer{
         
         $insert="insert into s_objetos_perfiles values ";
         $i=0;
-        
         $componente = new Componente($this->id_componente);
-        
         foreach ($perfiles as $key => $idPerfil) {
             if($i>0)$insert.=",";
             $insert.="(null,$idPerfil,$this->id_objeto)";
             $i++;
         }
-        
         $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto";
+        $metodos = new Metodo();
+        $dataMetodos = $metodos->getTabla(['id_metodo'],['id_objeto'=>$this->id_objeto],null,'id_metodo');
+        Debug::mostrarArray($dataMetodos);
         $this->bd->ejecutarQuery($delete);
         $this->bd->ejecutarQuery($insert);
         return array('ejecutado'=>1);
