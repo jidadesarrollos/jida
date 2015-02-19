@@ -89,6 +89,7 @@
             
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+            
             $this->validacion();
         
         }catch(Exception $e){
@@ -375,7 +376,7 @@
 
                 }//fin validacion de existencia del controlador.
            }else{
-               //Debug::mostrarArray(Session::get('acl','jadmin'));
+               
                  throw new Exception("No tiene permisos", 403);
                  
              }        
