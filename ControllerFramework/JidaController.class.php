@@ -473,7 +473,7 @@
         
                 
         $this->controladorObject = new $ctrlError;
-
+        
         if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else {
@@ -483,12 +483,14 @@
         $this->metodo='error';
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
-        
+      
         $this->vista->definirDirectorios();
         
         $this->vista->establecerAtributos(array("controlador"=>$this->controlador,'modulo'=>$this->modulo));
         
         $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
+        if($ctrl->layoutPropio)
+            $this->vista->layout = $ctrl->layout;
         
         if(empty($this->vista->layout)){
             $this->vista->layout=LAYOUT_DEFAULT;
@@ -498,6 +500,7 @@
         $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$ctrl->metaDescripcion;
         $retorno['urlCanonical'] = $ctrl->urlCanonical;
+        
         $this->mostrarContenido($retorno,$ctrl->vista);
     }
     /**
@@ -521,6 +524,7 @@
         if(! $this->vista->data instanceof DataVista){
             $this->vista->data=new DataVista();
         }
+        
         $this->vista->renderizar($retorno,$vista);
         
     }

@@ -155,6 +155,7 @@ class Session {
      * @return boolean TRUE si es conseguida o FALSE si no se consigue
      */
     static function checkPerfilAcceso($perfil){;
+        
         $perfiles = Session::get('usuario','perfiles');
         if(in_array(String::upperCamelCase($perfil),$perfiles)){
             return true;

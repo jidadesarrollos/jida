@@ -176,15 +176,17 @@ class Pagina{
             $this->nombreVista = $nombreVista;
         }
         $DataTpl = $this->data->getTemplate();
+        
         if(!empty($DataTpl)){
             $rutaVista = $this->procesarVistaAbsoluta();
             
         }else{
+            
             $rutaVista = $this->obtenerRutaVista();
             if($this->rutaPagina==3){
                 $rutaVista = $rutaVista. String::lowerCamelCase($this->nombreVista).".php";
             }else{
-                if($this->controlador=='Excepcion'){
+                if($this->controlador=='Excepcion' or $this->controlador==CONTROLADOR_EXCEPCIONES){
                     $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
                 }else{   
                     $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";          
@@ -198,9 +200,9 @@ class Pagina{
         $this->template=$rutaVista;
         
         if(!empty($this->layout) or $this->layout!==FALSE){
+            
             $this->renderizarLayout($data);
         }else{
-            
             throw new Exception("No se encuentra definida la plantilla", 120);
         }
     }//final funcion
@@ -221,9 +223,9 @@ class Pagina{
      */
     private function renderizarLayout($data){
         global $dataArray ;
-        
         $dataArray = $data;
         /* Permitimos almacenamiento en bufer */
+        
         ob_start();
         
         if(!empty($this->layout) and file_exists($this->directorioLayout.$this->layout)):
@@ -341,23 +343,27 @@ class Pagina{
         $this->checkData();
         $cont=0;
         $code= array();
-        if(array_key_exists('code',$this->data->jsAjax)){
-            $code = $this->data->jsAjax['code'];
-            unset($this->data->jsAjax['code']);
-        }
-        foreach ($this->data->jsAjax as $key => $archivo) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                    foreach ($archivo as $key => $value){
-                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
-                        if($cont==0) $cont=2;
-                    }           
-                }
+        
+        if(is_array($this->data->jsAjax)){
+            if(array_key_exists('code',$this->data->jsAjax)){
+                $code = $this->data->jsAjax['code'];
+                unset($this->data->jsAjax['code']);
             }
-            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
-            if($cont==0) $cont=2;
+            foreach ($this->data->jsAjax as $key => $archivo) {
+                
+                if(is_string($key)){
+                    if($key==ENTORNO_APP){
+                        foreach ($archivo as $key => $value){
+                            $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                            if($cont==0) $cont=2;
+                        }           
+                    }
+                }
+                else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+                if($cont==0) $cont=2;
+            }
         }
+            
         if(count($code)>0){
             foreach ($code as $key => $value){
                 if(array_key_exists('archivo',$value)){

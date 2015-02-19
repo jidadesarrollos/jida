@@ -125,7 +125,8 @@ class Formulario extends DBContainer {
     private $metodo = "POST";
     /**
      * Define una consulta externa utilizar para un campo de seleccion determinado, 
-     * el query debe ser registrado en una posición de arreglo donde el key tenga el nombre del campo; El
+     * el query debe ser registrado en una posición de arreglo donde el key tenga 
+     * el nombre del campo; El
      * valor es pasado a la clase CampoHTML.
      * 
      * @var array $externo

@@ -88,21 +88,44 @@ class Objeto extends DBContainer{
         
         $insert="insert into s_objetos_perfiles values ";
         $i=0;
-        
         $componente = new Componente($this->id_componente);
-        
         foreach ($perfiles as $key => $idPerfil) {
             if($i>0)$insert.=",";
             $insert.="(null,$idPerfil,$this->id_objeto)";
             $i++;
         }
-        
         $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto";
+        $metodos = new Metodo();
+        $dataMetodos = $metodos->getTabla(['id_metodo'],['id_objeto'=>$this->id_objeto],null,'id_metodo');
+        Debug::mostrarArray($dataMetodos);
         $this->bd->ejecutarQuery($delete);
         $this->bd->ejecutarQuery($insert);
         return array('ejecutado'=>1);
     
     }//fin función
+    /**
+     * 
+     */
+    function obtenerObjetosMetodos($config=""){
+        $objetos="";
+        if(is_array($config)){
+            $objetos=[];
+            foreach ($config as $key => $value) {
+                $objetos[$key]=$value;
+            }
+        } 
+        $objetos = $this->getTabla(null,$objetos,'descripcion','id_objeto');
+        $idsObjetos = Arrays::obtenerKey('id_objeto', $objetos);
+        
+        $queryMetodos = "select id_metodo,metodo,descripcion,id_objeto from s_metodos where id_objeto in (".implode(",", $idsObjetos).") order by id_objeto";
+        $resultMetodos = $this->bd->ejecutarQuery($queryMetodos);
+        while ($metodo = $this->bd->obtenerArrayAsociativo()) {
+            $objetos[$metodo['id_objeto']]['metodos'][$metodo['id_metodo']]=$metodo;
+            
+        }
+        return $objetos;   
+        
+    }
 }
 
 

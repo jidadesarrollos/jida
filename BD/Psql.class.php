@@ -251,20 +251,30 @@ class PSQLConexion extends ConexionBD {
         
     }
 
-    /**
-     * Devuelve un array asociativo multinivel con data de base de datos
+     /**
+     * Devuelve un arreglo con la información solicitada de base de datos
      * 
-     * @param string $query Consulta a SQL
-     * @return array $data Mapa ordenado de datos de la consulta a bd
+     * @method obtenerDataCompleta
+     * @param string $query Consulta a base de datos
+     * @param string $key  campo que se desee usar como key de la matriz a devolver, si es omitido los
+     * keys serán autonumericos
+     * @return array $dataCompleta 
+     * 
      */
-    public function obtenerDataCompleta($query = "",$mayus=false) {
+    public function obtenerDataCompleta($query = "",$key="") {
     
         $this->ejecutarQuery ( $query );
         $result = $this->result;
         $data = array();
         
         while($row = $this->obtenerArrayAsociativo($result,$mayus)){
-            $data[]=$row;
+          if(!empty($key))
+                $data[$row[$key]]=String::codificarArrayToHTML($data);
+            else {
+                $data[]=String::codificarArrayToHTML($data);
+            }
+            
+            
         }
     
         $this->query = ($query == "") ? $this->query : $query;
@@ -313,7 +323,8 @@ class PSQLConexion extends ConexionBD {
             $this->result = $result;
         }
         if($this->result){
-            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ),$mayus);
+            
+            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ));
             return $arr;
         }else{
             return False;
