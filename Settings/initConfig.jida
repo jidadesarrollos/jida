@@ -4,37 +4,12 @@
  * @author Julio Rodriguez <jirc48@gmail.com>
  */
 #--------------------------------------------------------------
- /**
-  * Define el entorno de desarrollo
-  */
-  if(!defined('dev')){
-    define('dev','dev');
-  }
-  if(!defined('prod')){
-    define('prod','prod');
-  }
-  /**
-   * Define el entorno actual de la aplicación
-   */
-  if(!defined('entorno_app')){
-    define('entorno_app', dev );
-  }
   
 if(!defined('TEST_PLATFORM')){
     define('TEST_PLATFORM',FALSE);
   
 }
-/**
- * Header por defecto
- */
-define ('header_default', 'plantillas/default/header.php');
-/**
- * Footer por defecto
- */
-define ('footer_default','plantillas/default/footer.php');
-  /**
-   * Define ubicación de las plantillas del framework
-   */
+
 define  ('plantillas_framework_dir', framework_dir ."jidaPlantillas/");
 /**
  * Directorio Plantillas de la aplicacion
@@ -48,67 +23,10 @@ define  ('jida_admin_vistas_dir', framework_dir ."Jadmin/Vistas/" );
 define('img_dir','/htdocs/img/');
 define ('DIR_EXCEPCION_PLANTILLAS', app_dir."plantillas/error/");
 
+
+if(!defined('DIR_EXCEPCION_PLANTILLAS')){
+    define ('DIR_EXCEPCION_PLANTILLAS', app_dir."plantillas/error/");
+}
+
 define ('meta_descripcion','Electron C.A Tienda Electronica');
 define ('titulo_sistema','Jida');
-  /**
-   * DEfinicion de constantes para mensajes
-   */
-       
-   define('cssMsjError','alert alert-danger');
-   define('cssMsjAlerta','alert alert-warning');
-   define('cssMsjSuccess','alert alert-success');
-   define('cssMsjInformacion','alert alert-info');
-   
-   
-   
-   
-$GLOBALS['configPaginador'] = array(
-    'cssLinkPaginas'        =>  "",
-    'cssPaginaActual'       =>  "active",
-    'cssListaPaginador'     =>  "pagination",
-    'tipoPaginador'         =>  "lista",
-    'filasPorPagina'        =>  10
-);
-$GLOBALS['PaginadorJida'] = array(
-    'cssLinkPaginas'        =>  "",
-    'cssPaginaActual'       =>  "active",
-    'cssListaPaginador'     =>  "pagination",
-    'tipoPaginador'         =>  "lista",
-    'filasPorPagina'        =>  50
-);
-
-$GLOBALS['configVista']=array(
-                            'cssSectionBusqueda'=>'row form-inline',
-                            'cssFormBusqueda'=>'navbar-form navbar-right',
-                            'cssDivBusqueda'=>'col-lg-12 txt-derecha',
-                            #'cssDivInputTextBusqueda'=>'col-xs-4',
-                            'cssInputTextBusqueda'=>'form-control input-busqueda',
-                            'cssDivInputBtnBusqueda'=>'',
-                            'cssBotonBusqueda'=>'btn btn-default',
-                            'cssTable'=>'table animate2 fadeInRight',
-                            'cssTituloVista'=>'animate1 rotateInDownLeft',
-                            
-                            
-                            );
-$GLOBALS['requireCSS']=array(
-        'css'=>"otraaa",
-
-);
-$GLOBALS['configFormsElectron']=array(
-							'cssSubmit'=>'btn btn-electron'
-);
-
-define ('CONTROLADOR_EXCEPCIONES',"Excepcion");
-
-
-
-/**
- * Arreglo de modulos existentes
- */
-$GLOBALS['modulos'] = array(
-                            'Jadmin',
-                            'error',
-                            'Admin'
-                            )
-
-?>

@@ -1,0 +1,69 @@
+<?PHP 
+
+
+/**
+ * Arreglo global por defecto con estructura para la
+ * configuración de la clase Páginador implementada por la clase vista
+ * @see Paginador
+ */
+$GLOBALS['configPaginador'] = [
+    'cssLinkPaginas'        =>  "",
+    'cssPaginaActual'       =>  "active",
+    'cssListaPaginador'     =>  "pagination",
+    'tipoPaginador'         =>  "lista",
+    'filasPorPagina'        =>  10
+];
+$GLOBALS['PaginadorJida'] =[
+    'cssLinkPaginas'        =>  "",
+    'cssPaginaActual'       =>  "active",
+    'cssListaPaginador'     =>  "pagination",
+    'tipoPaginador'         =>  "lista",
+    'filasPorPagina'        =>  20
+];
+
+
+$GLOBALS['configVista']=[
+    'cssSectionBusqueda'=>'row form-inline',
+    'cssFormBusqueda'=>'navbar-form navbar-right',
+    'cssDivBusqueda'=>'col-lg-12 txt-derecha',
+    #'cssDivInputTextBusqueda'=>'col-xs-4',
+    'cssInputTextBusqueda'=>'form-control input-busqueda',
+    'cssDivInputBtnBusqueda'=>'',
+    'cssBotonBusqueda'=>'btn btn-adm',
+    'cssBtnAccion' => 'btn btn-primary',
+    'cssTable'=>'table animate2 fadeInRight',
+    'cssTituloVista'=>'animate1 rotateInDownLeft',
+    'cssFilaAcciones'=>'text-right',
+    'paginador'=>$GLOBALS['configPaginador'],
+    ];
+/**
+ * Archivos y librerias CSS a utilizar en toda la aplicación
+ *  
+ */
+$GLOBALS['_CSS']=[
+    'prod'=>[
+        // Tu css para produccion
+    ],
+    'dev'=> [
+          // TU css para desarrollos
+    ],
+    // tu css General
+];
+/**
+ * Librerias JS a utilizar en la aplicación
+ */
+$GLOBALS['_JS']=[
+    'prod'=>[   
+            // js entorno prod
+        ],
+    'dev'=>[
+    //js entorno dev    
+            URL_HTDOCS."js/libs/jq2.0.3.js",
+            URL_HTDOCS."js/libs/jqui.1.11.3.js",
+            URL_HTDOCS."js/libs/bootstrap.min.js",
+    
+        ],
+//js general
+
+];
+$GLOBALS['_JS_AJAX']=[];
