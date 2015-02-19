@@ -472,7 +472,7 @@
         
                 
         $this->controladorObject = new $ctrlError;
-
+        
         if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
             $this->controlador='ExcepcionController';
         else {
@@ -482,7 +482,7 @@
         $this->metodo='error';
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
-        
+      
         $this->vista->definirDirectorios();
         
         $this->vista->establecerAtributos(array("controlador"=>$this->controlador,'modulo'=>$this->modulo));
@@ -499,6 +499,7 @@
         $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
         $retorno['metaDescripcion']=$ctrl->metaDescripcion;
         $retorno['urlCanonical'] = $ctrl->urlCanonical;
+        
         $this->mostrarContenido($retorno,$ctrl->vista);
     }
     /**
