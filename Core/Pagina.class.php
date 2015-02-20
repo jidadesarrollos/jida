@@ -325,7 +325,7 @@ class Pagina{
             
             if(is_string($key)){
                 if($key==ENTORNO_APP){
-                    Debug::mostrarArray($archivo);
+                    
                     foreach ($archivo as $key => $value){
                         $js.=Selector::crear('script',['src'=>$value],null,$cont);
                         if($cont==0) $cont=2;
