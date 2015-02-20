@@ -583,20 +583,21 @@ class DBContainer {
      */
     function getTabla($campos=null,$where,$order="",$claveArreglo=""){
         if(!is_array($campos)){
-            $campos = $this->propiedadesPublicas;
-            
+            $campos = array_keys($this->propiedadesPublicas);
             $selectCompleto=TRUE;
+        }else{
+            
         }
         $query ="Select ";
         $cont=0;
         foreach ($campos as $key => $value) {
             
-            if(!is_numeric($key)){
-                if($cont>0){
-                    $query.=",";
-                }
-                $query.="$key"; 
+            
+            if($cont>0){
+                $query.=",";
             }
+            $query.="$value"; 
+        
         
             $cont++; 
         }//fin
