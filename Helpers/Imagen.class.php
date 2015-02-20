@@ -82,7 +82,7 @@ class Imagen extends Archivo{
             $imagen = imagejpeg($lienzo, $url,90);
             break;
           case "image/png":
-            $imagen = imagepng($lienzo, $url,90);
+            $imagen = imagepng($lienzo, $url,2);
             break;
           case "image/gif":
             $imagen = imagegif($lienzo, $url,90);

@@ -174,14 +174,14 @@ class DataModel{
     }//fin indentificarRefereincas
     /**
      * Permite acceder a propiedades privadas o protegidas del objeto instanciado
-     * @method _get()
+     * @method __get()
      * @param string $propiedad Nombre de la propiedad a obtener
      */
     function __get($propiedad){
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
         }else{        
-            throw new Exception("La propiedad solicitada no existe", 123);   
+            throw new Exception("La propiedad ". $propiedad ." solicitada no existe", 123);   
         }
     }
     
@@ -635,7 +635,21 @@ class DataModel{
         $i=0;
         foreach ($dataUpdate as $campo => $valor) {
             if($i>0) $update.=",";
-            $update.=" $campo='$valor'";
+            switch ($valor) {
+                case '':
+                    if(!is_numeric($valor)){
+                        $campoValor="null";   
+                    }else{
+                        $campoValor=$valor;
+                    }
+                    break;
+                
+                default:
+                     $campoValor="'".$valor."'";
+                    break;
+            }
+            
+            $update.=" $campo=$campoValor";
             ++$i;
         }
         

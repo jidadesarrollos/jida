@@ -24,23 +24,23 @@ class ComponentesController extends Controller{
         $query = "select id_componente, Componente as \"Componente\" from s_componentes";
         $vista = new Vista($query,$GLOBALS['configPaginador'],'Componentes');
 		$vista->setParametrosVista($GLOBALS['configVista']);
-        $vista->filaOpciones=[
-            0=>['a'=>['atributos' =>[
-                'class'=>'btn','title'=>'Ver objetos del componente',
-                'href'=>"/jadmin/objetos/lista/comp/{clave}",
-                ],
-                'html'=>['span'=>['atributos'=>['class' => 'glyphicon glyphicon-folder-open']]]]],
-            1=>['a'=>[
-                'atributos'=>[ 'class'=>'btn',
-                    'title'=>'Asignar perfiles de acceso',
-                    'href'=>"/jadmin/componentes/asignar-acceso/comp/{clave}",
-            
-                    'data-jvista'=>'modal'
-                ],
-                'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]
-                        ];
-                                
-		
+
+        $vista->filaOpciones=[0=>['a'=>['atributos' =>[
+                        'class'=>'btn','title'=>'Ver objetos del componente',
+                        'href'=>"/jadmin/objetos/lista/comp/{clave}",
+                        'data-jvista'=>'modal'],
+            'html'=>['span'=>['atributos'=>['class' => 'glyphicon glyphicon-folder-open']]]]],
+          1=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                                'title'=>'Asignar perfiles de acceso',
+                                'href'=>"/jadmin/componentes/asignar-acceso/comp/{clave}",
+                        
+                                'data-jvista'=>'modal'
+                                ],
+            'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]
+        ];
+        $vista->acciones=['Nuevo'=>['href'=>$this->getUrl('setComponente'),'data-jvista'=>'modal']];
+
         $vista->mensajeError = Mensajes::mensajeAlerta("No hay registro de componentes <a href=\"".$this->url."set-componente\">Agregar uno</a>");
         $this->data['vista'] = $vista->obtenerVista();
     }
