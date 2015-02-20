@@ -591,14 +591,10 @@ class DBContainer {
         $query ="Select ";
         $cont=0;
         foreach ($campos as $key => $value) {
-            
-            
             if($cont>0){
                 $query.=",";
             }
-            $query.="$value"; 
-        
-        
+            $query.="$value";
             $cont++; 
         }//fin
         $query.=" from $this->nombreTabla";
