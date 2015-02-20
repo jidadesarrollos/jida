@@ -107,12 +107,10 @@ class ComponentesController extends Controller{
                     
                     $accion = $comp->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Session::set('__idVista', 'componentes');
-                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al componente '.$comp->componente);
-                        Session::set('__msjVista',$msj);
-                        redireccionar($this->url);
+                        Vista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente '.$comp->componente,$this->urlController());
+                        
                     }else{
-                    
+                        
                         $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                         Session::set('__msjForm', $msj);
                     }

@@ -85,7 +85,7 @@ class Objeto extends DBContainer{
      * @return boolean true or false 
      */
     function asignarAccesoPerfiles($perfiles){
-        
+            
         $insert="insert into s_objetos_perfiles values ";
         $i=0;
         $componente = new Componente($this->id_componente);
@@ -94,12 +94,28 @@ class Objeto extends DBContainer{
             $insert.="(null,$idPerfil,$this->id_objeto)";
             $i++;
         }
-        $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto";
+        $insert.=";";
+        $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto;";
         $metodos = new Metodo();
-        $dataMetodos = $metodos->getTabla(['id_metodo'],['id_objeto'=>$this->id_objeto],null,'id_metodo');
-        Debug::mostrarArray($dataMetodos);
-        $this->bd->ejecutarQuery($delete);
-        $this->bd->ejecutarQuery($insert);
+        $dataMetodos = array_keys($metodos->getTabla(['id_metodo'],['id_objeto'=>$this->id_objeto],null,'id_metodo'));
+        $borradoAccesoMetodos = "Delete from s_metodos_perfiles where id_metodo in(".implode(",", $dataMetodos).");";
+        $insertMetodos = 
+            "INSERT INTO s_metodos_perfiles
+            (id_perfil,".$metodos->_get('clavePrimaria').") VALUES ";
+        
+        $cont=0;
+        for($i=0;$i<count($dataMetodos);++$i){
+            foreach ($perfiles as $key => $idPerfil) {
+                if($cont>0) $insertMetodos.=",";
+                $insertMetodos.="($idPerfil,$dataMetodos[$i])";
+                ++$cont;
+            }
+            
+        }
+        
+        $this->bd->ejecutarQuery($delete.$insert.$borradoAccesoMetodos.$insertMetodos,2);
+        
+        
         return array('ejecutado'=>1);
     
     }//fin función

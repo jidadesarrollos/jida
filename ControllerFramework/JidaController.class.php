@@ -469,8 +469,6 @@
     private function procesarExcepcion(Exception $excepcion){
         
         $ctrlError = $this->controlador."Controller";
-        
-                
         $this->controladorObject = new $ctrlError;
         
         if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')

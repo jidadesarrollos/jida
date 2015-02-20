@@ -280,24 +280,18 @@ class ObjetosController extends Controller{
                 if($validacion===TRUE){
                     $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Session::set('__idVista', 'objetos');
-                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al objeto '.$obj->objeto);
-                        Session::set('__msjVista',$msj);
-                        redireccionar($this->url);
+                        Vista::msj("objetos", 'suceso', 'Asignados los perfiles de acceso al objeto '.$obj->objeto,$this->getUrl('lista',['comp'=>$obj->id_componente]));
                     }else{
-                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                        Session::set('__msjForm', $msj);
+                        Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
                 }else{
+                    Formulario::msj('error', "No se han asignado perfiles");
                     
-                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
                 }
             }
             $this->data['formAcceso'] =$form->armarFormulario();
         }else{
-            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
-            Session::set('__idVista','objetos');
-            redireccionar($this->url);  
+            Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());  
         }    
     }
 
