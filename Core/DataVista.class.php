@@ -44,13 +44,13 @@ class DataVista{
         if(is_array($js)){
             foreach ($js as $key => $archivo) {
                 if(!empty($ambito))
-                    $this->js[$ambito] = $dir.$archivo;
+                    $this->js[$ambito][] = $dir.$archivo;
                 else 
                     $this->js[]=$dir.$archivo;
             }
         }else{
             if(!empty($ambito))
-                    $this->js[$ambito] = $dir.$js;
+                    $this->js[$ambito][] = $dir.$js;
             else 
                 $this->js[]=$dir.$js;
         }
@@ -67,13 +67,13 @@ class DataVista{
         if(is_array($js)){
             foreach ($js as $key => $archivo) {
                 if(!empty($ambito))
-                    $this->jsAjax[$ambito] = $dir.$archivo;
+                    $this->jsAjax[$ambito][] = $dir.$archivo;
                 else 
                     $this->jsAjax[]=$dir.$archivo;
             }
         }else{
             if(!empty($ambito))
-                    $this->js[$ambito] = $dir.$js;
+                    $this->js[$ambito][] = $dir.$js;
             else 
                 $this->jsAjax[]=$dir.$js;
         }
@@ -101,7 +101,7 @@ class DataVista{
             }            
         }else{
             if(!empty($ambito))
-                $this->css[$ambito]=$constante.$css;
+                $this->css[$ambito][]=$constante.$css;
             else{
                 $this->css[]=$constante.$css;
             
