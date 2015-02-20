@@ -300,8 +300,18 @@ class Pagina{
         }
         
     }
-    
-    function printJS(){
+    /**
+     * Imprime los bloques JAVASCRIPT pasados del controlador
+     * 
+     * Permite imprimir las llamadas a archivos javascript o de segmentos de códigos creados desde el
+     * controlador
+     * @method printJS
+     * @param mixed $js [opcional] Si es pasado el nombre de un archivo o un arreglo de archivos solo serán 
+     * imprimido lo pasado por parametro, caso contrario la función hará impresion de todo lo guardado en la 
+     * variable global.
+     * 
+     */
+    function printJS($js=""){
         $js="";
         $this->checkData();
         $cont=0;
@@ -310,6 +320,7 @@ class Pagina{
             $code = $this->data->js['code'];
             unset($this->data->js['code']);
         }
+        
         foreach ($this->data->js as $key => $archivo) {
             
             if(is_string($key)){
@@ -429,6 +440,10 @@ class Pagina{
        }
         
 
+    }
+    
+    private function printHTML($html){
+        return htmlspecialchars_decode($html);
     }
     
     

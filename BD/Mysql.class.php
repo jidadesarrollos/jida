@@ -230,7 +230,7 @@ class Mysql extends ConexionBD{
      * 
      */
     function obtenerDataCompleta($query="",$key=""){
-        
+        Debug::mostrarArray($query,false);
         if(is_string($query)){
                    
             $this->query = ($query=="")?$this->query:$query;

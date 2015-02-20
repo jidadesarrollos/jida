@@ -323,6 +323,7 @@ class DataModel{
         $this->usoWhere=FALSE;
         return $this;
     }
+
     /**
      * Obtiene el nombre de la clave primaria de la tabla de base de datos
      * 
