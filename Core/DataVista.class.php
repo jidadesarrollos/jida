@@ -21,6 +21,22 @@ class DataVista{
      */
     var $jsAjax;
     /**
+     * Titulo de la Página HTML
+     * 
+     * Representa la etiqueta TITLE en el HEAD
+     * @var string $title
+     */
+    var $title;
+    /**
+     * @var string $meta_descripcion Representa la etiqueta meta property description de la página 
+     */
+    var $meta_descripcion;
+    var $meta_autor;
+    var $meta_image;
+    var $meta_url;
+    var $meta = array();
+    var $canonical;
+    /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
      * en la propiedad "vista del" controlador
@@ -31,6 +47,7 @@ class DataVista{
         if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
         if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
         if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
+        $this->setMetaBasico();   
     }
     /**
      * Agrega un javascript para ser renderizado en el layout
@@ -166,4 +183,21 @@ class DataVista{
           $this->js['code'][]=['codigo'=>$arg1];
        }
     }
+    
+    function setMetaBasico(){
+        $html = "";
+        if(empty($this->meta_descripcion)){
+           if(defined('META_DESCRIPCION')) $this->meta_descripcion = META_DESCRIPCION;
+        }
+        if(empty($this->autor)){
+            if(defined('APP_AUTOR'))  $this->meta_autor = APP_AUTOR;
+        }
+        if(empty($this->image)){
+            if(defined('APP_IMAGEN')) $this->image = APP_IMAGEN;
+        }
+    }
+    
+   
+    
+    
 }

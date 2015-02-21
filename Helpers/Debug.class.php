@@ -18,7 +18,7 @@ class Debug{
      * @method mostrarArray
      */
     static function mostrarArray($ar,$exit=true){
-        echo "<pre style=\"background:black;color:#dcdcdc\">";
+        echo "\n<pre style=\"background:black;color:#dcdcdc\">\n";
         print_r($ar);
         echo "</pre>";
         if($exit==TRUE){

@@ -124,18 +124,19 @@ class Selector{
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";
-        if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
-            
-            $content = $atributos ['content'];
-            unset ( $atributos ['content'] );
-        }
+        // if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
+//             
+            // $content = $atributos ['content'];
+            // unset ( $atributos ['content'] );
+        // }
         if(is_array($atributos)){
+            
             foreach ( $atributos as $key => $value ) {
                 
                 $selectorHTML .= " $key=\"$value\"";
             }    
         }
-        if(!in_array($selector,array('img','hr','br','link'))){
+        if(!in_array($selector,array('img','hr','br','link','meta'))){
             
             if(!empty($content)){
                 $selectorHTML .= ">\n".$tabulaciones."$content";

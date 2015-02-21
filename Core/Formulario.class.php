@@ -715,6 +715,7 @@ class Formulario extends DBContainer {
             );
             /*Se intenta colocar el label si el tipo de control!=hidden*/
             if ($arr ['control'] != 1) {
+                
                 $label = Selector::crear('label',array('for'=>$arr['name']),$arr['label']);
                 if($this->mostrarCamposObligatorios===TRUE){
                     if(is_array($validaciones) and array_key_exists('obligatorio', $validaciones)):

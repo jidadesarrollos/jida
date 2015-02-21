@@ -446,6 +446,41 @@ class Pagina{
     private function printHTML($html){
         return htmlspecialchars_decode($html);
     }
-    
+    /**
+     * Imprime la información meta HTML configurada para la página actual
+     * 
+     * Si no se ha configurado nada, se intentaran imprimir los valores por defectos
+     * que pueden estar configurados con las constantes APP_DESCRIPCION, APP_IMAGEN y APP_AUTOR
+     * 
+     * @method printHeadTags
+     *  
+     */
+    function printHeadTags(){
+        $meta="";$itemprop="";
+        if(!empty($this->data->meta_descripcion)){
+            $meta.=Selector::crear('meta',['name'=>'description','content'=>$this->data->meta_descripcion],null,0); 
+            $itemprop.=Selector::crear('meta',['itemprop'=>'description','content'=>$this->data->meta_descripcion],null,2);
+        }
+        if(!empty($this->data->meta_autor)){
+            $meta.=Selector::crear('meta',['name'=>'author','content'=>$this->data->meta_autor],null,2);
+            $itemprop.=Selector::crear('meta',['itemprop'=>'author','content'=>$this->data->meta_autor],null,2);
+        }
+        if(!empty($this->data->meta_imagen)){
+            $meta.=Selector::crear('meta',['name'=>'image','content'=>$this->data->meta_imagen],null,2); 
+            $itemprop.=Selector::crear('meta',['itemprop'=>'image','content'=>$this->data->meta_imagen],null,2);
+        }
+        
+        if(count($this->data->meta)>0){
+            $metaAdicional="\t\t<!---Tags Meta-----!>\n";
+            
+            foreach ($this->data->meta as $key => $dataMeta) {
+                
+                $metaAdicional.=Selector::crear('meta',$dataMeta,null,2);
+            }
+            $itemprop.=$metaAdicional;
+        }
+       
+        return $meta.$itemprop;
+    }
     
 }
