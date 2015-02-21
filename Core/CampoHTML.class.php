@@ -509,9 +509,10 @@ class CampoHTML extends DBContainer {
                             $check = "checked=\"checked\"";    
                     }
                 }
-                
             }
-            $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t<label><input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+            $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
+            
+            <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."$i\"><label for=\"".$this->name."$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
             $i = ($i=="")?$i=1:$i++;
         }//final foreach
         $this->control.="";
