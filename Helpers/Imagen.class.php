@@ -28,6 +28,7 @@ class Imagen extends Archivo{
             $directorioImagen = $rutaImg.$nombreImg;
         }
         $infoImagen = getimagesize($directorioImagen);
+        
         $anchoActual = $infoImagen[0];
         $altoActual = $infoImagen[1];
         $tipoImagen = $infoImagen['mime'];

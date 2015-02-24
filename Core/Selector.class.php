@@ -146,7 +146,7 @@ class Selector{
             }
                 
         }else{
-            $selectorHTML.="/>";
+            $selectorHTML.=" />";
         }
         
         
@@ -193,6 +193,18 @@ class Selector{
             }
                  
         }
+    }
+    
+    static function crearUL($content,$attrUL=array(),$attrLi=array()){
+        $li="";
+        
+        foreach ($content as $key => $item) {
+            
+            $li.=self::crear("li",$attrLi,$item);
+        }
+        
+        return self::crear("UL",$attrUL,$li,2);
+        
     }
       /**
      * Crea Un boton Input

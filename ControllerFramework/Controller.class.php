@@ -96,6 +96,11 @@ class Controller {
     private $_nombreController;
     private $_modulo;
     /**
+     * @var url $__url URL Actual Registra la URL ingresada en el navegador
+     * @access protected
+     */
+    var $__url;
+    /**
      *
      * @var object $dv Instancia de clase DataVista
      * @see DataVista object

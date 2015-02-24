@@ -457,17 +457,25 @@ class Pagina{
      */
     function printHeadTags(){
         $meta="";$itemprop="";
+        $initTab=0;
+        //Titulo de La pagina
+        if(!empty($this->data->title)){
+            $meta.=Selector::crear('TITLE',null,$this->data->title,0);
+            $initTab=2;
+            $meta.=Selector::crear('meta',['name'=>'title','content'=>$this->data->title],null,$initTab);
+            
+        }
         if(!empty($this->data->meta_descripcion)){
-            $meta.=Selector::crear('meta',['name'=>'description','content'=>$this->data->meta_descripcion],null,0); 
+            $meta.=Selector::crear('meta',['name'=>'description','content'=>$this->data->meta_descripcion],null,$initTab); 
             $itemprop.=Selector::crear('meta',['itemprop'=>'description','content'=>$this->data->meta_descripcion],null,2);
         }
         if(!empty($this->data->meta_autor)){
             $meta.=Selector::crear('meta',['name'=>'author','content'=>$this->data->meta_autor],null,2);
             $itemprop.=Selector::crear('meta',['itemprop'=>'author','content'=>$this->data->meta_autor],null,2);
         }
-        if(!empty($this->data->meta_imagen)){
-            $meta.=Selector::crear('meta',['name'=>'image','content'=>$this->data->meta_imagen],null,2); 
-            $itemprop.=Selector::crear('meta',['itemprop'=>'image','content'=>$this->data->meta_imagen],null,2);
+        if(!empty($this->data->meta_image)){
+            $meta.=Selector::crear('meta',['name'=>'image','content'=>$this->data->meta_image],null,2); 
+            $itemprop.=Selector::crear('meta',['itemprop'=>'image','content'=>$this->data->meta_image],null,2);
         }
         
         if(count($this->data->meta)>0){
@@ -479,8 +487,15 @@ class Pagina{
             }
             $itemprop.=$metaAdicional;
         }
-       
-        return $meta.$itemprop;
+        if(!$this->data->robots){
+            $itemprop.=Selector::crear('meta',['name'=>'robots','content'=>'noindex'],null,2);
+        }
+        //URL CANNONICA
+        if(!empty($this->data->url_canonical)){
+            $itemprop.=Selector::crear('link',['rel'=>'canonical','href'=>$this->data->url_canonical],null,2);
+        }
+            
+        return $meta.$itemprop."\n";
     }
     
 }

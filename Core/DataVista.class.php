@@ -35,7 +35,8 @@ class DataVista{
     var $meta_image;
     var $meta_url;
     var $meta = array();
-    var $canonical;
+    var $url_canonical;
+    var $robots = TRUE;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
