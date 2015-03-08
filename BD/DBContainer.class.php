@@ -197,7 +197,7 @@ class DBContainer {
      */
     protected function inicializarObjeto($id) {
         if(is_array($id)){
-            #Debug::string("voy por el camino",true);
+            
         }else{
             $this->identificarReferencias();
             $data = $this->consulta()
@@ -560,10 +560,13 @@ class DBContainer {
      * Esta funcion puede ser utilizada solo si es un objeto instanciado
      * @method eliminarObjeto
      */
-    function eliminarObjeto() {
-        $clavePrimaria = $this->clavePrimaria;
+    function eliminarObjeto($id="") {
+        if(empty($id)){
+            $id = $this->$$this->clavePrimaria;
+        }
+            
         
-        $query = "delete from $this->nombreTabla where $this->clavePrimaria = " . $this->$clavePrimaria;
+        $query = "delete from $this->nombreTabla where $this->clavePrimaria = " . $id;
         if ($this->bd->ejecutarQuery ( $query )) {
             return true;
         } else {

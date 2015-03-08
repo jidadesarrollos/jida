@@ -126,6 +126,17 @@ class Mysql extends ConexionBD{
         
     }
     /**
+     * Escapa los caracteres especiales de un string
+     * @method escaparString
+     */
+    function escaparString($string=""){
+        if(!$this->mysqli)
+            $this->establecerConexion();    
+        return $this->mysqli->real_escape_string($string);
+        
+        
+    }
+    /**
      * Ejecuta una inserción en Base de datos
      * @param string $nombreTabla
      * @param array  $camposTabla
@@ -194,7 +205,8 @@ class Mysql extends ConexionBD{
      * @method insertar
      */
     function insertar($insert){
-        $this->ejecutarQuery($insert);
+        $this->query = $insert;
+        $this->ejecutarQuery($this->query);
         $this->idResult = $this->mysqli->insert_id;
         return $this->result;
     }
