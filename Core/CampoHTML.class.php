@@ -480,9 +480,19 @@ class CampoHTML extends DBContainer {
             }elseif($i==0){
                #     $check = "checked=\"checked\"";
             }
+            // ". trim ( $this->atributosAdicionales ) ."
+            $data = "";
             
+            if(is_array($this->attrData) and count($this->data_atributo)>0){
+                 $i=0;
+                foreach ($this->attrData as $key => $value) {
+                    if($i<0) $data.=" ";
+                    $data.="$key='$value'";
+                    ++$i;
+                }
+            } 
             $this->control .="\n\t\t\t<label class=\"radio-inline\">";
-            $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad\" value=\"$valor\" $check>$dato";
+            $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad\" $data value=\"$valor\" $check>$dato";
             $this->control .="\n\t\t\t</label>";
            $i++;
         }
@@ -499,7 +509,7 @@ class CampoHTML extends DBContainer {
 
         $this->control="";
         $this->armarOpciones();
-        $i="";
+        $i=0;
         foreach ($this->opciones as $valor => $dato){
             $check="";
             if($this->typeForm==2){
@@ -510,10 +520,15 @@ class CampoHTML extends DBContainer {
                     }
                 }
             }
-            $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
+            if($i==0){
+                $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."\"><label for=\"".$this->name."\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+            }else{
+                $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."-$i\"><label for=\"".$this->name."-$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+            }
             
-            <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."$i\"><label for=\"".$this->name."$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
-            $i = ($i=="")?$i=1:$i++;
+            ++$i;
         }//final foreach
         $this->control.="";
         return $this->control;
