@@ -117,11 +117,12 @@ class Controller {
         $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
         $this->dv = new DataVista();
         $this->url = $this->urlController();
+        
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
         $this->getModelo();
-        
+        $this->dv->usuario = Session::get('Usuario');
         if(count($this->helpers)>0){
             for($i=0;$i<count($this->helpers);++$i){
                 $object = $this->helpers[$i];

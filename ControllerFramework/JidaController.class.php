@@ -74,7 +74,10 @@
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
             $_SESSION['urlActual'] = $_GET['url'];
             Session::set('URL_ACTUAL', $_GET['url']);
+            
             if(isset($_GET['url'])){
+                
+                $_GET['url'] = utf8_encode($_GET['url']);
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
@@ -83,6 +86,7 @@
             unset($_GET['url']);
             if(count($_GET)>0){
                $this->args=$_GET;
+                #Debug::mostrarArray($this->args);
             }
                 
             
@@ -92,6 +96,7 @@
             $GLOBALS['arrayParametros'] = $url;
             $this->getSubdominio($url);
             $this->procesarURL($url);
+            
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
@@ -274,7 +279,7 @@
                 $GLOBALS['getsIndex']= "otro";
             }
             
-            $_GET = $gets;
+            $_GET = array_merge($this->args,$gets);
             
         }catch(Exception $e){
             Excepcion::controlExcepcion($e);
@@ -443,13 +448,14 @@
         
     }//fin funcion ejecucion
     /**
-     * Verifica las propiedades de los directorios Layout,header y footer para la vista
+     * Verifica las propiedades de los directorios Layout
      * @method checkDirectoriosView
      */
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
             
             $this->vista->layout = $this->controladorObject->layout;
+            
             $this->vista->definirDirectorios();
             
         endif;
@@ -480,7 +486,7 @@
     }
     
     private function procesarExcepcion(Exception $excepcion){
-        
+        #Debug::mostrarArray($excepcion);
         $ctrlError = $this->controlador."Controller";
         $this->controladorObject = new $ctrlError;
         
@@ -489,7 +495,6 @@
         else {
             $this->controlador=CONTROLADOR_EXCEPCIONES;
         }
-        
         $this->metodo='error';
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
