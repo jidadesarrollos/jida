@@ -100,7 +100,7 @@ if(ENTORNO_APP == 'dev'){
     ini_set("html_errors", 0);
     error_reporting(0);	
 }
- 
+
 
 include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente

@@ -112,7 +112,11 @@ class ValidadorJida extends Validador{
             }
             $resultValidacion=($band===TRUE)?TRUE:FALSE;
         }else{
-            $resultValidacion=(preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $this -> valorCampo))?TRUE:FALSE;
+            if(empty($this->valorCampo))
+                $resultValidacion=TRUE;
+            else{
+                $resultValidacion=(preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $this -> valorCampo))?TRUE:FALSE;
+            }
         }
         if ($resultValidacion===TRUE) {
             /**
@@ -125,8 +129,6 @@ class ValidadorJida extends Validador{
                 }
             return true;
         } else {
-            Debug::string($this -> dataValidaciones[$nombreValidacion]["expresion"]);
-            Debug::string($this->valorCampo,true);
             $this->obtenerMensajeError($nombreValidacion,$datosValidacion);
             return false;
         }
@@ -160,7 +162,7 @@ class ValidadorJida extends Validador{
                 $validacion = strtolower($validacion);
                 
                 if ($bandera == 0 and (is_array($detalle) or $detalle == true)) {
-                   
+                    
                     switch ($validacion) {
                         case "obligatorio" :
                         case "externa":
@@ -185,6 +187,10 @@ class ValidadorJida extends Validador{
                             break;
                         case "igualdad":
                             $CheckValor = $this->igualdad($validacion, $detalle);
+                            break;
+                        case "documentacion":
+                            
+                            $CheckValor = $this->validarDocumentacion($validacion, $detalle);
                             break;
                         default :
                             $CheckValor = $this->validarCadena($validacion, $detalle);
@@ -253,7 +259,7 @@ class ValidadorJida extends Validador{
         if(array_key_exists('campo_codigo', $detalle)):
             $valor = $_POST[$this->campo['name']."-tipo-doc"].$this->valorCampo;
         endif;
-        
+        $this->valorCampo = $valor;
         return $this->validarCadena('documentacion', $this->valorCampo);
     }
     private function validarTelefono($validacion,$detalle){

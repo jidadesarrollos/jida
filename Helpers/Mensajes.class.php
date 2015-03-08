@@ -26,7 +26,7 @@ class Mensajes {
      * usadas.
      */
      
-    static function crear($tipo,$msj,$hidden=true){
+    static function crear($tipo,$msj,$hidden=false){
         $css = self::obtenerEstiloMensaje($tipo);
         if($hidden==true){
             $mensaje = "

@@ -136,6 +136,8 @@ class Pagina{
         if(!empty($metodo)){
             $this->nombreVista=$metodo;
         }
+        $this->url = Session::get('URL_ACTUAL');
+     
     }
 
     /**
@@ -155,6 +157,7 @@ class Pagina{
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
+        
         
     }
 
@@ -195,7 +198,7 @@ class Pagina{
         }
         if(!is_readable($rutaVista)){
             
-            throw new Exception("Pagina no conseguida", 404);
+            throw new Exception("Pagina no conseguida ".$rutaVista, 404);
         }
         $this->template=$rutaVista;
         

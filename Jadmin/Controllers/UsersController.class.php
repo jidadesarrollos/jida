@@ -2,11 +2,12 @@
 
 
 class UsersController extends Controller{
-	
-	
+    protected $urlCierreSession="/jadmin/";
+    var $layout = 'jadmin.tpl.php';    
 	function __construct(){
+	    $this->modelo = new User();
         $this->url='/jadmin/users/';
-        $this->layout="jadmin.tpl.php";
+        
         parent::__construct();
         
         
@@ -36,18 +37,24 @@ class UsersController extends Controller{
         $vista = new Vista($query,$GLOBALS['configPaginador'],"Usuarios");
         $vista->tipoControl=2;
         $vista->setParametrosVista($GLOBALS['configVista']);
-        $vista->filaOpciones=array(  0=>array('a'=>array(
-                                                            'atributos'=>array( 'class'=>'btn',
-                                                                                'title'=>'Asignar perfiles de acceso',
-                                                                                'href'=>"/jadmin/users/asociar-perfiles/usuario/{clave}"
-                                                                                ),
-                                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit'))))))
+        $vista->filaOpciones=[  0=>['a'=>[
+                        'atributos'=>[ 'class'=>'btn',
+                                            'title'=>'Asignar perfiles de acceso',
+                                            'href'=>"/jadmin/users/asociar-perfiles/usuario/{clave}"
+                                            ],
+                        'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]]
                                                 ;
-        $vista->acciones=array('Registrar'=>array('href'=>$url.'/set-usuario'),
-                               'Modificar'=>array('href'=>$url.'/set-usuario','data-jvista'=>'seleccion','data-jkey'=>'u'),
-                                '<span class="fa fa-trash-o"></span>'=>array('href'=>$url.'/eliminar-usuario','data-jvista'=>'seleccion',
-                                                                'data-multiple'=>'true','data-jkey'=>'u')                                
-                                );
+        $vista->acciones=
+        ['Registrar'=>
+            ['href'=>$url.'/set-usuario'],
+       'Modificar'=>
+            ['href'=>$url.'/set-usuario','data-jvista'=>'seleccion','data-jkey'=>'u'],
+                '<span class="fa fa-trash-o"></span>'=>
+                ['href'=>$url.'/eliminar-usuario',
+                'data-jvista'=>'seleccion',
+                'data-multiple'=>'true',
+                'data-jkey'=>'u']                                
+                ];
         return $vista;
     }
 
@@ -178,52 +185,83 @@ class UsersController extends Controller{
     }
 	function asociarPerfiles(){
         
-        if(isset($_GET['usuario']) and $this->getEntero($_GET['usuario'])!=""){
-            
+        if($this->getEntero($this->get('usuario'))){
             $form = new Formulario('PerfilesAUsuario',2,$this->get('usuario'),2);
             $user = new User($this->getEntero($this->get('usuario')));
-            
             $form->action=$this->url."asociar-perfiles/usuario/".$this->get('usuario');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar perfiles al usuario $user->nombre_usuario";
             
-            if(isset($_POST['btnPerfilesAUsuario'])){
+            if($this->post('btnPerfilesAUsuario')){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     $accion = $user->asociarPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Session::set('__idVista', 'componentes');
-                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles al usuario '.$user->nombre_usuario);
-                        Session::set('__msjVista',$msj);
-                        redireccionar($this->url);
+                        Vista::msj('componentes', 'suceso','Asignados los perfiles al usuario '.$user->nombre_usuario,$this->urlController());
+                        #redireccionar($this->url);
                     }else{
-                        
-                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                        Session::set('__msjForm', $msj);
+                        Formulario::msj('error',"No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
                 }else{
-                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
+                    Formulario::msj('error',"No se han asignado perfiles");
                 }
             }
             $this->data['form'] =$form->armarFormulario();
         }else{
-            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un usuario"));
-            Session::set('__idVista','usuarios');
+            Vista::msj('usuarios', 'error',"Debe seleccionar un usuario",$this->urlController());
+            
             redireccionar($this->url);  
         }
         
     }//fin función
-	
-	
-	 
-	function cierresesion($url=""){
-	    if(empty($url)){
-	    	 $url='/jadmin/';
-		}
-	    if(Session::destroy()){
-	       redireccionar($url);    
-	    }
-        
+    function cierresesion($url="/jadmin/"){
+	    if(Session::destroy()) $this->redireccionar($this->urlCierreSession);        
 	}
-}//fin metodo
-?>
+    /**
+     * Verifica los datos para iniciar sesion
+     * 
+     * Verifica los datos del usuario y si el mismo existe registra la sesion y lo habilita
+     * caso contrario retorna falso
+     * @method validarInicioSesion
+     */
+    function validarInicioSesion($usuario,$clave){
+        $data = $this->modelo->validarLogin($usuario, $clave);
+        if($data){
+            Session::sessionLogin();
+            Session::set('Usuario',$this->modelo);
+            //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+            Session::set('usuario',$data);
+            return true;
+        }else 
+            return false;
+    }//fin metodo
+    /**
+     * Retorna un Objeto Formulario para Formulario Login
+     * 
+     * @method obtenerFormulariologin
+     * @return object $form
+     * @see Formulario
+     */
+    function formularioLogin(){
+        if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
+            $form = Session::get('FormLoggin'); 
+        }else{
+            $form = new Formulario('Login',1,null,2);
+            $form->tituloFormulario = "Iniciar Sesi&oacute;n";
+            $form->valueBotonForm="Iniciar Sesi&oacute;n";
+        }        
+        
+        return $form;
+    }
+    
+    /**
+     * Crea una clave aleatoria
+     * @method generarContrasenia
+     * @param int $length Tamaño de la cadena, por defecto 30 
+     */
+    protected function generarContrasenia($length = 30) {
+       $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+       $string = substr( str_shuffle( $chars ), 0, $length );
+       return $string;
+    }
+}

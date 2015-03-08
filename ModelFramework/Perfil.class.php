@@ -11,10 +11,10 @@ class Perfil extends DBContainer{
     var $id_perfil;
     var $perfil;
     var $clave_perfil;
-	function __construct($id){
+	function __construct($id=""){
 		$this->nombreTabla="s_perfiles";
         $this->clavePrimaria="id_perfil";
-        $this->unico=array('nombre_perfil');
+        $this->unico=array('perfil');
         parent::__construct(__CLASS__,$id);
 	}//final constructor
 	

@@ -57,6 +57,10 @@ if(!defined('TPL_MANTENIMIENTO')){
     define('TPL_MANTENIMIENTO','Framework/jidaPlantillas/mantenimiento.tpl.php');
 }
 
+if(!defined('PREFIJO_TABLA'))
+    define('PREFIJO_TABLA',TRUE);
+if(!defined('PREFIJO_RELACIONAL'))
+    define('PREFIJO_RELACIONAL',"r");
 
 if(!defined('PLURAL_ATONO')){
     define('PLURAL_ATONO','s');

@@ -11,8 +11,6 @@
 
  
 class User extends DBContainer{
-    
-    
     /**
      * 
 	 * 
@@ -64,6 +62,11 @@ class User extends DBContainer{
      */
     var $codigo_recuperacion;
     /**
+     * Url de la imagen del perfil
+     * @var url $img_perfil
+     */
+    var $img_perfil;
+    /**
      * Perfiles asociados al usuario
      * @var $perfiles
      * @access private
@@ -80,18 +83,28 @@ class User extends DBContainer{
     
     /**
      * Verifica que los datos para iniciar session sean validos
+     * 
+     * 
+     * @param mixed Nombre del Usuario
+     * @param mixed clave  Clave del usuario sin convertir a md5
+     * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
+     * @return mixed array si la sesion es iniciada, false caso contrario 
      */
-    function validarLogin($usuario,$clave){
+    function validarLogin($usuario,$clave,$validacion=true){
+        $clave = md5($clave);
         
         $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and 
         clave_usuario='$clave' and validacion=1";
+        
         $result = $this->bd->ejecutarQuery($query);
         if($this->bd->totalRegistros>0){
             
             $datos = $this->bd->obtenerArrayAsociativo($result);
             $this->establecerAtributos($datos, __CLASS__);
             $this->obtenerPerfiles();
-			
+			$this->activo=1;
+            $this->salvar();
+            
             return $datos;
         }else{
             return false;
@@ -126,7 +139,14 @@ class User extends DBContainer{
     function getPerfiles(){
         return $this->perfiles;
     }
-	
+	/**
+     * Registra la sesion del usuario
+     * 
+     * Registra la fecha actual como ultima sesion del usuario y cambia el
+     * estatus activo a 1
+     * @method registrarSesion
+     * @return boolean
+     */
 	function registrarSesion(){
 		$query = "update s_usuarios set ultima_session =current_timestamp, activo=1 
 		where id_usuario=$this->id_usuario 
@@ -149,10 +169,8 @@ class User extends DBContainer{
                 $insert.="(null,$this->id_usuario,$idPerfil)";
                 $i++;
             }
-            
-            $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario";
-            $this->bd->ejecutarQuery($delete);
-            $this->bd->ejecutarQuery($insert);
+            $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
+            $this->bd->ejecutarQuery($delete.$insert,2);
             return array('ejecutado'=>1);
 	}
     /**
@@ -197,7 +215,17 @@ class User extends DBContainer{
         }
         return $guardado;
     }
-    
+    /**
+     * Verifica el codigo de activacion creado en el registro de un usuario
+     * 
+     * Si el codigo de activacion coincide con el de un usuario registrado, el 
+     * valor es cambiado a 1 quedando el usuario activo
+     * 
+     * 
+     * @method validarCodigoActivacion
+     * @param md5 $codigo
+     * @return boolean TRUE si el usuario es activado, FALSE sino coincide 
+      */
     function validarCodigoActivacion($codigo){
         $query = "select * from s_usuarios where validacion='$codigo'";
         $data = $this->bd->obtenerDataCompleta($query);
@@ -207,8 +235,12 @@ class User extends DBContainer{
             
             $this->activo=1;
             $this->validacion=1;
-            $guardado = $this->salvar();
-            return $guardado;
+            if($this->salvar()['ejecutado']==1){
+                return true;
+            }else{
+                return false;
+            }
+            
         }else{
             return false;
         }
@@ -221,6 +253,7 @@ class User extends DBContainer{
         if($this->bd->totalRegistros>0){
             $data = $this->bd->obtenerArray($result);
             $this->establecerAtributos($data);
+            $this->registrarSesion();
             return true;
         }else{
             return false;

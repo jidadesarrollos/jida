@@ -1082,6 +1082,7 @@ class Formulario extends DBContainer {
                             'id'=>$this->idBotonForm];
             if($this->funcionJidaJs=='jValidador'){
                 $atributosInput['data-jida']='validador';
+                //$atributosInput['data-config']='{"form":"'.$this->idTagForm.'"}';
             }
             if(!empty($this->funcionOnclick))$atributosInput['onclick']=$this->funcionOnclick;
             $btn = Selector::crearInput($this->valueBotonForm,$atributosInput);
