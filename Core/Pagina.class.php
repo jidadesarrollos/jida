@@ -136,6 +136,8 @@ class Pagina{
         if(!empty($metodo)){
             $this->nombreVista=$metodo;
         }
+        $this->url = Session::get('URL_ACTUAL');
+     
     }
 
     /**
@@ -155,6 +157,7 @@ class Pagina{
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
+        
         
     }
 
@@ -195,7 +198,7 @@ class Pagina{
         }
         if(!is_readable($rutaVista)){
             
-            throw new Exception("Pagina no conseguida", 404);
+            throw new Exception("Pagina no conseguida ".$rutaVista, 404);
         }
         $this->template=$rutaVista;
         
@@ -300,8 +303,18 @@ class Pagina{
         }
         
     }
-    
-    function printJS(){
+    /**
+     * Imprime los bloques JAVASCRIPT pasados del controlador
+     * 
+     * Permite imprimir las llamadas a archivos javascript o de segmentos de códigos creados desde el
+     * controlador
+     * @method printJS
+     * @param mixed $js [opcional] Si es pasado el nombre de un archivo o un arreglo de archivos solo serán 
+     * imprimido lo pasado por parametro, caso contrario la función hará impresion de todo lo guardado en la 
+     * variable global.
+     * 
+     */
+    function printJS($js=""){
         $js="";
         $this->checkData();
         $cont=0;
@@ -310,10 +323,12 @@ class Pagina{
             $code = $this->data->js['code'];
             unset($this->data->js['code']);
         }
+        
         foreach ($this->data->js as $key => $archivo) {
             
             if(is_string($key)){
                 if($key==ENTORNO_APP){
+                    
                     foreach ($archivo as $key => $value){
                         $js.=Selector::crear('script',['src'=>$value],null,$cont);
                         if($cont==0) $cont=2;
@@ -431,5 +446,59 @@ class Pagina{
 
     }
     
+    private function printHTML($html){
+        return htmlspecialchars_decode($html);
+    }
+    /**
+     * Imprime la información meta HTML configurada para la página actual
+     * 
+     * Si no se ha configurado nada, se intentaran imprimir los valores por defectos
+     * que pueden estar configurados con las constantes APP_DESCRIPCION, APP_IMAGEN y APP_AUTOR
+     * 
+     * @method printHeadTags
+     *  
+     */
+    function printHeadTags(){
+        $meta="";$itemprop="";
+        $initTab=0;
+        //Titulo de La pagina
+        if(!empty($this->data->title)){
+            $meta.=Selector::crear('TITLE',null,$this->data->title,0);
+            $initTab=2;
+            $meta.=Selector::crear('meta',['name'=>'title','content'=>$this->data->title],null,$initTab);
+            
+        }
+        if(!empty($this->data->meta_descripcion)){
+            $meta.=Selector::crear('meta',['name'=>'description','content'=>$this->data->meta_descripcion],null,$initTab); 
+            $itemprop.=Selector::crear('meta',['itemprop'=>'description','content'=>$this->data->meta_descripcion],null,2);
+        }
+        if(!empty($this->data->meta_autor)){
+            $meta.=Selector::crear('meta',['name'=>'author','content'=>$this->data->meta_autor],null,2);
+            $itemprop.=Selector::crear('meta',['itemprop'=>'author','content'=>$this->data->meta_autor],null,2);
+        }
+        if(!empty($this->data->meta_image)){
+            $meta.=Selector::crear('meta',['name'=>'image','content'=>$this->data->meta_image],null,2); 
+            $itemprop.=Selector::crear('meta',['itemprop'=>'image','content'=>$this->data->meta_image],null,2);
+        }
+        
+        if(count($this->data->meta)>0){
+            $metaAdicional="\t\t<!---Tags Meta-----!>\n";
+            
+            foreach ($this->data->meta as $key => $dataMeta) {
+                
+                $metaAdicional.=Selector::crear('meta',$dataMeta,null,2);
+            }
+            $itemprop.=$metaAdicional;
+        }
+        if(!$this->data->robots){
+            $itemprop.=Selector::crear('meta',['name'=>'robots','content'=>'noindex'],null,2);
+        }
+        //URL CANNONICA
+        if(!empty($this->data->url_canonical)){
+            $itemprop.=Selector::crear('link',['rel'=>'canonical','href'=>$this->data->url_canonical],null,2);
+        }
+            
+        return $meta.$itemprop."\n";
+    }
     
 }

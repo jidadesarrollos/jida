@@ -7,10 +7,6 @@
  * @category
  * @version
  */
-
- 
- 
- 
 class Selector{
     
     
@@ -124,18 +120,19 @@ class Selector{
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";
-        if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
-            
-            $content = $atributos ['content'];
-            unset ( $atributos ['content'] );
-        }
+        // if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
+//             
+            // $content = $atributos ['content'];
+            // unset ( $atributos ['content'] );
+        // }
         if(is_array($atributos)){
+            
             foreach ( $atributos as $key => $value ) {
                 
                 $selectorHTML .= " $key=\"$value\"";
             }    
         }
-        if(!in_array($selector,array('img','hr','br','link'))){
+        if(!in_array($selector,array('img','hr','br','link','meta'))){
             
             if(!empty($content)){
                 $selectorHTML .= ">\n".$tabulaciones."$content";
@@ -145,7 +142,7 @@ class Selector{
             }
                 
         }else{
-            $selectorHTML.="/>";
+            $selectorHTML.=" />";
         }
         
         
@@ -157,14 +154,22 @@ class Selector{
      * @param array $data
      * @return string $html Código HTML generado
      */
-    public static function crearBreadCrumb($data,$class='breadcrumb'){
+    public static function crearBreadCrumb($data,$config=[]){
+        $default=[
+            "keyLink"=>"link",
+            "keyHTML"=>"html",
+            "attrLI"=>[],
+            "attrUL"=>["class"=>"breadcrumb"]
+        ];
+        $config=array_merge($default,$config);
+        
         $lista="";
         foreach ($data as $key => $value) {
-            
-            $link = self::crear('a',array('href'=>$value['link']),$value['html']);
+            $data = array_merge(["href"=>$value[$config['keyLink']]],$config['attrLI']);
+            $link = self::crear('a',$data,$value[$config['keyHTML']]);
             $lista.= self::crear('li',null,$link);
         }
-        $html = self::crear('ol',array('class'=>$class),$lista);
+        $html = self::crear('ol',$config['attrUL'],$lista);
         
         return $html;
     }
@@ -192,6 +197,18 @@ class Selector{
             }
                  
         }
+    }
+    
+    static function crearUL($content,$attrUL=array(),$attrLi=array()){
+        $li="";
+        
+        foreach ($content as $key => $item) {
+            
+            $li.=self::crear("li",$attrLi,$item);
+        }
+        
+        return self::crear("UL",$attrUL,$li,2);
+        
     }
       /**
      * Crea Un boton Input
@@ -247,4 +264,3 @@ class Selector{
 }
 
 
-?>

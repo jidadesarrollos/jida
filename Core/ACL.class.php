@@ -227,6 +227,7 @@ class ACL extends DBContainer{
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
+        
         while($acceso == FALSE and $i<count($perfilesUser)){
             
             $perfil = $perfilesUser[$i];

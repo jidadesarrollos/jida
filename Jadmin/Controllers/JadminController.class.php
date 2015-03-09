@@ -41,11 +41,11 @@ class JadminController extends Controller{
                 $form->nombreSubmit="btnJidaAdminLogin";
                 $form->action=$this->url;
                 $form->valueBotonForm="Iniciar Session";
-                if(isset($_POST["btnJidaAdminLogin"])){
+                if($this->post("btnJidaAdminLogin")){
                     $validacion = $form->validarFormulario($_POST);
                     if($validacion===TRUE){
                         $User = new User();
-                        $clave = md5($this->post('clave_usuario'));
+                        $clave = $this->post('clave_usuario');
                         $checkUser = $User->validarLogin($this->post('nombre_usuario'),$clave);
                         if($checkUser===FALSE){
                            Formulario::msj('error',"Usuario o clave invalidos");

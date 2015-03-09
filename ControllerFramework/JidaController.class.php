@@ -70,25 +70,40 @@
             }else{
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
             }
+            
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
             $_SESSION['urlActual'] = $_GET['url'];
+            Session::set('URL_ACTUAL', $_GET['url']);
+            
             if(isset($_GET['url'])){
+                
+                $_GET['url'] = utf8_encode($_GET['url']);
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
             }
+            
+            unset($_GET['url']);
+            if(count($_GET)>0){
+               $this->args=$_GET;
+                #Debug::mostrarArray($this->args);
+            }
+                
+            
             /**
              * variable global con todos los parametros pasados via url
              */
             $GLOBALS['arrayParametros'] = $url;
             $this->getSubdominio($url);
             $this->procesarURL($url);
+            
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
             
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+            
             $this->validacion();
         
         }catch(Exception $e){
@@ -168,6 +183,7 @@
         }
         
         $this->args = array_merge($this->args, $url);
+
     }
     /**
      * Verifica la existencia de un metodo solicitado
@@ -263,7 +279,7 @@
                 $GLOBALS['getsIndex']= "otro";
             }
             
-            $_GET = $gets;
+            $_GET = array_merge($this->args,$gets);
             
         }catch(Exception $e){
             Excepcion::controlExcepcion($e);
@@ -366,16 +382,17 @@
                     if(method_exists($controlador, $this->validarNombre($this->controlador,2))){
                         $this->metodo = $this->controlador;
                         
-                    }else{
-                        $this->controlador=str_replace("Controller", "", $controlador);
-                        throw new Exception("No se encuentra definido el controlador o metodo ".$controlador."  solicitado", 10);
                     }
+                    // else{
+                        // $this->controlador=str_replace("Controller", "", $controlador);
+                        // throw new Exception("No se encuentra definido el controlador o metodo ".$controlador."  solicitado", 10);
+                    // }
                     $this->controlador=$nameControl;
                     $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
 
                 }//fin validacion de existencia del controlador.
            }else{
-               //Debug::mostrarArray(Session::get('acl','jadmin'));
+               
                  throw new Exception("No tiene permisos", 403);
                  
              }        
@@ -431,13 +448,14 @@
         
     }//fin funcion ejecucion
     /**
-     * Verifica las propiedades de los directorios Layout,header y footer para la vista
+     * Verifica las propiedades de los directorios Layout
      * @method checkDirectoriosView
      */
     private function checkDirectoriosView(){
         if(is_object($this->controladorObject)):
             
             $this->vista->layout = $this->controladorObject->layout;
+            
             $this->vista->definirDirectorios();
             
         endif;
@@ -455,6 +473,7 @@
         #se instancia el controlador solicitado
         
         $this->controladorObject = new $controlador;
+        
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         $controlador->$metodo($params);
@@ -467,10 +486,8 @@
     }
     
     private function procesarExcepcion(Exception $excepcion){
-        
+        #Debug::mostrarArray($excepcion);
         $ctrlError = $this->controlador."Controller";
-        
-                
         $this->controladorObject = new $ctrlError;
         
         if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
@@ -478,7 +495,6 @@
         else {
             $this->controlador=CONTROLADOR_EXCEPCIONES;
         }
-        
         $this->metodo='error';
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;

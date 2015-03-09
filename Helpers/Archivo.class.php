@@ -48,7 +48,10 @@ class Archivo{
      * 
      */
     protected $archivosCargados = array();
-    
+    /**
+     * @var array $files Array $_FILES
+     */
+    protected $files;
     function __construct($file=""){
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
@@ -59,6 +62,7 @@ class Archivo{
      * @method checkCarga
      */
     private function checkCarga($file){
+        $this->files = $file;
         if(!isset($file) or is_array($file)){
             
             $this->name  = $file['name'];
@@ -108,6 +112,7 @@ class Archivo{
 	   private function obtenerExtension(){
         if(is_array($this->type)){
             $i=0;
+            
             foreach ($this->type as $key ) {
                 $explode= explode("/",$key);
                 

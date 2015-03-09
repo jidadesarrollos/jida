@@ -27,7 +27,7 @@ class Controller {
      * Define el contenido de la meta-etiqueta description para uso de los buscadores
      * @var $metaDescripcion;
      */
-    var $metaDescripcion=meta_descripcion;
+    var $metaDescripcion;
     protected $helpers = array();
      /**
       * Define el Modelo a usar en el controlador;
@@ -44,7 +44,7 @@ class Controller {
       * crear una vista nueva, se puede especificar en esta propiedad cual es la vista a usar
       * @var string $vista
       */
-     var $vista="";
+    var $vista="";
      /**
       * Arreglo que contiene la información que desee pasarse a la vista
       * 
@@ -54,7 +54,7 @@ class Controller {
 	  * @var $data
       * @deprecated
       */
-     var $data=array();
+    var $data=array();
     /**
      * Archivos Javascript Requeridos
      * @var array $requireJS
@@ -95,8 +95,19 @@ class Controller {
      */
     private $_nombreController;
     private $_modulo;
+    /**
+     * @var url $__url URL Actual Registra la URL ingresada en el navegador
+     * @access protected
+     */
+    var $__url;
+    /**
+     *
+     * @var object $dv Instancia de clase DataVista
+     * @see DataVista object
+     */
     var $dv;
     function __construct(){
+        
         $this->instanciarHelpers();
         $this->post=& $_POST;
         $this->get =& $_GET;
@@ -106,10 +117,21 @@ class Controller {
         $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
         $this->dv = new DataVista();
         $this->url = $this->urlController();
+        
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
         $this->getModelo();
+        $this->dv->usuario = Session::get('Usuario');
+        if(count($this->helpers)>0){
+            for($i=0;$i<count($this->helpers);++$i){
+                $object = $this->helpers[$i];
+                
+                if(is_object($object)){
+                    $this->$$object = new $object();
+                }
+            }
+        }
         
     }
     

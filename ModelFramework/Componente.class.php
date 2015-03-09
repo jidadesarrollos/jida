@@ -57,7 +57,6 @@ class Componente extends DBContainer{
      * @return boolean true or false 
      */
     function asignarAccesoPerfiles($perfiles){
-            
             $insert="insert into s_componentes_perfiles values ";
             $i=0;
             foreach ($perfiles as $key => $idPerfil) {
@@ -66,9 +65,22 @@ class Componente extends DBContainer{
                 $i++;
             }
             
-            $delete = "delete from s_componentes_perfiles where id_componente=$this->id_componente";
-            $this->bd->ejecutarQuery($delete);
-            $this->bd->ejecutarQuery($insert);
+            $delete = "delete from s_componentes_perfiles where id_componente=$this->id_componente;";
+            // $obj = new Objeto();
+            // $idsObjetos = array_keys($obj->getTabla(['id_objeto'],['id_componente'=>$this->id_componente],null,'id_objeto'));
+            // $deleteObjetos = "DELETE from s_objetos_perfiles where id_objetos in (".implode(",",$idsObjetos).");";
+            // $insertPermisosObjetos = "INSERT INTO s_objetos_perfiles (id_perfil,id_objeto) VALUES ";
+            // $cont=0;
+             // for($i=0;$i<count($idsObjetos);++$i){
+                    // foreach ($perfiles as $key => $idPerfil) {
+                        // if($cont>0) $insertPermisosObjetos.=",";
+                        // $insertPermisosObjetos.="($idPerfil,".$idsObjetos[$i].")";
+                        // ++$cont;
+                    // }   
+             // }
+            $this->bd->ejecutarQuery($delete.$insert,2);
+            #$this->bd->ejecutarQuery($delete.$insert.$deleteObjetos.$insertPermisosObjetos);
+            
             return array('ejecutado'=>1);
         
     }

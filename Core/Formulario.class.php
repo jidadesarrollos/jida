@@ -715,6 +715,7 @@ class Formulario extends DBContainer {
             );
             /*Se intenta colocar el label si el tipo de control!=hidden*/
             if ($arr ['control'] != 1) {
+                
                 $label = Selector::crear('label',array('for'=>$arr['name']),$arr['label']);
                 if($this->mostrarCamposObligatorios===TRUE){
                     if(is_array($validaciones) and array_key_exists('obligatorio', $validaciones)):
@@ -1081,6 +1082,7 @@ class Formulario extends DBContainer {
                             'id'=>$this->idBotonForm];
             if($this->funcionJidaJs=='jValidador'){
                 $atributosInput['data-jida']='validador';
+                //$atributosInput['data-config']='{"form":"'.$this->idTagForm.'"}';
             }
             if(!empty($this->funcionOnclick))$atributosInput['onclick']=$this->funcionOnclick;
             $btn = Selector::crearInput($this->valueBotonForm,$atributosInput);

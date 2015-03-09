@@ -107,8 +107,9 @@ class String {
     
     /**
      * Generar Hash a Partir de un String
+     * @method sha256
      */
-    public static function generarUUID($parametro = null) {
+    public static function sha256($parametro = null) {
         return hash('sha256', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy123456789' . $parametro . date('U'));
     }
     /**
@@ -130,9 +131,11 @@ class String {
      * Verifica los caracteres especiales y los cambia por la codificación asci correspondiente
      * @method codificarHTML
      * @param string Cadena
+     * @param boolean $inversa Defecto false, si es cambiado a true buscara los valores html para
+     * reemplazarlo por el caracter especial
      * 
      */
-    public static function codificarHTML($cadena) {
+    public static function codificarHTML($cadena,$inversa=false) {
         $arrAcentos = array (
                 'á' => "&aacute;",
                 'é' => '&eacute;',
@@ -155,6 +158,78 @@ class String {
         
             $cadena = explode ( " ", $cadena );
             $arrCadena = array ();
+            foreach ( $cadena as $valor ) {
+                $band = 0;
+                foreach ( $arrAcentos as $key => $value ) {
+                    if($inversa) {
+                           $valorBuscado = $value; $modificador=$key;
+                    }
+                    else{
+                         $valorBuscado = $key; $modificador=$value;
+                    }
+                    if (strpos ( $valor, $valorBuscado ) !== false) {
+                        $valor = str_replace ( $valorBuscado, $modificador, $valor );
+                        $band = 2;
+                    }
+                } // fin foreach interno
+                $arrCadena [] = trim ( $valor );
+            } // fin foreach
+            $cadenaFinal = implode ( " ", $arrCadena );
+            return $cadenaFinal;
+        }else{
+            return $cadena;
+        }
+    } // fin función
+    
+    /**
+     * Retorna un string en minusculas y seperado por guiones
+     * 
+     * @method guionCase
+     * @param string $string;
+     * @return string $string;
+     */
+    public static function guionCase($string){
+        
+        return strtolower(str_replace(" ", "-", $string)); 
+    }
+    /**
+     * Modifica un string en formato guionCase a la frase original
+     * 
+     * @method guionCaseToString
+     * @param string $guionCase
+     * @return string $str
+     */
+    public static function guionCaseToString($guionCase){
+        return str_replace("-", " ", $guionCase);
+    }
+    /**
+     * Remueve los acentos de un string
+     * 
+     * Coloca las letras con acentos en su representación sin el mismo
+     * @method removerAcentos
+     * @param string $cadena Cadena a modificar
+     * @param string $enie Valor para modificar la letra Ñ, por defecto es "ni"
+     * @return string $string cadena modificada
+     */
+    public static function removerAcentos($cadena,$enie="ni") {
+        $arrAcentos = array (
+                'á' => "a",
+                'é' => 'e',
+                'í' => 'i',
+                'ó' => 'o',
+                'ú' => 'u',
+                'Á' => "A",
+                'É' => 'E',
+                'Í' => 'I',
+                'Ó' => 'O',
+                'Ú' => 'U',
+                'Ñ' => strtoupper($enie),
+                'ñ' => $enie,
+                '¿' => '' 
+        );
+        if(!empty($cadena) and is_string($cadena)){
+            $cadena = explode ( " ", $cadena );
+            $arrCadena = array ();
             
             foreach ( $cadena as $valor ) {
                 $band = 0;
@@ -173,12 +248,6 @@ class String {
             return $cadena;
         }
     } // fin función
-    
-    
-    public static function guionCase($string){
-        
-        return strtolower(str_replace(" ", "-", $string)); 
-    }
     
 } // END 
 

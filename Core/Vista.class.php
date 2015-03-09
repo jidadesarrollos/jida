@@ -845,6 +845,8 @@ class Vista extends DBContainer{
                     }
                     
                     $data ['atributos'] = array_combine ( array_keys ( $data ['atributos'] ), explode("||",$implode));
+                    $data['atributos']['data-toggle']="tooltip";
+                    $data['atributos']['data-placement']="top";
                     $content = (! is_array ( $data ['html'] )) ? $data ['html'] : "";
                     $opciones .= Selector::crear( $selector, $data ['atributos'], $html . $content );
                     // -------------------------------------------------------------
@@ -1174,6 +1176,14 @@ class Vista extends DBContainer{
      */
     static function msj($idVista,$type,$msj,$redirect=false){
         $msj = Mensajes::crear($type, $msj);
+        Session::set('__msjVista',$msj);
+        Session::set('__idVista',$idVista);
+        if($redirect){
+            redireccionar($redirect);
+        }
+    }
+    
+    static function setMsj($idVista,$msj,$redirect=false){
         Session::set('__msjVista',$msj);
         Session::set('__idVista',$idVista);
         if($redirect){

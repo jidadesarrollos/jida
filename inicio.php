@@ -77,8 +77,8 @@ include_once 'Settings/jidaConfiguracion.php';
  */
 
 include_once 'Config/BDConfig.php';
-include_once 'Config/appConfig.php';
 include_once 'Config/initConfig.php';
+include_once 'Config/appConfig.php';
 include_once 'Settings/jConstantes.php';
 #=======================================================================
 #=======================================================================
@@ -100,7 +100,7 @@ if(ENTORNO_APP == 'dev'){
     ini_set("html_errors", 0);
     error_reporting(0);	
 }
- 
+
 
 include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente

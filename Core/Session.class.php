@@ -129,6 +129,7 @@ class Session {
      * @return boolean true
      */
     static function checkLogg(){
+        
         if(Session::get('isLoggin'))
             return true;
         else {

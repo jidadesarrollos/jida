@@ -117,32 +117,33 @@ class ObjetosController extends Controller{
        $vista = new Vista($query,$GLOBALS['configPaginador'],"Objetos");
        $vista->setParametrosVista(array('idDivVista'=>'objetos'));
        $vista->setParametrosVista($GLOBALS['configVista']);
-       $vista->filaOpciones=array(0=>array('a'=>array(
-                                                    'atributos'=>array( 'class'=>'btn',
-                                                                        'title'=>'ver metodos',
-                                                                        'href'=>$this->url."metodos/obj/{clave}"
-                                                                        ),
-                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
-                                    
-                                    1=>array('a'=>array(
-                                                    'atributos'=>array( 'class'=>'btn',
-                                                                        'title'=>'Agregar Descripci&oacute;n',
-                                                                        'href'=>$this->url."/add-descripcion/obj/{clave}"
-                                                                        ),
-                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-info'))))),
-                                    2=>array('a'=>array(
-                                                    'atributos'=>array( 'class'=>'btn',
-                                                                        'title'=>'Asignar Accesos',
-                                                                        'href'=>$this->url."asignar-acceso/obj/{clave}"
-                                                                        ),
-                                                    'html'=>array('span'=>array('atributos'=>array('class' =>'fa fa-users'))))),
-                                                                    
-                                        );
-       $vista->acciones=array(
-                        'Agregar Descripci&oacute;n'=>array('href'=>$this->url.'set-objeto/obj/',
+       $vista->filaOpciones=[
+        0=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                                'title'=>'ver metodos',
+                                'href'=>$this->url."metodos/obj/{clave}"
+                                ],
+            'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-eye-open']]]]],
+        
+        1=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                                'title'=>'Agregar Descripci&oacute;n',
+                                'href'=>$this->url."/add-descripcion/obj/{clave}"
+                                ],
+            'html'=>['span'=>['atributos'=>['class' =>'fa fa-info']]]]],
+        2=>['a'=>[
+            'atributos'=>[ 'class'=>'btn',
+                                'title'=>'Asignar Accesos',
+                                'href'=>$this->url."asignar-acceso/obj/{clave}"
+                                ],
+            'html'=>['span'=>['atributos'=>['class' =>'fa fa-users']]]]],
+                            
+            ];
+       $vista->acciones=[
+                        'Agregar Descripci&oacute;n'=>['href'=>$this->url.'set-objeto/obj/',
                                                         'data-jvista'=>'seleccion',
-                                                        'data-multiple'=>'true','data-jkey'=>'obj'),
-                        );
+                                                        'data-multiple'=>'true','data-jkey'=>'obj'],
+                        ];
        $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/\">Agregar objeto</a>";
        return $vista;
    }
@@ -280,24 +281,18 @@ class ObjetosController extends Controller{
                 if($validacion===TRUE){
                     $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Session::set('__idVista', 'objetos');
-                        $msj = Mensajes::mensajeSuceso('Asignados los perfiles de acceso al objeto '.$obj->objeto);
-                        Session::set('__msjVista',$msj);
-                        redireccionar($this->url);
+                        Vista::msj("objetos", 'suceso', 'Asignados los perfiles de acceso al objeto '.$obj->objeto,$this->getUrl('lista',['comp'=>$obj->id_componente]));
                     }else{
-                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                        Session::set('__msjForm', $msj);
+                        Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
                 }else{
+                    Formulario::msj('error', "No se han asignado perfiles");
                     
-                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
                 }
             }
             $this->data['formAcceso'] =$form->armarFormulario();
         }else{
-            Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un objeto"));
-            Session::set('__idVista','objetos');
-            redireccionar($this->url);  
+            Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());  
         }    
     }
 
@@ -305,6 +300,3 @@ class ObjetosController extends Controller{
 	
 	
 }
-
-
-?>
