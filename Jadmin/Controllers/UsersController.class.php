@@ -214,8 +214,11 @@ class UsersController extends Controller{
         }
         
     }//fin función
-    function cierresesion($url="/jadmin/"){
-	    if(Session::destroy()) $this->redireccionar($this->urlCierreSession);        
+    function cierresesion(){
+	    if(Session::destroy()){
+	        //Debug::mostrarArray($_SESSION);
+	      $this->redireccionar($this->urlCierreSession);  
+	    }         
 	}
     /**
      * Verifica los datos para iniciar sesion

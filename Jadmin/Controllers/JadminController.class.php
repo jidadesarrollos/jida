@@ -54,6 +54,7 @@ class JadminController extends Controller{
                             $perfiles = $User->getPerfiles();
                             Session::sessionLogin();
                             Session::set('usuario',$checkUser);
+                            Session::set('Usuario',$User);
                             Session::set('usuario','perfiles',$perfiles);
                             
                             /*fin variables de usuario*/
