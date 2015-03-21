@@ -152,7 +152,10 @@ class ValidadorJida extends Validador{
             
             $datosObl = $this -> validaciones['obligatorio'];
             $bandera = 1;
-            $this -> mensajeError = $datosObl['mensaje'];
+            $this -> mensajeError = 
+            (array_key_exists('mensaje', $datosObl))
+            ?$datosObl['mensaje']
+            :$this->dataValidaciones['obligatorio']['mensaje'];
             
         } elseif ($valorLleno === true) {
             unset($this->validaciones['obligatorio']);

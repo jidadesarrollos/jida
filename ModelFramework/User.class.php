@@ -151,8 +151,8 @@ class User extends DBContainer{
 		$query = "update s_usuarios set ultima_session =current_timestamp, activo=1 
 		where id_usuario=$this->id_usuario 
 		";
-        
-		$this->bd->ejecutarQuery($query);
+        Session::sessionLogin();
+		$data = $this->bd->ejecutarQuery($query);
 		
 	}
 	/**
