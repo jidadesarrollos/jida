@@ -10,7 +10,7 @@
  */
 
  
-class User extends DBContainer{
+class User extends DataModel{
     /**
      * 
 	 * 
@@ -72,15 +72,11 @@ class User extends DBContainer{
      * @access private
      */
     protected $perfiles=array();
-    function __construct($id=""){
-        $this->nombreTabla="s_usuarios";
-        
-        $this->registroMomentoGuardado=TRUE;
-        $this->clavePrimaria="id_usuario";
-        $this->unico=array('nombre_usuario');
-        parent::__construct(__CLASS__,$id);
-    }
     
+    protected $tablaBD = "s_usuarios";
+    protected $pk = "id_usuario";
+    protected $unico =['nombre_usuario'];
+    protected $registroUser = FALSE;
     /**
      * Verifica que los datos para iniciar session sean validos
      * 
@@ -93,19 +89,18 @@ class User extends DBContainer{
     function validarLogin($usuario,$clave,$validacion=true){
         $clave = md5($clave);
         
-        $query = "select * from $this->nombreTabla where nombre_usuario='$usuario' and 
-        clave_usuario='$clave' and validacion=1";
         
-        $result = $this->bd->ejecutarQuery($query);
+        $result = $this ->select()
+                        ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,$validacion=>1])
+                        ->fila();
+                   
         if($this->bd->totalRegistros>0){
             
-            $datos = $this->bd->obtenerArrayAsociativo($result);
-            $this->establecerAtributos($datos, __CLASS__);
-            $this->obtenerPerfiles();
-			$this->activo=1;
+            $this->establecerAtributos($result);
+            $this->activo=1;
             $this->salvar();
-            
-            return $datos;
+            $this->obtenerPerfiles();
+            return $result;
         }else{
             return false;
         }
@@ -146,11 +141,10 @@ class User extends DBContainer{
      * @return boolean
      */
 	function registrarSesion(){
-		$query = "update s_usuarios set ultima_session =current_timestamp, activo=1 
-		where id_usuario=$this->id_usuario 
-		";
-        Session::sessionLogin();
-		$data = $this->bd->ejecutarQuery($query);
+	    if(!empty($this->id_usuario)){
+    		$this->salvar(['ultima_session'=>'current_timestamp','activo'=>1]);
+            Session::sessionLogin();
+		}else return false;
 		
 	}
 	/**
@@ -181,7 +175,7 @@ class User extends DBContainer{
         $clave = md5($clave);
         if($clave===$this->clave_usuario){
             $this->clave_usuario = md5($nuevaClave);
-            $this->salvarObjeto(__CLASS__);
+            $this->salvar();
             return true;
         }else{
             return false;
@@ -204,14 +198,12 @@ class User extends DBContainer{
         $this->validacion=$codigo;
         $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
         $this->activo=0;
-        $guardado = $this->salvar();
-        $guardado['codigo']=$codigo;
-        if($guardado['ejecutado']==1){
-            $this->id_usuario=$guardado['idResultado'];
-            $this->asociarPerfiles($perfiles);
-         
+        if($this->salvar()->ejecutado()){
+            $this->id_usuario=$this->resultBD->idResultado();
+            Debug::mostrarArray($this->resultBD->idResultado());
+            $this->asociarPerfiles($perfiles); 
         }
-        return $guardado;
+        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado()];
     }
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
@@ -225,47 +217,43 @@ class User extends DBContainer{
      * @return boolean TRUE si el usuario es activado, FALSE sino coincide 
       */
     function validarCodigoActivacion($codigo){
-        $query = "select * from s_usuarios where validacion='$codigo'";
-        $data = $this->bd->obtenerDataCompleta($query);
         
+        $data = $this->select()->filtro(['validacion'=>$codigo])->fila();
         if($this->bd->totalRegistros>0){
-            $this->establecerAtributos($data[0]);
-            
+            $this->establecerAtributos($data);
             $this->activo=1;
             $this->validacion=1;
-            if($this->salvar()['ejecutado']==1){
+            if($this->salvar()->ejecutado()){
                 return true;
             }else{
                 return false;
             }
-            
         }else{
             return false;
         }
     }
     
     function obtenerUsuarioByEmail($correo){
-        $query = "Select * from $this->nombreTabla where correo='$correo'";
-        $result = $this->bd->ejecutarQuery($query);
+        $data  = $this->select()->filtro(['correo'=>$correo])->fila();
         
         if($this->bd->totalRegistros>0){
-            $data = $this->bd->obtenerArray($result);
+            
             $this->establecerAtributos($data);
             $this->registrarSesion();
             return true;
-        }else{
-            return false;
-        }
+        }else return false;
+        
     }
-    
+    /**
+     * Cierra la sesión de un usuario
+     * @method cerrarSesion
+     * @param int $idUser Id del Usuario a cerrar sesion, si no es pasado se tomará el id instanciado
+     */
     function cerrarSesion($idUser=""){
         if(empty($idUser))
             $idUser=$this->id_usuario;
-        $query = "update $this->nombreTabla set activo=0 where $this->clavePrimaria=".$idUser;
-        $this->bd->ejecutarQuery($query);
-        
-        
-        
+        $this->activo=0;
+        $this->salvar();
     }
 
 }

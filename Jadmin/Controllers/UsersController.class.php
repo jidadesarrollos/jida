@@ -5,10 +5,9 @@ class UsersController extends Controller{
     protected $urlCierreSession="/jadmin/";
     var $layout = 'jadmin.tpl.php';    
 	function __construct(){
-	    $this->modelo = new User();
-        $this->url='/jadmin/users/';
-        
         parent::__construct();
+        $this->modelo = new User();
+        $this->url='/jadmin/users/';
         
         
     }
@@ -115,21 +114,14 @@ class UsersController extends Controller{
             $validacion  = $form->validarFormulario();
             
             if($validacion===TRUE){
-                
                 $user = new User();
                 $user->validacion=1;
                 $_POST['clave_usuario'] = md5($_POST['clave_usuario']);
-                $guardado = $user->salvar($_POST,true);
-                if($guardado['ejecutado']==1){
-                    $user->id_usuario=$guardado['idResultado'];
+                if($user->salvar($_POST)->ejecutado()){
                     $user->asociarPerfiles($_POST['id_perfil']);
-                }else{
-                    
                 }
-                $retorno['guardado']=$guardado;
-                 
+                $retorno['guardado']=['ejecutado'=>$user->getResult()->ejecutado()];
             }else{
-                Debug::mostrarArray($validacion);
                 $retorno['guardado'] =$validacion; 
             }
             
