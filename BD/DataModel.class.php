@@ -34,11 +34,17 @@ class DataModel{
     protected $registroUser=TRUE;
     /**
      * Arreglo que define las relaciones uno a muchos
-     * @var $muchos
+     * @var $muchos Alias de $tiene
      * @access protected
+     * 
      * 
      */
     protected $muchos=array();
+    
+    /**
+     * Arreglo que define las relaciones uno a muchos de un objeto
+     */
+    protected $tiene = array();
     /**
      * Arreglo que define las relaciones muchos a muchos
      * @var $muchosAMuchos
@@ -117,7 +123,7 @@ class DataModel{
       * Instancia de objeto para retorno de data de Base de Datos
       * @param object $resultBD
       */
-    private $resultBD;
+    protected $resultBD;
     
     /**
      * Objeto ReflectionClass instanciado con el objeto
@@ -293,8 +299,8 @@ class DataModel{
      * @see self::consulta
      */
     function select($campos=""){
-        $this->consulta($campos);
-        return $this;
+        return $this->consulta($campos);
+         
     }
      /**
      * Funcion para obtener datos de una tabla
@@ -871,5 +877,14 @@ class DataModel{
             return $palabra.PLURAL_CONSONANTE;
         }
         
+    }
+    /**
+     * Retorna el objeto ResultBD obtenido a partir de una consulta a base de datos
+     * 
+     * @method getResult
+     * @return object ResultBD();
+     */
+    function getResult(){
+        return $this->resultBD;
     }
 }//fin clase;
