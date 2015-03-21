@@ -70,7 +70,9 @@ class MenusController extends Controller {
     function setMenu() {
         
         $post =& $_POST;
-        $form = new Formulario('ProcesarMenus', 1);
+		$tipoForm = 1;
+        $seleccion = "";
+        $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $validacion = $form->validarFormulario($post);
         if(!is_array($validacion) and $validacion==TRUE){
             $idMenu = isset($post['id_menu']) ? $post['id_menu'] : '';
