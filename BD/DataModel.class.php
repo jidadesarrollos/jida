@@ -606,14 +606,22 @@ class DataModel{
         
     }
   
-    
-    
     /**
      * Retorna un arreglo con las propiedades publicas del objeto
-     * @method objectAsArray
+     * @method objectAsArray Alias obtenerPropiedades
+     * @deprecated
      * @return array 
      */
     function objectAsArray(){
+        $this->obtenerPropiedadesObjeto();
+        return $this->propiedades;
+    }
+    /**
+     * Retorna un arreglo con las propiedades publicas del objeto
+     * @method obtenerPropiedades
+     * @return array Arreglo con propiedades publicas del objeto
+     */  
+    function obtenerPropiedades(){
         $this->obtenerPropiedadesObjeto();
         return $this->propiedades;
     }
