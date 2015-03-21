@@ -342,7 +342,7 @@ class CampoHTML extends DBContainer {
                     $valorExtension=($tipoTelefono=='internacional')?substr($this->value,13):substr($this->value,10);
                 }
              }
-             $this->control="<div class=\"ctrl-multiple\" id=\"box".$this->id_propiedad."\">";
+             $this->control="<div class=\"control-multiple\" id=\"box".$this->id_propiedad."\">";
              if($tipoTelefono!='internacional'){
                 #$this->control.="<div class=\"text-muted ctrl-number\">(+58) </div>";
                 $this->control.="<input data-toggle=\"tooltip\" data-placement=\"top\" title=\"C&oacute;digo sin cero(0) inicial\" type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->cssControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"4xx.\">";     
@@ -384,7 +384,7 @@ class CampoHTML extends DBContainer {
     }
 
     private function crearControlIdentificacion(){
-            $this->control="<div class=\"ctrl-multiple\">";
+            $this->control="<div class=\"control-multiple\">";
             $this->control.="<select name=\"".$this->name."-tipo-doc\" class=\"$this->cssControlRequerida ctrl-documentacion \" id=\"".$this->id_propiedad."-tipo-doc\">";
             $tipoDoc="";
             $this->armarOpciones();

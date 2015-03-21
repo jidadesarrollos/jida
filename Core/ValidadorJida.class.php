@@ -140,7 +140,7 @@ class ValidadorJida extends Validador{
      *  que debe tener un campo
      * @param string $campo Campo a validar
      */
-    function validarCampo($campo) {
+    function validarCampo(&$campo) {
         $this->valorCampo =& $campo;
         
         //En caso de haber un error la variable bandera debe ser modificada a 1.
@@ -262,6 +262,7 @@ class ValidadorJida extends Validador{
         if(array_key_exists('campo_codigo', $detalle)):
             $valor = $_POST[$this->campo['name']."-tipo-doc"].$this->valorCampo;
         endif;
+        $_POST[$this->campo['name']] = $valor;
         $this->valorCampo = $valor;
         return $this->validarCadena('documentacion', $this->valorCampo);
     }
