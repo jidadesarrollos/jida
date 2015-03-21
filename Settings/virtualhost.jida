@@ -21,7 +21,7 @@
 		Require all granted
 	</Directory>
 	#ServerAlias dev.tuProyecto.local
-	RewriteRule \.(eot|svg|ttf|woff|css|jpe?g|gif|png|js|ods|odt|doc?x|xls|pdf)$ - [L]
+	RewriteRule \.(eot|svg|ttf|woff|less|css|jpe?g|gif|png|js|ods|odt|doc?x|xls|pdf)$ - [L]
     ErrorLog "logs/tuProyecto/dev.tuProyecto.local.com-error.log"
     CustomLog "logs/tuProyecto/dev.tuProyecto.local.com-access.log" common
 </VirtualHost>
