@@ -119,16 +119,13 @@ class User extends DBContainer{
         if($idUser!=""){
             $this->id_usuario = $idUser;
         }
-        $query = "select * from vj_perfiles_usuarios where id_usuario=$this->id_usuario";
-        
-        $data  = $this->bd->ejecutarQuery($query);
-        if(count($data)>1){
-            throw new Exception("No se han obtenido los perfiles del usuario", 1);
+        if(count($this->perfiles)<1){
+            $query = "select * from vj_perfiles_usuarios where id_usuario=$this->id_usuario";
+            $data  = $this->bd->ejecutarQuery($query);
+            if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
+            while($perfil = $this->bd->obtenerArrayAsociativo($data))	
+                $this->perfiles[]=$perfil['clave_perfil'];
             
-        }
-        while($perfil = $this->bd->obtenerArrayAsociativo($data)){
-        	
-            $this->perfiles[]=$perfil['clave_perfil'];
         }
     }
     /**
@@ -137,6 +134,7 @@ class User extends DBContainer{
      * @access public
      */
     function getPerfiles(){
+        $this->obtenerPerfiles();
         return $this->perfiles;
     }
 	/**
