@@ -308,6 +308,7 @@
             $acl = new ACL();
             
             $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+            
             if($acceso===TRUE){
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
@@ -338,7 +339,6 @@
                     }
                     $controlador = $this->controlador."Controller";
                     
-                    $instancia = new $controlador;
                     if(!is_callable(array($controlador,$metodo))){
                         /*En caso de que no se consiga metodo en la url
                          * Se llama un metodo por default llamado index y se agrega el
@@ -395,10 +395,11 @@
                
                  throw new Exception("No tiene permisos", 403);
                  
-             }        
-            if(isset($controlador)){
-                $this->ejecucion($controlador);
-            }
+           }        
+           if(isset($controlador)){
+                
+               $this->ejecucion($controlador);
+           }
          }catch(Exception $e){
             $this->procesarExcepcion($e);
         }  
