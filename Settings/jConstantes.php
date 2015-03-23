@@ -42,8 +42,8 @@ if(!defined('TEST_PLATFORM')){
 # Configuración del Framework
 #===============================================================================
 /* Definirá el nivel del orm del DataModel [aun no funcional] */
- if(!defined('DBCONTAINER_NIVEL_ORM'))
-    define('DBCONTAINER_NIVEL_ORM',1);
+ if(!defined('NIVEL_ORM'))
+    define('NIVEL_ORM',1);
 
 if(!defined('DB_PREFIJOS')){
     define('DB_PREFIJOS',TRUE);
