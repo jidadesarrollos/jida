@@ -106,6 +106,10 @@ class Controller {
      * @see DataVista object
      */
     var $dv;
+    var $usuario;
+    /**
+     * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio 
+     */
     function __construct(){
         
         $this->instanciarHelpers();
@@ -117,7 +121,7 @@ class Controller {
         $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
         $this->dv = new DataVista();
         $this->url = $this->urlController();
-        
+        $this->usuario = Session::get('Usuario');
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
@@ -344,20 +348,30 @@ class Controller {
      * 
      */
     private function getModelo(){
-        $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $arrayModel=array();
-        foreach ($words as $key => $word) {
-            if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
-                $arrayModel[]=substr($word, 0,strlen($word)-2);
-            }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
-                $arrayModel[]=substr($word, 0,strlen($word)-1);
+        if(!empty($this->modelo)){
+            if(class_exists($this->modelo)){
+                $this->modelo = new $this->modelo;
+            }else{
+                throw new Exception("El objeto $this->modelo especificado como modelo no existe", 1);
+                
+            }
+        }else{
+            $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $arrayModel=array();
+            foreach ($words as $key => $word) {
+                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+                    $arrayModel[]=substr($word, 0,strlen($word)-2);
+                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+                    $arrayModel[]=substr($word, 0,strlen($word)-1);
+                }
+            }
+            
+            $model = (count($arrayModel)>0)?implode($arrayModel):$this->_nombreController;
+            if(class_exists($model)){
+                $this->modelo = new $model;
             }
         }
-        
-        $model = (count($arrayModel)>0)?implode($arrayModel):$this->_nombreController;
-        if(class_exists($model)){
-            $this->modelo = new $model;
-        }
+            
     }
     /**
      * funcion estandard para eliminar registros, funcional solo con modelos que
