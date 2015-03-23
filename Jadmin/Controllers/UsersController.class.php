@@ -6,7 +6,7 @@ class UsersController extends Controller{
     var $layout = 'jadmin.tpl.php';    
 	function __construct(){
         parent::__construct();
-        $this->modelo = new User();
+        //$this->modelo = new User();
         $this->url='/jadmin/users/';
         
         
