@@ -50,7 +50,7 @@ class String {
      * @return string
      */
     
-    static function textoVista($texto='',$tamaño=50){
+    static function resumen($texto='',$tamaño=50){
         
         if(strlen($texto)>=$tamaño){
             //echo $texto;exit;
@@ -95,11 +95,8 @@ class String {
     static function rellenarString($texto='',$tamaño=10,$remplazar){
         
         $totalString=strlen($texto);
-        
         if($totalString==$tamaño){
-            
             return $texto;
-            
         }else{
             return str_pad($texto,$tamaño,$remplazar, STR_PAD_LEFT);
         }
