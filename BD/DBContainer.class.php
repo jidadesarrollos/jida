@@ -90,7 +90,7 @@ class DBContainer {
      * @var int $nivelORM
      * @see DBCONTAINER_NIVEL_ORM
      */
-    private $nivelORM = DBCONTAINER_NIVEL_ORM;
+    private $nivelORM = NIVEL_ORM;
     
     /**
      * Registra las propiedades del objeto que tambien son objetos
