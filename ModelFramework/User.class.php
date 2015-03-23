@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 /**
  * Modelo de Usuario de la aplicacion
  * 
@@ -89,13 +89,10 @@ class User extends DataModel{
     function validarLogin($usuario,$clave,$validacion=true){
         $clave = md5($clave);
         
-        
         $result = $this ->select()
                         ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,$validacion=>1])
                         ->fila();
-                   
         if($this->bd->totalRegistros>0){
-            
             $this->establecerAtributos($result);
             $this->activo=1;
             $this->salvar();
@@ -181,6 +178,7 @@ class User extends DataModel{
             return false;
         }
     }
+    
     /**
      * Registra un nuevo usuario y asigna los perfiles asociados
      * @method registrarUsuario
