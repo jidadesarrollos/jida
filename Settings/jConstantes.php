@@ -81,3 +81,12 @@ if(!defined('URL_CSS')) define('URL_CSS','/htdocs/css/');
  */
 
 if(!defined('DIR_PLANTILLAS_FRAMEWORK')) define ('DIR_PLANTILLAS_FRAMEWORK', framework_dir ."jidaPlantillas/");
+
+if(!defined('ZONA_HORARIA')){
+    /**
+     * Define la zona horaria con la cual se trabajarán todas las funciones
+     * de fecha. basado en la estructura de php
+     * @link http://php.net/manual/es/timezones.america.php
+     */
+    define('ZONA_HORARIA','America/Caracas');
+}
