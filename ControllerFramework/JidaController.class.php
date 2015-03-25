@@ -64,6 +64,7 @@
      private $modulosExistentes=array();
     function __construct(){
         try{
+            date_default_timezone_set(ZONA_HORARIA); 
             Session::destroy('__formValidacion');
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
