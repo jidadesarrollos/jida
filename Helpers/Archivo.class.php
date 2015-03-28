@@ -173,7 +173,7 @@ class Archivo{
      */
     function moverArchivosCargados($directorio,$nombreAleatorio=FALSE,$prefijo=""){
         $bandera=TRUE;
-        if($this->totalArchivosCargados>=1){
+        if($this->totalArchivosCargados>1){
             for($i=0;$i<$this->totalArchivosCargados;++$i){
                 $nombreArchivo = $this->validarNombreArchivoCargado($i, $nombreAleatorio,$prefijo);
                 $destino =$directorio."/". $nombreArchivo.".".$this->extension[$i];
@@ -187,7 +187,7 @@ class Archivo{
                     throw new Exception("No se pudo mover el archivo cargado", 900);   
             }    
         }else{
-            $nombreArchivo= $this->validarNombreArchivoCargado(1, $nombreAleatorio,$prefijo);
+            $nombreArchivo= $this->validarNombreArchivoCargado(0, $nombreAleatorio,$prefijo);
             $destino  =$directorio. "/".$nombreArchivo.".".$this->extension;
             $this->archivosCargados[]=[
                 'path' => $destino,
@@ -203,7 +203,7 @@ class Archivo{
     /**
      * Devuelve el nombre a asignar al archivo cargado en el servidor
      * 
-     * El archivo puede ser definido por el usuario por medio de la función setNombresArchivosCargados,
+     * El nombre puede ser definido por el usuario por medio de la función setNombresArchivosCargados,
      * puede ser creado aleatoriamente o [por defecto] es usado el mismo nombre del archivo original, reemplazando
      * los espacios por guiones [-]
      * @method validarNombreArchivoCargado

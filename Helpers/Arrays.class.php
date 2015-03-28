@@ -42,12 +42,7 @@ class Arrays {
                     $nuevoArreglo[]=$value;   
                 }
                     
-        }//fin foreach
-        if(is_array($nuevoArreglo)){
-            
-            //echo "SI<hr>";
         }
-        
         if(count($nuevoArreglo)>0){
             //echo "SI again<hr>";
             return $nuevoArreglo;
@@ -67,11 +62,27 @@ class Arrays {
         
         foreach ($array as $key => $fila) {
             if(is_array($fila)){
+                if(is_array($clave)){
+                    $datos=[];
+                    foreach ($clave as $key => $value) {
+                        if(array_key_exists($value, $fila))
+                            $datos[$value]=$fila[$value];
+                    }
+                    if(!empty($datos)) $arrayResult[]=$datos;
+                }else
                 if(array_key_exists($clave, $fila)){
-                     
                       $arrayResult[]=$fila[$clave];
                 }
+                
             }elseif(is_object($fila)){
+                if(is_array($clave)){
+                    $datos=[];
+                    foreach ($clave as $key => $value) {
+                        if(property_exists($value, $fila))
+                            $datos[$value]=$fila[$value];
+                    }
+                    if(!empty($datos)) $arrayResult[]=$datos;
+                }else
                 if(property_exists($fila, $clave) and !empty($fila->$clave)){
                     $arrayResult[]=$fila->$clave;
                 }

@@ -150,12 +150,14 @@ class Imagen extends Archivo{
         $arrayMimes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
         
         if($this->totalArchivosCargados>1){
-            
-            foreach ($this->files as $key => $imagen) {
-                if(!in_array(exif_imagetype($imagen['tmp_name'])))
+            $total = $this->getTotalArchivosCargados();
+            for($i=0;$i<$total;++$i){
+                if(!in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
+                    return true;
+                }else{
                     return false;
-                else return true;
-            }    
+                }
+            } 
         }else{
            
           if(is_array($this->files['tmp_name'])){

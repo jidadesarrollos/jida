@@ -11,29 +11,34 @@
  * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
  * @version     0.1 - 09/09/2013
  */
-class FechaHora {
-	
+class FechaHora{
+    
+    static $diasSemana =    [
+            0=>['en'=>'Sunday',     'es' => 'Domingo'],
+            1=>['en'=>'Monday',     'es' => 'Lunes'],
+            2=>['en'=>'Tuesday',    'es' => 'Martes'],
+            3=>['en'=>'Wednesday',  'es' => 'Miércoles'],
+            4=>['en'=>'Thursday',   'es' => 'Jueves'],
+            5=>['en'=>'Friday',     'es' => 'Viernes'],
+            6=>['en'=>'Saturday',   'es' => 'Sábado'] 
+          ]; 
+    	
 	/**
-	 * Función que retorna el día de hoy.
+	 * Función que retorna el día Actual en letras.
 	 *
 	 * @param string $texto        	
 	 * @return string
 	 * @example Imprime Lunes
 	 */
-	static function diaSemana() {
-		$diaHoy = date ( 'l' );
-		$diasSemanas = array (
-				'Sunday' => 'Domingo',
-				'Monday' => 'Lunes',
-				'Tuesday' => 'Martes',
-				'Wednesday' => 'Miércoles',
-				'Thursday' => 'Jueves',
-				'Friday' => 'Viernes',
-				'Saturday' => 'Sábado' 
-		);
-		return $diasSemanas [$diaHoy];
+	static function diaActual($dia="",$lang="es") {
+	    
+        $dia = date('w');
+		return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
 	}
 	
+    static function diasSemana($lang='es'){
+        return Arrays::obtenerKey('es', self::$diasSemana);
+    }
 	/**
 	 * Función que retorna el mes en el que estamos.
 	 * 
@@ -42,25 +47,25 @@ class FechaHora {
 	 * @example Imprime Febrero
 	 */
 	static function mes($fecha = '') {
-		if ($fecha == '') {
+		if (empty($fecha)) {
 			$mesActual = date ( 'F' );
 			$mesesAnio = array (
-					'January' => 'Enero',
+					'January'  => 'Enero',
 					'February' => 'Febrero',
-					'March' => 'Marzo',
-					'April' => 'Abril',
-					'May' => 'Mayo',
-					'June' => 'Junio',
-					'July' => 'Julio',
-					'August' => 'Agosto',
-					'September' => 'Septiembre',
-					'October' => 'Octubre',
+					'March'    => 'Marzo',
+					'April'    => 'Abril',
+					'May'      => 'Mayo',
+					'June'     => 'Junio',
+					'July'     => 'Julio',
+					'August'   => 'Agosto',
+					'September'=> 'Septiembre',
+					'October'  => 'Octubre',
 					'November' => 'Noviembre',
 					'December' => 'Diciembre' 
 			);
 			return $mesesAnio [$mesActual];
 		} else {
-			$mesesAnio = array (
+			$mesesAnio = [
 					'01' => 'Enero',
 					'02' => 'Febrero',
 					'03' => 'Marzo',
@@ -73,17 +78,17 @@ class FechaHora {
 					'10' => 'Octubre',
 					'11' => 'Noviembre',
 					'12' => 'Diciembre' 
-			);
+			];
 			return $mesesAnio [$fecha];
 		}
 	}
 	
 	/**
-	 * Función que retorna el dia de hoy en número.
+	 * Función que retorna número de día 
 	 * 
 	 * @return string
 	 */
-	static function diaSemanaNumero() {
+	static function diaMes() {
 		return date ( 'j' );
 	}
 	
@@ -321,7 +326,11 @@ class FechaHora {
 			}
 		}
 	}
-    
+    /**
+     * Retorna una fecha dada en Formato datetime
+     * 
+     * @method datetime
+     */
     static function datetime($fecha=""){
         if(!empty($fecha)){
             return date ( 'Y-m-d H:i:s',$fecha );    
@@ -330,11 +339,22 @@ class FechaHora {
         }
         
     }
-    static function Fecha(){
+    /**
+     * @method fecha
+     * @return date
+     */
+    static function fecha(){
         return date('d-m-Y');
     }
+    /**
+     * Cambia una fecha a formato datetime
+     * @method fecha
+     * @param date $fecha
+     */
     static function fechaToDateTime($fecha){
         $datetime = new DateTime($fecha);
         return $datetime->format('d-m-Y');
     }
+  
+    
 }
