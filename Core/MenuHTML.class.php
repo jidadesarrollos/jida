@@ -73,7 +73,7 @@ class MenuHTML extends DBContainer{
         
         parent::__construct(__CLASS__);
         $menu = $this->menu;
-        $this->opciones = $menu->obtenerOpcionesMenu();
+        
         
     }
     /**
@@ -82,6 +82,7 @@ class MenuHTML extends DBContainer{
      * 
      */
     function showMenuPersonalizado($data){
+           $this->opciones = $this->menu->obtenerOpcionesMenu();
            $config = $this->configuracion;
          
             if(count($data)>0){
@@ -109,10 +110,12 @@ class MenuHTML extends DBContainer{
      */
     function showMenu(){
         $config = $this->configuracion;
-
+        $this->opciones = $this->menu->obtenerOpcionesMenu();
+        
         $opciones=& $this->opciones;
         
         if(count($opciones)>0){
+            
             if(!array_key_exists("li", $config)){
                 $config['li']=array(0=>array());
             }
@@ -121,6 +124,10 @@ class MenuHTML extends DBContainer{
         }else{
             return true;
         }
+    }
+    
+    function setPerfilesAcceso($perfiles){
+        $this->menu->setPerfilesAccesoMenu($perfiles);
     }
     /**
      * Arma un menu

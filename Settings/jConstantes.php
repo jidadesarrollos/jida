@@ -48,7 +48,9 @@ if(!defined('TEST_PLATFORM')){
 if(!defined('DB_PREFIJOS')){
     define('DB_PREFIJOS',TRUE);
 }
-
+if(!defined('ORM_REGISTROS_RELACION')){
+    define('ORM_REGISTROS_RELACION',20);
+}
 
 if(!defined('APP_MANTENIMIENTO')){
     define('APP_MANTENIMIENTO',FALSE);
@@ -68,6 +70,7 @@ if(!defined('PLURAL_ATONO')){
 if(!defined('PLURAL_CONSONANTE')){
     define('PLURAL_CONSONANTE','es');
 }
+
 
 #===============================================================================
 # Constantes DE URLs y Directorios del Framework

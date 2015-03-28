@@ -270,7 +270,7 @@ class Controller {
      */
     protected function urlActual($valor=1){
         $quienLlama = debug_backtrace(null,$valor+1)[$valor]['function'];
-        return $this->url.$this->convertirNombreAUrl($quienLlama)."/";
+        return $this->urlController().$this->convertirNombreAUrl($quienLlama)."/";
     }
     
     /**
@@ -291,6 +291,7 @@ class Controller {
      * @method urlController
      */
     protected function urlController(){
+        $this->url="";
         if(isset($GLOBALS['_MODULO_ACTUAL'] )){
             $controller = str_replace("Controller", "", $this->_clase);
             if(strtolower($this->_modulo)==strtolower($controller)){
@@ -309,7 +310,9 @@ class Controller {
         return $this->url;
     }
     protected function urlModulo(){
-          return "/".strtolower($this->_modulo)."/";
+          if(!empty($this->_modulo))  return "/".strtolower($this->_modulo)."/";
+          else return false;
+          
     }
     /**
      * Devuelve la estructura de la url solicitada

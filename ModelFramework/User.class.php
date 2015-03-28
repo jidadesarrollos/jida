@@ -90,7 +90,7 @@ class User extends DataModel{
         $clave = md5($clave);
         
         $result = $this ->select()
-                        ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,$validacion=>1])
+                        ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,'validacion'=>1])
                         ->fila();
         if($this->bd->totalRegistros>0){
             $this->establecerAtributos($result);
@@ -198,10 +198,10 @@ class User extends DataModel{
         $this->activo=0;
         if($this->salvar()->ejecutado()){
             $this->id_usuario=$this->resultBD->idResultado();
-            Debug::mostrarArray($this->resultBD->idResultado());
+            
             $this->asociarPerfiles($perfiles); 
         }
-        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado()];
+        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico()];
     }
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
