@@ -22,6 +22,10 @@ class DataModel{
     protected $fecha_creacion;
     protected $fecha_modificacion;
     
+    /**
+     *@var int $nivelORM Define el nivel de navegación del ORM
+     */
+    protected $nivelORM = NIVEL_ORM;
     protected $prefijoRelacional=PREFIJO_RELACIONAL;
     
     /**
@@ -33,25 +37,26 @@ class DataModel{
     protected $registroMomentoGuardado=TRUE;
     protected $registroUser=TRUE;
     /**
-     * Arreglo que define las relaciones uno a muchos
-     * @var $muchos Alias de $tiene
+     * Arreglo que define las relaciones uno a uno del objeto
+     * @var $tieneUno 
      * @access protected
      * 
      * 
      */
-    protected $muchos=array();
+    protected $tieneUno=[];
     
     /**
      * Arreglo que define las relaciones uno a muchos de un objeto
+     * @var array $tieneMuchos
      */
-    protected $tiene = array();
+    protected $tieneMuchos = [];
     /**
      * Arreglo que define las relaciones muchos a muchos
      * @var $muchosAMuchos
      * @access protected
      * 
      */
-    protected $muchosAMuchos=array();
+    protected $perteneceAMuchos=array();
     /**
      * Registra la relacion inversa Uno a Muchos
      * @var $pertenece
@@ -67,10 +72,15 @@ class DataModel{
      */
     private $query;
     /**
+     * Define el nivel actual del ORM
+     */
+    private $nivelActualORM=0;
+    /**
      * Nombre de la Clave primaria de base de datos
      * @var string $pk
      */
     protected $pk;
+    
     
     /**
      * Objeto de conexión a Base de datos
@@ -137,10 +147,12 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
+        
         $numeroParams = func_num_args();
         $param = func_get_args(0);
         $this->_clase = get_class($this);
         $this->initBD();
+        
         //instancia objecto reflection
         $this->reflector =new ReflectionClass(get_class($this));
         
@@ -151,12 +163,33 @@ class DataModel{
         if(empty($this->pk)){
             $this->obtenerpk();
         }
-        $this->obtenerPropiedadesObjeto();
-        
-        if($id){
-            $this->instanciarObjeto($id);   
+        //si se pasa un segundo parametro, el mismo es el nivel del ORM
+        if($numeroParams==2){
+            
+            if(func_get_arg(1)){
+                 $this->nivelActualORM = func_get_arg(1)+1;
+            }
         }
-        $this->validarRelaciones();
+;
+        //Se obtienen propiedades publicas
+        $this->obtenerPropiedadesObjeto();
+        //se obtienen propiedades de relacion de pertenencia
+                
+        $this->identificarObjetosRelacion();
+        
+        #$this->validarRelaciones();
+        if($id){
+            
+            $this->instanciarObjeto($id);
+               
+        }
+        
+        $pk =& $this->pk;
+        
+        
+        //$this->validarRelaciones();
+        
+        
         
     }
     /**
@@ -175,15 +208,43 @@ class DataModel{
      */
     private function instanciarObjeto($id) {
         
-        $this->identificarPropertyObjects();
+        
         $data = $this->consulta()
                 ->filtro([$this->pk=>$id])
                 ->fila();
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
         
+        
         return $this;
     }//fin función inicializaarObjeto
+    /**
+     * Verifica las relaciones existentes
+     * 
+     * Valida las relaciones uno a muchos y muchos a muchos del objeto. Si el objeto
+     * está instanciado, obtiene la data de cada relacion basandose en el limite definido
+     * en la constante 
+     * @method validarRelaciones
+     */
+    private function validarRelaciones(){
+        
+        if($this->nivelActualORM<$this->nivelORM){
+            foreach ($this->tieneMuchos as $id => $key) {
+                
+                if(is_integer($id) and class_exists($key)){
+                    $keyObject = new $key(null,$this->nivelActualORM);
+                    $pk = $this->pk;
+                    $this->$key = $keyObject->obtenerBy($this->$pk,$pk);
+                }
+                  
+            }
+        }
+    }
+    /**
+     * obtiene las relaciones declaradas uno a muchos del objeto
+     * @method obtenerPertenencias
+     */
+   
     /**
      * Identifica el nombre de la tabla de base de datos
      * @method obtenerTablaBD
@@ -197,17 +258,24 @@ class DataModel{
       * 
       * @method identificarPropertyObjects
      */
-    private function identificarPropertyObjects(){
-        foreach ($this->propiedades as $prop => $val) {
-            
-            if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
-                $propiedad = str_replace("id_", "", $prop);
-                $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
-                if($propiedad!=$this->_clase and class_exists($objeto))
-                    $this->propiedadesObjetos[$prop]=new $objeto(); 
-            }   
-        }//fin foreach
+    private function identificarObjetosRelacion(){
         
+        if($this->nivelActualORM<$this->nivelORM){
+            
+            foreach ($this->propiedades as $prop => $val) {
+                if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
+                    $propiedad = str_replace("id_", "", $prop);
+                    $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
+                    if($propiedad!=$this->_clase and class_exists($objeto)){
+                        //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado 
+                        //ninguna relacion del objeto relacionado
+                        
+                        $this->pertenece[] = new $objeto(null,2); 
+                    }
+                        //$this->propiedadesObjetos[$prop]=new $objeto(); 
+                }
+            }//fin foreach
+        }
     }//fin indentificarRefereincas
     /**
      * Permite acceder a propiedades privadas o protegidas del objeto instanciado
@@ -282,7 +350,6 @@ class DataModel{
     private function obtenerPropiedadesObjeto() {
         $this->reflector = new ReflectionClass($this->_clase);
         $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
-        
         $arrayPropiedades = array();
         
         foreach($propiedades as $propiedad ) {
@@ -292,6 +359,7 @@ class DataModel{
         }
         $this->propiedades = $arrayPropiedades;
         
+        
     }
     /**
      * Alias de metodo Consulta
@@ -299,22 +367,34 @@ class DataModel{
      * @see self::consulta
      */
     function select($campos=""){
-        return $this->consulta($campos);
+        $this->consulta($campos);
+        return $this;
          
+    }
+    
+    /**
+     * Agrega la union de campos al query
+     * @method join
+     */
+    function join($tablaJoin){
+        
+        
     }
      /**
      * Funcion para obtener datos de una tabla
      * @method consulta
      * 
      */
-    protected function consulta($campos=""){
+    function consulta($campos=""){
         $banderaJoin = FALSE;
         $join="";
         if(empty($campos)){
-            if(count($this->propiedadesObjetos)>0){
+            
+            if(count($this->pertenece)>0){
                 $camposJoin = "";
                 $i=0;
-                foreach ($this->propiedadesObjetos as $campo => $object) {
+                
+                foreach ($this->pertenece as $campo => $object) {
                     $banderaJoin=TRUE;
                     $tabla = "";
                     $pk="";
@@ -343,7 +423,6 @@ class DataModel{
                 }//foreach
             }//fin if para joins
         }
-        
         if(empty($campos)){
             $campos =  array_keys($this->propiedades);
         }
@@ -378,50 +457,74 @@ class DataModel{
         }
             
     }
+    
     /**
-     * Verifica que las relaciones registradas existan
-     * 
-     * Verifica las relaciones Uno a Muchos del Objeto, en caso de no Existir retorna excepcion 132
-     * @throws El objeto no es identificado como clase en el proyecto
-     * @method validarRelaciones
-     * @access private
-     * 
+     * Realiza llamado a los objetos de relacion existentes
+     * @method __call
      */
-    private function validarRelaciones(){
+    function __call($rel,$campos){
         
-        if(count($this->muchos)>0){
-            // foreach ($this->muchos as $id => $rel) {
-                // if(!class_exists($rel)){
-                    // throw new Exception("No existe la clase de Relacion ".$rel, 1);
-//                     
-                // }else{
-                    // $this->$rel=function($id){
-                        // $clase = new $rel();
-                        // return $clase;
-                    // }
-                // }
-            // }
+        $class = ucfirst($this->_obtenerSingular($rel));
+        
+        if(in_array($class, $this->tieneMuchos) or in_array($class, $this->tieneUno)){
+            
+            $obj = new $class(null,1);
+            if(method_exists($obj,'consulta')){
+                $pk = $this->pk;
+                return $obj->consulta($campos)->filtro([$this->pk=>$this->$pk]);
+            }
+        }else{
+            //Debug::mostrarArray($this->tieneMuchos);
+            throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
+            
         }
-        //Muchos a Muchos
-        if(count($this->muchosAMuchos)>0){
-            // foreach ($this->muchos as $id => $rel) {
-                // if(is_int($id)){
-                    // if(class_exists($rel)){
-                        // $tablaRelacion="";
-                        // if($this->prefijoTabla)$tablaRelacion.=PREFIJO_RELACIONAL."_";
-//                         
-                        // $tablaRelacion.=strtolower($this->obtenerPlural($this->_clase))
-                        // ."_".strtolower($this->obtenerPlural($rel));
-                        // $muchos[]=[$tablaRelacion];
-                    // }
-                // }else{
-                    // $muchos[$id]=[$rel];
-                // }
-//                 
-            // }
+        
+        
+    }
+    
+    
+    /**
+     * Permite registrar una relacion uno a uno del objeto
+     * 
+     * @method agregar
+     * @param string $relacion Nombre de la relacion. ejemplo Usuario -> Perfil
+     * @param array $datos Datos a guardar
+     */
+    function agregar($relacion,$datos){
+        if(in_array($relacion, $this->tieneMuchos)){
+            $fk =  $this->pk;
+            $rel = new $relacion();
+            $rel->establecerAtributos($datos);
+            $rel->$fk = $this->$fk;
+            return $rel->salvar();
         }
         
     }
+    
+    function agregarMuchos(){
+        
+    }
+    
+    /**
+     * Permite acceder a las relaciones uno a uno y uno a muchos de un objeto
+     * 
+     * @method obtener
+     * @param string Nombre de la relacion
+     * @return array $datos Datos de la consulta
+     */ 
+    function obtener($relacion){
+        if(class_exists($relacion)){
+            $rel = new $relacion();
+            $pk = $this->pk;
+            
+            return $rel->obtenerBy($this->$pk,$this->pk);
+        }else{
+            throw new Exception("el objeto $relacion solicitado no existe", 1);
+            
+        }
+        
+    }
+    
     /**
      * Agrega la clausula where a la consulta
      * @method where
@@ -430,6 +533,8 @@ class DataModel{
         if(!$this->usoWhere){
             $this->query.=" where ";
             $this->usoWhere=TRUE;
+        }else{
+            $this->query.=" and ";
         }
     }
     /**
@@ -445,7 +550,7 @@ class DataModel{
            foreach ($arrayFiltro as $key => $value) {
                if($i>0)
                     $this->query.=" and ";
-           $this->query.=" $key='$value'";
+           $this->query.=" $this->tablaBD.$key='$value'";
                ++$i;
            }
        }else{
@@ -465,7 +570,7 @@ class DataModel{
        if(is_array($order)){
         $order = implode(",", $campo);
        }
-       $this->order = "Order by ".$order ." ".$type;
+       $this->order = "Order by ".$this->tablaBD.".".$order ." ".$type;
        return $this;
     }
     /**
@@ -520,6 +625,10 @@ class DataModel{
         if(!empty($this->order)) $this->query.=" ".$this->order;
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
     }
+    /**
+     * Retorna la consulta armada
+     * @method debug
+     */
     function debug($exit=TRUE){
         return Debug::string($this->query,$exit);
     }
@@ -681,33 +790,6 @@ class DataModel{
             $this->resultBD->__set('ejecutado', false);
         }
         return $this->resultBD;
-    }
-    
-    /**
-     * Registra las relaciones uno a muchos de un objeto
-     * @param array $relaciones
-     * @used FALSE;
-     */
-    function guardarRelaciones($relaciones,$data){
-        $asociados = array_keys($relaciones);
-        if(count($asociados)==1){
-            if(array_key_exists($asociados[0], $this->tieneMuchos)){
-               
-                $reg = new $asociados();
-                $pk =$this->pk;
-                $data[$this->pk] =$this->$pk;
-                
-                $this->salvar($data);  
-                 
-                Debug::mostrarArray("we are ok");
-            }else{
-                Debug::string("we are bad",true);
-            }
-        }
-    }
-    
-    private function validarRelacion(){
-        
     }
     /**
      * Obtiene los campos de Base de datos utilizados para realizar una inserción
@@ -877,6 +959,22 @@ class DataModel{
             return $palabra.PLURAL_CONSONANTE;
         }
         
+    }
+    
+    private function _obtenerSingular($palabra){
+        $arrayPalabra=array();
+        $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        
+            foreach ($palabra as $key => $word) {
+                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+                    $arrayPalabra[]=substr($word, 0,strlen($word)-2);
+                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+                    $arrayPalabra[]=substr($word, 0,strlen($word)-1);
+                }else{
+                    $arrayPalabra[]=$word;
+                }
+            }
+        return implode($arrayPalabra);
     }
     /**
      * Retorna el objeto ResultBD obtenido a partir de una consulta a base de datos
