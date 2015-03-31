@@ -32,15 +32,17 @@ class MenusController extends Controller {
                                                                     'class'=>'btn',
                                                                     'href'=>'/jadmin/menus/opciones/menu/{clave}/'),
                                                                     'html' =>array('span' =>array('atributos' => 
-                                                                                        array('class' => 'glyphicon glyphicon-folder-open')
+                                                                                        array('class' => 'glyphicon glyphicon-folder-open',
+																						'title'=>'Ver Opciones del Menu',)
                                                                                     )))),
                                              '1' => array('a' =>array('atributos' =>array( 
                                                                                 'href'=>'/jadmin/menus/eliminar-menu/menu/{clave}', 
-                                                                                'class'=> 'btn',
+                                                                                'class'=> 'btn','title'=>'Eliminar Menu',
                                                                                 ),
                                                                 'html' => array('span' =>array(
                                                                                         'atributos' =>array(
-                                                                                         'class' => 'glyphicon glyphicon-minus-sign'
+                                                                                         'class' => 'glyphicon glyphicon-minus-sign',
+                                                                                         
                                                                                         ))))),
                                                '2' => array('a' =>array('atributos' =>array( 
                                                                                 'href'=>'/jadmin/menus/procesar-menu/menu/{clave}', 
@@ -48,7 +50,8 @@ class MenusController extends Controller {
                                                                                 ),
                                                                 'html' => array('span' =>array(
                                                                                     'atributos' =>array(
-                                                                                            'class' => 'glyphicon glyphicon-pencil'
+                                                                                            'class' => 'glyphicon glyphicon-pencil',
+                                                                                            'title'=>'Modificar Menu',
                                                                                              )))))
                                                 );
                                                 
@@ -129,6 +132,7 @@ class MenusController extends Controller {
             if(!is_array($seleccion)){
                 $seleccion = $this->getEntero($seleccion);
             }
+			
             $cMenu = new Menu();
             
             if ($cMenu -> eliminarMenu($seleccion)) {
