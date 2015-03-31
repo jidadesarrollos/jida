@@ -147,14 +147,16 @@ class Imagen extends Archivo{
      * Verifica que el archivo cargado sea una imagen
      */
     function validarCargaImagen(){
-        $arrayMimes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+        $arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
         
         if($this->totalArchivosCargados>1){
             $total = $this->getTotalArchivosCargados();
             for($i=0;$i<$total;++$i){
-                if(!in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
+                
+                if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
                     return true;
                 }else{
+                    
                     return false;
                 }
             } 

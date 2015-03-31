@@ -183,20 +183,23 @@ class Archivo{
                     'nombre'=>$nombreArchivo,
                     'extension'=>$this->extension[$i]
                 ];
-                if(!move_uploaded_file($this->tmp_name[$i],$destino))
-                    throw new Exception("No se pudo mover el archivo cargado", 900);   
+                if(!move_uploaded_file($this->tmp_name[$i],$destino)){
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+                
+                }
+                 
             }    
         }else{
             $nombreArchivo= $this->validarNombreArchivoCargado(0, $nombreAleatorio,$prefijo);
-            $destino  =$directorio. "/".$nombreArchivo.".".$this->extension;
+            $destino  =$directorio. "/".$nombreArchivo.".".$this->extension[0];
             $this->archivosCargados[]=[
                 'path' => $destino,
                 'directorio'=>$directorio,
                 'nombre'=>$nombreArchivo,
-                'extension'=>$this->extension
+                'extension'=>$this->extension[0]
             ];  
-            if(!move_uploaded_file($this->tmp_name,$destino))
-                throw new Exception("No se pudo mover el archivo cargado", 900);
+            if(!move_uploaded_file($this->tmp_name[0],$destino))
+                throw new Exception("No se pudo mover el archivo cargado $destino", 900);
         }  
         return $this;
     }
@@ -218,6 +221,7 @@ class Archivo{
             $ramdon = rand(100000,999999);
             $name = $fecha.$ramdon;
             if(!empty($prefijo)) $name = $prefijo."-".$name;
+            
             return $name;
         }else{
             

@@ -78,7 +78,7 @@ class MenusController extends Controller {
         $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $validacion = $form->validarFormulario($post);
         if(!is_array($validacion) and $validacion==TRUE){
-            $idMenu = isset($post['id_menu']) ? $post['id_menu'] : '';
+            $idMenu = ($this->post('id_menu'))?$this->post('id_menu'):"";
             $classMenu = new Menu($idMenu);
             
             $valor = $classMenu->procesarMenu($post);
