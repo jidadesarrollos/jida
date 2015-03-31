@@ -205,17 +205,7 @@ class MenusController extends Controller {
                 $dataArray['subtitulo'] = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
                 $formulario->action.="/padre/".$this->get('padre');
             }
-			/**
-			 * Eso era para que vieras como son esas funciones ps. la de elimnar. si es 
-			 * la que depende de los modelos q hereden del DataModel. 
-			 *
-			 * Do you got it? yes 
-			 * but check 
-			 * 
-			 * UsuariosController - Usuario.class.php 
-			 * Ese error es xq no consigue el modelo 
-			 * 
-			 */
+			
             if($this->post('btnProcesarOpcionMenu')){
                 
                 $validacion = $formulario->validarFormulario();
