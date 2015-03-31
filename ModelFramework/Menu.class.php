@@ -87,21 +87,13 @@ class Menu extends DBContainer {
 	
 	
 	function procesarMenu($post){
-	   try{
-	       
-	       if(!$this->obtenerMenuByNombre($post['nombre_menu'])){
-	           $guardado  =$this->salvarObjeto(__CLASS__,$post);
-               return $guardado;
-            }else{
-                $msj = "Ya existe un menu \"".$post['nombre_menu']."\" registrado";
-                
-                return $msj;   
-            }    
-	   }catch(Exception $e){
-	       Excepcion::controlExcepcion($e);
-	   }
-	   
-	   
+		if(!$this->obtenerMenuByNombre($post['nombre_menu'])){
+			$guardado  =$this->salvarObjeto(__CLASS__,$post);
+            return $guardado;
+		}else{
+			$msj = "Ya existe un menu \"".$post['nombre_menu']."\" registrado";
+            return $msj;
+        }
 	}
 	
     
@@ -121,26 +113,21 @@ class Menu extends DBContainer {
     }
     
     function eliminarMenu($menu=""){
-        try{
-            
-            if(!empty($menu)){
-                if(is_array($menu)){
-                    $this->eliminarMultiplesDatos($menu, 'id_menu');
-                }else{
-                    $this->id_menu = $menu;
-                    $this->obtenerMenu();
-                    $this->eliminarObjeto();
-                    return true;    
-                }
+	
+        if(!empty($menu)){
+            if(is_array($menu)){
+                $this->eliminarMultiplesDatos($menu, 'id_menu');
+            }else{
+                $this->id_menu = $menu;
+                $this->obtenerMenu();
+                $this->eliminarObjeto();
+                return true;    
             }
-            else{
-                throw new Exception("Debe seleccionar un menú a eliminar", 1);
-                
-            }    
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
         }
-        
+        else{
+            throw new Exception("Debe seleccionar un menú a eliminar", 1);
+            
+        }  
     }
     
      function obtenerOpcionesMenu($menu = ""){

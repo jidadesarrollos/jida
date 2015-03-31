@@ -127,19 +127,25 @@ class MenusController extends Controller {
 
     function eliminarMenu() {
         
-        if (isset($_GET['menu'])) {
-            $seleccion = $_GET['menu'];
-            if(!is_array($seleccion)){
-                $seleccion = $this->getEntero($seleccion);
-            }
+        if ($this->getEntero($this->get('menu'))>0) {
+            $seleccion = $this->get('menu');
+           
+			$cMenu = new Menu($seleccion);
+	        if(!empty($cMenu->id_menu)){
+	        	$cMenu->eliminarObjeto($cMenu->id_menu);
+				Vista::msj('menus','suceso', 'Menu eliminado');
+				
+	        }else{
+	        	Vista::msj('menus',"error","No se ha eliminado menu");
+	        }    
+	          
+            $this->redireccionar('/jadmin/menus/');
 			
-            $cMenu = new Menu();
-            
-            if ($cMenu -> eliminarMenu($seleccion)) {
-                $_SESSION['__msjVista'] = Mensajes::mensajeSuceso("Menu <strong>$cMenu->nombre_menu</strong> Eliminado");
-                Session::set('__idVista', 'menus');
-                header('location:/jadmin/menus/');
-            }
+	            
+        }else
+        if(is_array($this->get('menu'))){
+        	Debug::mostrarArray($this->get('menu'));
+        	
         } else {
             throw new Exception("Debe seleccionar un menu", 1);
         }
@@ -148,9 +154,9 @@ class MenusController extends Controller {
     function opciones() {
         
         $this->vista = "opcionesMenu";
-        if (isset($_GET['menu'])) {
-            $menu = new Menu($_GET['menu']);
-            $idMenu = $_GET['menu'];
+        if ($this->get('menu')) {
+            $menu = new Menu($this->get('menu'));
+            $idMenu = $this->get('menu');
             $dataArray['vistaOpciones'] = $this -> vistaOpciones($idMenu);
         } else {
             throw new Exception("No ha seleccionado menu para ver opciones", 1);
@@ -164,22 +170,23 @@ class MenusController extends Controller {
      *
      */
     function procesarOpciones() {         
-        if(isset($_GET['menu'])){
-            $post =&  $_POST;
+        if($this->get('menu')){
+            $post =& $_POST;
             
             
             $tipoForm=1;
-            $campoUpdate=(isset($_GET['opcion']) and $this->getEntero($_GET['opcion'])>0)?$_GET['opcion']:"";
+            $campoUpdate=($this->getEntero($this->get('opcion'))>0)?$this->get('opcion'):"";
             
-            $idMenu  =$_GET['menu'];
+            $idMenu=$this->get('menu');
             $idOpcion="";
             $menu = new Menu($idMenu);
             
             $dataArray['titulo'] = "Registro de Opción para menu $menu->nombre_menu";
             $padre=0;
             
-            if(isset($_GET['opcion']) and $this->getEntero($_GET['opcion'])){
-                $idOpcion=$_GET['opcion'];
+            
+            if($this->getEntero($this->get('opcion'))){
+                $idOpcion=$this->get('opcion');
                 $tipoForm=2;
                 $dataArray['titulo'] = "Modificar Opción de menu $menu->nombre_menu";
             }
@@ -190,14 +197,26 @@ class MenusController extends Controller {
                 $formulario->action.="/opcion/".$idOpcion;
             }
 
-            if(isset($_GET['padre']) and $this->getEntero($_GET['padre'])>0){
+            
+            if($this->getEntero($this->get('padre'))>0){
                 
-                $post['padre']=$this->getEntero($_GET['padre']);
-                $opcionPadre = new OpcionMenu($_GET['padre']);
+                $post['padre']=$this->getEntero($this->get('padre'));
+                $opcionPadre = new OpcionMenu($this->get('padre'));
                 $dataArray['subtitulo'] = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
-                $formulario->action.="/padre/".$_GET['padre'];
+                $formulario->action.="/padre/".$this->get('padre');
             }
-            if(isset($_POST['btnProcesarOpcionMenu'])){
+			/**
+			 * Eso era para que vieras como son esas funciones ps. la de elimnar. si es 
+			 * la que depende de los modelos q hereden del DataModel. 
+			 *
+			 * Do you got it? yes 
+			 * but check 
+			 * 
+			 * UsuariosController - Usuario.class.php 
+			 * Ese error es xq no consigue el modelo 
+			 * 
+			 */
+            if($this->post('btnProcesarOpcionMenu')){
                 
                 $validacion = $formulario->validarFormulario();
                 if($validacion===TRUE){
@@ -205,9 +224,9 @@ class MenusController extends Controller {
                     $opcionMenu = new OpcionMenu($idOpcion);
                     $guardado = $opcionMenu->setOpcion($post);
                     if($guardado['ejecutado']==1){
-                        if(is_array($_POST['id_perfil'])){
+                        if(is_array($this->post('id_perfil'))){
                             $perfiles = array();
-                            foreach ($_POST['id_perfil'] as $key => $idPerfil) {
+                            foreach ($this->post('id_perfil') as $key => $idPerfil) {
                                 $perfiles[] = [ 'id_opcion_menu'=>$guardado['idResultado'],
                                                 'id_perfil'=>$idPerfil,
                                                 'id_opcion_menu_perfil'=>'null'
@@ -247,9 +266,9 @@ class MenusController extends Controller {
 
     function eliminarOpcion(){
         
-        if(isset($_GET['menu']) and isset($_GET['opcion'])){
-            $idmenu = $this->getEntero($_GET['menu']);
-            $idOpcion = $this->getEntero($_GET['opcion']);
+        if($this->get('menu') and $this->get('opcion')){
+            $idmenu = $this->getEntero($this->get('menu'));
+            $idOpcion = $this->getEntero($this->get('opcion'));
             $Opcion = new OpcionMenu($idOpcion);
             $Opcion->eliminarOpcion();
             Session::set('__idVista','opciones');
@@ -276,15 +295,15 @@ class MenusController extends Controller {
                 join s_estatus c on (a.id_estatus=c.id_estatus) 
                 where a.id_menu=$this->id_menu";
         $urlForm = $this->url."procesar-opciones/menu/".$idMenu."/";
-        if(isset($_GET['padre']) and $this->getEntero($_GET['padre'])){
+        if($this->getEntero($this->get('padre'))){
             
-            $query.=" and padre=".$_GET['padre']."";
+            $query.=" and padre=".$this->get('padre')."";
             $omObject= new OpcionMenu();
             $opcionesMenu = $omObject->getOpcionesByMenu($idMenu);
             $arbolObject = new Arbol($opcionesMenu);
             
             $arbolObject->estructurarArbolById('id_opcion_menu'); 
-            $arbol = $arbolObject->obtenerArbol($_GET['padre']);
+            $arbol = $arbolObject->obtenerArbol($this->get('padre'));
             $dataBC = array();
             $dataBC['selector']="a";
             $dataBC[0]['nombreLink']="Categorias";
@@ -318,8 +337,8 @@ class MenusController extends Controller {
                                                                                 ),
                                                             'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-plus'))))),
                                     );
-        if(isset($_GET['padre']) and $this->getEntero($_GET['padre']))
-            $urlForm = $urlForm."padre/".$_GET['padre'];          
+        if($this->getEntero($this->get('padre')))
+            $urlForm = $urlForm."padre/".$this->get('padre');          
         $vista ->acciones=array('Nuevo'=>array('href'=>$urlForm,'class'=>'btn'),
                                 'Modificar'=>array('href'=>$urlForm,
                                                     'data-jvista'=>'seleccion','class'=>'btn',
