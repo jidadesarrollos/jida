@@ -71,6 +71,12 @@ if(!defined('PLURAL_CONSONANTE')){
     define('PLURAL_CONSONANTE','es');
 }
 
+if(!defined('FECHA_CREACION')){
+    define('FECHA_CREACION',TRUE);
+}
+if(!defined('FECHA_MODIFICACION')){
+    define('FECHA_MODIFICACION',TRUE);
+}
 
 #===============================================================================
 # Constantes DE URLs y Directorios del Framework
