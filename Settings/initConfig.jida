@@ -30,3 +30,10 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS')){
 
 define ('meta_descripcion','Electron C.A Tienda Electronica');
 define ('titulo_sistema','Jida');
+
+if(!defined('FECHA_CREACION')){
+    define('FECHA_CREACION',TRUE);
+}
+if(!defined('FECHA_MODIFICACION')){
+    define('FECHA_MODIFICACION',TRUE);
+}

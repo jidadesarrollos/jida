@@ -19,8 +19,8 @@ class DataModel{
      * @var $prefijoBD
      */
     protected $prefijoBD=PREFIJO_TABLA;
-    protected $fecha_creacion;
-    protected $fecha_modificacion;
+    protected $fecha_creacion=FECHA_CREACION;
+    protected $fecha_modificacion=FECHA_MODIFICACION;
     
     /**
      *@var int $nivelORM Define el nivel de navegación del ORM
