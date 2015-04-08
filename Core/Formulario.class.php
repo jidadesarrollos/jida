@@ -402,7 +402,7 @@ class Formulario extends DBContainer {
             
         }
         $query = "select * from $this->nombreTabla where $this->campoBusquedaFormulario in ($campos)";
-        $formularios = $this->bd->obtenerDataCompleta( $this->bd->ejecutarQuery ( $query ) );
+        $formularios = $this->bd->obtenerDataCompleta( $query );
         $this->totalForms = $this->bd->totalRegistros;
         if($this->totalForms<1){
             throw new Exception("No se han obtenido formularios de la consulta <br/> $query", 1);
