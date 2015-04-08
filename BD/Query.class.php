@@ -22,6 +22,7 @@ class Query{
     var $rango;
     var $query;
     var $manejadorBD;
+	var $configuracionBD='default';
     var $bd;
     /**
      * Permite identificar si la consulta contiene una clausula where;
@@ -51,8 +52,8 @@ class Query{
         $this->manejadorBD = manejadorBD;
         switch ($this->manejadorBD) {
             case 'PSQL' :
-                include_once 'Psql.class.php';
-                $this->bd = new PSQLConexion ($this->configuracionBD);
+                
+                $this->bd = new Psql ($this->configuracionBD);
                 break;
             case 'MySQL' :
                 $this->bd = new Mysql ();

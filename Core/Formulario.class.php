@@ -777,6 +777,7 @@ class Formulario extends DBContainer {
                             );
                 $this->queryDatosUpdate=$query;
         }
+		
         if($multiQuery===TRUE){
             $result = $this->bd->ejecutarQuery($query,true);
             $data = $this->bd->obtenerDataMultiQuery();

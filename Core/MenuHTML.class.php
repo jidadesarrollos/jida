@@ -173,7 +173,7 @@ class MenuHTML extends DBContainer{
                         $icono = Selector::crear("span",array('class'=>$opcion['icono']));
                     }
                 endif;
-                if($opcion['hijo']==1){
+                if($opcion['hijo']==1 or $opcion['hijo']!='f'){
                     $atributos = array_merge($atributos,$this->atributosLIParent);
                     
                     $submenu=""; 

@@ -10,7 +10,7 @@
  * @version     0.1 - 09/09/2013
  *
  */
-class PSQLConexion extends ConexionBD {
+class Psql extends ConexionBD {
     public $ejecucionQuery = TRUE;
     /**
      * 
@@ -68,9 +68,12 @@ class PSQLConexion extends ConexionBD {
      * @return int id conexion
      */
     public function establecerConexion() {
+    	
         $stringConexion = "host=$this->servidor port=$this->puerto user=$this->usuario password=$this->clave dbname=$this->bd";         
-        $this->conexionID = @pg_connect ( $stringConexion );
-            
+        #Debug::mostrarArray($stringConexion,FALSE);
+		#Debug::mostrarArray(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,3),false);
+        $this->conexionID = pg_connect ( $stringConexion );
+		
         if (! $this->conexionID) {
             throw new Exception ( "No se realiza la conexion a base de datos", 10 );
         }
@@ -215,13 +218,15 @@ class PSQLConexion extends ConexionBD {
             $this->query = $query;
         }
         
-        $this->query =$this->query;
+        ;
         // Establece la conexion solo si no existe transaccion
         if (! $this->enTransaccion) {
+        	#echo "ejecutarQuery<br>".$this->query;
+			#Debug::mostrarArray($this,FALSE);
             $this->con = $this->establecerConexion ();
+			#echo "<hr><hr>";Debug::mostrarArray($this->con,FALSE);echo "<hr><hr>";
         }
-        
-        $this->result = @pg_query ( $this->conexionID, $this->query );
+		$this->result = pg_query ( $this->conexionID, $this->query );
         
         if (! $this->result) {
             $error = "No se pudo ejecutar la consulta : <br>
@@ -237,7 +242,7 @@ class PSQLConexion extends ConexionBD {
             $this->errorTransaccion = $this->errorTransaccion + 1;
         } else {
             
-            $this->totalRegistros = @pg_num_rows ( $this->result );
+            $this->totalRegistros = pg_num_rows ( $this->result );
         }
         
         //Cierra la Conexion
@@ -246,6 +251,7 @@ class PSQLConexion extends ConexionBD {
             $this->cerrarConexion($this->con);
         }
         $this->ejecucionQuery =(!$this->result)?FALSE:TRUE;
+
         return $this->result;
         
         
@@ -266,17 +272,15 @@ class PSQLConexion extends ConexionBD {
         $this->ejecutarQuery ( $query );
         $result = $this->result;
         $data = array();
-        
-        while($row = $this->obtenerArrayAsociativo($result,$mayus)){
+		
+        while($row = $this->obtenerArrayAsociativo($result)){
           if(!empty($key))
-                $data[$row[$key]]=String::codificarArrayToHTML($data);
+                $data[$row[$key]]=String::codificarArrayToHTML($row);
             else {
-                $data[]=String::codificarArrayToHTML($data);
-            }
-            
-            
+                $data[]=String::codificarArrayToHTML($row);
+            }            
         }
-    
+		
         $this->query = ($query == "") ? $this->query : $query;
         
         return $data;
@@ -324,7 +328,7 @@ class PSQLConexion extends ConexionBD {
         }
         if($this->result){
             
-            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ));
+            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ));	
             return $arr;
         }else{
             return False;
@@ -338,6 +342,7 @@ class PSQLConexion extends ConexionBD {
      * @return boolean true
      */
     public function comenzarTransaccion() {
+    	echo "<hr>transaccion<hr>";
         $this->establecerConexion ();
         $this->enTransaccion = true;
         $this->ejecutarQuery ( "BEGIN" );
@@ -426,6 +431,7 @@ class PSQLConexion extends ConexionBD {
      * @return int Numero de Columna
      */
     public function totalField($q) {
+    	if(empty($q)) $q = $this->result;
         $total = pg_num_fields($q);
         return $total;
     }
@@ -458,4 +464,13 @@ class PSQLConexion extends ConexionBD {
         }
         return $tablasBD;
     }
+	
+	function __get($propiedad){
+        if(property_exists($this, $propiedad)){
+            return $this->$propiedad;
+        }else{
+            return false;
+        }
+    }
+	
 }

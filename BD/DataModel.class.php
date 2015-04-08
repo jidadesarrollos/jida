@@ -330,11 +330,11 @@ class DataModel{
         $this->manejadorBD = manejadorBD;
         switch ($this->manejadorBD) {
             case 'PSQL' :
-                include_once 'Psql.class.php';
-                $this->bd = new PSQLConexion ($this->configuracionBD);
+                #include_once 'Psql.class.php';
+                $this->bd = new Psql ($this->configuracionBD);
                 break;
             case 'MySQL' :
-                // include_once 'Mysql.class.php';
+                #include_once 'Mysql.class.php';
                 $this->bd = new Mysql();
                 break;
         }
