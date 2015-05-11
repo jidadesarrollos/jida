@@ -170,12 +170,9 @@ class DataModel{
                  $this->nivelActualORM = func_get_arg(1)+1;
             }
         }
-;
         //Se obtienen propiedades publicas
         $this->obtenerPropiedadesObjeto();
         //se obtienen propiedades de relacion de pertenencia
-                
-        $this->identificarObjetosRelacion();
         
         #$this->validarRelaciones();
         if($id){
@@ -183,6 +180,8 @@ class DataModel{
             $this->instanciarObjeto($id);
                
         }
+                
+        $this->identificarObjetosRelacion();
         
         $pk =& $this->pk;
         
@@ -214,7 +213,7 @@ class DataModel{
                 ->fila();
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
-        
+           
         
         return $this;
     }//fin función inicializaarObjeto
@@ -269,8 +268,19 @@ class DataModel{
                     if($propiedad!=$this->_clase and class_exists($objeto)){
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado 
                         //ninguna relacion del objeto relacionado
+                        $obj = new $objeto(null,2);
+                        $pk = $this->pk;
+                        if(!empty($this->$pk)){
+                            
+                            $obj->obtenerBy($this->$prop,$prop);
+                            $this->$objeto = $obj;
+                        }else{
+                            $this->$objeto = new $objeto(null,2); 
+                        }
+                        $this->pertenece[$objeto]=$this->$objeto;    
                         
-                        $this->pertenece[] = new $objeto(null,2); 
+                        
+                         
                     }
                         //$this->propiedadesObjetos[$prop]=new $objeto(); 
                 }
@@ -709,7 +719,7 @@ class DataModel{
                 $this->valoresIniciales = $data;
                 $this->establecerAtributos($data,$this->_clase);
                 
-                return $data;    
+                return $this;    
             }else{
                 return false;
             }

@@ -470,16 +470,15 @@ class CampoHTML extends DBContainer {
                         
                     #$this->valueUpdate[$this->name]==(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
                     if ($this->valueUpdate[0][$this->name] == $valor){
-                        $check = "checked=\"checked\"";
+                        $check = "checked=\"checked\" ";
                     }
                     
                 }else{
                  #  throw new Exception("No se encuentra definido un valor update del formulario", 1);
                     
                 }
-            }elseif($i==0){
-               #     $check = "checked=\"checked\"";
             }
+          
             // ". trim ( $this->atributosAdicionales ) ."
             $data = "";
             
@@ -490,7 +489,7 @@ class CampoHTML extends DBContainer {
                     $data.="$key='$value'";
                     ++$i;
                 }
-            } 
+            } if($i==0) $check.=" $this->atributosAdicionales ";
             $this->control .="\n\t\t\t<label class=\"radio-inline\">";
             $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad\" $data value=\"$valor\" $check>$dato";
             $this->control .="\n\t\t\t</label>";
@@ -522,10 +521,10 @@ class CampoHTML extends DBContainer {
             }
             if($i==0){
                 $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
-                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."\"><label for=\"".$this->name."\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."\"  $this->atributosAdicionales  ><label for=\"".$this->name."\" >$dato\n\t\t\t\t</label>\n\t\t\t</div>";
             }else{
                 $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
-                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."-$i\"><label for=\"".$this->name."-$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."-$i\" ><label for=\"".$this->name."-$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
             }
             
             ++$i;
