@@ -19,8 +19,8 @@ class DataModel{
      * @var $prefijoBD
      */
     protected $prefijoBD=PREFIJO_TABLA;
-    protected $fecha_creacion;
-    protected $fecha_modificacion;
+    protected $fecha_creacion=FECHA_CREACION;
+    protected $fecha_modificacion=FECHA_MODIFICACION;
     
     /**
      *@var int $nivelORM Define el nivel de navegación del ORM
@@ -340,11 +340,11 @@ class DataModel{
         $this->manejadorBD = manejadorBD;
         switch ($this->manejadorBD) {
             case 'PSQL' :
-                include_once 'Psql.class.php';
-                $this->bd = new PSQLConexion ($this->configuracionBD);
+                #include_once 'Psql.class.php';
+                $this->bd = new Psql ($this->configuracionBD);
                 break;
             case 'MySQL' :
-                // include_once 'Mysql.class.php';
+                #include_once 'Mysql.class.php';
                 $this->bd = new Mysql();
                 break;
         }

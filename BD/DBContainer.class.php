@@ -166,7 +166,7 @@ class DBContainer {
         switch ($this->manejadorBD) {
             case 'PSQL' :
                 include_once 'Psql.class.php';
-                $this->bd = new PSQLConexion ($this->configuracionBD);
+                $this->bd = new Psql ($this->configuracionBD);
                 break;
             case 'MySQL' :
                 // include_once 'Mysql.class.php';

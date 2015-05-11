@@ -77,7 +77,7 @@ class Menu extends DBContainer {
      */
 	private function obtenerMenu(){
 	    $query = "select * from s_menus where $this->clavePrimaria = $this->id_menu";
-        
+        Debug::mostrarArray($query);
         $result = $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($query));
         if(count($result)>0){
             $this->establecerAtributos($result, __CLASS__);
@@ -98,7 +98,7 @@ class Menu extends DBContainer {
 	
     
     private function obtenerMenuByNombre($nombre){
-        $query = "select * from s_menus where nombre_menu=\"$nombre\"";
+        $query = "select * from s_menus where nombre_menu='$nombre'";
         
         $result = $this->bd->ejecutarQuery($query);
         

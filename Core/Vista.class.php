@@ -523,7 +523,8 @@ class Vista extends DBContainer{
     private function obtenerTitulos() { 
         $i=0;
         $titulos=array();
-        while($i< $this->bd->totalField($this->resultQuery)){
+
+        while($i< $this->bd->totalField($this->bd->result)){
             if($i==0 and $this->controlFila==TRUE){
                 if($this->tipoControl==2){
                     
@@ -540,7 +541,7 @@ class Vista extends DBContainer{
             }else{
                 
                 $titulos[$i]=
-                $this->bd->obtenerNombreCampo($this->resultQuery, $i);
+                $this->bd->obtenerNombreCampo($this->bd->result, $i);
             }//fin if
             $i++;
         }

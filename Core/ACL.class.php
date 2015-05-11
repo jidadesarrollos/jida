@@ -76,7 +76,7 @@ class ACL extends DBContainer{
             
         }
         
-        $query.=") group by componente;";
+        $query.=") group by componente, id_componente;";
         
         
         $result = $this->bd->ejecutarQuery($query);
@@ -107,7 +107,7 @@ class ACL extends DBContainer{
      * @access private 
      */
     private function obtenerAccesoObjetos(){
-        Session::destroy('acl');
+        if(ENTORNO_APP=='dev')	Session::destroy('acl');
 
         if(!isset($_SESSION['acl'])){
                     
@@ -124,13 +124,11 @@ class ACL extends DBContainer{
                                 implode(",",array_keys($this->componentes)),
                                 $perfiles
                                 );
-            
+
             $objetos = $this->bd->obtenerDataCompleta($query);
             $accesoObjetos=array();
             $accesoMetodos = $this->obtenerAccesoMetodos();
-     
             foreach($objetos as $key =>$dataObjeto){
-                
                 $componente = $this->componentes[$dataObjeto['id_componente']]['componente'];
                 $perfil = $dataObjeto['clave_perfil'];
                 
@@ -150,7 +148,8 @@ class ACL extends DBContainer{
             #Debug::mostrarArray($this->componentes);
            
             foreach($accesoMetodos as $key=>$dataMetodo){
-                    #Debug::string("pasa");
+        			#Debug::string('im here');
+                    #Debug::mostrarArray($dataMetodo);
                     $componente = $dataMetodo['componente'];
                     $soloElMetodo=false;
                      if($dataMetodo['loggin']==0){
