@@ -173,9 +173,8 @@ class MenuHTML extends DBContainer{
                         $icono = Selector::crear("span",array('class'=>$opcion['icono']));
                     }
                 endif;
-                if($opcion['hijo']==1 or $opcion['hijo']!='f'){
+                if($opcion['hijo']==1 or $opcion['hijo']=='t'){
                     $atributos = array_merge($atributos,$this->atributosLIParent);
-                    
                     $submenu=""; 
                     $submenu = $this->armarMenuRecursivoHijos($opciones,$config,$opcion['id_opcion_menu']);
                     if($submenu['open']===TRUE){
@@ -284,6 +283,3 @@ class MenuHTML extends DBContainer{
         return array('html'=>$submenu,'open'=>$ulOpen);
     }
 }
-
-
-?>
