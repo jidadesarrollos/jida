@@ -274,7 +274,13 @@ class CampoHTML extends DBContainer {
             default :
                 $this->control = "<input type=\"$this->type\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
                 $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
-                $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
+                
+                
+                if(is_array($this->value)){
+                    $this->control .= ($this->value != "") ? " value=\"".$this->value[0]."\" " : "";    
+                }else{
+                    $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
+                }
                 $this->control .= ($this->maxlength != "") ? " maxlength=\"$this->maxlength\" " : "";
                 $this->control .= ($this->size != "") ? "size=\"$this->size\"" : "";                
                 $this->control .= ">";
