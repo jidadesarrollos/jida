@@ -10,17 +10,6 @@
 class Session {
 	
 	/**
-	 * 
-	 */
-	var $something;
-	
-	/**
-	 * 
-	 */
-	function __construct(){
-		
-	}//final constructor
-	/**
      * Inicia una nueva sesión.
      * @method iniciarSession
      * @access public
@@ -166,5 +155,3 @@ class Session {
         
     }
 } // END
-
-?>

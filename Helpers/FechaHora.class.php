@@ -35,6 +35,15 @@ class FechaHora{
         $dia = date('w');
 		return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
 	}
+    /**
+     * Retorna el nombre del día solicitado
+     * @method obtenerDia
+     * @param $dia int 
+     */
+    static function nombreDia($dia="",$lang="es"){
+        if(empty($dia))  $dia = date('w');
+        return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
+    }
 	
     static function diasSemana($lang='es'){
         return Arrays::obtenerKey('es', self::$diasSemana);

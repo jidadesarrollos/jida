@@ -481,6 +481,7 @@ class DataModel{
             $obj = new $class(null,1);
             if(method_exists($obj,'consulta')){
                 $pk = $this->pk;
+                $obj->$pk = $this->$pk;
                 return $obj->consulta($campos)->filtro([$this->pk=>$this->$pk]);
             }
         }else{
@@ -995,4 +996,5 @@ class DataModel{
     function getResult(){
         return $this->resultBD;
     }
+    
 }//fin clase;

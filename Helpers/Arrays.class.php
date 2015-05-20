@@ -176,7 +176,4 @@ class Arrays {
         
     }
     
-} // END
-
-
-?>
+}
