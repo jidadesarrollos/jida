@@ -124,6 +124,10 @@ class Formulario extends DBContainer {
     private $idTagForm;
     private $metodo = "POST";
     /**
+     * @var array $dataUpdate MAtriz que registra los datos obtenidos de base de datos en un formulario update
+     */
+    private $dataUpdate =[];
+    /**
      * Define una consulta externa utilizar para un campo de seleccion determinado, 
      * el query debe ser registrado en una posición de arreglo donde el key tenga 
      * el nombre del campo; El
@@ -828,8 +832,9 @@ class Formulario extends DBContainer {
             }
         }
         
+        $this->dataUpdate=$dataCampos;
         $dataCampos=array_merge($dataCampos,$this->dataPost);
-        $this->valoresUpdate=$dataCampos;
+        
         return $dataCampos;
     }
     
@@ -1115,6 +1120,14 @@ class Formulario extends DBContainer {
         if($redirect){
             redireccionar($redirect);
         }
+    }
+    /**
+     * Retorna un arreglo con la información obtenida en un formulario tipo update
+     * 
+     * @method getDataUpdate
+     */
+    function getDataUpdate(){
+        return $this->dataUpdate;
     }
 } // fin clase formulario
 

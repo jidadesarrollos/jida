@@ -173,8 +173,6 @@ class DataModel{
         //Se obtienen propiedades publicas
         $this->obtenerPropiedadesObjeto();
         //se obtienen propiedades de relacion de pertenencia
-        
-        #$this->validarRelaciones();
         if($id){
             
             $this->instanciarObjeto($id);
@@ -277,10 +275,8 @@ class DataModel{
                         }else{
                             $this->$objeto = new $objeto(null,2); 
                         }
-                        $this->pertenece[$objeto]=$this->$objeto;    
-                        
-                        
-                         
+                        $this->pertenece[$objeto]=$this->$objeto;
+                            
                     }
                         //$this->propiedadesObjetos[$prop]=new $objeto(); 
                 }
@@ -386,10 +382,27 @@ class DataModel{
      * Agrega la union de campos al query
      * @method join
      */
-    function join($tablaJoin){
+    private function join($tablaJoin){
         
         
     }
+    /**
+     * Emula el in de base de datos
+     * @method in
+     * @var array $in Parametros para filtro
+     * @var string $clave [opcional] Campo para realizar clausula, si se omite
+     * será tomada la clave primaria
+     * @return object $this Objeto instanciado
+     */
+    function in($filtro,$clave=""){
+        $this->where();
+        if(is_array($filtro)){
+            if(empty($clave)) $clave = $this->pk;
+            $this->query.=$clave  ." in (". implode(",", $filtro) .")";
+        }
+        return $this;
+    }
+    
      /**
      * Funcion para obtener datos de una tabla
      * @method consulta
@@ -475,7 +488,7 @@ class DataModel{
     function __call($rel,$campos){
         
         $class = ucfirst($this->_obtenerSingular($rel));
-        
+     
         if(in_array($class, $this->tieneMuchos) or in_array($class, $this->tieneUno)){
             
             $obj = new $class(null,1);
@@ -485,7 +498,7 @@ class DataModel{
                 return $obj->consulta($campos)->filtro([$this->pk=>$this->$pk]);
             }
         }else{
-            //Debug::mostrarArray($this->tieneMuchos);
+            
             throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
             
         }
@@ -707,8 +720,7 @@ class DataModel{
      * @param mixed $valor Patrón de busqueda
      * @param string $propiedad de busqueda
      */
-    function obtenerBy($valor,$property="")
-    {
+    function obtenerBy($valor,$property=""){
         
         if(empty($property)) $property=$this->pk;
          
