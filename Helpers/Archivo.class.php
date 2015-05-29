@@ -183,7 +183,11 @@ class Archivo{
                     'nombre'=>$nombreArchivo,
                     'extension'=>$this->extension[$i]
                 ];
+                
                 if(!move_uploaded_file($this->tmp_name[$i],$destino)){
+                    if(!is_writable($directorio)){
+                    throw new Exception("No tiene permisos en la carpeta $destino", 900);    
+                    }else
                     throw new Exception("No se pudo mover el archivo cargado $destino", 900);
                 
                 }
@@ -198,8 +202,12 @@ class Archivo{
                 'nombre'=>$nombreArchivo,
                 'extension'=>$this->extension[0]
             ];  
-            if(!move_uploaded_file($this->tmp_name[0],$destino))
-                throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+            if(!move_uploaded_file($this->tmp_name[0],$destino)){
+                if(!is_writable($directorio)){
+                    throw new Exception("No tiene permisos en la carpeta $destino", 900);    
+                }else
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+            }
         }  
         return $this;
     }

@@ -432,6 +432,11 @@ class Mysql extends ConexionBD{
         return $arrayResult;
    }
     
+    
+    
+    function limit($limit,$offset){
+        return $this->addLimit($limit, $offset);
+    }
     function __get($propiedad){
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
