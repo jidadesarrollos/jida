@@ -172,21 +172,46 @@ class DataModel{
         }
         //Se obtienen propiedades publicas
         $this->obtenerPropiedadesObjeto();
+        
         //se obtienen propiedades de relacion de pertenencia
         if($id){
             
             $this->instanciarObjeto($id);
                
         }
-                
-        $this->identificarObjetosRelacion();
-        
+        //$this->identificarObjetosRelacion();
         $pk =& $this->pk;
         
         
         //$this->validarRelaciones();
         
         
+        
+    }
+    /**
+     * 
+     */
+    private function obtenerDataRelaciones(){
+        if($this->nivelActualORM<$this->nivelORM){
+            Debug::mostrarArray($this->tieneMuchos,false);
+            $datas = "";
+            $pk = $this->pk;
+            foreach ($this->tieneMuchos as $key => $relacion) {
+                $clase = new $relacion();
+                
+                $consulta = $clase  ->consulta()
+                                    ->filtro([$this->pk=>$this->$pk])
+                                    ->limit(0,ORM_REGISTROS_RELACION)
+                                    ->getQuery();
+                
+                $datas.="$consulta; <br/>";
+            }
+            
+            $data = $this->bd->ejecutarQuery($datas,2);
+            $result = $this->bd->obtenerDataMultiQuery($data);
+            Debug::mostrarArray($result);
+               
+        }
         
     }
     /**
@@ -211,7 +236,7 @@ class DataModel{
                 ->fila();
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
-           
+        #$this->obtenerDataRelaciones();   
         
         return $this;
     }//fin función inicializaarObjeto
@@ -403,12 +428,31 @@ class DataModel{
         return $this;
     }
     
+    function consulta(){
+        if(empty($campos)){
+            $campos =  array_keys($this->propiedades);
+        }
+         if(is_array($campos)){
+            array_walk($campos,function(&$key,$valor,$tabla){
+                             $key=$tabla.".".$key;
+            },$this->tablaBD);
+        
+            $campos = implode(", ",$campos);
+        }
+        
+        $this->query="SELECT $campos ";
+        
+        $this->query.=" from $this->tablaBD ";
+        $this->usoWhere=FALSE;
+        return $this;
+    }
+    
      /**
      * Funcion para obtener datos de una tabla
      * @method consulta
      * 
      */
-    function consulta($campos=""){
+    function consultaJoins($campos=""){
         $banderaJoin = FALSE;
         $join="";
         if(empty($campos)){
@@ -572,6 +616,7 @@ class DataModel{
        if(is_array($arrayFiltro)){
            $i=0;
            foreach ($arrayFiltro as $key => $value) {
+               
                if($i>0)
                     $this->query.=" and ";
            $this->query.=" $this->tablaBD.$key='$value'";
@@ -655,6 +700,13 @@ class DataModel{
      */
     function debug($exit=TRUE){
         return Debug::string($this->query,$exit);
+    }
+    /**
+     * Retorna el query armado
+     * @method getQuery
+     */
+    protected function getQuery(){
+        return $this->query;
     }
     /**
      * Permite registrar el objeto actual
@@ -928,6 +980,11 @@ class DataModel{
         
     }
    
+    private function limit(){
+        
+        $this->query .= $this->bd->addLimit(0, ORM_REGISTROS_RELACION);
+        return $this;
+    }
     /**
      * Valida las restricciones unicas creadas por medio del array unico antes
      * de realizar una inserción.
