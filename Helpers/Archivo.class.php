@@ -72,7 +72,7 @@ class Archivo{
             $this->size = $file['size'];
             $this->obtenerExtension();
             $this->totalArchivosCargados = count($file['tmp_name']);
-            $this->validarCarga();    
+            $this->validarCarga();
             
         }
     }//fin checkCarga
@@ -125,7 +125,7 @@ class Archivo{
             
         }else{
           $explode = explode("/",$this->type);
-		  $this->extension = $explode[1];
+		  $this->extension[0] = $explode[1];
         }
 		
 	}
@@ -165,7 +165,8 @@ class Archivo{
      * Mueve los archivos cargados por $_FILES a ur directorio especificado
      * @method moverArchivosCargados
      * @param string $directorio Directorios al cual serán movidos
-     * @param $nombreAleatorio Indica si el nombre del archivo será aleatorio, sl es pasado false se colocara el mismo nombre que contenga el archivo
+     * @param $nombreAleatorio Indica si el nombre del archivo será aleatorio, sl es pasado false se colocara 
+     * el mismo nombre que contenga el archivo
      * o se validara el array NombresArchivosCargados, si es pasado true se colocará un nombre aleatorio
      * @param string $prefijo Si nombreAleatorio es pasado en true, puede definirse un prefijo
      * para agregar antes de la parte aleatoria del nombre del archivo
@@ -173,7 +174,8 @@ class Archivo{
      */
     function moverArchivosCargados($directorio,$nombreAleatorio=FALSE,$prefijo=""){
         $bandera=TRUE;
-        if($this->totalArchivosCargados>1){
+        
+        if($this->totalArchivosCargados>1 or is_array($this->tmp_name)){
             for($i=0;$i<$this->totalArchivosCargados;++$i){
                 $nombreArchivo = $this->validarNombreArchivoCargado($i, $nombreAleatorio,$prefijo);
                 $destino =$directorio."/". $nombreArchivo.".".$this->extension[$i];
@@ -186,9 +188,9 @@ class Archivo{
                 
                 if(!move_uploaded_file($this->tmp_name[$i],$destino)){
                     if(!is_writable($directorio)){
-                    throw new Exception("No tiene permisos en la carpeta $destino", 900);    
+                        throw new Exception("No tiene permisos en la carpeta $directorio", 900);    
                     }else
-                    throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 902);
                 
                 }
                  
@@ -202,11 +204,15 @@ class Archivo{
                 'nombre'=>$nombreArchivo,
                 'extension'=>$this->extension[0]
             ];  
-            if(!move_uploaded_file($this->tmp_name[0],$destino)){
+            
+            
+            if(!move_uploaded_file($this->tmp_name,$destino)){
+                if(!(Directorios::validar($directorio))) 
+                    throw new Exception("No existe el directorio $directorio", 901);
                 if(!is_writable($directorio)){
-                    throw new Exception("No tiene permisos en la carpeta $destino", 900);    
+                    throw new Exception("No tiene permisos en la carpeta $directorio", 900);    
                 }else
-                    throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 902);
             }
         }  
         return $this;
