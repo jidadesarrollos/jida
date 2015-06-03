@@ -140,7 +140,9 @@ class DataModel{
      * @var object Reflection
      */
     private $reflector;
-     
+    
+    
+    
     
     /**
      * Funcion constructora
@@ -179,7 +181,7 @@ class DataModel{
             $this->instanciarObjeto($id);
                
         }
-        //$this->identificarObjetosRelacion();
+        $this->identificarObjetosRelacion();
         $pk =& $this->pk;
         
         
@@ -406,8 +408,18 @@ class DataModel{
     /**
      * Agrega la union de campos al query
      * @method join
+     * @param string $tablaJoin tabla o modelo con el que se desea unir
+     * @param mixed $campos Campo o Campos a solicitar de la tabla join
      */
-    private function join($tablaJoin){
+    private function join($tablaJoin,$campos="",$tipoJoin=""){
+        if(class_exists($tablaJoin)){
+            $clase = new $tablaJoin();
+            $tabla = $tablaJoin->__get('tablaBD');
+        }else{
+            $tabla = $tablaJoin;
+        }
+        $this->query.=" ".$tipoJoin." JOIN ".$tablaJoin." on ";
+        
         
         
     }
@@ -423,12 +435,13 @@ class DataModel{
         $this->where();
         if(is_array($filtro)){
             if(empty($clave)) $clave = $this->pk;
-            $this->query.=$clave  ." in (". implode(",", $filtro) .")";
+            $this->query.=$this->tablaBD.".".$clave  ." in (". implode(",", $filtro) .")";
         }
+        
         return $this;
     }
     
-    function consulta(){
+    function consultaSola(){
         if(empty($campos)){
             $campos =  array_keys($this->propiedades);
         }
@@ -452,7 +465,7 @@ class DataModel{
      * @method consulta
      * 
      */
-    function consultaJoins($campos=""){
+    function consulta($campos=""){
         $banderaJoin = FALSE;
         $join="";
         if(empty($campos)){
@@ -690,6 +703,10 @@ class DataModel{
         if(empty($order)) $order=$this->pk;
         return $this->select()->order($order)->obt($key);
     }
+    /**
+     * Retorna un vector asociativo de un registro obtenido de base de datos
+     * @method fila
+     */
     function fila(){
         if(!empty($this->order)) $this->query.=" ".$this->order;
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
