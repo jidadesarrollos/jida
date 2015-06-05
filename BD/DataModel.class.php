@@ -552,7 +552,7 @@ class DataModel{
             if(method_exists($obj,'consulta')){
                 $pk = $this->pk;
                 $obj->$pk = $this->$pk;
-                return $obj->consulta($campos)->filtro([$this->pk=>$this->$pk]);
+                return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
             }
         }else{
             
