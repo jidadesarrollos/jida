@@ -924,7 +924,11 @@ class DataModel{
                         }
                         break;
                     default:
-                        $valores[]="'".$this->bd->escaparString($valor)."'";
+                        if(!in_array($valor, $this->bd->getValoresReservados())){
+                                $valores[]="'".$this->bd->escaparString($valor)."'";
+                        }else {
+                            $valores[]=$valor;	       
+                        }
                         break;
                 }
             }
@@ -977,7 +981,12 @@ class DataModel{
                     break;
                 
                 default:
-                     $campoValor="'".$valor."'";
+                    if(!in_array($valor, $this->bd->getValoresReservados())){
+                            $campoValor="'".$valor."'";
+                        }else {
+                            $campoValor=$valor;         
+                        }
+                     
                     break;
             }
             

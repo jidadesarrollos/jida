@@ -239,7 +239,8 @@ class UsersController extends Controller{
      */
     function formularioLogin(){
         if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
-            $form = Session::get('FormLoggin'); 
+            $form = Session::get('FormLoggin');
+             
         }else{
             $form = new Formulario('Login',1,null,2);
             $form->tituloFormulario = "Iniciar Sesi&oacute;n";
@@ -249,6 +250,20 @@ class UsersController extends Controller{
         return $form;
     }
     
+    
+    /**
+     * Devuelve un formulario para modificar la contrasenia de un usuario
+     * @method formCambioContrasenia
+     * @return object $form Objeto Tipo Formulario
+     * @see Formulario
+     */
+    protected function formCambioContrasenia(){
+        
+        $form = new Formulario('CambioClave',1,null,2);
+        
+        return $form;
+        
+    }
     /**
      * Crea una clave aleatoria
      * @method generarContrasenia

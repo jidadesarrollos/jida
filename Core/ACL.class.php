@@ -58,6 +58,7 @@ class ACL extends DBContainer{
         
         $this->perfiles = $_SESSION['usuario']['perfiles'];
         $this->obtenerAccesoComponentes();
+        
         $this->obtenerAccesoObjetos();
     }
     /**

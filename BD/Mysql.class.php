@@ -20,6 +20,9 @@
 
 class Mysql extends ConexionBD{
     var $enTransaccion=false;
+    var $valoresReservados = [
+        'current_timestamp',
+    ];
     private $transaccionIniciada=false;
     /**
      * Contabiliza total de errores en ejecucion de una transaccion
@@ -386,16 +389,14 @@ class Mysql extends ConexionBD{
      * 
      */
     function obtenerTablasBD($esquema=""){
-       try{
+      
            $tablasBDResult = $this->ejecutarQuery("SHOW TABLES");
             $tablasBD = array();
             while($tablas = $this->obtenerArray()){
                 $tablasBD[$tablas[0]] = $tablas[0];
             }
             return $tablasBD;   
-       }catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       }
+      
         
     }
     /**
@@ -444,6 +445,11 @@ class Mysql extends ConexionBD{
             return false;
         }
     }
+    
+    function getValoresReservados(){
+        return $this->valoresReservados;
+    }
+    
 }//final clase Mysql
 
 ?>

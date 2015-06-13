@@ -93,7 +93,9 @@ class User extends DataModel{
                         ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,'validacion'=>1])
                         ->fila();
         if($this->bd->totalRegistros>0){
+            
             $this->establecerAtributos($result);
+            $this->registrarSesion();
             $this->activo=1;
             $this->salvar();
             $this->obtenerPerfiles();
