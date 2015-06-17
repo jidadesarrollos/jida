@@ -77,10 +77,11 @@ class Mysql extends ConexionBD{
      */
     function establecerConexion(){
         
-        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+        $this->mysqli = @new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
       
         if($this->mysqli->connect_error){
-            throw new Exception("No se establecio la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
+            
+            throw new Exception("No se ha establecido la conexi&oacute;n a base de datos ", 1);
             
         }else{
             return true;
