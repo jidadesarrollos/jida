@@ -20,8 +20,10 @@ class Imagen extends Archivo{
      * @param string $nombreImg Nombre de la imagen a redimensionar
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
      */
-    function redimensionar($anchoEsperado,$altoEsperado,$rutaImg,$rutaNuevaImg=""){
-        
+     
+     
+    function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
+        if(empty($rutaImg)) $rutaImg = $this->directorio;
         if(empty($nombreImg) or is_null($nombreImg)){
             $directorioImagen = $rutaImg;
         }else{
@@ -128,16 +130,18 @@ class Imagen extends Archivo{
      * @param int $h alto de la nueva imagen 
      * 
      */
-    function recortar($rutaImagen,$nuevaRuta,$alto,$ancho,$x,$y,$w,$h){
-        if(!file_exists($rutaImagen)){
+    function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
+        if(empty($rutaImagen))$rutaImagen=$this->directorio;
+        if(!file_exists($rutaImagen) or !$this->validarExistencia())
             throw new Exception("No existe la imagen requerida para recorte $rutaImagen", 2500);
-            
-        }
+        if(empty($nuevaRuta))$nuevaRuta=$rutaImagen;
+        
         $infoImagen = getimagesize($rutaImagen);
         $lienzo = $this->crearLienzo($infoImagen['mime'], $rutaImagen);
         $nuevaImg = imagecreatetruecolor($ancho,$alto);
         //imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
         imagecopyresampled($nuevaImg,$lienzo,0,0,$x,$y,$ancho,$alto,$w,$h);
+        
         if($this->exportarImagen($infoImagen['mime'], $nuevaImg, $nuevaRuta)){
             return true;
         }

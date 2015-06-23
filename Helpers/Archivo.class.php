@@ -8,6 +8,8 @@
  */
 class Archivo{
     /* Atributos para archivos cargados */
+    
+    
     /**
      * @var mixed $name String o arreglo de nombres originales de los archivos cargados
      */
@@ -52,9 +54,27 @@ class Archivo{
      * @var array $files Array $_FILES
      */
     protected $files;
+    /**
+     * Determina la existencia de un archivo
+     * @var boolean $existencia
+     */
+    protected $existencia=FALSE;
+    /**
+     * Define el directorio de ubicacion del archivo
+     */
+    protected $directorio;
     function __construct($file=""){
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
+        else {
+            Debug::string($file);
+            if(!empty($file) and self::validarExistencia($file)){
+                $this->directorio = $file;
+                $this->existencia = TRUE;
+            }else{
+                Debug::string("nothing to loose");
+            }
+        }
     }
     
     /**
@@ -256,22 +276,12 @@ class Archivo{
         return $this->archivosCargados;
     }
 
-	/**
-     * Obtiene un archivo
-     * 
-     * Usa file_get_contents para devolver el archivo como un string
-     */
-    static function obtArchivo($rutaArchivo){
-        
-        if(is_readable($rutaArchivo)){
-            
-        }else{
-            throw new Exception("La ruta del archivo no es legible : ".$rutaArchivo);
-            
-        }
-        
-    }
-    
+    function validarExistencia($file=""){
+        if(empty($file))$file=$this->directorio;
+        if(file_exists($file)){
+            return true;
+        }else return false;
+    }    
     /**
      * Crea un archivo 
      * 
@@ -314,7 +324,12 @@ class Archivo{
     		return false;
     	}
     }
-
-    
+    /**
+     * Retorna el valor de existencia de un Archivo
+     * @method existe;
+     */
+    function existe(){
+        return $this->existencia;
+    }
     
 } // END
