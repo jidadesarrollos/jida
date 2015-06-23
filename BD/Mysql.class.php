@@ -81,7 +81,7 @@ class Mysql extends ConexionBD{
       
         if($this->mysqli->connect_error){
             
-            throw new Exception("No se ha establecido la conexi&oacute;n a base de datos ", 1);
+            throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
             
         }else{
             return true;
