@@ -959,48 +959,52 @@ class DataModel{
         
     }//fin crearInsert
     private function modificar(){
-        
+     
         $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
-        
-        if($this->registroUser){
-            $idUser = Session::get('id_usuario');
-            $dataUpdate['id_usuario_modificador'] =(Session::checkLogg())?Session::get('usuario','id_usuario'):0;
-        };
-        
-        $update = "UPDATE $this->tablaBD SET ";
-        $i=0;
-        foreach ($dataUpdate as $campo => $valor) {
-            if($i>0) $update.=",";
-            switch ($valor) {
-                case '':
-                    if(!is_numeric($valor)){
-                        $campoValor="null";   
-                    }else{
-                        $campoValor=$valor;
-                    }
-                    break;
-                
-                default:
-                    if(!in_array($valor, $this->bd->getValoresReservados())){
-                            $campoValor="'".$valor."'";
-                        }else {
-                            $campoValor=$valor;         
+        if(count($dataUpdate)>0){    
+            if($this->registroUser){
+                $idUser = Session::get('id_usuario');
+                $dataUpdate['id_usuario_modificador'] =(Session::checkLogg())?Session::get('usuario','id_usuario'):0;
+            };
+            
+            $update = "UPDATE $this->tablaBD SET ";
+            $i=0;
+            foreach ($dataUpdate as $campo => $valor) {
+                if($i>0) $update.=",";
+                switch ($valor) {
+                    case '':
+                        if(!is_numeric($valor)){
+                            $campoValor="null";   
+                        }else{
+                            $campoValor=$valor;
                         }
-                     
-                    break;
+                        break;
+                    
+                    default:
+                        if(!in_array($valor, $this->bd->getValoresReservados())){
+                                $campoValor="'".$valor."'";
+                            }else {
+                                $campoValor=$valor;         
+                            }
+                         
+                        break;
+                }
+                
+                $update.=" $campo=$campoValor";
+                ++$i;
             }
             
-            $update.=" $campo=$campoValor";
-            ++$i;
-        }
-        
-        $pk = $this->pk;
-        $update.=" WHERE $this->pk=".$this->$pk;
-        
-        $this->query = $update;
-        
-        if($this->bd->ejecutarQuery($this->query)){
-            $this->resultBD->setValores($this);
+            $pk = $this->pk;
+            $update.=" WHERE $this->pk=".$this->$pk;
+            
+            $this->query = $update;
+            
+            if($this->bd->ejecutarQuery($this->query)){
+                $this->establecerAtributos($dataUpdate);
+                $this->resultBD->setValores($this);
+            }
+        }else{
+            $this->query="";
         }
         return $this->resultBD;
         
