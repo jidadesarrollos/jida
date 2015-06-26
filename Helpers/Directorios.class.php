@@ -126,6 +126,23 @@ class Directorios extends Directory{
      
         rmdir($dir);
     }
+    
+    /**
+     * Limpia un directorio
+     * 
+     * Elimina todo lo que exista dentro de un directorio
+     * @method limpiar
+     * @param url $directorio Ubicación del directorio a limpiar
+     */
+    static function limpiar($dir){
+       foreach(glob($dir . "/*") as $files){
+            if (is_dir($files)){
+                eliminarDir($files);
+            }else{
+                unlink($files);
+            }
+        }
+    }
     /**
      * Cuenta los archivos en un directorio
      * @param string $ruta Ruta del directorio
