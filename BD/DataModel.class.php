@@ -156,10 +156,10 @@ class DataModel{
         //instancia objecto reflection
         $this->reflector =new ReflectionClass(get_class($this));
         
-        if(empty($this->tablaBD)){
-            throw new Exception("Debe definir el nombre de la tabla de base de datos", 1);
-                
-        }
+        // if(empty($this->tablaBD)){
+            // throw new Exception("Debe definir el nombre de la tabla de base de datos", 1);
+//                 
+        // }
         if(empty($this->pk)){
             $this->obtenerpk();
         }

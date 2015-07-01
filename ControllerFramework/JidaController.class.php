@@ -473,12 +473,18 @@
         $metodo = $this->metodo;
         $retorno= array();
         #se instancia el controlador solicitado
-        
+        $nombreControlador = $controlador;
         $this->controladorObject = new $controlador;
+        
         
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
-        $controlador->$metodo($params);
+        if(method_exists($controlador, $metodo))
+            $controlador->$metodo($params);
+        else{
+            $controlador->controlExcepcion($params,2);
+            Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
+        }
         if($checkDirs){
             $this->checkDirectoriosView();
         }

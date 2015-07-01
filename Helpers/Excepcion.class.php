@@ -37,13 +37,7 @@ class Excepcion {
 
                             }
                             $msj.="</div>";
-                            
-                            
-                            // Arrays::mostrarArray($e->getTrace());
-                            // echo Mensajes::mensajeError($msj);exit;
                             if($type==1){
-                          
-                                #Mensajes::msjExcepcion(Mensajes::mensajeError($msj),'/excepcion/');
                                 return Mensajes::mensajeError($msj); 
                             }elseif($type==2){
                                if(!isset($_SESSION['__msjExcepcion']) or Session::get('__msjExcepcion')!=$e->getMessage()){
@@ -55,7 +49,7 @@ class Excepcion {
                                  
                                 
                             }
-                            
+                            Mensajes::mensajeError($msj);
                                                  
                             break;
                         case 'prod':

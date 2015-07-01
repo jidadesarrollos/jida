@@ -16,7 +16,7 @@
  */
  
  
-class ACL extends DBContainer{
+class ACL extends DataModel{
     
     /**
      * Arreglo que contiene los objetos y metodos a los que
@@ -45,6 +45,7 @@ class ACL extends DBContainer{
     /**
      * Funcion constructora
      */
+    protected $tablaBD = '';
     function __construct(){
         parent::__construct();
         
@@ -54,8 +55,9 @@ class ACL extends DBContainer{
             Session::set('acl_default',true);
         }
         
+        if(Session::Get('Usuario') instanceof Session::get('Usuario'))
         
-        
+            $this->perfiles = Session::get('Usuario')->perfiles;
         $this->perfiles = $_SESSION['usuario']['perfiles'];
         $this->obtenerAccesoComponentes();
         $this->obtenerAccesoObjetos();
