@@ -72,6 +72,7 @@ class DataVista{
             else 
                 $this->js[]=$dir.$js;
         }
+        return $this;
     }
     /**
      * Agrega un javascript para ser renderizado en el layout
@@ -124,7 +125,8 @@ class DataVista{
                 $this->css[]=$constante.$css;
             
             }
-        }        
+        }
+        return $this;        
     }
     /**
      * Permite definir una vista para usar fuera del ambito del controlador

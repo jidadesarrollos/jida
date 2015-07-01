@@ -60,6 +60,7 @@ class ACL extends DataModel{
             $this->perfiles = Session::get('Usuario')->perfiles;
         $this->perfiles = $_SESSION['usuario']['perfiles'];
         $this->obtenerAccesoComponentes();
+        
         $this->obtenerAccesoObjetos();
     }
     /**

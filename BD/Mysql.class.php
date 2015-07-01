@@ -20,6 +20,9 @@
 
 class Mysql extends ConexionBD{
     var $enTransaccion=false;
+    var $valoresReservados = [
+        'current_timestamp',
+    ];
     private $transaccionIniciada=false;
     /**
      * Contabiliza total de errores en ejecucion de una transaccion
@@ -74,10 +77,11 @@ class Mysql extends ConexionBD{
      */
     function establecerConexion(){
         
-        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+        $this->mysqli = @new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
       
         if($this->mysqli->connect_error){
-            throw new Exception("No se establecio la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
+            
+            throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
             
         }else{
             return true;
@@ -386,16 +390,14 @@ class Mysql extends ConexionBD{
      * 
      */
     function obtenerTablasBD($esquema=""){
-       try{
+      
            $tablasBDResult = $this->ejecutarQuery("SHOW TABLES");
             $tablasBD = array();
             while($tablas = $this->obtenerArray()){
                 $tablasBD[$tablas[0]] = $tablas[0];
             }
             return $tablasBD;   
-       }catch(Exception $e){
-           Excepcion::controlExcepcion($e);
-       }
+      
         
     }
     /**
@@ -432,6 +434,11 @@ class Mysql extends ConexionBD{
         return $arrayResult;
    }
     
+    
+    
+    function limit($limit,$offset){
+        return $this->addLimit($limit, $offset);
+    }
     function __get($propiedad){
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;
@@ -439,6 +446,11 @@ class Mysql extends ConexionBD{
             return false;
         }
     }
+    
+    function getValoresReservados(){
+        return $this->valoresReservados;
+    }
+    
 }//final clase Mysql
 
 ?>

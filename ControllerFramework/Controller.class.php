@@ -258,7 +258,7 @@ class Controller {
      * 
      */
     protected function post($param){
-        if(isset($this->post[$param]))
+        if(isset($this->post[$param]) or array_key_exists($param, $_POST))
             return $this->post[$param];
         else
             return false;

@@ -244,8 +244,10 @@ class CampoHTML extends DBContainer {
                 $data.=" $key='".$value."'";
             }
         }
-        $this->atributosAdicionales = " " . $this->attrTitle . " " . $class . " " . $data . " " . $this->attrVisibilidad . " ";
-        
+        if($this->control!=6 and $this->control!=5)
+            $this->atributosAdicionales = " " . $this->attrTitle . " " . $class . " " . $data . " " . $this->attrVisibilidad . " ";
+        else
+            $this->atributosAdicionales = " " . $this->attrTitle . " " .  $data . " " . $this->attrVisibilidad . " ";
         switch ($this->control) {
             case 3 :
                 $this->control = $this->crearTextArea ();
@@ -274,7 +276,13 @@ class CampoHTML extends DBContainer {
             default :
                 $this->control = "<input type=\"$this->type\" name=\"$this->name\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " ";
                 $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";
-                $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
+                
+                
+                if(is_array($this->value)){
+                    $this->control .= ($this->value != "") ? " value=\"".$this->value[0]."\" " : "";    
+                }else{
+                    $this->control .= ($this->value != "") ? " value=\"$this->value\" " : "";
+                }
                 $this->control .= ($this->maxlength != "") ? " maxlength=\"$this->maxlength\" " : "";
                 $this->control .= ($this->size != "") ? "size=\"$this->size\"" : "";                
                 $this->control .= ">";
@@ -459,10 +467,11 @@ class CampoHTML extends DBContainer {
     private function crearRadio() {
         $this->control = "";
         $this->armarOpciones ();
-        $this->control .= "\n\t\t<div>";
-        $i=0;
         
+        $i=0;
+        $a=0;
         foreach ( $this->opciones as $valor => $dato ) {
+            $this->control .= "\n\t\t<div class=\"radio radio-inline\">";
             $check = "";
             if ($this->typeForm == 2 ) {
                 
@@ -470,17 +479,14 @@ class CampoHTML extends DBContainer {
                         
                     #$this->valueUpdate[$this->name]==(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
                     if ($this->valueUpdate[0][$this->name] == $valor){
-                        $check = "checked=\"checked\"";
+                        $check = "checked=\"checked\" ";
                     }
                     
                 }else{
                  #  throw new Exception("No se encuentra definido un valor update del formulario", 1);
                     
                 }
-            }elseif($i==0){
-               #     $check = "checked=\"checked\"";
             }
-            // ". trim ( $this->atributosAdicionales ) ."
             $data = "";
             
             if(is_array($this->attrData) and count($this->data_atributo)>0){
@@ -490,13 +496,20 @@ class CampoHTML extends DBContainer {
                     $data.="$key='$value'";
                     ++$i;
                 }
-            } 
-            $this->control .="\n\t\t\t<label class=\"radio-inline\">";
-            $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad\" $data value=\"$valor\" $check>$dato";
+            } if($i==0) $check.=" $this->atributosAdicionales ";
+            if($a<1){
+                $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad\" $data value=\"$valor\" ".trim($check).">";
+                $this->control .="\n\t\t\t<label for=\"$this->id_propiedad\">$dato";
+            }else{
+                $this->control .="\n\t\t\t<input type=\"radio\" name=\"$this->name\" id=\"$this->id_propiedad-$a\" $data value=\"$valor\" ".trim($check).">";
+                $this->control .="\n\t\t\t<label for=\"$this->id_propiedad-$a\">$dato";
+            }
+            
             $this->control .="\n\t\t\t</label>";
-           $i++;
+            $this->control .="\n\t\t</div>";
+           $i++;++$a;
         }
-         $this->control .="\n\t\t</div>";
+         
         $this->control .= "";
         return $this->control;
     }
@@ -522,10 +535,11 @@ class CampoHTML extends DBContainer {
             }
             if($i==0){
                 $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
-                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."\"><label for=\"".$this->name."\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."\"  $this->atributosAdicionales  >
+                <label for=\"".$this->name."\" >$dato\n\t\t\t\t</label>\n\t\t\t</div>";
             }else{
                 $this->control.="\n\t\t\t<div class=\"checkbox\">\n\t\t\t\t
-                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."-$i\"><label for=\"".$this->name."-$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
+                <input type=\"checkbox\" $check name=\"$this->name[]\" value=\"$valor\" id=\"".$this->name."-$i\" ><label for=\"".$this->name."-$i\">$dato\n\t\t\t\t</label>\n\t\t\t</div>";
             }
             
             ++$i;

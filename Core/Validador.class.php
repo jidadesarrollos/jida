@@ -45,6 +45,7 @@ class Validador{
                                             "mensaje"   =>  "El formato del telefono debe ser 212 4222211"),
                     'celular'       =>array("expresion" =>  "/^(412|416|414|424|426)\d{7}$/",
                                             "mensaje"   =>  "El formato del celular debe ser 4212 4222211"),
+                                    
                     'coordenada'    =>array("expresion" =>  "/^\-?[0-9]{2}\.[0-9]{3,15}/",
                                             "mensaje"   =>  "La coordenada debe tener el siguiente formato"),
                     'contrasenia'   =>array("expresion" =>  "",
@@ -169,8 +170,8 @@ class Validador{
      */
     protected function obtenerMensajeError($validacion,$datos){
         
-        if(isset($datos['Mensaje'])){
-            $this->mensajeError = $datos['Mensaje'];
+        if(isset($datos['mensaje'])){
+            $this->mensajeError = $datos['mensaje'];
         }else{
             $this->mensajeError = "El campo ".$this->dataValidaciones[$validacion]["mensaje"];
         }

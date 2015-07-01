@@ -14,13 +14,14 @@
 class FechaHora{
     
     static $diasSemana =    [
-            0=>['en'=>'Sunday',     'es' => 'Domingo'],
+            
             1=>['en'=>'Monday',     'es' => 'Lunes'],
             2=>['en'=>'Tuesday',    'es' => 'Martes'],
             3=>['en'=>'Wednesday',  'es' => 'Miércoles'],
             4=>['en'=>'Thursday',   'es' => 'Jueves'],
             5=>['en'=>'Friday',     'es' => 'Viernes'],
-            6=>['en'=>'Saturday',   'es' => 'Sábado'] 
+            6=>['en'=>'Saturday',   'es' => 'Sábado'],
+            7=>['en'=>'Sunday',     'es' => 'Domingo'], 
           ]; 
     	
 	/**
@@ -30,11 +31,23 @@ class FechaHora{
 	 * @return string
 	 * @example Imprime Lunes
 	 */
+	 
+	 
+	
 	static function diaActual($dia="",$lang="es") {
 	    
         $dia = date('w');
 		return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
 	}
+    /**
+     * Retorna el nombre del día solicitado
+     * @method obtenerDia
+     * @param $dia int 
+     */
+    static function nombreDia($dia="",$lang="es"){
+        if(empty($dia))  $dia = date('w');
+        return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
+    }
 	
     static function diasSemana($lang='es'){
         return Arrays::obtenerKey('es', self::$diasSemana);
@@ -133,9 +146,16 @@ class FechaHora{
 	 * 
 	 * @return string
 	 */
-	static function horaFormato12() {
+	static function hora24() {
 		return date ( 'g' );
 	}
+    static function horaFormato12($hora=""){
+        
+        $periodo =(date($hora)>11)?"pm":"am";
+        $horaConFormato =date('h:i',strtotime($hora));
+        
+        return $horaConFormato." ".$periodo;
+    }
 	/**
 	 * Función que retorna los minutos.
 	 * 

@@ -37,6 +37,7 @@ class Excepcion {
 
                             }
                             $msj.="</div>";
+
                             if($type==1){
                                 return Mensajes::mensajeError($msj); 
                             }elseif($type==2){
@@ -61,10 +62,12 @@ class Excepcion {
                             break;
                     }
                 }else{
+                    Debug::string("No se encuentra definido el entorno de la aplicación",true);
                     throw new Exception("No se encuentra definido el entorno de la aplicación", 10);
                     
                 }
             }else{
+                debug("Ha ocurrido un error grave.", true);
                 throw new Exception("Ha ocurrido un error grave.", 1);
                 
             }

@@ -17,7 +17,7 @@ class Psql extends ConexionBD {
      * @var boolean
      */
     public $enTransaccion = false;
-    
+    public $valoresReservados=[];
     /**
      * Total de los Registro
      * @var int total registro
@@ -473,4 +473,9 @@ class Psql extends ConexionBD {
         }
     }
 	
+    function getValoresReservados(){
+        
+        return $this->valoresReservados;
+    }
+    
 }

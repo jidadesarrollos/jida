@@ -20,8 +20,10 @@ class Imagen extends Archivo{
      * @param string $nombreImg Nombre de la imagen a redimensionar
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
      */
-    function redimensionar($anchoEsperado,$altoEsperado,$rutaImg,$rutaNuevaImg=""){
-        
+     
+     
+    function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
+        if(empty($rutaImg)) $rutaImg = $this->directorio;
         if(empty($nombreImg) or is_null($nombreImg)){
             $directorioImagen = $rutaImg;
         }else{
@@ -118,26 +120,34 @@ class Imagen extends Archivo{
     
     /**
      * Crea una imagen recortada a partir de una imagen dada;
-     * @param string $rutaImagen Ruta de la imagen a recortar
-     * @param string $rutaNueva Ruta donde se guardará la nueva imagen
+     
      * @param int $alto Pixeles de altura de la imagen a crear
      * @param int $ancho Pixeles de largo de la imagen a crear
      * @param int $x inicio de recorte de eje x de la imagen
      * @param int $y inicio de recorte de eje y de la imagen
      * @param int $w ancho de la nueva imagen
-     * @param int $h alto de la nueva imagen 
+     * @param int $h alto de la nueva imagen
+     * @param string $rutaImagen Ruta de la imagen a recortar
+     * @param string $rutaNueva Ruta donde se guardará la nueva imagen 
      * 
      */
-    function recortar($rutaImagen,$nuevaRuta,$alto,$ancho,$x,$y,$w,$h){
-        if(!file_exists($rutaImagen)){
+    function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
+        Debug::string("$alto,$ancho,$x,$y,$w,$h");
+        if(empty($rutaImagen))$rutaImagen=$this->directorio;
+        if(!file_exists($rutaImagen) or !$this->validarExistencia())
             throw new Exception("No existe la imagen requerida para recorte $rutaImagen", 2500);
-            
-        }
+        if(empty($nuevaRuta))$nuevaRuta=$rutaImagen;
+        
         $infoImagen = getimagesize($rutaImagen);
         $lienzo = $this->crearLienzo($infoImagen['mime'], $rutaImagen);
         $nuevaImg = imagecreatetruecolor($ancho,$alto);
         //imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
+        //bool imagecopyresampled ( 
+        //resource $dst_image , resource $src_image , int $dst_x ,
+        // int $dst_y , int $src_x , int $src_y , int $dst_w , 
+        //int $dst_h , int $src_w , int $src_h )
         imagecopyresampled($nuevaImg,$lienzo,0,0,$x,$y,$ancho,$alto,$w,$h);
+        
         if($this->exportarImagen($infoImagen['mime'], $nuevaImg, $nuevaRuta)){
             return true;
         }

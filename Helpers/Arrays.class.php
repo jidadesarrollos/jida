@@ -9,6 +9,33 @@
  */
 class Arrays {
     
+    
+    /**
+     * Filtra los registros de una matriz
+     * 
+     * Filtra los registros de una matriz dada a partir de los valores
+     * de busqueda
+     * @method filtro
+     * @param array $matriz
+     * @param mixed $filtro Arreglo o matriz de valores para realizar el filtro
+     * @return array $array Nuevo Arreglo armado
+     * @example
+     * 
+     */
+    static function filtro($matriz, $filtro){
+        $numeroFiltros = count($filtro);
+        $array=[];
+        foreach ($matriz as $key => $valores) {
+            foreach ($filtro as $columna => $valor) {
+                if(array_key_exists($columna, $valores) and $valores[$columna]==$valor){
+                   $array[$key]=$valores;    
+                }
+            }
+        }
+        return $array;
+        
+        
+    }
     /**
      * Combina dos arreglos utilizando uno para la
      * estructura y otro para los valores
@@ -149,7 +176,4 @@ class Arrays {
         
     }
     
-} // END
-
-
-?>
+}

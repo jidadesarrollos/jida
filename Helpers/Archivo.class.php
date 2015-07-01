@@ -8,6 +8,8 @@
  */
 class Archivo{
     /* Atributos para archivos cargados */
+    
+    
     /**
      * @var mixed $name String o arreglo de nombres originales de los archivos cargados
      */
@@ -52,9 +54,27 @@ class Archivo{
      * @var array $files Array $_FILES
      */
     protected $files;
+    /**
+     * Determina la existencia de un archivo
+     * @var boolean $existencia
+     */
+    protected $existencia=FALSE;
+    /**
+     * Define el directorio de ubicacion del archivo
+     */
+    protected $directorio;
     function __construct($file=""){
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
+        else {
+            Debug::string($file);
+            if(!empty($file) and self::validarExistencia($file)){
+                $this->directorio = $file;
+                $this->existencia = TRUE;
+            }else{
+                Debug::string("nothing to loose");
+            }
+        }
     }
     
     /**
@@ -72,7 +92,7 @@ class Archivo{
             $this->size = $file['size'];
             $this->obtenerExtension();
             $this->totalArchivosCargados = count($file['tmp_name']);
-            $this->validarCarga();    
+            $this->validarCarga();
             
         }
     }//fin checkCarga
@@ -125,7 +145,7 @@ class Archivo{
             
         }else{
           $explode = explode("/",$this->type);
-		  $this->extension = $explode[1];
+		  $this->extension[0] = $explode[1];
         }
 		
 	}
@@ -165,7 +185,8 @@ class Archivo{
      * Mueve los archivos cargados por $_FILES a ur directorio especificado
      * @method moverArchivosCargados
      * @param string $directorio Directorios al cual serán movidos
-     * @param $nombreAleatorio Indica si el nombre del archivo será aleatorio, sl es pasado false se colocara el mismo nombre que contenga el archivo
+     * @param $nombreAleatorio Indica si el nombre del archivo será aleatorio, sl es pasado false se colocara 
+     * el mismo nombre que contenga el archivo
      * o se validara el array NombresArchivosCargados, si es pasado true se colocará un nombre aleatorio
      * @param string $prefijo Si nombreAleatorio es pasado en true, puede definirse un prefijo
      * para agregar antes de la parte aleatoria del nombre del archivo
@@ -173,7 +194,8 @@ class Archivo{
      */
     function moverArchivosCargados($directorio,$nombreAleatorio=FALSE,$prefijo=""){
         $bandera=TRUE;
-        if($this->totalArchivosCargados>1){
+        
+        if($this->totalArchivosCargados>1 or is_array($this->tmp_name)){
             for($i=0;$i<$this->totalArchivosCargados;++$i){
                 $nombreArchivo = $this->validarNombreArchivoCargado($i, $nombreAleatorio,$prefijo);
                 $destino =$directorio."/". $nombreArchivo.".".$this->extension[$i];
@@ -183,8 +205,12 @@ class Archivo{
                     'nombre'=>$nombreArchivo,
                     'extension'=>$this->extension[$i]
                 ];
+                
                 if(!move_uploaded_file($this->tmp_name[$i],$destino)){
-                    throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+                    if(!is_writable($directorio)){
+                        throw new Exception("No tiene permisos en la carpeta $directorio", 900);    
+                    }else
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 902);
                 
                 }
                  
@@ -198,8 +224,16 @@ class Archivo{
                 'nombre'=>$nombreArchivo,
                 'extension'=>$this->extension[0]
             ];  
-            if(!move_uploaded_file($this->tmp_name[0],$destino))
-                throw new Exception("No se pudo mover el archivo cargado $destino", 900);
+            
+            
+            if(!move_uploaded_file($this->tmp_name,$destino)){
+                if(!(Directorios::validar($directorio))) 
+                    throw new Exception("No existe el directorio $directorio", 901);
+                if(!is_writable($directorio)){
+                    throw new Exception("No tiene permisos en la carpeta $directorio", 900);    
+                }else
+                    throw new Exception("No se pudo mover el archivo cargado $destino", 902);
+            }
         }  
         return $this;
     }
@@ -242,22 +276,12 @@ class Archivo{
         return $this->archivosCargados;
     }
 
-	/**
-     * Obtiene un archivo
-     * 
-     * Usa file_get_contents para devolver el archivo como un string
-     */
-    static function obtArchivo($rutaArchivo){
-        
-        if(is_readable($rutaArchivo)){
-            
-        }else{
-            throw new Exception("La ruta del archivo no es legible : ".$rutaArchivo);
-            
-        }
-        
-    }
-    
+    function validarExistencia($file=""){
+        if(empty($file))$file=$this->directorio;
+        if(file_exists($file)){
+            return true;
+        }else return false;
+    }    
     /**
      * Crea un archivo 
      * 
@@ -300,7 +324,12 @@ class Archivo{
     		return false;
     	}
     }
-
-    
+    /**
+     * Retorna el valor de existencia de un Archivo
+     * @method existe;
+     */
+    function existe(){
+        return $this->existencia;
+    }
     
 } // END
