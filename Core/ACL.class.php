@@ -55,8 +55,7 @@ class ACL extends DataModel{
             Session::set('acl_default',true);
         }
         
-        if(Session::Get('Usuario') instanceof Session::get('Usuario'))
-        
+        if(Session::get('Usuario') instanceof Usuario)
             $this->perfiles = Session::get('Usuario')->perfiles;
         $this->perfiles = $_SESSION['usuario']['perfiles'];
         $this->obtenerAccesoComponentes();
