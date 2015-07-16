@@ -26,8 +26,6 @@ class ExcepcionController extends Controller{
         $this->data['msjError'] = $this->procesarError();
         
     }
-    
-
     protected function procesarError($view=""){
         
         if(!empty($view)){
@@ -53,7 +51,6 @@ class ExcepcionController extends Controller{
         //Excepcion::mailError($this->excepcion);
             
     }
-    
     private function getDetalleExcepcion(){
         switch (entorno_app) {
              case 'dev':
