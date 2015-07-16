@@ -23,7 +23,6 @@ class ExcepcionController extends Controller{
      */
     function error($e){
         $this->excepcion=$e;
-        
         $this->data['msjError'] = $this->procesarError();
         
     }
@@ -117,4 +116,7 @@ class ExcepcionController extends Controller{
     
     
 }
-?>
+
+
+
+

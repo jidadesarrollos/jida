@@ -50,6 +50,7 @@ class Excepcion {
                                  
                                 
                             }
+                            
                             Mensajes::mensajeError($msj);
                                                  
                             break;
@@ -114,4 +115,3 @@ class Excepcion {
     
 } // END
 
-?>

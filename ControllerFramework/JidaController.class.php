@@ -503,7 +503,7 @@
         else {
             $this->controlador=CONTROLADOR_EXCEPCIONES;
         }
-        $this->metodo='error';
+        $this->metodo=METODO_EXCEPCION;
         $this->checkDirectoriosView();
         $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
       
