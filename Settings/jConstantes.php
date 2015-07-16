@@ -22,7 +22,23 @@ if(!defined('titulo_sistema'))
     define ('titulo_sistema',TITULO_SISTEMA);
 if(!defined('NOMBRE_APP'))
     define('NOMBRE_APP','Aplicación de JidaFramework');
- 
+/**
+ * Nombre del controlador de las excepciones
+ * Por defecto es el ExcepcionController del Framework el cual será llamdo,
+ * si se define la constante será reemplazado el controlador e intentará
+ * ejecutarse el definido en la constante.
+ */
+if(!defined('CONTROLADOR_EXCEPCIONES'))
+    define('CONTROLADOR_EXCEPCIONES','ExcepcionController');
+/**
+ * Nombre del metodo a ejecutar en el CONTROLADOR_EXCEPCIONES
+ * al conseguir una excepción.
+ * @constant METODO_EXCEPCION
+ * 
+ */
+if(!defined('METODO_EXCEPCION'))
+    define('METODO_EXCEPCION','error');
+
 #===============================================================================
 # Constantes de entorno
 #===============================================================================
