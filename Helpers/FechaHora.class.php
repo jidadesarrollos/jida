@@ -15,13 +15,25 @@ class FechaHora{
     
     static $diasSemana =    [
             
-            1=>['en'=>'Monday',     'es' => 'Lunes'],
-            2=>['en'=>'Tuesday',    'es' => 'Martes'],
-            3=>['en'=>'Wednesday',  'es' => 'Miércoles'],
-            4=>['en'=>'Thursday',   'es' => 'Jueves'],
-            5=>['en'=>'Friday',     'es' => 'Viernes'],
-            6=>['en'=>'Saturday',   'es' => 'Sábado'],
-            7=>['en'=>'Sunday',     'es' => 'Domingo'], 
+            'en'=>[
+                 1=>'Monday',
+                 2=>'Tuesday',
+                 3=>'Wednesday',
+                 4=>'thursday',
+                 5=>'Friday',
+                 6=>'Saturday',
+                 7=>'Sunday'
+            ],
+            'es'=>[
+                1=>'Lunes',
+                2=>'Martes',
+                3=>'Miercoles',
+                4=>'Jueves',
+                5=>'Viernes',
+                6=>'Sábado',
+                7=>'Domingo',    
+            ]
+             
           ]; 
     	
 	/**
@@ -45,8 +57,9 @@ class FechaHora{
      * @param $dia int 
      */
     static function nombreDia($dia="",$lang="es"){
-        if(empty($dia))  $dia = date('w');
-        return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
+        if($dia!=0 and empty($dia))  $dia = date('w');
+        
+        return self::$diasSemana[$lang][$dia];
     }
 	
     static function diasSemana($lang='es'){

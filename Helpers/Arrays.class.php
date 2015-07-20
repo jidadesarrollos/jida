@@ -84,24 +84,12 @@ class Arrays {
      * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arregloa  buscar
      * @param array $array Arreglo multidimensional a filtrar
      */
-    static function obtenerKey($clave,$array){
+    static function obtenerKey($clave,$array,$mantenerKey=FALSE){
         $arrayResult = array();
         
         foreach ($array as $key => $fila) {
-            if(is_array($fila)){
-                if(is_array($clave)){
-                    $datos=[];
-                    foreach ($clave as $key => $value) {
-                        if(array_key_exists($value, $fila))
-                            $datos[$value]=$fila[$value];
-                    }
-                    if(!empty($datos)) $arrayResult[]=$datos;
-                }else
-                if(array_key_exists($clave, $fila)){
-                      $arrayResult[]=$fila[$clave];
-                }
-                
-            }elseif(is_object($fila)){
+            
+            if(is_object($fila)){
                 if(is_array($clave)){
                     $datos=[];
                     foreach ($clave as $key => $value) {
@@ -113,9 +101,40 @@ class Arrays {
                 if(property_exists($fila, $clave) and !empty($fila->$clave)){
                     $arrayResult[]=$fila->$clave;
                 }
+            }else
+            if(!is_array($fila)){
+                
+                if(is_array($clave)){
+                    
+                    foreach ($clave as $id => $valor) {
+                        
+                        if($valor==$key){
+                            $datos[$id]=$fila;
+                        }
+                    }
+                    
+                }
+                    
+            }else{
+                if(is_array($clave)){
+                    
+                    $datos=[];
+                    foreach ($clave as $key => $value) {
+                        Debug::string($value."   1");
+                        if(array_key_exists($value, $fila))
+                            $datos[$value]=$fila[$value];
+                    }
+                    if(!empty($datos)) $arrayResult[]=$datos;
+                }else
+                if(array_key_exists($clave, $fila)){
+                      $arrayResult[]=$fila[$clave];
+                }
             }
                     
-        }
+            
+                    
+        }//fin foreach
+        if(!empty($datos)) $arrayResult[]=$datos;
         if(count($array)>0){
             return $arrayResult;
         }else{

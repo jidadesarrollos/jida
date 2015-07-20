@@ -7,6 +7,7 @@
  * @category Controlador
  * @author  Julio Rodriguez <jirc48@gmail.com>
  * 
+ * 
  */
 class Controller {
     
@@ -352,10 +353,12 @@ class Controller {
      * 
      */
     private function getModelo(){
-        if(!empty($this->modelo)){
+        if(!empty($this->modelo) and !is_object($this->modelo)){
+            
             if(class_exists($this->modelo)){
                 $this->modelo = new $this->modelo;
             }else{
+                
                 throw new Exception("El objeto $this->modelo especificado como modelo no existe", 1);
                 
             }
