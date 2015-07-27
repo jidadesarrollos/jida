@@ -115,3 +115,10 @@ if(!defined('ZONA_HORARIA')){
      */
     define('ZONA_HORARIA','America/Caracas');
 }
+
+/**
+ * Determina si los caracteres especiales son codificados en código ASCII HTML
+ * antes de ser guardados en base de datos
+ */
+if(!defined('CODIFICAR_HTML_BD'))   define('CODIFICAR_HTML_BD',FALSE);
+

@@ -39,7 +39,7 @@ class Mysql extends ConexionBD{
      * @access public;
      * 
      */
-    var $codificarHTML=TRUE;
+    var $codificarHTML=CODIFICAR_HTML_BD;
     /**
      * Total de columnas obtenidas en una consulta.
      */
