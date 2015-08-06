@@ -122,3 +122,4 @@ if(!defined('ZONA_HORARIA')){
  */
 if(!defined('CODIFICAR_HTML_BD'))   define('CODIFICAR_HTML_BD',FALSE);
 
+if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',false);

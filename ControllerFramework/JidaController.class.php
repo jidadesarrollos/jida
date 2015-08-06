@@ -307,9 +307,13 @@
      */
     function validacion(){ 
         try{
-            $acl = new ACL();
-            
-            $acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+            if(BD_REQUERIDA===TRUE){
+				$acl = new ACL();
+            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
+			}else{
+				
+				$acceso=TRUE;
+			}
             
             if($acceso===TRUE){
                 $nombreArchivo = $this->controlador . "Controller.class.php";

@@ -447,6 +447,4 @@ class Controller {
     }
     
 
-} // END
-
-?>
+}
