@@ -452,5 +452,3 @@ class Mysql extends ConexionBD{
     }
     
 }//final clase Mysql
-
-?>
