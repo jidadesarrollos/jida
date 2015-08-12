@@ -151,7 +151,7 @@ class DataVista{
         return $this->_template;
         
     }
-    function getPath(){
+    function getPath(){	
         return $this->_path;
     }
     
@@ -200,7 +200,9 @@ class DataVista{
         }
     }
     
-   
+	function addMeta($meta){
+		$this->meta[]=$meta;
+	}   
     
     
 }
