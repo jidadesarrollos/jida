@@ -462,6 +462,17 @@ class Pagina{
         $meta="";$itemprop="";
         $initTab=0;
         //Titulo de La pagina
+        if(count($this->data->meta)>0){
+            $metaAdicional="";
+            
+            foreach ($this->data->meta as $key => $dataMeta) {
+                
+                $metaAdicional.=Selector::crear('meta',$dataMeta,null,2);
+            }
+            //$itemprop.=$metaAdicional;
+            $meta.=$metaAdicional;
+        }
+		
         if(!empty($this->data->title)){
             $meta.=Selector::crear('TITLE',null,$this->data->title,0);
             $initTab=2;
@@ -488,7 +499,7 @@ class Pagina{
                 
                 $metaAdicional.=Selector::crear('meta',$dataMeta,null,2);
             }
-            $itemprop.=$metaAdicional;
+            //$itemprop.=$metaAdicional;
         }
         if(!$this->data->robots){
             $itemprop.=Selector::crear('meta',['name'=>'robots','content'=>'noindex'],null,2);

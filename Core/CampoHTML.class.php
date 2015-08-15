@@ -336,11 +336,18 @@ class CampoHTML extends DBContainer {
              */
           $eventos = json_decode("{".$this->eventos."}");
           $tipoTelefono="normal";
+		  $digitosCodigo=3;
           if(is_object($eventos) and property_exists($eventos, 'telefono')){
               
               if(property_exists($eventos->{'telefono'}, 'tipo')){
                   $tipoTelefono = $eventos->{'telefono'}->{'tipo'};
+				  
               }
+			  
+			  if(property_exists($eventos->{'telefono'}, 'digitos_codigo')){
+			  	$digitosCodigo=$eventos->{'telefono'}->{'digitos_codigo'};
+			  }
+			
           }
           $valorCodigo="";$valorTelf="";$valorExtension="";
              if(!empty($this->value)){
@@ -353,11 +360,11 @@ class CampoHTML extends DBContainer {
              $this->control="<div class=\"control-multiple\" id=\"box".$this->id_propiedad."\">";
              if($tipoTelefono!='internacional'){
                 #$this->control.="<div class=\"text-muted ctrl-number\">(+58) </div>";
-                $this->control.="<input data-toggle=\"tooltip\" data-placement=\"top\" title=\"C&oacute;digo sin cero(0) inicial\" type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->cssControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"3\" title=\"c&oacute;digo de &aacute;rea sin cero inicial\" placeholder=\"4xx.\">";     
+                $this->control.="<input data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->cssControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:55px\" name=\"".$this->name."-codigo\" maxlength=\"$digitosCodigo\" title=\"\" placeholder=\"\">";     
              }else{
-                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->cssControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"4\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\" data-jidacontrol=\"numerico\">";
+                 $this->control.="<input type=\"text\" id=\"".$this->id_propiedad."-codigo\" value=\"$valorCodigo\" class=\"ctrl-number-code $this->cssControlRequerida\" data-jidacontrol=\"numerico\" style=\"width:60px\" name=\"".$this->name."-codigo\" maxlength=\"$digitosCodigo\" title=\"Ingrese c&oacute;digo de &aacute;rea\" placeholder=\"cod.\" data-jidacontrol=\"numerico\">";
              }
-            
+			            
             
             $this->control .= "<input type=\"text\" name=\"$this->name\" value=\"$valorTelf\" id=\"$this->id_propiedad\" " . trim ( $this->atributosAdicionales ) . " data-jidacontrol=\"numerico\"";
             $this->control .= ($this->placeholder != "") ? "placeholder=\"$this->placeholder\"" : "";

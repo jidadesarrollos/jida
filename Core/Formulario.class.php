@@ -375,6 +375,12 @@ class Formulario extends DBContainer {
         $this->obtenerCamposFormulario ();
         
     }
+	function setEstructura($estructura,$nombreidentificador){
+
+		$this->formularios[$nombreidentificador]->estructura=$estructura;
+		return $this;
+		
+	}
     private function obtenerDatosMultiplesForm($lista){
         $query.="";
         
@@ -923,12 +929,14 @@ class Formulario extends DBContainer {
     private function getEstructura($totalCampos){
         $estructura = "";
         $i=0;
+		
         foreach ($this->formularios as $key => $formulario) {
             if($i>0)
                 $estructura.=";";
             if(empty($formulario->estructura)){
                 $estructura.=$totalCampos ."x1";
             }else{
+            	
                 $estructura .= $formulario->estructura;    
             }
             
@@ -973,7 +981,7 @@ class Formulario extends DBContainer {
         }
                 
         if(!empty($this->tituloFormulario)){
-            $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
+            $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-md-12 col-xs-12 col-sm-12\">\n\t\t\t";
             $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
             $formulario.="\n\t\t</div>\n\t</div>";    
         }
@@ -1023,7 +1031,7 @@ class Formulario extends DBContainer {
                      * no puede ser superior a 12 (Basado en bootstrap3)
                      */
                     $col = (12/(int)$columnas); 
-                    $formulario.="\n\t\t\t<div class=\"col-lg-$col\">\n\t\t\t\t<div class=\"form-group\">";
+                    $formulario.="\n\t\t\t<div class=\"col-lg-$col col-md-$col col-xs-12\">\n\t\t\t\t<div class=\"form-group\">";
                     if(isset($form[$formKeys[$contador]]['label']) and $label===TRUE){
                         $formulario.="\n\t\t\t\t".$form[$formKeys[$contador]]['label'];
                     }
