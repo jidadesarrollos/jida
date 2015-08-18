@@ -67,6 +67,7 @@
             Session::set('__TIEjecucion',microtime(true) );
             date_default_timezone_set(ZONA_HORARIA); 
             Session::destroy('__formValidacion');
+            $_SERVER = array_merge($_SERVER,getallheaders());
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
