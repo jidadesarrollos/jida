@@ -323,10 +323,17 @@ class Controller {
      * @param string $controlador Nombre del controlador [aun no funcional] 
      * @return string $url
      */
-    protected function getUrl($metodo="",$data=array(),$controlador=""){
+    protected function getUrl($metodo="",$data=array()){
         if(!empty($metodo)){
             
-            if(method_exists($this->_clase,$metodo)){
+            if(is_array($metodo)){
+                $ctrl = array_keys($metodo)[0]."Controller";
+                $metodo = array_values($metodo)[0];
+            }else{
+                $ctrl = $this->_clase;
+                
+            }
+            if(method_exists($ctrl,$metodo)){
                 $params= "";
                 if(count($data)>0){
                     foreach ($data as $key => $value) 
@@ -335,6 +342,7 @@ class Controller {
                 
                 return $this->urlController().$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
+                
                 throw new Exception("El metodo pasado para estructurar la url no existe", 301);
             }
             
