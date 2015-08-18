@@ -119,6 +119,7 @@ class Controller {
         
         $this->_clase=get_class($this);
         $this->_nombreController = str_replace("Controller", "", $this->_clase);
+
         $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
         $this->dv = new DataVista();
         $this->url = $this->urlController();
@@ -218,10 +219,16 @@ class Controller {
 	 * @return boolean 
 	 */
 	protected function solicitudAjax(){
-		if(isset($_POST['s-ajax']))
+	    
+		if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) and !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
+		and strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+		    
 			return true;
-		else
+		}else{
+		    
 			return false;
+        }
+        exit;
 	}
     /**
      * Setter para propiedad url
@@ -292,8 +299,12 @@ class Controller {
      * Retorna la url del controlador actual
      * @method urlController
      */
-    protected function urlController(){
+    protected function urlController($ctrl=""){
+        
         $this->url="";
+        if(!empty($ctrl)){
+            
+        }else
         if(isset($GLOBALS['_MODULO_ACTUAL'] )){
             $controller = str_replace("Controller", "", $this->_clase);
             if(strtolower($this->_modulo)==strtolower($controller)){
@@ -319,28 +330,39 @@ class Controller {
     /**
      * Devuelve la estructura de la url solicitada
      * @method getUrl
-     * @param string $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url actual
+     * @param mixed $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url actual
      * @param string $controlador Nombre del controlador [aun no funcional] 
      * @return string $url
      */
     protected function getUrl($metodo="",$data=array()){
         if(!empty($metodo)){
+            $urlController=$this->urlController();
+            $modulo="/";
             
             if(is_array($metodo)){
-                $ctrl = array_keys($metodo)[0]."Controller";
-                $metodo = array_values($metodo)[0];
+                $ctrl = array_keys($metodo)[0];
+                $metodo= array_values($metodo)[0];
+                if(stripos($ctrl, "/")){
+                    $sep = explode("/", $ctrl);
+                    $ctrl = $sep[1];
+                    $modulo.=$sep[0]."/ ";
+                }
+                $urlController=$modulo;
+                $ctrl = $ctrl."Controller";
+                
             }else{
                 $ctrl = $this->_clase;
-                
             }
             if(method_exists($ctrl,$metodo)){
+                
                 $params= "";
                 if(count($data)>0){
                     foreach ($data as $key => $value) 
                         $params.="$key/$value/";
                 }
                 
-                return $this->urlController().$this->convertirNombreAUrl($metodo)."/".$params;
+                //Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+                return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
                 
                 throw new Exception("El metodo pasado para estructurar la url no existe", 301);
@@ -350,6 +372,17 @@ class Controller {
             return $this->urlActual(2);
         }
         
+    }
+    /**
+     * Retorna el nombre del modulo en el que se encuentra el objeto
+     */
+    function getModulo($obj){
+        if(is_object($obj)){
+            return $this->_modulo;
+        }else{
+            return $this->_404();
+        }
+            
     }
     
     /**
