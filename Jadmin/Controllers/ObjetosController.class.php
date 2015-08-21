@@ -184,7 +184,7 @@ class ObjetosController extends Controller{
                 redireccionar('/jadmin/objetos/lista/comp/'.$Objeto->id_componente);
             }
             
-            $this->data['form'] = $form->armarFormulario();
+            $this->dv->form = $form->armarFormulario();
         }else{
             
             throw new Exception("Pagina no conseguida", 404);
@@ -215,7 +215,7 @@ class ObjetosController extends Controller{
 	function metodos(){
 		$this->vista ="listaMetodos";
         $controladorMetodos = new MetodosController();
-        $this->data = $controladorMetodos->metodosObjeto();
+        $this->dv->vistaMetodos = $controladorMetodos->metodosObjeto();
 	}
 	/**
      * Muestra un formulario para dar acceso de los perfiles registrados al metodo de un objeto
@@ -254,7 +254,7 @@ class ObjetosController extends Controller{
 						Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
 					}
 				}
-				$this->data['formAcceso'] =$form->armarFormulario();
+				$this->dv->formAcceso =$form->armarFormulario();
 			}else{
 				Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un metodo"));
 				Session::set('__idVista','objetos');
@@ -292,7 +292,7 @@ class ObjetosController extends Controller{
                     
                 }
             }
-            $this->data['formAcceso'] =$form->armarFormulario();
+            $this->dv->formAcceso =$form->armarFormulario();
         }else{
             Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());  
         }    

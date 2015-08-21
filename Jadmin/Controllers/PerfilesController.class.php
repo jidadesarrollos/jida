@@ -49,14 +49,17 @@ class PerfilesController extends Controller{
 	function setPerfiles(){
 	    
 	    $pk="";$tipoForm=1;
-        if(isset($_GET['id']) and $this->getEntero($_GET['id'])){
-            $pk=$_GET['id'];$tipoForm=2;
+        if($this->getEntero($this->get('perfil'))){
+            
+            $pk=$this->get('perfil');$tipoForm=2;
         }
         
         $form=new Formulario('Perfiles',$tipoForm,$pk,2);
         $form->action=$this->url."set-perfiles/";
         $form->tituloFormulario="Gesti&oacute;n de Perfiles";
-        if(isset($_POST['btnPerfiles'])){
+        
+        if($this->post('btnPerfiles')){
+            
             $msj = 'No se ha podido registrar el perfil, vuelva a intenarlo';
             $validacion = $form->validarFormulario();
             if($validacion===TRUE){
@@ -75,7 +78,7 @@ class PerfilesController extends Controller{
             }
             Formulario::msj('error', $msj);            
         }
-        $this->data['form']=$form->armarFormulario();
+        $this->dv->form=$form->armarFormulario();
 	}//final funcion
 	
 	function eliminar(){

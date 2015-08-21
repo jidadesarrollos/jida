@@ -126,7 +126,6 @@ class ACL extends DataModel{
                                 implode(",",array_keys($this->componentes)),
                                 $perfiles
                                 );
-            //Debug::string($query,true);
             $objetos = $this->bd->obtenerDataCompleta($query);
             $accesoObjetos=array();
             $accesoMetodos = $this->obtenerAccesoMetodos();
@@ -225,6 +224,7 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
+        #Debug::mostrarArray($listaAcl,false);
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
@@ -271,7 +271,7 @@ class ACL extends DataModel{
                 }
             $i++;    
         }
-  
+        
         return $acceso;
     }//fin funcion
 }//fin clase

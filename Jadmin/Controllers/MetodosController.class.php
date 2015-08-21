@@ -24,7 +24,7 @@ class MetodosController	 extends Controller{
     function metodosObjeto($url=""){
         $url = (empty($url))?$this->url:$url;
         
-        if(isset($_GET['obj'])){
+        if($this->getEntero($this->get('obj'))){
             $objeto = new Objeto($this->getEntero($this->get('obj')));
             
             $this->tituloPagina="Objeto $objeto->objeto - Metodos";
@@ -41,8 +41,10 @@ class MetodosController	 extends Controller{
             
             $claseMetodo = new Metodo();
             $claseMetodo->validarMetodosExistentes($arrayMetodos, $objeto->id_objeto);
-            $this->data['vistaMetodos'] = MetodosController::vistaMetodos($objeto);
-            
+            $this->dv->vistaMetodos = MetodosController::vistaMetodos($objeto);
+            return $this->dv->vistaMetodos;
+        }else{
+            $this->_404();
         }
         return $this->data;
     }
@@ -74,7 +76,7 @@ class MetodosController	 extends Controller{
                 redireccionar('/jadmin/objetos/metodos/obj/'.$metodo->id_objeto);
             }
             
-            $this->data['form'] = $form->armarFormulario();
+            $this->dv->form = $form->armarFormulario();
         }else{
             
             throw new Exception("Pagina no conseguida", 404);
@@ -146,7 +148,7 @@ class MetodosController	 extends Controller{
                     Formulario::msj('error', "No se han asignado perfiles");
                 }
             }
-            $this->data['formAcceso'] =$form->armarFormulario();
+            $this->dv->formAcceso =$form->armarFormulario();
         }else{
             Vista::msj('metodos', 'error',"Debe seleccionar un objeto");
             redireccionar($this->url);  

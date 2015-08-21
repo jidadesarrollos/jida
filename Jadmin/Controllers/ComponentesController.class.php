@@ -83,7 +83,7 @@ class ComponentesController extends Controller{
 			 }   
          }
 
-         $this->data['fComponente'] = $F->armarFormulario();
+         $this->dv->fComponente = $F->armarFormulario();
     }
 
 
@@ -96,7 +96,7 @@ class ComponentesController extends Controller{
 	}
     function asignarAcceso(){
         
-        if(isset($_GET['comp']) and $this->getEntero($_GET['comp'])!=""){
+        if($this->getEntero($this->get('comp'))){
                         
             $this->vista="accesoPerfiles";
             $form = new Formulario('PerfilesAComponentes',2,$this->get('comp'),2);
@@ -105,7 +105,7 @@ class ComponentesController extends Controller{
             $form->action=$this->url."asignar-acceso/comp/".$this->get('comp');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
-            if(isset($_POST['btnPerfilesAComponentes'])){
+            if($this->post('btnPerfilesAComponentes')){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     
@@ -124,7 +124,7 @@ class ComponentesController extends Controller{
                 }
             }
 
-            $this->data['formAcceso'] =$form->armarFormulario();
+            $this->dv->formAcceso =$form->armarFormulario();
         }else{
             
             Vista::msj('componentes', 'error', "Debe seleccionar un componente");
