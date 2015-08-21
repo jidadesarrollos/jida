@@ -1,4 +1,4 @@
 <?PHP 
 
-echo $dataArray['formAcceso'];
+echo $this->data->formAcceso;
 ?>

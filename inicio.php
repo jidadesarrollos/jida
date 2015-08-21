@@ -21,13 +21,14 @@ set_time_limit(180);
 /**
  * Directorio del directorio de aplicación.
  */
-define ('app_dir', ROOT. 'Aplicacion/');
+define ('app_dir', ROOT. 'Aplicacion'.DS);
 
 /**
  * Directorio del directorio del framework
  */
-define ('framework_dir', ROOT . 'Framework' . "/");
-
+define ('framework_dir', ROOT . 'Framework' . DS);
+define ('DIR_FRAMEWORK',ROOT.'Framework'. DS );
+define ('DIR_APP', ROOT . 'Aplicacion'. DS );
 
 define ('libs_dir', ROOT . 'libs' . DS);
 

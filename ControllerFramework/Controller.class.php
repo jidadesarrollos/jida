@@ -51,9 +51,10 @@ class Controller {
       * 
       * Si desea pasarse información a la vista, la misma debe ser guardada en eñ arreglo como
       * una nueva posición asociativa con el nombre escogido por el programador, luego esta podrá
-      * ser accedida desde la vista, por medio del arreglo global $dataArray;
+      * ser accedida desde la vista, por medio del arreglo global $;
 	  * @var $data
       * @deprecated
+      * @see Pagina::data
       */
     var $data=array();
     /**
@@ -345,9 +346,9 @@ class Controller {
                 if(stripos($ctrl, "/")){
                     $sep = explode("/", $ctrl);
                     $ctrl = $sep[1];
-                    $modulo.=$sep[0]."/ ";
+                    $modulo.=$sep[0]."/";
                 }
-                $urlController=$modulo;
+                $urlController=$modulo.$ctrl."/";
                 $ctrl = $ctrl."Controller";
                 
             }else{

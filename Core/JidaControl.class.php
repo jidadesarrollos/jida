@@ -241,7 +241,7 @@ class JidaControl extends DBContainer{
      */
     
     function crearTablasBD(){
-        try{
+        
            $esquema="";
            if(manejadorBD == 'MySQL' or manejadorBD == 'PSQL'){        
                include_once 'BD/tablasBasicas.' . strtolower(manejadorBD) . ".php";
@@ -258,9 +258,7 @@ class JidaControl extends DBContainer{
            }else{
                throw new Exception("Error : Consulta a base de datos no definida");
            } 
-        }catch(Exception $e){
-            controlExcepcion($e->getMessage());
-        }//fin catch
+       
     } //fin funcion crearTablasBD   
      
     /**

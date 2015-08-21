@@ -1,4 +1,4 @@
 <?PHP
 
-echo $dataArray['vistaMenu'];
+echo $this->data->vistaMenu;
 ?>

@@ -2,7 +2,7 @@
  /**
  * 
  */
- $data =& $dataArray;
+ $data =& $this->data;
 ?>
 <style>
     textarea{
@@ -50,7 +50,7 @@
                     
                     <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data['formFramework']?>">
                      
-                    <?PHP foreach($data['camposFormulario'] as $key =>$campo):?>
+                    <?PHP foreach($data->camposFormulario as $key =>$campo):?>
                         <li id="campoform-<?=$campo['id_campo']?>" data-id-campo="<?=$campo['id_campo']?>"><?=$campo['name']?></li>
                     <?PHP endforeach; ?>
                     </ul>
@@ -59,8 +59,8 @@
         </section>
         <section id="jidaFormConfiguracion" class="col-lg-9">
             <?PHP 
-                if(isset($dataArray['formCampo'])){
-                    echo $dataArray['formCampo'];
+                if(isset($data->formCampo)){
+                    echo $data->formCampo;
                 }
             ?>
         </section>

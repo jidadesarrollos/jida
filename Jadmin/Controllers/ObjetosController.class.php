@@ -16,7 +16,8 @@ class ObjetosController extends Controller{
     function __construct($id=""){
         $this->helpers=array('Arrays');
         parent::__construct();
-        $this->layout="jadmin.tpl.php";
+        
+        if(!$this->solicitudAjax()) $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
         
 		$this->modelo = new Objeto();		
@@ -36,7 +37,7 @@ class ObjetosController extends Controller{
             $vista->tituloVista="Objetos";
 			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto\">Agregar objeto</a>";
 			$vista->mensajeError= Mensajes::mensajeAlerta($msjError);
-			$this->data['vista'] = $vista->obtenerVista();
+			$this->dv->vista = $vista->obtenerVista();
            
            
            
@@ -95,8 +96,9 @@ class ObjetosController extends Controller{
      * 
      */
     function lista(){
-		  $this->tituloPagina="jida-Registro Componentes";   
-          if(isset($_GET['comp'])){
+		  $this->tituloPagina="jida-Registro Componentes";
+          $this->dv->vista="";   
+          if($this->get('comp')){
                $idComponente = $this->getEntero($this->get('comp'));
                $comp = new Componente($idComponente);
                $this->validarObjetos($comp);
@@ -104,7 +106,7 @@ class ObjetosController extends Controller{
                $vista =$this->vistaObjetos($query);
                $vista->tituloVista="Objetos del Componente ".$comp->componente;
                $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
-               $this->data['vista'] = $vista->obtenerVista();
+               $this->dv->vista = $vista->obtenerVista();
            }else{
                Session::set('__idVista','componentes');
                Session::set('__msjVista',Mensajes::mensajeAlerta("Debe seleccionar un componente"));

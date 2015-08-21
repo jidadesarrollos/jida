@@ -14,7 +14,7 @@ class DebugController extends Controller{
     
       function query(){
       	$this->tituloPagina="JidaDesarrollos - Consulta BD";
-        try{
+        
             if(isset($_POST['ejecutarQuery'])){
                 if(isset($_POST['consulta']) and !empty($_POST['consulta'])){
                     $data = $this->jctrl->consultarBD($_POST['consulta']);
@@ -68,7 +68,7 @@ class DebugController extends Controller{
                         $cont++;
                     }//fin primer foreach
                     
-                    $dataArray['resultQuery'] = $tablas;
+                    $this->dv->resultQuery = $tablas;
                     
                 }else{
                     throw new Exception("La consulta a base de datos esta vacia", 1);
@@ -77,12 +77,9 @@ class DebugController extends Controller{
             }
             $jctrl = new JidaControl();
             $tablasBD = $jctrl->obtenerTablasBD();
-            $dataArray['tablasBD'] = $tablasBD;
-            $this->data = $dataArray;
-        }catch(Exception $e){
-            controlExcepcion($e->getMessage(),$e->getCode());
             
-        } 
+            
+  
         
     }
 }

@@ -22,22 +22,36 @@ if(!defined('titulo_sistema'))
     define ('titulo_sistema',TITULO_SISTEMA);
 if(!defined('NOMBRE_APP'))
     define('NOMBRE_APP','Aplicación de JidaFramework');
+
+if(!defined('CONTROLADOR_EXCEPCIONES'))
 /**
  * Nombre del controlador de las excepciones
  * Por defecto es el ExcepcionController del Framework el cual será llamdo,
  * si se define la constante será reemplazado el controlador e intentará
  * ejecutarse el definido en la constante.
  */
-if(!defined('CONTROLADOR_EXCEPCIONES'))
-    define('CONTROLADOR_EXCEPCIONES','ExcepcionController');
+   define('CONTROLADOR_EXCEPCIONES','ExcepcionController');
+if(!defined('DIR_EXCEPCION_PLANTILLAS'))
+/**
+ * Define el directorio en el que se encuentran las plantillas
+ * de exepciones
+ * @constant DIR_EXCEPCION_PLANTILLAS
+ */
+ define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."jidaPlantillas/error/");
+ if(!defined('DIR_PLANTILLAS_APP'))
+ /**
+  * Define la ubicacion de las plantillas de una aplicacion
+  * @default Aplicacion/plantillas
+  */
+  define('DIR_PLANTILLAS_APP',DIR_APP.'plantillas/');
+if(!defined('METODO_EXCEPCION'))        
 /**
  * Nombre del metodo a ejecutar en el CONTROLADOR_EXCEPCIONES
  * al conseguir una excepción.
  * @constant METODO_EXCEPCION
  * 
  */
-if(!defined('METODO_EXCEPCION'))
-    define('METODO_EXCEPCION','error');
+define('METODO_EXCEPCION','error');
 
 #===============================================================================
 # Constantes de entorno
@@ -97,15 +111,30 @@ if(!defined('FECHA_MODIFICACION')){
 #===============================================================================
 # Constantes DE URLs y Directorios del Framework
 #===============================================================================
-if(!defined('URL_IMGS')) define('URL_IMGS','/htdocs/img/');
-if(!defined('URL_JS')) define('URL_JS','/htdocs/js/');
-if(!defined('URL_CSS')) define('URL_CSS','/htdocs/css/');
+if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
+if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
+if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
+if(!defined('LAYOUT_JIDA'))
 
+define('LAYOUT_JIDA','jadminIntro.tpl.php');
+   
 /**
  * Constantes Framework
  */
-
-if(!defined('DIR_PLANTILLAS_FRAMEWORK')) define ('DIR_PLANTILLAS_FRAMEWORK', framework_dir ."jidaPlantillas/");
+if(!defined('LAYOUT_DEFAULT'))
+/**
+ * Define el layout a usar por defecto
+ */
+define('LAYOUT_DEFAULT','jadminIntro.tpl.php');
+if(!defined('DIR_LAYOUT_JIDA'))
+/**
+ * Definición de la ubicacion de los templates para el backend del Framework
+ * 
+ * Puede ser modificada su ubicación si desea personalizarse el disenio.
+ */
+define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
+if(!defined('DIR_LAYOUT_APP'))              define('DIR_LAYOUT_APP',DIR_APP.'Layout/');
+if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."jidaPlantillas/");
 
 if(!defined('ZONA_HORARIA')){
     /**
@@ -122,4 +151,4 @@ if(!defined('ZONA_HORARIA')){
  */
 if(!defined('CODIFICAR_HTML_BD'))   define('CODIFICAR_HTML_BD',FALSE);
 
-if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',false);
+if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',true);

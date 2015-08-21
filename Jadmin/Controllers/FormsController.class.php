@@ -30,8 +30,8 @@ class FormsController extends Controller{
     function index(){
         
         $this->vista='vistaFormularios';        
-        $dataArray['vistaForms'] = $this->mostrarVistaForms();
-        $this->data = $dataArray;
+        $this->dv->vistaForms = $this->mostrarVistaForms();
+        
         
     }
     /**

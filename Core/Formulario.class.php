@@ -1126,7 +1126,7 @@ class Formulario extends DBContainer {
         Session::set('__msjForm',$msj);
         
         if($redirect){
-            redireccionar($redirect);
+            $this->redireccionar($redirect);
         }
     }
     /**

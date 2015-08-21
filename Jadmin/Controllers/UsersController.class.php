@@ -15,7 +15,8 @@ class UsersController extends Controller{
 	function index(){
 	    
 		$vista = $this->vistaUser();
-		$this->data['vista'] = $vista->obtenerVista();
+        $this->vista="vistaUsuarios";
+		$this->dv->vista = $vista->obtenerVista();
 			
 	}
     /**

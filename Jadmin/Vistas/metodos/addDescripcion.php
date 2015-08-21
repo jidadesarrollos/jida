@@ -1,5 +1,5 @@
 <?PHP 
 
 
-echo $dataArray['form'];
+echo $this->data->form;
 ?>

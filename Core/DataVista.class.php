@@ -138,7 +138,7 @@ class DataVista{
      * @param string $path a utilizar opciones disponibles 'app' 'jida' cualquier valor distinto será tomado como app
      * @return void
      */
-    function setVistaAsTemplate($nombreVista,$path=""){
+    function setVistaAsTemplate($nombreVista,$path=""){    
         if($path=='jida')
             $this->_path="jida";
         $this->_template = $nombreVista;
@@ -146,6 +146,8 @@ class DataVista{
     }
     
     function getTemplate(){
+      
+        
         if(!isset($this->_template))
             $this->_template="";
         return $this->_template;

@@ -110,7 +110,7 @@ class ACL extends DataModel{
      */
     private function obtenerAccesoObjetos(){
         if(ENTORNO_APP=='dev')	Session::destroy('acl');
-
+        
         if(!isset($_SESSION['acl'])){
                     
             $perfiles ="";
@@ -126,7 +126,7 @@ class ACL extends DataModel{
                                 implode(",",array_keys($this->componentes)),
                                 $perfiles
                                 );
-
+            //Debug::string($query,true);
             $objetos = $this->bd->obtenerDataCompleta($query);
             $accesoObjetos=array();
             $accesoMetodos = $this->obtenerAccesoMetodos();
@@ -276,4 +276,3 @@ class ACL extends DataModel{
     }//fin funcion
 }//fin clase
 
-?>

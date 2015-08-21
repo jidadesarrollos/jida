@@ -1,4 +1,4 @@
 <?PHP 
 
-echo $dataArray['vistaPerfiles'];
+echo $this->data->vistaPerfiles;
 ?>

@@ -1,6 +1,6 @@
 
 <?PHP
-echo "<h1>".$dataArray['tituloForm']."</h1>"; 
-if(isset($dataArray['formMenu']))
-echo $dataArray['formMenu'];
+echo "<h1>".$this->data->tituloForm."</h1>"; 
+if(isset($this->data->formMenu))
+echo $this->data->formMenu;
 ?>

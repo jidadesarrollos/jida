@@ -4,6 +4,6 @@
  */
  $data =& $dataArray;
  
- echo $data['form'];
+ echo $data->form;
  ?>
  

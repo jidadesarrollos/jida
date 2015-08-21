@@ -1,30 +1,8 @@
 <?PHP 
-/**
- * Funciones básicas de manejo del framework
- * 
- * 
- */
-
- 
-/**
- * Devuelve contenido para una solicitud via ajax
- * 
- * Imprime la respuesta de la solicitud realizada sin esperar llegar a la vista
- * @param mixed $respuesta Respuesta de la solicitud ajax
- * @param int tipo 1 json, 2 html. 
- */
-function respuestaAjax($respuesta,$tipo=2){
-    if($tipo==2){
-        echo $respuesta;
-    }else{
-    	print(json_encode($respuesta));    
+function redireccionar($url){
+        header('location:'.$url.'');exit;
     }
     
-    exit;
-} 
-function redireccionar($url){
-    header('location:'.$url.'');exit;
-}
  function TestPlataforma(){
  	
 	/**

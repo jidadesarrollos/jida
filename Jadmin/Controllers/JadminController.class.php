@@ -24,7 +24,7 @@ class JadminController extends Controller{
         
     }
     function index(){
-        $this->layout="unaColumna.tpl.php";
+        $this->layout="jadminIntro.tpl.php";
 		$this->tituloPagina = "Jida Framework - Formularios";        
         $jctrl= new JidaControl();
         if(Session::checkLogg()){
@@ -58,8 +58,8 @@ class JadminController extends Controller{
                             Session::set('usuario','perfiles',$perfiles);
                             
                             /*fin variables de usuario*/
-                            Vista::msj(formularios, 'info', 'Bienvenido '.$User->nombre_usuario,'/jadmin/forms/');
-                            redireccionar('/jadmin/forms/');
+                            Vista::msj('formularios', 'info', 'Bienvenido '.$User->nombre_usuario,'/jadmin/forms/');
+                            $this->redireccionar('/jadmin/forms/');
                         }
                         
                           
@@ -71,20 +71,21 @@ class JadminController extends Controller{
             }//fin validación post
             
             
-            $dataArray['formLoggin'] = $form->armarFormulario();
+            $this->dv->formLoggin = $form->armarFormulario();
         
         }else{
-            $dataArray['testBD'] = "La conexión a base de datos no ha podido establecerse";
+            
+            $this->dv->testBD= "La conexión a base de datos no ha podido establecerse";
         }
         $tablasBD = $jctrl->obtenerTablasBD();
-        $this->data = $dataArray;
+        
+        
         
     }
 
     private function crearTablasJida(){
         
-        
-        $jctrl = new JidaControl();
+                $jctrl = new JidaControl();
         if($jctrl->crearTablasBD()){
             
             $_SESSION['__msj'] = Mensajes::mensajeSuceso("Tablas Creadas");
@@ -154,4 +155,3 @@ class JadminController extends Controller{
         exit;
     }   
 }
-?>

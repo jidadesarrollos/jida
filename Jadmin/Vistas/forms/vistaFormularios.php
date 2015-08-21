@@ -1,3 +1,3 @@
 <?PHP
-echo $dataArray['vistaForms'];
+echo $this->data->vistaForms;
 ?>

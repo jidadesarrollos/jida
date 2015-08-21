@@ -35,7 +35,7 @@
     private $args=array();
     /**
      * Instancia de objeto vista
-     * @var object vista
+     * @var object Pagina
      */
     private $vista;
     
@@ -64,10 +64,18 @@
      private $modulosExistentes=array();
     function __construct(){
         try{
+            /**
+             * Registro de tiempo inicial de ejecución
+             */
             Session::set('__TIEjecucion',microtime(true) );
-            date_default_timezone_set(ZONA_HORARIA); 
+            /**
+             * Seteo de zona horaria
+             */
+            date_default_timezone_set(ZONA_HORARIA);
+             
             Session::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
+            
             if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
@@ -77,7 +85,7 @@
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
             $_SESSION['urlActual'] = $_GET['url'];
             Session::set('URL_ACTUAL', $_GET['url']);
-            
+            /*Manejo de url*/
             if(isset($_GET['url'])){
                 
                 $_GET['url'] = utf8_encode($_GET['url']);
@@ -89,7 +97,6 @@
             unset($_GET['url']);
             if(count($_GET)>0){
                $this->args=$_GET;
-                #Debug::mostrarArray($this->args);
             }
                 
             
@@ -110,8 +117,7 @@
             $this->validacion();
         
         }catch(Exception $e){
-            
-            Excepcion::controlExcepcion($e);
+            $this->procesarExcepcion($e);
         }
             
     }//fin constructor
@@ -261,7 +267,7 @@
      */
     private function procesarArgumentos($tipo=1){
         
-        try{
+
             $band = 0;
             $clave = TRUE;
             
@@ -283,10 +289,6 @@
             }
             
             $_GET = array_merge($this->args,$gets);
-            
-        }catch(Exception $e){
-            Excepcion::controlExcepcion($e);
-        }
         
     }
     function get(){
@@ -312,10 +314,8 @@
 				$acl = new ACL();
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
 			}else{
-				
 				$acceso=TRUE;
 			}
-            
             if($acceso===TRUE){
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
@@ -323,17 +323,15 @@
                  * Si es llamado el modulo interno "jadmin" el valor de rutaVista = 2, excepcion=3 default=1
                  */
                 if(strtolower($this->controlador)=='jadmin' or strtolower($this->modulo)=='jadmin'){
+                       
                    $this->vista->rutaPagina=2;
                    $rutaArchivo=framework_dir.'Jadmin/Controllers/'.$nombreArchivo;
                    
                 }else
-                if(strtolower($this->controlador)=='excepcion' or strtolower($this->modulo)=='excepcion'){
-                    $rutaArchivo=framework_dir."ControllerFramework/".$nombreArchivo;
-                    $this->vista->rutaPagina=3;
-                }
-                else{
+                {
                     $rutaArchivo = $this->obtenerControladorModulo($nombreArchivo);    
                 }
+                
                 $metodo = $this->metodo;
                 /**
                  * Se valida la existencia del archivo, 
@@ -390,12 +388,8 @@
                         $this->metodo = $this->controlador;
                         
                     }
-                    // else{
-                        // $this->controlador=str_replace("Controller", "", $controlador);
-                        // throw new Exception("No se encuentra definido el controlador o metodo ".$controlador."  solicitado", 10);
-                    // }
                     $this->controlador=$nameControl;
-                    $this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
+                    //$this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
 
                 }//fin validacion de existencia del controlador.
            }else{
@@ -442,16 +436,8 @@
     private function ejecucion($controlador){
         
         $controlador = $this->ejecutarController($controlador);
-        #retorno del metodo ejecutado
-        $retorno=$controlador->data;        
-        /**
-         * Se define el titulo para tag titile de la página
-         */
-        $retorno['title'] = (!empty($controlador->tituloPagina))?$controlador->tituloPagina:titulo_sistema;
-        $retorno['metaDescripcion']=$controlador->metaDescripcion;
-        $retorno['urlCanonical'] = $controlador->urlCanonical;
         
-        $this->mostrarContenido($retorno,$controlador->vista);
+        $this->mostrarContenido($controlador->vista);
         
         
     }//fin funcion ejecucion
@@ -463,7 +449,6 @@
         if(is_object($this->controladorObject)):
             
             $this->vista->layout = $this->controladorObject->layout;
-            
             $this->vista->definirDirectorios();
             
         endif;
@@ -482,7 +467,6 @@
         $nombreControlador = $controlador;
         $this->controladorObject = new $controlador;
         
-        
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         if(method_exists($controlador, $metodo))
@@ -498,39 +482,57 @@
                 
         return $controlador;
     }
-    
+    /**
+     * Procesa una excepción capturarda
+     * 
+     * @method procesarExcepcion
+     */
     private function procesarExcepcion(Exception $excepcion){
-        #Debug::mostrarArray($excepcion);
-        $ctrlError = $this->controlador."Controller";
-        $this->controladorObject = new $ctrlError;
-        
-        if(!defined('CONTROLADOR_EXCEPCIONES') or $this->modulo=='jadmin')
-            $this->controlador='ExcepcionController';
-        else {
-            $this->controlador=CONTROLADOR_EXCEPCIONES;
+        try{
+            Debug::mostrarArray($excepcion);
+            if(strpos($this->controlador, 'Controller')===false)
+                $ctrlError = $this->controlador."Controller";        
+            else
+                $ctrlError = $this->controlador;
+            
+            if($ctrlError!=CONTROLADOR_EXCEPCIONES)
+                $this->controladorObject = new $ctrlError;
+            
+            if(!defined('CONTROLADOR_EXCEPCIONES')){
+                $this->controlador='ExcepcionController';
+            }else {
+                $this->controlador=CONTROLADOR_EXCEPCIONES;
+            }
+            
+            $this->metodo=METODO_EXCEPCION;
+            
+            $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+            $this->vista->rutaPagina=3;
+            if(!class_exists($ctrlError)) throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
+            $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
+            
+            $metodo = $this->metodo;
+            $ctrlExcepcion->$metodo();
+            
+            $this->vista->layout = $ctrlExcepcion->layout;
+            $this->vista->definirDirectorios();
+            $this->controladorObject = $ctrlExcepcion;
+            $this->mostrarContenido($ctrlExcepcion->vista);
+       
+//            
+        }catch(Exception $e){
+            $ctrlError = $this->controlador;
+            $ctrlExcepcion = new $this->controlador($e,$ctrlError);
+            $metodo = $this->metodo;
+            $ctrlExcepcion->$metodo();            
+            $this->vista->data->setVistaAsTemplate('error');
+            $this->vista->establecerAtributos(['modulo'=>'jadmin']);
+            $this->controladorObject =$ctrlExcepcion;
+            $this->vista->layout=LAYOUT_JIDA;
+            $this->mostrarContenido($ctrlExcepcion->vista);
         }
-        $this->metodo=METODO_EXCEPCION;
-        $this->checkDirectoriosView();
-        $this->vista->rutaPagina=($this->modulo=='Jadmin')?2:3;
-      
-        $this->vista->definirDirectorios();
-        
-        $this->vista->establecerAtributos(array("controlador"=>$this->controlador,'modulo'=>$this->modulo));
-        
-        $ctrl = $this->ejecutarController($this->controlador,$excepcion,false);
-        if($ctrl->layoutPropio)
-            $this->vista->layout = $ctrl->layout;
-        
-        if(empty($this->vista->layout)){
-            $this->vista->layout=LAYOUT_DEFAULT;
-        }
-        
-        $retorno=$ctrl->data;
-        $retorno['title'] = (!empty($ctrl->tituloPagina))?$ctrl->tituloPagina:titulo_sistema;
-        $retorno['metaDescripcion']=$ctrl->metaDescripcion;
-        $retorno['urlCanonical'] = $ctrl->urlCanonical;
-        
-        $this->mostrarContenido($retorno,$ctrl->vista);
+             
+
     }
     /**
      * Muestra contenido de la vista y controlador requeridos
@@ -545,16 +547,15 @@
      * @access private
      * 
      */
-    private function mostrarContenido($retorno,$vista=""){
-        
-        
+    private function mostrarContenido($vista=""){
         $this->vista->data = $this->controladorObject->dv;
         //Compatibilidad con sistemas sin objeto DataVista
         if(! $this->vista->data instanceof DataVista){
+            
             $this->vista->data=new DataVista();
         }
         
-        $this->vista->renderizar($retorno,$vista);
+        $this->vista->renderizar($vista);
         
     }
     /**

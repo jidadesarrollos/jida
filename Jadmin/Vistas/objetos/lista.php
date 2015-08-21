@@ -1,5 +1,6 @@
 <?PHP 
+$data = $this->data;
 
-echo $dataArray['vista'];
+echo $data->vista;
 
 ?>

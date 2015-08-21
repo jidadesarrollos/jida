@@ -15,11 +15,8 @@
         Remove this if you use the .htaccess -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <title>
-            <?PHP echo $dataArray['title'];?>
-        </title>
-        <meta name="description" content=""  charset="utf-8">
-        <meta name="author" content="jirc">
+        <?=$this->printHeadTags()?>
+        
         <link href="/htdocs/css/libs/bootstrap.min.css" rel="stylesheet">
         <link href="/htdocs/css/f-a.css" rel="stylesheet">
         <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
@@ -68,13 +65,7 @@
                     
                 </div>
             </div><!--Cierre div full-container-->
-        </div>                
-        <?PHP
-        
-        if(entorno_app =='dev'){
-          #  echo debug();
-        }
-        ?>    
+        </div>    
         <footer class="footer container-fluid">
             <p>
                 &copy; Copyright  by jirc Prueba

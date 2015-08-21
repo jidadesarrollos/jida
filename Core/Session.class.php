@@ -147,7 +147,7 @@ class Session {
     static function checkPerfilAcceso($perfil){;
         
         $perfiles = Session::get('usuario','perfiles');
-        if(in_array(String::upperCamelCase($perfil),$perfiles)){
+        if(is_array($perfiles) and in_array(String::upperCamelCase($perfil),$perfiles)){
             return true;
         }else{
             return false;

@@ -63,7 +63,8 @@ class FechaHora{
     }
 	
     static function diasSemana($lang='es'){
-        return Arrays::obtenerKey('es', self::$diasSemana);
+        
+        return self::$diasSemana[$lang];
     }
 	/**
 	 * Función que retorna el mes en el que estamos.
@@ -376,8 +377,10 @@ class FechaHora{
      * @method fecha
      * @return date
      */
-    static function fecha(){
-        return date('d-m-Y');
+    static function fecha($fecha=""){
+        $fecha = new DateTime($fecha);
+        
+        return $fecha->format('d-m-Y');
     }
     /**
      * Cambia una fecha a formato datetime

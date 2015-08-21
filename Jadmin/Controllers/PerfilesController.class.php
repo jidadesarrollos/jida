@@ -39,7 +39,7 @@ class PerfilesController extends Controller{
                                             'data-multiple'=>'true','data-jkey'=>'perfil'],
                                                                             
                                 ];
-		$this->data['vistaPerfiles'] = $vista->obtenerVista();
+		$this->dv->vistaPerfiles = $vista->obtenerVista();
 	}
 	
 	/**
@@ -116,4 +116,3 @@ class PerfilesController extends Controller{
 }
 
 
-?>

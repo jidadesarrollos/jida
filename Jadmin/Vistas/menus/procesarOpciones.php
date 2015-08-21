@@ -1,8 +1,8 @@
 <?PHP 
-
-echo "<h1>$dataArray[titulo]</h1><br>";
-if(isset($dataArray['subtitulo']))
-    echo "<h3>$dataArray[subtitulo]</h3>";
-echo $dataArray['formOpcion'];
+$data =& $this->data;
+echo "<h1>$data->titulo</h1><br>";
+if(isset($data->subtitulo))
+    echo "<h3>$data->subtitulo</h3>";
+echo $data->formOpcion;
 
 ?>

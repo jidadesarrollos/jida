@@ -6,6 +6,6 @@
  * 
  * 
  */
-echo $dataArray['vistaOpciones'];
+echo $this->data->vistaOpciones;
 ?>
 

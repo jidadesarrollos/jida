@@ -947,9 +947,10 @@ class Vista extends DBContainer{
                     
                     return $vistaArmada;
             }else{
+                
                 $this->prepareConsulta();
                 $vistaArmada = $this->crearVista();
-                
+                return $vistaArmada;
             }//fin if
         }else{
             

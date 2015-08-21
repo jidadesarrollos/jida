@@ -21,7 +21,7 @@ class MenusController extends Controller {
         $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
         $this -> vista = 'menus';
         
-        $dataArray = array();
+        
         $vistaMenu = new Vista($query, $GLOBALS['configPaginador'], 'Menus');
         $vistaMenu->setParametrosVista($GLOBALS['configVista']);
         
@@ -56,8 +56,8 @@ class MenusController extends Controller {
                                                 );
                                                 
         $vistaMenu -> actionForm = "/jadmin/menus/procesarMenu/";
-        $dataArray['vistaMenu'] = $vistaMenu -> obtenerVista();
-        $this->data = $dataArray;
+        $this->dv->vistaMenu = $vistaMenu -> obtenerVista();
+        
     }
 
     function procesarMenu() {
@@ -117,12 +117,12 @@ class MenusController extends Controller {
             $tipoForm=2;
             $seleccion = $get['menu'];    
         }
-        $dataArray = array();
+        
         $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $form -> action = '/jadmin/menus/set-menu/';
-        $dataArray['tituloForm'] = ($tipoForm == 1) ? 'Registrar Menu' : 'Modificar Menu';
-        $dataArray['formMenu'] = $form -> armarFormulario();
-        return  $dataArray;
+        $this->dv->tituloForm = ($tipoForm == 1) ? 'Registrar Menu' : 'Modificar Menu';
+        $this->dv->formMenu = $form -> armarFormulario();
+        
     }
 
     function eliminarMenu() {
@@ -157,12 +157,12 @@ class MenusController extends Controller {
         if ($this->get('menu')) {
             $menu = new Menu($this->get('menu'));
             $idMenu = $this->get('menu');
-            $dataArray['vistaOpciones'] = $this -> vistaOpciones($idMenu);
+            $this->dv->vistaOpciones = $this -> vistaOpciones($idMenu);
         } else {
             throw new Exception("No ha seleccionado menu para ver opciones", 1);
 
         }
-        $this->data=  $dataArray;
+        
     }//fin función
 
     /**
@@ -181,14 +181,14 @@ class MenusController extends Controller {
             $idOpcion="";
             $menu = new Menu($idMenu);
             
-            $dataArray['titulo'] = "Registro de Opción para menu $menu->nombre_menu";
+            $this->dv->titulo = "Registro de Opción para menu $menu->nombre_menu";
             $padre=0;
             
             
             if($this->getEntero($this->get('opcion'))){
                 $idOpcion=$this->get('opcion');
                 $tipoForm=2;
-                $dataArray['titulo'] = "Modificar Opción de menu $menu->nombre_menu";
+                $this->dv->titulo = "Modificar Opción de menu $menu->nombre_menu";
             }
             $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
             $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
@@ -202,7 +202,7 @@ class MenusController extends Controller {
                 
                 $post['padre']=$this->getEntero($this->get('padre'));
                 $opcionPadre = new OpcionMenu($this->get('padre'));
-                $dataArray['subtitulo'] = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
+                $this->dv->subtitulo = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
                 $formulario->action.="/padre/".$this->get('padre');
             }
 			
@@ -244,10 +244,8 @@ class MenusController extends Controller {
             }
             
             
-            $dataArray['formOpcion'] = $formulario->armarFormulario();
-            
-            $this->data = $dataArray;
-                
+            $this->dv->formOpcion = $formulario->armarFormulario();
+
          }else{
             throw new Exception("No se ha seleccionado menu para agregar opciones", 1);
         }
@@ -342,9 +340,9 @@ class MenusController extends Controller {
         $vista -> tipoControl = 1;
         $vista->setParametrosVista($GLOBALS['configVista']);
         $vista->mensajeError="No hay opciones <a href=\"$urlForm\" class=\"btn\">Registar Opci&oacute;n</a>";
-        $dataArray['vista'] = $vista -> obtenerVista();
+        $this->dv->vista= $vista -> obtenerVista();
 		
-        return $dataArray['vista'];
+        return $this->dv->vista;
 
     }
     

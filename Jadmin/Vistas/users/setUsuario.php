@@ -7,8 +7,8 @@
  * @version 1.0 //2014
  */
  
- $data =& $dataArray;
- echo $data['form'];
- if(isset($data['formPerfiles']))
-    echo $data['formPerfiles'];
+ $data =& $this->data;
+ echo $data->form;
+ if(isset($data->formPerfiles))
+    echo $data->formPerfiles;
 ?>

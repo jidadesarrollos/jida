@@ -148,7 +148,7 @@ class Metodo extends DBContainer{
 	 * @return boolean true or false 
 	 */
 	function asignarAccesoPerfiles($perfiles){
-		try{	
+		
 			$insert="insert into s_metodos_perfiles values ";
 			$i=0;
 			foreach ($perfiles as $key => $idPerfil) {
@@ -160,9 +160,7 @@ class Metodo extends DBContainer{
 			$this->bd->ejecutarQuery($delete);
 			$this->bd->ejecutarQuery($insert);
 			return array('ejecutado'=>1);
-		}catch(Exception $e){
-			Excepcion::controlExcepcion($e);
-		}
+
 	}
 }
 

@@ -20,4 +20,4 @@
 		
 	</div>
 </div>
-<?= $dataArray['formulario']?>
+<?= $this->data->formulario?>

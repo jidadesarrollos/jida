@@ -3,7 +3,7 @@
  * Archivo Vista
  * @category Jida - view
  */
-$data =& $dataArray;
+$data =& $this->data;
 ?>
 <h1>
     Bienvenido a Jida-Framework

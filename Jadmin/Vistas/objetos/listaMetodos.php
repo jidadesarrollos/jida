@@ -1,5 +1,5 @@
 <?PHP 
 
-echo $dataArray['vistaMetodos'];
+echo $this->data->vistaMetodos;
 
 ?>

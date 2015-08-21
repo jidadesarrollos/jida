@@ -9,48 +9,81 @@
  */
 class ExcepcionController extends Controller{
 
+    
     /**
      * @var object $excepcion Objeto con excepción capturada
      */
     var $excepcion;
-	var $layoutPropio =FALSE;    
+	var $layoutPropio =TRUE;
+    var $layoutDefault="";
+    var $layoutModulos = [];
+    protected $modulos;
+    protected $moduloActual;
+    protected $controladorError=FALSE;
+    
+    var $layoutError ="";
+    function __construct($e,$ctrlError=""){
+        
+        if(is_object($ctrlError)) $this->controladorError=new $ctrlError;
+        
+        $this->layoutDefault = LAYOUT_DEFAULT;
+        $this->excepcion = $e;
+        parent::__construct();
+        $this->modulos = $GLOBALS['modulos'];
+        
+        $this->moduloActual = $GLOBALS['_MODULO_ACTUAL'];
+        
+        //if($this->moduloActual=='Jadmin') $this->processJadminError();
+        if(array_key_exists($this->moduloActual, $this->layoutModulos)){
+            
+        }else{
+            $this->layoutPropio=FALSE;
+            $this->layout = LAYOUT_DEFAULT;
+        }
+    }
+    
+    protected function validarControllerError(){
+        $ctrlError = new $this->controladorError();
+        $this->layoutError = $ctrlError->layout;
+    }
     /**
      * Funcion por defecto para manejar
      * las excepciones existentes en el entorno de desarrollo
      * @method estandard
      * @param object $message
-     * @return boolean true
+     * @return boolean truesd
      */
-    function error($e){
-        $this->excepcion=$e;
-        $this->data['msjError'] = $this->procesarError();
+    function error($e=""){
+        if($e instanceof Exception) $this->excepcion=$e;
+        
+        $this->dv->msjError = $this->procesarError();
+        if(!$this->layoutPropio and is_object($this->controladorError)){
+            
+            $this->layout=$this->controladorError->layout;
+        }else{
+            $this->layout=LAYOUT_DEFAULT;
+        }
         
     }
     protected function procesarError($view=""){
-        
+          Debug::string($view);
         if(!empty($view)){
+          
                $this->vista=$view;        
-         }else{
-             
-         	$this->tituloPagina="Error ".$this->excepcion->getCode();
-             switch ($this->excepcion->getCode()) {
-                 case 404:
-				 case 403:
-                    $this->vista="404";
-                    break;
-                    
-                 default:
-                    
-                    $this->vista="500";
-                    
-                    break;
-             }
+         }else{             
+         	$this->dv->title="Error ".$this->excepcion->getCode();
+            $this->dv->setVistaAsTemplate('error','jida');
          }
          $msj  = $this->getDetalleExcepcion();
+         
          return $msj; 
-        //Excepcion::mailError($this->excepcion);
+        
             
     }
+    /**
+     * Obtiene el detalle de la excepción
+     * @method getDetalleExcepción
+     */
     private function getDetalleExcepcion(){
         switch (entorno_app) {
              case 'dev':
@@ -66,6 +99,10 @@ class ExcepcionController extends Controller{
         }//fin switch
         return $msj;   
     }
+    /**
+     * Retorna la excepción en formato HTML
+     * @method getHTMLMessage
+     */
     private function getHTMLMessage(){
         $e =& $this->excepcion;
         $msj = '<h3>Error Capturado!</h3><hr>';
