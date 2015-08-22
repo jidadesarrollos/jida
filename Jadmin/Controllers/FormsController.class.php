@@ -30,9 +30,7 @@ class FormsController extends Controller{
     function index(){
         
         $this->vista='vistaFormularios';        
-        $this->dv->vistaForms = $this->mostrarVistaForms();
-        
-        
+        $this->dv->vistaForms = $this->mostrarVistaForms();   
     }
     /**
      * Vista de Formularios Pertenecientes al Framework

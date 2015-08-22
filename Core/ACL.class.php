@@ -77,19 +77,13 @@ class ACL extends DataModel{
             $query.="'$value'";
             
         }
-        
         $query.=") group by componente, id_componente;";
-        
-        
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
         while($data = $this->bd->obtenerArrayAsociativo($result)){
-            $access[$data['componente']] =array(); 
-            $componentes[$data['id_componente']] = array(
-                                                          'componente'=>$data['componente']  
-         
-                                                        );           
+            $access[$data['componente']] =[]; 
+            $componentes[$data['id_componente']] =['componente'=>$data['componente']];           
         }
                 
         //EL componente PRINCIPAL siempre es visible;
@@ -120,19 +114,21 @@ class ACL extends DataModel{
                 $perfiles.="'$value'";
                 
             }
-            $query = sprintf("select * from vj_acceso_objetos where id_componente in(%s)
-                            and clave_perfil in (%s)
-                            ",
+            $query = sprintf("select * from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
                                 implode(",",array_keys($this->componentes)),
                                 $perfiles
                                 );
-            $objetos = $this->bd->obtenerDataCompleta($query);
-            $accesoObjetos=array();
-            $accesoMetodos = $this->obtenerAccesoMetodos();
+            //Debug::string($query,false);
+            $objetos        =   $this->bd->obtenerDataCompleta($query);
+            $accesoObjetos  =   array();
+            $accesoMetodos  =   $this->obtenerAccesoMetodos();
+            
+//            Debug::mostrarArray($accesoMetodos,false);
+            
             foreach($objetos as $key =>$dataObjeto){
-                $componente = $this->componentes[$dataObjeto['id_componente']]['componente'];
-                $perfil = $dataObjeto['clave_perfil'];
-                
+                    
+                $componente     = $this->componentes[$dataObjeto['id_componente']]['componente'];
+                $perfil         = $dataObjeto['clave_perfil'];    
                 $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
                 
                 $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
@@ -143,17 +139,18 @@ class ACL extends DataModel{
                 }
                 
             }//fin foreach recorrido de objetos
+            
+            #Debug::mostrarArray($this->acl,false);
             /**
              * Se recorren solo los metodos para validar la existencia de metodos que no requieran validación de sesion y perfiles
              */
-            #Debug::mostrarArray($this->componentes);
+            
            
             foreach($accesoMetodos as $key=>$dataMetodo){
-        			#Debug::string('im here');
-                    #Debug::mostrarArray($dataMetodo);
+        			
                     $componente = $dataMetodo['componente'];
                     $soloElMetodo=false;
-                     if($dataMetodo['loggin']==0){
+                     if($dataMetodo['loggin']===0){
                         
                         if(!array_key_exists($componente, $this->acl)){
                             
@@ -180,7 +177,7 @@ class ACL extends DataModel{
                     }
                 }//fin foreach
             
-            
+            #Debug::mostrarArray($this->acl);
             
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
@@ -201,6 +198,7 @@ class ACL extends DataModel{
     
     private function obtenerAccesoMetodos(){
         $query ="select * from vj_acceso_metodos";
+        
         $accesoMetodos = $this->bd->obtenerDataCompleta($query);
         return $accesoMetodos;
     }
@@ -224,7 +222,8 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
-        #Debug::mostrarArray($listaAcl,false);
+        //Debug::mostrarArray($this->perfiles,false);
+        
         $accesosUser = array();
         $acceso=FALSE;
         $i=0;
@@ -271,7 +270,8 @@ class ACL extends DataModel{
                 }
             $i++;    
         }
-        
+        #if($acceso===TRUE) Debug::string("TIENE ACCESO",TRUE);
+        #else Debug::string("NO TIENES ACCESO",TRUE);
         return $acceso;
     }//fin funcion
 }//fin clase
