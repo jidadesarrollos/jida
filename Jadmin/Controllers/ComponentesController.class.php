@@ -12,10 +12,11 @@
 class ComponentesController extends Controller{
     
     function __construct($id=""){
-        
+        parent::__construct();        
         $this->url="/jadmin/componentes/";
         $this->layout="jadmin.tpl.php";
-        parent::__construct();        
+        $this->dv->title="Componentes de ".TITULO_SISTEMA;
+        
         
     }
     function index(){
@@ -29,7 +30,7 @@ class ComponentesController extends Controller{
         0=>['a'=>['atributos'   =>[
                                     'class'         =>'btn','title'=>'Ver objetos del componente',
                                     'href'          =>$this->getUrl(['jadmin/objetos'=>'lista'],['comp'=>'{clave}']),
-                                    'data-jvista'   =>'modal'
+                                    //'data-jvista'   =>'modal'
                                   ],
                     'html'      =>[ 'span'=>['atributos'=>['class' => 'glyphicon glyphicon-folder-open']]]
                  ]

@@ -472,7 +472,11 @@
         if(method_exists($controlador, $metodo))
             $controlador->$metodo($params);
         else{
-            $controlador->controlExcepcion($params,2);
+            
+            
+            
+            throw new Exception("Error Processing Request", 404);
+            
             Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
         }
         if($checkDirs){

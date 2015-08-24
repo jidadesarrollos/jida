@@ -16,7 +16,9 @@ class MetodosController	 extends Controller{
         $this->layout="jadmin.tpl.php";
         $this->url="/jadmin/metodos/";
         parent::__construct();
+        $this->dv->title="Metodos";
     }
+    
     
     /**
      * Funcion controladora de metodos de un objeto
@@ -124,7 +126,7 @@ class MetodosController	 extends Controller{
      *
      */
     function asignarAcceso(){
-        if(isset($_GET['metodo']) and $this->getEntero($_GET['metodo'])!=""){            
+        if($this->getEntero($this->get('metodo'))){            
             $this->vista="accesoPerfiles";
             
             $form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
@@ -133,14 +135,14 @@ class MetodosController	 extends Controller{
             $form->action=$this->url."asignar-acceso/metodo/".$_GET['metodo'];
             $form->valueSubmit="Asignar Perfiles a Metodo";
             $form->tituloFormulario="Asignar acceso de perfiles al Metodo ".$metodo->metodo;
-            if(isset($_POST['btnPerfilesAMetodos'])){
+            if($this->post('btnPerfilesAMetodos')){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
                     
-                    $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
+                    $accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$obj->objeto);
-                        redireccionar($this->url);
+                        Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$metodo->metodo);
+                        redireccionar("/jadmin/objetos/metodos/obj/".$metodo->id_objeto);
                     }else{
                         Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
@@ -151,11 +153,9 @@ class MetodosController	 extends Controller{
             $this->dv->formAcceso =$form->armarFormulario();
         }else{
             Vista::msj('metodos', 'error',"Debe seleccionar un objeto");
-            redireccionar($this->url);  
+            redireccionar("jadmin/objetos/metodos/obj".$metodo->id_objeto);  
         }    
     }
 
 }
 
-
-?>

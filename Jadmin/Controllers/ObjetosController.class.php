@@ -19,8 +19,8 @@ class ObjetosController extends Controller{
         
         if(!$this->solicitudAjax()) $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
-        
-		$this->modelo = new Objeto();		
+		$this->modelo = new Objeto();	
+        $this->dv->title = "Objetos";	
         
     }
 	

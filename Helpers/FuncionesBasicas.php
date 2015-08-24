@@ -1,4 +1,12 @@
-<?PHP 
+<?PHP
+function respuestaAjax($respuesta,$tipo=2){
+        if($tipo==2){
+            echo $respuesta;
+        }else{
+            print(json_encode($respuesta));    
+        }
+        exit;
+    }
 function redireccionar($url){
         header('location:'.$url.'');exit;
     }
@@ -58,4 +66,3 @@ function debug(){
  #   include 'Helpers/debug/testVariables.php';
 
 }
-?>
