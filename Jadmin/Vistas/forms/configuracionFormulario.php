@@ -2,7 +2,7 @@
  /**
  * 
  */
- $data =& $this->data;
+ $data = $this->data;
 ?>
 <style>
     textarea{
@@ -29,7 +29,7 @@
     echo Mensajes::imprimirMsjSesion();
 ?>
 
-<article id="jidaConfiguracion" data-formulario="<?=$data['formFramework']?>">
+<article id="jidaConfiguracion" data-formulario="<?=$data->formFramework?>">
     
     <div class="row">
         <section id="jidaCampos" class="col-lg-3">
@@ -48,7 +48,7 @@
                 <div class="col-md-12">
                     
                     
-                    <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data['formFramework']?>">
+                    <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data->formFramework?>">
                      
                     <?PHP foreach($data->camposFormulario as $key =>$campo):?>
                         <li id="campoform-<?=$campo['id_campo']?>" data-id-campo="<?=$campo['id_campo']?>"><?=$campo['name']?></li>

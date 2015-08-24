@@ -230,31 +230,29 @@ class Pagina{
      * @method renderizarLayout
      * @access private
      */
-    private function renderizarLayout($data=""){
+    private function renderizarLayout(){
         
         /* Permitimos almacenamiento en bufer */
+        ob_start();
+        
         $this->layout = $this->directorioLayout.$this->layout;
         
-        
         if(empty($this->layout)){
-            Debug::string("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
+            
                 throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);            
         }else
         if(!file_exists($this->layout)){
-            Debug::string('No existe el layout '.$this->layout);
+            
             throw new Exception('No existe el layout '.$this->layout, 1);
             
             //Debug::string('No existe el layout '.$this->layout,true);
         }else{
-            
-           ob_start();
            include_once $this->template;
            #$this->obtenerBloquesJS();
            $contenido = ob_get_clean();
            include_once $this->layout;
            $layout = ob_get_clean();
            echo $layout;
-        
         }
         
         

@@ -1,6 +1,6 @@
 <?PHP
 
-$data =& $dataArray;
+$data =& $this->data;
 ?>
 
-<?=$data['formCampo']?>
+<?=$data->formCampo?>

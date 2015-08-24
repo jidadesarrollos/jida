@@ -68,7 +68,7 @@ class FormsController extends Controller{
         $bcArray = [1=>'prueba',2=>'algo',3=>'otra cosa'];
         
         $vForms->camposBusqueda=['nombre_f','query_f','clave_primaria_f'];
-        $this->data['vista']=$vForms->obtenerVista();
+        $this->dv->vista=$vForms->obtenerVista();
     }
     /**
      * Muestra formulario para registro o edición de Formularios propios del Framework
@@ -134,14 +134,15 @@ class FormsController extends Controller{
         
         $tipoForm = 1;
         $id_form=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$_GET['id']:"";
-		$this->tituloPagina="Registro de Formulario";
-		$this->data['totalCampos'] =0;
+		$this->dv->title="Registro de Formulario";
+		$this->dv->totalCampos =0;
+        
         $jctrol =  new JidaControl($id_form,$ambito);
         
-        if(isset($_GET['id']) and $this->getEntero($_GET['id'])){
+        if($this->getEntero($this->get('id'))){
             
         	$this->tituloPagina="Modificación de formulario";
-    		$this->data['totalCampos'] = $jctrol->obtenerTotalCamposFormulario($_GET['id']);        
+    		$this->dv->totalCampos = $jctrol->obtenerTotalCamposFormulario($_GET['id']);        
             $tipoForm = 2;    
         }else{
             $tipoForm=1;
@@ -190,7 +191,7 @@ class FormsController extends Controller{
 				Session::set('__msjForm',Mensajes::mensajeError("No se ha podido registrar el formulario"));
 			}
 		}
-        $this->data['formulario'] = $formulario->armarFormulario();
+        $this->dv->formulario = $formulario->armarFormulario();
         
         
      }
@@ -262,9 +263,9 @@ class FormsController extends Controller{
     function configuracionFormulario($form=1){
         
         if($form==2){
-            $this->data['formFramework']=2;   
+            $this->dv->formFramework=2;   
         }else{
-            $this->data['formFramework']=1;
+            $this->dv->formFramework=1;
         }
     	$jctrl = new JidaControl(null,$form);
         
@@ -273,7 +274,7 @@ class FormsController extends Controller{
          * Entra aqui al ser enviado un formulario de configuración
          * 
          */
-        if(isset($_POST['btnCamposFormulario'])){
+        if($this->post('btnCamposFormulario')){
             
             $formCampo = $this->getFormCampo($_POST['id_campo'],$form);
             $formCampo->setHtmlEntities=FALSE;
@@ -284,16 +285,17 @@ class FormsController extends Controller{
             }else{
                 Session::set('__msj',Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));                    
             }
-          $this->data['formCampo']=$formCampo->armarFormularioEstructura();
+          $this->dv->formCampo=$formCampo->armarFormularioEstructura();
         }
-		if(isset($_GET['formulario']) and $this->getEntero($_GET['formulario'])>0){
-			$jctrl->id_form=$_GET['formulario'];
+		if($this->getEntero($this->get('formulario'))){
+			$jctrl->id_form=$this->get('formulario');
 		}else{
-			redireccionar($this->url);
+			$this->redireccionar($this->url);
 		}
+		
         $camposFormulario = $jctrl->getCamposFormulario();
         //echo $vista;
-        $this->data['camposFormulario'] =$camposFormulario;
+        $this->dv->camposFormulario =$camposFormulario;
             
     }
     /**
@@ -343,13 +345,12 @@ class FormsController extends Controller{
        
         $this->layout="ajax.tpl.php";
          
-        if(isset($_POST['idCampo'])){
-            
+        if($this->post('idCampo')){
             $idCampo = $_POST['idCampo'];
             
             $form=$this->getFormCampo($idCampo,$_POST['form']);
             
-            $this->data['formCampo'] = $form->armarFormularioEstructura();
+            $this->dv->formCampo = $form->armarFormularioEstructura();
             
         }else{
             throw new Exception("No se ha obtenido el id del campo", 1);
