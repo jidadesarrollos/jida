@@ -47,10 +47,10 @@
                 $total =count($this->directorios);
                 if($modulo=="Jadmin"){
                     $this->directorios[$total+1]= $modulo ."/Controllers/";
-                    $this->directorios[$total+2]= $modulo ."/Models/";
+                    $this->directorios[$total+2]= $modulo ."/Modelos/";
                 }else{       
                     $this->directorios[$total+1]="Modulos/" . $modulo ."/Controller/";
-                    $this->directorios[$total+2]="Modulos/" . $modulo ."/Model/";
+                    $this->directorios[$total+2]="Modulos/" . $modulo ."/Modelos/";
                 }
             }
         }
@@ -90,4 +90,3 @@
     }
 
  }
-?>

@@ -266,7 +266,10 @@ class Controller {
      * @param string $param Dato a solicitar 
      * 
      */
-    protected function post($param){
+    protected function post($param=""){
+        if(empty($param)){
+            return $_POST;
+        }else
         if(isset($this->post[$param]) or array_key_exists($param, $_POST))
             return $this->post[$param];
         else

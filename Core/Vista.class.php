@@ -1192,7 +1192,9 @@ class Vista extends DBContainer{
             redireccionar($redirect);
         }
     }
-    
+    function getQuery(){
+        return $this->consultaBD;
+    }  
     function addFiltro(){
         if(is_array($this->filtro)){
             

@@ -195,7 +195,7 @@ class DataModel{
      */
     private function obtenerDataRelaciones(){
         if($this->nivelActualORM<$this->nivelORM){
-            Debug::mostrarArray($this->tieneMuchos,false);
+            
             $datas = "";
             $pk = $this->pk;
             foreach ($this->tieneMuchos as $key => $relacion) {
@@ -917,7 +917,7 @@ class DataModel{
                 
                 switch ($valor) {
                     case '':
-                        if(!filter_var($valor,FILTER_VALIDATE_INT)){
+                        if(!filter_var($valor,FILTER_VALIDATE_INT) and $valor!==0){
                             $valores[]="null";
                         } else {
                             $valores[]=$valor;
@@ -959,8 +959,9 @@ class DataModel{
         
     }//fin crearInsert
     private function modificar(){
-     
+        
         $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
+        
         if(count($dataUpdate)>0){    
             if($this->registroUser){
                 $idUser = Session::get('id_usuario');
@@ -1001,11 +1002,13 @@ class DataModel{
             
             if($this->bd->ejecutarQuery($this->query)){
                 $this->establecerAtributos($dataUpdate);
-                $this->resultBD->setValores($this);
             }
+            
         }else{
+            
             $this->query="";
         }
+        $this->resultBD->setValores($this);
         return $this->resultBD;
         
     }

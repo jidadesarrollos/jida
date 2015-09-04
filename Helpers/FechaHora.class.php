@@ -35,22 +35,24 @@ class FechaHora{
             ]
              
           ]; 
-    	
-	/**
-	 * Función que retorna el día Actual en letras.
-	 *
-	 * @param string $texto        	
-	 * @return string
-	 * @example Imprime Lunes
-	 */
-	 
-	 
-	
-	static function diaActual($dia="",$lang="es") {
-	    
-        $dia = date('w');
-		return Arrays::obtenerKey('es', self::$diasSemana)[$dia];
-	}
+
+    static $meses = [
+        'es'=>[
+        1=>['abr' => 'ene', 'mes'=>"enero"],
+        2=>['abr' => 'feb', 'mes'=>"Febrero"],
+        3=>['abr' => 'mar', 'mes'=>"Marzo"],
+        4=>['abr' => 'abr', 'mes'=>"Abril"],
+        5=>['abr' => 'may', 'mes'=>"Mayo"],
+        6=>['abr' => 'jun', 'mes'=>"Junio"],
+        7=>['abr' => 'jul', 'mes'=>"Julio"],
+        8=>['abr' => 'ago', 'mes'=>"Agosto"],
+        9=>['abr' => 'sep', 'mes'=>"Septiembre"],
+        10=>['abr' => 'oct', 'mes'=>"Octubre"],
+        11=>['abr' => 'nov', 'mes'=>"Noviembre"],
+        12=>['abr' => 'dic', 'mes'=>"Diciembre"],
+        
+        ]
+    ];
     /**
      * Retorna el nombre del día solicitado
      * @method obtenerDia
@@ -66,67 +68,7 @@ class FechaHora{
         
         return self::$diasSemana[$lang];
     }
-	/**
-	 * Función que retorna el mes en el que estamos.
-	 * 
-	 * @param string $texto        	
-	 * @return string
-	 * @example Imprime Febrero
-	 */
-	static function mes($fecha = '') {
-		if (empty($fecha)) {
-			$mesActual = date ( 'F' );
-			$mesesAnio = array (
-					'January'  => 'Enero',
-					'February' => 'Febrero',
-					'March'    => 'Marzo',
-					'April'    => 'Abril',
-					'May'      => 'Mayo',
-					'June'     => 'Junio',
-					'July'     => 'Julio',
-					'August'   => 'Agosto',
-					'September'=> 'Septiembre',
-					'October'  => 'Octubre',
-					'November' => 'Noviembre',
-					'December' => 'Diciembre' 
-			);
-			return $mesesAnio [$mesActual];
-		} else {
-			$mesesAnio = [
-					'01' => 'Enero',
-					'02' => 'Febrero',
-					'03' => 'Marzo',
-					'04' => 'Abril',
-					'05' => 'Mayo',
-					'06' => 'Junio',
-					'07' => 'Julio',
-					'08' => 'Agosto',
-					'09' => 'Septiembre',
-					'10' => 'Octubre',
-					'11' => 'Noviembre',
-					'12' => 'Diciembre' 
-			];
-			return $mesesAnio [$fecha];
-		}
-	}
-	
-	/**
-	 * Función que retorna número de día 
-	 * 
-	 * @return string
-	 */
-	static function diaMes() {
-		return date ( 'j' );
-	}
-	
-	/**
-	 * Función que retorna el mes en el que estamos en número.
-	 * 
-	 * @return string
-	 */
-	static function mesNumero() {
-		return date ( 'n' );
-	}
+
 	
 	/**
 	 * Función que retorna el año en dos digitos.
@@ -179,88 +121,8 @@ class FechaHora{
 		self::mesNumero ();
 		return date ( 'i' );
 	}
-	
-	/**
-	 * Función que retorna un arreglo con los dias en letra.
-	 * 
-	 * @return array
-	 */
-	static function formatoDias() {
-		return array (
-				'01' => 'Primer',
-				'02' => 'Segundo',
-				'03' => 'Tercer',
-				'04' => 'Cuatro',
-				'05' => 'Quinto',
-				'06' => 'Sexto',
-				'07' => 'Septimo',
-				'08' => 'Octavo',
-				'09' => 'Noveno',
-				'10' => 'Diez',
-				'11' => 'Once',
-				'12' => 'Doce',
-				'13' => 'Trece',
-				'14' => 'Catorce',
-				'15' => 'Quince',
-				'16' => 'Dieciseis',
-				'17' => 'Diecisiete',
-				'18' => 'Dieciocho',
-				'19' => 'Diecinueve',
-				'20' => 'Veinte',
-				'21' => 'Veintiún',
-				'22' => 'Veintidos',
-				'23' => 'Veintitres',
-				'24' => 'Veinticuatro',
-				'25' => 'Veinticinco',
-				'26' => 'Veintiseis',
-				'27' => 'Veintisiete',
-				'28' => 'Veintiocho',
-				'29' => 'Veintinueve',
-				'30' => 'Treinta',
-				'31' => 'Treinta y un' 
-		);
-	}
-	
-	/**
-	 * Función que retorna la fecha que se utiliza en los certificados.
-	 * 
-	 * @param string $fecha        	
-	 * @return string
-	 * @example Caracas, 02 de Enero de 2013
-	 */
-	static function FechaCompleta($fecha = '') {
-		if ($fecha == '') {
-			$diaHoy = self::diaSemanaNumero ();
-			$stringMes = 'Dias del mes de';
-			$diaHoy = self::diaSemanaNumero ();
-			$mesActual = self::mes ();
-			$anioActual = self::anioCuatroDigitos ();
-			$arrayDias = self::formatoDias ();
-			
-			return $arrayDias [$diaHoy] . '(' . $diaHoy . ') ' . $stringMes . ' ' . $mesActual . ' de ' . $anioActual . '<br>';
-		} else {
-			
-			$fechaBaseDatos = date ( 'd/m/Y', $fecha );
-			
-			$fechaSeparacion = explode ( '/', $fechaBaseDatos );
-			
-			if ($fechaSeparacion [0] >= 10) {
-				$stringCiudad = 'Caracas, a los';
-				$stringMes = 'Dias del mes de';
-			} else {
-				$stringCiudad = 'Caracas, al';
-				$stringMes = 'Dia del mes de';
-			}
-			$diaHoy = self::diaSemanaNumero ();
-			$mesActual = self::mes ( $fechaSeparacion [1] );
-			$anioActual = self::anioCuatroDigitos ();
-			
-			$arrayDias = self::formatoDias ();
-			
-			return $stringCiudad . ' ' . $arrayDias [$fechaSeparacion [0]] . '(' . $fechaSeparacion [0] . ') ' . $stringMes . ' ' . $mesActual . ' de ' . $fechaSeparacion [2] . '<br>';
-		}
-	}
-	
+		
+
 	/**
 	 * Timestamp Unix
 	 *
@@ -391,6 +253,26 @@ class FechaHora{
         $datetime = new DateTime($fecha);
         return $datetime->format('d-m-Y');
     }
-  
     
+    /**
+     * Retorna el número del día del mes de una fecha dada
+     * @method numeroDia
+     */
+    static function numeroDia($f=""){
+        
+        $f = new DateTime($f);
+        return $f->format('d');
+    }
+    /**
+     * Retorna el anio de una fecha dada
+     * @method anio
+     */
+    static function anio($f=""){
+        $f = new DateTime($f);
+        return $f->format('Y');
+    }
+    static function mesAbr($f){
+        $f = new DateTime($f);
+        return self::$meses['es'][$f->format('n')]['abr'];        
+    }
 }

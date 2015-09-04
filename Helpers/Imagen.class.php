@@ -132,9 +132,10 @@ class Imagen extends Archivo{
      * 
      */
     function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
-        Debug::string("$alto,$ancho,$x,$y,$w,$h");
+        //Debug::string("$alto,$ancho,$x,$y,$w,$h");
         if(empty($rutaImagen))$rutaImagen=$this->directorio;
-        if(!file_exists($rutaImagen) or !$this->validarExistencia())
+        else $this->directorio = $rutaImagen;
+        if(!$this->validarExistencia())
             throw new Exception("No existe la imagen requerida para recorte $rutaImagen", 2500);
         if(empty($nuevaRuta))$nuevaRuta=$rutaImagen;
         

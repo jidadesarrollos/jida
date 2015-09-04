@@ -275,12 +275,17 @@ class Archivo{
     function getArchivosCargados(){
         return $this->archivosCargados;
     }
-
+    /**
+     * Verifica la existencia de un archivo
+     * 
+     * Hace uso de la funcion file_exists para ello
+     * @method validarExistencia
+     */
     function validarExistencia($file=""){
         if(empty($file))$file=$this->directorio;
         if(file_exists($file)){
             return true;
-        }else return false;
+        }else{return false;};
     }    
     /**
      * Crea un archivo 
