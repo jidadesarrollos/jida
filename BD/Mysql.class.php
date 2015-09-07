@@ -257,7 +257,7 @@ class Mysql extends ConexionBD{
         if($this->result){
             
              
-            while($data = $this->result->fetch_assoc()){
+            while($data = $this->result->fetch_assoc() and count($data)>0){
                 
                 if(!empty($key))
                     $dataCompleta[$data[$key]]=String::codificarArrayToHTML($data);

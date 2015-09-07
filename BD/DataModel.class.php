@@ -154,14 +154,9 @@ class DataModel{
         $param = func_get_args(0);
         $this->_clase = get_class($this);
         $this->initBD();
-        
         //instancia objecto reflection
         $this->reflector =new ReflectionClass(get_class($this));
         
-        // if(empty($this->tablaBD)){
-            // throw new Exception("Debe definir el nombre de la tabla de base de datos", 1);
-//                 
-        // }
         if(empty($this->pk)){
             $this->obtenerpk();
         }
@@ -194,8 +189,9 @@ class DataModel{
      * 
      */
     private function obtenerDataRelaciones(){
-        if($this->nivelActualORM<$this->nivelORM){
-            
+        $a=0;
+        if($this->nivelActualORM<$this->nivelORM and $a>0){
+        
             $datas = "";
             $pk = $this->pk;
             foreach ($this->tieneMuchos as $key => $relacion) {
@@ -211,6 +207,7 @@ class DataModel{
             
             $data = $this->bd->ejecutarQuery($datas,2);
             $result = $this->bd->obtenerDataMultiQuery($data);
+            Debug::string($consulta);
             Debug::mostrarArray($result);
                
         }
@@ -238,7 +235,8 @@ class DataModel{
                 ->fila();
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
-        #$this->obtenerDataRelaciones();   
+        
+        $this->obtenerDataRelaciones();   
         
         return $this;
     }//fin función inicializaarObjeto
@@ -541,18 +539,37 @@ class DataModel{
     /**
      * Realiza llamado a los objetos de relacion existentes
      * @method __call
+     * @method 
      */
     function __call($rel,$campos){
         
         $class = ucfirst($this->_obtenerSingular($rel));
      
-        if(in_array($class, $this->tieneMuchos) or in_array($class, $this->tieneUno)){
+        if(in_array($class, $this->tieneMuchos)){
             
             $obj = new $class(null,1);
             if(method_exists($obj,'consulta')){
                 $pk = $this->pk;
+                
                 $obj->$pk = $this->$pk;
                 return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
+            }
+        }elseif(in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno)){
+            
+            $obj = new $class(null,1);
+            if(method_exists($obj,'consulta')){
+                if(!in_array($class,$this->tieneUno)){
+                    $pkRelacion = $this->tieneUno[$class]['fk'];
+                }else{
+                    $pkRelacion = $obj->__get('pk');    
+                }
+                // se obtiene el campo de clave primaria del objeto relacion
+                
+                
+                $this->$rel = $obj->instanciar($this->$pkRelacion);
+                
+                
+                return $this->$rel;
             }
         }else{
             
@@ -812,6 +829,8 @@ class DataModel{
         }
         
     }
+    
+    
   
     /**
      * Retorna un arreglo con las propiedades publicas del objeto
