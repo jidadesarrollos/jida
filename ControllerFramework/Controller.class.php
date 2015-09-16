@@ -37,6 +37,14 @@ class Controller {
 	  * @access protected
       */
     protected $modelo="";
+    /**
+     * Permite definir los modelos a usar en el controlador
+     * 
+     * Los modelos agregados en el arreglo podrán ser accedidos como propiedad posteriormente
+     * @var $modelos
+     * @access Protected
+     */
+    protected $modelos =[];
      /**
       * Permite especificar una vista para el metodo
       * 
@@ -115,6 +123,7 @@ class Controller {
     function __construct(){
         
         $this->instanciarHelpers();
+        $this->instanciarModelos();
         $this->post=& $_POST;
         $this->get =& $_GET;
         
@@ -149,7 +158,15 @@ class Controller {
                 $this->$propiedad = new $propiedad();
             }
         }
-    } 
+    }
+    private function instanciarModelos(){
+        if(count($this->modelos)>0){
+            foreach ($this->modelos as $key => $propiedad) {
+                if(class_exists($propiedad))
+                    $this->$propiedad = new $propiedad();
+            }
+        }
+    }  
     /**
      * Filtra contenido de Texto
      * 
@@ -176,7 +193,7 @@ class Controller {
            $valor = filter_var($valor,FILTER_VALIDATE_INT);
            return $valor;
        }
-       return 0;
+       return false;
     }
     /**
      * Valida y filta el contenido de una variable como Float

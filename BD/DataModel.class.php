@@ -1118,4 +1118,8 @@ class DataModel{
         return $this->resultBD;
     }
     
+    
+    protected function guardarRelacion($arrayData){
+        
+    }
 }//fin clase;

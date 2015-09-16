@@ -215,14 +215,15 @@ class ACL extends DataModel{
      * @return boolean TRUE or FALSE
      */
     function validarAcceso($controlador,$metodo,$componente=""){
-                  
+        $componente = strtolower($componente);
         $perfilesUser = $this->perfiles;
         if(empty($componente)){
             $componente = "principal";
         }
         
         $listaAcl  = Session::get('acl');
-        //Debug::mostrarArray($this->perfiles,false);
+        
+        //Debug::mostrarArray($listaAcl,false);
         
         $accesosUser = array();
         $acceso=FALSE;
@@ -231,13 +232,15 @@ class ACL extends DataModel{
         while($acceso == FALSE and $i<count($perfilesUser)){
             
             $perfil = $perfilesUser[$i];
-                //Se valida acceso al componente        
-                if(isset($listaAcl[$componente])){
+                //Se valida acceso al componente
+                        
+                if(array_key_exists($componente, $listaAcl)){
                 	
                     $arrComponentes = $listaAcl[$componente];
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
                         //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
+                        if($componente=='Social') Debug::string("si tengo acceso");
                         $acceso=TRUE;
                     }else{
                         $arrObjetos =$arrComponentes['objetos'];

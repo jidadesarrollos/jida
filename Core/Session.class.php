@@ -135,7 +135,7 @@ class Session {
      * @return boolean $acceso  
      */
     static function checkAcceso($perfil){
-        
+        return self::checkPerfilAcceso($perfil);
     }
     /**
      * Verifica que el usuario actual tenga exactamente el mimso perfil
@@ -153,5 +153,17 @@ class Session {
             return false;
         }
         
+    }
+    /**
+     * Verifica si el usuario en sesion es administrador
+     * 
+     * @method checkAdm
+     * @return boolean
+     */
+    static function checkAdm(){
+        $perfiles = Session::get('usuario','perfiles');
+        if(in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
+            return true;
+        return false;
     }
 } // END

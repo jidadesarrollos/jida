@@ -58,7 +58,7 @@ class ComponentesController extends Controller{
             $tipoForm=2;
         }
 
-         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
+         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
          
@@ -68,7 +68,9 @@ class ComponentesController extends Controller{
 			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Componente($idComponente);
                  $validacion = $F->validarFormulario($_POST);
+                 
                  if($validacion===TRUE){
+                     $_POST['componente'] = strtolower($this->post('componente'));
                      $guardado  = $comp->guardarComponente($_POST);
                      if($guardado['ejecutado']==1){
                          Session::set('__idVista', 'componentes');
