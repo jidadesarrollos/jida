@@ -69,7 +69,9 @@ class FechaHora{
         return self::$diasSemana[$lang];
     }
 
-	
+	function LTaDatetime($fecha){
+	    
+	}
 	/**
 	 * Función que retorna el año en dos digitos.
 	 * 
@@ -227,6 +229,7 @@ class FechaHora{
      * 
      * @method datetime
      */
+    
     static function datetime($fecha=""){
         if(!empty($fecha)){
             return date ( 'Y-m-d H:i:s',$fecha );    

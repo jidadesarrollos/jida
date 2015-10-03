@@ -354,6 +354,23 @@ class ValidadorJida extends Validador{
             return false;
         }
     }
+    /**
+     * Valida un campo con formato fecha
+     * @method validarFecha
+     * @access private
+     */
+    private function validarFechaHora($validacion,$detalle){
+        
+        if($this->validarCadena('fechaHora', $this->valorCampo)){
+            $this->valorCampo=FechaHora::fechaInvertida($this->valorCampo);
+            
+            return true;
+        }else{
+            $this->obtenerMensajeError('fechaHora', $detalle);
+            return false;
+        }
+    }
+    
    private function limiteCaracteres($validacion,$detalle){
 
         if(strlen($this->valorCampo)>($detalle['limite']+10)){

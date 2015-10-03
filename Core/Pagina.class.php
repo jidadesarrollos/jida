@@ -314,7 +314,7 @@ class Pagina{
      * Permite imprimir las llamadas a archivos javascript o de segmentos de códigos creados desde el
      * controlador
      * @method printJS
-     * @param mixed $js [opcional] Si es pasado el nombre de un archivo o un arreglo de archivos solo serán 
+     * @param mixed $js [opcional] Si es pasado el nombre de un archivo o un arreglo de archivos solo será
      * imprimido lo pasado por parametro, caso contrario la función hará impresion de todo lo guardado en la 
      * variable global.
      * 

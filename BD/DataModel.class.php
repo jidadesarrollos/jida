@@ -984,7 +984,12 @@ class DataModel{
         if(count($dataUpdate)>0){    
             if($this->registroUser){
                 $idUser = Session::get('id_usuario');
-                $dataUpdate['id_usuario_modificador'] =(Session::checkLogg())?Session::get('usuario','id_usuario'):0;
+                $dataUpdate['id_usuario_modificador'] = 0;
+                if(Session::checkLogg()){
+                    if(is_object(Session::get('Usuario'))) $dataUpdate['id_usuario_modificador'] = Session::get('Usuario')->id_usuario;
+                    else    $dataUpdate['id_usuario_modificador'] = Session::get('usuario','id_usuario');
+                }
+                
             };
             
             $update = "UPDATE $this->tablaBD SET ";
