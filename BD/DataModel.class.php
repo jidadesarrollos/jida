@@ -11,6 +11,7 @@ include_once 'ResultBD.class.php';
 class DataModel{
     
     protected $tablaBD;
+    protected $esquema;
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      * 
