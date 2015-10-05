@@ -223,14 +223,25 @@ class UsersController extends Controller{
     function validarInicioSesion($usuario,$clave){
         $data = $this->modelo->validarLogin($usuario, $clave);
         if($data){
-            Session::sessionLogin();
-            Session::set('Usuario',$this->modelo);
-            //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
-            Session::set('usuario',$data);
+            $this->crearSesionUsuario();
             return true;
         }else 
             return false;
     }//fin metodo
+    
+    /**
+     * Registra la sesion de un usuario
+     * 
+     * Crea la variable de Sesion Usuario con el usuario en sesión actual
+     * @method crearSesionUsuario
+     */
+    function crearSesionUsuario(){
+        Session::sessionLogin();
+        Session::set('Usuario',$this->modelo);
+        //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        Session::set('usuario',$data);
+        return $this;
+    }
     /**
      * Retorna un Objeto Formulario para Formulario Login
      * 

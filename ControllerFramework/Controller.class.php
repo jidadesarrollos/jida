@@ -488,6 +488,7 @@ class Controller {
      * @param int tipo 1 json, 2 html. 
      */
     protected function respuestaAjax($respuesta,$tipo=2){
+        
         if($tipo==2){
             echo $respuesta;
         }else{

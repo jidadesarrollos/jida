@@ -493,7 +493,7 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-            Debug::mostrarArray($excepcion);
+            #Debug::mostrarArray($excepcion);
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        
             else
