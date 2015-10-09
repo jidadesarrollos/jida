@@ -116,6 +116,11 @@ if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('LAYOUT_JIDA'))
 
+
+/**
+ * @constant URL_APP Dirección url de la aplicación
+ */
+define('URL_APP','/');
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
    
 /**
