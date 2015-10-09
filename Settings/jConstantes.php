@@ -117,7 +117,9 @@ if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('LAYOUT_JIDA'))
 
 
-/**
+
+if(!defined('URL_APP'))
+ /**
  * @constant URL_APP Dirección url de la aplicación
  */
 define('URL_APP','/');
