@@ -280,17 +280,25 @@ class Controller {
     /**
      * Retorna el valor post solicitado, false si el valor no es conseguido
      * @method post
-     * @param string $param Dato a solicitar 
+     * @param string $param Dato a solicitar
+     * @return mixed 1. si solo es pasado $param se devolverá el valor $_POST correspondiente,
+     * 2. Si es pasado $nuevoValor será retornado el objeto 
      * 
      */
-    protected function post($param=""){
+    protected function post($param="",$nuevoValor=""){
+        
         if(empty($param)){
             return $_POST;
-        }else
-        if(isset($this->post[$param]) or array_key_exists($param, $_POST))
+        }elseif(!empty($nuevoValor)){
+            
+             $this->post[$param]=$nuevoValor;
+             return $this;
+        }elseif(isset($this->post[$param]) or array_key_exists($param, $_POST)){
             return $this->post[$param];
-        else
-            return false;
+        }
+         
+        return false;   
+
     }
     
     /**

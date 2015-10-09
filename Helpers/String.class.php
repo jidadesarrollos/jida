@@ -186,7 +186,7 @@ class String {
      * @return string $string;
      */
     public static function guionCase($string){
-        
+        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $string);
         return strtolower(str_replace(" ", "-", $string)); 
     }
     /**
@@ -197,6 +197,10 @@ class String {
      * @return string $str
      */
     public static function guionCaseToString($guionCase){
+        $cadena= '/\/\\\'\?\¿\_';
+        //$guionCase= str_replace(["¿","?","/"], $replace, $subject)
+        preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $guionCase);
+        
         return str_replace("-", " ", $guionCase);
     }
     /**
@@ -245,6 +249,8 @@ class String {
             return $cadena;
         }
     } // fin función
+    
+    
     
 } // END 
 

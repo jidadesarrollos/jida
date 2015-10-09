@@ -14,7 +14,13 @@
 */
 
 class DataVista{
+    /**
+     * @var array $css Arreglo Global de archivos javascript a usar por la vista 
+     */        
     var $js;
+    /**
+     * @var array $css Arreglo Global con css a usar por la vista 
+     */
     var $css;
     /**
      * @var array $jsAjax Arreglo que registra los js a incluir en llamadas ajax
@@ -128,6 +134,30 @@ class DataVista{
         }
         return $this;        
     }
+    
+    /**
+     * Remueve un archivo CCS
+     * 
+     * Elimina un archivo css de la lista de archivos registrada para inserción en el view.
+     * 
+     * 
+     * @method removerCss
+     * @param string $css Nombre del Archivo CSS a eliminar 
+     */
+    function removerCSS($archivo,$key=null){
+       $arrayCss=& $this->css;
+       if(!is_null($key) and array_key_exists($key, $this->css)) $arrayCss =& $this->css[$key];
+       if(in_array($archivo, $arrayCss) ){
+           $key = array_search($archivo,$arrayCss);
+           unset($arrayCss[$key]);
+           return true;
+       }
+       return false;
+    }
+    
+    function removerJs(){
+        
+    }
     /**
      * Permite definir una vista para usar fuera del ambito del controlador
      * 
@@ -157,21 +187,7 @@ class DataVista{
         return $this->_path;
     }
     
-    
-    /**
-     * Remueve un css a cargar
-     * @method removerCSS
-     * @param $pos Key numerica del arreglo
-     * @param boolean $ambito En caso de que aplique a css cargados segun el entorno de la app
-     */
-    function removerCSS($pos,$ambito=FALSE){
-        if($ambito){
-            unset($GLOBALS[ENTORNO_APP][$pos]);    
-        }else{
-            
-        }
-        
-    }
+  
     
     /**
      * Agrega codigo Js al final de la vista, luego de incluir
