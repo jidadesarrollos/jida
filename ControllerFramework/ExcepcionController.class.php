@@ -1,3 +1,4 @@
+
 <?PHP 
 /**
  * Controlador de errores generales
@@ -17,9 +18,10 @@ class ExcepcionController extends Controller{
 	var $layoutPropio =TRUE;
     var $layoutDefault="";
     var $layoutModulos = [];
-    protected $modulos;
+    
     protected $moduloActual;
     protected $controladorError=FALSE;
+	protected $modulos=[];
     
     var $layoutError ="";
     function __construct($e,$ctrlError=""){
@@ -29,9 +31,10 @@ class ExcepcionController extends Controller{
         $this->layoutDefault = LAYOUT_DEFAULT;
         $this->excepcion = $e;
         parent::__construct();
-        $this->modulos = $GLOBALS['modulos'];
+		if(array_key_exists('modulos', $GLOBALS))
+        	$this->modulos = $GLOBALS['modulos'];
         
-        $this->moduloActual = $GLOBALS['_MODULO_ACTUAL'];
+        $this->moduloActual = $this->_modulo;
         
         //if($this->moduloActual=='Jadmin') $this->processJadminError();
         if(array_key_exists($this->moduloActual, $this->layoutModulos)){

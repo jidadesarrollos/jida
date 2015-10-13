@@ -13,6 +13,7 @@
      * @var string $controlador
      * @access private
      */
+ 	private $appRoot;
     private $controlador;
     /**
      * Objeto controlador instanciado
@@ -76,7 +77,7 @@
             Session::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
             
-            if(isset($GLOBALS['modulos']) and is_array($GLOBALS['modulos'])){
+            if(array_key_exists('modulos', $GLOBALS)){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
@@ -84,6 +85,8 @@
             
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
             $_SESSION['urlActual'] = $_GET['url'];
+			
+			
             Session::set('URL_ACTUAL', $_GET['url']);
             /*Manejo de url*/
             if(isset($_GET['url'])){
@@ -93,25 +96,34 @@
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
             }
-            
+			
             unset($_GET['url']);
             if(count($_GET)>0){
                $this->args=$_GET;
             }
-                
-            
+			   
+            $this->appRoot = str_replace(['index.php'], "", $_SERVER['PHP_SELF']);
+			$GLOBALS['__URL_APP'] = $this->appRoot;
+			
+			$ini = substr($this->appRoot, 1);
+			
+			Session::set('URL_ACTUAL', $ini.Session::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
             $GLOBALS['arrayParametros'] = $url;
+            
             $this->getSubdominio($url);
             $this->procesarURL($url);
             
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
-            
+            //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
+			
+			
+            
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             
             $this->validacion();
@@ -141,8 +153,12 @@
                 /**
                  * Entra aca si es una app nueva
                  */
-                $this->controlador="Jadmin";
-                $this->metodo = 'initApp';
+                $this->modulo="Jadmin";
+                $this->controlador = 'init';
+				$this->metodo="index";
+				$init = substr($this->appRoot, 1);
+				Session::set('URL_ACTUAL', $init.'jadmin/init');
+				
             else:
                 
                 //Se verifica si existe el controlador
@@ -312,6 +328,7 @@
         try{
             if(BD_REQUERIDA===TRUE){
 				$acl = new ACL();
+				
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
 			}else{
 				$acceso=TRUE;
@@ -322,6 +339,7 @@
                  * Se verifica si es llamado el controlador principal del framework.
                  * Si es llamado el modulo interno "jadmin" el valor de rutaVista = 2, excepcion=3 default=1
                  */
+                
                 if(strtolower($this->controlador)=='jadmin' or strtolower($this->modulo)=='jadmin'){
                        
                    $this->vista->rutaPagina=2;
@@ -398,7 +416,7 @@
                  
            }        
            if(isset($controlador)){
-                
+               
                $this->ejecucion($controlador);
            }
          }catch(Exception $e){
@@ -493,7 +511,7 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-            #Debug::mostrarArray($excepcion);
+            Debug::mostrarArray($excepcion);
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        
             else
@@ -567,8 +585,11 @@
      * 
      * Realiza una modificación del string para crear nombres
      * de clases controladoras y metodos validas
+	 * 
+	 * @method validarNombre
      * @param string $str Cadena a formatear
      * @param int $tipoCamelCase 1 Upper 2 Lower
+	 * @return string $nombre Cadena Formateada resultante
      */
     private function validarNombre($str,$tipoCamelCase){
         if(!empty($str)){

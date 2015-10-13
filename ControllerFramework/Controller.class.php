@@ -104,7 +104,7 @@ class Controller {
      * Nombre del controlador
      */
     private $_nombreController;
-    private $_modulo;
+    protected $_modulo;
     /**
      * @var url $__url URL Actual Registra la URL ingresada en el navegador
      * @access protected
@@ -129,8 +129,11 @@ class Controller {
         
         $this->_clase=get_class($this);
         $this->_nombreController = str_replace("Controller", "", $this->_clase);
-
-        $this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
+		if(array_key_exists('_MODULO_ACTUAL', $GLOBALS))
+        	$this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
+		else{
+			$this->_modulo="";
+		}
         $this->dv = new DataVista();
         $this->url = $this->urlController();
         $this->usuario = Session::get('Usuario');
@@ -340,9 +343,11 @@ class Controller {
                 $this->url = "/".strtolower($this->_modulo)."/";
             }else{
                 if(empty($this->_modulo)){
-                    $this->url = "/".$this->convertirNombreAUrl($controller)."/";
+                	
+                    $this->url = $this->obtURLApp().$this->convertirNombreAUrl($controller)."/";
                 }else{
-                    $this->url = "/".strtolower($this->_modulo)."/".$this->convertirNombreAUrl($controller)."/";    
+                	
+                    $this->url = $this->obtURLApp().strtolower($this->_modulo)."/".$this->convertirNombreAUrl($controller)."/";    
                 }
                     
             }
@@ -352,7 +357,7 @@ class Controller {
         return $this->url;
     }
     protected function urlModulo(){
-          if(!empty($this->_modulo))  return "/".strtolower($this->_modulo)."/";
+          if(!empty($this->_modulo))  return $this->obtURLApp().strtolower($this->_modulo)."/";
           else return false;
           
     }
@@ -365,6 +370,7 @@ class Controller {
      */
     protected function getUrl($metodo="",$data=array()){
         if(!empty($metodo)){
+        	
             $urlController=$this->urlController();
             $modulo="/";
             
@@ -516,6 +522,16 @@ class Controller {
     protected function redireccionar($url){
         header('location:'.$url.'');exit;
     }
+	
+	protected function obtURLApp(){
+		
+		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
+			return $GLOBALS['__URL_APP'];
+		}else{
+			return URL_APP;
+		}
+		
+	}
     
 
 }
