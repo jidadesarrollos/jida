@@ -1,0 +1,13 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME}% !-d
+RewriteCond %{REQUEST_FILENAME}% !-f
+RewriteCond %{REQUEST_FILENAME}% !-l
+
+
+
+#RewriteLogLevel 9
+
+RewriteRule \.(css|jpe?g|gif|png|js|ods|odt|doc?x|xls|pdf|eot|svg|ttf|woff|less)$ - [L]
+
+RewriteRule  ^(.+)$ index.php?url=$1 [QSA,L]
