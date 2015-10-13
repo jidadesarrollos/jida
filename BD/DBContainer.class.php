@@ -160,7 +160,7 @@ class DBContainer {
      */
     private function initBD(){
         if (!defined('manejadorBD')) {
-            throw new Exception("No se encuentra definido el manejador de base de datos", 1);
+            return false;
         }
         $this->manejadorBD = manejadorBD;
         switch ($this->manejadorBD) {

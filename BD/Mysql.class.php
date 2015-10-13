@@ -76,7 +76,7 @@ class Mysql extends ConexionBD{
      * Establece la conexión a base de datos
      */
     function establecerConexion(){
-        
+		        
         $this->mysqli = @new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
       
         if($this->mysqli->connect_error){
@@ -449,6 +449,36 @@ class Mysql extends ConexionBD{
     
     function getValoresReservados(){
         return $this->valoresReservados;
+    }
+	/**
+     * Retorna el listado de tablas de la base de datos
+     * 
+     * @method obtTablasBD
+     * 
+     */
+  	function obtTablasBD(){
+         $q = "select table_name,table_type, table_collation, create_time 
+                from information_schema.tables  where table_schema='".$this->bd."'
+                and table_type!='VIEW' and  table_name not like 's_%'
+            ;";
+        $data = $this->obtenerDataCompleta($q);
+      return $data;   
+    }
+	 /**
+     * Retorna las columnas de una tabla
+     * @method obtColumnasTabla
+     * @param array $tabla
+     */
+    function obtColumnasTabla($tabla){
+        $q= "select table_schema,table_name,column_name,data_type,column_type,column_key from 
+        information_schema.columns where table_schema='".$this->bd."' ";
+        if(is_array($tabla))
+        $q.= "and tables in (".implode(",",$tabla)."";
+        else {
+            $q.="and table_name='$tabla'";
+        }
+
+        return $this->obtenerDataCompleta($q);  
     }
     
 }//final clase Mysql

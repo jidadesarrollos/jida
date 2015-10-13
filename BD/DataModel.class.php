@@ -113,6 +113,11 @@ class DataModel{
      * @var $usoWhere
      */
     private $usoWhere=FALSE;
+	
+	/**
+	 * @var boolean $usoBD Dedermina si es requerido el uso de base de datos
+	 */
+	protected $usoBD=FALSE;
     /**
      *@var string $order Registra la clausula order de una sentencia a ejecutar
      */
@@ -154,7 +159,12 @@ class DataModel{
         $numeroParams = func_num_args();
         $param = func_get_args(0);
         $this->_clase = get_class($this);
-        $this->initBD();
+		if(defined('MANEJADOR_BD') or defined ('manejadorBD'))
+        	$this->initBD();
+		else{
+			$this->usoBD=FALSE;
+		}
+			
         //instancia objecto reflection
         $this->reflector =new ReflectionClass(get_class($this));
         
@@ -179,12 +189,7 @@ class DataModel{
         }
         $this->identificarObjetosRelacion();
         $pk =& $this->pk;
-        
-        
-        //$this->validarRelaciones();
-        
-        
-        
+		
     }
     /**
      * 
