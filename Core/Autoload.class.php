@@ -39,6 +39,7 @@
             'Controller/',
             'Componentes/',
             'Modelos/',
+            'Core/GeneradorCodigo/',
         );
         
         if(isset($GLOBALS['modulos'] )){

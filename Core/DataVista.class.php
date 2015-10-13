@@ -113,9 +113,9 @@ class DataVista{
      * @param boolean $ambito TRUE si se desea usar la constante URL_CSS como ubicacion
      * @param string $ambito Usado para agregar css solo para prod o dev
      */
-    function addCSS($css,$constante=TRUE,$ambito=""){
+    function addCSS($css,$constante=URL_CSS,$ambito=""){
         
-        if($constante===TRUE) $constante=URL_CSS;
+        
             
         if(is_array($css)){
             foreach ($css as $key => $value) {

@@ -90,7 +90,10 @@ class Pagina{
      */
     private $modulo;
     private $rutaExcepciones="";
-    
+	/**
+	 * URL Actual
+	 */
+    private $url;
     
     function __construct($controlador,$metodo="",$modulo=""){
        
@@ -242,7 +245,7 @@ class Pagina{
                 throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);            
         }else
         if(!file_exists($this->layout)){
-            
+			            
             throw new Exception('No existe el layout '.$this->layout, 1);
             
             //Debug::string('No existe el layout '.$this->layout,true);

@@ -58,9 +58,12 @@ class ACL extends DataModel{
         if(Session::get('Usuario') instanceof Usuario)
             $this->perfiles = Session::get('Usuario')->perfiles;
         $this->perfiles = $_SESSION['usuario']['perfiles'];
-        $this->obtenerAccesoComponentes();
-        
-        $this->obtenerAccesoObjetos();
+		if($this->usoBD===TRUE){
+			Debug::string("hola");
+		    $this->obtenerAccesoComponentes();
+		    
+		    $this->obtenerAccesoObjetos();
+		}
     }
     /**
      * Define los componentes a los que tiene acceso el perfil
@@ -215,7 +218,12 @@ class ACL extends DataModel{
      * @return boolean TRUE or FALSE
      */
     function validarAcceso($controlador,$metodo,$componente=""){
+    	
+    	if($this->usoBD===FALSE)return true;
+		else echo "nada papa <hr />";
+		echo "voy";
         $componente = strtolower($componente);
+		
         $perfilesUser = $this->perfiles;
         if(empty($componente)){
             $componente = "principal";

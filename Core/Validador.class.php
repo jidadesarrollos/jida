@@ -94,7 +94,7 @@ class Validador{
      * @param array $datosValidacion [opcional] Datos adicionales a ejecutar en validacion a tener en cuenta
      *  
      */
-    function __construct($cadena,$validacion,$datosValidacion=array()){
+    function __construct($cadena="",$validacion="",$datosValidacion=array()){
         
         $this->valorCampo = $cadena;
         $this->validacion=TRUE;
@@ -179,10 +179,27 @@ class Validador{
             $this->mensajeError = "El campo ".$this->dataValidaciones[$validacion]["mensaje"];
         }
     }//fin función
-            
+    /**
+	 * Permite realizar validaciones a una cadena
+	 * @method validar
+	 * @access public static
+	 * @param mixed $validacion nombre de la validacion o array de nombres
+	 * @param string $cadena Cadena a validar
+	 * @param boolean $mensaje Define si se obtiene el mensaje de error o no.
+	 * @return boolean 
+	 */
     static function validar($validacion,$cadena,$mensaje=FALSE){
         $validador = new Validador();
-        return $validador->validarCadena($validacion, array('mensaje'=>$mensaje));
+		if(is_array($validacion)){
+			$bandera = TRUE;
+			foreach ($validacion as $key => $v) {
+				$validador->valorCampo=$cadena;
+				$bandera=$validador->validarCadena($v, ['mensaje'=>$mensaje]);
+			}
+			Debug::string($bandera);
+			return $bandera;
+		}else
+        	return $validador->validarCadena($validacion, array('mensaje'=>$mensaje));
     }
     /**
      * Devuelve el valor del resultado de la valicación efectuada
