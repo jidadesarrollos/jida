@@ -67,7 +67,7 @@ class ConexionBD {
      * @throws Exception Error de Conexion a la Base de Datos
      */
     public function __construct($conexion="default") {
-        
+       		 
             if(array_key_exists('conexiones',$GLOBALS) and array_key_exists($conexion,$GLOBALS['conexiones'])){
                 $arr = $GLOBALS['conexiones'][$conexion];
                 $metodos = get_class_vars(__CLASS__);
