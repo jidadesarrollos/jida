@@ -1,0 +1,29 @@
+{
+  "name": "Jida Framework",
+  "version": "1.0.4",
+  "description": "Framework para desarrollo de aplicaciones web",
+  "main": "index.php",
+  "keywords": [
+    "php",
+    "framework",
+    "jida",
+    "mvc"
+  ],
+  "authors": [
+    "jrodriguez"
+  ],
+  "license": "MIT",
+  "homepage": "www.jidadesarrollos.com.ve",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "../htdocs/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4"
+  }
+}

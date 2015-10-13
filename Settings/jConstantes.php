@@ -7,7 +7,8 @@
  * 
  */
  
- 
+$GLOBALS['modulos']=['Jadmin'];
+//Debug::mostrarArray($GLOBALS['modulos'],false); 
 /**
  * @constante TITULO_SISTEMA Nombre de la aplicación
  */
@@ -114,6 +115,7 @@ if(!defined('FECHA_MODIFICACION')){
 if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
+if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components');
 if(!defined('LAYOUT_JIDA'))
 
 
@@ -122,7 +124,7 @@ if(!defined('URL_APP'))
  /**
  * @constant URL_APP Dirección url de la aplicación
  */
-define('URL_APP','/');
+define('URL_APP',$_SERVER['REQUEST_URI']);
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
    
 /**

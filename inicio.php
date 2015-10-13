@@ -76,10 +76,9 @@ include_once 'Settings/jidaConfiguracion.php';
 /**
  * Incluir archivo de configuración general del framework
  */
-
-include_once 'Config/BDConfig.php';
-include_once 'Config/initConfig.php';
-include_once 'Config/appConfig.php';
+if (file_exists(DIR_APP.'Config/BDConfig.php'))	include_once 'Config/BDConfig.php';
+if (file_exists(DIR_APP.'Config/initConfig')) 	include_once 'Config/initConfig.php';
+if (file_exists(DIR_APP.'Config/appConfig')){	include_once 'Config/appConfig.php'; echo "yeah";}
 include_once 'Settings/jConstantes.php';
 #=======================================================================
 #=======================================================================
@@ -102,9 +101,10 @@ if(ENTORNO_APP == 'dev'){
     error_reporting(0);	
 }
 
-
 include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente
 Autoload::init();
+
+
 Session::iniciarSession();
 ?>

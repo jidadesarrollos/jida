@@ -17,29 +17,7 @@
 
         <?=$this->printHeadTags()?>
         
-        <link href="/htdocs/css/libs/bootstrap.min.css" rel="stylesheet">
-        <link href="/htdocs/css/f-a.css" rel="stylesheet">
-        <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
-        <link href="/htdocs/css/jida.css" rel="stylesheet">
-        <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link rel="stylesheet/less" type="text/css" href="/htdocs/less/menu.less">
-        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
-        <!--libs-->
-        <script src="/htdocs/js/libs/jq2.0.3.js"></script>
-        <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
-        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
-        <script src="/htdocs/js/libs/bootbox.min.js"></script>
-        <script src="/htdocs/js/libs/tipsy.js"></script>
-        <script src="/htdocs/js/libs/ajaxupload.js"></script>
-        <script src="/htdocs/js/libs/less.js"></script>
-        <!--jidalibs-->
-        <script src="/htdocs/js/jida/jd.ajax.js"></script>
-        <script src="/htdocs/js/jida/validadorJida.js"></script>
-        <script src="/htdocs/js/jida/jidaPlugs.js"></script>
-        <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
-        <!--custom files-->
-        <script src="/htdocs/js/funcionesGenerales.js"></script>
-        
+        <?=$this->printCss()?>
     </head>
 
     <body>
@@ -72,6 +50,6 @@
             </p>
         </footer>
         
-
+		<?=$this->printJS()?>
     </body>
 </html>
