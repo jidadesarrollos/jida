@@ -248,12 +248,53 @@ class String {
         }else{
             return $cadena;
         }
-    } // fin función
-    
-    
-    
-} // END 
+    } // fin función 
+     /**
+     * Obtiene el singular de una palabra
+     * 
+     * Esta función se basa en el lenguaje español principalmente, basandose en las constantes
+     * PLURAL_ATONO y PLURAL CONSONANTE, las mismas pueden ser editadas para configurar el funcionamiento
+     * del metodo
+     * 
+     * @method obtenerSingular
+     * @param string $palabra Palabra sobre la cual se desea obtener el plural
+     * @return string $singular Palabra resultante
+     */
+    public static function obtenerSingular($palabra){
+        $arrayPalabra=array();
+        $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        
+            foreach ($palabra as $key => $word) {
+                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+                    $arrayPalabra[]=substr($word, 0,strlen($word)-2);
+                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+                    $arrayPalabra[]=substr($word, 0,strlen($word)-1);
+                }else{
+                    $arrayPalabra[]=$word;
+                }
+            }
+        return implode($arrayPalabra);
+    }
+    /**
+     * Obtiene el plural de una palabra
+     * 
+     * Esta función se basa en el lenguaje español principalmente, basandose en las constantes
+     * PLURAL_ATONO y PLURAL CONSONANTE, las mismas pueden ser editadas para configurar el funcionamiento
+     * del metodo
+     * 
+     * @method obtenerPlural
+     * @param string $palabra Palabra sobre la cual se desea obtener el plural
+     * @return string $plural Palabra resultante
+     */
+    public static function obtenerPlural($palabra){
+        $vocales = ['a','e','i','o','u'];
+        $ultima = substr($palabra,-1);
+        if(in_array($ultima, $vocales)){
+            return $palabra.PLURAL_ATONO;
+        }else{
+            return $palabra.PLURAL_CONSONANTE;
+        }
+        
+    }
 
-
-
-?>
+} // END

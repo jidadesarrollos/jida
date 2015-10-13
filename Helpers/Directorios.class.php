@@ -33,7 +33,9 @@ class Directorios extends Directory{
      */
     static function crear($directorio,$mode=0777){
         if(is_array($directorio)){
-            
+            foreach ($directorio as $key => $dir) {
+                mkdir($dir,$mode,TRUE);
+            }
         }else{
             if(!file_exists($directorio)){
                 mkdir($directorio,$mode,TRUE);
@@ -160,6 +162,25 @@ class Directorios extends Directory{
 
         
     }
+	/**
+	 * Copia el contenido de un directorio a otro
+	 */
+	static function copiar($origen,$destino){
+		if(is_dir($origen) and is_readable($origen)){
+			if(!self::validar($destino)) self::crear($destino);
+			$origenDir = dir($origen);
+			while (($file=$origenDir->read())!==FALSE) {
+				if($file=='.' or $file=='..') continue;
+				if(is_dir($file)){
+					 self::copiar($origen."/".$file, $destino."/file");
+					continue;
+				}
+				
+				
+				copy($origen."/".$file,$destino."/".$file);
+			}	
+		}
+	}
         
     
 } // END
