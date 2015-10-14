@@ -1,5 +1,4 @@
 <?PHP 
- 
  /**
   * Controlador global del framework
   *
