@@ -73,6 +73,9 @@ class Validador{
                                                     "mensaje"   =>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/),
                     "fecha"                 =>array("expresion" => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
                                                     "mensaje"   => 'El formato de fecha debe ser dd-mm-yyyy'),
+                    "fechaHora"             =>[ 'expresion'=>'/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
+                                                'mensaje' =>'Formato de Fecha u hora incorrecto.'
+                                            ],
                     "limiteCaracteres"      =>array("mensaje"=>"La cadena no puede superar el total de caracteres permitidos"),
                     "documentacion"         =>array("mensaje"=>"El campo debe tener el siguiente formato J-18935170",
                                                     "expresion"=>"/^([V|E|G|J|P|N]{1}\d{8,10})*$/",),
