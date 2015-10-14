@@ -59,7 +59,7 @@ class ACL extends DataModel{
             $this->perfiles = Session::get('Usuario')->perfiles;
         $this->perfiles = $_SESSION['usuario']['perfiles'];
 		if($this->usoBD===TRUE){
-			Debug::string("hola");
+			
 		    $this->obtenerAccesoComponentes();
 		    
 		    $this->obtenerAccesoObjetos();
@@ -219,9 +219,9 @@ class ACL extends DataModel{
      */
     function validarAcceso($controlador,$metodo,$componente=""){
     	
-    	if($this->usoBD===FALSE)return true;
-		else echo "nada papa <hr />";
-		echo "voy";
+    	if($this->usoBD===FALSE)
+    		return true;
+		
         $componente = strtolower($componente);
 		
         $perfilesUser = $this->perfiles;
@@ -230,8 +230,9 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
-        
-        //Debug::mostrarArray($listaAcl,false);
+		//Se da acceso si no existe una lista acl creada
+        if(!is_array($listaAcl)) return true;
+        Debug::mostrarArray($listaAcl,false);
         
         $accesosUser = array();
         $acceso=FALSE;

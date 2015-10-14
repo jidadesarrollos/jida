@@ -8,7 +8,9 @@
  */
  
 $GLOBALS['modulos']=['Jadmin'];
-//Debug::mostrarArray($GLOBALS['modulos'],false); 
+//Debug::mostrarArray($GLOBALS['modulos'],false);
+if(!defined('MANEJADOR_BD'))
+define('MANEJADOR_BD',FALSE); 
 /**
  * @constante TITULO_SISTEMA Nombre de la aplicación
  */

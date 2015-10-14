@@ -8,7 +8,7 @@
 */
 
 
-class FormsController extends Controller{
+class FormsController extends JController{
     /**
      * objeto modelo jidaControl
      * @access private

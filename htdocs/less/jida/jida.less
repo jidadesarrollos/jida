@@ -1,0 +1,39 @@
+/*
+ * Estilo basico para panel jadmin
+ * 
+ * @author Julio Rodriguez 
+ */
+@urlbower     :     '../../../htdocs/bower_components/';
+
+@import '@{urlbower}bootstrap/less/variables.less';
+@import 'jida-vars.less';
+@import 'mixins.less';
+@import 'helpers.less';
+@import 'jaside.less';
+@import 'forms.less';
+
+html,
+body {
+   height: 100%;
+   
+}
+textarea{
+    resize: none;
+}
+ .cp{
+      padding-top:60px;
+    }
+.all-container{
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -100px;
+   
+}
+.separador-footer{
+    margin-top:50px;
+    height: 100px;  
+    clear: both;
+}
+

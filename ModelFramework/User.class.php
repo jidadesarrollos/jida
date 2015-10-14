@@ -71,7 +71,7 @@ class User extends DataModel{
      * @var $perfiles
      * @access private
      */
-    protected $perfiles=array();
+    protected $perfiles=[];
     
     protected $tablaBD = "s_usuarios";
     protected $pk = "id_usuario";
@@ -158,9 +158,11 @@ class User extends DataModel{
             foreach ($perfiles as $key => $idPerfil) {
                 if($i>0)$insert.=",";
                 $insert.="(null,$this->id_usuario,$idPerfil)";
+				
                 $i++;
             }
             $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
+			
             $this->bd->ejecutarQuery($delete.$insert,2);
             return array('ejecutado'=>1);
 	}
@@ -187,17 +189,18 @@ class User extends DataModel{
      * @param array $datos Arreglo con información del usuario (clave, nombre de usuario)
      * @param array $perfiles Perfiles que se asocian al usuario a registrar
      */
-    function registrarUsuario($datos,$perfiles=""){
+    function registrarUsuario($datos,$perfiles="",$validacion=TRUE){
         if(empty($perfiles)){
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
             
         }
         $this->establecerAtributos($datos);
-        
-        $codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
-        $this->validacion=$codigo;
+        if($validacion===TRUE){
+        	$codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
+	        $this->validacion=$codigo;    
+	        $this->activo=0;
+        }
         $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
-        $this->activo=0;
         if($this->salvar()->ejecutado()){
             $this->id_usuario=$this->resultBD->idResultado();
             
@@ -255,6 +258,14 @@ class User extends DataModel{
         $this->activo=0;
         $this->salvar();
     }
+	
+	function agregarPerfilSesion($perfil){
+		if(is_array($perfil)){
+			$this->perfiles = array_merge($this->perfiles,$perfil);
+		}
+		$this->perfiles[]=$perfil;
+		
+	}
 
 }
     

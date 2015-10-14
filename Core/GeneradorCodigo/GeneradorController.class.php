@@ -66,7 +66,7 @@ class GeneradorController extends GeneradorObjeto{
 	}
 	
 	function metodoIndex($callback=""){
-		Debug::string("hola");
+
 		$this->agregarMetodo('index',null,null,$callback);
 		return $this;
 	}

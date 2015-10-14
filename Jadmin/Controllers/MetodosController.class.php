@@ -9,7 +9,7 @@
  */
 
  
-class MetodosController	 extends Controller{
+class MetodosController	 extends JController{
     
     function __construct($id=""){
         

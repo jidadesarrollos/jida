@@ -2,7 +2,7 @@
 /**
  * 
  */
-class AclController extends Controller{
+class AclController extends JController{
     
     function __construct(){
         $this->url='/jadmin/acl/';

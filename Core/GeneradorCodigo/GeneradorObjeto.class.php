@@ -57,6 +57,12 @@ class GeneradorObjeto extends DataModel{
         }else{
         	if(!empty($prefijos))$objeto=preg_replace($prefijos, "", $objeto);
 			
+			$nombre = explode("_",$objeto);
+				array_walk($nombre,function(&$valor,$clave){
+					$valor = String::upperCamelCase(String::obtenerSingular($valor));
+				});
+				
+			$nombre = implode("_", $nombre);
             $nombre = $this->String->upperCamelCase(
                       $this->String->obtenerSingular(str_replace("_", " ", $objeto))
                     );  

@@ -9,7 +9,7 @@
  */
 
  
-class ObjetosController extends Controller{
+class ObjetosController extends JController{
     
 	
 	var $Mperfil = "";

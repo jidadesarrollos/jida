@@ -252,7 +252,7 @@ class String {
      /**
      * Obtiene el singular de una palabra
      * 
-     * Esta función se basa en el lenguaje español principalmente, basandose en las constantes
+     * Esta función trabaja en el lenguaje español principalmente, basandose en las constantes
      * PLURAL_ATONO y PLURAL CONSONANTE, las mismas pueden ser editadas para configurar el funcionamiento
      * del metodo
      * 
@@ -265,9 +265,21 @@ class String {
         $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         
             foreach ($palabra as $key => $word) {
-                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+            	$ultimaLetraSingular = substr($word,strlen($word)-3,1);
+				$penultima = substr($word, strlen($word)-2,1);
+				$pluralAtono=['í','ú','y','d','r','n','l'];
+                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE 
+                	and in_array($ultimaLetraSingular, $pluralAtono)
+					
+					){
+                	
+					
                     $arrayPalabra[]=substr($word, 0,strlen($word)-2);
-                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+                }elseif(
+                	substr($word, strlen($word)-1)==PLURAL_ATONO
+                	and !in_array($penultima, ['u'])
+				
+				){
                     $arrayPalabra[]=substr($word, 0,strlen($word)-1);
                 }else{
                     $arrayPalabra[]=$word;

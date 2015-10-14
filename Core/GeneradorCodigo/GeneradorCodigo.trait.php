@@ -118,7 +118,7 @@ trait GeneradorCodigo{
 	 * 
 	 */
 	protected function crearFuncion($nombre,$params=[],$ambito,$contenido=""){
-		Debug::string("hola");
+		
 		$arrayAmbito=['public','private','protected','static'];
 		$funcion = "";
 		if(!in_array($ambito, $arrayAmbito)) $ambito="";

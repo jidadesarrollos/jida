@@ -72,7 +72,7 @@ if(TEST_PLATFORM==TRUE){
 /**
  * Se incluye el archivo de configuración por defecto
  */
-include_once 'Settings/jidaConfiguracion.php';
+
 /**
  * Incluir archivo de configuración general del framework
  */
@@ -80,6 +80,7 @@ if (file_exists(DIR_APP.'Config/BDConfig.php'))	include_once 'Config/BDConfig.ph
 if (file_exists(DIR_APP.'Config/initConfig')) 	include_once 'Config/initConfig.php';
 if (file_exists(DIR_APP.'Config/appConfig')){	include_once 'Config/appConfig.php'; echo "yeah";}
 include_once 'Settings/jConstantes.php';
+include_once 'Settings/jidaConfiguracion.php';
 #=======================================================================
 #=======================================================================
 #=======================================================================

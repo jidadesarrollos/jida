@@ -1,7 +1,7 @@
 <?PHP 
 
 
-class UsersController extends Controller{
+class UsersController extends JController{
     protected $urlCierreSession="/jadmin/";
     var $layout = 'jadmin.tpl.php';    
 	function __construct(){

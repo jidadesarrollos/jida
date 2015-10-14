@@ -12,6 +12,8 @@ class DataModel{
     
     protected $tablaBD;
     protected $esquema;
+	protected $manejadorBD;
+	
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      * 
@@ -155,11 +157,13 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
-        
+        if(defined('MANEJADOR_BD') or defined('manejadorBD'))
+			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
         $param = func_get_args(0);
         $this->_clase = get_class($this);
-		if(defined('MANEJADOR_BD') or defined ('manejadorBD'))
+		$this->usoBD=$this->manejadorBD;
+		if($this->usoBD!==FALSE)
         	$this->initBD();
 		else{
 			$this->usoBD=FALSE;
@@ -213,8 +217,8 @@ class DataModel{
             
             $data = $this->bd->ejecutarQuery($datas,2);
             $result = $this->bd->obtenerDataMultiQuery($data);
-            Debug::string($consulta);
-            Debug::mostrarArray($result);
+            #Debug::string($consulta);
+            #Debug::mostrarArray($result);
                
         }
         
@@ -360,11 +364,12 @@ class DataModel{
      * Inicializa el objeto correspondiente para el manejo de la base de datos
      * @method initBD
      */
-    private function initBD(){
-        if (!defined('manejadorBD')) {
+    private function initBD($manejador=""){
+    	
+    	if(!empty($manejador)) $this->manejadorBD=$manejador;
+        if (empty($this->manejadorBD)) {
             throw new Exception("No se encuentra definido el manejador de base de datos", 1);
         }
-        $this->manejadorBD = manejadorBD;
         switch ($this->manejadorBD) {
             case 'PSQL' :
                 #include_once 'Psql.class.php';
@@ -374,7 +379,11 @@ class DataModel{
                 #include_once 'Mysql.class.php';
                 $this->bd = new Mysql();
                 break;
+			default:
+				throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);
+				
         }
+		
         $this->resultBD=new ResultBD($this);
     }//fin metodo initBD
     /**
@@ -548,7 +557,7 @@ class DataModel{
      * @method 
      */
     function __call($rel,$campos){
-        
+        if($rel=='initBD'){ $this->initBD($campos[0]); return true;};
         $class = ucfirst($this->_obtenerSingular($rel));
      
         if(in_array($class, $this->tieneMuchos)){

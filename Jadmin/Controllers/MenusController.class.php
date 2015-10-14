@@ -7,7 +7,7 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1 13/01/2014
  */
-class MenusController extends Controller {
+class MenusController extends JController {
 
     function __construct(){
         $this->layout="jadmin.tpl.php";

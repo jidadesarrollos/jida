@@ -64,7 +64,7 @@ class Menu extends DBContainer {
      */
 	function getPerfilesAcceso(){
 	    
-	     if(Session::get('Usuario') instanceof Usuario){
+	     if(Session::get('Usuario') instanceof User){
              $perfiles = array_merge(Session::get('usuario','perfiles'),Session::get('Usuario')->perfiles);
          }else{
              $perfiles = Session::get('usuario','perfiles');
@@ -77,7 +77,7 @@ class Menu extends DBContainer {
      */
 	private function obtenerMenu(){
 	    $query = "select * from s_menus where $this->clavePrimaria = $this->id_menu";
-        Debug::mostrarArray($query);
+        
         $result = $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($query));
         if(count($result)>0){
             $this->establecerAtributos($result, __CLASS__);
@@ -153,6 +153,7 @@ class Menu extends DBContainer {
                     and c.clave_perfil in($perfilesUser)
                     and  (id_estatus=1 or id_estatus=null)
                     order by padre,orden,nombre_opcion";
+		 
          $data = $this->bd->obtenerDataCompleta($query);
          return $data;     
      }

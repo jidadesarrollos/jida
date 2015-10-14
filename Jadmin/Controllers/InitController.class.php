@@ -29,8 +29,8 @@ class InitController extends JController{
 				if($this->configurarBD()){
 					$this->crearControllerApp();
 					$this->agregarLayout();
-					$this->copiarJs();
-					
+					$this->copiarHtdocs();
+					$this->crearUsuarioJadmin();
 					
 					$this->redireccionar($this->getUrl('modelos'));
 				}else{
@@ -38,7 +38,7 @@ class InitController extends JController{
 					Formulario::msj('error','No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
 				}
 				
-				Debug::string("final funcion",true);
+				//Debug::string("final funcion",true);
 			}
 		}
 	}
@@ -82,7 +82,7 @@ class InitController extends JController{
 			return true;
 			
 		}else{
-			Debug::string("nada");
+			
 			return false;
 		}
 					
@@ -115,7 +115,11 @@ class InitController extends JController{
         //Debug::mostrarArray($BDManager->obtenerTablas());
         if($this->post('btnCrearModelos')){
             if(count($this->post('tablas_bd')>0)){
-                $this->crearModelos();
+                if($this->crearModelos()){
+                	Vista::msj('componentes','suceso', 'Se han creado los objetos correctamente');
+                	$this->redireccionar($this->obtURLApp()."jadmin/componentes/");
+//                	
+                }
 				
             }else{
                 Session::set('__msj',Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
@@ -127,24 +131,25 @@ class InitController extends JController{
         
         $this->dv->tablas=$tablas;
     }
+	/**
+	 * Crea los modelos de la aplicacion a partir de la estructura de base de datos.
+	 * 
+	 * @method crearModelos
+	 * @return void
+	 */
     private function crearModelos(){
-        Debug::mostrarArray($this->post(),false);
         $objetos = $this->post('tablas_bd');
         $prefijos = explode(",",$this->post('txtPrefijos'));
         
         array_walk($prefijos,function(&$valor,$clave){
           $valor ="/^".$valor."/";
         });
-        
+    
         foreach ($objetos as $key => $objeto) {
-            //$nombreClase = $this->GeneradorModelo->nombreObjeto($objeto,$prefijos);
-            
-            $this->GeneradorModelo->generar($objeto,$prefijos);
-            
-            
+            $this->GeneradorModelo->generar($objeto,$prefijos);   
         }
-        
-        Debug::string("fin funcion",true);
+		
+		return true;
     }
 	private function crearDirApp(){
 		$directorios=[
@@ -237,8 +242,27 @@ class InitController extends JController{
 		if(!Directorios::validar(DIR_APP."Layout")) Directorios::crear(DIR_APP."Layout");
 		copy(DIR_FRAMEWORK."Layout/jadminIntro.tpl.php",DIR_APP."Layout/default.tpl.php");
 	}
-	private function copiarJS(){
-		Directorios::copiar(DIR_FRAMEWORK."js/", HTDOCS_DIR."jida/");
+	private function copiarHtdocs(){
+		Directorios::copiar(DIR_FRAMEWORK."htdocs/js/", HTDOCS_DIR."js/jida/");
+		Directorios::copiar(DIR_FRAMEWORK."htdocs/css/", HTDOCS_DIR."css/jida/");
+	}
+	private function crearUsuarioJadmin(){
+		$user = new User();
+		Debug::string("hola");
+		$user->initBD('MySQL');
+		
+		$data = [
+			'id_estatus'=>1,
+			'validacion'=>1,
+			'nombre_usuario'=>$this->post('nombre_usuario'),
+			'clave_usuario'=>md5($this->post('clave_usuario'))
+		];
+		$user->registrarUsuario($data,[1],FALSE);
+		$user->agregarPerfilSesion('JidaAdministrador');
+		
+		Session::sessionLogin();
+		$user->registrarSesion();
+		Session::set('Usuario',$user);
 	}
 	
 }

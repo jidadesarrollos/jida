@@ -9,7 +9,7 @@
  */
 
  
-class PerfilesController extends Controller{
+class PerfilesController extends JController{
     
 	/**
 	 * Funcion constructora

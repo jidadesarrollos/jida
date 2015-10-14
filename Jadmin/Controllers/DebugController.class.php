@@ -3,7 +3,7 @@
  * 
  */
  
-class DebugController extends Controller{
+class DebugController extends JController{
     private $jctrl="";
     
     function __construct(){

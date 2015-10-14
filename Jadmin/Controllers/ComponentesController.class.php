@@ -9,14 +9,14 @@
  */
 
  
-class ComponentesController extends Controller{
+class ComponentesController extends JController{
     
     function __construct($id=""){
         parent::__construct();        
         $this->url="/jadmin/componentes/";
         $this->layout="jadmin.tpl.php";
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
-        
+		#Debug::mostrarArray($this->usuario);        
         
     }
     function index(){

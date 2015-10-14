@@ -16,12 +16,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
         <?=$this->printHeadTags()?>
-        <link href="/htdocs/css/libs/bootstrap.min.css" rel="stylesheet">
-        <link href="/htdocs/css/libs/fa.min.css" rel="stylesheet">
-        <link href="/htdocs/css/estiloDefault.css" rel="stylesheet">
-        <link href="/htdocs/css/jida-common.css" rel="stylesheet">
-        <link href="/htdocs/css/jida.css" rel="stylesheet">
-        
+        <?=$this->printCSS()?>
+         
         <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
         <!--libs--> 
     </head>
@@ -29,33 +25,35 @@
     <body>
         
      <div  class="jida-container">
+     	<nav class="navbar navbar-default navbar-fixed-top">
+			  <div class="container-fluid">
+			    <div class="navbar-header">
+			    	<a href="#" class="navbar-brand">
+			    		JIDAFramework.
+			    	</a>
+			    </div>
+			  </div>
+		</nav>
          <div class="container-fluid">
              
-             <div class="row">
-                <nav id="nav-top" class="navbar bg-jida navbar-fixed-top">    
-                    <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
-                </nav>
-            </div>
+             
             <div class="row">
-            <aside class="col-md-2 aside">
-                    <?PHP 
-                    
-                    $menuControl  = new MenuHTML('Principal');
-                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
-                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
-                    $menuControl->configuracion['li']['caret']="li-caret";
-                     echo $menuControl->showMenu();
-                    ?>
-                
-            </aside>
-            <div class="col-md-offset-2 col-lg-10 col-md-10 contenido-principal">
-                <!-- <div class="row"> -->
-        
-                 <?=$contenido?>
-            
-                <!-- </div> -->
-                <!--Cierre col-lg-9 del contenido-->
-            </div><!--Cierre col-lg-9 del contenido-->
+	            <aside class="col-md-2 aside">
+	                    <?PHP 
+	                    
+	                    $menuControl  = new MenuHTML('Principal');
+	                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
+	                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
+	                    $menuControl->configuracion['li']['caret']="li-caret";
+	                     echo $menuControl->showMenu();
+	                    ?>
+	                
+	            </aside>
+	            <main class="col-md-offset-2 col-lg-10 col-md-10 col-sm-12 col-xs-12 cp">
+	                <!-- <div class="row"> -->
+	        
+	                 <?=$contenido?>
+	            </main><!--Cierre col-lg-9 del contenido-->
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -72,21 +70,6 @@
                 &copy; Copyright  by jirc Prueba
             </p>
         </footer>
-         <script src="/htdocs/js/libs/jq2.0.3.js"></script>
-        <script src="/htdocs/js/libs/jqui1.10.3.js"></script>
-        <script src="/htdocs/js/libs/bootstrap.min.js"></script>
-        <script src="/htdocs/js/libs/bootbox.min.js"></script>
-        <script src="/htdocs/js/libs/tipsy.js"></script>
-        <script src="/htdocs/js/libs/ajaxupload.js"></script>
-        <script src="/htdocs/js/libs/less.js"></script>
-        <!--jidalibs-->
-        <script src="/htdocs/js/jida/jd.ajax.js"></script>
-        <!-- <script src="/htdocs/js/jida/validadorJida.js"></script> -->
-        <script src="/htdocs/js/jida/validador.js"></script>
-        <script src="/htdocs/js/jida/jidaPlugs.js"></script>
-        <script src="/htdocs/js/jida/jidaControlCampos.js"></script>
-        <!--custom files-->
-        <script src="/htdocs/js/funcionesGenerales.js"></script>
-        <script src="/htdocs/js/jida/jadmin.js"></script>
+         <?=$this->printJS()?>
     </body>
 </html>
