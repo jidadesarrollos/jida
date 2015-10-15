@@ -528,8 +528,11 @@ class Controller {
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
 			return $GLOBALS['__URL_APP'];
 		}else{
+			
 			return URL_APP;
 		}
+		
+		
 		
 	}
     

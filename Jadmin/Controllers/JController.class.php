@@ -14,6 +14,7 @@ class JController extends Controller{
     	parent::__construct();
 		
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
+		
 		$this->layout="jadminIntro.tpl.php";
 		$this->dv->addCSS([
 			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
@@ -25,6 +26,7 @@ class JController extends Controller{
 			$this->urlHtdocs."jquery/dist/jquery.js",
 			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
 			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
+			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
 			
 		],false);
     }

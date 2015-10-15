@@ -29,7 +29,7 @@ class InitController extends JController{
 				if($this->configurarBD()){
 					$this->crearControllerApp();
 					$this->agregarLayout();
-					$this->copiarHtdocs();
+					//$this->copiarHtdocs();
 					$this->crearUsuarioJadmin();
 					
 					$this->redireccionar($this->getUrl('modelos'));

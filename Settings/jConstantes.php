@@ -126,7 +126,7 @@ if(!defined('URL_APP'))
  /**
  * @constant URL_APP Dirección url de la aplicación
  */
-define('URL_APP',$_SERVER['REQUEST_URI']);
+define('URL_APP',"/");
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
    
 /**

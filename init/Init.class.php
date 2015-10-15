@@ -26,15 +26,18 @@ class Init{
 	
 	
 	function inicializarJida(){
-		// echo "<pre>";
-		// print_r($_SERVER);
-		// echo "</pre>";
-		// exit;
+		
 		if($this->crearArchivosRequeridos()){
-			echo "listo<hr>";
+			$this->copiarHtdocs();
 			
-			redireccionar($this->obtenerUrlPath().'/jadmin/init/');
+			redireccionar($this->obtenerUrlPath().'jadmin/init/');
 		}
+	}
+	
+	private function copiarHtdocs(){
+		Directorios::crear('htdocs');
+		Directorios::copiar("htdocs/js/","../htdocs/js/jida/");
+		Directorios::copiar("htdocs/css/", "../htdocs/css/jida/");
 	}
 	
 	private function crearArchivosRequeridos(){
@@ -50,6 +53,7 @@ class Init{
 	}
 	
 	private function obtenerUrlPath(){
+		
 		return str_replace('/Framework', '', $this->dataServer['REQUEST_URI']);
 	}
 	
