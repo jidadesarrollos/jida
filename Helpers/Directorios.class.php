@@ -34,7 +34,8 @@ class Directorios extends Directory{
     static function crear($directorio,$mode=0777){
         if(is_array($directorio)){
             foreach ($directorio as $key => $dir) {
-                mkdir($dir,$mode,TRUE);
+            	if(!self::validar($dir))
+                	mkdir($dir,$mode,TRUE);
             }
         }else{
             if(!file_exists($directorio)){

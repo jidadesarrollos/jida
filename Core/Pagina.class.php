@@ -327,37 +327,41 @@ class Pagina{
         $this->checkData();
         $cont=0;
         $code= array();
-        if(array_key_exists('code',$this->data->js)){
-            $code = $this->data->js['code'];
-            unset($this->data->js['code']);
-        }
         
-        foreach ($this->data->js as $key => $archivo) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                    
-                    foreach ($archivo as $key => $value){
-                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
-                        if($cont==0) $cont=2;
-                    }           
-                }
-            }
-            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
-            if($cont==0) $cont=2;
-        }
-        if(count($code)>0){
-            foreach ($code as $key => $value){
-                if(array_key_exists('archivo',$value)){
-                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
-                    $js.=Selector::crear('script',null,$contenido,$cont);    
-                }else{
-                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
-                }
-                
-            }
-    
-        }
+        
+		if(is_array($this->data->js)){
+			if(array_key_exists('code',$this->data->js)){
+	            $code = $this->data->js['code'];
+	            unset($this->data->js['code']);
+	        }
+			foreach ($this->data->js as $key => $archivo) {
+	            
+	            if(is_string($key)){
+	                if($key==ENTORNO_APP){
+	                    
+	                    foreach ($archivo as $key => $value){
+	                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
+	                        if($cont==0) $cont=2;
+	                    }           
+	                }
+	            }
+	            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+	            if($cont==0) $cont=2;
+	        }
+	        if(count($code)>0){
+	            foreach ($code as $key => $value){
+	                if(array_key_exists('archivo',$value)){
+	                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
+	                    $js.=Selector::crear('script',null,$contenido,$cont);    
+	                }else{
+	                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
+	                }
+	                
+	            }
+	    
+	        }
+		}
+	        
         return $js;
     }
 
@@ -407,27 +411,33 @@ class Pagina{
         
         $this->checkData();
         $cont=0;
-        foreach ($this->data->css as $key => $files) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                    foreach ($files as $key => $value) {
-                        if(is_array($value)) 
-                            $css.=Selector::crear('link',$value,null,$cont);
-                        else 
-                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
-                        if($cont==0) $cont=2;
-                    }    
-                }   
-            }else{
-                if(is_array($files)){
-                    $css.=Selector::crear('link',$files,null,$cont);
-                }else{
-                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
-                }
-                if($cont==0) $cont=2;       
-            }
-        }
+		if(is_array($this->data->css)){
+			foreach ($this->data->css as $key => $files) {
+	            
+	            if(is_string($key)){
+	            	
+	                if($key==ENTORNO_APP){
+	                    foreach ($files as $key => $value) {
+	                        if(is_array($value)) 
+	                            $css.=Selector::crear('link',$value,null,$cont);
+	                        else 
+	                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
+	                        if($cont==0) $cont=2;
+	                    }    
+	                }   
+	            }else{
+	                if(is_array($files)){
+	                    $css.=Selector::crear('link',$files,null,$cont);
+	                }else{
+	                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
+	                }
+	                if($cont==0) $cont=2;       
+	            }
+	        }
+		}else{
+			
+		}
+	        
         return $css;
     }
     private function checkData(){

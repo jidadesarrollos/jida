@@ -22,11 +22,13 @@ class Controller {
 	  * 
 	  * @var string $tituloPagina
 	  * @access public
+	 *  @deprecated
 	  */
 	var $tituloPagina="";
     /**
      * Define el contenido de la meta-etiqueta description para uso de los buscadores
      * @var $metaDescripcion;
+	 * @deprecated
      */
     var $metaDescripcion;
     protected $helpers = array();

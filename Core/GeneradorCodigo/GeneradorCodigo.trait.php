@@ -56,7 +56,7 @@ trait GeneradorCodigo{
 	
 	function constante($nombre,$valor,$type,$descripcion){
 		$constante = $this->docConstante($nombre, $type, $descripcion);
-		$constante.="\n".'define(\''.$nombre.'\',\''.$valor.'\');';
+		$constante.="\n".'define(\''.$nombre.'\',\''.$valor.'\');'.$this->saltodeLinea();
 		return $constante;
 	}
 	/**

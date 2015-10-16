@@ -4,20 +4,23 @@
  * que se encuentran en este archivo pueden ser sobreescritos o reemplazados
  * 
  * Se recomienda que el reemplazo se realice en un archivo externo a la carpeta framework
+ * @see Aplicacion\Config\AppConfig
  * @author Julio Rodriguez 
  * @version 1.0
  * @package Framework
  * @category Setting
  */
-
+if(!array_key_exists('_CSS', $GLOBALS))
 /**
  * Arreglo globla para manejo de css en las vistas
- */ 
-$GLOBALS['requireCSS']=[];
+ */
+  
+$GLOBALS['_CSS']=[];
+if(!array_key_exists('_JS', $GLOBALS))
 /**
  * Arreglo global para manejo de JS en las vistas
  */
-$GLOBALS['requireJS']=[];
+$GLOBALS['_JS']=[];
 
 if(!array_key_exists('configPaginador', $GLOBALS)){
 	/**

@@ -29,7 +29,7 @@ class InitController extends JController{
 				if($this->configurarBD()){
 					$this->crearControllerApp();
 					$this->agregarLayout();
-					//$this->copiarHtdocs();
+					$this->copiarHtdocs()->appConfig()->initConfig();
 					$this->crearUsuarioJadmin();
 					
 					$this->redireccionar($this->getUrl('modelos'));
@@ -87,6 +87,71 @@ class InitController extends JController{
 		}
 					
 		
+	}
+
+	/**
+	 * Definicion archivo appConfig
+	 */
+	private function appConfig(){
+		
+		$devCss = [
+			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
+			$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
+			$this->obtURLApp()."htdocs/css/jida/jida.css",
+			];
+			
+		$devJS =[
+			$this->urlHtdocs."jquery/dist/jquery.js",
+			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
+			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
+			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
+			
+		];
+
+		$appConfig = 
+			  $this->abrirPHP()
+			. $this->docBlock('Archivo de Configuracion de la Aplicación',
+							'El app config es creado para definir variables y constantes de configuracion que
+* puedan ser utilizadas en cualquier ambiente de la aplicacion (De desarrollo o produccion) ')
+			. $this->saltodeLinea()
+			. $this->docBlock(
+				'Archivos CSS Requeridos', 'Los archivos definidos en el primer nivel del arreglo serán incluidos
+* siempre sin importar el ambiente de la aplicacion. Si se desea especificar archivos solo para un ambiente,
+* se debe definir una clave con el nombre del ambiente.
+			')
+			.$this->definirArray('$GLOBALS[\'_CSS\']',['dev'=>$devCss]).$this->saltodeLinea()
+			.$this->docBlock(
+					'Archivos JS Requeridos', 
+					'Los archivos definidos en el primer nivel del arreglo serán incluidos siempre sin importar el ambiente de 
+* la aplicacion. Si se desea especificar archivos solo para un ambiente, se debe definir una clave con el nombre del ambiente.
+			')
+			.$this->definirArray('$GLOBALS[\'_JS\']',['dev'=>$devJS]);
+			$this 	->crear(DIR_APP."Config/appConfig.php")
+					->escribir($appConfig)
+					->cerrar();
+			return $this;
+	}
+	private function initConfig(){
+		$initConfig = 
+			$this->abrirPHP() .
+			$this->docBlock(
+				'Archivo Inicial de configuracion de la Aplicacion',
+				'El InitConfig es usado para definir todas aquellas variables globales o constantes que 
+ * solo sean utilizadas en un ambiente especifico (como desearrollo, calidad o producción), esto facilita
+ * agrupar en un solo archivo todo lo que no desea ser pasado de un ambiente a otro.
+				'
+				) 
+			. $this->constante('APP_MANTENIMIENTO', FALSE, 'boolean', 'Define si la aplicacion se encuentra en mantenimiento')
+			. $this->constante('URL_APP', '/', 'url', 'Direccion URL de la App')
+			. $this->constante('ENTORNO_APP', 'dev', 'string', 'Define el entorno de la aplicacion')
+			
+			;
+		$initConfig .= $this->saltodeLinea() 
+			. $this->definirArray('$GLOBALS[\'modulos\']',['Jadmin']);
+		$this 	->crear(DIR_APP."Config/initConfig.php")
+					->escribir($initConfig)
+					->cerrar();	
+		return $this;
 	}
 	private function validarDatosBD(){
 		$bandera=FALSE;
@@ -220,12 +285,16 @@ class InitController extends JController{
 	protected function crearVista($controller,$metodo,$contenido=""){
 		$modulo  =explode(".", $controller);
 		$ubicacion = DIR_APP;
+		
 		if(count($modulo)>1){
+		
 			$ubicacion.=String::upperCamelCase(String::upperCamelCase($modulo[0]))."/Vistas/".String::lowerCamelCase($modulo[1])."/";
 		}else{
-			$ubicacion.="Vistas/".String::lowerCamelCase($controller);
+		
+			$ubicacion.="Vistas/".String::lowerCamelCase($controller)."/";
 		}
-		$ubicacion .="Vistas/".$metodo;
+		
+		
 		if(!Directorios::validar($ubicacion)) Directorios::crear($ubicacion);
 		
 		$view = 
@@ -241,14 +310,16 @@ class InitController extends JController{
 	private function agregarLayout(){
 		if(!Directorios::validar(DIR_APP."Layout")) Directorios::crear(DIR_APP."Layout");
 		copy(DIR_FRAMEWORK."Layout/jadminIntro.tpl.php",DIR_APP."Layout/default.tpl.php");
+		return $this;
 	}
 	private function copiarHtdocs(){
 		Directorios::copiar(DIR_FRAMEWORK."htdocs/js/", HTDOCS_DIR."js/jida/");
 		Directorios::copiar(DIR_FRAMEWORK."htdocs/css/", HTDOCS_DIR."css/jida/");
+		return $this;
 	}
 	private function crearUsuarioJadmin(){
 		$user = new User();
-		Debug::string("hola");
+		
 		$user->initBD('MySQL');
 		
 		$data = [
@@ -263,6 +334,7 @@ class InitController extends JController{
 		Session::sessionLogin();
 		$user->registrarSesion();
 		Session::set('Usuario',$user);
+		return $this;
 	}
 	
 }

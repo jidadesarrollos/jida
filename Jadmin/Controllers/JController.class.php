@@ -13,6 +13,7 @@ class JController extends Controller{
     function __construct(){
     	parent::__construct();
 		
+		$this->dv->title="JIDAPanel";
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
 		
 		$this->layout="jadminIntro.tpl.php";
@@ -27,6 +28,7 @@ class JController extends Controller{
 			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
 			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
+			$this->obtURLApp()."htdocs/js/jida/jidaPlugs.js",
 			
 		],false);
     }

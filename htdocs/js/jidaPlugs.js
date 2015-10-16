@@ -6,10 +6,6 @@
  * @version 1.2
  * @fecha : 13/11/2013 
  */
-
-/**
- * Crea funcionalidades a una vista dada
- */
  jd.vista = function(nombreVista,tipoControl){
       /**
       * Nombre de la vista
@@ -136,7 +132,7 @@
         opcion="seleccionar";
         if(campo)
             opcion=campo;
-         console.log("llego a la seleccion "+opcion);
+         
          seleccion  = validarRadio(opcion);
         
         if(seleccion===false){
@@ -159,7 +155,7 @@
          $ctrl = $("[data-jvista=seleccion]");
          
          if($ctrl.size()>0){
-             console.log("yeah man");
+             
              $ctrl.on('click',function(e){
                 
                 var $this = $( this );
@@ -319,7 +315,7 @@
 
 
     $("[data-liparent] > a").on('click',function(){
-        console.log('dimelo');
+        
         ele = $( this ).parent();
         
         if(ele.children('ul').size()>0){
@@ -365,3 +361,30 @@ function activarPaginador(){
         });
     });
 }
+
+var activarJidaDependientes = function (){
+        
+        $("[data-dependiente]").each(function(valor,campo){
+            
+            $campo = $( campo );
+            var padre = $campo.data('dependiente');
+            var urlAccion = $campo.data('accion');
+            $("#"+padre).off();
+            $("#"+padre).on('change',function(){
+                var $padre = $( this );
+                var id= $padre.attr('id');
+                var v = $padre.val();
+                var data = new Object();
+                data[id]=v;
+                new jd.ajax({
+                    metodo:"POST",
+                    url: urlAccion,
+                    parametros:data,
+                    funcionCarga:function(ajax){
+                        $(campo).html(this.respuesta);
+                    }
+                });
+            });
+        }) ;
+    
+};
