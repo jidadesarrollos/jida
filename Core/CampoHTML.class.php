@@ -576,6 +576,9 @@ class CampoHTML extends DBContainer {
             
             $esSelect = strpos(strtolower($opcion), "select" );
             $esSelectExterno = strpos(trim($opcion), "externo" );
+			if(is_array($this->externo) and array_key_exists($this->name, $this->externo)){
+				$esSelectExterno=TRUE;
+			}
             $esArraySesion = strpos(trim($opcion), "session" );
             $esJson= strpos(trim($opcion), "json" );
             if ($esSelect === FALSE and $esSelectExterno === FALSE and $esArraySesion === FALSE) {
@@ -598,22 +601,12 @@ class CampoHTML extends DBContainer {
                 throw new Exception("No se encuentra disponible el uso de archivos json", 1);
                 
             }else {
-                
-                if ($esSelect !== FALSE) {
-                        
-                    
-                    $data = $this->bd->ejecutarQuery ( $opcion );
-                    if ($this->bd->totalRegistros > 0):
-                        while ( $result = $this->bd->obtenerArray ( $data ) ):
-                            $arrOp [$result [0]] = $result [1];
-                        endwhile;
-                    endif;
-                } elseif ($esSelectExterno !== FALSE) {
+                if ($esSelectExterno !== FALSE) {
                     // entra aqui cuando las opciones son definidas por un query o arreglo externo
                     /**
                      * En caso de que sea un arreglo
                      */
-                      
+                     
                     if(is_array($this->externo[$this->name])){
                         $arrOp =$this->externo[$this->name];
                     }else{
@@ -628,6 +621,16 @@ class CampoHTML extends DBContainer {
                         endif;
                     }
                     
+                }else
+                if ($esSelect !== FALSE) {
+                        
+                    
+                    $data = $this->bd->ejecutarQuery ( $opcion );
+                    if ($this->bd->totalRegistros > 0):
+                        while ( $result = $this->bd->obtenerArray ( $data ) ):
+                            $arrOp [$result [0]] = $result [1];
+                        endwhile;
+                    endif;
                 }//fin if;
             }
         }

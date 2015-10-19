@@ -106,6 +106,7 @@ class UsersController extends JController{
         $form = new Formulario(array('RegistroUsuarios','PerfilesAUsuario'),$tipoForm,$campoUpdate,2);
         
         $form->externo['id_perfil']=(!empty($externo))?$externo:"select id_perfil, nombre_perfil from s_perfiles";
+		Debug::string($form->externo['id_perfil']);
         $form->valueBotonForm=(!is_null($campoUpdate))?'Actualizar Datos':'Registrar Usuario';
         $form->action=$this->url.'/'.$metodo;
         $retorno=array('guardado'=>'','form'=>'');
