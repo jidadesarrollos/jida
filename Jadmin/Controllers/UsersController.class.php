@@ -79,7 +79,7 @@ class UsersController extends JController{
         $form=& $datosForm['form'];
         $form->tituloFormulario="Gesti&oacute;n de Usuarios";
         if($this->post('btnRegistroUsuarios')):
-            $this->post('clave_usuario')=md5($this->post('clave_usuario'));
+            $_POST['clave_usuario']=md5($this->post('clave_usuario'));
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
                 $msj = 'El usuario '.$this->post('nombre_usuario')." ha sido creado exitosamente";
                 Vista::msj($idVista, 'suceso', $msj,$urlVista);
@@ -90,7 +90,6 @@ class UsersController extends JController{
         #$this->data['form'] = $form->armarFormulario();
 		$this->dv->form = $form->armarFormulario();
 	}
-	
     /**
      * Devuelve el formulario para gestion de usuarios
      * 
