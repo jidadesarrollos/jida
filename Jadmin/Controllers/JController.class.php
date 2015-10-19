@@ -18,17 +18,17 @@ class JController extends Controller{
 		
 		$this->layout="jadminIntro.tpl.php";
 		$this->dv->addCSS([
-			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
-			$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
-			$this->obtURLApp()."htdocs/css/jida/jida.css",
+			#$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
+			#$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
+			#$this->obtURLApp()."htdocs/css/jida/jida.css",
 			]
 			,false);
 		$this->dv->addJS([
-			$this->urlHtdocs."jquery/dist/jquery.js",
-			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
-			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
+			#$this->urlHtdocs."jquery/dist/jquery.js",
+			#$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
+			#$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
-			$this->obtURLApp()."htdocs/js/jida/jidaPlugs.js",
+			#$this->obtURLApp()."htdocs/js/jida/jidaPlugs.js",
 			
 		],false);
     }

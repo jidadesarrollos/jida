@@ -870,6 +870,8 @@ class DataModel{
      * Inserta multiples registros en Base de Datos
      * @method crearTodo
      * @param array $data Data a insertar
+	 * @return object ResultBD
+	 * @see ResultBD
      */
     function salvarTodo($data){
         if(is_array($data)){

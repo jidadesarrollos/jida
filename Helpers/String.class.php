@@ -19,6 +19,7 @@ class String {
 	 * @return string $upperC
 	 **/
 	static function upperCamelCase($cadena,$espacios=true){
+		
 		$strUpperCase =ucwords($cadena);
 		if($espacios===true){
 			$strUpperCase = str_replace(" ", "", $strUpperCase);

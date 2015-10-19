@@ -294,11 +294,12 @@ class Controller {
         
         if(empty($param)){
             return $_POST;
-        }elseif(!empty($nuevoValor)){
-            
+        }elseif($nuevoValor!=""){
+             Debug::String($nuevoValor);
              $this->post[$param]=$nuevoValor;
              return $this;
-        }elseif(isset($this->post[$param]) or array_key_exists($param, $_POST)){
+        }else
+        if(isset($this->post[$param]) or array_key_exists($param, $_POST)){
             return $this->post[$param];
         }
          

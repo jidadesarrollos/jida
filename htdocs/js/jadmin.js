@@ -1,34 +1,39 @@
+(function(){
+	var $listaCampos = $("#listaCamposFormulario");
+	
+	function addSortable(){
+	     $listaCampos.find('li').addClass('selecionable');
+	     $listaCampos.sortable();
+	}
+	function guardarOrden(){
+	        var orden = $listaCampos.sortable('toArray').toString();
+	            
+	        data = "s-ajax=true&campos="+orden;
+	        data={'s-ajax':true,'campos':orden}
+	        
+	        new jd.ajax({
+	            url:"/jadmin/forms/ordernar-campos/",
+	            parametros:{'campos':orden,'ambito':$("#jidaConfiguracion").data('formulario')},
+	            respuesta:'json',
+	            funcionCarga:function(){
+	                $("#jidaFormConfiguracion").html(this.respuesta);
+	                if(this.respuesta.ejecutado==true){
+	                    $("#jidaFormConfiguracion").html(this.respuesta.msj);
+	                    $("#listCamposFormulario > li").removeClass('selecionable');
+	                    $("#listCamposFormulario").sortable("destroy");
+	                }else{
+	                    
+	                }
+	            }
+	        });
+	        return true;
+	        
+	}//fin guardarOrden	
+});
 
-function addSortable(){
-     $("#listCamposFormulario > li").addClass('selecionable');
-     $("#listCamposFormulario").sortable();
-}
 
 
-function guardarOrden(){
-        var orden = $("#listCamposFormulario").sortable('toArray').toString();
-            
-        data = "s-ajax=true&campos="+orden;
-        
-        
-        new jd.ajax({
-            url:"/jadmin/forms/ordernar-campos/",
-            parametros:{'campos':orden,'ambito':$("#jidaConfiguracion").data('formulario')},
-            respuesta:'json',
-            funcionCarga:function(){
-                $("#jidaFormConfiguracion").html(this.respuesta);
-                if(this.respuesta.ejecutado==true){
-                    $("#jidaFormConfiguracion").html(this.respuesta.msj);
-                    $("#listCamposFormulario > li").removeClass('selecionable');
-                    $("#listCamposFormulario").sortable("destroy");
-                }else{
-                    
-                }
-            }
-        });
-        return true;
-        
-}//fin guardarOrden
+
 
 
 $( document ).ready(function(){
