@@ -1,6 +1,5 @@
 <?PHP 
 
-
 class UsersController extends JController{
     protected $urlCierreSession="/jadmin/";
     var $layout = 'jadmin.tpl.php';    
@@ -8,8 +7,6 @@ class UsersController extends JController{
         parent::__construct();
         //$this->modelo = new User();
         $this->url='/jadmin/users/';
-        
-        
     }
     
 	function index(){
@@ -42,8 +39,7 @@ class UsersController extends JController{
                                             'title'=>'Asignar perfiles de acceso',
                                             'href'=>"/jadmin/users/asociar-perfiles/usuario/{clave}"
                                             ],
-                        'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]]
-                                                ;
+                        'html'=>['span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]]]];
         $vista->acciones=
         ['Registrar'=>
             ['href'=>$url.'/set-usuario'],
@@ -87,7 +83,7 @@ class UsersController extends JController{
                 Session::set('__msjForm',Mensajes::crear('error',"No se ha podido registrar el usuario, vuelva a intentarlo"),false);
             }
         endif;
-        #$this->data['form'] = $form->armarFormulario();
+        $this->data['form'] = $form->armarFormulario();
 		$this->dv->form = $form->armarFormulario();
 	}
     /**
@@ -106,17 +102,16 @@ class UsersController extends JController{
         $form = new Formulario(array('RegistroUsuarios','PerfilesAUsuario'),$tipoForm,$campoUpdate,2);
         
         $form->externo['id_perfil']=(!empty($externo))?$externo:"select id_perfil, nombre_perfil from s_perfiles";
-		Debug::string($form->externo['id_perfil']);
         $form->valueBotonForm=(!is_null($campoUpdate))?'Actualizar Datos':'Registrar Usuario';
         $form->action=$this->url.'/'.$metodo;
         $retorno=array('guardado'=>'','form'=>'');
-        if(isset($_POST['btnRegistroUsuarios'])):
+        if($this->post('btnRegistroUsuarios')):
             $validacion  = $form->validarFormulario();
             
             if($validacion===TRUE){
                 $user = new User();
                 $user->validacion=1;
-                $_POST['clave_usuario'] = md5($_POST['clave_usuario']);
+                $_POST['clave_usuario'] = md5($this->post('clave_usuario'));
                 if($user->salvar($_POST)->ejecutado()){
                     $user->asociarPerfiles($_POST['id_perfil']);
                 }
@@ -176,12 +171,10 @@ class UsersController extends JController{
        } 
     }
 	function asociarPerfiles(){
-        Debug::mostrarArray($_POST,false);
-        Debug::mostrarArray($_GET);
         if($this->getEntero($this->get('usuario'))){
             $form = new Formulario('PerfilesAUsuario',2,$this->get('usuario'),2);
             $user = new User($this->getEntero($this->get('usuario')));
-            $form->action=$this->url."asociar-perfiles/usuario/".$this->get('usuario');
+            $form->action=$this->url."asociar-perfiles";
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar perfiles al usuario $user->nombre_usuario";
             
@@ -200,6 +193,7 @@ class UsersController extends JController{
                 }
             }
             $this->data['form'] =$form->armarFormulario();
+			$this->dv->form = $form->armarFormulario();
         }else{
             Vista::msj('usuarios', 'error',"Debe seleccionar un usuario",$this->urlController());
             
@@ -209,9 +203,8 @@ class UsersController extends JController{
     }//fin función
     function cierresesion(){
 	    if(Session::destroy()){
-	        //Debug::mostrarArray($_SESSION);
 	      $this->redireccionar($this->urlCierreSession);  
-	    }         
+	    }
 	}
     /**
      * Verifica los datos para iniciar sesion
