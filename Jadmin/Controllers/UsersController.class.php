@@ -72,25 +72,23 @@ class UsersController extends JController{
 	function setUsuario($url="",$externo="",$idVista='usuarios',$urlVista=""){
 	    $urlVista =(empty($urlVista))?$this->url:$urlVista;
 	    $id ="";
-	    if(isset($_GET['u']) and $this->getEntero($_GET['u']))
-	       $id = $_GET['u'];
+	    if($this->getEntero($this->get('u')))
+	       $id = $this->get('u');
         
 	    $datosForm =  $this->formGestionUser($id,$url,$externo);
         $form=& $datosForm['form'];
         $form->tituloFormulario="Gesti&oacute;n de Usuarios";
-        if(isset($_POST['btnRegistroUsuarios'])):
-            $_POST['clave_usuario']=md5($_POST['clave_usuario']);
+        if($this->post('btnRegistroUsuarios')):
+            $_POST['clave_usuario']=md5($this->post('clave_usuario'));
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
-                $msj = 'El usuario '.$_POST['nombre_usuario']." ha sido creado exitosamente";
-                
+                $msj = 'El usuario '.$this->post('nombre_usuario')." ha sido creado exitosamente";
                 Vista::msj($idVista, 'suceso', $msj,$urlVista);
             }else{
-                
                 Session::set('__msjForm',Mensajes::crear('error',"No se ha podido registrar el usuario, vuelva a intentarlo"),false);
             }
         endif;
-        $this->data['form'] = $form->armarFormulario();
-        
+        #$this->data['form'] = $form->armarFormulario();
+		$this->dv->form = $form->armarFormulario();
 	}
     /**
      * Devuelve el formulario para gestion de usuarios
@@ -144,7 +142,7 @@ class UsersController extends JController{
         $tipoForm=(!empty($campoUpdate))?2:1;
         $form = new Formulario('PerfilesAUsuario',$tipoForm,$campoUpdate,2);
         $form->valueBotonForm='Asignar Perfiles';
-        $form->action=$this->url.'asociar-perfiles';
+        $form->action=$this->urlController().'asociar-perfiles';
         
         if(!empty($perfiles) and is_array($perfiles)){
             $form->externo['id_perfil']="select id_perfil,perfil from s_perfiles where id_perfil in (".implode(",", $perfiles).") order by perfil";    
@@ -177,7 +175,8 @@ class UsersController extends JController{
        } 
     }
 	function asociarPerfiles(){
-        
+        Debug::mostrarArray($_POST,false);
+        Debug::mostrarArray($_GET);
         if($this->getEntero($this->get('usuario'))){
             $form = new Formulario('PerfilesAUsuario',2,$this->get('usuario'),2);
             $user = new User($this->getEntero($this->get('usuario')));
