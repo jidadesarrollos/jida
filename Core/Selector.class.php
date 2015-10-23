@@ -117,6 +117,20 @@ class Selector{
      * @param string $content Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "",$tabs=0) {
+    	$selector = explode("#",$selector);
+		if(count($selector)>1){
+			 $atributos['id']=$selector[1];
+			$selector=$selector[0];
+		}else{
+			$selector = $selector[0];
+		}
+		$clases = explode(".",$selector);
+		if(count($clases)>1){
+			$selector = $clases[0];
+			unset($clases[0]);
+			$atributos['class']=implode(" ",$clases);
+		}
+		
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";

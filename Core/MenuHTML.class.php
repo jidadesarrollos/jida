@@ -82,7 +82,7 @@ class MenuHTML extends DBContainer{
      * 
      */
     function showMenuPersonalizado($data){
-           $this->opciones = $this->menu->obtenerOpcionesMenu();
+           //$this->opciones = $this->menu->obtenerOpcionesMenu();
            $config = $this->configuracion;
          
             if(count($data)>0){
@@ -145,7 +145,7 @@ class MenuHTML extends DBContainer{
             
             $atributosUL = $config['ul'][$nivel];
             if(!is_array($atributosUL))
-                $atributosUL = array('class'=>$atributosUL);
+                $atributosUL = ['class'=>$atributosUL];
         }else{
             $atributosUL =array();
         }
@@ -162,17 +162,17 @@ class MenuHTML extends DBContainer{
                 }
                 //Se valida si en $config se paso una clase css o un arreglo de atributos
                 if(!is_array($atributos)){
-                    $atributos=array('class'=>$atributos);
+                    $atributos=['class'=>$atributos];
                 }
                 $icono="";
                  if(!empty($opcion['icono'])):
                     
                     if($opcion['selector_icono']==2){
-                        $icono = Selector::crear("img",array('src'=>$opcion['icono']));
+                        $icono = Selector::crear("img",['src'=>$opcion['icono']]);
                     }else{
-                        $icono = Selector::crear("span",array('class'=>$opcion['icono']));
+                        $icono = Selector::crear("span",['class'=>$opcion['icono']]);
                     }
-                endif;
+                endif;
                 if($opcion['hijo']==1 or $opcion['hijo']=='t'){
                     $atributos = array_merge($atributos,$this->atributosLIParent);
                     $submenu=""; 
@@ -181,8 +181,11 @@ class MenuHTML extends DBContainer{
                         $atributos['class'] =$atributos['class'] ." ". $this->cssLiSeleccionado; 
                     }
                     //Se agrega separador para lis padres si existe;
-                    if(array_key_exists('caret', $config['li']))
+                    
+                    if(array_key_exists('caret', $config['li'][$nivel]))
                         $atributos['class']=$atributos['class']." ".$config['li']['caret'];
+					if(array_key_exists('padre', $config['li'][$nivel]))
+						$atributos['class'] = $atributos['class']." ".$config['li']['padre'];
                     if($this->tagAdicionalLIpadre!==False){
                         $this->identacion=4;
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
@@ -223,7 +226,12 @@ class MenuHTML extends DBContainer{
          $ident = $this->identacion+$nivel+2;
          if(array_key_exists($nivel, $config['ul'])){
             
-            $cssUl['class'] = $config['ul'][$nivel];
+			 if(is_array($config['ul'][$nivel]) and array_key_exists('class', $config['ul'][$nivel]))
+			 	$cssUl['class'] = $config['ul'][$nivel]['class'];
+			 else {
+				$cssUl['class'] = $config['ul'][$nivel]; 
+			 }
+            	
         }else{
             $cssUl['class'] ="";
             
@@ -231,14 +239,18 @@ class MenuHTML extends DBContainer{
         
         
         $listaMenu="";
-        
+        if(array_key_exists($nivel, $config['li'])){
+        	if(is_array($config['li'][$nivel]) and array_key_exists('class', $config['li'][$nivel]))        
+            	$cssli['class'] = $config['li'][$nivel]['class'];
+			else {
+				$cssli['class'] = $config['li'][$nivel];
+			}
+        }else{
+            $cssli['class'] ="";                
+        }    
         foreach ($opciones as $key => $subopcion) {
             
-            if(array_key_exists($nivel, $config['li'])){        
-                $cssli['class'] = $config['li'][$nivel]['class'];
-            }else{
-                $cssli['class'] ="";                
-            }    
+            
             $icono="";
             if(!empty($subopcion['icono'])):
            
@@ -256,6 +268,9 @@ class MenuHTML extends DBContainer{
                     //Se agrega separador para lis padres si existe;
                     if(array_key_exists('caret', $config['li']))
                         $cssli['class']=$cssli['class']." ".$this->configuracion['li']['caret'];
+                    if(array_key_exists($nivel, $config['li']) and is_array($config['li'][$nivel]) and array_key_exists('padre', $config['li'][$nivel])){
+                        $cssli['class']=$cssli['class']." ".$this->configuracion['li'][$nivel]['padre'];
+                    }
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['nombre_opcion'],$ident+3);
                     }else{
@@ -279,7 +294,17 @@ class MenuHTML extends DBContainer{
         }//fin foreach
         if($ulOpen)
             $cssUl['class'] = $cssUl['class']." ".$this->cssUlChildOpen;
-        $submenu=Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true);
+		
+		if(array_key_exists($nivel,$config['ul']) and  is_array($config['ul'][$nivel]) and array_key_exists('selectorPadre', $config['ul'][$nivel])){
+			
+			$submenu = Selector::crear(
+				$config['ul'][$nivel]['selectorPadre'],null,
+				Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true));
+				
+		}else{
+			$submenu=Selector::crear("ul",$cssUl,$listaMenu,$this->identacion,true);
+		}
+        
         return array('html'=>$submenu,'open'=>$ulOpen);
     }
 }

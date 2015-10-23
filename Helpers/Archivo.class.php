@@ -67,7 +67,7 @@ class Archivo{
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
         else {
-            Debug::string($file);
+            
             if(!empty($file) and self::validarExistencia($file)){
                 $this->directorio = $file;
                 $this->existencia = TRUE;

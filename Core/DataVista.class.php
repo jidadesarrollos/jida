@@ -151,7 +151,7 @@ class DataVista{
            $key = array_search($archivo,$arrayCss);
            unset($arrayCss[$key]);
            return true;
-       }
+       }
        return false;
     }
     
@@ -204,8 +204,15 @@ class DataVista{
           $this->js['code'][]=['codigo'=>$arg1];
        }
     }
-    
-    function setMetaBasico(){
+    /**
+	 * Permite editar las multiples etiquetas metas de una pagina
+	 * @method editarMeta
+	 * @param array Arreglo de etiquetas meta, los keys deben coincidir con las meta definidas
+	 */
+    function editarMeta($array){
+    	$this->establecerAtributos($array,__CLASS__);
+    }
+    private function setMetaBasico(){
         $html = "";
         if(empty($this->meta_descripcion)){
            if(defined('META_DESCRIPCION')) $this->meta_descripcion = META_DESCRIPCION;
@@ -221,6 +228,29 @@ class DataVista{
 	function addMeta($meta){
 		$this->meta[]=$meta;
 	}   
-    
+     /**
+     * Establece los atributos de una clase.
+     *
+     * Valida si los valores pasados en el arreglo corresponden a los atributos de la clase en uso
+     * y asigna el valor correspondiente
+     * 
+     * @access protected
+     * @param array @arr Arreglo con valores
+     * @param instance @clase Instancia de la clase
+     */
+    protected function establecerAtributos($arr, $clase="") {
+        if(empty($clase)){
+            $clase=$this->_clase;
+        }
+        
+        $metodos = get_class_vars($clase);
+        foreach($metodos as $k => $valor) {
+            
+            if (isset($arr[$k])) {
+                $this->$k = $arr[$k];
+            }
+        }
+        
+    }
     
 }

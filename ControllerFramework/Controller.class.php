@@ -276,11 +276,14 @@ class Controller {
      * @param string $param Dato a solicitar 
      * 
      */
-    protected function get($param){
-        if(isset($this->get[$param]))
-            return $this->get[$param];
-        else
-            return false;
+    protected function get($param=""){
+    	if(!empty($param)){
+    		if(isset($this->get[$param]))
+	            return $this->get[$param];
+	        else
+	            return false;
+    	}else return $_GET;
+	        
     }
     /**
      * Retorna el valor post solicitado, false si el valor no es conseguido

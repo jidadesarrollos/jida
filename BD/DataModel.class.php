@@ -481,45 +481,45 @@ class DataModel{
     function consulta($campos=""){
         $banderaJoin = FALSE;
         $join="";
-        if(empty($campos)){
-            
-            if(count($this->pertenece)>0){
-                $camposJoin = "";
-                $i=0;
-                
-                foreach ($this->pertenece as $campo => $object) {
-                    $banderaJoin=TRUE;
-                    $tabla = "";
-                    $pk="";
-                    if(property_exists($object, 'tablaBD')){
-                        
-                        $tabla = $object->__get('tablaBD');
-                        $pk = $object->__get('pk');
-                        $props= $object->__get('propiedades');
-                        
-                    }elseif(property_exists($object, 'nombreTabla')){
-                        $tabla = $object->__get('nombreTabla');
-                        $pk = $object->__get('pk');
-                        $props = $object->__get('propiedadesPublicas');
-                    }//fin if
-                        $camposTabla = array_keys($props);
-                        array_walk($camposTabla,function(&$ele,$clave,$tabla){
-                                                        $ele = $tabla.".".$ele;
-                                        },$tabla);
-                        if($i>0)
-                            $camposJoin.=",";
-                        $camposJoin .=" ".implode(", ",$camposTabla);
-                    if(!empty($tabla) and !empty($pk)){
-                        $join .= sprintf(" LEFT JOIN %s on (%s.%s = %s.%s)",$tabla,$this->tablaBD,$pk,$tabla,$pk);
-                    }
-                    ++$i;
-                }//foreach
-            }//fin if para joins
-        }
-        if(empty($campos)){
-            $campos =  array_keys($this->propiedades);
-        }
-        
+        // if(empty($campos)){
+//             
+            // if(count($this->pertenece)>0){
+                // $camposJoin = "";
+                // $i=0;
+//                 
+                // foreach ($this->pertenece as $campo => $object) {
+                    // $banderaJoin=TRUE;
+                    // $tabla = "";
+                    // $pk="";
+                    // if(property_exists($object, 'tablaBD')){
+//                         
+                        // $tabla = $object->__get('tablaBD');
+                        // $pk = $object->__get('pk');
+                        // $props= $object->__get('propiedades');
+//                         
+                    // }elseif(property_exists($object, 'nombreTabla')){
+                        // $tabla = $object->__get('nombreTabla');
+                        // $pk = $object->__get('pk');
+                        // $props = $object->__get('propiedadesPublicas');
+                    // }//fin if
+                        // $camposTabla = array_keys($props);
+                        // array_walk($camposTabla,function(&$ele,$clave,$tabla){
+                                                        // $ele = $tabla.".".$ele;
+                                        // },$tabla);
+                        // if($i>0)
+                            // $camposJoin.=",";
+                        // $camposJoin .=" ".implode(", ",$camposTabla);
+                    // if(!empty($tabla) and !empty($pk)){
+                        // $join .= sprintf(" LEFT JOIN %s on (%s.%s = %s.%s)",$tabla,$this->tablaBD,$pk,$tabla,$pk);
+                    // }
+                    // ++$i;
+                // }//foreach
+            // }//fin if para joins
+        // }
+         if(empty($campos)){
+             $campos =  array_keys($this->propiedades);
+         }
+//         
         if(is_array($campos)){
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
@@ -653,13 +653,15 @@ class DataModel{
     /**
      * Permite realizar un filtro de la consulta a realizar
      * @method filtro
-     * @param array $arrayFiltro el key es el campo y el value el valor a filtrar
+     * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
+	 * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
+	 * @return object $this Objeto DataModel instanciado
      * 
      */
-    function filtro($arrayFiltro=array()){
+    function filtro($arrayFiltro=[],$arrayOr=[]){
        $this->where();
        if(is_array($arrayFiltro)){
-           $i=0;
+           $i=0;$o=0;
            foreach ($arrayFiltro as $key => $value) {
                
                if($i>0)
@@ -667,11 +669,36 @@ class DataModel{
            $this->query.=" $this->tablaBD.$key='$value'";
                ++$i;
            }
+		   
+		   if(is_array($arrayOr) and count($arrayOr)>0){
+		   		$this->query.=" or (";
+		   		foreach ($arrayOr as $key => $value) {   
+	               if($o>0) $this->query.=" and ";
+	           $this->query.=" $this->tablaBD.$key='$value'";
+	               ++$o;
+	           }
+				$this->query.=")";
+		   }
        }else{
            throw new Exception("No se ha definido correctamente el filtro", 200);
        }
       return $this;
     }//fin función filtro
+    /**
+	 * Realiza la agrupación de la consulta
+	 * @method agrupar
+	 * @param mixed $agrupacion Campo o conjunto de campos por los que se desea agrupar
+	 * @return object $this Objeto instanciado
+	 */
+    function agrupar($agrupacion){
+    	
+    	if(is_array($agrupacion))
+			$this->query.="group by ".implode(",", $agrupacion);
+		else
+			$this->query.="group by ".$agrupacion;
+		return $this;
+    }
+    
     /**
      * Permite ordenar una consulta
      * 
