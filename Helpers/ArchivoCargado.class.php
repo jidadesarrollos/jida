@@ -34,7 +34,7 @@ class ArchivoCargado extends Archivo {
      * Verifica la carga de uno o varios archivos
      * @method validarCarga
      */
-    private function validarCarga(){
+     function validarCarga(){
         if(is_array($this->tmp_name)){
             $i=0;
             foreach ($this->tmp_name as $key) {
@@ -96,7 +96,7 @@ class ArchivoCargado extends Archivo {
 		
 	}
     
-    function moverArchivosCargados($directorio,$archivos){
+    function moverArchivosCargado($directorio,$archivos){
         $bandera=TRUE;
         if(is_array($archivos)){
             foreach ($archivos as $key => $archivo) {
@@ -127,10 +127,10 @@ class ArchivoCargado extends Archivo {
     static function obtArchivo($rutaArchivo){
         
         if(is_readable($rutaArchivo)){
-            
+            return true;
         }else{
             throw new Exception("La ruta del archivo no es legible : ".$rutaArchivo);
-            
+            return false;
         }
         
     }
