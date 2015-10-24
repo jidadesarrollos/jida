@@ -9,11 +9,11 @@
 */
 include_once 'ResultBD.class.php';
 class DataModel{
-    
+	protected $debug=FALSE;    
     protected $tablaBD;
     protected $esquema;
 	protected $manejadorBD;
-	
+	private $join=FALSE;	
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      * 
@@ -177,22 +177,20 @@ class DataModel{
         }
         //si se pasa un segundo parametro, el mismo es el nivel del ORM
         if($numeroParams==2){
-            
             if(func_get_arg(1)){
                  $this->nivelActualORM = func_get_arg(1)+1;
             }
         }
         //Se obtienen propiedades publicas
         $this->obtenerPropiedadesObjeto();
-        
         //se obtienen propiedades de relacion de pertenencia
-        if($id){
-            
+        if($id){    
             $this->instanciarObjeto($id);
                
         }
         $this->identificarObjetosRelacion();
         $pk =& $this->pk;
+		
 		
     }
     /**
@@ -200,6 +198,9 @@ class DataModel{
      */
     private function obtenerDataRelaciones(){
         $a=0;
+		if($this->debug){
+			Debug::string($this->nivelORM);
+		}
         if($this->nivelActualORM<$this->nivelORM and $a>0){
         
             $datas = "";
@@ -421,34 +422,57 @@ class DataModel{
     /**
      * Agrega la union de campos al query
      * @method join
-     * @param string $tablaJoin tabla o modelo con el que se desea unir
+     * @param string $clase tabla o modelo con el que se desea unir
      * @param mixed $campos Campo o Campos a solicitar de la tabla join
      */
-    private function join($tablaJoin,$campos="",$tipoJoin=""){
-        if(class_exists($tablaJoin)){
-            $clase = new $tablaJoin();
-            $tabla = $tablaJoin->__get('tablaBD');
+    function join($clase,$campos="",$data=[]){
+    	$tipoJoin="";
+		
+        if(class_exists($clase)){
+            $clase = new $clase();
+            $tablaJoin = $clase->__get('tablaBD');
+			$clavePrimaria = $clase->__get('pk');
         }else{
-            $tabla = $tablaJoin;
+            $tablaJoin = $clase;
         }
-        $this->query.=" ".$tipoJoin." JOIN ".$tablaJoin." on ";
+		if(!empty($campos)){
+			$_queryExplode = explode('from',$this->query);
+			
+			$campos = (is_array($campos))?implode(",$tablaJoin.",$campos):$tablaJoin.".".$campos;
+			$_queryExplode[0].=", ".$campos;
+			$this->query=implode(" from ",$_queryExplode);
+		}
+		$this->join=TRUE;
+		$this->query.=sprintf(
+		"%s JOIN %s on (%s.%s=%s.%s)",
+		$tipoJoin,$tablaJoin,$tablaJoin,$this->pk,$this->tablaBD,$this->pk);
+		
+        return $this;
         
         
         
     }
+	
+	
+	
+	
     /**
      * Emula el in de base de datos
      * @method in
-     * @var array $in Parametros para filtro
+     * @var $filtro Arreglo de campos a filtrar
      * @var string $clave [opcional] Campo para realizar clausula, si se omite
      * será tomada la clave primaria
      * @return object $this Objeto instanciado
      */
     function in($filtro,$clave=""){
         $this->where();
+		Debug::string($this->query);
         if(is_array($filtro)){
-            if(empty($clave)) $clave = $this->pk;
-            $this->query.=$this->tablaBD.".".$clave  ." in (". implode(",", $filtro) .")";
+            if(empty($clave)) $clave = $this->tablaBD.$this->pk;
+			else{
+				if(!strpos($clave, ".")){ $clave = $this->tablaBD.".".$clave;}
+			}
+            $this->query.=$clave  ." in (". implode(",", $filtro) .")";
         }
         
         return $this;
@@ -674,8 +698,11 @@ class DataModel{
 		   		$this->query.=" or (";
 		   		foreach ($arrayOr as $key => $value) {   
 	               if($o>0) $this->query.=" and ";
-	           $this->query.=" $this->tablaBD.$key='$value'";
-	               ++$o;
+			   if(!strpos($key, "."))
+	           		$this->query.=" $this->tablaBD.$key='$value'";
+			   else 
+			   		$this->query.=$key.="'$value'";
+               ++$o;
 	           }
 				$this->query.=")";
 		   }

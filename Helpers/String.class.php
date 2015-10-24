@@ -188,7 +188,9 @@ class String {
      */
     public static function guionCase($string){
         $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $string);
-        return strtolower(str_replace(" ", "-", $string)); 
+		$string = self::removerAcentos($string);
+		
+        return self::removerAcentos(strtolower(str_replace(" ", "-", $string))); 
     }
     /**
      * Modifica un string en formato guionCase a la frase original
