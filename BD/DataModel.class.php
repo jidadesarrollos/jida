@@ -218,9 +218,6 @@ class DataModel{
             
             $data = $this->bd->ejecutarQuery($datas,2);
             $result = $this->bd->obtenerDataMultiQuery($data);
-            #Debug::string($consulta);
-            #Debug::mostrarArray($result);
-               
         }
         
     }
@@ -466,7 +463,6 @@ class DataModel{
      */
     function in($filtro,$clave=""){
         $this->where();
-		Debug::string($this->query);
         if(is_array($filtro)){
             if(empty($clave)) $clave = $this->tablaBD.$this->pk;
 			else{
