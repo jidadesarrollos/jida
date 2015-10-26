@@ -423,8 +423,8 @@ class DataModel{
      * @param string $clase tabla o modelo con el que se desea unir
      * @param mixed $campos Campo o Campos a solicitar de la tabla join
      */
-    function join($clase,$campos="",$data=[]){
-    	$tipoJoin="";
+    function join($clase,$campos="",$data=[],$tipoJoin=""){
+    	
 		
         if(class_exists($clase)){
             $clase = new $clase();
@@ -701,7 +701,7 @@ class DataModel{
        $this->where();
        if(is_array($arrayFiltro)){
            $i=0;$o=0;
-           Debug::mostrarArray($arrayFiltro,false);
+           
            foreach ($arrayFiltro as $key => $value) {
                
                if($i>0)
