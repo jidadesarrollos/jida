@@ -323,6 +323,7 @@ class DataModel{
      */
     function __get($propiedad){
         if(property_exists($this, $propiedad)){
+            
             return $this->$propiedad;
         }else{        
             throw new Exception("La propiedad ". $propiedad ." solicitada no existe", 123);   
@@ -429,14 +430,29 @@ class DataModel{
             $clase = new $clase();
             $tablaJoin = $clase->__get('tablaBD');
 			$clavePrimaria = $clase->__get('pk');
+            if(empty($campos)){
+                $campos = array_keys($clase->obtenerPropiedades());
+                
+            }
+                
         }else{
             $tablaJoin = $clase;
         }
+        
 		if(!empty($campos)){
 			$_queryExplode = explode('from',$this->query);
+			if(is_array($campos)){
+			    $camposJoin="";
+                
+			    for($i=0;$i<count($campos);++$i){
+			        if($i>0) $camposJoin.=", ";
+			        $camposJoin.=$tablaJoin.".".$campos[$i];
+			    }
+			}else{
+			    $camposJoin = $campos;
+			}
 			
-			$campos = (is_array($campos))?implode(",$tablaJoin.",$campos):$tablaJoin.".".$campos;
-			$_queryExplode[0].=", ".$campos;
+			$_queryExplode[0].=", ".$camposJoin;
 			$this->query=implode(" from ",$_queryExplode);
 		}
 		$this->join=TRUE;
@@ -579,7 +595,10 @@ class DataModel{
     function __call($rel,$campos){
         if($rel=='initBD'){ $this->initBD($campos[0]); return true;};
         $class = ucfirst($this->_obtenerSingular($rel));
-     
+        if(property_exists($this,$rel)){
+            return $this->$rel;
+        }
+        
         if(in_array($class, $this->tieneMuchos)){
             
             $obj = new $class(null,1);
@@ -682,6 +701,7 @@ class DataModel{
        $this->where();
        if(is_array($arrayFiltro)){
            $i=0;$o=0;
+           Debug::mostrarArray($arrayFiltro,false);
            foreach ($arrayFiltro as $key => $value) {
                
                if($i>0)
@@ -741,15 +761,16 @@ class DataModel{
      * Permite hacer una consulta like
      * @method like
      * @param array $filtro
+     * @param string $condicion or u and
      * @param int $tipo 1=intermedio,2=inicio,3=final
      */
-    function like($arrayFiltro,$tipo=1){
+    function like($arrayFiltro,$condicion="or",$tipo=1){
         $this->where();
         if(is_array($arrayFiltro)){
            $i=0;
            foreach ($arrayFiltro as $key => $value) {
                if($i>0)
-                    $this->query.=" and ";
+                    $this->query.=" $condicion ";
                $this->query.="$key like";
                switch ($tipo) {
                    case 1:
