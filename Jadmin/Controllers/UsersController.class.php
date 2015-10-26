@@ -12,6 +12,9 @@ class UsersController extends JController{
 	function index(){
 	    
 		$vista = $this->vistaUser();
+		if(defined('MODELO_USUARIO') and class_exists(MODELO_USUARIO)){
+			$this->modelo = new MODELO_USUARIO();
+		}
         $this->vista="vistaUsuarios";
 		$this->dv->vista = $vista->obtenerVista();
 			
@@ -215,6 +218,7 @@ class UsersController extends JController{
      */
     function validarInicioSesion($usuario,$clave){
         $data = $this->modelo->validarLogin($usuario, $clave);
+        
         if($data){
             $this->crearSesionUsuario();
             return true;
@@ -232,6 +236,7 @@ class UsersController extends JController{
         Session::sessionLogin();
         Session::set('Usuario',$this->modelo);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        if(isset($data))
         Session::set('usuario',$data);
         return $this;
     }

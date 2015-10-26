@@ -196,7 +196,7 @@ class Validador{
 				$validador->valorCampo=$cadena;
 				$bandera=$validador->validarCadena($v, ['mensaje'=>$mensaje]);
 			}
-			Debug::string($bandera);
+			
 			return $bandera;
 		}else
         	return $validador->validarCadena($validacion, array('mensaje'=>$mensaje));

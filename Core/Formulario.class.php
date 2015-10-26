@@ -40,7 +40,7 @@ class Formulario extends DBContainer {
      * Id del formulario
      */
     public $id_form;
-    
+    protected $cssSelectorTitulo="titulo-formulario";    
     /**
      * Nombre del formulario
      */
@@ -523,7 +523,8 @@ class Formulario extends DBContainer {
         #";
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
-            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
+            $formulario.=Selector::crear($this->selectorTitulo.".".$this->cssSelectorTitulo,null,$this->tituloFormulario);
+//            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
             $formulario.="\n\t\t</div>\n\t</div>";    
         }
         
@@ -982,7 +983,7 @@ class Formulario extends DBContainer {
                 
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-md-12 col-xs-12 col-sm-12\">\n\t\t\t";
-            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
+            $formulario.=Selector::crear($this->selectorTitulo.".".$this->cssSelectorTitulo,null,$this->tituloFormulario);
             $formulario.="\n\t\t</div>\n\t</div>";    
         }
         if ($this->mostrarMensajes === TRUE and ! empty ( $_SESSION ['__msjForm'] )) {
