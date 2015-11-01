@@ -695,6 +695,7 @@ class DataModel{
      * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
 	 * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
 	 * @return object $this Objeto DataModel instanciado
+     * 02418586494 karen
      * 
      */
     function filtro($arrayFiltro=[],$arrayOr=[]){
