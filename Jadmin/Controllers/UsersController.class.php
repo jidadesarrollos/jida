@@ -219,7 +219,7 @@ class UsersController extends JController{
      * caso contrario retorna falso
      * @method validarInicioSesion
      */
-    function validarInicioSesion($usuario,$clave){
+    protected function validarInicioSesion($usuario,$clave){
         $data = $this->modelo->validarLogin($usuario, $clave);
         
         if($data){
@@ -235,7 +235,7 @@ class UsersController extends JController{
      * Crea la variable de Sesion Usuario con el usuario en sesión actual
      * @method crearSesionUsuario
      */
-    function crearSesionUsuario(){
+    protected function crearSesionUsuario(){
         Session::sessionLogin();
         Session::set('Usuario',$this->modelo);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
@@ -250,7 +250,7 @@ class UsersController extends JController{
      * @return object $form
      * @see Formulario
      */
-    function formularioLogin(){
+    protected function formularioLogin(){
         if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
             $form = Session::get('FormLoggin');
              

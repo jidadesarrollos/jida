@@ -430,6 +430,7 @@ class DataModel{
             $clase = new $clase();
             $tablaJoin = $clase->__get('tablaBD');
 			$clavePrimaria = $clase->__get('pk');
+            $clave=$this->pk;$claveRelacion=$this->pk;
             if(empty($campos)){
                 $campos = array_keys($clase->obtenerPropiedades());
                 
@@ -437,6 +438,15 @@ class DataModel{
                 
         }else{
             $tablaJoin = $clase;
+        }
+        if(count($data)>0){
+            if(array_key_exists('clave_relacion', $data)){
+                $claveRelacion = $data['clave_relacion'];
+            }
+            if(array_key_exists('clave', $data)){
+                $clave=$data['clave'];
+            }
+            
         }
         
 		if(!empty($campos)){
@@ -458,7 +468,10 @@ class DataModel{
 		$this->join=TRUE;
 		$this->query.=sprintf(
 		"%s JOIN %s on (%s.%s=%s.%s)",
-		$tipoJoin,$tablaJoin,$tablaJoin,$this->pk,$this->tablaBD,$this->pk);
+		$tipoJoin,
+		$tablaJoin,
+		$tablaJoin,$clave,
+		$this->tablaBD,$claveRelacion);
 		
         return $this;
         

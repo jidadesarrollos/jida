@@ -43,6 +43,7 @@ class DataVista{
     var $meta = array();
     var $url_canonical;
     var $robots = TRUE;
+    var $solicitudAjax=FALSE;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida

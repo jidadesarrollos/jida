@@ -245,7 +245,7 @@ class Controller {
 	    
 		if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) and !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
 		and strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
-		    
+		    $this->dv->solicitudAjax=TRUE;
 			return true;
 		}else{
 		    
