@@ -226,6 +226,7 @@ class User extends DataModel{
             $this->establecerAtributos($data);
             $this->activo=1;
             $this->validacion=1;
+			$this->id_estatus=1;
             if($this->salvar()->ejecutado()){
                 return true;
             }else{
