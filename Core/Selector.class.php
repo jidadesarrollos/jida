@@ -18,6 +18,8 @@ class Selector{
       */
     var $selector="";
     var $id="";
+    var $atributos=[];
+    var $data=[];
     var $class="";
     var $style="";
     /**
@@ -101,6 +103,7 @@ class Selector{
      * y los agrega
      * @method getElementosData
      * @access private;
+     * @deprecta
      */
     private function getAttr(){
         if(count($this->attr)>0){
@@ -274,6 +277,14 @@ class Selector{
             $tabs.="\t";
         endfor;
         return $tabs;
+    }
+    
+    /**
+     * Genera una instancia selector y la retorna
+     */
+    statict function obt($selector){
+        $tag = new Selector($selector);
+        return $tag;
     }
 }
 
