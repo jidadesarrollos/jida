@@ -7,7 +7,7 @@
 * @category
 */
 
-class Selector{
+class Selectore{
     
     
     var $selector="";

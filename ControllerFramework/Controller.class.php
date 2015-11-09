@@ -298,7 +298,7 @@ class Controller {
         if(empty($param)){
             return $_POST;
         }elseif($nuevoValor!=""){
-             Debug::String($nuevoValor);
+             
              $this->post[$param]=$nuevoValor;
              return $this;
         }else

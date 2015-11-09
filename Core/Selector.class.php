@@ -19,15 +19,16 @@ class Selector{
     var $selector="";
     var $id="";
     var $atributos=[];
-    var $data=[];
-    var $class="";
-    var $style="";
+    var $envoltorio="";
     /**
      * Atributos data para el selector
      * @var array $data
      */
-    var $data=array();
-    /**
+    var $data=[];
+    var $class="";
+    var $style="";
+    
+        /**
      * Arreglo para agregar atributos adicionales al selector
      * @var array $attr
      */
@@ -36,7 +37,7 @@ class Selector{
      * Contenido del selector
      * @var mixed $contenido
      */
-    var $contenido;
+    var $contenido="";
     /**
      * Contiene el HTML que se genera al crear el selector
      * @var string $selectorCreado;
@@ -47,8 +48,14 @@ class Selector{
      * Permite agregar propiedades adicionales al selector
      */
     private $propiedades=array();
+    protected $noCierre=[
+    'hr',
+    'br',
+    'img'
+    ];
     function __construct($selector=""){
         $this->selector=$selector;
+        
     }
     /**
      * Genera el HTML del selector instanciado
@@ -282,9 +289,99 @@ class Selector{
     /**
      * Genera una instancia selector y la retorna
      */
-    statict function obt($selector){
+    static function obt($selector){
         $tag = new Selector($selector);
         return $tag;
+    }
+    
+    function render(){
+        $html="";
+        if(!$this->selectorCierre()){
+            if(!empty($this->selector)){
+                $html = "<".$this->selector." ".$this->renderAttr()." />\n";
+            }
+        }else{
+            if(!empty($this->selector)){
+                $html = "\n<".$this->selector." ".$this->renderAttr().">\n\t";
+                $html.=$this->contenido."\n</".$this->selector.">";
+            }
+                    
+        }
+        
+        return $html;
+    }
+    private function selectorCierre(){
+        if(in_array($this->selector, $this->noCierre)){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    protected function renderAttr(){
+        $atribs="";$i=0;
+        if(count($this->attr)>0){
+            
+            foreach ($this->attr as $attr => $value) {
+               if($i>0) $atribs.=" ";
+                
+               $atribs.=$attr."=\"".$value."\"";
+                ++$i;
+            }
+        }
+        if(count($this->data)>0){
+            foreach ($this->data as $data => $value) {
+               if($i>0) $atribs.=" ";
+                if(is_array($value))$value=json_encode($value);
+               $atribs.="data-".$data."='".$value."'";
+                ++$i;
+            }
+        }
+        return $atribs;
+        
+    } 
+    
+    protected function obtClases(){
+        $this->class=$this->attr['class'];
+        return $this->attr['class'];
+    }
+    function addClass($clase){
+        if(!empty($this->attr['class']))
+            $this->attr['class'].=" ". $clase;
+        else{
+            $this->attr['class']=$clase;
+        }
+    }
+    function removerClass(){
+        $clases = explode(",",$this->attr['class']);
+        if(in_array($clase, $clases)){
+            unset($clases[$clase]);
+        }
+    }
+    
+    function html($html){
+        $this->contenido=$html;
+        return $this;
+    }
+    
+    function data($data,$valor=""){
+        if(!empty($valor)){
+            $this->data[$data]=$valor;
+        }else{
+            if(array_key_exists($data, $this->data)){
+              return $this->data[$data];  
+            }
+        }
+    }
+    function attr($attr,$valor=""){
+        if(!empty($valor)){
+            $this->attr[$attr]=$valor;  
+            return $this;
+        }else{
+            if(array_key_exists($attr, $this->attr)){
+                return $this->attr[$attr];
+            }
+            return false;
+        }
     }
 }
 

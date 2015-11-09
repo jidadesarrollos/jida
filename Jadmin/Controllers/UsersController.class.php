@@ -6,9 +6,7 @@ class UsersController extends JController{
 	function __construct(){
         parent::__construct();
         //$this->modelo = new User();
-        
-        $this->dv->addCSS('admin.css');
-        $this->dv->removerCSS('/htdocs/css/espvirtualshop.css','dev');
+
         $this->url='/jadmin/users/';
     }
     

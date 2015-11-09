@@ -70,8 +70,7 @@ class MenuHTML extends DBContainer{
         }else{
             
         }
-        
-        parent::__construct(__CLASS__);
+        parent::__construct();
         $menu = $this->menu;
         
         
@@ -91,11 +90,8 @@ class MenuHTML extends DBContainer{
                     $config['li']=array(0=>"");
                 }
                 $listaMenu = $this->armarListaMenuRecursivo($data,$config);
-                return $listaMenu;    
-                
+                return $listaMenu;   
             }
-        
-        
     }
     /**
      * Devuelde un menu armado
