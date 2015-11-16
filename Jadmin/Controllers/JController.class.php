@@ -21,9 +21,12 @@ class JController extends Controller{
 		$this->dv->addCSS([
 			#$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
 			#$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
-			#$this->obtURLApp()."htdocs/css/jida/jida.css",
+			$this->obtURLApp()."htdocs/css/jida/jida.css",
 			]
 			,false);
+			
+
+
 		$this->dv->addJS([
 			#$this->urlHtdocs."jquery/dist/jquery.js",
 			#$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',

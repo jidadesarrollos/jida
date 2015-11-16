@@ -497,7 +497,7 @@ class DataModel{
 			else{
 				if(!strpos($clave, ".")){ $clave = $this->tablaBD.".".$clave;}
 			}
-            $this->query.=$clave  ." in (". implode(",", $filtro) .")";
+            $this->query.=$clave  ." in ('". implode("','", $filtro) ."')";
         }
         
         return $this;
@@ -694,12 +694,12 @@ class DataModel{
      * Agrega la clausula where a la consulta
      * @method where
      */
-    private function where(){
+    private function where($condicion=" and"){
         if(!$this->usoWhere){
             $this->query.=" where ";
             $this->usoWhere=TRUE;
         }else{
-            $this->query.=" and ";
+            $this->query.=" $condicion ";
         }
     }
     /**
@@ -783,21 +783,47 @@ class DataModel{
         if(is_array($arrayFiltro)){
            $i=0;
            foreach ($arrayFiltro as $key => $value) {
-               if($i>0)
-                    $this->query.=" $condicion ";
-               $this->query.="$key like";
-               switch ($tipo) {
-                   case 1:
-                        $this->query.=" '%$value%'";
-                       break;
-                   case 2:
-                        $this->query.=" '$value%'";
-                        break;
-                   case 3:
-                       
-                        $this->query.=" '%$value'";
-                        break;
-                }
+               
+			   if(is_array($value)){
+			   	$a=0;
+			   	
+			   	foreach ($value as $id => $valor) {
+			   		if($a>0)
+	                    $this->query.=" $condicion ";
+               		$this->query.="$key like";
+			   		
+				   switch ($tipo) {
+	                   case 1:
+	                        $this->query.=" '%$valor%'";
+	                       break;
+	                   case 2:
+	                        $this->query.=" '$valor%'";
+	                        break;
+	                   case 3:
+	                       
+	                        $this->query.=" '%$valor'";
+	                        break;
+	                }
+				   ++$a;  
+			  	}
+				
+			   }else{
+				   	if($i>0)
+	                    $this->query.=" $condicion ";
+               		$this->query.="$key like";
+	               switch ($tipo) {
+	                   case 1:
+	                        $this->query.=" '%$value%'";
+	                       break;
+	                   case 2:
+	                        $this->query.=" '$value%'";
+	                        break;
+	                   case 3:
+	                       
+	                        $this->query.=" '%$value'";
+	                        break;
+	                }
+			   }
                ++$i;
            }
         }else{

@@ -259,10 +259,19 @@ class Mysql extends ConexionBD{
              
             while($data = $this->result->fetch_assoc() and count($data)>0){
                 
-                if(!empty($key))
-                    $dataCompleta[$data[$key]]=String::codificarArrayToHTML($data);
-                else {
-                    $dataCompleta[]=String::codificarArrayToHTML($data);
+                if(!empty($key)){
+					if($this->codificarHTML===TRUE){
+						$dataCompleta[$data[$key]]=$data;	
+					}else{
+						$dataCompleta[$data[$key]]=String::codificarArrayToHTML($data);
+					}	
+                    
+                }else {
+                	if($this->codificarHTML===TRUE){
+                    	$dataCompleta[]=String::codificarArrayToHTML($data);
+					}else{
+						$dataCompleta[]=$data;
+					}
                 }
                 
             }   
@@ -283,9 +292,14 @@ class Mysql extends ConexionBD{
         if($result!=""){
             $this->result = $result;
         }
-        if($this->result)       
-          $arr = String::codificarArrayToHTML($this->result->fetch_array());
-        else{
+        if($this->result){
+			if($this->codificarHTML===TRUE){
+				$arr = String::codificarArrayToHTML($this->result->fetch_array());	
+			}else{
+				$arr = $this->result->fetch_array();
+			}       
+          
+        }else{
             throw new Exception("El result de $this->query no trae información", 1);
             
         }
@@ -296,8 +310,12 @@ class Mysql extends ConexionBD{
           if($result){
             $this->result = $result;
           }
+          if($this->codificarHTML===TRUE){
+          	$arr = String::codificarArrayToHTML($this->result->fetch_assoc());	
+          }else{
+          	$arr = $this->result->fetch_assoc();
+          }
           
-          $arr = String::codificarArrayToHTML($this->result->fetch_assoc());
           
           return $arr;
     }  
@@ -348,7 +366,7 @@ class Mysql extends ConexionBD{
      * @author  
      */
     function fetchRow() {
-        return String::codificarArrayToHTML($this->result->fetch_row());
+        return $this->result->fetch_row();
     }
     
     function totalField() {

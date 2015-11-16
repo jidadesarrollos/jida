@@ -187,7 +187,7 @@ class String {
      * @return string $string;
      */
     public static function guionCase($string){
-        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $string);
+        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´)/','', $string);
 		$string = self::removerAcentos($string);
 		
         return self::removerAcentos(strtolower(str_replace(" ", "-", $string))); 
@@ -202,7 +202,7 @@ class String {
     public static function guionCaseToString($guionCase){
         $cadena= '/\/\\\'\?\¿\_';
         //$guionCase= str_replace(["¿","?","/"], $replace, $subject)
-        preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $guionCase);
+        preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|&)/','', $guionCase);
         
         return str_replace("-", " ", $guionCase);
     }
