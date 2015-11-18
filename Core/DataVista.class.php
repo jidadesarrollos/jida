@@ -42,6 +42,7 @@ class DataVista{
     var $meta_url;
     var $meta = array();
     var $url_canonical;
+	var $responsive=TRUE;
     var $robots = TRUE;
     var $solicitudAjax=FALSE;
     /**

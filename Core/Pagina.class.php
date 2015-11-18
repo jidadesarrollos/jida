@@ -490,7 +490,10 @@ class Pagina{
             //$itemprop.=$metaAdicional;
             $meta.=$metaAdicional;
         }
-		
+		if($this->data->responsive){
+			
+			$meta.=Selector::crear('meta',["name"=>"viewport",'content'=>"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);
+		}
         if(!empty($this->data->title)){
             $meta.=Selector::crear('TITLE',null,$this->data->title,0);
             $initTab=2;
