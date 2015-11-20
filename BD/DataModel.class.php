@@ -1165,9 +1165,9 @@ class DataModel{
         
     }
    
-    private function limit(){
+    function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
         
-        $this->query .= $this->bd->addLimit(0, ORM_REGISTROS_RELACION);
+        $this->query .= $this->bd->addLimit($limit,$offset);
         return $this;
     }
     /**
