@@ -1164,10 +1164,13 @@ class DataModel{
         return $this->resultBD;
         
     }
-   
+   	/**
+	 * Limita la consulta a base de datos
+	 */
     function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
         
-        $this->query .= $this->bd->addLimit($limit,$offset);
+        //$this->query .= $this->bd->addLimit($limit,$offset);
+        $this->bd->addLimit($limit, $offset);
         return $this;
     }
     /**

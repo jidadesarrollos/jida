@@ -24,7 +24,7 @@ class FormsController extends JController{
         $this->jctrl = new JidaControl();
         $this->url="/jadmin/forms/";
         parent::__construct();
-        $this->dv->addJs('jida/jadmin.js');
+        
         $this->layout="jadmin.tpl.php";
     }
     function index(){

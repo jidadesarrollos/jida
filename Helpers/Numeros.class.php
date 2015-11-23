@@ -12,7 +12,14 @@
 class Numeros{
     
     
-    
+    /**
+	 * Devuelve un número en formato de moneda
+	 * @method moneda
+	 * @param mixed $numero
+	 * @param int $decimales Por defecto es 2
+	 * @param string $type de moneda
+	 * @return string $numero Numero resultante
+	 */
     public static function moneda($numero,$decimales=2,$type="bolivar"){
         switch ($type) {
             case 'dolar':

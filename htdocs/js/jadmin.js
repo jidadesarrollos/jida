@@ -7,8 +7,7 @@
 	}
 	function guardarOrden(){
 	        var orden = $listaCampos.sortable('toArray').toString();
-	            
-	        data = "s-ajax=true&campos="+orden;
+	        
 	        data={'s-ajax':true,'campos':orden}
 	        
 	        new jd.ajax({
