@@ -42,26 +42,31 @@ class ACL extends DataModel{
      * @var array $componentes Conjunto de componentes a los que tiene el usuario
      */
     private $componentes =array();
+	private $usuario;
     /**
      * Funcion constructora
      */
     protected $tablaBD = '';
     function __construct(){
         parent::__construct();
-        
+        $this->usuario = Session::get('Usuario');
         if(!isset($_SESSION['usuario']['perfiles'])){
-            
+        	   
             Session::set('usuario', 'perfiles',array('UsuarioPublico'));
             Session::set('acl_default',true);
         }
-        
-        if(Session::get('Usuario') instanceof Usuario)
-            $this->perfiles = Session::get('Usuario')->perfiles;
-        $this->perfiles = $_SESSION['usuario']['perfiles'];
+       	#Debug::mostrarArray(Session::get('Usuario')->perfiles);
+        if($this->usuario instanceof Usuario){
+        	$this->perfiles = array('UsuarioPublico');
+        	if(count($this->perfiles)>0){
+        		$this->perfiles = Session::get('Usuario')->perfiles;	
+        	}
+            
+        }else{
+        	$this->perfiles = $_SESSION['usuario']['perfiles'];
+		}
 		if($this->usoBD===TRUE){
-			
 		    $this->obtenerAccesoComponentes();
-		    
 		    $this->obtenerAccesoObjetos();
 		}
     }
@@ -74,13 +79,7 @@ class ACL extends DataModel{
        
         $query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
         $i=0;
-
-        foreach ($this->perfiles as $key => $value) {
-            ($i==0)?$i++:$query.=",";
-            $query.="'$value'";
-            
-        }
-        $query.=") group by componente, id_componente;";
+		$query = $query.implode(',',$this->perfiles).") group by componente, id_componente;";
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
@@ -91,9 +90,7 @@ class ACL extends DataModel{
                 
         //EL componente PRINCIPAL siempre es visible;
         $componentes[1]=array('componente'=>'principal');
-        $this->componentes = $componentes;
-        $this->acl = $access;
-        
+        $this->componentes = $componentes;   
     }
     
     /**
@@ -117,11 +114,10 @@ class ACL extends DataModel{
                 $perfiles.="'$value'";
                 
             }
-            $query = sprintf("select * from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
+            $query = sprintf("select  id_objeto_perfil,id_perfil,clave_perfil,nombre_perfil,id_objeto,objeto,
+								id_componente from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
                                 implode(",",array_keys($this->componentes)),
-                                $perfiles
-                                );
-            //Debug::string($query,false);
+                                $perfiles);
             $objetos        =   $this->bd->obtenerDataCompleta($query);
             $accesoObjetos  =   array();
             $accesoMetodos  =   $this->obtenerAccesoMetodos();
@@ -170,18 +166,9 @@ class ACL extends DataModel{
                             }elseif(array_key_exists('metodos', $objetosComponente[$dataMetodo['objeto']])){
                                 $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];    
                                 
-                            }
-                           // if(!array_key_exists('metodos',$objetosComponente['objetos'] )){
-                                // $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                           // }         1
-//                             
-                            // $this->acl[$componente]['objetos'][$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                        }
+                            }}
                     }
                 }//fin foreach
-            
-            #Debug::mostrarArray($this->acl);
-            
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
             Session::set('acl',$this->acl);

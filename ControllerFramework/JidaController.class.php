@@ -120,9 +120,6 @@
             }
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
-			
-			
-            
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             
             $this->validacion();
