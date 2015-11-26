@@ -31,17 +31,13 @@ class ObjetosController extends JController{
             $query = "select id_objeto,objeto as \"Objeto\",a.descripcion \"Descripci&oacute;n\", componente  as Componente
                         from s_objetos a 
                         join s_componentes b on (b.id_componente = a.id_componente)";
-                        
 			
 			$vista = $this->vistaObjetos($query);
             $vista->tituloVista="Objetos";
 			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto\">Agregar objeto</a>";
 			$vista->mensajeError= Mensajes::mensajeAlerta($msjError);
 			$this->dv->vista = $vista->obtenerVista();
-           
-           
-           
-       	
+        
 	}
     /**
      * Verifica los objetos existentes en un directorio especificado o en todos.
@@ -62,18 +58,16 @@ class ObjetosController extends JController{
 			$rutaComponente = ($nombreComponente=='Jadmin')?framework_dir.'Jadmin/Controllers/':app_dir."Modulos/".$nombreComponente."/Controller/";	
 		}
         
-        
-        
-        $objetosCarpeta =array();
-        # "/^(?:\+|-)?\d+$/"
+        $objetosCarpeta = [];
         Directorios::listarDirectoriosRuta($rutaComponente,$objetosCarpeta,"/^.*Controller.class.php$/");
         array_walk($objetosCarpeta,function(&$objeto,$key){
                      $objeto =str_replace("Controller.class.php", "", $objeto);
                 });
                 
         $objetos = new Objeto();
-        $dataBD = $objetos->getTabla(null,array('id_componente'=>$componente->id_componente));
-        $objetosBD=array();
+        $dataBD = $objetos->obtenerTodo();
+		
+        $objetosBD=[];
         //Recorro los objetos de la bd
         foreach($dataBD as $key=>$valor){    
             $objetosBD[]=$valor['objeto'];
@@ -81,13 +75,20 @@ class ObjetosController extends JController{
         
         $nuevos = array_diff($objetosCarpeta, $objetosBD);
         $inexistentes = array_diff($objetosBD, $objetosCarpeta);
-
+		
+		$arr=[];
+		foreach ($nuevos as $key => $value) {
+			$arr[$key]['objeto'] = $value;
+			$arr[$key]['id_componente'] = $componente->id_componente;
+			$arr[$key]['descripcion'] = '';
+		}
+		
         if(count($nuevos)>0){
-            $objetos->insert(array('objeto','id_componente'), $this->Arrays->addColumna($nuevos,$componente->id_componente));
+            $objetos->salvarTodo($arr);
         }
-        
+
         if(count($inexistentes)>0){
-            $objetos->eliminarMultiplesDatos($inexistentes, 'objeto');
+            $objetos->eliminar($inexistentes,'objeto');
         }
     }
     /**
@@ -96,21 +97,21 @@ class ObjetosController extends JController{
      * 
      */
     function lista(){
-		  $this->tituloPagina="jida-Registro Componentes";
-          $this->dv->vista="";   
-          if($this->get('comp')){
-               $idComponente = $this->getEntero($this->get('comp'));
-               $comp = new Componente($idComponente);
-               $this->validarObjetos($comp);
-               $query = "select id_objeto,objeto as \"Objeto\",descripcion \"Descripci&oacute;n\" from s_objetos where id_componente = $idComponente";
-               $vista =$this->vistaObjetos($query);
-               $vista->tituloVista="Objetos del Componente ".$comp->componente;
-               $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
-               $this->dv->vista = $vista->obtenerVista();
-           }else{
-               Session::set('__idVista','componentes');
-               Session::set('__msjVista',Mensajes::mensajeAlerta("Debe seleccionar un componente"));
-           }
+	
+	  $this->tituloPagina="jida-Registro Componentes";
+      $this->dv->vista="";   
+      if($this->get('comp')){
+      	$idComponente = $this->getEntero($this->get('comp'));
+	    $comp = new Componente($idComponente);
+        $this->validarObjetos($comp);
+        $query = "select id_objeto,objeto as \"Objeto\",descripcion \"Descripci&oacute;n\" from s_objetos where id_componente = $idComponente";
+        $vista =$this->vistaObjetos($query);
+        $vista->tituloVista="Objetos del Componente ".$comp->componente;
+        $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
+        $this->dv->vista = $vista->obtenerVista();
+      }else{
+      	Vista::msj('componentes','alert','Debe seleccionar un componente');
+      }
    }
 
 
@@ -157,23 +158,21 @@ class ObjetosController extends JController{
      * @method addDescripcion
      */
     function addDescripcion(){
-        if(isset($_GET['obj']) and $this->getEntero($_GET['obj'])){
+        if($this->getEntero($this->get('obj'))){
                 
             if(isset($_POST['s-ajax'])){
                 $this->layout='ajax.tpl.php';
             }
-            
-            $form = new Formulario('DescripcionMetodo',2,$_GET['obj'],2);
-            $Objeto = new Objeto($_GET['obj']);
+
+            $form = new Formulario('DescripcionMetodo',2,$this->get('obj'),2);
+            $Objeto = new Objeto($this->get('obj'));
             
             $form->action="$this->url".'add-descripcion/obj/'.$Objeto->id_objeto;
             $form->tituloFormulario="Agregar Descripci&oacute;n del Objeto ".$Objeto->objeto;
-            if(isset($_POST['btnDescripcionMetodo'])){
+            if($this->post('btnDescripcionMetodo')){
                 $validacion = $form->validarFormulario();
                 if($validacion===TRUE){
-                    $guardado = $Objeto->salvar($_POST);
-                    
-                    if($guardado['ejecutado']==1){
+                    if($Objeto->salvar($_POST)->ejecutado()==1){
                         Vista::msj('objetos', 'suceso', "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
                     }else{
                         Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
@@ -225,40 +224,31 @@ class ObjetosController extends JController{
      * 
      */
 	function accesoPerfiles(){
-		
-			if(isset($_GET['metodo'])){
+		if($this->get('metodo')){
 				
+			$metodo = new Metodo($this->get('metodo'));
+			$form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
 			
-				$metodo = new Metodo($this->get('metodo'));
-				$form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
-				
-				$form->action=$this->url."acceso-perfiles/metodo/".$this->get('metodo');
-				$form->valueSubmit="Asignar Perfiles";
-				$form->tituloFormulario="Asignar acceso de perfiles a metodo $metodo->nombre_metodo";
-				if(isset($_POST['btnPerfilesAMetodos'])){
-					$validacion = $form->validarFormulario($_POST);
-					if($validacion===TRUE){
-						
-						$accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
-						if($accion['ejecutado']==1){
-							Session::set('__idVista', 'metodosObjeto');
-							$msj = Mensajes::mensajeSuceso('Asignado los perfiles de acceso al metodo '.$metodo->nombre_metodo);
-							Session::set('__msjVista',$msj);
-							redireccionar($this->url."metodos/obj/".$metodo->id_objeto);
-						}else{
-							$msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-							Session::set('__msjForm', $msj);
-						}
+			$form->action=$this->url."acceso-perfiles/metodo/".$this->get('metodo');
+			$form->valueSubmit="Asignar Perfiles";
+			$form->tituloFormulario="Asignar acceso de perfiles a metodo $metodo->nombre_metodo";
+			
+			if($this->post('btnPerfilesAMetodos')){
+				$validacion = $form->validarFormulario($_POST);
+				if($validacion===TRUE){
+					$accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
+					if($accion['ejecutado']==1){
+						Vista::msj('metodosObjeto','suceso','Asignado los perfiles de acceso al metodo '.$metodo->nombre_metodo,$this->url."metodos/obj/".$metodo->id_objeto);
 					}else{
-						
-						Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
+						Formulario::msj('error','No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
 					}
+				}else{
+					Formulario::msj('error','No se han asignado perfiles');
 				}
+			}
 				$this->dv->formAcceso =$form->armarFormulario();
 			}else{
-				Session::set('__msjVista',Mensajes::mensajeError("Debe seleccionar un metodo"));
-				Session::set('__idVista','objetos');
-				redireccionar($this->url);	
+				Vista::msj('objetos','error','Debe seleccionar un metodo',$this->url);
 			}
 		
 	}
@@ -289,16 +279,12 @@ class ObjetosController extends JController{
                     }
                 }else{
                     Formulario::msj('error', "No se han asignado perfiles");
-                    
                 }
             }
             $this->dv->formAcceso =$form->armarFormulario();
         }else{
             Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());  
-        }    
+        }
     }
 
-	
-	
-	
 }
