@@ -110,7 +110,7 @@ class Mysql extends ConexionBD{
         
         $this->mysqli->query("SET NAMES 'utf8'");
         if($this->codificarHTML===TRUE)
-            $this->query=String::codificarHTML($this->query);
+            $this->query=$this->query;
         if($tipoQuery==2){
             $this->result  = $this->mysqli->multi_query($this->query);
         }else{
@@ -430,7 +430,7 @@ class Mysql extends ConexionBD{
      * en una multiConsulta
      * @method obtenerDataMultiQuery
      */
-    function obtenerDataMultiQuery($result=""){
+    function obtenerDataMultiQuery($result="",$keys=[]){
         if(empty($result))
         $result = $this->result;
         $arrayResult = array();
@@ -439,9 +439,12 @@ class Mysql extends ConexionBD{
             if($result = $this->mysqli->store_result()){
                 
                 $e=0;
-                $arrayResult[$i]['totalRegistros'] = $result->num_rows;
+				$key = $i;
+				if(array_key_exists($i, $keys)) $key = $keys[$i];
+				
+                $arrayResult[$key]['totalRegistros'] = $result->num_rows;
                 while ($data = $this->obtenerArrayAsociativo($result)) {
-                    $arrayResult[$i][$e]=$data;
+                    $arrayResult[$key]['result'][$e]=$data;
                     $e++;
                 }
                     

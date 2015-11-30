@@ -13,6 +13,7 @@ class DataModel{
     protected $tablaBD;
     protected $esquema;
 	protected $manejadorBD;
+	private $consultaMultiple=FALSE;
 	private $join=FALSE;	
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
@@ -530,41 +531,7 @@ class DataModel{
     function consulta($campos=""){
         $banderaJoin = FALSE;
         $join="";
-        // if(empty($campos)){
-//             
-            // if(count($this->pertenece)>0){
-                // $camposJoin = "";
-                // $i=0;
-//                 
-                // foreach ($this->pertenece as $campo => $object) {
-                    // $banderaJoin=TRUE;
-                    // $tabla = "";
-                    // $pk="";
-                    // if(property_exists($object, 'tablaBD')){
-//                         
-                        // $tabla = $object->__get('tablaBD');
-                        // $pk = $object->__get('pk');
-                        // $props= $object->__get('propiedades');
-//                         
-                    // }elseif(property_exists($object, 'nombreTabla')){
-                        // $tabla = $object->__get('nombreTabla');
-                        // $pk = $object->__get('pk');
-                        // $props = $object->__get('propiedadesPublicas');
-                    // }//fin if
-                        // $camposTabla = array_keys($props);
-                        // array_walk($camposTabla,function(&$ele,$clave,$tabla){
-                                                        // $ele = $tabla.".".$ele;
-                                        // },$tabla);
-                        // if($i>0)
-                            // $camposJoin.=",";
-                        // $camposJoin .=" ".implode(", ",$camposTabla);
-                    // if(!empty($tabla) and !empty($pk)){
-                        // $join .= sprintf(" LEFT JOIN %s on (%s.%s = %s.%s)",$tabla,$this->tablaBD,$pk,$tabla,$pk);
-                    // }
-                    // ++$i;
-                // }//foreach
-            // }//fin if para joins
-        // }
+        
          if(empty($campos)){
              $campos =  array_keys($this->propiedades);
          }
@@ -576,8 +543,9 @@ class DataModel{
         
             $campos = implode(", ",$campos);
         }
-        
-        $this->query="SELECT $campos ";
+        if($this->consultaMultiple)
+        	$this->query.="SELECT $campos ";
+		else $this->query="SELECT $campos "; 
         if($banderaJoin===TRUE)
             $this->query .=", ".$camposJoin;
         $this->query.=" from $this->tablaBD ".$join;
@@ -832,10 +800,31 @@ class DataModel{
         return $this;
     }//final función like
     function obt($key=""){
-        if(!empty($this->order)) $this->query.=" ".$this->order;        
-     
+        //if(!empty($this->order)) $this->query.=" ".$this->order;        
+     	
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
+	function addConsulta(){
+		$this->query.=";";
+		$this->consultaMultiple=TRUE;
+		$this->consulta();
+		return $this;
+	}
+	/**
+	 * Retorna el resultado de multiples consultas
+	 * 
+	 * Funcional para trabajar con Mysql. Retorna el resultado de multiples consultas solicitadas
+	 * @see Mysql::mysqli_multi_query
+	 * @method obtMultiple
+	 * 
+	 */
+	function obtMultiple($keys){
+		$this->consultaMultiple=FALSE;
+		return $this->bd->obtenerDataMultiQuery(
+			$this->bd->ejecutarQuery($this->query,2),$keys
+		);
+		
+	}
     /**
      * Retorna todos los registros de Base de datos
      * @method obtenerTodo
@@ -1170,7 +1159,8 @@ class DataModel{
     function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
         
         //$this->query .= $this->bd->addLimit($limit,$offset);
-        $this->bd->addLimit($limit, $offset);
+        $this->query = $this->bd->addLimit($limit, $offset,$this->query);
+		
         return $this;
     }
     /**
