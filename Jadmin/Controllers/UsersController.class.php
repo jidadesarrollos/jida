@@ -14,7 +14,8 @@ class UsersController extends JController{
 	    
 		$vista = $this->vistaUser();
 		if(defined('MODELO_USUARIO') and class_exists(MODELO_USUARIO)){
-			$this->modelo = new MODELO_USUARIO();
+			$clase = MODELO_USUARIO;
+			$this->modelo = new $clase();
 		}
         $this->vista="vistaUsuarios";
 		$this->dv->vista = $vista->obtenerVista();
@@ -207,7 +208,9 @@ class UsersController extends JController{
     }//fin función
     function cierresesion(){
 	    if(Session::destroy()){
-	      $this->redireccionar($this->urlCierreSession);  
+	    	if(Session::get('Usuario') instanceof MODELO_USUARIO)
+				Session::get('Usuario')->cerrarSesion();
+	    	$this->redireccionar($this->urlCierreSession);  
 	    }
 	}
     /**

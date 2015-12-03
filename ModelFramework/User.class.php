@@ -1,4 +1,5 @@
 <?PHP
+
 /**
  * Modelo de Usuario de la aplicacion
  * 
@@ -266,6 +267,14 @@ class User extends DataModel{
 		}
 		$this->perfiles[]=$perfil;
 		
+	}
+	function crearSesionUsuario(){
+		Session::sessionLogin();
+        Session::set('Usuario',$this);
+        //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        if(isset($data))
+        Session::set('usuario',$data);
+        return $this;
 	}
 
 }

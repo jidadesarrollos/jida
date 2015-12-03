@@ -1079,7 +1079,7 @@ class DataModel{
                 if(is_array($user) and array_key_exists('id_usuario', $user)) 
                     $idUser = $user['id_usuario'];
                 elseif(is_object($user) and property_exists($user, 'id_usuario'))
-                    $idUser= $user->id_usuario; 
+                    $idUser= ($user->id_usuario>0)?$user->id_usuario:0; 
             }else{
                if(is_array(Session::get('usuario')) and array_key_exists('id_usuario', Session::get('usuario'))) 
                     $idUser = Session::get('usuario')['id_usuario'];
@@ -1248,4 +1248,9 @@ class DataModel{
     protected function guardarRelacion($arrayData){
         
     }
+	
+	function totalRegistros(){
+		
+		return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from ".$this->tablaBD));
+	}
 }//fin clase;

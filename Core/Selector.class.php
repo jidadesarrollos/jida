@@ -34,27 +34,45 @@ class Selector{
      */
     var $attr=array();
     /**
-     * Contenido del selector
+     * Contenido del selector, que puede incluir el innerHTML
+	 * y otros selectores
      * @var mixed $contenido
      */
     var $contenido="";
+	/**
+	 * Define si es el selector contenedor del InnerHTML
+	 * o no
+	 * @var boolean $padreInner
+	 */
+	var $padreInner=FALSE;
+	/**
+	 * Nodo de selectores hijos del selector
+	 * var array $nodo;
+	 */
+	private $nodos=[];
     /**
      * Contiene el HTML que se genera al crear el selector
      * @var string $selectorCreado;
      * 
      */
     private $selectorCreado;
+	/**
+	 * Contenido especifico a agregar
+	 */
+	protected $innerHTML;
     /**
      * Permite agregar propiedades adicionales al selector
      */
     private $propiedades=array();
+
     protected $noCierre=[
     'hr',
     'br',
     'img'
     ];
     function __construct($selector=""){
-        $this->selector=$selector;
+    	if(!empty($selector))
+        	$this->selector=$selector;
         
     }
     /**
@@ -296,20 +314,37 @@ class Selector{
     
     function render(){
         $html="";
+		
         if(!$this->selectorCierre()){
             if(!empty($this->selector)){
                 $html = "<".$this->selector." ".$this->renderAttr()." />\n";
             }
         }else{
             if(!empty($this->selector)){
-                $html = "\n<".$this->selector." ".$this->renderAttr().">\n\t";
-                $html.=$this->contenido."\n</".$this->selector.">";
+                $html = "\n<".$this->selector."".$this->renderAttr().">\n\t";
+				if($this->selector=='TABLE'){
+					
+				}
+                $html.=$this->renderContenido()."\n</".$this->selector.">";
+				
             }
                     
         }
         
         return $html;
     }
+	
+	protected function renderContenido(){
+		$contenido ="";
+		
+		if($this->contenido instanceOf Selector){
+			$contenido = $this->contenido->renderContenido();
+		}else{
+			
+			return $this->innerHTML;
+		}
+		return $contenido;
+	}
     private function selectorCierre(){
         if(in_array($this->selector, $this->noCierre)){
             return false;
@@ -322,7 +357,7 @@ class Selector{
         if(count($this->attr)>0){
             
             foreach ($this->attr as $attr => $value) {
-               if($i>0) $atribs.=" ";
+               $atribs.=" ";
                 
                $atribs.=$attr."=\"".$value."\"";
                 ++$i;
@@ -374,15 +409,45 @@ class Selector{
     }
     function attr($attr,$valor=""){
         if(!empty($valor)){
-            $this->attr[$attr]=$valor;  
+        	
+    		$this->attr[$attr]=$valor;	
+        	
             return $this;
         }else{
+        	if(is_array($attr)){
+        		$this->attr = array_merge($this->attr,$attr);
+					
+        	}else
             if(array_key_exists($attr, $this->attr)){
                 return $this->attr[$attr];
             }
             return false;
         }
     }
+	/**
+	 * Define el contenido inner del Selector
+	 * @method innerHTML
+	 * 
+	 */
+	function innerHTML($innerHTML=""){
+		if(empty($innerHTML)) return $innerHTML;
+		else{
+			$this->innerHTML = $innerHTML;
+			return $this;
+		}
+	}
+	/**
+	 * Envuelve el contenido en un selector adicional
+	 * @method envolver
+	 * @param string selector Nombre del selector a crear
+	 */
+	function envolver($selector){
+		$this->contenido= new Selector($selector);
+	}
+	function addNodo($selector){
+		
+	}	
+	
 }
 
 
