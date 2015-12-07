@@ -164,6 +164,7 @@ class DataModel{
         $param = func_get_args(0);
         $this->_clase = get_class($this);
 		$this->usoBD=$this->manejadorBD;
+
 		if($this->usoBD!==FALSE)
         	$this->initBD();
 		else{
@@ -875,6 +876,7 @@ class DataModel{
         }else{
             return $this->modificar();
         }
+		
         //return $this->resultBD->setValores($this);
     }
     
@@ -910,10 +912,13 @@ class DataModel{
         }        
         $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode ( ',', $datos ) );
         
-        if ($this->bd->ejecutarQuery ( $query ))
+        if ($this->bd->ejecutarQuery ( $query )){
+        	$this->bd->cerrarConexion();
             return true;
-        else 
-            return false;    
+        }else{
+        	$this->bd->cerrarConexion(); 
+            return false;
+		}    
     }
     /**
      * Permite instanciar el objeto por medio de una propiedad;
@@ -1017,6 +1022,7 @@ class DataModel{
         }else{
             $this->resultBD->__set('ejecutado', false);
         }
+		$this->bd->cerrarConexion();
         return $this->resultBD;
     }
     /**
@@ -1150,6 +1156,7 @@ class DataModel{
             $this->query="";
         }
         $this->resultBD->setValores($this);
+		$this->bd->cerrarConexion();
         return $this->resultBD;
         
     }

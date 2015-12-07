@@ -96,11 +96,16 @@ class Controller {
      * @var array $get;
      */
     private $get;
+	/**
+	 * @var array $request Arreglo $_REQUEST
+	 */
+	private $request;
     /**
      * Objeto DataVista
      * @var object $dv;
      */
-     
+	
+	     
     private $_clase;
     /**
      * Nombre del controlador
@@ -128,7 +133,7 @@ class Controller {
         $this->instanciarModelos();
         $this->post=& $_POST;
         $this->get =& $_GET;
-        
+        $this->request=& $_REQUEST;
         $this->_clase=get_class($this);
         $this->_nombreController = str_replace("Controller", "", $this->_clase);
 		if(array_key_exists('_MODULO_ACTUAL', $GLOBALS))
@@ -309,6 +314,22 @@ class Controller {
         return false;   
 
     }
+	/**
+	 * Retorna el valor request solicitado
+	 * @method request
+	 * @param string $param Nombre del key a buscar o agregar
+	 * @param string $nuevoValor [opcional] Valor a agregar a param
+	 */
+	protected function request($param="",$nuevoValor=""){
+		if(empty($param)){
+			return $_REQUEST;
+		}elseif($nuevoValor!=""){
+			$this->request[$param] = $nuevoValor;
+		}elseif(isset($this->request[$param]) or array_key_exists($param, $this->request)){
+			return $this->request[$param];
+		}
+		return false;
+	}
     
     /**
      * Devuelve la URL correspondiente al metodo que hace la llamada
@@ -541,6 +562,7 @@ class Controller {
 		
 		
 	}
+	
     
 
 }

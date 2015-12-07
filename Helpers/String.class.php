@@ -187,7 +187,7 @@ class String {
      * @return string $string;
      */
     public static function guionCase($string){
-        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´)/','', $string);
+        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/','', $string);
 		$string = self::removerAcentos($string);
 		
         return self::removerAcentos(strtolower(str_replace(" ", "-", $string))); 

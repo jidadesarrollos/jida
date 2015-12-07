@@ -141,7 +141,7 @@ class Pagina{
            
         }
             
-        $this->url = Session::get('URL_ACTUAL');
+        $this->url = "/".Session::get('URL_ACTUAL');
      
     }
 
@@ -236,6 +236,7 @@ class Pagina{
     private function renderizarLayout(){
         
         /* Permitimos almacenamiento en bufer */
+        
         ob_start();
         
         $this->layout = $this->directorioLayout.$this->layout;

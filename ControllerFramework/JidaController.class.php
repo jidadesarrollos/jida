@@ -507,7 +507,8 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-            Debug::mostrarArray($excepcion);
+        	if(ENTORNO_APP=='dev') 	Debug::mostrarArray($excepcion);
+			
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        
             else
@@ -525,20 +526,24 @@
             $this->metodo=METODO_EXCEPCION;
             
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+			
             $this->vista->rutaPagina=3;
             if(!class_exists($ctrlError)) throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
             $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
             
             $metodo = $this->metodo;
             $ctrlExcepcion->$metodo();
-            
+              
             $this->vista->layout = $ctrlExcepcion->layout;
+			
             $this->vista->definirDirectorios();
+			//Debug::string($this->controlador." ".$this->metodo);
             $this->controladorObject = $ctrlExcepcion;
             $this->mostrarContenido($ctrlExcepcion->vista);
        
 //            
         }catch(Exception $e){
+        	Debug::mostrarArray($e);
             $ctrlError = $this->controlador;
             $ctrlExcepcion = new $this->controlador($e,$ctrlError);
             $metodo = $this->metodo;
