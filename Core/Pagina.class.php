@@ -491,6 +491,9 @@ class Pagina{
             //$itemprop.=$metaAdicional;
             $meta.=$metaAdicional;
         }
+		if($this->data->google_verification!=FALSE){
+			$meta.=Selector::crear('meta',["name"=>"google-site-verification", "content"=>$this->data->google_verification]);
+		}
 		if($this->data->responsive){
 			
 			$meta.=Selector::crear('meta',["name"=>"viewport",'content'=>"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);

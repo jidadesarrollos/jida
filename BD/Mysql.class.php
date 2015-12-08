@@ -78,7 +78,7 @@ class Mysql extends ConexionBD{
     function establecerConexion(){
 		        
         $this->mysqli = @new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
-      	$this->mysqli->set_charset('utf8');
+      	
         if($this->mysqli->connect_error){
             
             throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
@@ -220,6 +220,7 @@ class Mysql extends ConexionBD{
      * Cierra una conexión a Base de Datos
      */
     function cerrarConexion(){
+    	
         $this->mysqli->close();
     }
     
