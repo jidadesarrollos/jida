@@ -56,9 +56,11 @@
 	 * var object $objeto Objeto implementado
 	 */
 	private $objeto;
+	private $urlActual;
 	function __construct($ejecucion,$params=[]){
 		$dataConsulta = explode(".", $ejecucion);
-		
+		if(!empty(Session::get('urlActual')))
+			$this->paginaConsulta = (Session::get('urlActual')[0]=="/")?Session::get('urlActual'):"/".Session::get('urlActual');
 		if(count($params)>0){
 			if(array_key_exists('campos', $params)){
 				$this->campos = $params['campos'];
@@ -148,17 +150,14 @@
 			$item = $this->paginador->addItem($i)->envolver('a');
 			if($i == $this->paginaActual){
 				$item->attr([
-					'class'	=>$this->configPaginador['classPaginaActual'],
-					'href'	=>"$this->paginaConsulta/pagina/$i/",
-					
-					
-				])->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
+					'class'	=>$this->configPaginador['classPaginaActual']])
+					->contenido->attr(['href'	=>"$this->paginaConsulta/pagina/$i/"])
+					->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
 			}else{
 				$item->attr([
-					'class'	=>$this->configPaginador['classLink'],
-					'href'	=>"$this->paginaConsulta/pagina/$i/",
-					
-				])->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
+					'class'	=>$this->configPaginador['classLink']])
+					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina/$i/",])
+					->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
 			}
 			
 		}

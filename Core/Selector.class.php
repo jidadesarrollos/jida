@@ -24,7 +24,7 @@ class Selector{
      * Atributos data para el selector
      * @var array $data
      */
-    protected $data=[];
+    var $data=[];
     var $class="";
     var $style="";
     
@@ -403,7 +403,7 @@ class Selector{
             $this->data[$data]=$valor;
         }else{
         	if(is_array($data)){
-        		$this->attr = array_merge($this->data,$data);
+        		$this->data = array_merge($this->data,$data);
 				return $this;	
         	}else
             if(array_key_exists($data, $this->data)){
