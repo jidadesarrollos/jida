@@ -126,6 +126,7 @@
 	
 	function obtenerVista(){
 		$this->tabla->attr($this->attTabla);
+		if(count($this->titulos)>0) $this->tabla->tHead($this->titulos);
 		$vista = $this->tabla->generar();
 		$vista.= $this->crearPaginador();
 		

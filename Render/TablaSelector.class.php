@@ -37,7 +37,8 @@ class TablaSelector extends Selector{
 	function tHead($data){
 		$this->dataThead = $data;
 		$this->tHead = new Selector('THEAD');
-		$this->hHead->fila = new FilaSelector($this->dataThead);
+		$this->validarTHead();
+		$this->tHead->fila = new FilaSelector($this->dataThead);
 		
 	}
 	private function validarTHead(){
@@ -98,7 +99,9 @@ class TablaSelector extends Selector{
 		
 		foreach ($this->filas as $key => $fila) {
 				$keys = array_keys($fila->columnas);
-				
+			if(!array_key_exists($columna,$keys)) 
+			throw new Exception("La columna indicada no existe en la vista",4);
+			
 				$fila->columnas[$keys[$columna]]->ejecutarFuncion($funcion);
 		}
 		return $this;
