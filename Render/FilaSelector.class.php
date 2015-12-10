@@ -38,7 +38,7 @@ class FilaSelector extends Selector{
 		foreach ($this->columnas as $key => $columna) {
 			
 			$this->innerHTML.=$columna->render();
-			
+			 
 		}
 		
 		return $this;	
@@ -48,5 +48,23 @@ class FilaSelector extends Selector{
 		$html = $this->generarContenido()->render();
 		return $html;
 	}
+	
+	/**
+	 * Agrega una nueva columna al final de la fila
+	 * 
+	 * El contenido de la columna debe ser especificado por el desarrollador por
+	 * medio de una función pasada como parametro. La función recibe el arreglo de columnas
+	 * existentes
+	 *
+	 * @method agregarColumna
+	 * @param function $funcion Funcion creada por el usuario. Debe retornar innerHTML.
+	 */
+	function agregarColumna($funcion){
+		$nueva = new ColumnaSelector();
+		$funcion($this,$nueva);
+		array_push($this->columnas,$nueva);
+	}
+	
+	
 
 }

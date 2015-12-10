@@ -1255,7 +1255,10 @@ class DataModel{
     protected function guardarRelacion($arrayData){
         
     }
-	
+	/**
+	 * Registra el total de registros de una tabla
+	 * @method totalRegistros
+	 */
 	function totalRegistros(){
 		
 		return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from ".$this->tablaBD));

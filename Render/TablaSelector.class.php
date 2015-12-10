@@ -34,6 +34,12 @@ class TablaSelector extends Selector{
 			
 	}
 	
+	function tHead($data){
+		$this->dataThead = $data;
+		$this->tHead = new Selector('THEAD');
+		$this->hHead->fila = new FilaSelector($this->dataThead);
+		
+	}
 	private function validarTHead(){
 		$this->tHead = new Selector('THEAD');
 		$this->tHead->Fila = new FilaSelector($this->dataThead,'TH');
@@ -75,14 +81,37 @@ class TablaSelector extends Selector{
 	}
 	private function crearTBody(){
 		foreach ($this->filas as $key => $fila) {
-			
 			$this->innerHTML .= $fila->renderizar();
 		}
 		
 		return $this;
-	}
+	}
 	private function crearTFooter(){
 		
+	}
+	
+	/**
+	 * Ejecuta una funcion sobre una columna de la tabla
+	 * @method funcionColumna
+	 */
+	function funcionColumna($columna,$funcion="",$fila=""){
+		
+		foreach ($this->filas as $key => $fila) {
+				$keys = array_keys($fila->columnas);
+				
+				$fila->columnas[$keys[$columna]]->ejecutarFuncion($funcion);
+		}
+		return $this;
+	}
+	/**
+	 * Inserta una columna al final de la tabla
+	 * @method insertarColumna
+	 */
+	function insertarColumna($funcion){
+		foreach ($this->filas as $key => $fila) {
+			$fila->agregarColumna($funcion);
+		}
+		return $this;
 	}
 	
 }

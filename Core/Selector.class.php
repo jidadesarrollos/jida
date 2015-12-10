@@ -16,15 +16,15 @@ class Selector{
       * @var $selector
       * @access public
       */
-    var $selector="";
-    var $id="";
-    var $atributos=[];
-    var $envoltorio="";
+    protected $selector="";
+    protected $id="";
+    protected $atributos=[];
+    protected $envoltorio="";
     /**
      * Atributos data para el selector
      * @var array $data
      */
-    var $data=[];
+    protected $data=[];
     var $class="";
     var $style="";
     
@@ -322,9 +322,7 @@ class Selector{
         }else{
             if(!empty($this->selector)){
                 $html = "\n<".$this->selector."".$this->renderAttr().">\n\t";
-				if($this->selector=='TABLE'){
-					
-				}
+
                 $html.=$this->renderContenido()."\n</".$this->selector.">";
 				
             }
@@ -338,11 +336,13 @@ class Selector{
 		$contenido ="";
 		
 		if($this->contenido instanceOf Selector){
-			$contenido = $this->contenido->renderContenido();
+			$this->contenido->innerHTML($this->innerHTML);
+			$contenido = $this->contenido->render();
 		}else{
 			
 			return $this->innerHTML;
 		}
+		
 		return $contenido;
 	}
     private function selectorCierre(){
@@ -402,11 +402,25 @@ class Selector{
         if(!empty($valor)){
             $this->data[$data]=$valor;
         }else{
+        	if(is_array($data)){
+        		$this->attr = array_merge($this->data,$data);
+				return $this;	
+        	}else
             if(array_key_exists($data, $this->data)){
               return $this->data[$data];  
             }
         }
     }
+    /**
+	 * Manejo de atributos del Selector
+	 * 
+	 * Permite obtener o asignar valor a un selector.
+	 * @method attr
+	 * @param mixed $attr Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es un arreglo será tomado para asignar un conjunto de atributos
+	 * @param $valor [opcional] Valor a asignar al string $attr
+	 * 
+	 * 
+	 */
     function attr($attr,$valor=""){
         if(!empty($valor)){
         	
@@ -416,7 +430,7 @@ class Selector{
         }else{
         	if(is_array($attr)){
         		$this->attr = array_merge($this->attr,$attr);
-					
+				return $this;	
         	}else
             if(array_key_exists($attr, $this->attr)){
                 return $this->attr[$attr];
@@ -430,22 +444,46 @@ class Selector{
 	 * 
 	 */
 	function innerHTML($innerHTML=""){
-		if(empty($innerHTML)) return $innerHTML;
+		if(empty($innerHTML)) return $this->innerHTML;
 		else{
 			$this->innerHTML = $innerHTML;
 			return $this;
 		}
 	}
+	
 	/**
-	 * Envuelve el contenido en un selector adicional
-	 * @method envolver
-	 * @param string selector Nombre del selector a crear
+	 * Agrega un nodo Selector al contenido inner del selector instanciado
+	 * @method addNodo
+	 * @param string $selector Objeto Selector a crear
 	 */
-	function envolver($selector){
-		$this->contenido= new Selector($selector);
-	}
 	function addNodo($selector){
 		
+	}
+	/**
+	 * Envuelve el innerHTML del Selector creado en otro selector
+	 * 
+	 * El nuevo selector creado se convertirá en el innerHTML.
+	 * @method envolver
+	 * @param $selector
+	 */
+	function envolver($selector,$attr=[]){
+		$envoltorio = new Selector($selector);
+		$envoltorio->attr($attr);
+		$this->contenido= $envoltorio;
+		
+		//$this->innerHTML($envoltorio->innerHTML($this->innerHTML));
+		
+		return $this;
+	}
+	
+	/**
+	 *  Ejecuta una funcion del programador sobre el selector
+	 *  
+	 *  @method ejecutarFuncion
+	 */
+	function ejecutarFuncion($funcion){	
+		 $funcion($this);
+		 
 	}	
 	
 }
