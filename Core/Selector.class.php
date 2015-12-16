@@ -43,6 +43,7 @@ class Selector{
 	 * Define si es el selector contenedor del InnerHTML
 	 * o no
 	 * @var boolean $padreInner
+	 * @unuse
 	 */
 	var $padreInner=FALSE;
 	/**
@@ -70,9 +71,10 @@ class Selector{
     'br',
     'img'
     ];
-    function __construct($selector=""){
+    function __construct($selector="",$attr=[]){
     	if(!empty($selector))
         	$this->selector=$selector;
+		if(count($attr)>0) $this->attr($attr);
         
     }
     /**
@@ -456,8 +458,26 @@ class Selector{
 	 * @method addNodo
 	 * @param string $selector Objeto Selector a crear
 	 */
-	function addNodo($selector){
+	function addNodo(Selector $selector){
+		//$this->innerHTML($selector->innerHTML());
+	}
+	/**
+	 * Agrega contenido al principio del innerHTML
+	 * @method addInicio
+	 * @param string html a insertar
+	 */
+	function addInicio($html){
+		$this->innerHTML($html.$this->innerHTML);
+		return $this;
 		
+	}
+	/**
+	 * Agrega contenido al final del innerHTML
+	 * @method addFinal
+	 */
+	function addFinal($html){
+		$this->innerHTML($this->innerHTML()."\n".$html);
+		return $this;
 	}
 	/**
 	 * Envuelve el innerHTML del Selector creado en otro selector
@@ -481,9 +501,20 @@ class Selector{
 	 *  
 	 *  @method ejecutarFuncion
 	 */
-	function ejecutarFuncion($funcion){	
-		 $funcion($this);
+	function ejecutarFuncion($funcion){
+		 $numeroArgs = func_num_args();
 		 
+		 if($numeroArgs>1){
+		 	$args = func_get_args();
+		 	$args[0] = $this;
+		 	
+			call_user_func_array($funcion, $args);
+		 	
+		 }else{
+		 	$funcion($this);	
+		 }	
+		 
+		 return $this;
 	}	
 	
 }

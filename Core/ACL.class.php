@@ -57,17 +57,21 @@ class ACL extends DataModel{
         }
        	#Debug::mostrarArray(Session::get('Usuario')->perfiles);
         if($this->usuario instanceof Usuario){
-        	$this->perfiles = array('UsuarioPublico');
-        	if(count($this->perfiles)>0){
-        		$this->perfiles = Session::get('Usuario')->perfiles;	
+        	
+			$this->perfiles = Session::get('Usuario')->perfiles;
+        	if(count($this->perfiles)<1){
+        		$this->perfiles = array('UsuarioPublico');		
         	}
             
         }else{
         	$this->perfiles = $_SESSION['usuario']['perfiles'];
 		}
-		if($this->usoBD===TRUE){
+		if($this->usoBD!==FALSE){
+			
 		    $this->obtenerAccesoComponentes();
 		    $this->obtenerAccesoObjetos();
+		}else{
+			
 		}
     }
     /**
@@ -79,7 +83,7 @@ class ACL extends DataModel{
        
         $query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
         $i=0;
-		$query = $query.implode(',',$this->perfiles).") group by componente, id_componente;";
+		$query = $query."'".implode(",",$this->perfiles)."') group by componente, id_componente;";
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
@@ -105,7 +109,7 @@ class ACL extends DataModel{
     private function obtenerAccesoObjetos(){
         if(ENTORNO_APP=='dev')	Session::destroy('acl');
         
-        if(!isset($_SESSION['acl'])){
+        if(!Session::get('acl')){
                     
             $perfiles ="";
              $i=0;
@@ -174,6 +178,8 @@ class ACL extends DataModel{
             Session::set('acl',$this->acl);
 #            $this->accesos  =  $accesoObjetos;
             
+        }else{
+        	
         }//fin validacion existencia
         
     }
@@ -217,9 +223,12 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
+		
 		//Se da acceso si no existe una lista acl creada
-        if(!is_array($listaAcl)) return true;
-        Debug::mostrarArray($listaAcl,false);
+        if(!is_array($listaAcl)){
+        	return true;
+        } 
+        
         
         $accesosUser = array();
         $acceso=FALSE;
@@ -236,7 +245,7 @@ class ACL extends DataModel{
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
                         //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
-                        if($componente=='Social') Debug::string("si tengo acceso");
+                      //  if($componente=='Social') //Debug::string("si tengo acceso");
                         $acceso=TRUE;
                     }else{
                         $arrObjetos =$arrComponentes['objetos'];

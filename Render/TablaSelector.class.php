@@ -9,21 +9,29 @@ class TablaSelector extends Selector{
 	private $htmlCols;
 	private $tHead;
 	private $tBody;
-	private $tFooter;
+	private $tFoot;
 	private $dataTabla;
 	private $dataThead;
 	private $dataTfoot;
 	var $selector = "TABLE";
 	
-	function __construct($data,$dataThead=[],$dataTfoot=""){
+	function __construct($data=[],$dataThead=[],$dataTfoot=""){
 		parent::__construct();
-		if(count($data)<1) throw new Exception("La informacion pasada a la tabla no es valida", 1);
+		if(count($data)>1){
+			$this->inicializarTabla($data,$dataThead,$dataTfoot);
+		}
 		
+		
+			
+	}
+	
+	function inicializarTabla($data,$dataTHead=[],$dataTfoot=[]){
 		$this->totalFilas = count($data);
 		$this->dataTabla = $data;
-		$this->dataThead = $dataThead;
+		$this->dataThead = $dataTHead;
 		$this->dataTfoot = $dataTfoot;
-		if(count($dataThead)>0){
+		
+		if(count($dataTHead)>0){
 			if(count($dataThead) !=$this->obtTotalColumnas())
 				throw new Exception("Los titulos de la tabla no coinciden con el contenido", 1);
 			$this->validarTHead();	
@@ -31,15 +39,23 @@ class TablaSelector extends Selector{
 		
 			
 		$this->crearFilas();
-			
 	}
 	
-	function tHead($data){
+	function crearTHead($data){
 		$this->dataThead = $data;
 		$this->tHead = new Selector('THEAD');
 		$this->validarTHead();
 		$this->tHead->fila = new FilaSelector($this->dataThead);
 		
+	}
+	function thead(){
+		return $this->tHead;
+	}
+	function tbody(){
+		return $this->tBody;
+	}
+	function tfoot(){
+		return $this->tFoot;
 	}
 	private function validarTHead(){
 		$this->tHead = new Selector('THEAD');
@@ -63,14 +79,14 @@ class TablaSelector extends Selector{
 	
 	
 	function generar(){
-			$this->crearTHead();
-			$this->crearTBody();
-			$this->crearTFooter();
+			$this->renderTHead();
+			$this->renderTBody();
+			$this->renderTFoot();
 			
 			return $this->render();
 	}
 	
-	private function crearTHead(){
+	private function renderTHead(){
 		if(is_object($this->tHead)){
 			
 			$this->innerHTML(
@@ -80,41 +96,69 @@ class TablaSelector extends Selector{
 			
 		
 	}
-	private function crearTBody(){
+	private function renderTBody(){
 		foreach ($this->filas as $key => $fila) {
 			$this->innerHTML .= $fila->renderizar();
 		}
 		
 		return $this;
 	}
-	private function crearTFooter(){
+	private function renderTFoot(){
 		
 	}
 	
 	/**
+	 * Ejecuta una funcion sobre toda una fila
+	 * @method funcionFila
+	 * @param mixed $evalucion Index de la fila o arreglo de validacion donde el key 
+	 * sea la columna a evaluar y el value el valor a comparar
+	 * @incompleto
+	 */
+	function funcionFila($evaluacion,$funcion=""){
+		
+	}
+	/**
 	 * Ejecuta una funcion sobre una columna de la tabla
 	 * @method funcionColumna
 	 */
-	function funcionColumna($columna,$funcion="",$fila=""){
+	function funcionColumna($columna,$funcion="",$data=[]){
 		
 		foreach ($this->filas as $key => $fila) {
 				$keys = array_keys($fila->columnas);
 			if(!array_key_exists($columna,$keys)) 
 			throw new Exception("La columna indicada no existe en la vista",4);
 			
-				$fila->columnas[$keys[$columna]]->ejecutarFuncion($funcion);
+				$fila->columnas[$keys[$columna]]->ejecutarFuncion($funcion,$data);
 		}
 		return $this;
 	}
+	//function espe
 	/**
 	 * Inserta una columna al final de la tabla
 	 * @method insertarColumna
 	 */
 	function insertarColumna($funcion){
+		$numeroArgs = func_num_args();
+		$args = func_get_args();
+		;
+		
 		foreach ($this->filas as $key => $fila) {
-			$fila->agregarColumna($funcion);
+			
+			if($numeroArgs>1){
+						
+				$args[$numeroArgs]=$fila;	
+				$contenido = call_user_func_array($funcion,$args);
+			}else{	
+				$contenido = $funcion($this,$fila);	
+			}
+			
+			$fila->agregarColumna($contenido);
 		}
+	
+		
+		
 		return $this;
 	}
+	
 	
 }

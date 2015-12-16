@@ -86,7 +86,7 @@
             $_SESSION['urlActual'] = $_GET['url'];
 			
 			
-            Session::set('URL_ACTUAL', $_GET['url']);
+            Session::set('URL_ACTUAL_COMPLETA', $_GET['url']);
             /*Manejo de url*/
             if(isset($_GET['url'])){
                 
@@ -135,8 +135,9 @@
      * @method procesarURL
      */
     private function procesarURL($url){
-        
-        $param = $this->validarNombre(array_shift($url),1);
+        $primerParam = array_shift($url);
+		$URL = "/".$primerParam;
+        $param = $this->validarNombre($primerParam,1);
        //Se valida si se ha solicitado un modulo por medio de un subdominio
         if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
             $this->modulo=$this->validarNombre($this->subdominio,1);
@@ -161,7 +162,10 @@
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
                     if(count($url)>0 ){
-                        $param =$this->validarNombre(array_shift($url),1);
+                    	
+                    	$paramDos =array_shift($url);
+						$URL.="/".$paramDos;
+                        $param =$this->validarNombre($paramDos,1);
                         $this->checkMetodo($param,TRUE);
                     }else{
                         $this->metodo='index';
@@ -183,13 +187,17 @@
         }else{
             $this->modulo=$param;
             if(count($url)>0){
-                $param =$this->validarNombre(array_shift($url),1);
+            	$paramDos = array_shift($url);
+				$URL.="/".$paramDos;
+                $param =$this->validarNombre($paramDos,1);
 
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
                     if(count($url)>0){
-                        $param =$this->validarNombre(array_shift($url),1);
+                    	$paramTres = array_shift($url);
+						$URL.="/".$paramTres;
+                        $param =$this->validarNombre($paramTres,1);
                         
                     }
                     $this->checkMetodo($param,true);
@@ -202,7 +210,7 @@
                 $this->metodo='index';
             }
         }
-        
+        Session::set('URL_ACTUAL', $URL);
         $this->args = array_merge($this->args, $url);
 
     }
@@ -301,6 +309,7 @@
             }
             
             $_GET = array_merge($this->args,$gets);
+			$_REQUEST = array_merge($_POST,$_GET);
         
     }
     function get(){
@@ -507,7 +516,7 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-        	if(ENTORNO_APP=='dev') 	Debug::mostrarArray($excepcion);
+        	if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404) 	Debug::mostrarArray($excepcion);
 			
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        

@@ -85,7 +85,7 @@ class DataModel{
      */
     protected $pk;
     
-    
+	private $tablaQuery;    
     /**
      * Objeto de conexión a Base de datos
      * @var object $bd
@@ -161,6 +161,7 @@ class DataModel{
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
+		$this->tablaQuery = $this->tablaBD;
         $param = func_get_args(0);
         $this->_clase = get_class($this);
 		$this->usoBD=$this->manejadorBD;
@@ -408,16 +409,7 @@ class DataModel{
         
         
     }
-    /**
-     * Alias de metodo Consulta
-     * @method select
-     * @see self::consulta
-     */
-    function select($campos=""){
-        $this->consulta($campos);
-        return $this;
-         
-    }
+    
     
     /**
      * Agrega la union de campos al query
@@ -447,6 +439,8 @@ class DataModel{
             }
             if(array_key_exists('clave', $data)){
                 $clave=$data['clave'];
+            }else{
+            	$clave=$data['clave_relacion'];
             }
             
         }
@@ -495,9 +489,9 @@ class DataModel{
     function in($filtro,$clave=""){
         $this->where();
         if(is_array($filtro)){
-            if(empty($clave)) $clave = $this->tablaBD.$this->pk;
+            if(empty($clave)) $clave = $this->tablaQuery.$this->pk;
 			else{
-				if(!strpos($clave, ".")){ $clave = $this->tablaBD.".".$clave;}
+				if(!strpos($clave, ".")){ $clave = $this->tablaQuery.".".$clave;}
 			}
             $this->query.=$clave  ." in ('". implode("','", $filtro) ."')";
         }
@@ -512,14 +506,14 @@ class DataModel{
          if(is_array($campos)){
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
-            },$this->tablaBD);
+            },$this->tablaQuery);
         
             $campos = implode(", ",$campos);
         }
         
         $this->query="SELECT $campos ";
         
-        $this->query.=" from $this->tablaBD ";
+        $this->query.=" from $this->tablaQuery ";
         $this->usoWhere=FALSE;
         return $this;
     }
@@ -529,7 +523,7 @@ class DataModel{
      * @method consulta
      * 
      */
-    function consulta($campos=""){
+    function consulta($campos="",$adicionales=[]){
         $banderaJoin = FALSE;
         $join="";
         
@@ -538,9 +532,10 @@ class DataModel{
          }
 //         
         if(is_array($campos)){
+        	
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
-            },$this->tablaBD);
+            },$this->tablaQuery);
         
             $campos = implode(", ",$campos);
         }
@@ -549,10 +544,17 @@ class DataModel{
 		else $this->query="SELECT $campos "; 
         if($banderaJoin===TRUE)
             $this->query .=", ".$camposJoin;
-        $this->query.=" from $this->tablaBD ".$join;
+        $this->query.=" from $this->tablaQuery ".$join;
         $this->usoWhere=FALSE;
         return $this;
     }
+	
+	function query($campos,$tabla){
+		$this->query="SELECT ";
+		$this->query.=implode(",", $campos);
+		$this->tablaQuery = $tabla;
+		$this->query.=" from ".$this->tablaQuery;
+	}
 
     /**
      * Obtiene el nombre de la clave primaria de la tabla de base de datos
@@ -689,7 +691,7 @@ class DataModel{
                
                if($i>0)
                     $this->query.=" and ";
-           $this->query.=" $this->tablaBD.$key='$value'";
+           $this->query.=" $this->tablaQuery.$key='$value'";
                ++$i;
            }
 		   
@@ -698,7 +700,7 @@ class DataModel{
 		   		foreach ($arrayOr as $key => $value) {   
 	               if($o>0) $this->query.=" and ";
 			   if(!strpos($key, "."))
-	           		$this->query.=" $this->tablaBD.$key='$value'";
+	           		$this->query.=" $this->tablaQuery.$key='$value'";
 			   else 
 			   		$this->query.=$key.="'$value'";
                ++$o;
@@ -724,7 +726,16 @@ class DataModel{
 			$this->query.="group by ".$agrupacion;
 		return $this;
     }
-    
+    /**
+     * Alias de metodo Consulta
+     * @method select
+     * @see self::consulta
+     */
+    function select($campos=""){
+        $this->consulta($campos);
+        return $this;
+         
+    }
     /**
      * Permite ordenar una consulta
      * 
@@ -733,11 +744,13 @@ class DataModel{
      * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
      */
     function order($order,$type='asc'){
-       
+        
        if(is_array($order)){
         $order = implode(",", $campo);
        }
        $this->order = "Order by ".$this->tablaBD.".".$order ." ".$type;
+	   
+	   //Debug::string($this->order." ".$this->_clase);
        return $this;
     }
     /**
@@ -749,6 +762,7 @@ class DataModel{
      */
     function like($arrayFiltro,$condicion="or",$tipo=1){
         $this->where();
+		
         if(is_array($arrayFiltro)){
            $i=0;
            foreach ($arrayFiltro as $key => $value) {
@@ -801,7 +815,12 @@ class DataModel{
         return $this;
     }//final función like
     function obt($key=""){
-        //if(!empty($this->order)) $this->query.=" ".$this->order;        
+    	
+        if(!empty($this->order)){
+        	
+        	$this->query.=" ".$this->order;
+			$this->order="";
+        }         
      	
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
@@ -1164,8 +1183,10 @@ class DataModel{
 	 * Limita la consulta a base de datos
 	 */
     function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
-        
-        //$this->query .= $this->bd->addLimit($limit,$offset);
+        if(!empty($this->order)){
+        	$this->query = $this->query." ".$this->order;
+			$this->order="";
+        }//$this->query .= $this->bd->addLimit($limit,$offset);
         $this->query = $this->bd->addLimit($limit, $offset,$this->query);
 		
         return $this;
@@ -1259,8 +1280,10 @@ class DataModel{
 	 * Registra el total de registros de una tabla
 	 * @method totalRegistros
 	 */
-	function totalRegistros(){
-		
-		return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from ".$this->tablaBD));
+	function totalRegistros($filtro=FALSE){
+		$this->query = "Select count(*) as total from ".$this->tablaBD." ";
+		if($filtro) return $this;
+		else 
+			return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from ".$this->tablaBD));
 	}
 }//fin clase;

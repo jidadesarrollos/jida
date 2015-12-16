@@ -12,8 +12,8 @@
 	private $items =[];
 	
 	
-	function __construct($numeroItems=0){
-		parent::__construct($this->selector);
+	function __construct($numeroItems=0,$attr=[]){
+		parent::__construct($this->selector,$attr);
 	}
 	
 	/**
@@ -33,13 +33,13 @@
 		return end($this->items);	
 	}
 	
-	function renderizar(){
+	function render(){
 		
 		foreach ($this->items as $key => $item) {
 			
 			$this->innerHTML.=$item->render();
 		}
-		return $this->render();
+		return parent::render();
 	}
 	
  }

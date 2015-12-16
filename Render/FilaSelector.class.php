@@ -36,7 +36,6 @@ class FilaSelector extends Selector{
 	
 	private function generarContenido(){
 		foreach ($this->columnas as $key => $columna) {
-			
 			$this->innerHTML.=$columna->render();
 			 
 		}
@@ -49,6 +48,11 @@ class FilaSelector extends Selector{
 		return $html;
 	}
 	
+	function columnas(){
+		return $this->columnas;
+	}
+	
+	
 	/**
 	 * Agrega una nueva columna al final de la fila
 	 * 
@@ -59,10 +63,14 @@ class FilaSelector extends Selector{
 	 * @method agregarColumna
 	 * @param function $funcion Funcion creada por el usuario. Debe retornar innerHTML.
 	 */
-	function agregarColumna($funcion){
+	function agregarColumna($contenido){
+		$numeroArgs = func_num_args();
+		
 		$nueva = new ColumnaSelector();
-		$funcion($this,$nueva);
+		
+		$nueva->innerHTML($contenido);
 		array_push($this->columnas,$nueva);
+;
 	}
 	
 	

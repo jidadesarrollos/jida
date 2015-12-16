@@ -3,32 +3,103 @@
  * Clase para manejo de Vistas Dinamicas
  * 
  */
- class JVista extends DataModel{
+ class JVista{
  	
-	
+	//Contenido Vista============================================
 	private $dataVista;
-	private $acciones=[];
-	
-	
-	private $nroFilas=15;
+	private $ordenamientos=TRUE;
+	private $nroFilas=10;
 	private $paginasMostradas=9;
 	private $totalPaginas;
+	private $titulos=[];
+	private $titulosKey=[];
+	private $contenedorAcciones;
+	private $contenedorPaginador;	
+	private $accionesFila=FALSE;
+	private $listadoFiltros;		
+	var $buscador = FALSE;
+	private $ejecucion;
+	private $titulo;
+	/**
+	 * @var mixed acciones Permite definir acciones para toda la vista.
+	 */
+	private $acciones=FALSE;
+	#==============================================================
+	# Opciones de funcionabilidad
+	#==============================================================
+	/**
+	 * Define si las filas llevaran algún control
+	 * @var mixed $controlFila 1. Radio, 2. checkbox, 3. campo oculto 
+	 */
+	var $controlFila=1;
+	private $parametroPagina = "pagina";
+	/**
+	 * @var array $filtros Permite definir los objetos de filtro
+	 */
+	private $filtros;
+	
+	#==============================================================
+	# Configuracion de la clase
+	#
+	# Configuración de renderización de la clase
+	#==============================================================
 	/**
 	 * @var object $tabla Objeto TablaSelector
 	 */
-	var $tabla;
+	private $tabla;
 	private $campos = [];
-	private $titulos=[];
-		
-	private $attTabla = [
-		'class' => 'table'
 	
+	private $configTabla = [
+		'class' => 'table'
 	];
+	
+	private $configAcciones=[
+		'class' 		=> 'btn btn-vista',
+		'data-accion'	=> 'true',
+		
+		
+		
+	];
+	private $configAccionesFila=[
+		'class'	=>'btn',
+		'data-placement'=>'top',
+		'data-toggle'=>'tooltip',
+			
+		
+	];
+	private $configContenedorAcciones=[
+		'class'=>'col-md-offset-6 col-md-6 col-xs-12 text-right'
+	];
+	private $configTitulo=[
+		'section'=>[],
+		'titulo' =>[
+			'selector'=>'h1'
+		],
+	];
+	
+	private $configFiltros=[
+		'section'=>[
+			'class'=>'col-md-6 hidden-xs'
+		],
+		'listaFiltros'=>[
+			'class'=> 'list-filtros',
+		],
+		'listaItemsFiltro'=>[
+			'class'=>'nav nav-pills'
+		]
+	];
+	private $configArticleVista=[];
+	private $configSeccionForm=[];
+	private $configSeccionFiltros=[];
+	
+	
+	
+	#=====================================================================
 	/**
 	 * @var array $registros Data obtenida de la consulta a base de datos
 	 * 
 	 */
-	private $registros;
+	private $registros;	
 	
 	/**
 	 * @var int $totalRegistros Numero total de registros obtenidos
@@ -57,41 +128,71 @@
 	 */
 	private $objeto;
 	private $urlActual;
-	function __construct($ejecucion,$params=[]){
+	function __construct($ejecucion,$params=[],$titulo=""){
+		$this->ejecucion = $ejecucion;	
 		$dataConsulta = explode(".", $ejecucion);
-		if(!empty(Session::get('urlActual')))
-			$this->paginaConsulta = (Session::get('urlActual')[0]=="/")?Session::get('urlActual'):"/".Session::get('urlActual');
+		$this->tabla = new TablaSelector();
+		if(!empty($titulo)) $this->titulo=$titulo;
+		
+		$this->paginador = new ListaSelector();
+		
+		$this->validarPaginaConsulta();
 		if(count($params)>0){
 			if(array_key_exists('campos', $params)){
 				$this->campos = $params['campos'];
+				
 			}
 			if(array_key_exists('titulos', $params)){
+				
 				$this->titulos = $params['titulos'];
 			}
 		}
-		
-		if(count($dataConsulta)>1){
-			$object = new $$dataConsulta[0]();
-			if(method_exists($object, $dataConsulta[1])){
-				$this->dataVista = $object->$$dataConsulta[1];	
-			}else
-				throw new Exception("No existe el metodo pasado", 1);
-				
-			
+		if(isset($_REQUEST[$this->parametroPagina]) and is_numeric($_REQUEST[$this->parametroPagina])){
+			$this->paginaActual = $_REQUEST[$this->parametroPagina];
 		}else{
 			
-			if(class_exists($dataConsulta[0])){
-				$this->objeto = new $dataConsulta[0];
+		}
+		$this->establecerValoresDefault();
+		#$this->checkGlobals();
+		
+		
+	}
+	/**
+	 * Verifica la estructura de la url manejada para la funcionalidad de la vista
+	 */
+	private function validarPaginaConsulta(){
+		if(!empty(Session::get('URL_ACTUAL')))
+			$this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
+			
+		if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
+			$this->paginaConsulta.="/busqueda/".$_GET['busqueda']."/";
+		}
+	}
+	private function establecerValoresDefault(){
+		$nombre = explode(".", $this->ejecucion)[0];
+		$this->configArticleVista['id'] = String::lowerCamelCase('Vista '.$nombre);
+		$this->configTabla['id']=String::lowerCamelCase('data '.$nombre);
+		
+		
+	}
+	private function realizarConsulta(){
+		$dataConsulta = explode(".",$this->ejecucion);
+		
+		if(class_exists($dataConsulta[0])){
+			$this->objeto = new $dataConsulta[0];
+			if(count($dataConsulta)>1){
 				
-				$this->obtInformacionObjeto();
+				if(method_exists($dataConsulta[0], $dataConsulta[1])){
+					$this->obtInformacionObjeto($dataConsulta[1]);
+				}else throw new Exception("No existe el metodo pasado", 1);
+			
 			}else{
-				throw new Exception("No existe el objeto pasado", 2);
-				
+				$this->obtInformacionObjeto();
 			}
-				
+		}else{
+			throw new Exception("No existe el objeto pasado", 2);
 		}
 		
-		$this->paginador = new ListaSelector();
 	}
 	/**
 	 * Obtiene la información a renderizar desde un objeto dado
@@ -101,37 +202,235 @@
 	 * @method obtInformacionObjeto
 	 * 
 	 */
-	private function obtInformacionObjeto(){
+	private function obtInformacionObjeto($metodo=false){
+		
 		$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->nroFilas);
-		$this->totalRegistros = $this->objeto->totalRegistros()['total'];
 		
-		if(count($this->campos)<1){
-			$this->registros = $this->objeto->consulta()->limit($this->nroFilas,$offset)->obt();	
+		if($metodo){
+			$this->objeto->$metodo();
 		}else{
-			$this->registros=$this->objeto->consulta($this->campos)
-									->limit($this->nroFilas,$offset)
-									->obt();
+			if(count($this->campos)<1){
+				$this->campos = array_keys($this->objeto->obtenerPropiedades());	
+				$this->objeto->consulta();	
+			}else{
+				$this->objeto->consulta($this->campos);
+										
+			}
 		}
+		if(isset($_GET['busqueda'])){
+	
+			$filtros = [];
+			foreach ($this->buscador as $key => $filtro) {
+				$filtros[$filtro]=$_GET['busqueda'];
+				
+			}
+			$this->objeto->like($filtros,'or');
+			
+		}
+
+		$keysFiltro = array_keys($this->filtros);
+		foreach ($keysFiltro as $key => $value) {
+			if(array_key_exists($value, $_GET)){
+				
+				$this->objeto->filtro([$value=>$_GET[$value]]);
+			}
+		}
+		$this->totalRegistros = count($this->objeto->obt());
+		$this->registros = $this->objeto->limit($this->nroFilas,$offset)->obt();
 		
-		$this->tabla = new TablaSelector($this->registros);	
+		
+		$this->obtenerNombreCampos();
+		$this->tabla->inicializarTabla($this->registros);	
 	}
 	/**
-	 * Obtiene la información a renderizar desde el metodo de un objeto dado
-	 * 
-	 * @method obtInformacionMetodo
+	 * obtiene los nombres de los campos consultados a base de datos
+	 * @method obtenerNombreCampos
 	 */
-	private function obtInformacionMetodo(){
+	private function obtenerNombreCampos(){
+		$i=0;
+		while($i< $this->objeto->bd->totalField($this->objeto->bd->result)){
+			$this->titulosKey[]= $this->objeto->bd->obtenerNombreCampo($this->objeto->bd->result, $i);
+			$i++;	
+		}
+		
+	}
+ 	/**
+     * ejecuta la consulta de la vista agregando el limite de registros
+     * requeridos.
+     * @method obtenerConsultaPaginada
+     */
+    private function obtConsultaPaginada(){
+    	$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->filasPorPagina);
+       $this->query=$this->bd->addLimit($this->filasPorPagina, $offset,$this->queryReal);
+       
+       
+    }
+	function obtenerVista(){
+		$this->realizarConsulta();
+		$this->tabla->attr($this->configTabla);
+		$vista="";
+		if(count($this->titulos)>0){
+			 $this->crearTitulos();
+		}
+		$vista.= $this->checkTitulo();
+		$vista.=$this->renderFiltros();
+		$this->procesarAccionesFila();
+		
+		$this->procesarControlFila();
+		$vista .= $this->procesarFormBusqueda();
+		$vista .= $this->tabla->generar();
+		if(count($this->acciones)>0){
+			$vista.=$this->procesarAcciones();
+		}
+		$vista.= $this->crearPaginador();
+		$seccionVista = new Selector('article',$this->configArticleVista);
+		$seccionVista->innerHTML($vista);
+		return $seccionVista->render();
+	}
+	
+	/**
+	 * Renderiza el titulo de la vista
+	 * @method checkTitulo
+	 */
+	private function checkTitulo(){
+		if(!empty($this->titulo)){
+			$attrSeccion = (array_key_exists('section', $this->configTitulo))?$this->configTitulo['section']:[];
+			$seccionTitulo = new Selector('seccion',$attrSeccion);
+			$titulo = new Selector($this->configTitulo['titulo']['selector']);
+			$titulo->innerHTML($this->titulo);
+			$seccionTitulo->innerHTML($titulo->render());
+			return $seccionTitulo->render();
+			
+			
+		}
+	}
+	
+	private function procesarControlFila(){
+		if($this->controlFila){
+			
+			$this->tabla->funcionColumna(0,function(Selector $selector,$control=1){
+				
+				
+				$types =[1=>'radio','2'=>'checkbox',3=>"hidden"];
+				$columnasTitulo = $this->tabla->tHead()->Fila->columnas();
+				if($control==2){
+					
+					
+					$inputTitle = new Selector('input',
+						[	"type"			=>$types[$control],
+							'id'			=>'obtTotalCol',
+							'data-jvista'	=>'seleccionarTodas',
+							'value'=>""
+						]);
+					$columnasTitulo[0]->innerHTML($inputTitle->render());
+				}elseif($control==1){
+					
+				}
+				$input = new Selector('input',
+				["type"=>$types[$control],'id'=>'radio'.$selector->innerHTML(),'value'=>$selector->innerHTML()]);
+				$selector->innerHTML($input->render());
+				
+			},$this->controlFila);
+		}	
+	}
+	private function procesarFormBusqueda(){
+		if(is_array($this->buscador)){
+			$div = new Selector('section');
+			$valorBusqueda="";
+			if(isset($_GET['busqueda'])){ $valorBusqueda = $_GET['busqueda'];
+				$url = $this->urlFiltro(['busqueda'=>$_GET['busqueda']]);
+			}else{
+				$url = $this->urlFiltro();
+			}
+			$inner = '
+			<form action="'.$url.'" method="get">
+				<div class="col-md-6 col-md-6">
+					<div class="input-group">
+						<input type="search" class="form-control jvista-search" name="busqueda" value="'.$valorBusqueda.'"/>
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="submit">Buscar!</button>
+							</span>
+					</div>
+				</div>
+			</form>';
+
+			return $inner;			
+		}
+		
+	}
+	/**
+	 * Verifica si se agregaron acciones a una fila
+	 * @method procesarAccionesFila
+	 */
+	private function procesarAccionesFila(){
+		if(count($this->accionesFila)>0){
+			
+			$this->tabla->insertarColumna(function($ele,$acciones,$fila){
+				$contenido="";
+				if(is_array($acciones))
+				{
+					$keys = array_keys($fila->columnas);
+					
+					
+					#Debug::string($keys[0]);
+					
+					$colIni = $fila->columnas[$keys[0]];
+					
+					foreach ($acciones as $key => $accion) {
+						$accionFila = clone $accion;
+						
+						$config = $this->configAccionesFila;
+						$accionFila->attr($config);
+						$accionFila->attr('href',
+							str_replace('{clave}', 
+							$colIni->innerHTML(), 
+							$accionFila->attr('href'))
+						);
+						$contenido .= $accionFila->render();
+						unset($accionFila);
+					}
+				
+					return $contenido;
+				}else{
+					throw new Exception("Las acciones pasadas a la fila no son validas", 1);
+					
+				}
+			},$this->accionesFila);
+			#Debug::string("a");	
+		}
+	}
+	private function crearTitulos(){
+		$this->tabla->crearTHead($this->titulos);
+		if($this->ordenamientos){
+			$columnasTitulos = $this->tabla->tHead()->Fila->columnas();
+	
+			for($i=0;$i<count($columnasTitulos);++$i){
+				if($this->controlFila and $i==0) continue;
+				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
+					$params = ['href'=>$pagina."/ordenar/".$titulos[$indice]];
+					if(isset($_REQUEST[$this->parametroPagina])){
+						$params['href'] =$params['href'] ."/pagina/".$_REQUEST[$this->parametroPagina]; 
+					}
+					$col->envolver('a',$params);
+				},$i,$this->titulosKey,$this->paginaConsulta);
+			}
+			
+		}
 		
 	}
 	
-	function obtenerVista(){
-		$this->tabla->attr($this->attTabla);
-		if(count($this->titulos)>0) $this->tabla->tHead($this->titulos);
-		$vista = $this->tabla->generar();
-		$vista.= $this->crearPaginador();
+	function procesarAcciones(){
+		$inner="";
+		foreach ($this->acciones as $key => $selector) {
+			$inner .= $selector->render();
+		}
+		$this->contenedorAcciones = new Selector('div',['class'=>'contenedor-acciones']);
+		$this->contenedorAcciones->attr($this->configContenedorAcciones);
+		return $this->contenedorAcciones->innerHTML($inner)->render();
 		
-		return $vista;
 	}
+	
+	
 	
 	/**
 	 * Genera el páginador de la vista
@@ -149,24 +448,154 @@
 			$link = new Selector('a');
 			$this->paginador->attr('class',$this->configPaginador['classListaPaginador']);
 			$item = $this->paginador->addItem($i)->envolver('a');
+			
 			if($i == $this->paginaActual){
 				$item->attr([
 					'class'	=>$this->configPaginador['classPaginaActual']])
 					->contenido->attr(['href'	=>"$this->paginaConsulta/pagina/$i/"])
-					->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
+					//->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
+					;
 			}else{
 				$item->attr([
 					'class'	=>$this->configPaginador['classLink']])
-					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina/$i/",])
-					->data(['paginador'=>$i,'page'=>$this->paginaConsulta]);
+					->contenido->attr(['href'	=>"$this->paginaConsulta/pagina/$i/",])
+					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
+					;
 			}
 			
 		}
-		return $this->paginador->renderizar(); 
+		return $this->paginador->render(); 
 		//----------------------------------------------------------
 	}
 	
+	function accionesFila($acciones){
+		if(is_array($acciones)){
+			foreach ($acciones as $key => $accion) {
+				$orden = $key;
+				if(array_key_exists('orden', $accion)){
+					$orden = $accion['orden'];unset($accion['orden']);
+				}
+				
+				$attrAccion = array_merge($this->configAccionesFila,$accion,['span'=>["class"=>$accion['span']]]);
+				
+				$nuevaAccion = new AccionVistaSelector("",$attrAccion);
+				$this->accionesFila[$orden]=$nuevaAccion;	
+			}
+			return $this;
+		}	
+	}
+
+	/**
+	 * 
+	 */
+	function acciones($acciones=False){
+		if(is_array($acciones)){
+			
+			foreach ($acciones as $key => $accion) {
+				#Debug::mostrarArray($this->configAcciones,false);
+				#Debug::mostrarArray($accion,0);
+				$attrAccion = array_merge($this->configAcciones,$accion);
+				#Debug::mostrarArray($attrAccion);
+				$nuevaAccion = new AccionVistaSelector($key,$attrAccion);
+				$this->acciones[$nuevaAccion->nombreAccion()]=$nuevaAccion;
+			}
+			
+		}
+		return $this;
+	}
+	//Geters===========================================
+	function tabla(){
+		return $this->tabla;
+	}
 	
+	/**
+	 * Verifica si existen arreglos GLobales de configuración para el estilo
+	 * 
+	 * @method checkGlobals
+	 */
+	private function checkGlobals(){
+		if(array_key_exists('configPaginador', $GLOBALS)){
+			$this->configPaginador = $GLOBALS['configPaginador'];
+		}
+		if(array_key_exists('configVista', $GLOBALS)){
+			$this->configTabla = $GLOBALS['configVista'];
+		}
+		if(array_key_exists('configPaginador', $GLOBALS)){
+			
+		}
+	}
+	/**
+	 * Permite agregar filtros a la vista
+	 * 
+	 * 
+	 * @method addFiltros
+	 * @param array $filtros Arreglo de Filtros a agregar, el key será el titulo a mostrar
+	 * y el value puede ser una matriz con valores de personalización.
+	 * 
+	 */
+	function addFiltros($filtros){
+		
+		if(is_array($filtros)){
+			$this->filtros = $filtros;
+			
+			$seccionFiltro = new Selector('section',$this->configFiltros['section']);
+			
+			$listaFiltros = new ListaSelector(count($this->filtros),$this->configFiltros['listaFiltros']);
+			foreach ($filtros as $campoFiltro => $item) {
+				$tituloFiltro = new Selector('h4');
+				$tituloFiltro->innerHTML($item['titulo']);
+				
+				$listaItems = new ListaSelector(count($item['items']));
+				$listaItems->attr($this->configFiltros['listaItemsFiltro']);
+				
+				foreach($item['items'] as $idFiltro => $itemFiltro){
+					
+					$link = new Selector('a',['href'=>$this->urlFiltro([$campoFiltro=>$idFiltro])]);
+					
+					$link->innerHTML($itemFiltro);
+					$item = $listaItems->addItem($link->render());
+					if(array_key_exists($campoFiltro, $_GET) and $_GET[$campoFiltro]==$idFiltro){
+						
+						$item->addClass('active');	
+					}
+				}
+				 
+				$listaFiltros->addItem($tituloFiltro->render().$listaItems->render());
+				
+			}//fin foreach
+			$this->listaFiltros = $seccionFiltro->innerHTML($listaFiltros->render());
+			
+		}
+		
+	}
+	
+	function renderFiltros(){
+
+		if(count($this->filtros)>0){
+			return $this->listaFiltros->render();
+		}
+	}
+	/**
+	 * Retorna la url para un filtro de la vista
+	 * @method urlFiltro
+	 */
+	private function urlFiltro($params=[]){
+		if(is_array($params)){
+			$querystring="";
+			$i=0;
+			foreach ($params as $key => $value) {
+				if($i>0)$querystring.="&";
+				if(!strpos($this->paginaConsulta, '?'))
+						$querystring.="?";
+					$querystring.=$key."=".$value;
+				++$i;
+			}
+			return $this->paginaConsulta.$querystring;
+		}else{
+			throw new Exception("No se han pasado bien los parametros para la url", 1);
+			
+		}
+	}
 	
 		
 	
