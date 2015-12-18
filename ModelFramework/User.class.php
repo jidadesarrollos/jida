@@ -87,7 +87,7 @@ class User extends DataModel{
      * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
      * @return mixed array si la sesion es iniciada, false caso contrario 
      */
-    function validarLogin($usuario,$clave,$validacion=true){
+    function validarLogin($usuario,$clave,$validacion=true,$callback=null){
         $clave = md5($clave);
         
         $result = $this ->select()
@@ -96,10 +96,14 @@ class User extends DataModel{
         if($this->bd->totalRegistros>0){
             
             $this->establecerAtributos($result);
+			$this->debug=TRUE;
+			$this->__obtConsultaInstancia()->debug();
+			$this->obtenerDataRelaciones();
             $this->registrarSesion();
             $this->activo=1;
             $this->salvar();
             $this->obtenerPerfiles();
+			
             return $result;
         }else{
             return false;

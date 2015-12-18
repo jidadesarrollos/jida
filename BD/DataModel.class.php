@@ -197,15 +197,16 @@ class DataModel{
 		
     }
     /**
-     * 
+     * Verifica las relaciones declaradas del Objeto
      */
-    private function obtenerDataRelaciones(){
+    protected function obtenerDataRelaciones(){
         $a=0;
 		if($this->debug){
 			Debug::string($this->nivelORM);
 		}
+		
         if($this->nivelActualORM<$this->nivelORM and $a>0){
-        
+        	
             $datas = "";
             $pk = $this->pk;
             foreach ($this->tieneMuchos as $key => $relacion) {
@@ -239,18 +240,27 @@ class DataModel{
      * @param int $id Identificador unico del registro;
      */
     private function instanciarObjeto($id) {
-        
-        
-        $data = $this->consulta()
-                ->filtro([$this->pk=>$id])
-                ->fila();
+    	
+        $data = $this->__obtConsultaInstancia()->fila();
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
-        
-        $this->obtenerDataRelaciones();   
-        
+		
+        if($this->nivelActualORM<=$this->nivelORM){
+        	$this->obtenerDataRelaciones();	
+        }
         return $this;
-    }//fin función inicializaarObjeto
+    }//fin función inicializarObjeto
+    
+    function __obtConsultaInstancia(){
+    	return $this->consulta()->filtro([$this->pk=>$id]);
+    }
+	
+	function instanciarTieneUno($idTieneUno){
+		
+	}
+	function instanciarTieneMuchos(){
+		
+	}
     /**
      * Verifica las relaciones existentes
      * 
@@ -549,11 +559,13 @@ class DataModel{
         return $this;
     }
 	
-	function query($campos,$tabla){
+	function query($campos=[],$tabla){
+		if(count($campos)<1)$campos=["*"];
 		$this->query="SELECT ";
 		$this->query.=implode(",", $campos);
 		$this->tablaQuery = $tabla;
 		$this->query.=" from ".$this->tablaQuery;
+		return $this;
 	}
 
     /**
@@ -577,42 +589,52 @@ class DataModel{
      * @method 
      */
     function __call($rel,$campos){
+    	//chequear esto.
         if($rel=='initBD'){ $this->initBD($campos[0]); return true;};
-        $class = ucfirst($this->_obtenerSingular($rel));
-        if(property_exists($this,$rel)){
-            return $this->$rel;
-        }
-        
-        if(in_array($class, $this->tieneMuchos)){
-            
-            $obj = new $class(null,1);
-            if(method_exists($obj,'consulta')){
-                $pk = $this->pk;
-                
-                $obj->$pk = $this->$pk;
-                return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
-            }
-        }elseif(in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno)){
-            
-            $obj = new $class(null,1);
-            if(method_exists($obj,'consulta')){
-                if(!in_array($class,$this->tieneUno)){
-                    $pkRelacion = $this->tieneUno[$class]['fk'];
-                }else{
-                    $pkRelacion = $obj->__get('pk');    
-                }
-                // se obtiene el campo de clave primaria del objeto relacion
-                
-                
-                $this->$rel = $obj->instanciar($this->$pkRelacion);
-                
-                
-                return $this->$rel;
-            }
+        if(method_exists($this, $rel)){
+        	
+        	return $this->$rel;
         }else{
-            
-            throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
-            
+        	Debug::mostrarArray($this);
+        
+	        $class = ucfirst($this->_obtenerSingular($rel));
+			
+	        if(property_exists($this,$rel)){
+	            return $this->$rel;
+	        }
+	        
+	        if(in_array($class, $this->tieneMuchos)){
+	            
+	            $obj = new $class(null,1);
+	            if(method_exists($obj,'consulta')){
+	                $pk = $this->pk;
+	                
+	                $obj->$pk = $this->$pk;
+	                return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
+	            }
+	        }else
+	        if(in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno)){
+	            
+	            $obj = new $class(null,1);
+	            if(method_exists($obj,'consulta')){
+	                if(!in_array($class,$this->tieneUno)){
+	                    $pkRelacion = $this->tieneUno[$class]['fk'];
+	                }else{
+	                    $pkRelacion = $obj->__get('pk');    
+	                }
+	                // se obtiene el campo de clave primaria del objeto relacion
+	                
+	                
+	                $this->$rel = $obj->instanciar($this->$pkRelacion);
+	                
+	                
+	                return $this->$rel;
+	            }
+	        }else{
+	            
+	            throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
+	            
+	        }
         }
         
         

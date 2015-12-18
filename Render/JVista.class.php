@@ -33,6 +33,8 @@
 	 */
 	var $controlFila=1;
 	private $parametroPagina = "pagina";
+	var $funcionNoRegistros;
+	var $mensajeNoRegistros="No se han conseguido Registros";
 	/**
 	 * @var array $filtros Permite definir los objetos de filtro
 	 */
@@ -88,6 +90,8 @@
 			'class'=>'nav nav-pills'
 		]
 	];
+	
+	private $noRegistros="";
 	private $configArticleVista=[];
 	private $configSeccionForm=[];
 	private $configSeccionFiltros=[];
@@ -267,25 +271,35 @@
     }
 	function obtenerVista(){
 		$this->realizarConsulta();
-		$this->tabla->attr($this->configTabla);
-		$vista="";
-		if(count($this->titulos)>0){
-			 $this->crearTitulos();
-		}
-		$vista.= $this->checkTitulo();
-		$vista.=$this->renderFiltros();
-		$this->procesarAccionesFila();
-		
-		$this->procesarControlFila();
-		$vista .= $this->procesarFormBusqueda();
-		$vista .= $this->tabla->generar();
-		if(count($this->acciones)>0){
-			$vista.=$this->procesarAcciones();
-		}
-		$vista.= $this->crearPaginador();
 		$seccionVista = new Selector('article',$this->configArticleVista);
-		$seccionVista->innerHTML($vista);
+		$vista="";
+			$vista.= $this->checkTitulo();
+			$vista.=$this->renderFiltros();
+			$vista .= $this->procesarFormBusqueda();
+		if($this->totalRegistros){
+			$this->tabla->attr($this->configTabla);
+			if(count($this->titulos)>0){
+				 $this->crearTitulos();
+			}
+			
+			
+			$this->procesarAccionesFila();
+			$this->procesarControlFila();
+			$vista .= $this->tabla->generar();
+			if(count($this->acciones)>0){
+				$vista.=$this->procesarAcciones();
+			}
+			$vista.= $this->crearPaginador();
+			
+			
+			$seccionVista->innerHTML($vista);
+			
+		}else{
+			
+			$seccionVista->innerHTML($vista.$this->procesarNoRegistros());
+		}
 		return $seccionVista->render();
+			
 	}
 	
 	/**
@@ -594,6 +608,15 @@
 		}else{
 			throw new Exception("No se han pasado bien los parametros para la url", 1);
 			
+		}
+	}
+	
+	function procesarNoRegistros(){
+		if(!empty($this->funcionNoRegistros)){
+			return call_user_func_array($this->funcionNoRegistros, [$this]);
+		}else{
+			
+			return Selector::crear('div.col-md-12',null,Mensajes::crear('alert',$this->mensajeNoRegistros));
 		}
 	}
 	
