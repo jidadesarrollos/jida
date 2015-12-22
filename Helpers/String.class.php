@@ -311,5 +311,16 @@ class String {
         }
         
     }
+	/**
+	 * Imprime un valor de reemplazo si el string pasado es vacio
+	 * 
+	 * @method vacio
+	 * @param string $string Valor a validar si es vacio
+	 * @param string $reemplazo Texto de reemplazo
+	 */
+	public static function vacio($string,$reemplazo){
+		if(empty($string)) return $reemplazo;
+		return $string;
+	}
 
 } // END
