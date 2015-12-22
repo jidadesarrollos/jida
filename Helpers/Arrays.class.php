@@ -189,7 +189,8 @@ class Arrays {
     static function convertirAObjeto($array){
         $objeto = new stdClass();
         foreach ($array as $key => $value) {
-            $objeto->$key=$value;
+        	if(is_array($value)) $objeto->$key = self::convertirAObjeto($value);
+			else $objeto->$key=$value;
         }
         return $objeto;
         
