@@ -444,6 +444,7 @@ class Mysql extends ConexionBD{
 				if(array_key_exists($i, $keys)) $key = $keys[$i];
 				
                 $arrayResult[$key]['totalRegistros'] = $result->num_rows;
+				$arrayResult[$key]['result']=[];
                 while ($data = $this->obtenerArrayAsociativo($result)) {
                     $arrayResult[$key]['result'][$e]=$data;
                     $e++;
