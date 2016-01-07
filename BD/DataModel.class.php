@@ -7,6 +7,7 @@
 * @version 01
 * @category Model
 */
+
 include_once 'ResultBD.class.php';
 class DataModel{
 	protected $debug=FALSE;    
