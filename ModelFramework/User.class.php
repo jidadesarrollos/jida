@@ -73,7 +73,7 @@ class User extends DataModel{
      * @access private
      */
     protected $perfiles=[];
-    
+
     protected $tablaBD = "s_usuarios";
     protected $pk = "id_usuario";
     protected $unico =['nombre_usuario'];
@@ -96,8 +96,8 @@ class User extends DataModel{
         if($this->bd->totalRegistros>0){
             
             $this->establecerAtributos($result);
-			$this->debug=TRUE;
-			$this->__obtConsultaInstancia()->debug();
+			
+			$this->__obtConsultaInstancia($this->id_usuario);
 			$this->obtenerDataRelaciones();
             $this->registrarSesion();
             $this->activo=1;
@@ -279,6 +279,10 @@ class User extends DataModel{
         if(isset($data))
         Session::set('usuario',$data);
         return $this;
+	}
+	
+	function guardarSesion(){
+		Session::set('Usuario',$this);
 	}
 
 }

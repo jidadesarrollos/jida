@@ -7,7 +7,7 @@
  	
 	//Contenido Vista============================================
 	private $dataVista;
-	private $ordenamientos=TRUE;
+	var $ordenamientos=TRUE;
 	private $nroFilas=10;
 	private $paginasMostradas=9;
 	private $totalPaginas;
@@ -25,7 +25,7 @@
 	 */
 	private $acciones=FALSE;
 	#==============================================================
-	# Opciones de funcionabilidad
+	# Opciones de funcio/nabilidad
 	#==============================================================
 	/**
 	 * Define si las filas llevaran algún control
@@ -38,7 +38,7 @@
 	/**
 	 * @var array $filtros Permite definir los objetos de filtro
 	 */
-	private $filtros;
+	private $filtros=[];
 	
 	#==============================================================
 	# Configuracion de la clase
@@ -132,6 +132,7 @@
 	 */
 	private $objeto;
 	private $urlActual;
+	private $idVista;
 	function __construct($ejecucion,$params=[],$titulo=""){
 		$this->ejecucion = $ejecucion;	
 		$dataConsulta = explode(".", $ejecucion);
@@ -174,6 +175,7 @@
 	}
 	private function establecerValoresDefault(){
 		$nombre = explode(".", $this->ejecucion)[0];
+		$this->idVista = String::lowerCamelCase($nombre);
 		$this->configArticleVista['id'] = String::lowerCamelCase('Vista '.$nombre);
 		$this->configTabla['id']=String::lowerCamelCase('data '.$nombre);
 		
@@ -274,8 +276,11 @@
 		$seccionVista = new Selector('article',$this->configArticleVista);
 		$vista="";
 			$vista.= $this->checkTitulo();
+			$vista.=$this->checkMensajes();
 			$vista.=$this->renderFiltros();
 			$vista .= $this->procesarFormBusqueda();
+			
+			
 		if($this->totalRegistros){
 			$this->tabla->attr($this->configTabla);
 			if(count($this->titulos)>0){
@@ -302,6 +307,19 @@
 			
 	}
 	
+	private function checkMensajes(){
+		if(Session::get('__msjVista')){
+			
+			$msj = Session::get('__msjVista');
+			if(array_key_exists('idVista', $msj) and $msj['idVista']==$this->idVista){
+				Session::destroy('__msjVista');
+				return $msj['msj'];
+				
+			}
+		}
+		return "";
+	}
+	
 	/**
 	 * Renderiza el titulo de la vista
 	 * @method checkTitulo
@@ -320,30 +338,34 @@
 	}
 	
 	private function procesarControlFila(){
+		
 		if($this->controlFila){
 			
 			$this->tabla->funcionColumna(0,function(Selector $selector,$control=1){
 				
 				
 				$types =[1=>'radio','2'=>'checkbox',3=>"hidden"];
-				$columnasTitulo = $this->tabla->tHead()->Fila->columnas();
-				if($control==2){
+				if($this->tabla->tHead() instanceof Selector){
+					$columnasTitulo = $this->tabla->tHead()->Fila->columnas();
+					if($control==2){
+						
+						
+						$inputTitle = new Selector('input',
+							[	"type"			=>$types[$control],
+								'id'			=>'obtTotalCol',
+								'data-jvista'	=>'seleccionarTodas',
+								'value'=>""
+							]);
+						$columnasTitulo[0]->innerHTML($inputTitle->render());
+					}elseif($control==1){
+						
+					}
+					$input = new Selector('input',
+					["type"=>$types[$control],'id'=>'radio'.$selector->innerHTML(),'value'=>$selector->innerHTML()]);
+					$selector->innerHTML($input->render());
 					
-					
-					$inputTitle = new Selector('input',
-						[	"type"			=>$types[$control],
-							'id'			=>'obtTotalCol',
-							'data-jvista'	=>'seleccionarTodas',
-							'value'=>""
-						]);
-					$columnasTitulo[0]->innerHTML($inputTitle->render());
-				}elseif($control==1){
-					
-				}
-				$input = new Selector('input',
-				["type"=>$types[$control],'id'=>'radio'.$selector->innerHTML(),'value'=>$selector->innerHTML()]);
-				$selector->innerHTML($input->render());
-				
+				}				
+									
 			},$this->controlFila);
 		}	
 	}
@@ -377,7 +399,8 @@
 	 * @method procesarAccionesFila
 	 */
 	private function procesarAccionesFila(){
-		if(count($this->accionesFila)>0){
+		
+		if(is_array($this->accionesFila) and count($this->accionesFila)>0){
 			
 			$this->tabla->insertarColumna(function($ele,$acciones,$fila){
 				$contenido="";
@@ -421,7 +444,8 @@
 			for($i=0;$i<count($columnasTitulos);++$i){
 				if($this->controlFila and $i==0) continue;
 				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
-					$params = ['href'=>$pagina."/ordenar/".$titulos[$indice]];
+					
+					$params = ['href'=>$pagina."/ordenar/".$titulos[$indice-1]];
 					if(isset($_REQUEST[$this->parametroPagina])){
 						$params['href'] =$params['href'] ."/pagina/".$_REQUEST[$this->parametroPagina]; 
 					}
@@ -435,12 +459,16 @@
 	
 	function procesarAcciones(){
 		$inner="";
-		foreach ($this->acciones as $key => $selector) {
-			$inner .= $selector->render();
+		if(is_array($this->acciones)){
+			foreach ($this->acciones as $key => $selector) {
+				$inner .= $selector->render();
+			}
+			$this->contenedorAcciones = new Selector('div',['class'=>'contenedor-acciones']);
+			$this->contenedorAcciones->attr($this->configContenedorAcciones);
+			return $this->contenedorAcciones->innerHTML($inner)->render();
 		}
-		$this->contenedorAcciones = new Selector('div',['class'=>'contenedor-acciones']);
-		$this->contenedorAcciones->attr($this->configContenedorAcciones);
-		return $this->contenedorAcciones->innerHTML($inner)->render();
+		return $inner;
+			
 		
 	}
 	
@@ -620,6 +648,14 @@
 		}
 	}
 	
+	function obtTotalRegistros(){
+		return $this->totalRegistros;
+	}
+	
+	static function msj($msj,$idVista,$tipo,$redireccion=""){
+		Session::set('__msjVista',['msj'=>Mensajes::crear($tipo, $msj),'id'=>$idVista]);
+		if(!empty($redireccion)) redireccionar($redireccion);
 		
+	}
 	
  }//fin clase

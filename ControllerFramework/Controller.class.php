@@ -143,7 +143,14 @@ class Controller {
 		}
         $this->dv = new DataVista();
         $this->url = $this->urlController();
-        $this->usuario = Session::get('Usuario');
+		if(Session::get('Usuario')instanceof User) 
+        	$this->usuario = Session::get('Usuario');
+		else{
+			$clase = MODELO_USUARIO;
+			$this->usuario = new $clase;
+		}
+		
+			
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }

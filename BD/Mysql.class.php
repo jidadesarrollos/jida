@@ -231,6 +231,10 @@ class Mysql extends ConexionBD{
         return $this->query;
         
     }
+	
+	function limit($limit,$offset){
+		return "limit $offset,$limit";
+	}
     
     function obtenerTotalCampos(){
         return $this->totalCampos;
@@ -261,6 +265,7 @@ class Mysql extends ConexionBD{
             while($data = $this->result->fetch_assoc() and count($data)>0){
                 
                 if(!empty($key)){
+                	
 					if($this->codificarHTML===TRUE){
 						$dataCompleta[$data[$key]]=$data;	
 					}else{
@@ -276,6 +281,7 @@ class Mysql extends ConexionBD{
                 }
                 
             }   
+		
         $this->cerrarConexion();
         }else{
             throw new Exception("El query $this->query , no retorna resultado", 1);
@@ -456,12 +462,6 @@ class Mysql extends ConexionBD{
         
         return $arrayResult;
    }
-    
-    
-    
-    function limit($limit,$offset){
-        return $this->addLimit($limit, $offset);
-    }
     function __get($propiedad){
         if(property_exists($this, $propiedad)){
             return $this->$propiedad;

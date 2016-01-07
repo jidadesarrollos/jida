@@ -55,8 +55,12 @@ class ACL extends DataModel{
             Session::set('usuario', 'perfiles',array('UsuarioPublico'));
             Session::set('acl_default',true);
         }
-       	#Debug::mostrarArray(Session::get('Usuario')->perfiles);
-        if($this->usuario instanceof Usuario){
+       	/**
+		 * El objeto de instancia debe ser user siempre pues es el objeto usuario padre
+		 * del framework.
+		 */
+       	$objetoUser = 'User';
+        if($this->usuario instanceof $objetoUser){
         	
 			$this->perfiles = Session::get('Usuario')->perfiles;
         	if(count($this->perfiles)<1){
@@ -64,7 +68,11 @@ class ACL extends DataModel{
         	}
             
         }else{
-        	$this->perfiles = $_SESSION['usuario']['perfiles'];
+        	if(array_key_exists('usuario', $_SESSION) and array_key_exists('perfiles', $_SESSION['usuario']))
+        		$this->perfiles = $_SESSION['usuario']['perfiles'];
+			else {
+				$this->perfiles=[];
+			}
 		}
 		if($this->usoBD!==FALSE){
 			

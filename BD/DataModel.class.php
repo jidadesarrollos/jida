@@ -14,7 +14,12 @@ class DataModel{
     protected $esquema;
 	protected $manejadorBD;
 	private $consultaMultiple=FALSE;
-	private $join=FALSE;	
+	private $join=FALSE;
+	private $usoLimit=FALSE;
+	/**
+	 * @var string $limit estring de la clausula limit
+	 */
+	private $limit="";	
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      * 
@@ -164,7 +169,7 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
-  
+  		
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
@@ -189,11 +194,13 @@ class DataModel{
         
         //Se obtienen propiedades publicas
         $this->obtenerPropiedadesObjeto();
+		
         if($numeroParams>1){
             if(func_get_arg(1)){
+            	
         		if(is_array(func_get_arg(1))){
         			$this->debug(func_get_arg(1),1);
-        			$this->nivelORM = array_keys(func_get_arg(1))[0];
+        			//$this->nivelORM = array_keys(func_get_arg(1))[0];
 					$this->nivelActualORM =func_get_arg(1)[array_keys(func_get_arg(1))[0]]+1;
         		}else{
         			$this->nivelActualORM = func_get_arg(1)+1;	
@@ -209,13 +216,22 @@ class DataModel{
 	        if($id){    
 	            $this->instanciarObjeto($id);
 	               
+	        }else{
+	        	$this->instanciarTieneUno();
 	        }
 				
         }
 		
     }
 
-
+	private function instanciarTieneUno(){
+		foreach ($this->tieneUno as $key => $class) {
+			if(class_exists($class)){
+				$this->$class = new $class();
+			}
+			
+		}
+	}
 	private function instanciarPerteneceAUno($id,$nivel,$data){
     	$data = $this->consulta()
                     ->filtro([$property=>$valor])
@@ -228,9 +244,7 @@ class DataModel{
      */
     protected function obtenerDataRelaciones(){
         $a=0;
-		if($this->debug){
-			Debug::string($this->nivelORM);
-		}
+	
 		$this 	->obtTieneUno()
 				->obtTieneMuchos()
 				->obtPerteneceAUno()
@@ -260,15 +274,13 @@ class DataModel{
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
 		);
-		$this->debug($data,1);
 		
-		foreach ($data as $relacion => $info) {
-			$this->debug($this->tieneMuchos,2);
-			
+		foreach ($data as $relacion => $info) {	
 			if(in_array($relacion, $this->tieneMuchos)){
 				$this->{$relacion} = [];
 				if($info['totalRegistros']>0){
-					foreach ($info[$result] as $key => $value) {
+					
+					foreach ($info['result'] as $key => $value) {
 						$this->{$relacion}[$key] = $value;
 						
 					}
@@ -297,7 +309,7 @@ class DataModel{
 				$this->{$relacion} = $rel;
 				
 			}else{
-				Debug::string($relacion." no",0);
+				
 				$this->debug("no existe $relacion");
 			}
 		
@@ -326,9 +338,9 @@ class DataModel{
 	 */
 	private function obtTieneUno(){
 		
-				
+			
 		foreach ($this->tieneUno as $key => $relacion) {
-	
+			
 			if(is_string($relacion) and class_exists($relacion)){
 				$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
 				
@@ -336,13 +348,13 @@ class DataModel{
 				 
 				$this->consultaRelaciones[$relacion]= $rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])->obtQuery();
 				
-				return $this;
+				
 								
 			}else{
 				
 			}
 		}	
-		
+		return $this;
 	//	$this->debug($consultas);
 	}
     /**
@@ -350,18 +362,21 @@ class DataModel{
      * @method instanciar
      * 
      */
-    function instanciar($id){
+    function instanciar($id,$data=[]){
         
-        return $this->instanciarObjeto($id);
+        return $this->instanciarObjeto($id,$data);
     }
     /**
      * Inicializa un objeto a partir de Base de Datos
      * @method inicializarObjeto
      * @param int $id Identificador unico del registro;
      */
-    private function instanciarObjeto($id) {
-    	
-        $data = $this->__obtConsultaInstancia($id)->fila();
+    private function instanciarObjeto($id,$data=[]) {
+    	if(count($data)<1){
+    		$data = $this->__obtConsultaInstancia($id)->fila();	
+    	}
+        
+		
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
 		
@@ -714,6 +729,7 @@ class DataModel{
      * Realiza llamado a los objetos de relacion existentes
      * @method __call
      * @method 
+	 * @deprecated
      */
     function __call($rel,$campos){
     	//chequear esto.
@@ -970,7 +986,8 @@ class DataModel{
         	$this->query.=" ".$this->order;
 			$this->order="";
         }         
-     	
+		if(!empty($this->limit)) $this->query.=" ".$this->limit;
+		
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 	function addConsulta(){
@@ -1341,11 +1358,12 @@ class DataModel{
 	 * Limita la consulta a base de datos
 	 */
     function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
-        if(!empty($this->order)){
-        	$this->query = $this->query." ".$this->order;
-			$this->order="";
-        }//$this->query .= $this->bd->addLimit($limit,$offset);
-        $this->query = $this->bd->addLimit($limit, $offset,$this->query);
+       
+        if(!$this->usoLimit){
+        	$this->limit=$this->bd->limit($limit, $offset);
+			$this->usoLimit=TRUE;	
+        }
+        
 		
         return $this;
     }

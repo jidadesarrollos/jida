@@ -185,4 +185,9 @@ class Imagen extends Archivo{
         }
         
     }
+	
+	
+	function redimension(){
+		$imagen  = 
+	}
 }
