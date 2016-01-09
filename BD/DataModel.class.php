@@ -1471,7 +1471,7 @@ class DataModel{
 		return $this; 
 	}
 	
-	protected function imprimir($propiedad="query",$exit=1){
+	function imprimir($propiedad="query",$exit=1){
 		Debug::string($this->{$propiedad},$exit);
 	}
 }//fin clase;
