@@ -1217,7 +1217,7 @@ class DataModel{
         }else{
             $this->resultBD->__set('ejecutado', false);
         }
-		$this->bd->cerrarConexion();
+		#$this->bd->cerrarConexion();
         return $this->resultBD;
     }
     /**
@@ -1248,7 +1248,7 @@ class DataModel{
         if(count($data)<1){
             $data = $this->propiedades;
         }
-        
+
         foreach($data as $campo => $valor) {
             if ($campo != $this->pk) {
                 
