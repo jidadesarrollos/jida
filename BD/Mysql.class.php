@@ -282,7 +282,7 @@ class Mysql extends ConexionBD{
                 
             }   
 		
-        $this->cerrarConexion();
+  #      $this->cerrarConexion();
         }else{
             throw new Exception("El query $this->query , no retorna resultado", 1);
             
