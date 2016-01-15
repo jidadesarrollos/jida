@@ -1235,7 +1235,7 @@ class DataModel{
         }else{
             $this->resultBD->__set('ejecutado', false);
         }
-		$this->bd->cerrarConexion();
+		#$this->bd->cerrarConexion();
         return $this->resultBD;
     }
     /**
@@ -1369,7 +1369,7 @@ class DataModel{
             $this->query="";
         }
         $this->resultBD->setValores($this);
-		$this->bd->cerrarConexion();
+		#$this->bd->cerrarConexion();
         return $this->resultBD;
         
     }
@@ -1489,7 +1489,7 @@ class DataModel{
 		return $this; 
 	}
 	
-	protected function imprimir($propiedad="query",$exit=1){
+	function imprimir($propiedad="query",$exit=1){
 		Debug::string($this->{$propiedad},$exit);
 	}
 }//fin clase;
