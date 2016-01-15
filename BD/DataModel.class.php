@@ -980,6 +980,24 @@ class DataModel{
         }
         return $this;
     }//final función like
+    
+    /**
+     * Permite hacer una consulta regExp
+	 * 
+	 * Funcion que recibe el campo y la expresion regular para consultar.
+	 * $arrayFiltro contiene el campo a consultar y la expresion regular a utilizar 
+     * @method regExp
+     * @param array $arrayFiltro
+     */
+    function regExp($arrayFiltro){
+        $this->where();
+		
+		foreach ($arrayFiltro as $campo => $valor)
+			$this->query.=" ".$campo." regexp '$valor'";
+        
+        return $this;
+    }//final función regExp
+    
     function obt($key=""){
     	
         if(!empty($this->order)){
@@ -988,7 +1006,7 @@ class DataModel{
 			$this->order="";
         }         
 		if(!empty($this->limit)) $this->query.=" ".$this->limit;
-		
+
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 	function addConsulta(){
