@@ -912,9 +912,9 @@ class DataModel{
     function order($order,$type='asc'){
         
        if(is_array($order)){
-        $order = implode(",", $campo);
+        $order = implode(",", $order);
        }
-       $this->order = "Order by ".$this->tablaBD.".".$order ." ".$type;
+       $this->order = "Order by ".$this->tablaQuery.".".$order ." ".$type;
 	   
 	   //Debug::string($this->order." ".$this->_clase);
        return $this;

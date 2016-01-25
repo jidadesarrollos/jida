@@ -455,6 +455,7 @@ class Mysql extends ConexionBD{
                     $arrayResult[$key]['result'][$e]=$data;
                     $e++;
                 }
+				$result->free();
                     
             }
              $i++;

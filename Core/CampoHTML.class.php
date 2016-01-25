@@ -482,7 +482,7 @@ class CampoHTML extends DBContainer {
             $check = "";
             if ($this->typeForm == 2 ) {
                 
-                if(is_array($this->valueUpdate) and is_array($this->valueUpdate[0]) and array_key_exists($this->name, $this->valueUpdate[0])){
+                if(is_array($this->valueUpdate) and array_key_exists(0, $this->valueUpdate) and is_array($this->valueUpdate[0]) and array_key_exists($this->name, $this->valueUpdate[0])){
                         
                     #$this->valueUpdate[$this->name]==(is_numeric($this->valueUpdate[$this->name]))?(int)$this->valueUpdate[$this->name]:$this->valueUpdate[$this->name];
                     if ($this->valueUpdate[0][$this->name] == $valor){

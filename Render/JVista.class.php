@@ -311,7 +311,7 @@
 		if(Session::get('__msjVista')){
 			
 			$msj = Session::get('__msjVista');
-			if(array_key_exists('idVista', $msj) and $msj['idVista']==$this->idVista){
+			if(is_array($msj) and array_key_exists('idVista', $msj) and $msj['idVista']==$this->idVista){
 				Session::destroy('__msjVista');
 				return $msj['msj'];
 				
@@ -652,6 +652,9 @@
 		return $this->totalRegistros;
 	}
 	
+	function obtConsulta(){
+		$this->objeto->imprimir();
+	}
 	static function msj($msj,$idVista,$tipo,$redireccion=""){
 		Session::set('__msjVista',['msj'=>Mensajes::crear($tipo, $msj),'id'=>$idVista]);
 		if(!empty($redireccion)) redireccionar($redireccion);
