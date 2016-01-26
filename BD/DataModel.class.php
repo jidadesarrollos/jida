@@ -1266,7 +1266,7 @@ class DataModel{
         if(count($data)<1){
             $data = $this->propiedades;
         }
-        
+
         foreach($data as $campo => $valor) {
             if ($campo != $this->pk) {
                 
