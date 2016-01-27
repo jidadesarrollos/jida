@@ -251,17 +251,21 @@ class UsersController extends JController{
      * @return object $form
      * @see Formulario
      */
-    protected function formularioLogin(){
-        if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
-            $form = Session::get('FormLoggin');
-             
+    function formularioLogin($called=FALSE){
+        if($called){
+            if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
+                $form = Session::get('FormLoggin');
+                 
+            }else{
+                $form = new Formulario('Login',1,null,2);
+                $form->tituloFormulario = "Iniciar Sesi&oacute;n";
+                $form->valueBotonForm="Iniciar Sesi&oacute;n";
+            }        
+            
+            return $form;
         }else{
-            $form = new Formulario('Login',1,null,2);
-            $form->tituloFormulario = "Iniciar Sesi&oacute;n";
-            $form->valueBotonForm="Iniciar Sesi&oacute;n";
-        }        
-        
-        return $form;
+            $this->_404();
+        }
     }
     
     

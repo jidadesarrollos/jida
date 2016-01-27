@@ -15,8 +15,8 @@ class JController extends Controller{
 
 		$this->dv->title="JIDAPanel";
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
-
-		$this->layout="jadminIntro.tpl.php";
+        if(!$this->layout)
+		  $this->layout="jadminIntro.tpl.php";
 		
 		$this->dv->addCSS([
 			#$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',

@@ -49,6 +49,7 @@ class ACL extends DataModel{
     protected $tablaBD = '';
     function __construct(){
         parent::__construct();
+        $this->layout="";
         $this->usuario = Session::get('Usuario');
         if(!isset($_SESSION['usuario']['perfiles'])){
         	   
@@ -74,9 +75,11 @@ class ACL extends DataModel{
 				$this->perfiles=[];
 			}
 		}
+        
 		if($this->usoBD!==FALSE){
 			
 		    $this->obtenerAccesoComponentes();
+            
 		    $this->obtenerAccesoObjetos();
 		}else{
 			
@@ -88,21 +91,25 @@ class ACL extends DataModel{
      * @method obtenerAccesoComponentes
      */
     private function obtenerAccesoComponentes(){
-       
+        $componentes=[];
         $query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
         $i=0;
-		$query = $query."'".implode(",",$this->perfiles)."') group by componente, id_componente;";
+		$query = $query."'".implode("','",$this->perfiles)."') group by componente, id_componente;";
+      
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
         while($data = $this->bd->obtenerArrayAsociativo($result)){
+            $this->acl[$data['componente']]=[];
             $access[$data['componente']] =[]; 
             $componentes[$data['id_componente']] =['componente'=>$data['componente']];           
         }
                 
         //EL componente PRINCIPAL siempre es visible;
-        $componentes[1]=array('componente'=>'principal');
-        $this->componentes = $componentes;   
+        
+        $this->componentes = $componentes;
+        
+           
     }
     
     /**
@@ -117,6 +124,7 @@ class ACL extends DataModel{
     private function obtenerAccesoObjetos(){
         if(ENTORNO_APP=='dev')	Session::destroy('acl');
         
+#        Debug::mostrarArray($this->acl,0);
         if(!Session::get('acl')){
                     
             $perfiles ="";
@@ -183,6 +191,9 @@ class ACL extends DataModel{
                 }//fin foreach
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
+            if(!array_key_exists('principal', $this->acl)){
+                $this->acl['principal']=[];
+            }
             Session::set('acl',$this->acl);
 #            $this->accesos  =  $accesoObjetos;
             
@@ -231,7 +242,7 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
-		
+		#Debug::mostrarArray($listaAcl,0);
 		//Se da acceso si no existe una lista acl creada
         if(!is_array($listaAcl)){
         	return true;
@@ -253,6 +264,7 @@ class ACL extends DataModel{
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
                         //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
+                        
                       //  if($componente=='Social') //Debug::string("si tengo acceso");
                         $acceso=TRUE;
                     }else{

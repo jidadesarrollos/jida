@@ -227,6 +227,10 @@ class DataModel{
 
 	private function instanciarTieneUno(){
 		foreach ($this->tieneUno as $key => $class) {
+		    if(!is_string($class)){
+		      Debug::string($this->_clase);
+		      Debug::mostrarArray($class);  
+		    } 
 			if(class_exists($class)){
 				$this->$class = new $class();
 			}
