@@ -349,6 +349,7 @@ class Pagina{
 	            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
 	            if($cont==0) $cont=2;
 	        }
+			
 	        if(count($code)>0){
 	            foreach ($code as $key => $value){
 	                if(array_key_exists('archivo',$value)){

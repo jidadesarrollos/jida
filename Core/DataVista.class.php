@@ -83,6 +83,50 @@ class DataVista{
         }
         return $this;
     }
+	/**
+	 * Permite agregar archivos JS pertenecientes a un modulo especifico
+	 * 
+	 * Los archivos js seran buscados dentro de una carpeta htdocs/js del modulo sobre el cual
+	 * se encuentre el sistema
+	 * @method addJsModulo
+	 */
+	function addJsModulo($js,$ruta=true){
+		$modulo = $GLOBALS['_MODULO_ACTUAL'];
+		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/".$modulo;
+		if(is_array($js)){
+			foreach ($js as $key => $archivo) {
+				
+				if($ruta)$this->js[]="/".String::guionCase($modulo)."/htdocs/js/".$archivo;
+				else $this->js[]=$archivo;
+			}
+		}elseif(is_string($js)){
+			if($ruta)$this->js[]="/".String::guionCase($modulo)."/htdocs/js/".$js;
+				else $this->js[]=$js;
+		}
+		
+	}
+	/**
+	 * Permite agregar archivos css pertenecientes a un modulo especifico
+	 * 
+	 * Los archivos css seran buscados dentro de una carpeta htdocs/css del modulo sobre el cual
+	 * se encuentre el sistema
+	 * @method addcssModulo
+	 */
+	function addCssModulo($css,$ruta=true){
+		$modulo = $GLOBALS['_MODULO_ACTUAL'];
+		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/".$modulo;
+		if(is_array($css)){
+			foreach ($css as $key => $archivo) {
+				
+				if($ruta)$this->css[]="/".String::guionCase($modulo)."/htdocs/css/".$css;
+				else $this->css[]=$archivo;
+			}
+		}elseif(is_string($css)){
+			if($ruta)$this->css[]="/".String::guionCase($modulo)."/htdocs/css/".$css;
+				else $this->css[]=$css;
+		}
+		
+	}
     /**
      * Agrega un javascript para ser renderizado en el layout
      * @method addjs
