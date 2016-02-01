@@ -92,10 +92,7 @@ class ACL extends DataModel{
      */
     private function obtenerAccesoComponentes(){
         $componentes=[];
-        $query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
-        $i=0;
-		$query = $query."'".implode("','",$this->perfiles)."') group by componente, id_componente;";
-      
+        $query = "select id_componente,componente from s_componentes";
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
@@ -123,8 +120,6 @@ class ACL extends DataModel{
      */
     private function obtenerAccesoObjetos(){
         if(ENTORNO_APP=='dev')	Session::destroy('acl');
-        
-#        Debug::mostrarArray($this->acl,0);
         if(!Session::get('acl')){
                     
             $perfiles ="";
@@ -138,6 +133,7 @@ class ACL extends DataModel{
 								id_componente from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
                                 implode(",",array_keys($this->componentes)),
                                 $perfiles);
+			
             $objetos        =   $this->bd->obtenerDataCompleta($query);
             $accesoObjetos  =   array();
             $accesoMetodos  =   $this->obtenerAccesoMetodos();
