@@ -242,7 +242,8 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
-		#Debug::mostrarArray($listaAcl,0);
+		
+        
 		//Se da acceso si no existe una lista acl creada
         if(!is_array($listaAcl)){
         	return true;
