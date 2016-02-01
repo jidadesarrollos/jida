@@ -17,15 +17,9 @@ class JController extends Controller{
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         if(!$this->layout)
 		  $this->layout="jadminIntro.tpl.php";
-		
-		$this->dv->addCSS([
-			#$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
-			#$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
-			$this->obtURLApp()."htdocs/css/jida/jida.css",
-			]
-			,false);
-			
 
+			
+		$this->dv->addCssModulo('jida.css');   
 
 		$this->dv->addJS([
 			#$this->urlHtdocs."jquery/dist/jquery.js",
