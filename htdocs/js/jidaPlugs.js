@@ -1,4 +1,4 @@
-
+if(!jd) var jd = Object();
 /**
  * Conjunto de funcionalidades para las vistas
  * 
@@ -201,7 +201,7 @@
                     var url = $this.data('link')?$this.data('link'):$this.attr('href');
                           new jd.ajax({
                                 url:url,
-                                metodo:'POST',
+                                metodo:'GET',
                                 respuesta:"html",
                                 funcionCarga: function(){
                                     bootbox.dialog({message:this.respuesta});
@@ -317,7 +317,7 @@
     $("[data-liparent] > a").on('click',function(){
         
         ele = $( this ).parent();
-        
+        console.log("hola");
         if(ele.children('ul').size()>0){
             if(ele.children('ul').hasClass('show')){
                 $("ul.show").removeClass('show');
