@@ -1119,10 +1119,10 @@ class DataModel{
         $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode ( ',', $datos ) );
         
         if ($this->bd->ejecutarQuery ( $query )){
-        	$this->bd->cerrarConexion();
+        	#$this->bd->cerrarConexion();
             return true;
         }else{
-        	$this->bd->cerrarConexion(); 
+        	#$this->bd->cerrarConexion(); 
             return false;
 		}    
     }
