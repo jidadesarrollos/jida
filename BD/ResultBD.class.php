@@ -36,6 +36,7 @@ class ResultBD{
         $this->dataModel = $DataModel;
         $this->bdObject = $this->dataModel->__get('bd');
         $this->idResultado= $this->bdObject->__get('idResult');
+		
         $this->result = $this->dataModel->bd->result;
         if(!empty($this->idResultado) or $this->result)
             $this->ejecutado=TRUE;

@@ -228,8 +228,12 @@ class DataModel{
 	private function instanciarTieneUno(){
 		foreach ($this->tieneUno as $key => $class) {
 		    if(!is_string($class)){
+		      
+			  
 		      Debug::string($this->_clase);
-		      Debug::mostrarArray($class);  
+		      Debug::mostrarArray($class,0);
+			  throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);
+			    
 		    } 
 			if(class_exists($class)){
 				$this->$class = new $class();

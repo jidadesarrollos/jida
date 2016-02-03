@@ -576,7 +576,7 @@ class CampoHTML extends DBContainer {
             
             $esSelect = strpos(strtolower($opcion), "select" );
             $esSelectExterno = strpos(trim($opcion), "externo" );
-			if(is_array($this->externo) and array_key_exists($this->name, $this->externo)){
+			if($esSelectExterno and is_array($this->externo) and array_key_exists($this->name, $this->externo)){
 				$esSelectExterno=TRUE;
 			}
             $esArraySesion = strpos(trim($opcion), "session" );
