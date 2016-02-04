@@ -212,7 +212,7 @@ class DataModel{
 			$this->debug('llego al nivel '.$this->nivelActualORM);
 			#Debug::string($this->_clase);
 			#Debug::mostrarArray(func_get_args(),0);
-			#call_user_func_array([$this,'instanciarPerteneceAUno'], func_get_args());
+			call_user_func_array([$this,'instanciarPerteneceAUno'], func_get_args());
 			
         }else{
 	        //se obtienen propiedades de relacion de pertenencia
