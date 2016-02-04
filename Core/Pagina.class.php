@@ -366,7 +366,11 @@ class Pagina{
 	        
         return $js;
     }
-
+	/**
+	 * Imprime los archivos js incluidos en e
+	 * 
+	 * @method printJSAjax
+	 */
     function printJSAjax(){
         $js="";
         $this->checkData();

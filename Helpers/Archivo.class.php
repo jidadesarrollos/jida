@@ -82,6 +82,7 @@ class Archivo{
      * @method checkCarga
      */
     private function checkCarga($file){
+    	
         $this->files = $file;
         if(!isset($file) or is_array($file)){
             
@@ -90,7 +91,7 @@ class Archivo{
             $this->tmp_name = $file['tmp_name'];
             $this->error = $file['error'];
             $this->size = $file['size'];
-            $this->obtenerExtension();
+            //$this->obtenerExtension();
             $this->totalArchivosCargados = count($file['tmp_name']);
             $this->validarCarga();
             
@@ -145,6 +146,7 @@ class Archivo{
             
         }else{
           $explode = explode("/",$this->type);
+		  
 		  $this->extension[0] = $explode[1];
         }
 		

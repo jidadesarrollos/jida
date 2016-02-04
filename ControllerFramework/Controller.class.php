@@ -546,7 +546,7 @@ class Controller {
     } 
     
     protected function respuestaJson($respuesta){
-        print(json_encode($respuesta));
+        exit(json_encode($respuesta));
         exit;
     }
     /**

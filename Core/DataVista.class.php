@@ -92,15 +92,16 @@ class DataVista{
 	 */
 	function addJsModulo($js,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/".$modulo;
+		(String::guionCase($modulo)=='jadmin')?$modulo="framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
+		
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
 				
-				if($ruta)$this->js[]="/".String::guionCase($modulo)."/htdocs/js/".$archivo;
+				if($ruta)$this->js[]="/".$modulo."/htdocs/js/".$archivo;
 				else $this->js[]=$archivo;
 			}
 		}elseif(is_string($js)){
-			if($ruta)$this->js[]="/".String::guionCase($modulo)."/htdocs/js/".$js;
+			if($ruta)$this->js[]="/".$modulo."/htdocs/js/".$js;
 				else $this->js[]=$js;
 		}
 		
@@ -114,7 +115,7 @@ class DataVista{
 	 */
 	function addCssModulo($css,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/".$modulo;
+		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/modulos/".$modulo;
 		if(is_array($css)){
 			foreach ($css as $key => $archivo) {
 				
