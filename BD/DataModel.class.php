@@ -74,8 +74,7 @@ class DataModel{
      * 
      */
     
-    protected 
-    $perteneceAUno=[];
+    protected $perteneceAUno=[];
     
     /**
      * Consulta de base de datos construida
@@ -220,7 +219,7 @@ class DataModel{
 	            $this->instanciarObjeto($id);
 	               
 	        }else{
-	        	$this->instanciarTieneUno();
+	        	$this->instanciarTieneUno()->instanciarTieneMuchos();
 	        }
 				
         }
@@ -242,7 +241,15 @@ class DataModel{
 			}
 			
 		}
+		return $this;
 	}
+	
+	private function instanciarTieneMuchos(){	
+		foreach ($this->tieneMuchos as $key => $value) {
+			$this->{$value}=[];
+		}
+	}
+	
 	private function instanciarPerteneceAUno($id,$nivel,$data){
     	$data = $this->consulta()
                     ->filtro([$property=>$valor])
@@ -368,6 +375,7 @@ class DataModel{
 		return $this;
 	//	$this->debug($consultas);
 	}
+	
     /**
      * Permite instanciar un objeto ya inicializado
      * @method instanciar
@@ -747,13 +755,12 @@ class DataModel{
         if($rel=='initBD'){ $this->initBD($campos[0]); return true;};
         if(method_exists($this, $rel)){
         	
-        	return $this->$rel;
         }else{
         	
         
 	        $class = ucfirst($this->_obtenerSingular($rel));
 			
-	        if(property_exists($this,$rel)){
+	        if(property_exists($this,$rel) and !in_array($rel, $this->tieneMuchos)){
 	            return $this->$rel;
 	        }
 	        
