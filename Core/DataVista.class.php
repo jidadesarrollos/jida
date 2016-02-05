@@ -119,11 +119,11 @@ class DataVista{
 		if(is_array($css)){
 			foreach ($css as $key => $archivo) {
 				
-				if($ruta)$this->css[]="/".String::guionCase($modulo)."/htdocs/css/".$css;
+				if($ruta)$this->css[]="/".$modulo."/htdocs/css/".$css;
 				else $this->css[]=$archivo;
 			}
 		}elseif(is_string($css)){
-			if($ruta)$this->css[]="/".String::guionCase($modulo)."/htdocs/css/".$css;
+			if($ruta)$this->css[]="/".$modulo."/htdocs/css/".$css;
 				else $this->css[]=$css;
 		}
 		
