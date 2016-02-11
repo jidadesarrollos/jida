@@ -89,6 +89,8 @@ class DataVista{
 	 * Los archivos js seran buscados dentro de una carpeta htdocs/js del modulo sobre el cual
 	 * se encuentre el sistema
 	 * @method addJsModulo
+	 * @param string js Nombre o ruta del archivo
+	 * @param boolean $ruta 
 	 */
 	function addJsModulo($js,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];

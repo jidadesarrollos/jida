@@ -43,7 +43,9 @@ jd.ajax.prototype = {
       "parametros":null,
       "respuesta":"html",
       "cargando" :"<div class='cargaAjax'> Cargando...</div>",
+      "contexto" :'body',
       "funcionProgreso":false,
+      
       "pushstate":false
     },
     inicializarValores:function(){
@@ -114,11 +116,13 @@ jd.ajax.prototype = {
         ajax = this.obAjax;
         if(ajax.readyState==jd.cargandoAjaxUno || ajax.readyState==jd.cargandoAjaxDos){
             $(".cargaAjax").remove();
-            $('body').prepend(this.valores.cargando);
+            console.log(typeof this.valores.cargando);
+            $(this.valores.contexto).prepend(this.valores.cargando);
         }
         if(ajax.readyState==jd.listoAjaxCompleto){
             $(".cargaAjax").remove();
             var httpStatus= ajax.status;
+            console.log(typeof this.valores.cargando);
             if(httpStatus==200 || httpStatus ==0){
                 //this.valores.funcionCarga.call(this);
                 this.procesarRespuesta();
