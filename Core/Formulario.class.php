@@ -1125,9 +1125,8 @@ class Formulario extends DBContainer {
     static function msj($type,$msj,$redirect=false){
         $msj = Mensajes::crear($type, $msj);
         Session::set('__msjForm',$msj);
-        
         if($redirect){
-            $this->redireccionar($redirect);
+            redireccionar($redirect);
         }
     }
     /**
