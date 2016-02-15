@@ -50,6 +50,13 @@ class DataModel{
      * Arreglo que define las relaciones uno a uno del objeto
      * @var $tieneUno 
      * @access protected
+	 * @example [
+	 * 
+	 * 'objetoRelacion',
+	 * // En caso de que la relacion no posea un nombre estandar o se encuentre 
+	 * // declarada en el objeto instanciado.
+	 * 'objetoRelacion'=>['pk'=>'claveRelacion'] 
+	 * ]
      * 
      * 
      */
@@ -170,7 +177,7 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
-  		
+    	
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
@@ -214,8 +221,10 @@ class DataModel{
 			#call_user_func_array([$this,'instanciarPerteneceAUno'], func_get_args());
 			
         }else{
+        	
 	        //se obtienen propiedades de relacion de pertenencia
-	        if($id){    
+	        if($id){
+	            
 	            $this->instanciarObjeto($id);
 	               
 	        }else{
@@ -225,20 +234,34 @@ class DataModel{
         }
 		
     }
-
+	/**
+	 * Instancia las relaciones uno a uno de un objeto
+	 * 
+	 * Crea un objeto vacio para cada relacion "tieneUno" definida en un objeto nuevo
+	 * @method instanciarTieneUno
+	 * 
+	 */
 	private function instanciarTieneUno(){
+		
 		foreach ($this->tieneUno as $key => $class) {
+			
 		    if(!is_string($class)){
 		      
-			  
-		      Debug::string($this->_clase);
-		      Debug::mostrarArray($class,0);
-			  throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);
-			    
+			  if(is_string($key) and is_array($class)){		
+					$relacion =& $key;	
+					if(array_key_exists('fk', $class))
+						$this->$relacion = new $relacion();
+					//Debug::mostrarArray($this->$relacion);
+					
+			  }else{
+			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);	
+			  }  
+		    }else{
+			    if(class_exists($class)){
+					$this->$class = new $class();
+				}	
 		    } 
-			if(class_exists($class)){
-				$this->$class = new $class();
-			}
+			
 			
 		}
 		return $this;
@@ -248,14 +271,6 @@ class DataModel{
 		foreach ($this->tieneMuchos as $key => $value) {
 			$this->{$value}=[];
 		}
-	}
-	
-	private function instanciarPerteneceAUno($id,$nivel,$data){
-    	$data = $this->consulta()
-                    ->filtro([$property=>$valor])
-                    ->fila();
-		return $this->obtenerBy($id,$data['pk']);
-		
 	}
     /**
      * Verifica las relaciones declaradas del Objeto
@@ -292,8 +307,8 @@ class DataModel{
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
 		);
-		
-		foreach ($data as $relacion => $info) {	
+		foreach ($data as $relacion => $info) {
+				
 			if(in_array($relacion, $this->tieneMuchos)){
 				$this->{$relacion} = [];
 				if($info['totalRegistros']>0){
@@ -305,7 +320,7 @@ class DataModel{
 				}
 				
 				 
-			}elseif(in_array($relacion, $this->tieneUno)){
+			}elseif(in_array($relacion, $this->tieneUno) or array_key_exists($relacion, $this->tieneUno)){
 				
 				$rel = new $relacion();
 				if($info['totalRegistros']>0)
@@ -355,21 +370,26 @@ class DataModel{
 	 * @method 
 	 */
 	private function obtTieneUno(){
-		
-			
+		$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;	
 		foreach ($this->tieneUno as $key => $relacion) {
 			
 			if(is_string($relacion) and class_exists($relacion)){
-				$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
 				
 				$rel = new $relacion();
-				 
 				$this->consultaRelaciones[$relacion]= $rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])->obtQuery();
 				
 				
 								
-			}else{
+			}elseif(is_string($key) and class_exists($key)){
+				$rel = new $key();
 				
+				if(array_key_exists('fk', $relacion)){
+					
+					$this->consultaRelaciones[$key]= 
+					$rel->consulta()->filtro([$rel->pk=>$this->{$relacion['fk']}])->obtQuery();
+					
+				}
+					
 			}
 		}	
 		return $this;
@@ -400,6 +420,7 @@ class DataModel{
         $this->establecerAtributos ( $data, $this->_clase );
 		
         if($this->nivelActualORM<=$this->nivelORM){
+        	
         	$this->identificarObjetosRelacion();
         	$this->obtenerDataRelaciones();	
         }
@@ -451,8 +472,8 @@ class DataModel{
 			if(substr($prop, 0,2)=='id' and $prop!=$this->pk){
 				
 				$objeto = String::upperCamelCase(str_replace("_"," ",str_replace("id_", "", $prop)));
-				if(class_exists($objeto))
-					$this->perteneceAUno[$objeto]=['obj'=>$objeto,'pk'=>$prop];
+				if(class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto, $this->tieneUno))
+					$this->tieneUno[$objeto]=['obj'=>$objeto,'pk'=>$prop];
 			}
 		}
 	}
@@ -1339,8 +1360,12 @@ class DataModel{
                 $idUser = Session::get('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
                 if(Session::checkLogg()){
+                	
+					
                     if(is_object(Session::get('Usuario'))) $dataUpdate['id_usuario_modificador'] = Session::get('Usuario')->id_usuario;
-                    else    $dataUpdate['id_usuario_modificador'] = Session::get('usuario','id_usuario');
+					elseif(array_key_exists('id_usuario', Session::get('usuario'))){
+                    	$dataUpdate['id_usuario_modificador'] = Session::get('usuario','id_usuario');
+                    }    
                 }
                 
             };
