@@ -331,7 +331,9 @@
      */
     function validacion(){ 
         try{
+        	
             if(BD_REQUERIDA===TRUE){
+            	
 				$acl = new ACL();
 				
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
