@@ -199,8 +199,15 @@ class ACL extends DataModel{
                             }}
                     }else{
                     	$valores = Arrays::convertirAObjeto($dataMetodo);
-                    	$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
-						$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;
+						/**
+						 * Se agregan los metodos que no requieren loggin, solo si los perfiles actuales no tienen acceso al componente o,
+						 * si tienen acceso solo a algunos metodos del componente.
+						 */
+						if(!array_key_exists($valores->componente, $this->acl) or (is_array($this->acl[$valores->componente]) and array_key_exists('objetos', $this->acl[$valores->componente]))){
+							$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
+							$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;	
+						}
+                    	
                     }
                 }//fin foreach
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
@@ -264,7 +271,7 @@ class ACL extends DataModel{
      * @return boolean TRUE or FALSE
      */
     function validarAcceso($controlador,$metodo,$componente=""){
-    	#Debug::mostrarArray($this->acl);
+    	
     	if($this->usoBD===FALSE)
     		return true;
 		
