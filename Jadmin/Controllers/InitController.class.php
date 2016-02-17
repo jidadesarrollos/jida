@@ -15,6 +15,22 @@ class InitController extends JController{
 		parent::__construct();
 		$this->GeneradorModelo=new GeneradorModelo();
 		$this->gController= new GeneradorController();
+		/**
+		 * Esta forma de insertar los archivos debe ser mejorada
+		 */
+		$this->dv->addCSS([
+			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
+			$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
+			$this->obtURLApp()."htdocs/css/jida/jida.css",
+			]
+			,false);
+		$this->dv->addJS([
+			$this->urlHtdocs."jquery/dist/jquery.js",
+			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
+			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
+			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
+			
+		],false);
 		
 	}
 	
@@ -31,7 +47,6 @@ class InitController extends JController{
 					$this->agregarLayout();
 					$this->copiarHtdocs()->appConfig()->initConfig();
 					$this->crearUsuarioJadmin();
-					
 					$this->redireccionar($this->getUrl('modelos'));
 				}else{
 					
@@ -218,12 +233,12 @@ class InitController extends JController{
     }
 	private function crearDirApp(){
 		$directorios=[
-			'../Aplicacion',
-			'../Aplicacion/Config',
-			'../Aplicacion/Modelos',
-			'../Aplicacion/Controller',
-			'../Aplicacion/Layout',
-			'../Aplicacion/Vistas'
+			'Aplicacion',
+			'Aplicacion/Config',
+			'Aplicacion/Modelos',
+			'Aplicacion/Controller',
+			'Aplicacion/Layout',
+			'Aplicacion/Vistas'
 		];
 		Directorios::crear($directorios);
 		Session::set('dirApp', TRUE);

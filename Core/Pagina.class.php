@@ -142,6 +142,7 @@ class Pagina{
         }
             
         $this->url = (Session::get('URL_ACTUAL')[0]!="/")?"/".Session::get('URL_ACTUAL'):Session::get('URL_ACTUAL');
+		
      
     }
 

@@ -102,7 +102,7 @@ trait GeneradorArchivo{
         
     }
 	
-	function imprimir($contenido=""){
+	function imprimirContenido($contenido=""){
 		echo "<pre>";
 		echo $contenido;
 		echo "</pre>";
