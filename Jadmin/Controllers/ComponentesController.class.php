@@ -10,11 +10,11 @@
 
  
 class ComponentesController extends JController{
-    
+    var $layout="jadmin.tpl.php";
     function __construct($id=""){
         parent::__construct();        
         $this->url="/jadmin/componentes/";
-        $this->layout="jadmin.tpl.php";
+        
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
         
     }
@@ -66,9 +66,7 @@ class ComponentesController extends JController{
 			 
 			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Componente($idComponente);
-                 $validacion = $F->validarFormulario($_POST);
-                 
-                 if($validacion===TRUE){
+                 if($F->validarFormulario()){
                      $_POST['componente'] = strtolower($this->post('componente'));
                      if($comp->salvar($_POST)->ejecutado()==1){
 						 Vista::msj('componentes','suceso','Componente <strong>'.$this->post('componente').'</strong> guardado',$this->url.'');    

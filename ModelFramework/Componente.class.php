@@ -25,7 +25,8 @@ class Componente extends DataModel{
 	
 	protected $pk='id_componente';
 	protected $tablaBD='s_componentes';
-	
+	protected $registroMomentoGuardado=FALSE;
+	protected $registroUser=FALSE;
 	
     /**
      * Guarda o modifica un componente en base de datos
@@ -33,8 +34,10 @@ class Componente extends DataModel{
      * @method guardarComponente
      * @acces public
      */
-    function guardarComponente($datos=""){   
+    function guardarComponente($datos=""){
+    	   
         return $this->salvar($datos);
+		
     }
     
     /**
