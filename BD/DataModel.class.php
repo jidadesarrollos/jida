@@ -245,20 +245,20 @@ class DataModel{
 		
 		foreach ($this->tieneUno as $key => $class) {
 			
-		    if(!is_string($class)){
+		    if(!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))){
 		      
 			  if(is_string($key) and is_array($class)){		
 					$relacion =& $key;	
 					if(array_key_exists('fk', $class))
-						$this->$relacion = new $relacion();
+						$this->$relacion = new $relacion(null,$this->nivelActualORM);
 					//Debug::mostrarArray($this->$relacion);
 					
 			  }else{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);	
 			  }  
 		    }else{
-			    if(class_exists($class)){
-					$this->$class = new $class();
+			    if(class_exists($class) and !property_exists($this, $class)){
+					$this->$class = new $class(null,$this->nivelActualORM);
 				}	
 		    } 
 			
@@ -345,8 +345,8 @@ class DataModel{
 				
 				$this->debug("no existe $relacion");
 			}
-		
 		}//fin foreach
+		$this->instanciarTieneUno();
 		
 	}
 	/**
