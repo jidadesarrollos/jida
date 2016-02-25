@@ -1,4 +1,4 @@
-<?php
+	<?php
 /**
  * Clase para manejo de Vistas Dinamicas
  * 
@@ -34,7 +34,11 @@
 	var $controlFila=1;
 	private $parametroPagina = "pagina";
 	var $funcionNoRegistros;
-	var $mensajeNoRegistros="No se han conseguido Registros";
+	/**
+	 * @var string mensajeNoRegistros Mensaje a mostrar si no se consigues registros
+	 */
+	private $mensajeNoRegistros="No se han conseguido Registros";
+	private $htmlPersonalizado=FALSE; 
 	/**
 	 * @var array $filtros Permite definir los objetos de filtro
 	 */
@@ -73,7 +77,7 @@
 		'class'=>'col-md-offset-6 col-md-6 col-xs-12 text-right'
 	];
 	private $configTitulo=[
-		'section'=>[],
+		'section'=>['class'=>'col-md-12'],
 		'titulo' =>[
 			'selector'=>'h1'
 		],
@@ -133,6 +137,15 @@
 	private $objeto;
 	private $urlActual;
 	private $idVista;
+	/**
+	 * Contructor de Jvista
+	 * 
+	 * @param string $ejecucion Objeto y metodo sobre el cual se obtendrá la información a usar en la vista El valor retornado por el objeto debe ser el objeto
+	 * 
+	 * @param array $params Arreglo de parametros de configuracion, por ejemplo titulos
+	 * @param string $titulo Titulo de la vista
+	 * 
+	 */
 	function __construct($ejecucion,$params=[],$titulo=""){
 		$this->ejecucion = $ejecucion;	
 		$dataConsulta = explode(".", $ejecucion);
@@ -271,6 +284,10 @@
        
        
     }
+	/**
+	 * Retorna la vista renderizada
+	 * @method obtenerVista
+	 */
 	function obtenerVista(){
 		$this->realizarConsulta();
 		$seccionVista = new Selector('article',$this->configArticleVista);
@@ -643,7 +660,7 @@
 		if(!empty($this->funcionNoRegistros)){
 			return call_user_func_array($this->funcionNoRegistros, [$this]);
 		}else{
-			
+			if($this->htmlPersonalizado) return Selector::crear('div.col-md-12',null,$this->mensajeNoRegistros);
 			return Selector::crear('div.col-md-12',null,Mensajes::crear('alert',$this->mensajeNoRegistros));
 		}
 	}
@@ -660,5 +677,33 @@
 		if(!empty($redireccion)) redireccionar($redireccion);
 		
 	}
+	/**
+	 * Permite personalizar un mensaje en caso de no haber registros
+	 * @method addMensajeNoRegistro
+	 * @param string $msj Mensaje a mostrar. Puede ser un string o una cadena HTML
+	 * @param array $data Data adicional para el mensaje.
+	 * @see self::mensajeRegistros
+	 * Las opciones a pasar son : cssContendor,link,cssLink,txtLink
+	 */
+	function addMensajeNoRegistros($msj,$cssDiv=[]){
+		$dataDefault=[
+			'link'=>false,
+			'cssContenedor'=>'alert alert-warning',
+			'attrLink'=>[],
+			'cssLink'=>'btn btn-default pull-right',
+			'txtLink'=>'Agregar'
+			
+		];
+		$dataDefault=array_merge($dataDefault,$cssDiv);
+		$msj= Selector::crear('div.'.$dataDefault['cssContenedor'],[],$msj);
+		if($dataDefault['link']){
+			$this->htmlPersonalizado=TRUE;
+			$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
+			array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
+			'Agregar');
+		}
+		$this->mensajeNoRegistros=$msj;
+	}
 	
  }//fin clase
+ 

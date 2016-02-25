@@ -556,7 +556,11 @@ class Controller {
     protected function redireccionar($url){
         header('location:'.$url.'');exit;
     }
-	
+	/**
+	 * Retorna la url de la aplicacion actual
+	 * @method obtURLApp
+	 * 
+	 */
 	protected function obtURLApp(){
 		
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){

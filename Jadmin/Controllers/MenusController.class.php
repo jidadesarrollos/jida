@@ -166,7 +166,7 @@ class MenusController extends JController {
 
     /**
      * Funcion controladora de gestion de opciones de un menu
-     *
+     * @method procesarOpciones
      */
     function procesarOpciones() {         
         if($this->get('menu')){
@@ -241,7 +241,7 @@ class MenusController extends JController {
             
             
             $this->dv->formOpcion = $formulario->armarFormulario();
-
+			
          }else{
             throw new Exception("No se ha seleccionado menu para agregar opciones", 1);
         }
@@ -327,6 +327,13 @@ class MenusController extends JController {
                                                                                 #'data-jvista'=>'modal'
                                                                                 ),
                                                             'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-plus'))))),
+                                    2=>array('a'=>array(
+                                                            'atributos'=>array( 'class'=>'btn',
+                                                                                'title'=>'Editar',
+                                                                                'href'=>$urlForm."opcion/{clave}",
+                                                                                #'data-jvista'=>'modal'
+                                                                                ),
+                                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit'))))),
                                     );
         if($this->getEntero($this->get('padre')))
             $urlForm = $urlForm."padre/".$this->get('padre');          
