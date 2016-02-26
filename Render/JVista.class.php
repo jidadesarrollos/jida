@@ -20,6 +20,10 @@
 	var $buscador = FALSE;
 	private $ejecucion;
 	private $titulo;
+    /**
+     * @var array $clausulas Arreglo de clausulas agregadas a la consulta a base de datos implementada por el objeto
+     */
+    private $clausulas;
 	/**
 	 * @var mixed acciones Permite definir acciones para toda la vista.
 	 */
@@ -179,7 +183,8 @@
 	 * Verifica la estructura de la url manejada para la funcionalidad de la vista
 	 */
 	private function validarPaginaConsulta(){
-		if(!empty(Session::get('URL_ACTUAL')))
+		$urlActual=Session::get('URL_ACTUAL');
+		if(!empty($urlActual))
 			$this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
 			
 		if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
@@ -236,6 +241,17 @@
 										
 			}
 		}
+        if(count($this->clausulas)>0){
+            foreach ($this->clausulas as $clausula => $params) {
+
+                if(is_array($params)){
+                    call_user_func_array([$this->objeto,$clausula], $params);
+                        
+                }else{
+                    $this->objeto->{$clausula}($params);
+                }
+            }
+        }
 		if(isset($_GET['busqueda'])){
 	
 			$filtros = [];
@@ -704,6 +720,26 @@
 		}
 		$this->mensajeNoRegistros=$msj;
 	}
+    /**
+     * Permite agregar clausulas a la consulta realizada por la vista
+     * @method clausula
+     * @param string $nombreClausula Nombre de la clausula a ejecutar
+     * @param mixed $valores Tantos valores como requiera $nombreClausula
+     */
+    function clausula($nombreClausula,$valores){
+        $argumentos = func_num_args();
+        if($argumentos==2)
+            $this->clausulas[$nombreClausula][]=$valores;
+        elseif($argumentos>2){
+            $argumentos=func_get_args();
+            $params=[];  
+            foreach ($argumentos as $key => $value) {
+                $params[]=$value;
+            }
+            $this->clausulas=$argumentos;
+        }
+        
+    }
 	
  }//fin clase
  

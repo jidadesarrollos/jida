@@ -278,4 +278,20 @@ class FechaHora{
         $f = new DateTime($f);
         return self::$meses['es'][$f->format('n')]['abr'];        
     }
+	/**
+	 * Retorna el mes
+	 * @method nombreMes
+	 * @param int Mes Fecha en formato (n)
+	 * @param string Lang es
+	 */
+	static function nombreMes($mes,$lang='es'){
+		return self::$meses[$lang][$mes]['mes'];
+	}
+
+    static function formato($fecha,$formato){
+        $date = new DateTime($fecha);
+        return $date->format($formato);
+    }
+
+	
 }
