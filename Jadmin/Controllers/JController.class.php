@@ -47,6 +47,7 @@ class JController extends Controller{
 					'/htdocs/bower_components/jquery/dist/jquery.js',
 					'/htdocs/bower_components/jquery-ui/jquery-ui.min.js',
 					'/htdocs/bower_components/bootstrap/dist/js/bootstrap.min.js',
+					'/htdocs/bower_components/bootbox/bootbox.js',
 				],
 				
 				'prod'=>[
