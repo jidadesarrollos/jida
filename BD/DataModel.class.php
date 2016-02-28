@@ -257,7 +257,7 @@ class DataModel{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);	
 			  }  
 		    }else{
-			    if(class_exists($class) and !property_exists($this, $class)){
+			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
 					$this->$class = new $class(null,$this->nivelActualORM);
 				}	
 		    } 
@@ -269,7 +269,11 @@ class DataModel{
 	
 	private function instanciarTieneMuchos(){	
 		foreach ($this->tieneMuchos as $key => $value) {
-			$this->{$value}=[];
+			if(!is_array($value)) $this->{$value}=[];
+			else{
+				#Debug::mostrarArray($key);
+				$this->{$key}=[];
+			}
 		}
 	}
     /**
@@ -307,9 +311,11 @@ class DataModel{
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
 		);
+		
 		foreach ($data as $relacion => $info) {
+					
+			if(in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->tieneMuchos)){
 				
-			if(in_array($relacion, $this->tieneMuchos)){
 				$this->{$relacion} = [];
 				if($info['totalRegistros']>0){
 					
@@ -357,8 +363,32 @@ class DataModel{
 	 */
 	private function obtTieneMuchos(){
 		foreach ($this->tieneMuchos as $key => $relacion) {
-			$rel = new $relacion(); 
-			$this->consultaRelaciones[$relacion] = $rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])->obtQuery();
+			if(is_array($relacion)){
+				$rel = new $key();
+				$consulta = $rel->consulta();
+				if(array_key_exists('rel', $relacion)){
+					$campos=['*'];
+					$tipoJoin = '';
+					$clave=$rel->__get('pk');
+					$fk = $clave;
+					if(array_key_exists('campos', $relacion))
+						$campos=$relacion['campos'];
+					if(array_key_exists('join', $relacion)) $tipoJoin=$relacion['join'];	
+					
+					
+					if(array_key_exists('pk', $relacion)) $clave=$relacion['pk'];
+					if(array_key_exists('fk', $relacion)) $fk=$relacion['fk'];
+					$this->consultaRelaciones[$key]=
+					$rel->join($relacion['rel'],$campos,['clave'=>$clave,'clave_relacion'=>$fk],$tipoJoin)
+						->filtro([$this->pk=>$this->{$this->pk}])
+						->obtQuery();	
+				}
+				
+			}else{
+				$rel = new $relacion(); 
+				$this->consultaRelaciones[$relacion] = $rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])->obtQuery();	
+			}
+			
 		}
 		return $this;
 	}
@@ -1036,6 +1066,14 @@ class DataModel{
         return $this;
     }//final función regExp
     
+    /**
+	 * Retorna una matriz como resultado de una consulta realizada
+	 * 
+	 * @param string $key [opcional] campo de la consulta a usar como clave en la matriz resultante
+	 * @return array $data Matriz resultante
+	 * @see BDObject::obtenerDataCompleta
+	 * 
+	 */
     function obt($key=""){
     	
         if(!empty($this->order)){
@@ -1417,8 +1455,10 @@ class DataModel{
     }
    	/**
 	 * Limita la consulta a base de datos
+	 * @param int $limit campo sobre el que empieza la consulta
+	 * @param int $offset  limite de registros a traer
 	 */
-    function limit($limit=0,$offset=ORM_REGISTROS_RELACION){
+    function limit($limit=100,$offset=0){
        
         if(!$this->usoLimit){
         	$this->limit=$this->bd->limit($limit, $offset);
@@ -1508,6 +1548,17 @@ class DataModel{
     function getResult(){
         return $this->resultBD;
     }
+	/**
+	 * Agrega condicion opuesta a consulta en base de datos.
+	 * @method o
+	 * @param condiciones or
+	 */
+	function abrirOr(){
+		$this->query.="(";
+	}
+	function cerrarOr(){
+		$this->query.=")";
+	}
     
     
     protected function guardarRelacion($arrayData){
