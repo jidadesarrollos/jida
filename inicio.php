@@ -83,6 +83,12 @@ if(TEST_PLATFORM==TRUE){
  }
 include_once 'Settings/jConstantes.php';
 include_once 'Settings/jidaConfiguracion.php';
+
+if(array_key_exists('include', $GLOBALS)){
+	foreach ($GLOBALS['include'] as $key => $archivo) {
+		include_once $archivo;
+	}
+}
 #=======================================================================
 #=======================================================================
 #=======================================================================
