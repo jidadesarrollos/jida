@@ -20,6 +20,11 @@
 	var $buscador = FALSE;
 	private $ejecucion;
 	private $titulo;
+	/**
+	 * Funcion pasada por el usuario a ejecutar sobre la data obtenida
+	 * @var function $funcionData
+	 */
+	private $funcionData;
     /**
      * @var array $clausulas Arreglo de clausulas agregadas a la consulta a base de datos implementada por el objeto
      */
@@ -192,7 +197,12 @@
 		}
 	}
 	private function establecerValoresDefault(){
-		$nombre = explode(".", $this->ejecucion)[0];
+		if(empty($this->titulo)){
+			$nombre = explode(".", $this->ejecucion)[0];	
+		}else{
+			$nombre=$this->titulo;
+		}
+		
 		$this->idVista = String::lowerCamelCase($nombre);
 		$this->configArticleVista['id'] = String::lowerCamelCase('Vista '.$nombre);
 		$this->configTabla['id']=String::lowerCamelCase('data '.$nombre);
@@ -272,9 +282,15 @@
 		}
 		$this->totalRegistros = count($this->objeto->obt());
 		$this->registros = $this->objeto->limit($this->nroFilas,$offset)->obt();
-		
-		
+		/**
+		 * Se llama a la funcion pasada por el usuario
+		 */
+		if(!empty($this->funcionData)){
+			$funcionData=$this->funcionData;
+			$this->registros=$funcionData($this->registros,$this);
+		}
 		$this->obtenerNombreCampos();
+		
 		$this->tabla->inicializarTabla($this->registros);	
 	}
 	/**
@@ -303,8 +319,14 @@
 	/**
 	 * Retorna la vista renderizada
 	 * @method obtenerVista
+	 * @param function $function Funcion a ejecutar sobre la data obtenida de base de datos
+	 * 
 	 */
-	function obtenerVista(){
+	function obtenerVista($function=""){
+		if(!empty($function)){
+			
+			$this->funcionData=$function;
+		}
 		$this->realizarConsulta();
 		$seccionVista = new Selector('article',$this->configArticleVista);
 		$vista="";
@@ -344,9 +366,9 @@
 		if(Session::get('__msjVista')){
 			
 			$msj = Session::get('__msjVista');
-			if(is_array($msj) and array_key_exists('idVista', $msj) and $msj['idVista']==$this->idVista){
+			if(is_array($msj) and array_key_exists('id', $msj) and $msj['id']==$this->idVista){
 				Session::destroy('__msjVista');
-				return $msj['msj'];
+				return Selector::crear('div.row',null,Selector::crear('div.col-md-12',null,$msj['msj']));
 				
 			}
 		}
@@ -688,7 +710,15 @@
 	function obtConsulta(){
 		$this->objeto->imprimir();
 	}
-	static function msj($msj,$idVista,$tipo,$redireccion=""){
+	/**
+	 * Crea mensajes a mostrar en la vista
+	 * 
+	 * @param string $msj Mensaje a mostrar
+	 * @param string $idVista Identificador
+	 * @param string $tipoMensaje Debe corresponder a una clase de mensajes configurara
+	 * @param jidaUrl $redireccion Url a la cual redireccionar
+	 */
+	static function msj($idVista,$tipo,$msj,$redireccion=""){
 		Session::set('__msjVista',['msj'=>Mensajes::crear($tipo, $msj),'id'=>$idVista]);
 		if(!empty($redireccion)) redireccionar($redireccion);
 		
