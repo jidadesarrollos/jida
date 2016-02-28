@@ -18,6 +18,11 @@ class Controller {
      */
     var $layout=FALSE;
 	/**
+	 * Define el idioma manejado al momento de la ejecucion del controlador
+	 * @var string $idioma;
+	 */
+	var $idioma;
+	/**
 	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
 	  * 
 	  * @var string $tituloPagina
@@ -367,17 +372,24 @@ class Controller {
      */
     protected function urlController($ctrl=""){
         
-        $this->url="";
-        if(!empty($ctrl)){
-            
-        }else
-        if(isset($GLOBALS['_MODULO_ACTUAL'] )){
-            $controller = str_replace("Controller", "", $this->_clase);
+        if(empty($ctrl)){
+           $ctrl = $this->_clase;
+           $controller = str_replace("Controller", "", $this->_clase);
+        }else{
+            if(class_exists(String::upperCamelCase($ctrl)."Controller") or class_exists(String::upperCamelCase($ctrl))){
+                $controller = str_replace('Controller', "", $ctrl);
+            }else{
+                throw new Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
+                
+            }
+        }
+        
+        if(!empty($controller)){
+                
             if(strtolower($this->_modulo)==strtolower($controller)){
                 $this->url = "/".strtolower($this->_modulo)."/";
             }else{
-                if(empty($this->_modulo)){
-                	
+                if(empty($this->_modulo)){	
                     $this->url = $this->obtURLApp().$this->convertirNombreAUrl($controller)."/";
                 }else{
                 	
@@ -387,7 +399,6 @@ class Controller {
             }
                
         }
-        
         return $this->url;
     }
     protected function urlModulo(){
@@ -405,22 +416,20 @@ class Controller {
     protected function getUrl($metodo="",$data=array()){
         if(!empty($metodo)){
         	
-            $urlController=$this->urlController();
-            $modulo="/";
             
-            if(is_array($metodo)){
-                $ctrl = array_keys($metodo)[0];
-                $metodo= array_values($metodo)[0];
-                if(stripos($ctrl, "/")){
-                    $sep = explode("/", $ctrl);
-                    $ctrl = $sep[1];
-                    $modulo.=$sep[0]."/";
-                }
-                $urlController=$modulo.$ctrl."/";
-                $ctrl = $ctrl."Controller";
+            
+            $url = explode(".", $metodo);
+            if(count($url)==2){
+                $ctrl = str_replace('Controller', "", String::upperCamelCase($url[0]));
+                $ctrl = $ctrl.'Controller';
                 
-            }else{
+                $urlController = $this->urlController($url[0]);
+                $metodo=$url[1];
+            }
+            else{
                 $ctrl = $this->_clase;
+                $urlController = $this->urlController();
+                
             }
             if(method_exists($ctrl,$metodo)){
                 
@@ -434,7 +443,7 @@ class Controller {
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
                 
-                throw new Exception("El metodo pasado para estructurar la url no existe", 301);
+                throw new Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
             
         }else{
@@ -562,12 +571,12 @@ class Controller {
 	 * 
 	 */
 	protected function obtURLApp(){
-		
+		$idioma=(empty($this->idioma))?"":$this->idioma."/";
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
-			return $GLOBALS['__URL_APP'];
+			return $GLOBALS['__URL_APP'].$idioma;
 		}else{
 			
-			return URL_APP;
+			return URL_APP.$idioma;
 		}
 		
 		

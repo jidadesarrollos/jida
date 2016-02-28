@@ -14,6 +14,12 @@
      */
  	private $appRoot;
     private $controlador;
+	/**
+	 * Arreglo de lenguajes manejados en la aplicacion
+	 * @var array $lenguajes
+	 */
+	private $idiomas=[];
+	private $idiomaActual;
     /**
      * Objeto controlador instanciado
      * @var object $controladorObject
@@ -72,7 +78,12 @@
              * Seteo de zona horaria
              */
             date_default_timezone_set(ZONA_HORARIA);
-             
+			/**
+			 * validacion lenguajes existentes
+			 */
+            if(array_key_exists('idiomas', $GLOBALS)){
+            	$this->idiomas=$GLOBALS['idiomas'];
+            }
             Session::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
             
@@ -94,6 +105,16 @@
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
+				if(in_array($url[0], $this->idiomas)){
+					
+					$this->idiomaActual=$url[0];
+					array_shift($url);
+					if(count($url)<1){
+						$url[0]='index';
+					}	
+				}
+				
+				
             }
 			
             unset($_GET['url']);
@@ -121,7 +142,7 @@
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
-            
+            $this->vista->idioma=$this->idiomaActual;
             $this->validacion();
         
         }catch(Exception $e){
@@ -136,6 +157,7 @@
      */
     private function procesarURL($url){
         $primerParam = array_shift($url);
+		
 		$URL = "/".$primerParam;
         $param = $this->validarNombre($primerParam,1);
        //Se valida si se ha solicitado un modulo por medio de un subdominio
@@ -491,7 +513,8 @@
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
         $this->controladorObject = new $controlador;
-        
+        if(!empty($this->idiomaActual))
+			$this->controladorObject->idioma=$this->idiomaActual;
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         if(method_exists($controlador, $metodo))

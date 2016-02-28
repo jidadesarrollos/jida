@@ -16,6 +16,8 @@ class Pagina{
      * @param mixed $data
      */
     var $data;
+	
+	var $idioma;
     
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
@@ -542,5 +544,22 @@ class Pagina{
             
         return $meta.$itemprop."\n";
     }
+	/**
+	 * Renderiza una URL
+	 * 
+	 * En estos momentos el metodo solo verifica si se estan manejando multiples
+	 * lenguajes y antepone el lenguaje actual a la url
+	 * @version beta
+	 * 
+	 */
+	function renderURL($url,$lang=""){
+		
+		if(defined('USO_IDIOMAS') and USO_IDIOMAS){
+			if(empty($lang) and !empty($this->idioma)) $lang = $this->idioma;
+		}
+		if(!empty($lang)) $lang='/'.$lang;
+			
+		return $lang.$url;
+	}
     
 }
