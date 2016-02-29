@@ -211,7 +211,7 @@ class User extends DataModel{
             
             $this->asociarPerfiles($perfiles); 
         }
-        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico()];
+        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico(),'validacion'=>$this->validacion];
     }
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
