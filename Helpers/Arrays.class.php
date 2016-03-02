@@ -74,7 +74,7 @@ class Arrays {
             //echo "SI again<hr>";
             return $nuevoArreglo;
         }else{
-            return false;
+            return [];
         }
         
     }
@@ -120,7 +120,7 @@ class Arrays {
                     
                     $datos=[];
                     foreach ($clave as $key => $value) {
-                        Debug::string($value."   1");
+                        
                         if(array_key_exists($value, $fila))
                             $datos[$value]=$fila[$value];
                     }
@@ -138,7 +138,7 @@ class Arrays {
         if(count($array)>0){
             return $arrayResult;
         }else{
-            return false;
+            return [];
         }
     }
     
