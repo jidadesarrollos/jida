@@ -193,7 +193,7 @@
 			$this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
 			
 		if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
-			$this->paginaConsulta.="/busqueda/".$_GET['busqueda']."/";
+			$this->paginaConsulta.="?busqueda=".$_GET['busqueda'];
 		}
 	}
 	private function establecerValoresDefault(){
@@ -549,13 +549,13 @@
 			if($i == $this->paginaActual){
 				$item->attr([
 					'class'	=>$this->configPaginador['classPaginaActual']])
-					->contenido->attr(['href'	=>"$this->paginaConsulta/pagina/$i/"])
+					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina=$i"])
 					//->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
 					;
 			}else{
 				$item->attr([
 					'class'	=>$this->configPaginador['classLink']])
-					->contenido->attr(['href'	=>"$this->paginaConsulta/pagina/$i/",])
+					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina=$i",])
 					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
 					;
 			}

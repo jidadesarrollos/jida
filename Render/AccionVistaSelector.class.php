@@ -44,7 +44,8 @@ class AccionVistaSelector extends Selector{
 	}
 	function render(){
 		if($this->span instanceof Selector){
-			if(empty($this->innerHTML())){
+			$valor=$this->innerHTML();
+			if(empty($valor)){
 				$this->innerHTML($this->span->render().$this->innerHTML());
 			}
 			
