@@ -17,6 +17,7 @@ class DataModel{
 	private $consultaMultiple=FALSE;
 	private $join=FALSE;
 	private $usoLimit=FALSE;
+	private $condicion='and';
 	/**
 	 * @var string $limit estring de la clausula limit
 	 */
@@ -381,7 +382,8 @@ class DataModel{
 					$this->consultaRelaciones[$key]=
 					$rel->join($relacion['rel'],$campos,['clave'=>$clave,'clave_relacion'=>$fk],$tipoJoin)
 						->filtro([$this->pk=>$this->{$this->pk}])
-						->obtQuery();	
+						->obtQuery();
+						
 				}
 				
 			}else{
@@ -923,9 +925,14 @@ class DataModel{
            $i=0;$o=0;
            
            foreach ($arrayFiltro as $key => $value) {
+               	if($i>0) $this->query.=" and ";
+               if(is_array($value)){
+               	$this->query.=" $this->tablaQuery.$key'.$value[1].'$value[0]'";
+               }else{
+               	$this->query.=" $this->tablaQuery.$key='$value'";
+               }
                
-               if($i>0) $this->query.=" and ";
-           		$this->query.=" $this->tablaQuery.$key='$value'";
+           		
                ++$i;
            }
 		   
@@ -987,6 +994,10 @@ class DataModel{
 	   //Debug::string($this->order." ".$this->_clase);
        return $this;
     }
+	function condicion($cond){
+		$this->condicion=$cond;
+		return $this;
+	}
     /**
      * Permite hacer una consulta like
      * @method like
@@ -995,7 +1006,7 @@ class DataModel{
      * @param int $tipo 1=intermedio,2=inicio,3=final
      */
     function like($arrayFiltro,$condicion="or",$tipo=1){
-        $this->where();
+        $this->where($this->condicion);
 		
         if(is_array($arrayFiltro)){
            $i=0;
@@ -1548,18 +1559,12 @@ class DataModel{
     function getResult(){
         return $this->resultBD;
     }
-	/**
-	 * Agrega condicion opuesta a consulta en base de datos.
-	 * @method o
-	 * @param condiciones or
-	 */
-	function abrirOr(){
-		$this->query.="(";
-	}
-	function cerrarOr(){
-		$this->query.=")";
-	}
-    
+
+    function envolverFiltro(){
+    	$consulta = explode('where', $this->query);
+		if(count($consulta>0)) $this->query = $consulta[0].' where ('.$consulta[1].')';
+		return $this;
+    }
     
     protected function guardarRelacion($arrayData){
         
@@ -1584,5 +1589,11 @@ class DataModel{
 	
 	function imprimir($propiedad="query",$exit=1){
 		Debug::string($this->{$propiedad},$exit);
+	}
+	/**
+	 * Utiliza la clausula between de mysql
+	 */
+	function entre($campo,$ini,$fin){
+		$this->query.=$campo.=' between \''.$ini.'\' and \''.$fin.'\'';
 	}
 }//fin clase;
