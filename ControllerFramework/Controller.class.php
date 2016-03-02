@@ -432,7 +432,7 @@ class Controller {
                 
             }
             if(method_exists($ctrl,$metodo)){
-                
+                if($metodo=='index')$metodo="";
                 $params= "";
                 if(count($data)>0){
                     foreach ($data as $key => $value) 
