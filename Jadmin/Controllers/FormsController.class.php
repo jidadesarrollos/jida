@@ -159,10 +159,7 @@ class FormsController extends JController{
 		if(isset($_POST['btnFormularios'])){
 			$validacion = $formulario->validarFormulario($_POST);
 			if($validacion===true){
-			    if(CURL_USE===TRUE){
-				    $_POST['query_f'] = stripcslashes($_POST['query_f']);
-                }
-                
+			                   
 		        if($jctrol->validarQuery($_POST['query_f'])===TRUE){
 		            $_POST['query_f'] = addslashes($_POST['query_f']);		
 					if($_POST['btnFormularios']!='Modificar'){
@@ -359,6 +356,3 @@ class FormsController extends JController{
     }
 
 }
-
-?>
- 

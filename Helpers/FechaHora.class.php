@@ -60,7 +60,7 @@ class FechaHora{
      */
     static function nombreDia($dia="",$lang="es"){
         if($dia!=0 and empty($dia))  $dia = date('w');
-        
+ 
         return self::$diasSemana[$lang][$dia];
     }
 	
@@ -95,18 +95,15 @@ class FechaHora{
 	 * 
 	 * @return string
 	 */
-	static function horaFormato24() {
-		return date ( 'h' );
+	static function hora24($hora="") {
+		if(empty($hora)) $hora=date ( 'H' );
+		else{
+			$date = new DateTime($hora);
+			$hora = $date->format('H');	
+		}
+		return $hora;
 	}
-	
-	/**
-	 * Función que retorna la hora en formato 12 de dos digitos.
-	 * 
-	 * @return string
-	 */
-	static function hora24() {
-		return date ( 'g' );
-	}
+
     static function horaFormato12($hora=""){
         
         $periodo =(date($hora)>11)?"pm":"am";

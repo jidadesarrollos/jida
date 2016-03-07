@@ -1174,7 +1174,7 @@ class DataModel{
      * @param string $campo Campo o propiedad por medio de la cual se eliminaran los objetos, si no es pasado sera usada
      * la clave primaria.
      */
-    function eliminar($arrayDatos="",$campo=""){
+    function eliminar($arrayDatos="",$campo="",$cond="and"){
         $totalParams = func_num_args();
         if(empty($campo))
             $campo = $this->pk;
@@ -1195,7 +1195,21 @@ class DataModel{
                 $datos[]=$arrayDatos;
             }
         }        
-        $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode ( ',', $datos ) );
+		if(is_array($campo)){
+			$i=0;
+			$where="";
+			foreach ($campo as $key => $filtro) {
+				if($i>0)
+					$where.' '.$cond.' ';
+				$where.="$key='".$filtro."'";
+				++$i;
+				
+			}
+			$query = sprintf ( "DELETE FROM %s where %s", $this->tablaBD, $where );
+		}else{
+			$query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode ( ',', $datos ) );	
+		}
+
         
         if ($this->bd->ejecutarQuery ( $query )){
         	#$this->bd->cerrarConexion();

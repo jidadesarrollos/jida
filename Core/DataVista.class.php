@@ -94,7 +94,7 @@ class DataVista{
 	 */
 	function addJsModulo($js,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
+		(String::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
 		
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
@@ -117,7 +117,7 @@ class DataVista{
 	 */
 	function addCssModulo($css,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/modulos/".$modulo;
+		(String::guionCase($modulo)=='jadmin')?$modulo="Framework":$modulo="Aplicacion/Modulos/".$modulo;
 		if(is_array($css)){
 			foreach ($css as $key => $archivo) {
 				
