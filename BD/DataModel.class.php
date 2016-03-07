@@ -709,16 +709,16 @@ class DataModel{
      * será tomada la clave primaria
      * @return object $this Objeto instanciado
      */
-    function in($filtro,$clave=""){
-        $this->where();
+    function in($filtro,$clave="",$condicion="and"){
+        $this->where($condicion);
         if(is_array($filtro)){
             if(empty($clave)) $clave = $this->tablaQuery.$this->pk;
 			else{
 				if(!strpos($clave, ".")){ $clave = $this->tablaQuery.".".$clave;}
 			}
-            $this->query.=$clave  ." in ('". implode("','", $filtro) ."')";
+			$this->query.=$clave  ." in ('". implode("','", $filtro) ."')";
         }
-        
+
         return $this;
     }
     
@@ -902,7 +902,6 @@ class DataModel{
      * @method where
      */
     private function where($condicion=" and"){
-    
         if(!$this->usoWhere){
             $this->query.=" where ";
             $this->usoWhere=TRUE;
@@ -1294,16 +1293,18 @@ class DataModel{
      */
     function salvarTodo($data){
         if(is_array($data)){
+            
             $insert = "INSERT INTO ".$this->tablaBD." ";
-
-            $insert.="(".implode(",", $this->obtenerCamposQuery($data[0])).") VALUES ";
+            $insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0])).") VALUES ";
             $i=0;
+            
             foreach ($data as $key => $registro) {
                 if($i>0) $insert.=",";
                 $datos = $this->estructuraInsert($registro);
                 $insert.=" (".implode(',', $datos).")";
                 ++$i;
             }
+			
             $this->bd->ejecutarQuery($insert);
             
             return $this->resultBD->setValores($this);
@@ -1610,4 +1611,5 @@ class DataModel{
 	function entre($campo,$ini,$fin){
 		$this->query.=$campo.=' between \''.$ini.'\' and \''.$fin.'\'';
 	}
+	
 }//fin clase;
