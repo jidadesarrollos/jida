@@ -746,7 +746,7 @@
 			$this->htmlPersonalizado=TRUE;
 			$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
 			array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
-			'Agregar');
+			$dataDefault['txtLink']);
 		}
 		$this->mensajeNoRegistros=$msj;
 	}
