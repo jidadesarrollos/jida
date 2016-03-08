@@ -151,9 +151,9 @@ class FormsController extends JController{
         
 		$formulario = new Formulario('Formularios',$tipoForm,$id_form,$ambito);
         if($ambito==2){
-            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->url."gestion-jida-form/id/$id_form":$this->url."gestion-jida-form/";
+            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->getUrl('gestionJidaForm',['id'=>$id_form]):$this->getUrl('gestionJidaForm');
         }else{
-            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->url."gestion-formulario/id/$id_form":$this->url."gestion-formulario/";    
+            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->getUrl('gestionFormulario',['id'=>$id_form]):$this->getUrl('gestionFormulario');    
         }
         
 		if(isset($_POST['btnFormularios'])){

@@ -516,10 +516,11 @@
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
+		$this->vista->data->idioma=$this->idiomaActual;
 		$GLOBALS['dv']=$this->vista->data;
+		
         $this->controladorObject = new $controlador();
-        if(!empty($this->idiomaActual))
-			$this->controladorObject->idioma=$this->idiomaActual;
+        
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         if(method_exists($controlador, $metodo))

@@ -140,13 +140,14 @@ class Controller {
     function __construct(){
     	
         if(array_key_exists('dv', $GLOBALS) and $GLOBALS['dv'] instanceof DataVista){
-		
 			$this->dv = $GLOBALS['dv'];
 			unset($GLOBALS['dv']);
 		}else{
-			Debug::mostrarArray($dataVista);
+			
 			$this->dv = new DataVista();
 		}
+		$this->idioma=& $this->dv->idioma;
+		
         $this->instanciarHelpers();
         $this->instanciarModelos();
         $this->post=& $_POST;
