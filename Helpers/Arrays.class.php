@@ -65,7 +65,8 @@ class Arrays {
         $nuevoArreglo = array();
         
         foreach ($arr as $key => $value) {
-                if($value[$filtro]==$busqueda){
+                if(array_key_exists($filtro, $arr) and $value[$filtro]==$busqueda){
+                	
                     $nuevoArreglo[]=$value;   
                 }
                     

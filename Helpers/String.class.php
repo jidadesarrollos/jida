@@ -158,6 +158,7 @@ class String {
             $arrCadena = array ();
             foreach ( $cadena as $valor ) {
                 $band = 0;
+				
                 foreach ( $arrAcentos as $key => $value ) {
                     if($inversa) {
                            $valorBuscado = $value; $modificador=$key;
@@ -165,9 +166,13 @@ class String {
                     else{
                          $valorBuscado = $key; $modificador=$value;
                     }
+					
                     if (strpos ( $valor, $valorBuscado ) !== false) {
+						
                         $valor = str_replace ( $valorBuscado, $modificador, $valor );
                         $band = 2;
+                    }else{
+                  	
                     }
                 } // fin foreach interno
                 $arrCadena [] = trim ( $valor );
