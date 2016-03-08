@@ -358,11 +358,15 @@
             	
 				$acl = new ACL();
 				
-            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
+            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+					
 			}else{
 				$acceso=TRUE;
 			}
             if($acceso===TRUE){
+            	
+            	$this->vista->data = new DataVista($this->modulo,$this->controlador,$this->metodo);
+				
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
                  * Se verifica si es llamado el controlador principal del framework.
@@ -512,7 +516,8 @@
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
-        $this->controladorObject = new $controlador;
+		$GLOBALS['dv']=$this->vista->data;
+        $this->controladorObject = new $controlador();
         if(!empty($this->idiomaActual))
 			$this->controladorObject->idioma=$this->idiomaActual;
         $this->controladorObject->modulo=$this->modulo;
@@ -609,7 +614,7 @@
         //Compatibilidad con sistemas sin objeto DataVista
         if(! $this->vista->data instanceof DataVista){
             
-            $this->vista->data=new DataVista();
+            $this->vista->data=new DataVista($this->modulo,$this->controlador,$this->metodo);
         }
         
         $this->vista->renderizar($vista);
