@@ -117,6 +117,10 @@ class Controller {
      */
     private $_nombreController;
     protected $_modulo;
+	protected $_controlador;
+	protected $_metodo;
+	
+	var $metodo;
     /**
      * @var url $__url URL Actual Registra la URL ingresada en el navegador
      * @access protected
@@ -129,11 +133,21 @@ class Controller {
      */
     var $dv;
     var $usuario;
+	
     /**
      * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio 
      */
     function __construct(){
-        
+    	
+        if(array_key_exists('dv', $GLOBALS) and $GLOBALS['dv'] instanceof DataVista){
+			$this->dv = $GLOBALS['dv'];
+			unset($GLOBALS['dv']);
+		}else{
+			
+			$this->dv = new DataVista();
+		}
+		$this->idioma=& $this->dv->idioma;
+		
         $this->instanciarHelpers();
         $this->instanciarModelos();
         $this->post=& $_POST;
@@ -141,12 +155,8 @@ class Controller {
         $this->request=& $_REQUEST;
         $this->_clase=get_class($this);
         $this->_nombreController = str_replace("Controller", "", $this->_clase);
-		if(array_key_exists('_MODULO_ACTUAL', $GLOBALS))
-        	$this->_modulo = $GLOBALS["_MODULO_ACTUAL"];
-		else{
-			$this->_modulo="";
-		}
-        $this->dv = new DataVista();
+		
+        
         $this->url = $this->urlController();
 		if(Session::get('Usuario')instanceof User) 
         	$this->usuario = Session::get('Usuario');
@@ -155,7 +165,10 @@ class Controller {
 			$this->usuario = new $clase;
 		}
 		
-			
+		$this->_modulo=$this->dv->modulo;
+		$this->_metodo=$this->dv->metodo;
+		$this->_controlador=$this->dv->controlador;
+		
         if($this->solicitudAjax()){
             $this->layout="ajax.tpl.php";
         }
@@ -389,7 +402,11 @@ class Controller {
             if(strtolower($this->_modulo)==strtolower($controller)){
                 $this->url = "/".strtolower($this->_modulo)."/";
             }else{
-                if(empty($this->_modulo)){	
+            	
+                if(empty($this->_modulo)){
+                	if(strtolower($this->_controlador)=='index')
+						$this->url =$this->obtURLApp();
+					else		
                     $this->url = $this->obtURLApp().$this->convertirNombreAUrl($controller)."/";
                 }else{
                 	
@@ -572,6 +589,7 @@ class Controller {
 	 */
 	protected function obtURLApp(){
 		$idioma=(empty($this->idioma))?"":$this->idioma."/";
+		
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
 			return $GLOBALS['__URL_APP'].$idioma;
 		}else{

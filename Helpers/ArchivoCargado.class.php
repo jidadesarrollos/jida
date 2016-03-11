@@ -14,6 +14,8 @@ class ArchivoCargado extends Archivo {
 	var $tmp_name;
 	var $error;
 	var $extension;
+	protected $finfo;
+	protected $mime;
 	/**
 	 * Define si un archivo a sido subido al servidor exitosamente
 	 */
@@ -26,31 +28,39 @@ class ArchivoCargado extends Archivo {
             $this->error = $file['error'];
             $this->size = $file['size'];
             $this->obtenerExtension();
-            $this->validarCarga();    
+            $this->validarCarga();
+			$this->finfo=finfo_open(FILEINFO_MIME_TYPE);
+			$this->mime = finfo_file($this->finfo, $this->tmp_name);   
 		}
 		
 	}
-    /**
+	
+	function obtMime(){
+		return $this->mime;
+	}
+ /**
      * Verifica la carga de uno o varios archivos
      * @method validarCarga
      */
-     function validarCarga(){
+    function validarCarga(){
+        
+        $totalCarga = (is_array($this->tmp_name))?count($this->tmp_name):1;
+        $archivosCargados = 0;
         if(is_array($this->tmp_name)){
-            $i=0;
             foreach ($this->tmp_name as $key) {
-                if(is_uploaded_file($key)){
-                    $this->cargaRealizada[$i]=TRUE;
-                    $i++;
-                }else{
-                    $this->cargaRealizada[$i]=FALSE;
-                }
+                
+                if(is_uploaded_file($key));
+                    ++$archivosCargados;
             }//fin foreach
         }else{
-            if(is_uploaded_file($this->tmp_name)){
-                    $this->cargaRealizada=TRUE;
-                }else{
-                    $this->cargaRealizada=FALSE;
-            }    
+            if(is_uploaded_file($this->tmp_name))
+                ++$archivosCargados;
+        }
+        if($totalCarga==$archivosCargados){
+            $this->totalArchivosCargados=$archivosCargados;
+            return TRUE;
+        }else{
+            return false;
         }
         
     }

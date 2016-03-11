@@ -32,24 +32,48 @@ class FechaHora{
                 5=>'Viernes',
                 6=>'Sábado',
                 7=>'Domingo',    
+            ],
+            'po'=>[
+                1=>'Segunda-feira',
+                2=>'Terça-feira',
+                3=>'Quarta-feira',
+                4=>'Quinta-feira',
+                5=>'Quinta-feira',
+                6=>'Sexta-feira',
+                7=>'Sábado',    
             ]
              
           ]; 
 
     static $meses = [
         'es'=>[
-        1=>['abr' => 'ene', 'mes'=>"enero"],
-        2=>['abr' => 'feb', 'mes'=>"Febrero"],
-        3=>['abr' => 'mar', 'mes'=>"Marzo"],
-        4=>['abr' => 'abr', 'mes'=>"Abril"],
-        5=>['abr' => 'may', 'mes'=>"Mayo"],
-        6=>['abr' => 'jun', 'mes'=>"Junio"],
-        7=>['abr' => 'jul', 'mes'=>"Julio"],
-        8=>['abr' => 'ago', 'mes'=>"Agosto"],
-        9=>['abr' => 'sep', 'mes'=>"Septiembre"],
-        10=>['abr' => 'oct', 'mes'=>"Octubre"],
-        11=>['abr' => 'nov', 'mes'=>"Noviembre"],
-        12=>['abr' => 'dic', 'mes'=>"Diciembre"],
+	        1=>['abr' => 'ene', 'mes'=>"enero"],
+	        2=>['abr' => 'feb', 'mes'=>"Febrero"],
+	        3=>['abr' => 'mar', 'mes'=>"Marzo"],
+	        4=>['abr' => 'abr', 'mes'=>"Abril"],
+	        5=>['abr' => 'may', 'mes'=>"Mayo"],
+	        6=>['abr' => 'jun', 'mes'=>"Junio"],
+	        7=>['abr' => 'jul', 'mes'=>"Julio"],
+	        8=>['abr' => 'ago', 'mes'=>"Agosto"],
+	        9=>['abr' => 'sep', 'mes'=>"Septiembre"],
+	        10=>['abr' => 'oct', 'mes'=>"Octubre"],
+	        11=>['abr' => 'nov', 'mes'=>"Noviembre"],
+	        12=>['abr' => 'dic', 'mes'=>"Diciembre"],
+        
+        ],
+        'po'=>[
+	        1=>['abr' => 'ene', 'mes'=>"Janeiro ¿"],
+	        2=>['abr' => 'feb', 'mes'=>"Fevereiro"],
+	        3=>['abr' => 'mar', 'mes'=>"Março"],
+	        4=>['abr' => 'abr', 'mes'=>"Abril"],
+	        5=>['abr' => 'may', 'mes'=>"Maio"],
+	        6=>['abr' => 'jun', 'mes'=>"Junho"],
+	        7=>['abr' => 'jul', 'mes'=>"Julho"],
+	        8=>['abr' => 'ago', 'mes'=>"Agosto"],
+	        9=>['abr' => 'sep', 'mes'=>"Setembro"],
+	        10=>['abr' => 'oct', 'mes'=>"Outubro"],
+	        11=>['abr' => 'nov', 'mes'=>"Outubro"],
+	        12=>['abr' => 'dic', 'mes'=>"Dezembro"],
         
         ]
     ];
@@ -60,7 +84,7 @@ class FechaHora{
      */
     static function nombreDia($dia="",$lang="es"){
         if($dia!=0 and empty($dia))  $dia = date('w');
-        
+ 
         return self::$diasSemana[$lang][$dia];
     }
 	
@@ -95,18 +119,15 @@ class FechaHora{
 	 * 
 	 * @return string
 	 */
-	static function horaFormato24() {
-		return date ( 'h' );
+	static function hora24($hora="") {
+		if(empty($hora)) $hora=date ( 'H' );
+		else{
+			$date = new DateTime($hora);
+			$hora = $date->format('H');	
+		}
+		return $hora;
 	}
-	
-	/**
-	 * Función que retorna la hora en formato 12 de dos digitos.
-	 * 
-	 * @return string
-	 */
-	static function hora24() {
-		return date ( 'g' );
-	}
+
     static function horaFormato12($hora=""){
         
         $periodo =(date($hora)>11)?"pm":"am";

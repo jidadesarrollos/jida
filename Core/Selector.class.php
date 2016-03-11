@@ -503,7 +503,7 @@ class Selector{
 	 */
 	function ejecutarFuncion($funcion){
 		 $numeroArgs = func_num_args();
-		 
+
 		 if($numeroArgs>1){
 		 	$args = func_get_args();
 		 	$args[0] = $this;
@@ -513,7 +513,7 @@ class Selector{
 		 }else{
 		 	$funcion($this);	
 		 }	
-		 
+
 		 return $this;
 	}	
 	

@@ -1,4 +1,4 @@
-	<?php
+<?php
 /**
  * Clase para manejo de Vistas Dinamicas
  * 
@@ -535,8 +535,8 @@
 	 */
 	private function crearPaginador(){
 		$division = $this->totalRegistros/$this->nroFilas;
-		$this->totalPaginas = is_float($this->totalRegistros)?ceil($division):$this->totalRegistros/$this->nroFilas;
-		$medio = ceil($this->paginasMostradas/2);
+		$this->totalPaginas = is_float($this->totalRegistros)?ceil($division):ceil($this->totalRegistros/$this->nroFilas);
+			$medio = ceil($this->paginasMostradas/2);
 		
 		$ultimaPaginaMostrada=(($this->paginaActual+$medio)< $this->totalPaginas)?$this->paginaActual+$medio:$this->totalPaginas;	
 		$primeraPaginaMostrada=($this->paginaActual>$medio)?$this->paginaActual-$medio:1;
@@ -771,5 +771,9 @@
         
     }
 	
+	
+	function funcionFila($numeroFila,$function){
+		
+	}
  }//fin clase
  

@@ -125,8 +125,7 @@ class TablaSelector extends Selector{
 		
 		foreach ($this->filas as $key => $fila) {
 				$keys = array_keys($fila->columnas);
-			if(!array_key_exists($columna,$keys)) 
-			throw new Exception("La columna indicada no existe en la vista",4);
+			if(!array_key_exists($columna,$keys)) throw new Exception("La columna indicada no existe en la vista",4);
 			
 				$fila->columnas[$keys[$columna]]->ejecutarFuncion($funcion,$data);
 		}

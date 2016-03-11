@@ -46,6 +46,10 @@ class DataVista{
     var $robots = TRUE;
     var $solicitudAjax=FALSE;
 	var $google_verification=FALSE;
+	var $metodo;
+	var $modulo;
+	var $controlador;
+	var $idioma;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
@@ -53,7 +57,12 @@ class DataVista{
      */
     private $_template="";
     private $_path="app";    
-    function __construct(){
+    function __construct($modulo="",$controlador="",$metodo=""){
+    	
+    	$this->modulo=$modulo;
+		$this->controlador=$controlador;
+		$this->metodo=$metodo;
+		
         if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
         if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
         if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
@@ -94,7 +103,7 @@ class DataVista{
 	 */
 	function addJsModulo($js,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
+		(String::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
 		
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
@@ -117,7 +126,7 @@ class DataVista{
 	 */
 	function addCssModulo($css,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(String::guionCase($modulo)=='jadmin')?$modulo="framework":$modulo="aplicacion/modulos/".$modulo;
+		(String::guionCase($modulo)=='jadmin')?$modulo="Framework":$modulo="Aplicacion/Modulos/".$modulo;
 		if(is_array($css)){
 			foreach ($css as $key => $archivo) {
 				
