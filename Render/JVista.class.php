@@ -740,14 +740,17 @@
 			'txtLink'=>'Agregar'
 			
 		];
-		$dataDefault=array_merge($dataDefault,$cssDiv);
 		$msj= Selector::crear('div.'.$dataDefault['cssContenedor'],[],$msj);
-		if($dataDefault['link']){
-			$this->htmlPersonalizado=TRUE;
-			$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
-			array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
-			$dataDefault['txtLink']);
+		foreach ($cssDiv as $key => $value){
+			$dataDefault=array_merge($dataDefault,$value);
+			if($dataDefault['link']){
+				$this->htmlPersonalizado=TRUE;
+				$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
+				array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
+				$dataDefault['txtLink']);
+			}
 		}
+		
 		$this->mensajeNoRegistros=$msj;
 	}
     /**

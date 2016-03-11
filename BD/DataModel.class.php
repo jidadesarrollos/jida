@@ -642,6 +642,7 @@ class DataModel{
      */
     function join($clase,$campos="",$data=[],$tipoJoin=""){
     	
+		$tablaRelacion = $this->tablaBD;
 		
         if(class_exists($clase)){
             $clase = new $clase();
@@ -650,7 +651,6 @@ class DataModel{
             $clave=$this->pk;$claveRelacion=$this->pk;
             if(empty($campos)){
                 $campos = array_keys($clase->obtenerPropiedades());
-                
             }
                 
         }else{
@@ -664,6 +664,9 @@ class DataModel{
                 $clave=$data['clave'];
             }else{
             	$clave=$data['clave_relacion'];
+            }
+			if(array_key_exists('tabla_join', $data)){
+                $tablaRelacion = $data['tabla_join'];
             }
             
         }
@@ -690,15 +693,11 @@ class DataModel{
 		$tipoJoin,
 		$tablaJoin,
 		$tablaJoin,$clave,
-		$this->tablaBD,$claveRelacion);
+		$tablaRelacion,$claveRelacion);
 		
         return $this;
         
-        
-        
     }
-	
-	
 	
 	
     /**
