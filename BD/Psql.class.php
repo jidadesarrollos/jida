@@ -275,9 +275,9 @@ class Psql extends ConexionBD {
 		
         while($row = $this->obtenerArrayAsociativo($result)){
           if(!empty($key))
-                $data[$row[$key]]=String::codificarArrayToHTML($row);
+                $data[$row[$key]]=Cadenas::codificarArrayToHTML($row);
             else {
-                $data[]=String::codificarArrayToHTML($row);
+                $data[]=Cadenas::codificarArrayToHTML($row);
             }            
         }
 		
@@ -308,7 +308,7 @@ class Psql extends ConexionBD {
             $this->result = $result;
         }
         if($this->result){
-            $arr = String::codificarArrayToHTML(pg_fetch_array ( $this->result ),$mayus);   
+            $arr = Cadenas::codificarArrayToHTML(pg_fetch_array ( $this->result ),$mayus);   
         }else{
             throw new Exception("El query $this->query no retorna valor", 1);
             
@@ -328,7 +328,7 @@ class Psql extends ConexionBD {
         }
         if($this->result){
             
-            $arr = String::codificarArrayToHTML(pg_fetch_assoc ( $result ));	
+            $arr = Cadenas::codificarArrayToHTML(pg_fetch_assoc ( $result ));	
             return $arr;
         }else{
             return False;
@@ -420,7 +420,7 @@ class Psql extends ConexionBD {
      * @return multitype:
      */
     public function fetchRow($result,$mayus=false) {
-        $fetch = String::codificarArrayToHTML(pg_fetch_row($result),$mayus);
+        $fetch = Cadenas::codificarArrayToHTML(pg_fetch_row($result),$mayus);
         return $fetch;
     }
     

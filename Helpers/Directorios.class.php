@@ -84,7 +84,7 @@ class Directorios extends Directory{
                         $esCoincidencia = (preg_match($expReg,$file))?1:0;
                         if($esCoincidencia){
                            
-                            $arr[$i] = String::removerAcentos($file);++$i;
+                            $arr[$i] = Cadenas::removerAcentos($file);++$i;
                         }   
                     }
                     if (is_dir($ruta . $file) && $file!="." && $file!=".."){

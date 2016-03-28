@@ -635,9 +635,9 @@
     private function validarNombre($str,$tipoCamelCase){
         if(!empty($str)){
             if($tipoCamelCase==1){
-                $nombre = str_replace(" ","",String::upperCamelCase(str_replace("-", " ",$str)));    
+                $nombre = str_replace(" ","",Cadenas::upperCamelCase(str_replace("-", " ",$str)));    
             }else{
-                $nombre = str_replace(" ","",String::lowerCamelCase(str_replace("-", " ",$str)));
+                $nombre = str_replace(" ","",Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
             }
             return $nombre;    
         }

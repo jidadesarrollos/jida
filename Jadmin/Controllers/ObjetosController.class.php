@@ -51,7 +51,7 @@ class ObjetosController extends JController{
     private function validarObjetos(Componente  $componente){
         $objetosInexistentes =array();
         $objetosNuevos=array();
-        $nombreComponente = String::upperCamelCase($componente->componente);
+        $nombreComponente = Cadenas::upperCamelCase($componente->componente);
 		if($nombreComponente=='Principal'){
 			$rutaComponente= app_dir."Controller/";
 		}else{
@@ -196,7 +196,7 @@ class ObjetosController extends JController{
      * @method validarNombreObjeto
      */
 	private function validarNombreObjeto($nombre){
-		$nombreClase = String::upperCamelCase($nombre."Controller");
+		$nombreClase = Cadenas::upperCamelCase($nombre."Controller");
 		if(class_exists($nombreClase)){
 			return true;
 		}else {

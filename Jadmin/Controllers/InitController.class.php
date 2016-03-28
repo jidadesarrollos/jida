@@ -303,10 +303,10 @@ class InitController extends JController{
 		
 		if(count($modulo)>1){
 		
-			$ubicacion.=String::upperCamelCase(String::upperCamelCase($modulo[0]))."/Vistas/".String::lowerCamelCase($modulo[1])."/";
+			$ubicacion.=Cadenas::upperCamelCase(Cadenas::upperCamelCase($modulo[0]))."/Vistas/".Cadenas::lowerCamelCase($modulo[1])."/";
 		}else{
 		
-			$ubicacion.="Vistas/".String::lowerCamelCase($controller)."/";
+			$ubicacion.="Vistas/".Cadenas::lowerCamelCase($controller)."/";
 		}
 		
 		

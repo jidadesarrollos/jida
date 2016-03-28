@@ -151,7 +151,7 @@ class Session {
 		else
 			$perfiles = [];
 		
-        if(is_array($perfiles) and in_array(String::upperCamelCase($perfil),$perfiles)){
+        if(is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil),$perfiles)){
             return true;
         }else{
             return false;

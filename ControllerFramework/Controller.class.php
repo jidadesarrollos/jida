@@ -252,7 +252,7 @@ class Controller {
      */
     protected function process(){
        if(isset($_GET['form'])){
-           $nombreForm = String::upperCamelCase($_GET['form']);
+           $nombreForm = Cadenas::upperCamelCase($_GET['form']);
            $tipoForm=1;
            $pk="";
            if(isset($_GET['id'])){
@@ -389,7 +389,7 @@ class Controller {
            $ctrl = $this->_clase;
            $controller = str_replace("Controller", "", $this->_clase);
         }else{
-            if(class_exists(String::upperCamelCase($ctrl)."Controller") or class_exists(String::upperCamelCase($ctrl))){
+            if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller") or class_exists(Cadenas::upperCamelCase($ctrl))){
                 $controller = str_replace('Controller', "", $ctrl);
             }else{
                 throw new Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
@@ -437,7 +437,7 @@ class Controller {
             
             $url = explode(".", $metodo);
             if(count($url)==2){
-                $ctrl = str_replace('Controller', "", String::upperCamelCase($url[0]));
+                $ctrl = str_replace('Controller', "", Cadenas::upperCamelCase($url[0]));
                 $ctrl = $ctrl.'Controller';
                 
                 $urlController = $this->urlController($url[0]);
