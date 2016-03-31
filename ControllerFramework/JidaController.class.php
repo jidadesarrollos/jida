@@ -364,8 +364,10 @@
 				$acceso=TRUE;
 			}
             if($acceso===TRUE){
-            	
-            	$this->vista->data = new DataVista($this->modulo,$this->controlador,$this->metodo);
+            	global $dataVista;
+                
+                $dataVista= new DataVista($this->modulo,$this->controlador,$this->metodo);
+            	$this->vista->data = $dataVista;
 				
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
@@ -611,7 +613,8 @@
      * 
      */
     private function mostrarContenido($vista=""){
-        $this->vista->data = $this->controladorObject->dv;
+        global $dataVista;
+        $this->vista->data = $dataVista;
         //Compatibilidad con sistemas sin objeto DataVista
         if(! $this->vista->data instanceof DataVista){
             

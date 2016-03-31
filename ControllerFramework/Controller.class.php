@@ -138,14 +138,10 @@ class Controller {
      * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio 
      */
     function __construct(){
-    	
-        if(array_key_exists('dv', $GLOBALS) and $GLOBALS['dv'] instanceof DataVista){
-			$this->dv = $GLOBALS['dv'];
-			unset($GLOBALS['dv']);
-		}else{
-			
-			$this->dv = new DataVista();
-		}
+    	global $dataVista;
+        
+        $this->dv = $dataVista;
+        $dataVista->a = "hola";
 		$this->idioma=& $this->dv->idioma;
 		
         $this->instanciarHelpers();

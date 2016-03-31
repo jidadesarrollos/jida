@@ -11,7 +11,8 @@
  * @category bootstrap 
  */
 
-
+global $jdOpciones;
+$jdOpciones=[];
 /**
  * Incluir archivo de configuración de Base de datos
  */
