@@ -439,7 +439,7 @@ class Formulario extends DBContainer {
     protected function obtenerCamposFormulario() {
         if($this->totalForms==1){
             $clave = (is_array($this->claveFormulario))?$this->claveFormulario[0]:$this->claveFormulario;
-            $clave = String::upperCamelCase($clave);
+            $clave = Cadenas::upperCamelCase($clave);
             $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";    
         }elseIf($this->totalForms>1){
             
@@ -489,8 +489,8 @@ class Formulario extends DBContainer {
      */
     protected function inicializarValoresForm() {
         #Debug::mostrarArray($this->formularios,false);
-        if(array_key_exists(String::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
-            $data  = $this->formularios[String::upperCamelCase($this->claveFormulario[0])];    
+        if(array_key_exists(Cadenas::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
+            $data  = $this->formularios[Cadenas::upperCamelCase($this->claveFormulario[0])];    
         }else{
             
             throw new Exception("No existe la clave del formulario ".$this->claveFormulario[0], 1);

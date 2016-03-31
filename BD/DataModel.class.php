@@ -216,7 +216,7 @@ class DataModel{
         		}
                  
             }
-			$this->debug('llego al nivel '.$this->nivelActualORM);
+			#$this->debug('llego al nivel '.$this->nivelActualORM);
 			#Debug::string($this->_clase);
 			#Debug::mostrarArray(func_get_args(),0);
 			#call_user_func_array([$this,'instanciarPerteneceAUno'], func_get_args());
@@ -503,7 +503,7 @@ class DataModel{
 		foreach ($this->propiedades as $prop => $value) {
 			if(substr($prop, 0,2)=='id' and $prop!=$this->pk){
 				
-				$objeto = String::upperCamelCase(str_replace("_"," ",str_replace("id_", "", $prop)));
+				$objeto = Cadenas::upperCamelCase(str_replace("_"," ",str_replace("id_", "", $prop)));
 				if(class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto, $this->tieneUno))
 					$this->tieneUno[$objeto]=['obj'=>$objeto,'pk'=>$prop];
 			}
@@ -521,7 +521,7 @@ class DataModel{
             foreach ($this->propiedades as $prop => $val) {
                 if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
                     $propiedad = str_replace("id_", "", $prop);
-                    $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
+                    $objeto =Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
                     if($propiedad!=$this->_clase and class_exists($objeto)){
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado 
                         //ninguna relacion del objeto relacionado

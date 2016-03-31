@@ -203,9 +203,9 @@
 			$nombre=$this->titulo;
 		}
 		
-		$this->idVista = String::lowerCamelCase($nombre);
-		$this->configArticleVista['id'] = String::lowerCamelCase('Vista '.$nombre);
-		$this->configTabla['id']=String::lowerCamelCase('data '.$nombre);
+		$this->idVista = Cadenas::lowerCamelCase($nombre);
+		$this->configArticleVista['id'] = Cadenas::lowerCamelCase('Vista '.$nombre);
+		$this->configTabla['id']=Cadenas::lowerCamelCase('data '.$nombre);
 		
 		
 	}

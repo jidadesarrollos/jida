@@ -269,12 +269,12 @@ class Mysql extends ConexionBD{
 					if($this->codificarHTML===TRUE){
 						$dataCompleta[$data[$key]]=$data;	
 					}else{
-						$dataCompleta[$data[$key]]=String::codificarArrayToHTML($data);
+						$dataCompleta[$data[$key]]=Cadenas::codificarArrayToHTML($data);
 					}	
                     
                 }else {
                 	if($this->codificarHTML===TRUE){
-                    	$dataCompleta[]=String::codificarArrayToHTML($data);
+                    	$dataCompleta[]=Cadenas::codificarArrayToHTML($data);
 					}else{
 						$dataCompleta[]=$data;
 					}
@@ -303,7 +303,7 @@ class Mysql extends ConexionBD{
         }
         if($this->result){
 			if($this->codificarHTML===TRUE){
-				$arr = String::codificarArrayToHTML($this->result->fetch_array());	
+				$arr = Cadenas::codificarArrayToHTML($this->result->fetch_array());	
 			}else{
 				$arr = $this->result->fetch_array();
 			}       
@@ -320,7 +320,7 @@ class Mysql extends ConexionBD{
             $this->result = $result;
           }
           if($this->codificarHTML===TRUE){
-          	$arr = String::codificarArrayToHTML($this->result->fetch_assoc());	
+          	$arr = Cadenas::codificarArrayToHTML($this->result->fetch_assoc());	
           }else{
           	$arr = $this->result->fetch_assoc();
           }

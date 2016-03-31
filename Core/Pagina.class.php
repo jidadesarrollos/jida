@@ -200,12 +200,12 @@ class Pagina{
             //Valida si se esta pasando una excepción
                 
             if($this->controlador=='Excepcion' or $this->controlador==CONTROLADOR_EXCEPCIONES){
-                $rutaVista=$this->rutaExcepciones.String::lowerCamelCase($this->nombreVista).".php";
+                $rutaVista=$this->rutaExcepciones.Cadenas::lowerCamelCase($this->nombreVista).".php";
                 
             }else{
             //Arma la estructura para una vista cualquiera
                
-                $rutaVista = $rutaVista.String::lowerCamelCase($this->controlador )."/". String::lowerCamelCase($this->nombreVista).".php";
+                $rutaVista = $rutaVista.Cadenas::lowerCamelCase($this->controlador )."/". Cadenas::lowerCamelCase($this->nombreVista).".php";
                       
             }   
             
@@ -228,7 +228,7 @@ class Pagina{
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
              
         }  
-        return $this->urlPlantilla.String::lowerCamelCase($this->data->getTemplate()).".php";
+        return $this->urlPlantilla.Cadenas::lowerCamelCase($this->data->getTemplate()).".php";
     }
     
     /**

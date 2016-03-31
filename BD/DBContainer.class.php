@@ -9,7 +9,7 @@
  * @author      Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
  * @version     0.1 - 09/09/2013
- * @required String.class
+ * @required Cadenas.class
  */
 
 
@@ -183,7 +183,7 @@ class DBContainer {
             
             if (substr($prop, 0,2)=='id' and $prop!=$this->clavePrimaria){
                 $propiedad = str_replace("id_", "", $prop);
-                $objeto =String::upperCamelCase(str_replace("_", " ", $propiedad));
+                $objeto =Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
                 if($propiedad!=$this->clase and class_exists($objeto,FALSE))
                     $this->propiedadesObjetos[$propiedad]=new $objeto(); 
             }   
@@ -619,7 +619,7 @@ class DBContainer {
     /**
      * Registra objetos a partir de los valores pasados
      * @method insert
-     * @var mixed $campos String de campo a pasar por valor o arreglo de multiples campos
+     * @var mixed $campos Cadenas:: de campo a pasar por valor o arreglo de multiples campos
      * @var array $valores Matriz Que permite pasar multiples valores a insertar, la función intentara
      * insertar un valor por cada posición del arreglo
      * @example $objeto->insert('campo1',array(1,2,3,4,5)). Esto creara 5 registros donde la columna campo1 tendra 

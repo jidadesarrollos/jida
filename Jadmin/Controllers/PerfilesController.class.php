@@ -64,7 +64,7 @@ class PerfilesController extends JController{
             $validacion = $form->validarFormulario();
             if($validacion===TRUE){
                 $perfil = New Perfil($pk);
-                $_POST['clave_perfil'] = String::upperCamelCase($_POST['perfil']);
+                $_POST['clave_perfil'] = Cadenas::upperCamelCase($_POST['perfil']);
                 #Debug::mostrarArray($_POST);
                 $guardado = $perfil->salvar($_POST);
                 if($guardado['ejecutado']){
