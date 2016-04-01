@@ -9,7 +9,7 @@
  * @category Helper
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
-class Cadenas {
+class String {
 	
 	/**
 	 * Convierte una cadena a formato upperCamelCase

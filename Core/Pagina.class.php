@@ -321,12 +321,10 @@ class Pagina{
      * Permite imprimir las llamadas a archivos javascript o de segmentos de códigos creados desde el
      * controlador
      * @method printJS
-     * @param mixed $js [opcional] Si es pasado el nombre de un archivo o un arreglo de archivos solo será
-     * imprimido lo pasado por parametro, caso contrario la función hará impresion de todo lo guardado en la 
-     * variable global.
+     * @param string $pos Head o footer
      * 
      */
-    function printJS($js=""){
+    function printJS($pos='footer'){
         $js="";
         $this->checkData();
         $cont=0;
@@ -334,10 +332,7 @@ class Pagina{
         
         
 		if(is_array($this->data->js)){
-			if(array_key_exists('code',$this->data->js)){
-	            $code = $this->data->js['code'];
-	            unset($this->data->js['code']);
-	        }
+			
 			foreach ($this->data->js as $key => $archivo) {
 	            
 	            if(is_string($key)){
@@ -347,26 +342,28 @@ class Pagina{
 	                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
 	                        if($cont==0) $cont=2;
 	                    }           
-	                }
+	                }elseif($key=='codigo'){
+	                    
+	                  $js.=$this->imprimirCodigoJs($archivo,$cont);  
+	                } 
 	            }
 	            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
 	            if($cont==0) $cont=2;
 	        }
 			
-	        if(count($code)>0){
-	            foreach ($code as $key => $value){
-	                if(array_key_exists('archivo',$value)){
-	                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
-	                    $js.=Selector::crear('script',null,$contenido,$cont);    
-	                }else{
-	                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
-	                }
-	                
-	            }
-	    
-	        }
+
 		}
 	        
+        return $js;
+    }
+    private function imprimirCodigoJs($codigo,$cont){
+        $js="";
+        
+        if(is_array($codigo)){
+                    
+        }else{
+            $js=Selector::crear('script',null,$codigo,$cont);
+        }
         return $js;
     }
 	/**
@@ -561,5 +558,6 @@ class Pagina{
 			
 		return $lang.$url;
 	}
+    
     
 }

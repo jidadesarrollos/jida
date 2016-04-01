@@ -614,13 +614,7 @@
      */
     private function mostrarContenido($vista=""){
         global $dataVista;
-        $this->vista->data = $dataVista;
-        //Compatibilidad con sistemas sin objeto DataVista
-        if(! $this->vista->data instanceof DataVista){
-            
-            $this->vista->data=new DataVista($this->modulo,$this->controlador,$this->metodo);
-        }
-        
+        $this->vista->data = $dataVista;        
         $this->vista->renderizar($vista);
         
     }

@@ -68,14 +68,17 @@ class DataVista{
         if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
         $this->setMetaBasico();   
     }
+    
+    
+    
     /**
      * Agrega un javascript para ser renderizado en el layout
      * @method addjs
      * @param mixed $js Arreglo o string con ubicación del js
      * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación 
-     * @param string ambito Usado para agregar el js solo para prod o dev
+     * @param boolean footer True Define si el js se imprimirá arriba o abajo 
      */
-    function addJs($js,$dir=TRUE,$ambito=""){
+    function addJs($js,$dir=TRUE,$contentJS="",$footer=TRUE){
         if ($dir===TRUE) $dir=URL_JS;
         if(is_array($js)){
             foreach ($js as $key => $archivo) {
@@ -308,6 +311,15 @@ class DataVista{
             if (isset($arr[$k])) {
                 $this->$k = $arr[$k];
             }
+        }
+        
+    }
+    
+    function addJsCodigo($codigo){
+        if(array_key_exists('codigo', $this->js)){
+            $this->js['codigo'].=$codigo;
+        }else{
+            $this->js['codigo']=$codigo;
         }
         
     }
