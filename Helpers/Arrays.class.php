@@ -65,7 +65,8 @@ class Arrays {
         $nuevoArreglo = array();
         
         foreach ($arr as $key => $value) {
-                if(array_key_exists($filtro, $arr) and $value[$filtro]==$busqueda){
+        
+                if(array_key_exists($filtro, $value) and $value[$filtro]==$busqueda){
                 	
                     $nuevoArreglo[]=$value;   
                 }
@@ -150,7 +151,7 @@ class Arrays {
      * @param mixed $valores Arreglo o string de valores a insertar
      * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
      */
-    function addColumna($matriz,$valores,$usoKeyValores=FALSE){
+    static function addColumna($matriz,$valores,$usoKeyValores=FALSE){
         
         if(is_array($valores)){
             foreach($matriz as $key =>&$vector){
