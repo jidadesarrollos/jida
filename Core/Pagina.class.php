@@ -315,6 +315,39 @@ class Pagina{
         }
         
     }
+    
+    private function imprimirArrayJs($keyArrayPadre,$archivos,$pos,&$cont,$tipo="script"){
+        
+        $js="";
+        Debug::string($keyArrayPadre." ".$pos);Debug::mostrarArray($archivos,0);
+        if(is_array($archivos) and ($keyArrayPadre==ENTORNO_APP or $keyArrayPadre==$pos)){
+                Debug::string($pos);
+            $inclusiones = Arrays::obtenerKey($pos, $archivos);
+            Debug::mostrarArray($inclusiones,0);
+            foreach ($inclusiones as $key => $value) {
+                if(!is_string($key) and !empty($post)){
+                    $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                }else{
+                    $this->imprimirArrayJs($key, $value, $pos, $cont);
+                }
+            }
+        }else{
+            switch ($keyArrayPadre) {
+                case 'codigo':
+                    $js.=$this->imprimirCodigoJs($archivos,$cont);  
+                    break;
+                
+                default:
+                    if($keyArrayPadre==$pos) $js.=Selector::crear('script',['src'=>$value],null,$cont);
+                    break;
+            }    
+        }
+        
+        return $js;
+            
+        
+        
+    }
     /**
      * Imprime los bloques JAVASCRIPT pasados del controlador
      * 
@@ -324,7 +357,7 @@ class Pagina{
      * @param string $pos Head o footer
      * 
      */
-    function printJS($pos='footer'){
+    function printJS($pos=''){
         $js="";
         $this->checkData();
         $cont=0;
@@ -332,30 +365,87 @@ class Pagina{
         
         
 		if(is_array($this->data->js)){
-			
-			foreach ($this->data->js as $key => $archivo) {
-	            
-	            if(is_string($key)){
-	                if($key==ENTORNO_APP){
-	                    
-	                    foreach ($archivo as $key => $value){
-	                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
-	                        if($cont==0) $cont=2;
-	                    }           
-	                }elseif($key=='codigo'){
-	                    
-	                  $js.=$this->imprimirCodigoJs($archivo,$cont);  
-	                } 
-	            }
-	            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
-	            if($cont==0) $cont=2;
-	        }
+			$data=[];
+            if(!empty($pos)){
+                if(array_key_exists($pos, $this->data->js)) $data = $this->data->js[$pos];
+                if(array_key_exists(ENTORNO_APP, $this->data->js) and array_key_exists($pos, $this->data->js[ENTORNO_APP]))
+                    $data = array_merge($data,$this->data->js[ENTORNO_APP][$pos]);
+                
+                foreach ($data as $id => $archivo) {
+                    $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+                    if($cont==0)$cont=2;
+                }
+                
+            }else{
+                if(array_key_exists('footer', $this->data->js)){
+                  $this->data->js = array_merge($this->data->js,$this->data->js['footer']);
+                  unset($this->data->js['footer']);  
+                } 
+                if(array_key_exists('head', $this->data->js)){
+                     $this->data->js = array_merge($this->data->js,$this->data->js['head']);
+                    unset($this->data->js['head']);
+                }
+                
+                foreach ($this->data->js as $key => $archivo) {
+                    if(is_string($key)){
+                        if($key==ENTORNO_APP){
+                            foreach ($archivo as $id => $archivoEntorno) {
+                                #Debug::mostrarArray($archivoEntorno,0);
+                                
+                                if(is_string($archivoEntorno))
+                                {
+                                    $js.=Selector::crear('script',['src'=>$archivoEntorno],null,$cont);
+                                    if($cont==0)$cont=2;
+                                }elseif(is_string($id)){
+                                    foreach ($archivoEntorno as $key => $archivoSeccion) {
+                                        $js.=Selector::crear('script',['src'=>$archivoSeccion],null,$cont);
+                                        if($cont==0)$cont=2;    
+                                    }
+                                }
+                                
+                            }
+                        }
+                            
+                    }else{
+                        
+                       $js.=Selector::crear('script',['src'=>$archivo],null,$cont); 
+                    }
+                    if($cont==0)$cont=2;
+                }    
+            }
+         }
+			// foreach ($this->data->js as $key => $archivo) {
+// 			    
+	            // if(is_string($key)){
+// 	            
+	                // $js.=$this->imprimirArrayJs($key,$archivo,$pos,$cont);
+	            // }else{
+	                // if(empty($pos))
+	                   // $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+	            // }
+//                
+	            // if(is_string($key)){
+	                // if($key==ENTORNO_APP){
+// 	                    
+	                    // foreach ($archivo as $key => $value){
+	                        // $js.=Selector::crear('script',['src'=>$value],null,$cont);
+	                        // if($cont==0) $cont=2;
+	                    // }           
+	                // }elseif($key=='codigo'){
+// 	                    
+	                  // $js.=$this->imprimirCodigoJs($archivo,$cont);  
+	                // } 
+	            // }
+	            // else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+	          //  if($cont==0) $cont=2;
+	      //  }
 			
 
-		}
+		//}
 	        
         return $js;
     }
+
     private function imprimirCodigoJs($codigo,$cont){
         $js="";
         

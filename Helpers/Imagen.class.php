@@ -29,7 +29,21 @@ class Imagen extends Archivo{
       	'image/jpeg'=> 'jpeg',
       	'image/png'	=> 'png',
 	 
-	 ];    
+	 ];
+     
+     /**
+      * Información de getimagesize
+      */
+     private $ancho;
+     private $alto;
+     private $tipo;
+     private $atributos;
+     private $peso;
+     
+    
+     
+     
+     
      /**
      * Permite redimensionar una imagen sin quitar la calidad de la misma
      * Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada
@@ -188,7 +202,15 @@ class Imagen extends Archivo{
         
     }
 	private function validarImagenFileInfo(){
-		
+
+        if($this->totalArchivosCargados>1){
+            
+        }else{
+          $r = getimagesize( $image );
+          return $r[2];  
+        }
+        
+          
 	}
 	/**
 	 * Verifica si una imagen es valida haciendo uso de la funcion exif_imagetype
@@ -203,15 +225,17 @@ class Imagen extends Archivo{
 		$arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
 	        if($this->totalArchivosCargados>1){
 	            $total = $this->getTotalArchivosCargados();
+                $band = true;
 	            for($i=0;$i<$total;++$i){
 	                
 	                if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
-	                    return true;
+	                    $band=true;
 	                }else{
+	                    $band=false;
 	                    
-	                    return false;
 	                }
-	            } 
+	            }
+                return $band; 
 	        }else{
 	        	
 				if(count($this->files)>0){
@@ -234,5 +258,16 @@ class Imagen extends Archivo{
 	function setMimesAceptados($arr){
 		$this->mimesAceptados=$arr;
 	}	
+    
 	function redimension(){}
+    
+    static function obtDimensiones($img){
+        $size = list($ancho,$alto,$mime,$attr)=getimagesize($img);
+        return ['ancho'=>$ancho,'alto'=>$alto,'mime'=>$mime,'attr'=>$attr];
+        
+    } 
+    
+    
+    
+    
 }

@@ -339,4 +339,16 @@ class Archivo{
         return $this->existencia;
     }
     
+    static function obtPeso($img,$unidad = 'mb'){
+        $cantidades = ['mb'=>'1048576','kb'=>'1024',"b"=>'1'];
+        $bytes="";
+        
+        if(array_key_exists($unidad, $cantidades)){
+            return number_format(filesize($img) / $cantidades[$unidad],2);
+        
+        }else {
+        
+            return false;
+        }
+    }
 } // END
