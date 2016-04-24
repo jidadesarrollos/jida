@@ -189,7 +189,7 @@ class MenusController extends JController {
 			
             $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
             $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
-            $formulario->action=$this->url.'procesar-opciones/menu/' . $menu -> id_menu ;
+            $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu]);
             if(!empty($idOpcion)){
                 $formulario->action.="/opcion/".$idOpcion;
             }
@@ -200,7 +200,7 @@ class MenusController extends JController {
                 $post['padre']=$this->getEntero($this->get('padre'));
                 $opcionPadre = new OpcionMenu($this->get('padre'));
                 $this->dv->subtitulo = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
-                $formulario->action.="/padre/".$this->get('padre');
+                $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu,'padre'=>$this->get('padre')]);
             }
 			
             if($this->post('btnProcesarOpcionMenu')){    
@@ -335,14 +335,16 @@ class MenusController extends JController {
                                                                                 ),
                                                             'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit'))))),
                                     );
-        if($this->getEntero($this->get('padre')))
+        $urlForm = $this->url."procesar-opciones/menu/".$idMenu."/";
+        $opciones=['menu'=>$idMenu];
+        if($this->getEntero($this->get('padre'))) $opciones['padre']=$this->get('padre');
             $urlForm = $urlForm."padre/".$this->get('padre');          
-        $vista ->acciones=array('Nuevo'=>array('href'=>$urlForm,'class'=>'btn'),
-                                'Modificar'=>array('href'=>$urlForm,
+        $vista ->acciones=array('Nuevo'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),'class'=>'btn'),
+                                'Modificar'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),
                                                     'data-jvista'=>'seleccion','class'=>'btn',
                                                     'data-jkey'=>'opcion'
                                                     ,),
-                                'Eliminar'=>array('href'=>'/jadmin/menus/eliminar-opcion/menu/'.$this->id_menu."/",
+                                'Eliminar'=>array('href'=>$this->getUrl('eliminarOpcion',['menu'=>$this->id_menu]),
                                                     'data-jvista'=>'seleccion','class'=>'btn',
                                                     'data-jkey'=>'opcion'
                                                     )                                                        
