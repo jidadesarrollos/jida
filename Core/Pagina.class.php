@@ -377,15 +377,30 @@ class Pagina{
                 }
                 
             }else{
+                if(array_key_exists('footer', $this->data->js)){
+                  $this->data->js = array_merge($this->data->js,$this->data->js['footer']);
+                  unset($this->data->js['footer']);  
+                } 
+                if(array_key_exists('head', $this->data->js)){
+                     $this->data->js = array_merge($this->data->js,$this->data->js['head']);
+                    unset($this->data->js['head']);
+                }
+                
                 foreach ($this->data->js as $key => $archivo) {
                     if(is_string($key)){
                         if($key==ENTORNO_APP){
                             foreach ($archivo as $id => $archivoEntorno) {
                                 #Debug::mostrarArray($archivoEntorno,0);
+                                
                                 if(is_string($archivoEntorno))
                                 {
                                     $js.=Selector::crear('script',['src'=>$archivoEntorno],null,$cont);
                                     if($cont==0)$cont=2;
+                                }elseif(is_string($id)){
+                                    foreach ($archivoEntorno as $key => $archivoSeccion) {
+                                        $js.=Selector::crear('script',['src'=>$archivoSeccion],null,$cont);
+                                        if($cont==0)$cont=2;    
+                                    }
                                 }
                                 
                             }
