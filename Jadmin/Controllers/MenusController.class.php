@@ -284,7 +284,8 @@ class MenusController extends JController {
                 from s_opciones_menu a 
                 join s_estatus c on (a.id_estatus=c.id_estatus) 
                 where a.id_menu=$this->id_menu";
-        $urlForm = $this->url."procesar-opciones/menu/".$idMenu."/";
+        $urlForm = $this->getUrl('procesarOpciones',['menu'=>$idMenu]); 
+        
 		
         if($this->getEntero($this->get('padre'))){
             
@@ -317,7 +318,7 @@ class MenusController extends JController {
         $vista->filaOpciones=array(0=>array('a'=>array(
                                             'atributos'=>array( 'class'=>'btn',
                                                                 'title'=>'ver subcategorias',
-                                                                'href'=>$this->url."opciones/menu/$idMenu/padre/{clave}"
+                                                                'href'=>$this->getUrl('opciones',['menu'=>$idMenu,'padre','{clave}'])
                                                                 ),
                                             'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
                                     1=>array('a'=>array(
