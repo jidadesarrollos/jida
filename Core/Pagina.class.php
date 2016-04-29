@@ -327,6 +327,7 @@ class Pagina{
         $this->checkData();
         $cont=0;
         $code= array();
+		if(!is_array($this->data->js)) return $js;
         if(array_key_exists('code',$this->data->js)){
             $code = $this->data->js['code'];
             unset($this->data->js['code']);
@@ -407,10 +408,12 @@ class Pagina{
         
         $this->checkData();
         $cont=0;
+		if(!is_array($this->data->css)) return $css;
         foreach ($this->data->css as $key => $files) {
             
             if(is_string($key)){
                 if($key==ENTORNO_APP){
+                	
                     foreach ($files as $key => $value) {
                         if(is_array($value)) 
                             $css.=Selector::crear('link',$value,null,$cont);
