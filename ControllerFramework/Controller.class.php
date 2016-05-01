@@ -139,7 +139,7 @@ class Controller {
      */
     function __construct(){
     	global $dataVista;
-        Debug::string($dataVista);
+        
 		/**
 		 * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
 		 * del controlador con error, por tanto se crea un objeto DataVista vacio
