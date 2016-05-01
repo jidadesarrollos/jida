@@ -46,6 +46,7 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
  * Define el directorio en el que se encuentran las plantillas
  * de exepciones
  * @constant DIR_EXCEPCION_PLANTILLAS
+ * @deprecated 2.0
  */
  define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."jidaPlantillas/error/");
  if(!defined('DIR_PLANTILLAS_APP'))
@@ -144,6 +145,12 @@ if(!defined('LAYOUT_DEFAULT'))
  * Define el layout a usar por defecto
  */
 define('LAYOUT_DEFAULT','jadminIntro.tpl.php');
+
+if(!defined('LAYOUT_EXCEPCIONES'))
+/**
+ * Nombre del layout para excepciones
+ */ 
+define('LAYOUT_EXCEPCIONES','error.tpl.php');
 if(!defined('DIR_LAYOUT_JIDA'))
 /**
  * Definición de la ubicacion de los templates para el backend del Framework

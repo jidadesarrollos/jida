@@ -59,12 +59,8 @@ class Pagina{
      * @access private
      */
     private $rutaFramework="";
-    /**
-     * Define la ruta de las plantillas del Framework
-     * @var $rutaPlantillasFramework
-     * @access private
-     */
-    private $rutaPlantillasFramework = "";
+
+
         /**
      * Define el nombre del controlador requerido
      * @var $controlador
@@ -92,6 +88,8 @@ class Pagina{
      */
     private $modulo;
     private $rutaExcepciones="";
+	
+	private $directorioPlantillas='Framework/jidaPlantillas/';
 	/**
 	 * URL Actual
 	 */
@@ -113,12 +111,9 @@ class Pagina{
      */
     function validarDefiniciones($controlador,$metodo="",$modulo=""){
         
-        $this->rutaExcepciones = DIR_EXCEPCION_PLANTILLAS;
-         if(!empty($controlador))
-                $this->controlador = $controlador;
-        if(!empty($metodo)){
-            $this->nombreVista=$metodo;
-        }
+
+         if(!empty($controlador))    $this->controlador = $controlador;
+        if(!empty($metodo)){ $this->nombreVista=$metodo;}
         if(!empty($modulo)) $this->modulo = $modulo;
         
         if($controlador==CONTROLADOR_EXCEPCIONES){
@@ -165,8 +160,7 @@ class Pagina{
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
-        
-        
+		
     }
 
   
@@ -182,7 +176,7 @@ class Pagina{
      * 
      */
     
-    function renderizar($nombreVista="",$urlAbsoluta=""){
+    function renderizar($nombreVista="",$excepcion=FALSE){
         
         if(!empty($nombreVista)){
             $this->nombreVista = $nombreVista;
@@ -197,32 +191,36 @@ class Pagina{
         }else{
             // Se accede a un archivo vista
             $rutaVista = $this->obtenerRutaVista();
+			
             //Valida si se esta pasando una excepción
-                
-            if($this->controlador=='Excepcion' or $this->controlador==CONTROLADOR_EXCEPCIONES){
-                $rutaVista=$this->rutaExcepciones.Cadenas::lowerCamelCase($this->nombreVista).".php";
-                
-            }else{
+        
+            
             //Arma la estructura para una vista cualquiera
+            if($excepcion)
+				$rutaVista = $rutaVista . $nombreVista .'.php';
+			else 
+            $rutaVista = $rutaVista.Cadenas::lowerCamelCase($this->controlador )."/". Cadenas::lowerCamelCase($this->nombreVista).".php";
+        	
+			              
                
-                $rutaVista = $rutaVista.Cadenas::lowerCamelCase($this->controlador )."/". Cadenas::lowerCamelCase($this->nombreVista).".php";
-                      
-            }   
             
         }
-                        
-        if(!is_readable($rutaVista)) throw new Exception("Pagina no conseguida ".$rutaVista, 404);
-        
+                    
+        if(!is_readable($rutaVista)) throw new Exception("No se consigue el archivo $rutaVista", 1);
+         
         $this->template=$rutaVista;
         
-        if(!empty($this->layout) and $this->layout!==FALSE) 
-            $this->renderizarLayout();
+        if((!empty($this->layout) and $this->layout!==FALSE) or $excepcion===TRUE) 
+            $this->renderizarLayout($excepcion);
         else 
             throw new Exception("No se encuentra definida la plantilla", 120);
         
     }//final funcion
     
-    
+    /**
+	 * Incluye una plantilla
+	 * @inconclusa
+	 */
     private function procesarVistaAbsoluta(){
         if($this->data->getPath()=="jida"){
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
@@ -236,24 +234,26 @@ class Pagina{
      * @method renderizarLayout
      * @access private
      */
-    private function renderizarLayout(){
+    private function renderizarLayout($excepcion=FALSE){
+    	
         
         /* Permitimos almacenamiento en bufer */
-        
+        ob_clean();
         ob_start();
         
         $this->layout = $this->directorioLayout.$this->layout;
         
-        if(empty($this->layout)){
+        if(empty($this->layout) and !$excepcion){
             
                 throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);            
         }else
-        if(!file_exists($this->layout)){
+        if(!file_exists($this->layout) and !$excepcion){
 			            
             throw new Exception('No existe el layout '.$this->layout, 1);
             
             //Debug::string('No existe el layout '.$this->layout,true);
         }else{
+        	
            include_once $this->template;
            #$this->obtenerBloquesJS();
            $contenido = ob_get_clean();
@@ -273,6 +273,10 @@ class Pagina{
     private function requiresJs(){
         
     }
+	/**
+	 * Obtiene la vista del error generado
+	 * @deprecated 2.0
+	 */
     private function obtenerVistaError($rutaVista,$vistaError="404"){
         
         $directorioError="";
@@ -281,12 +285,54 @@ class Pagina{
         return $directorioError;
   
     }
+    
+    /**
+	 * Procesa la excepción generada
+	 * @method procesarExcepcion
+	 */
+    function procesarExcepcion(JExcepcion $e,$ctrlExcepcion)
+    {
+    	$this->layout = LAYOUT_DEFAULT;
+	
+		if(class_exists($ctrlExcepcion)){
+			
+    		$ctrl  =new $ctrlExcepcion($e);
+			if(method_exists($ctrlExcepcion, 'layout'))
+				$this->layout = $ctrl->layout();
+    	}
+    	$codigo = $e->codigo();
+
+		$this->excepcion = $e;
+		$path= $this->directorioPlantillas.'error/';
+	
+		$tpl = 'error';
+		
+		$this->rutaPagina=3;
+		if(Directorios::validar(DIR_APP.'plantillas/error/')){
+			$path =DIR_APP.'plantillas/error/';
+			if(Directorios::validar($path.$codigo.".php")){
+				
+				
+				$tpl = $codigo;
+			}elseif(Directorios::validar($path.'error.php')) $tpl = 'error';
+		}else{
+			$this->directorioLayout='Framework/Layout/';
+			
+		}
+		$this->rutaExcepciones = $path;
+		$this->renderizar($tpl,TRUE);
+			
+		 
+		 
+		
+    }
     /**
      * Verifica la ruta a utilizar para la vista
      * @return string $rutaPagina
+	 * @deprecated Será eliminado en la versión 2 del Framework
      */
     private function obtenerRutaVista(){
-            
+    	Debug::string("aqui ".$this->rutaPagina);    
         switch ($this->rutaPagina) {
             case 1:
                 $rutaVista = $this->rutaApp;
@@ -647,6 +693,18 @@ class Pagina{
 		if(!empty($lang)) $lang='/'.$lang;
 			
 		return $lang.$url;
+	}
+	/**
+	 * Retorna el layout a utilizar en la vista
+	 * 
+	 * @param path $path Si es pasado el objeto buscará el layout en
+	 * el directorio indicado
+	 * @return path $path
+	 */
+	function pathLayout($path=""){
+		if(!empty($path))	$this->urlPlantilla = $path;
+		return $this->urlPlantilla;
+		
 	}
     
     
