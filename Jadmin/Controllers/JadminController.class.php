@@ -20,7 +20,7 @@ class JadminController extends JController{
         
         $this->jctrl = new JidaControl();
         $this->layout="jadmin.tpl.php";
-        
+      
         
     }
     function index(){

@@ -136,21 +136,25 @@ class Menu extends DataModel {
          
          
          $perfilesUser = "'".implode("','", $this->getPerfilesAcceso())."'";
-         
-         $query  = "
-                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
-                    selector_icono, id_metodo
-                    from 
-                    $this->tablaOpciones a
-                    join $this->tablaOpcionesAcceso b on (a.id_opcion_menu = b.id_opcion_menu)
-                    join s_perfiles c on(b.id_perfil=c.id_perfil)
-                    where id_menu = $this->id_menu
-                    and c.clave_perfil in($perfilesUser)
-                    and  (id_estatus=1 or id_estatus=null)
-                    order by padre,orden,nombre_opcion";
-		 
-         $data = $this->bd->obtenerDataCompleta($query);
-         return $data;     
+         if(!empty($this->id_menu)){
+         	$query  = "
+	                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
+	                    selector_icono, id_metodo
+	                    from 
+	                    $this->tablaOpciones a
+	                    join $this->tablaOpcionesAcceso b on (a.id_opcion_menu = b.id_opcion_menu)
+	                    join s_perfiles c on(b.id_perfil=c.id_perfil)
+	                    where id_menu = $this->id_menu
+	                    and c.clave_perfil in($perfilesUser)
+	                    and  (id_estatus=1 or id_estatus=null)
+	                    order by padre,orden,nombre_opcion";
+			 
+	         $data = $this->bd->obtenerDataCompleta($query);
+	         return $data;
+         }else{
+         	return[];
+         }
+	              
      }
     
 	
