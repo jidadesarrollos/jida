@@ -308,16 +308,16 @@ class Pagina{
 		$tpl = 'error';
 		
 		$this->rutaPagina=3;
-        Debug::string("es");
+        
 		if(Directorios::validar(DIR_APP.'plantillas/error/')){
 			$path =DIR_APP.'plantillas/error/';
-            Debug::string("ak 1");
+        
 			if(Directorios::validar($path.$codigo.".php")){
 				
-				Debug::string("ak e");
+		
 				$tpl = $codigo;
 			}elseif(Directorios::validar($path.'error.php')){
-			    Debug::string("no existe y entro ak");
+			    
 			     $tpl = 'error';
             }else{
                 $path = DIR_FRAMEWORK.'jidaPlantillas/error/';
@@ -344,7 +344,7 @@ class Pagina{
 	 * @deprecated Será eliminado en la versión 2 del Framework
      */
     private function obtenerRutaVista(){
-    	Debug::string("aqui ".$this->rutaPagina);    
+    	    
         switch ($this->rutaPagina) {
             case 1:
                 $rutaVista = $this->rutaApp;
@@ -377,11 +377,11 @@ class Pagina{
     private function imprimirArrayJs($keyArrayPadre,$archivos,$pos,&$cont,$tipo="script"){
         
         $js="";
-        Debug::string($keyArrayPadre." ".$pos);Debug::mostrarArray($archivos,0);
+        
         if(is_array($archivos) and ($keyArrayPadre==ENTORNO_APP or $keyArrayPadre==$pos)){
-                Debug::string($pos);
+        
             $inclusiones = Arrays::obtenerKey($pos, $archivos);
-            Debug::mostrarArray($inclusiones,0);
+        
             foreach ($inclusiones as $key => $value) {
                 if(!is_string($key) and !empty($post)){
                     $js.=Selector::crear('script',['src'=>$value],null,$cont);

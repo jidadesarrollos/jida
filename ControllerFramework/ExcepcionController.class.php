@@ -20,8 +20,12 @@ class ExcepcionController extends Controller{
     
     
     function __construct(JExcepcion $e){
+        parent::__construct();
         $this->excepcion = $e;
-        if($this->solicitudAjax()) {$this->layout = 'ajax.tpl.php';}
+        if($this->solicitudAjax()) {
+            
+            $this->layoutExcepcion = $this->layout = 'ajax.tpl.php';
+        }
         
     }
     /**
