@@ -568,7 +568,7 @@
             }
             
             $this->vista->data = $dataVista;
-			echo "aki voy <br />";
+			
             $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
 
 // 			
