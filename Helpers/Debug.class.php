@@ -31,10 +31,15 @@ class Debug{
      * 
      */
     static function string($content,$exit=false,$tag="hr"){
-        echo $content."<$tag/>";
-        if($exit==TRUE){
-            exit;
+        if(is_string($content)){
+            echo $content."<$tag/>";
+            if($exit==TRUE){
+                exit;
+            }    
+        }elseif(is_array($content) or is_object($content)){
+            self::mostrarArray($ar,$exit);
         }
+        
         
     }
 }

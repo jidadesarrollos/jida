@@ -65,9 +65,9 @@ class Arrays {
         $nuevoArreglo = array();
         
         foreach ($arr as $key => $value) {
-        
-                if(array_key_exists($filtro, $value) and $value[$filtro]==$busqueda){
-                	
+
+                if(array_key_exists($filtro, $value) and $value[$filtro]==$busqueda){   
+
                     $nuevoArreglo[]=$value;   
                 }
                     
@@ -191,8 +191,8 @@ class Arrays {
     static function convertirAObjeto($array){
         $objeto = new stdClass();
         foreach ($array as $key => $value) {
-        	if(is_array($value)) $objeto->$key = self::convertirAObjeto($value);
-			else $objeto->$key=$value;
+            if(is_array($value)) $objeto->$key = self::convertirAObjeto($value);
+            else $objeto->$key=$value;
         }
         return $objeto;
         

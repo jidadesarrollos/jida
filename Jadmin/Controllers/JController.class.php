@@ -14,6 +14,7 @@ class JController extends Controller{
     	parent::__construct();
 
 		$this->dv->title="JIDAPanel";
+		
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         if(!$this->layout)
 		  $this->layout="jadminIntro.tpl.php";

@@ -43,9 +43,7 @@ jd.ajax.prototype = {
       "parametros":null,
       "respuesta":"html",
       "cargando" :"<div class='cargaAjax'> Cargando...</div>",
-      "contexto" :'body',
       "funcionProgreso":false,
-      
       "pushstate":false
     },
     inicializarValores:function(){
@@ -81,6 +79,18 @@ jd.ajax.prototype = {
             objeto.Listo.call(objeto);
         };
         
+        if(typeof this.valores.parametros=='object' && this.valores.parametros!=null){
+            data+="&";
+            $.each(this.valores.parametros,function(key,value){
+                data+="&"+encodeURI(key)+"="+encodeURI(value);
+            });
+        }else if(typeof this.valores.parametros=='string'){
+            data +="&"+this.valores.parametros;
+        }
+        
+        if(this.valores.metodo=='get' || this.valores.metodo=='GET')
+        	this.valores.url+='?'+data;
+
         ajax.open(this.valores.metodo,this.valores.url,true);
         //validar contentype
         if(this.valores.contentype==true){  
@@ -90,14 +100,7 @@ jd.ajax.prototype = {
             
         }//fin if
         
-        if(typeof this.valores.parametros=='object' && this.valores.parametros!=null){
-            data+="&";
-            $.each(this.valores.parametros,function(key,value){
-                data+="&"+encodeURI(key)+"="+encodeURI(value);
-            });
-        }else if(typeof this.valores.parametros=='string'){
-            data +="&"+this.valores.parametros;
-        }
+        
         // else{
             // throw "No se encuentra definido correctamente el objeto parametros";
         // }
@@ -116,13 +119,11 @@ jd.ajax.prototype = {
         ajax = this.obAjax;
         if(ajax.readyState==jd.cargandoAjaxUno || ajax.readyState==jd.cargandoAjaxDos){
             $(".cargaAjax").remove();
-            console.log(typeof this.valores.cargando);
-            $(this.valores.contexto).prepend(this.valores.cargando);
+            $('body').prepend(this.valores.cargando);
         }
         if(ajax.readyState==jd.listoAjaxCompleto){
             $(".cargaAjax").remove();
             var httpStatus= ajax.status;
-            console.log(typeof this.valores.cargando);
             if(httpStatus==200 || httpStatus ==0){
                 //this.valores.funcionCarga.call(this);
                 this.procesarRespuesta();

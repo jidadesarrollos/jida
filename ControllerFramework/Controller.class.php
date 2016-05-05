@@ -140,6 +140,11 @@ class Controller {
     function __construct(){
     	global $dataVista;
         
+		/**
+		 * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
+		 * del controlador con error, por tanto se crea un objeto DataVista vacio
+		 */
+		if(!$dataVista instanceof DataVista)		$dataVista = new DataVista();
         $this->dv = $dataVista;
         $dataVista->a = "hola";
 		$this->idioma=& $this->dv->idioma;

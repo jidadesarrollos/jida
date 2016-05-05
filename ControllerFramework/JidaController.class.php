@@ -443,10 +443,10 @@
                     }
                     $this->controlador=$nameControl;
                     //$this->vista->validarDefiniciones($this->controlador,$this->metodo,$this->modulo);
-
+					
                 }//fin validacion de existencia del controlador.
            }else{
-               
+               	
                  throw new Exception("No tiene permisos", 403);
                  
            }        
@@ -549,13 +549,15 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-        	if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404) 	Debug::mostrarArray($excepcion);
+        	//if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404) 	
+        	global $dataVista;
 			
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        
             else
                 $ctrlError = $this->controlador;
             
+			
             if($ctrlError!=CONTROLADOR_EXCEPCIONES)
                 $this->controladorObject = new $ctrlError;
             
@@ -565,36 +567,40 @@
                 $this->controlador=CONTROLADOR_EXCEPCIONES;
             }
             
-            $this->metodo=METODO_EXCEPCION;
-            
-            $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+            $this->vista->data = $dataVista;
 			
-            $this->vista->rutaPagina=3;
-            if(!class_exists($ctrlError)) throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
-            $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
-            
-            $metodo = $this->metodo;
-            $ctrlExcepcion->$metodo();
-              
-            $this->vista->layout = $ctrlExcepcion->layout;
-			
-            $this->vista->definirDirectorios();
-			//Debug::string($this->controlador." ".$this->metodo);
-            $this->controladorObject = $ctrlExcepcion;
-            $this->mostrarContenido($ctrlExcepcion->vista);
+            $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
+
+// 			
+            // $this->vista->rutaPagina=3;
+            // if(!class_exists($ctrlError)) 
+            	// throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
+            // $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
+//             
+            // $metodo = $this->metodo;
+            // $ctrlExcepcion->$metodo();
+//               
+            // $this->vista->layout = $ctrlExcepcion->layout;
+// 			
+            // $this->vista->definirDirectorios();
+			// //Debug::string($this->controlador." ".$this->metodo);
+            // $this->controladorObject = $ctrlExcepcion;
+            // $this->mostrarContenido($ctrlExcepcion->vista);
        
 //            
         }catch(Exception $e){
-        	Debug::mostrarArray($e);
-            $ctrlError = $this->controlador;
-            $ctrlExcepcion = new $this->controlador($e,$ctrlError);
+        	Debug::mostrarArray($e,0);
+            
+            
             $metodo = $this->metodo;
-            $ctrlExcepcion->$metodo();            
+			
+                        
             $this->vista->data->setVistaAsTemplate('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
+			$this->vista->pathLayout('Framework/Layout');
             $this->controladorObject =$ctrlExcepcion;
-            $this->vista->layout=LAYOUT_JIDA;
-            $this->mostrarContenido($ctrlExcepcion->vista);
+          
+            //$this->mostrarContenido($ctrlExcepcion->vista);
         }
              
 
