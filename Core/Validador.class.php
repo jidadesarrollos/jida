@@ -41,7 +41,7 @@ class Validador{
                                             "mensaje"   =>  "Solo puede poseer caracteres alfanumericos,underscore o guion"),
                     'email'         =>array("expresion" =>  "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
                                             "mensaje"   =>  "El formato del email no es valido"),
-                    'telefono'      =>array("expresion" =>  "/^2[0-9]{9,13}$/",
+                    'telefono'      =>array("expresion" =>  "/^02[0-9]{9,13}$/",
                                             "mensaje"   =>  "El formato del telefono debe ser 212 4222211"),
                     'celular'       =>array("expresion" =>  "/^(412|416|414|424|426)\d{7}$/",
                                             "mensaje"   =>  "El formato del celular debe ser 4212 4222211"),
