@@ -238,7 +238,6 @@ class Pagina{
 
 
         /* Permitimos almacenamiento en bufer */
-        ob_clean();
         ob_start();
 
         $this->layout = $this->directorioLayout.$this->layout;

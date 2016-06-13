@@ -1,25 +1,25 @@
-<?PHP 
+<?PHP
 /**
  * Definición de la clase
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package
  * @category Controller
  * @version 0.1
  */
 
- 
+
 class ComponentesController extends JController{
     var $layout="jadmin.tpl.php";
     function __construct($id=""){
-        parent::__construct();        
+        parent::__construct();
         $this->url="/jadmin/componentes/";
-        
+
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
-        
+
     }
     function index(){
-        
+
         $this->vista="vistaComponentes";
         $query = "select id_componente, Componente as \"Componente\" from s_componentes";
         $vista = new Vista($query,$GLOBALS['configPaginador'],'Componentes');
@@ -28,7 +28,7 @@ class ComponentesController extends JController{
         $vista->filaOpciones=[
         0=>['a'=>['atributos'   =>[
                                     'class'         =>'btn','title'=>'Ver objetos del componente',
-                                    'href'          =>$this->getUrl(['jadmin/objetos'=>'lista'],['comp'=>'{clave}']),
+                                    'href'          =>$this->getUrl('objetos.lista',['comp'=>'{clave}']),
                                     //'data-jvista'   =>'modal'
                                   ],
                     'html'      =>[ 'span'=>['atributos'=>['class' => 'glyphicon glyphicon-folder-open']]]
@@ -49,7 +49,7 @@ class ComponentesController extends JController{
         $this->dv->vista = $vista->obtenerVista();
     }
     function setComponente(){
-        
+
         $tipoForm=1;
         $idComponente = "";
         if($this->get('comp')){
@@ -60,23 +60,23 @@ class ComponentesController extends JController{
          $F = new Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
-         
+
          if($this->post('btnComponente')){
              $this->getEntero($this->post('id_componente'));
-			 
+
 			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Componente($idComponente);
                  if($F->validarFormulario()){
                      $_POST['componente'] = strtolower($this->post('componente'));
                      if($comp->salvar($_POST)->ejecutado()==1){
-						 Vista::msj('componentes','suceso','Componente <strong>'.$this->post('componente').'</strong> guardado',$this->url.'');    
+						 Vista::msj('componentes','suceso','Componente <strong>'.$this->post('componente').'</strong> guardado',$this->url.'');
                      }else{
                          Formulario::msj('error', 'No se pudo registrar el componente');
-                     }                     
+                     }
                  }
 			 }else{
 			 	Formulario::msj('error', 'El componente no existe');
-			 }   
+			 }
          }
 
          $this->dv->fComponente = $F->armarFormulario();
@@ -90,17 +90,17 @@ class ComponentesController extends JController{
 			return false;
 	}
     function asignarAcceso(){
-        
+
         if($this->getEntero($this->get('comp'))){
-                        
+
             $this->vista="accesoPerfiles";
             $form = new Formulario('PerfilesAComponentes',2,$this->get('comp'),2);
             $comp = new Componente($this->getEntero($this->get('comp')));
-            
+
             $form->action=$this->url."asignar-acceso/comp/".$this->get('comp');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
-            
+
             if($this->post('btnPerfilesAComponentes')){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
@@ -119,7 +119,7 @@ class ComponentesController extends JController{
                 redireccionar($this->url);
             else{
                 echo Mensajes::mensajeError("Debe seleccionar un componente");
-            }  
-        }    
+            }
+        }
     }
 }

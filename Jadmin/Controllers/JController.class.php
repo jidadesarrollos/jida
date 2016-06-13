@@ -48,7 +48,7 @@ class JController extends Controller{
 					'/htdocs/bower_components/jquery/dist/jquery.js',
 					'/htdocs/bower_components/jquery-ui/jquery-ui.min.js',
 					'/htdocs/bower_components/bootstrap/dist/js/bootstrap.min.js',
-					'/htdocs/bower_components/bootbox/bootbox.js',
+					'/htdocs/bower_components/bootbox.js/bootbox.js',
 				],
 
 				'prod'=>[
@@ -56,7 +56,7 @@ class JController extends Controller{
 			        	'https://code.jquery.com/ui/1.10.3/jquery-ui.min.js',
 			            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
 					],
-				//'/htdocs/js/min/jd.plugs.js',
+				'/htdocs/js/min/jd.plugs.js',
 
 
 

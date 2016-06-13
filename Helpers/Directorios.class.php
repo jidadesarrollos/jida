@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 /**
  * Helper para manejo de Archivos y directorios
  *
@@ -7,8 +7,8 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
 class Directorios extends Directory{
-	
-	
+
+
 	/**
      * Verifica si un directorio existe, hace uso de funcion file_exists de PHP
      * @method validar
@@ -22,10 +22,8 @@ class Directorios extends Directory{
 	        return false;
 	    }
 	}
-	
-	static function validarExistenciaFile($archivo){
-		
-	}
+
+
     /**
      * Crea un directorio
      * @method crear
@@ -50,23 +48,23 @@ class Directorios extends Directory{
 			if($directorio = opendir($ruta)){
 				while (($file = readdir($directorio)) !== false) {
 					if($file!="." and $file!='..' and $file!='TP_LINK Consumo'){
-						
+
 						$listado[]=$file;
 					}
-					
+
 				}
 			}
 		}
-		return $listado;	
+		return $listado;
 	}
     /**
-    * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg 
+    * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
     *
-    * @param string $ruta   # directorio a recorrer 
+    * @param string $ruta   # directorio a recorrer
     * @param string $arr    # arreglo que guarda los archivos recorridos
     * @param string $expReg # expresion regular para filtrar por el nombre del archivo
     * @param string $i  # indice
-    
+
     * @return $arr array con todos los controladores que coincidan con $expReg
     */
     static public function listarDirectoriosRuta($ruta,&$arr,$expReg='',&$i=0){
@@ -83,9 +81,9 @@ class Directorios extends Directory{
                     // Guardo los archivos que coincidan con la expresion regular
                         $esCoincidencia = (preg_match($expReg,$file))?1:0;
                         if($esCoincidencia){
-                           
+
                             $arr[$i] = Cadenas::removerAcentos($file);++$i;
-                        }   
+                        }
                     }
                     if (is_dir($ruta . $file) && $file!="." && $file!=".."){
                     // Solo si el archivo es un directorio, distinto a "." y ".."
@@ -104,7 +102,7 @@ class Directorios extends Directory{
      * Recorre un directorio y aplica una funcion por cada archivo encontrado en el directorio
      * @param string $ruta URL del directorio
      * @param mixed $callback funcion o nombre de función a ejecutar, se le pasara como parametro el nombre del archivo
-     * @param boolean $recursive Si es colocado en TRUE la función se aplicara en los subdirectorios 
+     * @param boolean $recursive Si es colocado en TRUE la función se aplicara en los subdirectorios
      */
     static function recorrerDirectorio($ruta,$callback,$recursive=FALSE){
         // Abrir un directorio y listarlo recursivamente
@@ -118,20 +116,20 @@ class Directorios extends Directory{
                             self::listarDirectoriosRuta($ruta . $file . "/",$arr,$expReg,$i);
                         }
                     }
-                        
+
                 }//fin while
                 closedir($directorio);
             }//fin if openRuta
         }else{
             throw new Exception("La ruta a listar no es una ruta valida $ruta", 333);
         }
-        
-        
-        
+
+
+
     }
     /**
      * Elimina un directorio y su contenido
-     * 
+     *
      * Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la carpeta pasada
      * @method eliminar
      */
@@ -143,13 +141,13 @@ class Directorios extends Directory{
                 unlink($files);
             }
         }
-     
+
         rmdir($dir);
     }
-    
+
     /**
      * Limpia un directorio
-     * 
+     *
      * Elimina todo lo que exista dentro de un directorio
      * @method limpiar
      * @param url $directorio Ubicación del directorio a limpiar
@@ -172,13 +170,13 @@ class Directorios extends Directory{
         $totalArchivos = 0;
         if ($handle = opendir($ruta)) {
             while (($file = readdir($handle)) !== false){
-                if (!in_array($file, array('.', '..')) && !is_dir($ruta.$file)) 
+                if (!in_array($file, array('.', '..')) && !is_dir($ruta.$file))
                 $totalArchivos++;
             }
         }
         return $totalArchivos;
 
-        
+
     }
 	/**
 	 * Copia el contenido de un directorio a otro
@@ -193,12 +191,12 @@ class Directorios extends Directory{
 					 self::copiar($origen."/".$file, $destino."/file");
 					continue;
 				}
-				
-				
+
+
 				copy($origen."/".$file,$destino."/".$file);
-			}	
+			}
 		}
 	}
-        
-    
+
+
 } // END
