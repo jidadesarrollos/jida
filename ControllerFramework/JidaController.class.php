@@ -511,7 +511,7 @@
      * Realiza la ejecución del Controlador a instanciar
      * @method ejecutarController
      */
-    private function ejecutarController($controlador,$params=null,$checkDirs=true){
+    private function ejecutarController($controlador,$params=[],$checkDirs=true){
         
         $args = $this->args;
         $metodo = $this->metodo;
@@ -526,13 +526,10 @@
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
         if(method_exists($controlador, $metodo))
-            $controlador->$metodo($params);
+            //$controlador->$metodo($params);
+            call_user_func_array([$controlador,$metodo], $params);
         else{
-            
-            
-            
             throw new Exception("Error Processing Request", 404);
-            
             Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
         }
         if($checkDirs){
