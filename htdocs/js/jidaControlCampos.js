@@ -362,7 +362,8 @@ jd.controladorInput.prototype={
         miles : {cadena:/^[0-9]*$/,tipo:2},
         caracteres : {cadena : /^[A-ZñÑa-z ]*$/},
         alfanumerico : {cadena: /^[0-9A-ZñÑa-z ]*$/},
-        coordenada : {cadena: /^\-?[0-9]{2}\.[0-9]{3,15}/,tipo:0}
+        coordenada : {cadena: /^\-?[0-9]{2}\.[0-9]{3,15}/,tipo:0},
+        fecha:{cadena:/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/,tipo:0}
         //cedula : {cadena:/^([V|E]\-{1}\d{8})*$/},
         //cedula : /^([VEJG]\d{7,8})$/,
     },
@@ -374,7 +375,8 @@ jd.controladorInput.prototype={
     formatosDisponibles:{
         
          rif : 'J123456789',
-         rifConFormato : 'J-12345678-9'
+         rifConFormato : 'J-12345678-9',
+         fecha:'00-00-0000'
         
     }
     
