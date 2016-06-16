@@ -94,14 +94,14 @@ class FormsController extends JController{
         $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
         
         $vForms->acciones=[
-        'Nuevoo'=>['href'=>$this->url.'/gestion-formulario/','class'=>'btn btn-adm'],
+        'Nuevoo'=>['href'=>$this->getUrl('gestionFormulario'),'class'=>'btn btn-adm'],
         'Modificar'=>[
-            'href'=>'/jadmin/forms/gestion-formulario/',
+            'href'=>$this->getUrl('gestionFormulario'),#'/jadmin/forms/gestion-formulario/',
             'data-jvista'=>'seleccion',
             'data-jkey'=>'id', 
             'class'=>'btn btn-default','data-multiple'=>'false'],
         'Eliminar'=>[
-            'href'=>$this->url.'/eliminar-formulario/',
+            'href'=>$this->getUrl('eliminarFormulario'),
             'class'=>'btn btn-default','data-jvista'=>'seleccion','data-multiple'=>'true'],
         ];
         $vForms->filaOpciones=
