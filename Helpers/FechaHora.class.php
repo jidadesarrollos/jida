@@ -313,6 +313,16 @@ class FechaHora{
         $date = new DateTime($fecha);
         return $date->format($formato);
     }
-
+	/**
+	 * Retorna si una fecha es valida o no
+	 * @method validarFecha
+	 * @param string fecha a validar
+	 * @param string formato formato en que se recibe la fecha
+	 * @return boolean
+	 */
+	static function validarFecha($fecha, $formato = 'Y-m-d H:i:s'){
+	    $date = DateTime::createFromFormat($formato, $fecha);
+	    return $date && $date->format($formato) == $fecha;
+	}
 	
 }
