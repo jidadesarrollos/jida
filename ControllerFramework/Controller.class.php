@@ -469,6 +469,48 @@ class Controller {
         }
         
     }
+
+   /**
+     * Devuelve la estructura de la url solicitada
+     * @method obtUrl
+     * @param mixed $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url actual
+     * @param string $data parametros pasados a la funcion 
+     * @return string $url
+     */
+    protected function obtUrl($metodo="",$data=array()){
+        if(!empty($metodo)){
+        	
+        	$url = explode(".", $metodo);
+            if(count($url)==2){
+                $ctrl = str_replace('Controller', "", Cadenas::upperCamelCase($url[0]));
+                $ctrl = $ctrl.'Controller';
+                
+                $urlController = $this->urlController($url[0]);
+                $metodo=$url[1];
+            }else{
+                $ctrl = $this->_clase;
+                $urlController = $this->urlController();
+            }
+            if(method_exists($ctrl,$metodo)){
+                if($metodo=='index')$metodo="";
+                $params= "";
+                if(count($data)>0){
+                    foreach ($data as $key => $value) 
+                        $params.="$value/";
+                }
+                #Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+                return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
+            }else{
+                
+                throw new Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
+            }
+            
+        }else{
+            return $this->urlActual(2);
+        }
+        
+    }
+	
     /**
      * Retorna el nombre del modulo en el que se encuentra el objeto
      */

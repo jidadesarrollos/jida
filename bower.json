@@ -27,5 +27,8 @@
     "font-awesome": "~4.4.0",
     "jquery": "~2.1.4",
     "bootbox.js": "^4.4.0"
+  },
+  "devDependencies": {
+    "jquery-ui": "^1.11.4"
   }
 }
