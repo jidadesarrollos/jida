@@ -172,7 +172,10 @@ class Selector{
         if(is_array($atributos)){
             
             foreach ( $atributos as $key => $value ) {
-                
+                if(is_array($value)){
+                	throw new Exception("se ha pasado un arreglo para el key ".$key, 1);
+					
+                }
                 $selectorHTML .= " $key=\"$value\"";
             }    
         }

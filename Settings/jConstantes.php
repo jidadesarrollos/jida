@@ -144,7 +144,7 @@ if(!defined('LAYOUT_DEFAULT'))
 /**
  * Define el layout a usar por defecto
  */
-define('LAYOUT_DEFAULT','jadminIntro.tpl.php');
+define('LAYOUT_DEFAULT','default.tpl.php');
 
 if(!defined('LAYOUT_EXCEPCIONES'))
 /**

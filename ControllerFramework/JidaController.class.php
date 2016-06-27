@@ -455,6 +455,7 @@
                $this->ejecucion($controlador);
            }
          }catch(Exception $e){
+
             $this->procesarExcepcion($e);
         }  
        
@@ -567,24 +568,7 @@
             $this->vista->data = $dataVista;
 			
             $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
-
-// 			
-            // $this->vista->rutaPagina=3;
-            // if(!class_exists($ctrlError)) 
-            	// throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
-            // $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
-//             
-            // $metodo = $this->metodo;
-            // $ctrlExcepcion->$metodo();
-//               
-            // $this->vista->layout = $ctrlExcepcion->layout;
-// 			
-            // $this->vista->definirDirectorios();
-			// //Debug::string($this->controlador." ".$this->metodo);
-            // $this->controladorObject = $ctrlExcepcion;
-            // $this->mostrarContenido($ctrlExcepcion->vista);
-       
-//            
+   
         }catch(Exception $e){
         	Debug::mostrarArray($e,0);
             

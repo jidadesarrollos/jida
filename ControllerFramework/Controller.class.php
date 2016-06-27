@@ -10,7 +10,17 @@
  * 
  */
 class Controller {
-    
+	/**
+	 * Define el tema de diseño a implementar en la aplicacion
+	 * 
+	 * El tema será buscado en la carpeta Aplicacion/layout/nombreTema
+	 * En caso de que no se encuentre ningun tema definido, los templates seran
+	 * buscado en la carpeta layout como en las versiones anteriores.
+	 * 
+	 * @since 1.4
+	 * @var temaLayout
+	 */
+	var $temaLayout="";    
     var $urlCanonical=URL_APP;
     /**
      *  Define el layout a usar por el controlador
@@ -642,6 +652,13 @@ class Controller {
 		
 		
 		
+	}
+	/**
+	 * Define el layout a utilizar
+	 * @method addLayout
+	 */
+	protected function addLayout($layout){
+		$this->layout = $layout;
 	}
 	
     
