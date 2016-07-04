@@ -188,12 +188,12 @@ class Directorios extends Directory{
 			while (($file=$origenDir->read())!==FALSE) {
 				if($file=='.' or $file=='..') continue;
 				if(is_dir($file)){
-					 self::copiar($origen."/".$file, $destino."/file");
+					 self::copiar($origen.'/'.$file, $destino.'/'.$file);
 					continue;
 				}
 
 
-				copy($origen."/".$file,$destino."/".$file);
+				copy($origen.'/'.$file,$destino.'/'.$file);
 			}
 		}
 	}
