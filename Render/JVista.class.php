@@ -105,7 +105,7 @@
 	];
 	
 	private $noRegistros="";
-	private $configArticleVista=[];
+	private $configArticleVista=['data-jida'=>'vista'];
 	private $configSeccionForm=[];
 	private $configSeccionFiltros=[];
 	
