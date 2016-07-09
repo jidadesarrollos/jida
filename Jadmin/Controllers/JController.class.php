@@ -56,7 +56,7 @@ class JController extends Controller{
 			        	'https://code.jquery.com/ui/1.10.3/jquery-ui.min.js',
 			            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
 					],
-				'/htdocs/js/min/jd.plugs.js',
+				'/htdocs/js/jida/min/jd.plugs.js',
 
 
 
