@@ -18,9 +18,9 @@ class Pagina{
     var $data;
 	/**
 	 * Define el layout por defecto de la aplicación
-	 * 
+	 *
 	 * Por defecto siempre buscara el valor "default.tpl.php" Este valor puede ser modificado
-	 * por medio de la constante LAYOUT_DEFAULT 
+	 * por medio de la constante LAYOUT_DEFAULT
 	 * @since 1.4
 	 * @see LAYOUT_DEFAULT
 	 * @var $layoutDefault
@@ -111,12 +111,12 @@ class Pagina{
     private $url;
 
     function __construct($controlador,$metodo="",$modulo=""){
-		
+
        $this->validarDefiniciones($controlador,$metodo,$modulo);
 	   $this->validarEstructuraApp();
 
     }
-	
+
 	/**
 	 * Verifica la estructura general de la aplicación
 	 * @method validarEstructuraApp
@@ -124,7 +124,9 @@ class Pagina{
 	 */
 	function validarEstructuraApp(){
 		//la data cargada aquí, deberá poder ser obtenida de base de datos o un archivo.
-		$data=$GLOBALS['configuracion'];
+		$data=[];
+		if(array_key_exists('configuracion', $GLOBALS))
+			$data=$GLOBALS['configuracion'];
 		if(array_key_exists('tema', $data))
 		{
 			$this->temaApp = $data['tema'];
@@ -185,31 +187,31 @@ class Pagina{
          /*Verificación de ruta de plantillas*/
 
         if(strtolower($this->modulo)!='jadmin'){
-        	
+
             $this->urlPlantilla=DIR_PLANTILLAS_APP;
             $this->directorioLayout=DIR_LAYOUT_APP;
             if(!empty($this->temaApp))
             {
-            	if(!Directorios::validar(DIR_LAYOUT_APP.$this->temaApp)) 
+            	if(!Directorios::validar(DIR_LAYOUT_APP.$this->temaApp))
 					throw new Exception("No se consigue el tema definido", 1);
-				
+
 				$this->directorioLayout.=$this->temaApp."/";
-				
+
 				if(empty($this->layout) or !Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->layout))){
-					
-					if(\Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->controlador))){		
+
+					if(\Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->controlador))){
 						$this->layout=$this->obtNombreTpl($this->controlador);
 					}else
 					if(!empty($this->modulo) and \Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->modulo))){
-						
+
 						$this->layout=$this->obtNombreTpl($this->modulo);
 					}elseif(\Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->temaApp))){
 						$this->layout=$this->obtNombreTpl($this->temaApp);
 					}else{
 						$this->layout=$this->obtNombreTpl($this->layoutDefault);
 					}
-					
-				}	
+
+				}
             }
         }else{
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
@@ -225,13 +227,13 @@ class Pagina{
     */
 	private function obtNombreTpl($tpl){
 		if(strpos($tpl, '.tpl.php')===false) return Cadenas::lowerCamelCase($tpl.'.tpl.php');
-		
+
 		return Cadenas::lowerCamelCase($tpl);
-		 
+
 	}
 	/**
 	 * Verifica el string del layout y estructura el nombre de forma correcta
-	 * 
+	 *
 	 * Si el layout no tiene la extension ".tpl.php" se la agrega
 	 * @method procesarLayout
 	 * @since 1.4
@@ -242,7 +244,7 @@ class Pagina{
 			$this->layout.='.tpl.php';
 		}
 	}
-	
+
 
 
     /**
@@ -255,7 +257,7 @@ class Pagina{
      */
 
     function renderizar($nombreVista="",$excepcion=FALSE){
-	
+
         if(!empty($nombreVista)){
             $this->nombreVista = $nombreVista;
         }
@@ -264,7 +266,7 @@ class Pagina{
          * Se verifica si desea usarse una plantilla
          */
         if(!empty($DataTpl)){
-        	
+
             $rutaVista = $this->procesarVistaAbsoluta();
 
         }else{
@@ -332,7 +334,7 @@ class Pagina{
             //Debug::string('No existe el layout '.$this->layout,true);
         }else{
 		   if(isset($this->template)) include_once $this->template;
-           
+
            #$this->obtenerBloquesJS();
            $contenido = ob_get_clean();
            include_once $this->layout;
@@ -369,9 +371,9 @@ class Pagina{
 	 * @method procesarExcepcion
 	 */
     function procesarExcepcion(JExcepcion $e,$ctrlExcepcion)
-    {	
+    {
     	$this->layout = LAYOUT_DEFAULT;
-	
+
 		if(class_exists($ctrlExcepcion)){
 
     		$ctrl  =new $ctrlExcepcion($e);
@@ -638,22 +640,22 @@ class Pagina{
         }
         return $js;
     }
-	
+
 	/**
 	 * Imprime el css correspondiente a un modulo especifico
 	 * @method printCssModulo
 	 * @param string $modulo
 	 * @since 1.4
-	 * 
+	 *
 	 */
 	function printCssModulo($modulo){
-		
+
 	}
 
 	/**
 	 * Imprime las lirerias del lado cliente
-	 * 
-	 * 
+	 *
+	 *
 	 * @since 1.4
 	 * @param string $lang Tipo de libreria a imprimir [js o css]
 	 * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
@@ -661,14 +663,14 @@ class Pagina{
 	 */
 	function imprimirLibrerias($lang,$modulo=""){
 		$dataInclude=[];
-		
+
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};
 		if(array_key_exists(ENTORNO_APP, $data)){
 			$dataInclude = $data[ENTORNO_APP];
-			
+
 			unset($data[ENTORNO_APP]);
-			
+
 		}
 		$librerias = array_merge($dataInclude,$data);
 		if(!empty($modulo)){
@@ -677,37 +679,37 @@ class Pagina{
 				$libreriasModulo = $librerias[$modulo];
 				unset($librerias[$modulo]);
 				$librerias = $libreriasModulo;
-		
+
 			}
-				
+
 		}
 
 		$libsHTML = "";
 		$cont=0;
-		
+
 		// if($lang=='js'){
 			// $order = [];
 			// foreach ($librerias as $id => $libreria) {
 				// if(is_array($libreria)){
 					// if(array_key_exists('dependencia', $libreria)){
 						// $order[$libreria['dependencia']] = $libreria['src'];
-					// }else 
+					// }else
 						// $order[$id]=$libreria;
 				// }
-			// }	
+			// }
 		// }
-		
+
 		foreach($librerias as $id => $libreria){
 			if(is_array($libreria) and $lang=='css'){
 					//se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
 					//a partir del arreglo $libreria
 					$libsHTML.=$this->__obtHTMLLibreria('link',$libreria,$cont);
-					
+
 			}elseif(!is_array($libreria))
 				$libsHTML.=$this->__obtHTMLLibreria($lang, $libreria,$cont);
-			
+
 			if($cont==0) $cont=2;
-		
+
 		}//fin foreach=======================================
 		return $libsHTML;
 	}
@@ -715,10 +717,10 @@ class Pagina{
 		switch ($lang) {
 			case 'js':
 				if(is_array($libreria)) Debug::mostrarArray($libreria,0);
-				$html = Selector::crear('script',['src'=>$libreria],null,$cont);	
+				$html = Selector::crear('script',['src'=>$libreria],null,$cont);
 				break;
 			case 'link':
-				
+
 				$html = Selector::crear('link',$libreria,null,$cont);
 				break;
 			default:
@@ -730,7 +732,7 @@ class Pagina{
 	}
 	/**
 	 * Imprime las librerias css
-	 * 
+	 *
 	 */
     function printCSS(){
         $css = "";
@@ -956,29 +958,29 @@ class Pagina{
 	}
 	/**
 	 * Agrega un template en otra
-	 * 
+	 *
 	 * Busca la plantilla en el directorio Aplicacion/Layout o Aplicacion/layout/tema si existe uno
 	 * y la agrega. Si la plantilla no es conseguida arrojará error
-	 * 
+	 *
 	 * @method addTpl
 	 * @param string $archivo Nombre de la plantilla a agregar
 	 * @return boolean
 	 */
 	function addTpl($archivo){
 		$path = $this->directorioLayout;
-		
+
 		if(is_array($archivo)){
 			foreach ($archivo as $key => $ar) {
 				if(file_exists($path.$ar.'.php'))
 					include_once $path.$ar.'.php';
 				else
 					throw new Exception("No existe la plantilla solicitada ".$path.$ar, 100);
-					
+
 			}
 		}elseif(is_string($archivo)){
 			if(file_exists($path.$archivo.'.php')) include_once $path.$archivo.'.php';
 			else throw new Exception("No existe la plantilla solicitada ".$path.$archivo, 100);
-			
+
 		}
 	}
 
