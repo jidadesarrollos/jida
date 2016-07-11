@@ -82,6 +82,7 @@
 			
 		
 	];
+
 	private $configContenedorAcciones=[
 		'class'=>'col-md-offset-6 col-md-6 col-xs-12 text-right'
 	];
@@ -105,8 +106,12 @@
 	];
 	
 	private $noRegistros="";
-	private $configArticleVista=['data-jida'=>'vista'];
-	private $configSeccionForm=[];
+	private $configArticleVista=['data-jida'=>'vista','class'=>'jvista'];
+	private $configSeccionForm=[
+		'col'=>[
+			'class'=>'col-md-6 col-md-offset-6 np-r col-xs-12 seccion-busqueda',
+		]
+	];
 	private $configSeccionFiltros=[];
 	
 	
@@ -345,7 +350,7 @@
 			
 			$this->procesarAccionesFila();
 			$this->procesarControlFila();
-			$vista .= $this->tabla->generar();
+			$vista .= Selector::crear('div.col-md-12',[],$this->tabla->generar());
 			if(count($this->acciones)>0){
 				$vista.=$this->procesarAcciones();
 			}
@@ -425,6 +430,7 @@
 		}	
 	}
 	private function procesarFormBusqueda(){
+		if($this->totalRegistros<1) return "";
 		if(is_array($this->buscador)){
 			$div = new Selector('section');
 			$valorBusqueda="";
@@ -435,7 +441,7 @@
 			}
 			$inner = '
 			<form action="'.$url.'" method="get">
-				<div class="col-md-6 col-md-6">
+				<div class="'.$this->configSeccionForm['col']['class'].'">
 					<div class="input-group">
 						<input type="search" class="form-control jvista-search" name="busqueda" value="'.$valorBusqueda.'"/>
 							<span class="input-group-btn">
