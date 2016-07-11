@@ -187,16 +187,17 @@ class MenuHTML extends DBContainer{
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
                             $this->tagAdicionalLIpadre['atributos']=array();
                         endif;
-                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$opcion['nombre_opcion'],3,true);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.
+                        Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']),3,true);
                     }else{
-                        $opc = $icono.$opcion['nombre_opcion'];
+                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
                     }
                     
                     $listaMenu.=Selector::crear("li",$atributos,$opc.$submenu['html'],2,true);
                 }else{
                     
                     //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
-                    $span =$opcion['nombre_opcion'];
+                    $span =Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
                     
                     $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$icono.$span,3);
                     $listaMenu.=Selector::crear("li",$atributos,$enlace,2,true);
@@ -270,7 +271,7 @@ class MenuHTML extends DBContainer{
                     if(is_array($this->tagAdicionalLIpadre)){
                         $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['nombre_opcion'],$ident+3);
                     }else{
-                        $opc = $icono.$subopcion['nombre_opcion'];
+                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$subopcion['nombre_opcion']);
                     }    
                     $ulOpen=$submenus['open'];
                     $listaMenu .= Selector::crear("li",$cssli,$opc.$submenus['html'],$nivel+1);
@@ -278,7 +279,7 @@ class MenuHTML extends DBContainer{
                     /**
                      * Entra aqui si es un link o enlace del menu
                      */
-                    $span = $subopcion['nombre_opcion'];
+                    $span = Selector::crear('span',['class'=>'inner-text'],$subopcion['nombre_opcion']);
                     if($subopcion['url_opcion']==$_SERVER['REQUEST_URI']){
                         $ulOpen=TRUE;
                         $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
