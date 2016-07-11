@@ -363,8 +363,14 @@ class Selector{
             
             foreach ($this->attr as $attr => $value) {
                $atribs.=" ";
-                
-               $atribs.=$attr."=\"".$value."\"";
+               if(strpos($attr,"data-")!==FALSE){
+               		#echo "if()";
+               		$atribs.=$attr."='".$value."'";
+               }else{
+               	#echo "elsee())";
+               		$atribs.=$attr."=\"".$value."\"";
+               }
+               
                 ++$i;
             }
         }
