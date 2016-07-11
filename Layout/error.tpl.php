@@ -16,7 +16,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
         <?=$this->printHeadTags()?>        
-        <?=$this->printCss()?>
+        <?=$this->imprimirLibrerias('css')?>
     </head>
 
     <body>
