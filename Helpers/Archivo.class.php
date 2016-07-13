@@ -349,6 +349,30 @@ class Archivo{
     }
     
     /**
+     * Elimina varios archivos
+     * @method	eliminarMultiplesArchivos
+	 * @param	$arr de direccion fisica de archivos a eliminar
+	 * @return	boolean o array de elementos no eliminados
+     */
+    static function eliminarMultiplesArchivos($arr){
+		if(is_array($arr)){
+			$noEliminados=[];
+			foreach ($arr as $key => $value):
+				if(!unlink($value))
+					$noEliminados[]=$value;
+			endforeach;
+			
+			if($noEliminados>0)
+				return $noEliminados;
+			else
+				return true;
+		}else{
+			throw new Exception("Debes pasar un arreglo", 1);
+			return false;
+		}
+    }
+	
+    /**
      * @method eliminarArchivo
      * @deprecated
      */
