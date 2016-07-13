@@ -823,10 +823,13 @@ class DataModel{
 	                $pk = $this->pk;
 	                
 	                $obj->$pk = $this->$pk;
-	                return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
+					if(!empty($this->$pk))
+	                	return $obj->consultaSola($campos)->filtro([$this->pk=>$this->$pk]);
+					else 
+						return $obj;
 	            }
 	        }else
-	        if(in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno)){
+	        if(in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno) or in_array($class, $this->tieneMuchos)){
 	            
 	            $obj = new $class(null,1);
 	            if(method_exists($obj,'consulta')){
@@ -836,11 +839,11 @@ class DataModel{
 	                    $pkRelacion = $obj->__get('pk');    
 	                }
 	                // se obtiene el campo de clave primaria del objeto relacion
-	                
-	                
-	                $this->$rel = $obj->instanciar($this->$pkRelacion);
-	                
-	                
+	                Debug::string($this->{$pkRelacion},1);exit;
+	                if(!empty($this->{$pkRelacion}))
+	                	$this->$rel = $obj->instanciar($this->$pkRelacion);
+					else 
+	                	$this->$rel = $obj;
 	                return $this->$rel;
 	            }
 	        }else{
