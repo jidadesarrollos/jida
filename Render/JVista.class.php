@@ -63,7 +63,7 @@
 	 */
 	private $tabla;
 	private $campos = [];
-	
+	private $nameInputLinea='seleccionar';
 	private $configTabla = [
 		'class' => 'table'
 	];
@@ -414,14 +414,19 @@
 							[	"type"			=>$types[$control],
 								'id'			=>'obtTotalCol',
 								'data-jvista'	=>'seleccionarTodas',
+								'name'			=>'seleccionar',
 								'value'=>""
 							]);
 						$columnasTitulo[0]->innerHTML($inputTitle->render());
 					}elseif($control==1){
 						
 					}
-					$input = new Selector('input',
-					["type"=>$types[$control],'id'=>'radio'.$selector->innerHTML(),'value'=>$selector->innerHTML()]);
+					$input = new Selector('input',[
+						"type"	=>$types[$control],
+						'id'	=>'radio'.$selector->innerHTML(),
+						'value'	=>$selector->innerHTML(),
+						'name'	=>$this->nameInputLinea,
+					]);
 					$selector->innerHTML($input->render());
 					
 				}				
