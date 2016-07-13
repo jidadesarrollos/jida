@@ -473,8 +473,7 @@
 				if(is_array($acciones))
 				{
 					$keys = array_keys($fila->columnas);
-					
-					
+										
 					#Debug::string($keys[0]);
 					
 					$colIni = $fila->columnas[$keys[0]];
@@ -483,16 +482,29 @@
 						$accionFila = clone $accion;
 						
 						$config = $this->configAccionesFila;
+					
+						foreach ($accionFila->attr as $clave => $valor){
+							$accionFila->attr($config);
+							$accionFila->attr($clave,
+								str_replace('{clave}', 
+								$colIni->innerHTML(), 
+								$accionFila->attr($clave))
+							);
+						}
+						
+					/*
 						$accionFila->attr($config);
 						$accionFila->attr('href',
 							str_replace('{clave}', 
 							$colIni->innerHTML(), 
 							$accionFila->attr('href'))
 						);
+					*/
+						
 						$contenido .= $accionFila->render();
 						unset($accionFila);
 					}
-				
+
 					return $contenido;
 				}else{
 					throw new Exception("Las acciones pasadas a la fila no son validas", 1);
@@ -587,7 +599,7 @@
 				$attrAccion = array_merge($this->configAccionesFila,$accion,['span'=>["class"=>$accion['span']]]);
 				
 				$nuevaAccion = new AccionVistaSelector("",$attrAccion);
-				$this->accionesFila[$orden]=$nuevaAccion;	
+				$this->accionesFila[$orden]=$nuevaAccion;
 			}
 			return $this;
 		}	
