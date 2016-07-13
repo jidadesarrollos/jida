@@ -206,11 +206,12 @@ class UsersController extends JController{
         }
         
     }//fin función
-    function cierresesion(){
+    function cierresesion($url=""){
 	    if(Session::destroy()){
 	    	if(Session::get('Usuario') instanceof MODELO_USUARIO)
 				Session::get('Usuario')->cerrarSesion();
-	    	$this->redireccionar($this->urlCierreSession);  
+			if(empty($url)) $url = $this->urlCierreSession;
+	    	$this->redireccionar($url);  
 	    }
 	}
     /**
