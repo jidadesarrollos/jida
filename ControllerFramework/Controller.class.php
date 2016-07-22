@@ -10,7 +10,8 @@
  * 
  */
 class Controller {
-    
+	
+	    
     var $urlCanonical=URL_APP;
     /**
      *  Define el layout a usar por el controlador

@@ -893,12 +893,15 @@ class Vista extends DBContainer{
                     
                     $col =& $this->tabla->tr[$i]->td[0];
                     
-                    $col->contenido=Selector::crearInput($col->contenido,
-                                            array(  'name'=>$nombreControl,
-                                                    'type'=>$control,
-                                                    $col->contenido
-                                                    )
-                                            );
+                    $col->contenido=
+                    Selector::crear('div',['class'=>$control],
+						Selector::crearInput($col->contenido,
+                            array(  'name'=>$nombreControl,
+                                    'type'=>$control,
+                                    $col->contenido
+                                    )
+                            ).Selector::crear('label',[])
+					);
                 }//fin for
                  
                 break;
