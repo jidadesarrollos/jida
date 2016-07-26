@@ -243,8 +243,12 @@ if(!jd) var jd = Object();
      		var link = $this.data('link');
      		var msj = $this.data('msj');
 
-     		if(link) $this.attr('href');
-
+     		if(typeof link == 'undefined') link = $this.attr('href');
+     		
+     		console.log($this);
+     		console.log("$this.data('select')");
+     		console.log($this.data('select'));
+     		
      		if($this.data('select')){
      			seleccion  = $jvista.checkSeleccion();
      			if(seleccion==false)
@@ -255,6 +259,11 @@ if(!jd) var jd = Object();
      				link = link+"/"+key+"/"+seleccion;
      			}
      		}
+     		console.log($this);
+     		console.log('link');
+     		console.log(link);
+     		console.log(msj);
+     		//console.log(seleccion);
      		bootbox.confirm(msj,function(response){
 	 				if(response===true){
 	 					window.location.href=link;

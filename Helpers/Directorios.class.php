@@ -134,14 +134,16 @@ class Directorios extends Directory{
      * @method eliminar
      */
     static function eliminar($dir){
+    	Debug::mostrarArray($dir,0);
         foreach(glob($dir . "/*") as $files){
+        	Debug::mostrarArray($files,0);
             if (is_dir($files)){
-                eliminarDir($files);
+                self::eliminar($files);
             }else{
                 unlink($files);
             }
         }
-
+		Debug::mostrarArray($dir,0);
         rmdir($dir);
     }
 
