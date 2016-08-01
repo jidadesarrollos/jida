@@ -644,7 +644,18 @@ class Controller {
 		
 		
 	}
-	
+		/**
+	 * Retorna un arreglo a partir de un archivo JSON
+	 * 
+	 * @method obtJSON
+	 * @param directory $path Directorio del archivo
+	 * @return array
+	 * @since 1.4
+	 */
+	protected function obtJson($path){
+		return file_get_contents($path);
+		
+	}
     
 
 }
