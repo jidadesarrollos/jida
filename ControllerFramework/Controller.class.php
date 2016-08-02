@@ -653,7 +653,7 @@ class Controller {
 	 * @since 1.4
 	 */
 	protected function obtJson($path){
-		return file_get_contents($path);
+		return json_decode(file_get_contents($path));
 		
 	}
     
