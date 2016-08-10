@@ -16,16 +16,29 @@ class ExcepcionController extends Controller{
      */
     var $excepcion;
 
-    private $layoutExcepcion="error.tpl.php";
+    protected $layoutExcepcion="error.tpl.php";
+	/**
+	 * Define el modulo css a incrustar en la plantilla de error
+	 * @var $moduloCss
+	 * @since 1.4
+	 */
+	protected $moduloCss ="";
+	/**
+	 * Define el modulo JS a incrustar en la plantilla de error
+	 * @var $moduloJS
+	 * @since 1.4
+	 */
+	protected $moduloJS="";
 
 
     function __construct(JExcepcion $e){
         parent::__construct();
         $this->excepcion = $e;
-
+		$this->dv->libreriasCss = $this->libreriasCss;
         if($this->solicitudAjax()) {
 
             $this->layoutExcepcion = $this->layout = 'ajax.tpl.php';
+			
         }
 
     }

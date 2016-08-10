@@ -278,7 +278,7 @@ class Pagina{
 
             //Arma la estructura para una vista cualquiera
             if($excepcion)
-				echo $rutaVista = $rutaVista . $nombreVista .'.php';
+				$rutaVista = $rutaVista . $nombreVista .'.php';
 			else
             $rutaVista = $rutaVista.Cadenas::lowerCamelCase($this->controlador )."/". Cadenas::lowerCamelCase($this->nombreVista).".php";
 
@@ -666,12 +666,24 @@ class Pagina{
 
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};
+
+		//Se eliminan las librerias incluidas en un entorno distinto al actual
+		//o que pertenezcan a un $modulo no solicitado
+		foreach ($data as $key => $value) {
+			if(is_array($value) and $key!=ENTORNO_APP and $key!=$modulo)
+				unset($data[$key]);
+		}//fin forech
+		
 		if(array_key_exists(ENTORNO_APP, $data)){
 			$dataInclude = $data[ENTORNO_APP];
-
+			//Se eliminan
+			foreach ($dataInclude as $key => $value) {
+				if(is_array($value) and $key!=$modulo) unset($dataInclude[$key]);
+			}
 			unset($data[ENTORNO_APP]);
 
 		}
+
 		$librerias = array_merge($dataInclude,$data);
 		if(!empty($modulo)){
 			if(array_key_exists($modulo,$librerias))
@@ -687,17 +699,6 @@ class Pagina{
 		$libsHTML = "";
 		$cont=0;
 
-		// if($lang=='js'){
-			// $order = [];
-			// foreach ($librerias as $id => $libreria) {
-				// if(is_array($libreria)){
-					// if(array_key_exists('dependencia', $libreria)){
-						// $order[$libreria['dependencia']] = $libreria['src'];
-					// }else
-						// $order[$id]=$libreria;
-				// }
-			// }
-		// }
 
 		foreach($librerias as $id => $libreria){
 			if(is_array($libreria) and $lang=='css'){

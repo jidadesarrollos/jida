@@ -164,11 +164,7 @@ class Selector{
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";
-        // if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
-//             
-            // $content = $atributos ['content'];
-            // unset ( $atributos ['content'] );
-        // }
+
         if(is_array($atributos)){
             
             foreach ( $atributos as $key => $value ) {
