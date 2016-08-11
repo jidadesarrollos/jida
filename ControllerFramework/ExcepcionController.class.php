@@ -29,12 +29,13 @@ class ExcepcionController extends Controller{
 	 * @since 1.4
 	 */
 	protected $moduloJS="";
-
+	protected $libreriasCss;
 
     function __construct(JExcepcion $e){
         parent::__construct();
         $this->excepcion = $e;
-		$this->dv->libreriasCss = $this->libreriasCss;
+		$this->dv->moduloCss = $this->moduloCss;
+		$this->dv->moduloJS = $this->moduloJS;
         if($this->solicitudAjax()) {
 
             $this->layoutExcepcion = $this->layout = 'ajax.tpl.php';
