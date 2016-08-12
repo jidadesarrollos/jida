@@ -17,7 +17,7 @@
 
         <?=$this->printHeadTags()?>
         
-        <?=$this->printCss()?>
+        <?=$this->imprimirLibrerias('css','jadmin')?>
     </head>
 
     <body>

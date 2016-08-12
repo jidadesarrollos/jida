@@ -144,7 +144,7 @@ if(!defined('LAYOUT_DEFAULT'))
 /**
  * Define el layout a usar por defecto
  */
-define('LAYOUT_DEFAULT','jadminIntro.tpl.php');
+define('LAYOUT_DEFAULT','default.tpl.php');
 
 if(!defined('LAYOUT_EXCEPCIONES'))
 /**
@@ -177,3 +177,7 @@ if(!defined('ZONA_HORARIA')){
 if(!defined('CODIFICAR_HTML_BD'))   define('CODIFICAR_HTML_BD',FALSE);
 
 if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',true);
+/**
+ * Determina
+ */
+if(!defined('PATH_APP')) define('PATH_APP','/');
