@@ -8,7 +8,9 @@
 	//Contenido Vista============================================
 	private $dataVista;
 	var $ordenamientos=TRUE;
-	private $nroFilas=10;
+	var $buscador = FALSE;
+	
+	private $nroFilas=1;
 	private $paginasMostradas=9;
 	private $totalPaginas;
 	private $titulos=[];
@@ -17,7 +19,7 @@
 	private $contenedorPaginador;	
 	private $accionesFila=FALSE;
 	private $listadoFiltros;		
-	var $buscador = FALSE;
+	
 	private $ejecucion;
 	private $titulo;
 	/**
@@ -34,15 +36,29 @@
 	 */
 	private $acciones=FALSE;
 	#==============================================================
-	# Opciones de funcio/nabilidad
+	# Opciones de funcionabilidad
 	#==============================================================
 	/**
 	 * Define si las filas llevaran algún control
 	 * @var mixed $controlFila 1. Radio, 2. checkbox, 3. campo oculto 
 	 */
 	var $controlFila=1;
-	private $parametroPagina = "pagina";
 	var $funcionNoRegistros;
+	private $parametroPagina = "pagina";
+	/**
+	 * Parametros pasados como querystring y que son manipulados por el objeto
+	 * @var array $querySTring
+	 */
+	private $queryString=[];
+	/**
+	 * Define si debe analizarse la URL
+	 * 
+	 * Si esta en true se tratara la url de conformidad con la estructura de urls usada por JidaFramework
+	 * @var boolean $analizaURL default true
+	 * @link /estructura-urls/
+	 */
+	var $analizaURL = TRUE;
+	
 	/**
 	 * @var string mensajeNoRegistros Mensaje a mostrar si no se consigues registros
 	 */
@@ -169,21 +185,19 @@
 		$this->paginador = new ListaSelector();
 		
 		$this->validarPaginaConsulta();
+		
 		if(count($params)>0){
 			if(array_key_exists('campos', $params)){
 				$this->campos = $params['campos'];
-				
 			}
 			if(array_key_exists('titulos', $params)){
-				
 				$this->titulos = $params['titulos'];
 			}
 		}
-		if(isset($_REQUEST[$this->parametroPagina]) and is_numeric($_REQUEST[$this->parametroPagina])){
-			$this->paginaActual = $_REQUEST[$this->parametroPagina];
-		}else{
-			
-		}
+		
+		if(array_key_exists($this->parametroPagina, $this->queryString))
+			$this->paginaActual = $this->queryString[$this->parametroPagina];
+		
 		$this->establecerValoresDefault();
 		#$this->checkGlobals();
 		
@@ -191,15 +205,30 @@
 	}
 	/**
 	 * Verifica la estructura de la url manejada para la funcionalidad de la vista
+	 * 
+	 * Para el funcionamiento de este metodo el objeto debe usarse dentro del Framework JIDA.
+	 * @method validarPaginaConsulta
 	 */
 	private function validarPaginaConsulta(){
-		$urlActual=Session::get('URL_ACTUAL');
-		if(!empty($urlActual))
-			$this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
+		
+		if($this->analizaURL)
+		{
+			$urlActual=Session::get('URL_ACTUAL_COMPLETA');
 			
-		if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
-			$this->paginaConsulta.="?busqueda=".$_GET['busqueda'];
 		}
+		
+		$this->paginaConsulta = JD('URL_COMPLETA');
+
+		$this->queryString = JD('QueryString');
+		
+		// if(!empty($urlActual))
+			// $this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
+// 		
+		// Debug::string(JD('QueryString'));
+		// Debug::string($this->paginaConsulta,1);	
+		// if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
+			// $this->paginaConsulta.="?busqueda=".$_GET['busqueda'];
+		// }
 	}
 	private function establecerValoresDefault(){
 		if(empty($this->titulo)){
@@ -522,16 +551,18 @@
 			for($i=0;$i<count($columnasTitulos);++$i){
 				if($this->controlFila and $i==0) continue;
 				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
+							
+					$params = ['href'=>$this->procesarURL([
+								'ordenar'	=>$titulos[$indice-1],
+								'pagina'	=>$this->paginaActual
+							],0)];
 					
-					$params = ['href'=>$pagina."/ordenar/".$titulos[$indice-1]];
-					if(isset($_REQUEST[$this->parametroPagina])){
-						$params['href'] =$params['href'] ."/pagina/".$_REQUEST[$this->parametroPagina]; 
-					}
 					$col->envolver('a',$params);
 				},$i,$this->titulosKey,$this->paginaConsulta);
 			}
 			
 		}
+		
 		
 	}
 	
@@ -563,27 +594,31 @@
 		
 		$ultimaPaginaMostrada=(($this->paginaActual+$medio)< $this->totalPaginas)?$this->paginaActual+$medio:$this->totalPaginas;	
 		$primeraPaginaMostrada=($this->paginaActual>$medio)?$this->paginaActual-$medio:1;
+		echo $ultimaPaginaMostrada." ".$primeraPaginaMostrada;
+
 		//----------------------------------------------------------
 		for($i=$primeraPaginaMostrada;$i<=$ultimaPaginaMostrada;++$i){
+			
 			$link = new Selector('a');
 			$this->paginador->attr('class',$this->configPaginador['classListaPaginador']);
 			$item = $this->paginador->addItem($i)->envolver('a');
 			
 			if($i == $this->paginaActual){
 				$item->attr([
-					'class'	=>$this->configPaginador['classPaginaActual']])
-					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina=$i"])
-					//->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
-					;
+					'class'	=>$this ->configPaginador['classPaginaActual']])
+									->contenido
+									->attr(['href'	=>$this->procesarURL(['pagina'=>$i])]);
 			}else{
 				$item->attr([
-					'class'	=>$this->configPaginador['classLink']])
-					->contenido->attr(['href'	=>"$this->paginaConsulta?pagina=$i",])
+					'class'	=>$this ->configPaginador['classLink']])
+									->contenido
+									->attr(['href'	=>$this->procesarURL(['pagina'=>$i])]);
 					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
 					;
 			}
 			
 		}
+
 		return $this->paginador->render(); 
 		//----------------------------------------------------------
 	}
@@ -651,6 +686,13 @@
 	 * @method addFiltros
 	 * @param array $filtros Arreglo de Filtros a agregar, el key será el titulo a mostrar
 	 * y el value puede ser una matriz con valores de personalización.
+	 * @example
+	 *  $jvista->addFiltros([
+	 * 		'Un titulo'=>[
+	 * 			'valor1'=>'label 1',
+	 * 			'valor2'=>'label 2',
+	 * 		]
+	 * 	]);
 	 * 
 	 */
 	function addFiltros($filtros){
@@ -661,17 +703,26 @@
 			$seccionFiltro = new Selector('section',$this->configFiltros['section']);
 			
 			$listaFiltros = new ListaSelector(count($this->filtros),$this->configFiltros['listaFiltros']);
+			// $listaFiltros = new Selector('Article',['class'=>'jvista-filtros']);
+			$htmlFiltros = "";
 			foreach ($filtros as $campoFiltro => $item) {
+				//Titulo filtro-------------------------------------------
 				$tituloFiltro = new Selector('h4');
-				$tituloFiltro->innerHTML($item['titulo']);
+				$titulo = $campoFiltro;
+				if(array_key_exists('titulo',$item)){
+					$titulo = $item['titulo'];
+					unset($item['titulo']);
+				}
 				
-				$listaItems = new ListaSelector(count($item['items']));
+				$tituloFiltro->innerHTML($titulo);
+				//Titulo filtro
+				$listaItems = new ListaSelector(count($item));
 				$listaItems->attr($this->configFiltros['listaItemsFiltro']);
-				
-				foreach($item['items'] as $idFiltro => $itemFiltro){
-					
+				//Recorrido de items=====================
+				foreach($item as $idFiltro => $itemFiltro){
+							
 					$link = new Selector('a',['href'=>$this->urlFiltro([$campoFiltro=>$idFiltro])]);
-					
+						
 					$link->innerHTML($itemFiltro);
 					$item = $listaItems->addItem($link->render());
 					if(array_key_exists($campoFiltro, $_GET) and $_GET[$campoFiltro]==$idFiltro){
@@ -679,20 +730,21 @@
 						$item->addClass('active');	
 					}
 				}
-				 
+			 	// $htmlFiltros.=$tituloFiltro->render().$listaItems->render();
 				$listaFiltros->addItem($tituloFiltro->render().$listaItems->render());
 				
 			}//fin foreach
 			$this->listaFiltros = $seccionFiltro->innerHTML($listaFiltros->render());
 			
 		}
+		// Debug::string($this->listaFiltros->innerHTML(),1);
 		
 	}
 	
 	function renderFiltros(){
 
 		if(count($this->filtros)>0){
-			return $this->listaFiltros->render();
+			return Selector::crear('div.row',[],Selector::crear('div.col-md-12',[],$this->listaFiltros->render()));
 		}
 	}
 	/**
@@ -710,6 +762,7 @@
 					$querystring.=$key."=".$value;
 				++$i;
 			}
+			// Debug::string($this->paginaConsulta,1);
 			return $this->paginaConsulta.$querystring;
 		}else{
 			throw new Exception("No se han pasado bien los parametros para la url", 1);
@@ -800,6 +853,34 @@
 	
 	function funcionFila($numeroFila,$function){
 		
+	}
+	/**
+	 * Gestiona la url de los enlaces a usar en la
+	 * @since 1.4
+	 * @method procesarURL
+	 * @param  array $params Parametros a agregar en el querystring del link
+	 * @param  boolean $print Solo para uso de Debug, realiza impresion de valores y corta la ejecucion de codigo.
+	 * @return url   
+	 */
+	private function procesarURL($params,$print=false){
+		// if($this->paginaConsulta[strlen($this->paginaConsulta)-1]!='/')
+			// $this->paginaConsulta.="/";
+		if($print){
+		Debug::string("==============================");
+		Debug::string($this->paginaConsulta);
+		Debug::mostrarArray($this->queryString,0);
+		Debug::mostrarArray($params,0);
+		}
+		//Se setea en una variable diferente para que no interfiera con los ajustes de otras variables.
+		$querystring =array_merge($this->queryString,$params);
+		if($print){
+			Debug::mostrarArray($querystring,0);
+			Debug::string($this->paginaConsulta . '?' . http_build_query($querystring),1);
+			
+			exit;			
+		}
+
+		return $this->paginaConsulta .'?'. http_build_query($querystring);
 	}
  }//fin clase
  

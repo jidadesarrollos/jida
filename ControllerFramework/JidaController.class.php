@@ -6,6 +6,7 @@
   * @author  Julio Rodriguez <jirc48@gmail.com>
   * @date 27/12/2013
   */
+  global $JD;
  class JidaController {
     /**
      * Define el nombre del Controlador requerido
@@ -94,10 +95,11 @@
             }
 
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-            $_SESSION['urlActual'] = $_GET['url'];
-
-
-            Session::set('URL_ACTUAL_COMPLETA', $_GET['url']);
+			JD('URL_ANTERIOR',Session::get('urlActual'));
+			Session::set('urlActual',$_GET['url']);
+			JD('URL_COMPLETA',"/".$_GET['url']);
+			
+            
             /*Manejo de url*/
             if(isset($_GET['url'])){
 
@@ -116,7 +118,7 @@
 
 
             }
-
+			
             unset($_GET['url']);
             if(count($_GET)>0){
                $this->args=$_GET;
@@ -126,8 +128,9 @@
 			$GLOBALS['__URL_APP'] = $this->appRoot;
 
 			$ini = substr($this->appRoot, 1);
-
+			
 			Session::set('URL_ACTUAL', $ini.Session::get('URL_ACTUAL'));
+			JD('URL',Session::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -135,21 +138,40 @@
 
             $this->getSubdominio($url);
             $this->procesarURL($url);
-
+			
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
+			
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->vista->idioma=$this->idiomaActual;
+			$this->generarVariables();
             $this->validacion();
-
+		
         }catch(Exception $e){
             $this->procesarExcepcion($e);
         }
 
     }//fin constructor
+    /**
+	 * Gestiona variables para acceso global en la aplicacion
+	 * 
+	 * Esta funcion debe ser revisada
+	 * @since 1.4
+	 */
+	 
+    private function generarVariables(){
+    	JD('Controlador',$this->controlador);
+		JD('Vista',$this->vista);
+		JD('Metodo',$this->metodo);
+		JD('Modulo',$this->modulo);
+
+
+		
+		
+    }
     /**
      * Procesa el contenido de la url
      * Valida los modulos, controladores y metodos a consultar
@@ -232,9 +254,13 @@
                 $this->metodo='index';
             }
         }
+		
+		JD('QueryString',$this->args);
+		
         Session::set('URL_ACTUAL', $URL);
+		
         $this->args = array_merge($this->args, $url);
-
+		
     }
     /**
      * Verifica la existencia de un metodo solicitado
@@ -315,24 +341,27 @@
 
 
             $totalClaves = count($this->args);
+			
             $gets=array();
-            if($totalClaves>=2){
-                for($i = 0; $i<=$totalClaves;$i++){
-
-                    if($clave===TRUE){
-                        if(isset($this->args[$i]) and isset($this->args[$i+1]))
-                            $gets[$this->args[$i]]=$this->args[$i+1];
-                    }
-                    $i++;
-                }
-            }if($tipo>1){
-
-                $GLOBALS['getsIndex']= "otro";
-            }
-
+            // if($totalClaves>=2){
+                // for($i = 0; $i<=$totalClaves;$i++){
+// 
+                    // if($clave===TRUE){
+                        // if(isset($this->args[$i]) and isset($this->args[$i+1]))
+                            // $gets[$this->args[$i]]=$this->args[$i+1];
+                    // }
+                    // $i++;
+                // }
+            // }if($tipo>1){
+// 
+                // $GLOBALS['getsIndex']= "otro";
+            // }
+			foreach ($this->args as $key => $value) {
+				
+				
+			}
             $_GET = array_merge($this->args,$gets);
 			$_REQUEST = array_merge($_POST,$_GET);
-
     }
     function get(){
         Debug::mostrarArray($this);

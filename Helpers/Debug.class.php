@@ -31,13 +31,13 @@ class Debug{
      * 
      */
     static function string($content,$exit=false,$tag="hr"){
-        if(is_string($content)){
+        if(!is_array($content)){
             echo $content."<$tag/>";
             if($exit==TRUE){
                 exit;
             }    
         }elseif(is_array($content) or is_object($content)){
-            self::mostrarArray($ar,$exit);
+            self::mostrarArray($content,$exit);
         }
         
         
