@@ -35,6 +35,8 @@ class ExcepcionController extends Controller{
         parent::__construct();
         $this->excepcion = $e;
 		$this->dv->moduloCss = $this->moduloCss;
+		
+		
 		$this->dv->moduloJS = $this->moduloJS;
         if($this->solicitudAjax()) {
 
