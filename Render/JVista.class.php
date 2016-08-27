@@ -595,7 +595,6 @@
 		
 		$ultimaPaginaMostrada=(($this->paginaActual+$medio)< $this->totalPaginas)?$this->paginaActual+$medio:$this->totalPaginas;	
 		$primeraPaginaMostrada=($this->paginaActual>$medio)?$this->paginaActual-$medio:1;
-		echo $ultimaPaginaMostrada." ".$primeraPaginaMostrada;
 
 		//----------------------------------------------------------
 		for($i=$primeraPaginaMostrada;$i<=$ultimaPaginaMostrada;++$i){

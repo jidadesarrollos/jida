@@ -147,7 +147,8 @@ class Cadenas {
                 'Ú' => '&Uacute;',
                 'Ñ' => "&Ntilde;",
                 'ñ' => "&ntilde;",
-                '¿' => '&iquest;' 
+                '¿' => '&iquest;',
+                "'" =>	"&#39;" 
         );
         if(!empty($cadena) and is_string($cadena)){
             
