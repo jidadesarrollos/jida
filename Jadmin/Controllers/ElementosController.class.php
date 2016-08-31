@@ -9,7 +9,7 @@
  *
 */
 
-class ElementosController extends JController{
+class ElementosController extends \JController{
 	var $layout="jadmin.tpl.php";
 	var $helpers=['Arrays','Cadenas','Debug'];
 	function __construct(){

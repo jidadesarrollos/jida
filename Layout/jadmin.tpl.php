@@ -65,6 +65,6 @@
             </div><!--Cierre div full-container-->
         </div>
 
-         <?=$this->printJS()?>
+         <?=$this->imprimirLibrerias('js','jadmin')?>
     </body>
 </html>

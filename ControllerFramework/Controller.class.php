@@ -5,7 +5,7 @@
  *
  * @package Framework
  * @category Controlador
- * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @author  Julio Rodriguez jirc48@gmail.com
  *
  *
  */
@@ -22,7 +22,15 @@ class Controller {
 	 * @var temaLayout
 	 */
 	var $temaLayout="";
-
+	/**
+	 * Define si la aplicación maneja multiples idiomas
+	 *
+	 * Si es colocada en true el controller validara la variable $idioma y la incluira en
+	 * las urls
+	 *
+	 * @var boolean multiidioma
+	 */
+	var $multiidioma=FALSE;
     var $urlCanonical=URL_APP;
     /**
      *  Define el layout a usar por el controlador
@@ -35,7 +43,7 @@ class Controller {
 	 */
 	var $idioma;
 	/**
-	  * Define el titulo de la pagina a colocar en la etiqueta <title> del head del sitio
+	  * Define el titulo de la pagina a colocar en la etiqueta title del head del sitio
 	  *
 	  * @var string $tituloPagina
 	  * @access public
@@ -48,6 +56,17 @@ class Controller {
 	 * @deprecated
      */
     var $metaDescripcion;
+	/**
+	 * Define un metodo a ejecutar previo a la ejecucion de metodos accedidos por url
+	 *
+	 * @var string $preEjecucion
+	 */
+	var $preEjecucion="";
+	/**
+	 * Define un metodo a ejecutar posterior a la ejecucion de metodos accedidos por url
+	 * @var string $postEjecucion
+	 */
+	var $postEjecucion="";
     protected $helpers = array();
      /**
       * Define el Modelo a usar en el controlador;
@@ -157,6 +176,7 @@ class Controller {
 		 * del controlador con error, por tanto se crea un objeto DataVista vacio
 		 */
 		if(!$dataVista instanceof DataVista)		$dataVista = new DataVista();
+		if(defined('APP_MULTIIDIOMA')) $this->multiidioma = APP_MULTIIDIOMA;
         $this->dv = $dataVista;
         $dataVista->a = "hola";
 		$this->idioma=& $this->dv->idioma;
@@ -405,7 +425,7 @@ class Controller {
             if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller") or class_exists(Cadenas::upperCamelCase($ctrl))){
                 $controller = str_replace('Controller', "", $ctrl);
             }else{
-                throw new Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
+                throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
 
             }
         }
@@ -544,31 +564,34 @@ class Controller {
      *
      */
     private function getModelo(){
-        if(!empty($this->modelo) and !is_object($this->modelo)){
+		if( !is_object($this->modelo)){
+			if(!empty($this->modelo)){
 
-            if(class_exists($this->modelo)){
-                $this->modelo = new $this->modelo;
-            }else{
+	            if(class_exists($this->modelo)){
+	                $this->modelo = new $this->modelo;
+	            }else{
 
-                throw new Exception("El objeto $this->modelo especificado como modelo no existe", 1);
+	                throw new Exception("El objeto $this->modelo especificado como modelo no existe", 1);
 
-            }
-        }else{
-            $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-            $arrayModel=array();
-            foreach ($words as $key => $word) {
-                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
-                    $arrayModel[]=substr($word, 0,strlen($word)-2);
-                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
-                    $arrayModel[]=substr($word, 0,strlen($word)-1);
-                }
-            }
+	            }
+	        }else{
+	            $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+	            $arrayModel=array();
+	            foreach ($words as $key => $word) {
+	                if(substr($word, strlen($word)-2)==PLURAL_CONSONANTE){
+	                    $arrayModel[]=substr($word, 0,strlen($word)-2);
+	                }elseif(substr($word, strlen($word)-1)==PLURAL_ATONO){
+	                    $arrayModel[]=substr($word, 0,strlen($word)-1);
+	                }
+	            }
 
-            $model = (count($arrayModel)>0)?implode($arrayModel):$this->_nombreController;
-            if(class_exists($model)){
-                $this->modelo = new $model;
-            }
-        }
+	            $model = (count($arrayModel)>0)?implode($arrayModel):$this->_nombreController;
+	            if(class_exists($model)){
+	                $this->modelo = new $model;
+	            }
+	        }
+
+		}
 
     }
     /**
@@ -643,7 +666,9 @@ class Controller {
 	 *
 	 */
 	protected function obtURLApp(){
-		$idioma=(empty($this->idioma))?"":$this->idioma."/";
+		$idioma="";
+		if($this->multiidioma)
+			$idioma=(empty($this->idioma))?"":$this->idioma."/";
 
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
 			return $GLOBALS['__URL_APP'].$idioma;

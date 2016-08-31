@@ -1,10 +1,10 @@
-<?PHP 
+<?PHP
 /**
  * Archivo contenedor de constantes de configuración establecidas con valores por defecto.
- * 
+ *
  * Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
  * en los archivos appSetting. initConfig y BDConfig.
- * 
+ *
  */
  if(!array_key_exists('modulos', $GLOBALS)){
  	$GLOBALS['modulos']=['Jadmin'];
@@ -14,19 +14,19 @@
 if(!defined('MODELO_USUARIO')){
 	define('MODELO_USUARIO','User');
 }
-	
+
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if(!defined('MANEJADOR_BD'))
-define('MANEJADOR_BD',FALSE); 
+define('MANEJADOR_BD',FALSE);
 /**
  * @constante TITULO_SISTEMA Nombre de la aplicación
  */
 if(!defined('TITULO_SISTEMA'))
     define ('TITULO_SISTEMA','Aplicación Jida - Framework');
-/** 
- * Nombre de la aplicacion, 
- * @deprecated 
- * @see TITULO_SISTEMA 
+/**
+ * Nombre de la aplicacion,
+ * @deprecated
+ * @see TITULO_SISTEMA
  * */
 if(!defined('titulo_sistema'))
     define ('titulo_sistema',TITULO_SISTEMA);
@@ -55,12 +55,12 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
   * @default Aplicacion/plantillas
   */
   define('DIR_PLANTILLAS_APP',DIR_APP.'plantillas/');
-if(!defined('METODO_EXCEPCION'))        
+if(!defined('METODO_EXCEPCION'))
 /**
  * Nombre del metodo a ejecutar en el CONTROLADOR_EXCEPCIONES
  * al conseguir una excepción.
  * @constant METODO_EXCEPCION
- * 
+ *
  */
 define('METODO_EXCEPCION','error');
 
@@ -70,14 +70,14 @@ define('METODO_EXCEPCION','error');
 
 if(!defined('ENTORNO_APP')){
     /**
-     * @constante ENTORNO_APP Define el entorno de la aplicación 
+     * @constante ENTORNO_APP Define el entorno de la aplicación
      */
     define('ENTORNO_APP',dev);
 }
 if(!defined('entorno_app'))    define('entorno_app',ENTORNO_APP);
 if(!defined('TEST_PLATFORM')){
     define('TEST_PLATFORM',FALSE);
-  
+
 }
 #===============================================================================
 # Configuración del Framework
@@ -136,7 +136,7 @@ if(!defined('URL_APP'))
  */
 define('URL_APP',"/");
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
-   
+
 /**
  * Constantes Framework
  */
@@ -149,12 +149,12 @@ define('LAYOUT_DEFAULT','default.tpl.php');
 if(!defined('LAYOUT_EXCEPCIONES'))
 /**
  * Nombre del layout para excepciones
- */ 
+ */
 define('LAYOUT_EXCEPCIONES','error.tpl.php');
 if(!defined('DIR_LAYOUT_JIDA'))
 /**
  * Definición de la ubicacion de los templates para el backend del Framework
- * 
+ *
  * Puede ser modificada su ubicación si desea personalizarse el disenio.
  */
 define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
@@ -181,3 +181,5 @@ if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',true);
  * Determina
  */
 if(!defined('PATH_APP')) define('PATH_APP','/');
+
+$GLOBALS['idiomas']=['es'=>'Espa&ntilde;ol'];
