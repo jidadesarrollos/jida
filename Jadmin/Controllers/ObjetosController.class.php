@@ -12,6 +12,8 @@
 class ObjetosController extends \JController{
 
 
+
+
 	var $Mperfil = "";
     function __construct($id=""){
         $this->helpers=array('Arrays');
