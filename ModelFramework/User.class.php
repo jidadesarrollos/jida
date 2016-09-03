@@ -141,6 +141,8 @@ class User extends DataModel{
             while($perfil = $this->bd->obtenerArrayAsociativo($data))	
                 $this->perfiles[]=$perfil['clave_perfil'];
             
+        }else{
+        	$this->perfiles[]='UsuarioPublico';
         }
     }
     /**

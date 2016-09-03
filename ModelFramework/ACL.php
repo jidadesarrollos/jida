@@ -40,9 +40,13 @@ class ACL{
 		if(!$this->usuario instanceof MODELO_USUARIO)
 			$this->usuario = new $modeloUser();
 		if(empty($this->usuario->perfiles)) $this->usuario->agregarPerfilSesion('UsuarioPublico');
-		$this->leerEstructura();
+		if(!Session::get('ACL')){
+			$this->leerEstructura();
+			$this->leerPerfiles();	
+		}else{
+			$this->_acl = Session::get('ACL');
+		}
 		
-		$this->leerPerfiles();
 		
 		
                 

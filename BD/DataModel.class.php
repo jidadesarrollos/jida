@@ -395,14 +395,14 @@ class DataModel{
 						->filtro([$this->pk=>$this->{$this->pk}])
 						
 						->obtQuery();
-					$rel->imprimir();
+					
 				}
 
 			}else{
 				$rel = new $relacion();
 				$this->consultaRelaciones[$relacion] = 
 				$rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])
-				->imprimir()
+				
 				->obtQuery();
 			}
 
@@ -458,6 +458,7 @@ class DataModel{
      * @param int $id Identificador unico del registro;
      */
     private function instanciarObjeto($id,$data=[]) {
+    	
     	if(count($data)<1){
     		$data = $this->__obtConsultaInstancia($id)->fila();
     	}
