@@ -937,9 +937,15 @@ class DataModel{
            foreach ($arrayFiltro as $key => $value) {
                	if($i>0) $this->query.=" and ";
                if(is_array($value)){
-               	$this->query.=" $this->tablaQuery.$key'.$value[1].'$value[0]'";
+	               	if(!strpos($key, "."))
+		           		$this->query.="$this->tablaQuery.$value[1].'$value[0]'";
+				   else 
+	               		$this->query.=" $key'.$value[1].'$value[0]'";
                }else{
-               	$this->query.=" $this->tablaQuery.$key='$value'";
+               	if(!strpos($key, "."))
+               		$this->query.="$this->tablaQuery.$key='$value'";
+				else
+					$this->query.="$key='$value'";
                }
 
 
@@ -950,6 +956,7 @@ class DataModel{
 		   		$this->query.=" or (";
 		   		foreach ($arrayOr as $key => $value) {
 	               if($o>0) $this->query.=" and ";
+				
 			   if(!strpos($key, "."))
 	           		$this->query.=" $this->tablaQuery.$key='$value'";
 			   else
