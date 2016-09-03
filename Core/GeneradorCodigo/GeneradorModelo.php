@@ -25,7 +25,7 @@ class GeneradorModelo extends GeneradorObjeto{
 		return $this;
 
 	}
-    function generar($tablaBD,$prefijos){
+    function generar($tablaBD,$prefijos){
 
         $this->tabla=$tablaBD;
         $this->nombreObjeto($tablaBD,$prefijos);

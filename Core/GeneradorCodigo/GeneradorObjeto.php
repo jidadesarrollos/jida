@@ -20,6 +20,7 @@ class GeneradorObjeto extends \DataModel{
     protected $extends;
     private $Directorio;
 	protected $modulo;
+	var $extensionClass=TRUE;
     /**
      * @var dir $ubicacion Directorio donde se guardara el archivo del objeto
      */
@@ -72,9 +73,16 @@ class GeneradorObjeto extends \DataModel{
 
         return $nombre;
     }
+	/**
+	 * Crea un objeto 
+	 */
     protected function crearClase(){
       if(!$this->Directorio->validar($this->ubicacion)) $this->Directorio->crear($this->ubicacion);
-      $this->crear($this->ubicacion.$this->nombreObjeto.".class.php");
+	  if($this->extensionClass)
+      	$this->crear($this->ubicacion.$this->nombreObjeto.".class.php");
+	  else {
+		$this->crear($this->ubicacion.$this->nombreObjeto.".php");  
+	  }
       $this->contenido='<?php'.$this->saltodeLinea();
       $this->contenido.=
           $this->docBlock

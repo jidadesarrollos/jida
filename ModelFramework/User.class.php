@@ -78,6 +78,7 @@ class User extends DataModel{
     protected $pk = "id_usuario";
     protected $unico =['nombre_usuario'];
     protected $registroUser = FALSE;
+	
     /**
      * Verifica que los datos para iniciar session sean validos
      * 
@@ -109,6 +110,21 @@ class User extends DataModel{
             return false;
         }
     }
+	private function  stringConsulta(){
+		return "select 
+			a.id_usuario_perfil AS id_usuario_perfil,
+			a.id_perfil AS id_perfil,
+			a.id_usuario AS id_usuario,
+			c.nombre_usuario,
+			c.nombres,
+			c.apellidos,
+			b.clave_perfil AS clave_perfil
+		from
+			s_usuarios_perfiles a
+			join s_perfiles b ON (a.id_perfil = b.id_perfil)
+			join s_usuarios c on (a.id_usuario = c.id_usuario)";
+		
+	}
     /**
      * Obtiene los perfiles asociados a un usuario de base de datos
      * @method obtenerPerfiles
@@ -119,7 +135,7 @@ class User extends DataModel{
             $this->id_usuario = $idUser;
         }
         if(count($this->perfiles)<1){
-            $query = "select * from vj_perfiles_usuarios where id_usuario=$this->id_usuario";
+            $query = $this->stringConsulta()." where a.id_usuario=$this->id_usuario";
             $data  = $this->bd->ejecutarQuery($query);
             if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
             while($perfil = $this->bd->obtenerArrayAsociativo($data))	
