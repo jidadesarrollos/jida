@@ -525,10 +525,14 @@
 
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
-        if(method_exists($controlador, $metodo))
-            //$controlador->$metodo($params);
-            call_user_func_array([$controlador,$metodo], $args);
-        else{
+        if(method_exists($controlador, $metodo)){
+        	
+        	if($controlador->manejoParams)
+            	call_user_func_array([$controlador,$metodo], $args);
+            else
+            	$controlador->$metodo($params);	
+            
+		}else{
             throw new Exception("Error Processing Request", 404);
             Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
         }

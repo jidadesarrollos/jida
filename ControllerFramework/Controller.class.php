@@ -133,11 +133,19 @@ class Controller {
      * @see DataVista object
      */
     var $dv;
-    var $usuario;
-	
-    /**
+    
+	/**
      * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio 
      */
+    var $usuario;
+	
+     /**
+     * Define el funcionamiento que realiza el framework para manejar
+	 * los parametros en las URL
+     * @var $manejoParams
+     */
+    var $manejoParams=MANEJADOR_PARAMS;
+	
     function __construct(){
     	global $dataVista;
         

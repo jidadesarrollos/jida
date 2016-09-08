@@ -135,6 +135,16 @@ if(!defined('URL_APP'))
  * @constant URL_APP Dirección url de la aplicación
  */
 define('URL_APP',"/");
+
+/**
+ * @constant MANEJADOR_PARAMS 
+ * Mantiene el funcionamiento del pase de parametros en las URLs entre las distintas versiones del Framework
+ * TRUE para utilizar el manejo actualizado desde V-1.4
+ * FALSE para versiones inferiores
+ */
+if(!defined('MANEJADOR_PARAMS'))
+define('MANEJADOR_PARAMS',TRUE); 
+
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
    
 /**
