@@ -3,10 +3,11 @@
 
 
 //require_once 'GeneradorObjeto.class.php';
+namespace Jida;
 class GeneradorModelo extends GeneradorObjeto{
-    
+
     private $tabla;
-    
+
     public function __construct(){
         parent::__construct();
         $this->ubicacion=DIR_APP."Modelos/";
@@ -14,19 +15,27 @@ class GeneradorModelo extends GeneradorObjeto{
     function obtenerTablas(){
         return $this->bd->obtTablasBD();
     }
-    
-    
+
+
+	function ubicacion($ubicacion=""){
+		if(empty($ubicacion)){
+			return $this->ubicacion;
+		}
+		$this->ubicacion = $ubicacion;
+		return $this;
+
+	}
     function generar($tablaBD,$prefijos){
-        
+
         $this->tabla=$tablaBD;
         $this->nombreObjeto($tablaBD,$prefijos);
         $this->extends="DataModel";
-        $this->generarDoc();   
+        $this->generarDoc();
         $this->propiedades = $this->definirPropiedadesBD($tablaBD);
         $this->crearClase();
-        
+		return true;
     }
-    
+
     private function generarDoc(){
         $tags=[
             'package'   => 'Aplicacion',
@@ -35,19 +44,19 @@ class GeneradorModelo extends GeneradorObjeto{
         $titulo = "Clase Modelo para ".$this->tabla;
         $this->docBlock=$this->generarDocObjeto($titulo,null,$tags);
     }
-    
+
     private function obtenerMetodos($tablaBD){
         return $this->bd->obtColumnasTabla($tablaBD);
     }
     private function definirPropiedadesBD($tablaBD){
         $metodos = $this->obtenerMetodos($tablaBD);
-        
+
         $pk="";
         $propiedades=[
-                
+
         ];
         for($i=0;$i<count($metodos);++$i){
-            
+
             if(strtolower($metodos[$i]['column_key'])=='pri') $pk=$metodos[$i];
             $propiedades[] =[
                 'propiedad'     =>      $metodos[$i]['column_name'],
@@ -64,15 +73,15 @@ class GeneradorModelo extends GeneradorObjeto{
                 ];
         return $propiedades;
     }
-    
+
     private function  generarDocPropiedad($type,$prop,$comment=""){
         $doc  ="\t/**\n";
         $doc.="\t* @var ".$type." $prop ".$comment."\n\t*/";
         return $doc;
-        
+
     }
-   
-    
-    
+
+
+
 }
 

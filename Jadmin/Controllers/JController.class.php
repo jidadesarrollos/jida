@@ -10,11 +10,16 @@
 class JController extends Controller{
 
 	protected $urlHtdocs;
+	var $idioma = 'es';
     function __construct(){
     	parent::__construct();
 
 		$this->dv->title="JIDAPanel";
-
+		if(empty($this->idioma)){
+			$this->idioma='es';
+		}
+		$this->tr = new JComponentes\Traductor($this->idioma,['path'=>'Framework/Traducciones/']);
+		$this->dv->traductor = $this->tr;
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         if(!$this->layout)
 		  $this->layout="jadminIntro.tpl.php";
@@ -43,25 +48,30 @@ class JController extends Controller{
 	 */
 	private function definirJSGlobals(){
 		if(strtolower($this->_modulo)=='jadmin'){
-			$GLOBALS['_JS']=[
-				'dev'=>[
-					'/htdocs/bower_components/jquery/dist/jquery.js',
-					'/htdocs/bower_components/jquery-ui/jquery-ui.min.js',
-					'/htdocs/bower_components/bootstrap/dist/js/bootstrap.min.js',
-					'/htdocs/bower_components/bootbox.js/bootbox.js',
-				],
+			if(!array_key_exists('jadmin', $GLOBALS['_JS'])){
 
-				'prod'=>[
-				 		'https://code.jquery.com/jquery-2.0.3.min.js',
-			        	'https://code.jquery.com/ui/1.10.3/jquery-ui.min.js',
-			            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
+
+				$GLOBALS['_JS']=[
+					'dev'=>[
+						'/htdocs/bower_components/jquery/dist/jquery.js',
+						'/htdocs/bower_components/jquery-ui/jquery-ui.min.js',
+						'/htdocs/bower_components/bootstrap/dist/js/bootstrap.min.js',
+						'/htdocs/bower_components/bootbox.js/bootbox.js',
 					],
-				'/htdocs/js/jida/min/jd.plugs.js',
+
+					'prod'=>[
+					 		'https://code.jquery.com/jquery-2.0.3.min.js',
+				        	'https://code.jquery.com/ui/1.10.3/jquery-ui.min.js',
+				            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
+						],
+					'/htdocs/js/jida/min/jd.plugs.js',
 
 
 
-			];
+				];
+
 			$this->dv->js=$GLOBALS['_JS'];
+			}
 		}
 
 		return $this;

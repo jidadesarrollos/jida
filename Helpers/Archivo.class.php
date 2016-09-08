@@ -85,13 +85,14 @@ class Archivo{
     	
         $this->files = $file;
         if(!isset($file) or is_array($file)){
-            
+			
             $this->name  = $file['name'];
             $this->type = $file['type'];
             $this->tmp_name = $file['tmp_name'];
             $this->error = $file['error'];
             $this->size = $file['size'];
             $this->obtenerExtension();
+			
             $this->totalArchivosCargados = count($file['tmp_name']);
             $this->validarCarga();
             
@@ -131,6 +132,7 @@ class Archivo{
      * @method obtenerExtension
      */
 	   private function obtenerExtension(){
+
         if(is_array($this->type)){
             $i=0;
             
@@ -146,8 +148,36 @@ class Archivo{
             
         }else{
           $explode = explode("/",$this->type);
+		  switch ($explode[1]){
+	        case 'pdf':
+	            $mime = 'pdf';
+	            break;
+	        case 'msword':
+	            $mime = 'doc';
+	            break;
+	        case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
+	            $mime = 'docx';
+	            break;
+	        case 'vnd.ms-excel':
+	            $mime = 'xls';
+	            break;
+	        case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+	            $mime = 'xlsx';
+	            break;
+	        case 'vnd.ms-powerpoint':
+	            $mime = 'ppt';
+	            break;
+	        case 'vnd.openxmlformats-officedocument.presentationml.presentation':
+	            $mime = 'pptx';
+	            break;
+	        case 'plain':
+	            $mime = 'txt';
+	            break;
+			default: $mime = $explode[1];
+				break;
+	    }
 		  
-		  $this->extension[0] = $explode[1];
+		  $this->extension[0] = $mime;
         }
 		
 	}
@@ -318,6 +348,30 @@ class Archivo{
         }
     }
     
+    /**
+     * Elimina varios archivos
+     * @method	eliminarMultiplesArchivos
+	 * @param	$arr de direccion fisica de archivos a eliminar
+	 * @return	boolean o array de elementos no eliminados
+     */
+    static function eliminarMultiplesArchivos($arr){
+		if(is_array($arr)){
+			$noEliminados=[];
+			foreach ($arr as $key => $value):
+				if(!unlink($value))
+					$noEliminados[]=$value;
+			endforeach;
+			
+			if($noEliminados>0)
+				return $noEliminados;
+			else
+				return true;
+		}else{
+			throw new Exception("Debes pasar un arreglo", 1);
+			return false;
+		}
+    }
+	
     /**
      * @method eliminarArchivo
      * @deprecated

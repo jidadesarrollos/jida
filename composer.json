@@ -11,8 +11,17 @@
     ],
     "require": {},
     "autoload":{
+        "files" : ["funciones.php"],
     	"psr-4":{
-    		"Jida\\":["/","elementos/","core/"]
+    		"Jida\\":[
+    			"/","elementos/",
+    			"core/",
+    			"core/GeneradorCodigo/",
+    			"ModelFramework/"
+    			],
+			"JComponentes\\":[
+				"Componentes/"
+			]
 
     	}
     }

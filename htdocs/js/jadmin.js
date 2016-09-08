@@ -7,10 +7,10 @@ function addSortable(){
 
 function guardarOrden(){
         var orden = $("#listCamposFormulario").sortable('toArray').toString();
-            
+
         data = "s-ajax=true&campos="+orden;
-        
-        
+
+
         new jd.ajax({
             url:"/jadmin/forms/ordernar-campos/",
             parametros:{'campos':orden,'ambito':$("#jidaConfiguracion").data('formulario')},
@@ -22,12 +22,12 @@ function guardarOrden(){
                     $("#listCamposFormulario > li").removeClass('selecionable');
                     $("#listCamposFormulario").sortable("destroy");
                 }else{
-                    
+
                 }
             }
         });
         return true;
-        
+
 }//fin guardarOrden
 
 
@@ -38,36 +38,43 @@ $( document ).ready(function(){
        if(this.value==1){
             addSortable();
             console.log("aqui");
-            $this.html("<span class=\"fa fa-save fa-lg\"></span> Finalizar").val(2);        
+            $this.html("<span class=\"fa fa-save fa-lg\"></span> Finalizar").val(2);
        }else
        if(this.value==2){
-           
+
            $(this).val(1).html('<span class=\"fa fa-edit fa-lg\"></span> Editar Orden');
            guardarOrden();
        }
-       
+
    });
-    $("#listCamposFormulario li").on('dblclick',function(){
-        
+    $("#listCamposFormulario li").on('dblclick',function(e){
+
         var valorSeleccion = $( this ).data('id-campo');
-        var accion = $( this ).attr('name');
-        var form =  $( "#listCamposFormulario" ).data('form');
+        var accion 	= $( this ).attr('name');
+        var $this 	= $( this );
+        var $ul 	= $this.parent();
+        var form	= $ul.data('form');
+        var urlCall	= $ul.data('url');
+        e.preventDefault();
+        console.log("ak");
         if(valorSeleccion){
-            
-            data = "accion=2&idCampo="+encodeURIComponent(valorSeleccion)+"&form="+form;
-            var jdajax = new jd.ajax(
-                {
-                    url:'/jadmin/forms/configuracion-campo/',
-                    metodo:'POST',
-                    respuesta:"html",
-                    funcionCarga:   function(ajax){
-                        nodoTexto=this.obAjax.responseText;
-                        $("#jidaFormConfiguracion").html(nodoTexto);
-                    },
-                    parametros:data,    
-                });
-        }
-        return false;
+
+			parametros ={
+				'accion':2,
+				'idCampo' :valorSeleccion,
+				'form':form
+			};
+			$.ajax({
+				url : urlCall,
+				method: 'post',
+				dataType:'html',
+				data: parametros
+			}).done(function(data){
+			$("#jidaFormConfiguracion").html(data);
+			});
+		}
+
+
     });
      if($('[data-selectall]').size()>0){
     	$seleccionador = $('[data-selectall]');
@@ -78,15 +85,15 @@ $( document ).ready(function(){
 			$( seleccion ).each(function(){
 				this.checked=$this.prop('checked');
 			});
-	    	
+
 	    });
 	    $($seleccionador.data('selectall')).on('click',function(){
-	    	
+
 	    	if($($seleccionador.data('selectall')+':checked').lenght== $($seleccionador.data('selectall')).length )
 	    	$seleccionador.prop('checked',true);
 	    	else
 	    	$seleccionador.prop('checked',false);
 	    });
     }
-    
-});    
+
+});

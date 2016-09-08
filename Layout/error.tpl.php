@@ -16,7 +16,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
         <?=$this->printHeadTags()?>        
-        <?=$this->printCss()?>
+
+        <?=$this->imprimirLibrerias('css',$this->data->moduloCss)?>
     </head>
 
     <body>
@@ -40,6 +41,6 @@
                 </div>
             </div><!--Cierre div full-container-->
         </div>
-		<?=$this->printJS()?>
+		<?=$this->printJS($this->data->moduloJS)?>
     </body>
 </html>

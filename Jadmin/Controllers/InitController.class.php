@@ -6,15 +6,15 @@
 * @version
 * @category Controller
 */
-require_once 'Framework/Core/GeneradorCodigo/GeneradorCodigo.trait.php';
+use \Directorios as Directorios;
 class InitController extends JController{
-	use GeneradorCodigo;
+	use Jida\GeneradorCodigo;
 	private $GeneradorModelo;
 	private $gController;
 	function __construct(){
 		parent::__construct();
-		$this->GeneradorModelo=new GeneradorModelo();
-		$this->gController= new GeneradorController();
+		$this->GeneradorModelo=new Jida\GeneradorModelo();
+		$this->gController= new Jida\GeneradorController();
 		/**
 		 * Esta forma de insertar los archivos debe ser mejorada
 		 */
@@ -29,17 +29,17 @@ class InitController extends JController{
 			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
 			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
-			
+
 		],false);
-		
+
 	}
-	
+
 	function index(){
 		$this->vista="init";
 		if($this->post('btnBdConfig')){
 			if(!Session::get('dirApp')) $this->crearDirApp();
 			if(!$this->validarDatosBD()){
-				
+
 				Formulario::msj('error', 'Faltan algunos datos, por favor valida y vuelve a intentarlo');
 			}else{
 				if($this->configurarBD()){
@@ -49,20 +49,20 @@ class InitController extends JController{
 					$this->crearUsuarioJadmin();
 					$this->redireccionar($this->getUrl('modelos'));
 				}else{
-					
+
 					Formulario::msj('error','No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
 				}
-				
+
 				//Debug::string("final funcion",true);
 			}
 		}
 	}
 	/**
 	 * Gestiona toda la configuración para la base de datos
-	 * 
+	 *
 	 * Crea el archivo de configuracion de bd y la estructura de aplicacion
 	 * @method configurarBD
-	 * 
+	 *
 	 */
 	private function configurarBD(){
 		//$bdConfig = file("Framework/Settings/BDConfig.jida");
@@ -75,7 +75,7 @@ class InitController extends JController{
 			'bd'		=>	$this->post('bd')
 		];
 		if($this->probarConexion($arrayConfig)){
-			
+
 			$bdConfig="";
 			#Debug::mostrarArray($bdConfig);
 			if(!Directorios::validar(DIR_APP)) Directorios::crear(DIR_APP);
@@ -85,45 +85,45 @@ class InitController extends JController{
 				);
 			$bdConfig.=$this->constante('MANEJADOR_BD', 'MySQL', 'string', 'Manejador de Base de datos utilizado en el sistema');
 			$bdConfig.=$this->constante('manejadorBD', 'MySQL', 'string', 'Manejador de Base de datos utilizado en el sistema');
-			
+
 			$bdConfig.=$this->saltodeLinea();
 			$bdConfig.=$this->docBlock('Arreglo de conexiones',null,['var'=>['type'=>'array','name'=>'$GLOBALS[\'conexiones\']']]);
-			
-			
+
+
 			$bdConfig.=$this->definirArray('$GLOBALS[\'conexiones\']',['default'=>$arrayConfig]);
 			$this 	->crear(DIR_APP."Config/BDConfig.php")
 					->escribir($bdConfig)
 					->cerrar();
 			return true;
-			
+
 		}else{
-			
+
 			return false;
 		}
-					
-		
+
+
 	}
 
 	/**
 	 * Definicion archivo appConfig
 	 */
 	private function appConfig(){
-		
+
 		$devCss = [
 			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
 			$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
 			$this->obtURLApp()."htdocs/css/jida/jida.css",
 			];
-			
+
 		$devJS =[
 			$this->urlHtdocs."jquery/dist/jquery.js",
 			$this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
 			$this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
-			
+
 		];
 
-		$appConfig = 
+		$appConfig =
 			  $this->abrirPHP()
 			. $this->docBlock('Archivo de Configuracion de la Aplicación',
 							'El app config es creado para definir variables y constantes de configuracion que
@@ -136,8 +136,8 @@ class InitController extends JController{
 			')
 			.$this->definirArray('$GLOBALS[\'_CSS\']',['dev'=>$devCss]).$this->saltodeLinea()
 			.$this->docBlock(
-					'Archivos JS Requeridos', 
-					'Los archivos definidos en el primer nivel del arreglo serán incluidos siempre sin importar el ambiente de 
+					'Archivos JS Requeridos',
+					'Los archivos definidos en el primer nivel del arreglo serán incluidos siempre sin importar el ambiente de
 * la aplicacion. Si se desea especificar archivos solo para un ambiente, se debe definir una clave con el nombre del ambiente.
 			')
 			.$this->definirArray('$GLOBALS[\'_JS\']',['dev'=>$devJS]);
@@ -147,31 +147,31 @@ class InitController extends JController{
 			return $this;
 	}
 	private function initConfig(){
-		$initConfig = 
+		$initConfig =
 			$this->abrirPHP() .
 			$this->docBlock(
 				'Archivo Inicial de configuracion de la Aplicacion',
-				'El InitConfig es usado para definir todas aquellas variables globales o constantes que 
+				'El InitConfig es usado para definir todas aquellas variables globales o constantes que
  * solo sean utilizadas en un ambiente especifico (como desearrollo, calidad o producción), esto facilita
  * agrupar en un solo archivo todo lo que no desea ser pasado de un ambiente a otro.
 				'
-				) 
+				)
 			. $this->constante('APP_MANTENIMIENTO', FALSE, 'boolean', 'Define si la aplicacion se encuentra en mantenimiento')
 			. $this->constante('URL_APP', '/', 'url', 'Direccion URL de la App')
 			. $this->constante('ENTORNO_APP', 'dev', 'string', 'Define el entorno de la aplicacion')
-			
+
 			;
-		$initConfig .= $this->saltodeLinea() 
+		$initConfig .= $this->saltodeLinea()
 			. $this->definirArray('$GLOBALS[\'modulos\']',['Jadmin']);
 		$this 	->crear(DIR_APP."Config/initConfig.php")
 					->escribir($initConfig)
-					->cerrar();	
+					->cerrar();
 		return $this;
 	}
 	private function validarDatosBD(){
 		$bandera=FALSE;
 		$validaciones = ['obligatorio'];
-		
+
 		if(	!empty($this->post('servidor')) and !empty($this->post('usuario_bd')) and
 			!empty($this->post('clave_bd')) and !empty($this->post('bd'))
 			// Validador::validar($validaciones, $this->post('servidor')) and
@@ -179,18 +179,18 @@ class InitController extends JController{
 			// Validador::validar($validaciones,$this->post('servidor')) and
 			// Validador::validar($validaciones,$this->post('clave_bd'))
 			){
-				
-				
+
+
 				$bandera=TRUE;
 			}
-			
+
 		return $bandera;
 	}
 	/**
 	 * @method modelos;
 	 */
     function modelos(){
-     	
+
 		$tablas = $this->GeneradorModelo->obtenerTablas();
         //Debug::mostrarArray($BDManager->obtenerTablas());
         if($this->post('btnCrearModelos')){
@@ -198,37 +198,37 @@ class InitController extends JController{
                 if($this->crearModelos()){
                 	Vista::msj('componentes','suceso', 'Se han creado los objetos correctamente');
                 	$this->redireccionar($this->obtURLApp()."jadmin/componentes/");
-//                	
+//
                 }
-				
+
             }else{
                 Session::set('__msj',Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
             }
-                        
-        }    
-        
-        
-        
+
+        }
+
+
+
         $this->dv->tablas=$tablas;
     }
 	/**
 	 * Crea los modelos de la aplicacion a partir de la estructura de base de datos.
-	 * 
+	 *
 	 * @method crearModelos
 	 * @return void
 	 */
     private function crearModelos(){
         $objetos = $this->post('tablas_bd');
         $prefijos = explode(",",$this->post('txtPrefijos'));
-        
+
         array_walk($prefijos,function(&$valor,$clave){
           $valor ="/^".$valor."/";
         });
-    
+
         foreach ($objetos as $key => $objeto) {
-            $this->GeneradorModelo->generar($objeto,$prefijos);   
+            $this->GeneradorModelo->generar($objeto,$prefijos);
         }
-		
+
 		return true;
     }
 	private function crearDirApp(){
@@ -243,8 +243,8 @@ class InitController extends JController{
 		Directorios::crear($directorios);
 		Session::set('dirApp', TRUE);
 	}
-	
-	
+
+
 	private function probarConexion($configuracion){
 		$GLOBALS['conexiones']['default'] = $configuracion;
 		$manejador="MySQL";
@@ -254,27 +254,27 @@ class InitController extends JController{
 						$bd = new Mysql();
 					$GLOBALS['conexiones']['default']['puerto']=3306;
 					break;
-				
+
 				case 'PSQL':
-					
+
 					break;
 			}
 			if($bd->establecerConexion()){
-				return true;	
+				return true;
 			}
 		}catch(Exception $e){
-			
+
 			return false;
 		}
-			
+
 	}
-	
-	
+
+
 	private function crearControllerApp(){
 		$this->gController->documentacion(
 		"Controlador Principal de la Aplicacion",null,
 		['className'=>'AppController','category'=>'controller','package'=>'Aplicacion']);
-		
+
 		$this->gController->agregarExtend('Controller')->crearController('App');
 		$this->gController
 		->agregarExtend('AppController')
@@ -284,35 +284,35 @@ class InitController extends JController{
 			return $content;
 		})
 		->crearController('Index');
-		
+
 		$this->crearVista(
-				'index', 'index', 
+				'index', 'index',
 				Selector::crear("a",
 						['href'=>$this->urlController(),'class'=>"text-center"],
 			 			'Configurar Aplicaci&oacute;n'
 				)
 		 );
-		
-				
+
+
 	}
-	
-	
+
+
 	protected function crearVista($controller,$metodo,$contenido=""){
 		$modulo  =explode(".", $controller);
 		$ubicacion = DIR_APP;
-		
+
 		if(count($modulo)>1){
-		
+
 			$ubicacion.=Cadenas::upperCamelCase(Cadenas::upperCamelCase($modulo[0]))."/Vistas/".Cadenas::lowerCamelCase($modulo[1])."/";
 		}else{
-		
+
 			$ubicacion.="Vistas/".Cadenas::lowerCamelCase($controller)."/";
 		}
-		
-		
+
+
 		if(!Directorios::validar($ubicacion)) Directorios::crear($ubicacion);
-		
-		$view = 
+
+		$view =
 			$this->abrirPHP()
 			. $this->docBlock("Archivo vista para $metodo",null,
 				['category'=>'view','package'=>'Aplicacion'])
@@ -334,9 +334,9 @@ class InitController extends JController{
 	}
 	private function crearUsuarioJadmin(){
 		$user = new User();
-		
+
 		$user->initBD('MySQL');
-		
+
 		$data = [
 			'id_estatus'=>1,
 			'validacion'=>1,
@@ -345,11 +345,11 @@ class InitController extends JController{
 		];
 		$user->registrarUsuario($data,[1],FALSE);
 		$user->agregarPerfilSesion('JidaAdministrador');
-		
+
 		Session::sessionLogin();
 		$user->registrarSesion();
 		Session::set('Usuario',$user);
 		return $this;
 	}
-	
+
 }

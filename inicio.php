@@ -78,14 +78,18 @@ if(TEST_PLATFORM==TRUE){
 /**
  * Incluir archivo de configuración general del framework
  */
- if(file_exists(DIR_APP)){
+ if(file_exists(DIR_APP.'Config/BDConfig.php')){
+
 	include_once 'Config/BDConfig.php';
-	include_once 'Config/initConfig.php';
-	include_once 'Config/appConfig.php';
+
  }
+if(file_exists(DIR_APP . 'Config/initConfig.php'))
+	include_once 'Config/initConfig.php';
 include_once 'Settings/jConstantes.php';
 include_once 'Settings/jidaConfiguracion.php';
 
+if(file_exists(DIR_APP) and file_exists(DIR_APP . 'Config/appConfig.php'))
+	include_once 'Config/appConfig.php';
 if(array_key_exists('include', $GLOBALS)){
 	foreach ($GLOBALS['include'] as $key => $archivo) {
 		include_once $archivo;

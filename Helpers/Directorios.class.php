@@ -134,9 +134,10 @@ class Directorios extends Directory{
      * @method eliminar
      */
     static function eliminar($dir){
+
         foreach(glob($dir . "/*") as $files){
             if (is_dir($files)){
-                eliminarDir($files);
+                self::eliminar($files);
             }else{
                 unlink($files);
             }
@@ -155,7 +156,7 @@ class Directorios extends Directory{
     static function limpiar($dir){
        foreach(glob($dir . "/*") as $files){
             if (is_dir($files)){
-                eliminarDir($files);
+				self::eliminar($files);
             }else{
                 unlink($files);
             }

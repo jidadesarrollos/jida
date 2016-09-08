@@ -164,15 +164,14 @@ class Selector{
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";
-        // if (is_array($atributos) and array_key_exists ( 'content', $atributos )) {
-//             
-            // $content = $atributos ['content'];
-            // unset ( $atributos ['content'] );
-        // }
+
         if(is_array($atributos)){
             
             foreach ( $atributos as $key => $value ) {
-                
+                if(is_array($value)){
+                	throw new Exception("se ha pasado un arreglo para el key ".$key, 1);
+					
+                }
                 $selectorHTML .= " $key=\"$value\"";
             }    
         }
@@ -360,8 +359,14 @@ class Selector{
             
             foreach ($this->attr as $attr => $value) {
                $atribs.=" ";
-                
-               $atribs.=$attr."=\"".$value."\"";
+               if(strpos($attr,"data-")!==FALSE){
+               		#echo "if()";
+               		$atribs.=$attr."='".$value."'";
+               }else{
+               	#echo "elsee())";
+               		$atribs.=$attr."=\"".$value."\"";
+               }
+               
                 ++$i;
             }
         }

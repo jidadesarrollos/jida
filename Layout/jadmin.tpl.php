@@ -16,7 +16,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
         <?=$this->printHeadTags()?>
-        <?=$this->printCSS()?>
+        <?=$this->imprimirLibrerias('css','jadmin')?>
 
         <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
         <!--libs-->
@@ -65,6 +65,6 @@
             </div><!--Cierre div full-container-->
         </div>
 
-         <?=$this->printJS()?>
+         <?=$this->imprimirLibrerias('js','jadmin')?>
     </body>
 </html>

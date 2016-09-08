@@ -6,6 +6,7 @@
   * @author  Julio Rodriguez <jirc48@gmail.com>
   * @date 27/12/2013
   */
+  global $JD;
  class JidaController {
     /**
      * Define el nombre del Controlador requerido
@@ -94,10 +95,12 @@
             }
 
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-            $_SESSION['urlActual'] = $_GET['url'];
+			JD('URL_ANTERIOR',Session::get('urlActual'));
+			Session::set('urlActual',$_GET['url']);
+			JD('URL_COMPLETA',"/".$_GET['url']);
 
 
-            Session::set('URL_ACTUAL_COMPLETA', $_GET['url']);
+
             /*Manejo de url*/
             if(isset($_GET['url'])){
 
@@ -105,7 +108,8 @@
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
-				if(in_array($url[0], $this->idiomas)){
+
+				if(array_key_exists($url[0], $this->idiomas)){
 
 					$this->idiomaActual=$url[0];
 					array_shift($url);
@@ -128,21 +132,28 @@
 			$ini = substr($this->appRoot, 1);
 
 			Session::set('URL_ACTUAL', $ini.Session::get('URL_ACTUAL'));
+			JD('URL',Session::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
             $GLOBALS['arrayParametros'] = $url;
 
-            $this->getSubdominio($url);
+            // $this->getSubdominio($url);
+
             $this->procesarURL($url);
 
             if(count($this->args)>0){
                 $this->procesarArgumentos();
             }
+
+
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
+
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->vista->idioma=$this->idiomaActual;
+			$this->generarVariables();
+
             $this->validacion();
 
         }catch(Exception $e){
@@ -151,20 +162,38 @@
 
     }//fin constructor
     /**
+	 * Gestiona variables para acceso global en la aplicacion
+	 *
+	 * Esta funcion debe ser revisada
+	 * @since 1.4
+	 */
+
+    private function generarVariables(){
+    	JD('Controlador',$this->controlador);
+		JD('Vista',$this->vista);
+		JD('Metodo',$this->metodo);
+		JD('Modulo',$this->modulo);
+
+
+
+
+    }
+    /**
      * Procesa el contenido de la url
      * Valida los modulos, controladores y metodos a consultar
      * @method procesarURL
      */
     private function procesarURL($url){
+
         $primerParam = array_shift($url);
 
 		$URL = "/".$primerParam;
         $param = $this->validarNombre($primerParam,1);
        //Se valida si se ha solicitado un modulo por medio de un subdominio
-        if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
-            $this->modulo=$this->validarNombre($this->subdominio,1);
-            $this->moduloSubdominio=TRUE;
-        }
+        // if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
+            // $this->modulo=$this->validarNombre($this->subdominio,1);
+            // $this->moduloSubdominio=TRUE;
+        // }
 
         if(!in_array($param,$this->modulosExistentes) or $this->moduloSubdominio===TRUE){
 
@@ -183,6 +212,7 @@
                 //Se verifica si existe el controlador
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
+
                     if(count($url)>0 ){
 
                     	$paramDos =array_shift($url);
@@ -207,22 +237,29 @@
             endif;
 
         }else{
+
             $this->modulo=$param;
+
             if(count($url)>0){
+
             	$paramDos = array_shift($url);
+
 				$URL.="/".$paramDos;
                 $param =$this->validarNombre($paramDos,1);
 
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
+
+
                     if(count($url)>0){
                     	$paramTres = array_shift($url);
 						$URL.="/".$paramTres;
                         $param =$this->validarNombre($paramTres,1);
-
+						$this->checkMetodo($param,true);
                     }
-                    $this->checkMetodo($param,true);
+
+
                 }else{
                     $this->controlador=$this->modulo;
                     $this->checkMetodo($param,TRUE);
@@ -232,7 +269,13 @@
                 $this->metodo='index';
             }
         }
+
+
+		// Debug::mostrarArray($this->args);
+		JD('QueryString',$this->args);
+
         Session::set('URL_ACTUAL', $URL);
+
         $this->args = array_merge($this->args, $url);
 
     }
@@ -249,8 +292,9 @@
                 $this->metodo=$metodo;
                 return true;
             }else{
+
                  $this->metodo="index";
-                if($insertArg){
+                if($insertArg and !empty($metodo)){
                     $this->args[]=strtolower($metodo);
                 }
             }
@@ -258,7 +302,7 @@
         }else{
 
             $this->metodo="index";
-            if($insertArg){
+            if($insertArg and !empty($metodo)){
                 $this->args[]=strtolower($metodo);
             }
             return false;
@@ -308,31 +352,19 @@
      *
      */
     private function procesarArgumentos($tipo=1){
-
-
             $band = 0;
             $clave = TRUE;
 
+			$this->args = array_filter($this->args,function($value){
+				return !empty($value);
+			});
 
             $totalClaves = count($this->args);
+
             $gets=array();
-            if($totalClaves>=2){
-                for($i = 0; $i<=$totalClaves;$i++){
-
-                    if($clave===TRUE){
-                        if(isset($this->args[$i]) and isset($this->args[$i+1]))
-                            $gets[$this->args[$i]]=$this->args[$i+1];
-                    }
-                    $i++;
-                }
-            }if($tipo>1){
-
-                $GLOBALS['getsIndex']= "otro";
-            }
 
             $_GET = array_merge($this->args,$gets);
 			$_REQUEST = array_merge($_POST,$_GET);
-
     }
     function get(){
         Debug::mostrarArray($this);
@@ -455,6 +487,7 @@
                $this->ejecucion($controlador);
            }
          }catch(Exception $e){
+
             $this->procesarExcepcion($e);
         }
 
@@ -514,7 +547,7 @@
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-        $metodo = $this->metodo;
+        $metodo = Cadenas::lowerCamelCase($this->metodo);
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
@@ -525,15 +558,28 @@
 
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
+
         if(method_exists($controlador, $metodo)){
-        	
-        	if($controlador->manejoParams)
-            	call_user_func_array([$controlador,$metodo], $args);
-            else
-            	$controlador->$metodo($params);	
+
+			if(!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)){
+				call_user_func_array([$controlador,$controlador->preEjecucion], $args);
+			}
+
+            if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
+				throw new \Exception("aaa", 404);
+            }
             
-		}else{
-            throw new Exception("Error Processing Request", 404);
+			if($controlador->manejoParams)
+				call_user_func_array([$controlador,$metodo], $args);
+            else
+            	$controlador->$metodo($params);
+			
+			
+			if(!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)){
+				call_user_func_array([$controlador,$controlador->postEjecucion], $args);
+			}
+        }else{
+            throw new Exception("No existe el metodo $metodo del controlador $nombreControlador", 404);
             Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
         }
         if($checkDirs){
@@ -573,23 +619,6 @@
 
             $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
 
-//
-            // $this->vista->rutaPagina=3;
-            // if(!class_exists($ctrlError))
-            	// throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
-            // $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
-//
-            // $metodo = $this->metodo;
-            // $ctrlExcepcion->$metodo();
-//
-            // $this->vista->layout = $ctrlExcepcion->layout;
-//
-            // $this->vista->definirDirectorios();
-			// //Debug::string($this->controlador." ".$this->metodo);
-            // $this->controladorObject = $ctrlExcepcion;
-            // $this->mostrarContenido($ctrlExcepcion->vista);
-
-//
         }catch(Exception $e){
         	Debug::mostrarArray($e,0);
 
