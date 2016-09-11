@@ -59,7 +59,7 @@ class ObjetosController extends \JController{
 		array_walk($prefijos,function(&$valor,$clave){
           $valor ="/^".$valor."/";
         });
-
+		$generador->extensionClass = FALSE;
 		if($generador->generar($objeto,$prefijos)){
 			$msj = Mensajes::crear('suceso', 'Objeto creado exitosamente');
 			Session::set('__mensaje',$msj);

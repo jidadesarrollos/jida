@@ -388,10 +388,10 @@
 
             if(BD_REQUERIDA===TRUE){
 
-				$acl = new ACL();
-
+				// $acl = new ACL();
+				$acl = new Jida\ACL();
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
-
+				
 			}else{
 				$acceso=TRUE;
 			}

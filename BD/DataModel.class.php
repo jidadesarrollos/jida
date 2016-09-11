@@ -187,7 +187,7 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
-
+	
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
@@ -234,7 +234,7 @@ class DataModel{
 
 	        //se obtienen propiedades de relacion de pertenencia
 	        if($id){
-
+			
 	            $this->instanciarObjeto($id);
 
 	        }else{
@@ -372,7 +372,9 @@ class DataModel{
 	 *
 	 */
 	private function obtTieneMuchos(){
+		
 		foreach ($this->tieneMuchos as $key => $relacion) {
+			
 			if(is_array($relacion)){
 				$rel = new $key();
 				$consulta = $rel->consulta();
@@ -391,13 +393,17 @@ class DataModel{
 					$this->consultaRelaciones[$key]=
 					$rel->join($relacion['rel'],$campos,['clave'=>$clave,'clave_relacion'=>$fk],$tipoJoin)
 						->filtro([$this->pk=>$this->{$this->pk}])
+						
 						->obtQuery();
-
+					
 				}
 
 			}else{
 				$rel = new $relacion();
-				$this->consultaRelaciones[$relacion] = $rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])->obtQuery();
+				$this->consultaRelaciones[$relacion] = 
+				$rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])
+				
+				->obtQuery();
 			}
 
 		}
@@ -452,6 +458,7 @@ class DataModel{
      * @param int $id Identificador unico del registro;
      */
     private function instanciarObjeto($id,$data=[]) {
+    	
     	if(count($data)<1){
     		$data = $this->__obtConsultaInstancia($id)->fila();
     	}
@@ -652,8 +659,9 @@ class DataModel{
     function join($clase,$campos="",$data=[],$tipoJoin=""){
 
 		$tablaRelacion = $this->tablaBD;
-
+		
         if(class_exists($clase)){
+        	
             $clase = new $clase();
             $tablaJoin = $clase->__get('tablaBD');
 			$clavePrimaria = $clase->__get('pk');
@@ -697,12 +705,17 @@ class DataModel{
 			$this->query=implode(" from ",$_queryExplode);
 		}
 		$this->join=TRUE;
+		$joinParteA=$tablaJoin.'.'.$clave;
+		$joinParteB=$tablaRelacion.'.'.$claveRelacion;
+		if(strpos($claveRelacion, "."))
+			$joinParteB = $claveRelacion;
+		if(strpos($clave, '.'))
+			$joinParteA = $clave;
 		$this->query.=sprintf(
-		"%s JOIN %s on (%s.%s=%s.%s)",
+		"%s JOIN %s on (%s=%s)",
 		$tipoJoin,
 		$tablaJoin,
-		$tablaJoin,$clave,
-		$tablaRelacion,$claveRelacion);
+		$joinParteA,$joinParteB);
 
         return $this;
 
@@ -1110,7 +1123,6 @@ class DataModel{
 			$this->order="";
         }
 		if(!empty($this->limit)) $this->query.=" ".$this->limit;
-
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 	function addConsulta(){

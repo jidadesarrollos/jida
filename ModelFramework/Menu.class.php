@@ -59,11 +59,7 @@ class Menu extends DataModel {
      */
 	function getPerfilesAcceso(){
 	    
-	     if(Session::get('Usuario') instanceof User){
-             $perfiles = array_merge(Session::get('usuario','perfiles'),Session::get('Usuario')->perfiles);
-         }else{
-             $perfiles = Session::get('usuario','perfiles');
-         }
+	     $perfiles = Session::get('Usuario')->perfiles();
          return array_merge($perfiles,$this->perfilesAcceso);
             
 	}

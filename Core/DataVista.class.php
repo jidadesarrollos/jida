@@ -50,6 +50,8 @@ class DataVista{
 	var $modulo;
 	var $controlador;
 	var $idioma;
+	var $jsAgregado=[];
+	var $cssAgregado=[];
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
@@ -81,18 +83,23 @@ class DataVista{
     function addJs($js,$dir=TRUE,$contentJS="",$footer=TRUE){
         if ($dir===TRUE) $dir=URL_JS;
         if(is_array($js)){
+        	
             foreach ($js as $key => $archivo) {
                 if(!empty($ambito))
                     $this->js[$ambito][] = $dir.$archivo;
                 else 
                     $this->js[]=$dir.$archivo;
+				
+				array_push($this->jsAgregado,$dir.$archivo);
             }
         }else{
+        	array_push($this->jsAgregado,$dir.$js);
             if(!empty($ambito))
                     $this->js[$ambito][] = $dir.$js;
             else 
                 $this->js[]=$dir.$js;
         }
+
         return $this;
     }
 	/**
@@ -180,6 +187,7 @@ class DataVista{
         
             
         if(is_array($css)){
+        	$this->cssAgregado = array_merge($this->cssAgregado,$css);
             foreach ($css as $key => $value) {
                 if(!empty($ambito))
                     $this->css[$ambito][]=$constante.$value;
@@ -187,6 +195,7 @@ class DataVista{
                     $this->css[]=$constante.$value;
             }            
         }else{
+        	array_push($this->cssAgregado,$css);
             if(!empty($ambito))
                 $this->css[$ambito][]=$constante.$css;
             else{
