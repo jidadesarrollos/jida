@@ -20,6 +20,13 @@
 	 * @var array $lenguajes
 	 */
 	private $idiomas=[];
+	/**
+	 * Registra la estructura de los valores get pasados por URL para versiones del framework anteriores a 1.4
+	 * 
+	 * @var array $arrayGetCompatibilidad
+	 * @ignored
+	 */
+	private $arrayGetCompatibilidad;
 	private $idiomaActual;
     /**
      * Objeto controlador instanciado
@@ -358,12 +365,30 @@
 			$this->args = array_filter($this->args,function($value){
 				return !empty($value);
 			});
+			
+			$totalClaves = count($this->args);
+            $gets=array();
+            if($totalClaves>=2){
+                for($i = 0; $i<=$totalClaves;$i++){
 
+                    if($clave===TRUE){
+                        if(isset($this->args[$i]) and isset($this->args[$i+1]))
+                            $gets[$this->args[$i]]=$this->args[$i+1];
+                    }
+                    $i++;
+                }
+            }if($tipo>1){
+
+                $GLOBALS['getsIndex']= "otro";
+            }
+			$this->arrayGetCompatibilidad = array_merge($this->args,$gets);
+			
             $totalClaves = count($this->args);
 
             $gets=array();
 
-            $_GET = array_merge($this->args,$gets);
+            // $_GET = array_merge($this->args,$gets);
+            $_GET = $this->args;
 			$_REQUEST = array_merge($_POST,$_GET);
     }
     function get(){
@@ -568,12 +593,16 @@
             if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
 				throw new \Exception("aaa", 404);
             }
-            
+            $controlador->manejoParams=FALSE;
 			if($controlador->manejoParams)
 				call_user_func_array([$controlador,$metodo], $args);
-            else
+            else{
+            	$_GET = $this->arrayGetCompatibilidad;
+				$_REQUEST = array_merge($_POST,$_GET);
+				$controlador->validarVarGlobales(true);
+				
             	$controlador->$metodo($params);
-			
+			}
 			
 			if(!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)){
 				call_user_func_array([$controlador,$controlador->postEjecucion], $args);

@@ -31,6 +31,7 @@ class Controller {
 	 * @var boolean multiidioma
 	 */
 	var $multiidioma=FALSE;
+	
     var $urlCanonical=URL_APP;
     /**
      *  Define el layout a usar por el controlador
@@ -191,9 +192,7 @@ class Controller {
 
         $this->instanciarHelpers();
         $this->instanciarModelos();
-        $this->post=& $_POST;
-        $this->get =& $_GET;
-        $this->request=& $_REQUEST;
+        $this->validarVarGlobales();
         $this->_clase=get_class($this);
         $this->_nombreController = str_replace("Controller", "", $this->_clase);
 
@@ -227,6 +226,17 @@ class Controller {
         }
 
     }
+	/**
+	 * Procesa las variables de parametros globales
+	 * @since 1.4
+	 * @method validarVarGlobales
+	 */
+	function validarVarGlobales($bug=false){
+		$this->post=& $_POST;
+        $this->get =& $_GET;
+        $this->request=& $_REQUEST;
+		;
+	}
 
     private function instanciarHelpers(){
         if(count($this->helpers)>0){
