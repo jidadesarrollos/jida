@@ -61,18 +61,12 @@ class ACL{
 		#Debug::mostrarArray($this->estructura,0);
 		
 		$componentesPerfil 	= array_filter(array_unique(Arrays::obtenerKey('id_componente',$this->accesoPerfiles)));
-		
-		// foreach ($componentesPerfil as $key => $id) {
 			foreach ($this->estructura as $key => $componente) {
-				// if($id==$componente['id'])
-				// {
-// 					
+
 					$this->_acl[$componente['componente']] = array('objetos'=>[]);
 					$this->validarAccesoObjetos($componente);		
-				// }
+
 			}
-			
-		// }
 		if(!array_key_exists('principal', $this->_acl)) $this->_acl['principal']=['objetos'=>[]];
 		
 	
