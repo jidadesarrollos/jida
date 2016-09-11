@@ -22,11 +22,11 @@
 	private $idiomas=[];
 	/**
 	 * Registra la estructura de los valores get pasados por URL para versiones del framework anteriores a 1.4
-	 * 
+	 *
 	 * @var array $arrayGetCompatibilidad
 	 * @ignored
 	 */
-	private $arrayGetCompatibilidad;
+	private $arrayGetCompatibilidad=[];
 	private $idiomaActual;
     /**
      * Objeto controlador instanciado
@@ -365,7 +365,7 @@
 			$this->args = array_filter($this->args,function($value){
 				return !empty($value);
 			});
-			
+
 			$totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
@@ -382,7 +382,7 @@
                 $GLOBALS['getsIndex']= "otro";
             }
 			$this->arrayGetCompatibilidad = array_merge($this->args,$gets);
-			
+
             $totalClaves = count($this->args);
 
             $gets=array();
@@ -416,7 +416,7 @@
 				// $acl = new ACL();
 				$acl = new Jida\ACL();
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
-				
+
 			}else{
 				$acceso=TRUE;
 			}
@@ -600,10 +600,10 @@
             	$_GET = $this->arrayGetCompatibilidad;
 				$_REQUEST = array_merge($_POST,$_GET);
 				$controlador->validarVarGlobales(true);
-				
+
             	$controlador->$metodo($params);
 			}
-			
+
 			if(!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)){
 				call_user_func_array([$controlador,$controlador->postEjecucion], $args);
 			}
