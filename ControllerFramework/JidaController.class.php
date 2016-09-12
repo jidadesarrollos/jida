@@ -587,16 +587,19 @@
         if(method_exists($controlador, $metodo)){
 
 			if(!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)){
+
 				call_user_func_array([$controlador,$controlador->preEjecucion], $args);
 			}
 
             if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
 				throw new \Exception("aaa", 404);
             }
-            $controlador->manejoParams=FALSE;
-			if($controlador->manejoParams)
+
+			if($controlador->manejoParams){
+
 				call_user_func_array([$controlador,$metodo], $args);
-            else{
+            }else{
+
             	$_GET = $this->arrayGetCompatibilidad;
 				$_REQUEST = array_merge($_POST,$_GET);
 				$controlador->validarVarGlobales(true);

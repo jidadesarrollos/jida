@@ -42,6 +42,7 @@ class FormulariosController extends  JController{
 			$vista = new JVista('Jida\Formulario.obtFormulario',$params);
 
 		}
+
 		$vista->accionesFila([
 			['span'=>'fa fa-edit','title'=>'Editar','href'=>$this->obtUrl('gestion',[$app,'{clave}'])],
 			['span'=>'fa fa-trash','title'=>'Eliminar Formulario','href'=>$this->obtUrl('gestion',[$app,'{clave}'])]

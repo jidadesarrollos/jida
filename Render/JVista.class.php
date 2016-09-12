@@ -10,7 +10,7 @@
 	var $ordenamientos=TRUE;
 	var $buscador = FALSE;
 
-	private $nroFilas=1;
+	private $nroFilas=10;
 	private $paginasMostradas=9;
 	private $totalPaginas;
 	private $titulos=[];

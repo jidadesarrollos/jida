@@ -31,7 +31,7 @@ class Controller {
 	 * @var boolean multiidioma
 	 */
 	var $multiidioma=FALSE;
-	
+
     var $urlCanonical=URL_APP;
     /**
      *  Define el layout a usar por el controlador
@@ -164,19 +164,19 @@ class Controller {
      * @see DataVista object
      */
     var $dv;
-    
+
 	/**
-     * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio 
+     * @var object $usuario Objeto User instanciado al iniciar sesion. Si la sesion no esta iniciada retorna vacio
      */
     var $usuario;
-	
+
      /**
      * Define el funcionamiento que realiza el framework para manejar
 	 * los parametros en las URL
      * @var $manejoParams
      */
     var $manejoParams=MANEJADOR_PARAMS;
-	
+
     function __construct(){
     	global $dataVista;
 
@@ -545,8 +545,10 @@ class Controller {
                 if($metodo=='index')$metodo="";
                 $params= "";
                 if(count($data)>0){
-                    foreach ($data as $key => $value)
+                    foreach ($data as $key => $value){
+						if(is_array($value)) Debug::mostrarArray(debug_backtrace());
                         $params.="$value/";
+					}
                 }
                 #Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
