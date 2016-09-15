@@ -8,7 +8,7 @@
  * @category Modelo
 
 */
-namespace Jida;
+
 use \Datamodel as DataModel;
 class Componente extends DataModel{
 

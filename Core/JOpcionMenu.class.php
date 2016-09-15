@@ -10,7 +10,7 @@
 
 class JOpcionMenu extends Selector{
     
-    private $innerHTML;
+    protected $innerHTML;
     private $url;
     private $padre=0;
     private $hijo=0;

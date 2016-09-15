@@ -10,7 +10,7 @@
 class MenuL extends Selector{
 	
 	
-	protected $data;
+	var $data;
 	protected $items;
 	protected $subitems;
     /**
