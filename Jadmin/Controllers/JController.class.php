@@ -11,7 +11,8 @@ class JController extends Controller{
 
 	protected $urlHtdocs;
 	var $idioma = 'es';
-	var $manejoParams = true;
+
+	var $manejoParams=FALSE;
     function __construct(){
     	parent::__construct();
 

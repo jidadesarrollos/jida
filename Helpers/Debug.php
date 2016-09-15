@@ -1,18 +1,18 @@
-<?PHP 
+<?PHP
 /**
  * Clase con funcionalidades generales que permiten al programador hacer tests
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package Framework
  * @category Helpers
  * @version 0.1
  */
 
- 
+namespace Jida;
 class Debug{
-    
+
     /**
      * Muestra el contenido de un arreglo envuelto en tag <pre>
      * @method mostrarArray
@@ -24,23 +24,37 @@ class Debug{
         if($exit==TRUE){
             exit;
         }
-        
+
     }
+
+	static function imprimir(){
+		$numero = func_num_args();
+		for($i=0;$i<$numero;++$i)
+		{
+			$arg = func_get_arg($i);
+			if(is_array($arg)) self::mostrarArray($arg,0);
+			elseif(is_string($arg)) self::string($arg,0);
+			elseif(is_bool($arg) and $arg){
+				exit;
+
+			}
+		}
+	}
     /**
      * Muestra el contenido de una variable String
-     * 
+     *
      */
     static function string($content,$exit=false,$tag="hr"){
         if(!is_array($content)){
             echo $content."<$tag/>";
             if($exit==TRUE){
                 exit;
-            }    
+            }
         }elseif(is_array($content) or is_object($content)){
             self::mostrarArray($content,$exit);
         }
-        
-        
+
+
     }
 }
 ?>

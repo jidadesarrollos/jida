@@ -10,6 +10,7 @@
 */
 
 namespace Jida;
+use Jida\Debug as Debug;
 class Componente extends \DataModel{
 
 
@@ -31,7 +32,7 @@ class Componente extends \DataModel{
 
 
 	function obtComponentesData(){
-		$this->debug = new \Debug();
+		$this->debug = new Debug();
 
 
 
