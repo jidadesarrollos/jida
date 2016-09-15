@@ -187,7 +187,7 @@ class DataModel{
      * @method __construct
      */
     function __construct($id=false){
-	
+
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
@@ -234,7 +234,7 @@ class DataModel{
 
 	        //se obtienen propiedades de relacion de pertenencia
 	        if($id){
-			
+
 	            $this->instanciarObjeto($id);
 
 	        }else{
@@ -324,6 +324,7 @@ class DataModel{
 
 		foreach ($data as $relacion => $info) {
 
+
 			if(in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->tieneMuchos)){
 
 				$this->{$relacion} = [];
@@ -372,9 +373,9 @@ class DataModel{
 	 *
 	 */
 	private function obtTieneMuchos(){
-		
+
 		foreach ($this->tieneMuchos as $key => $relacion) {
-			
+
 			if(is_array($relacion)){
 				$rel = new $key();
 				$consulta = $rel->consulta();
@@ -393,16 +394,16 @@ class DataModel{
 					$this->consultaRelaciones[$key]=
 					$rel->join($relacion['rel'],$campos,['clave'=>$clave,'clave_relacion'=>$fk],$tipoJoin)
 						->filtro([$this->pk=>$this->{$this->pk}])
-						
+
 						->obtQuery();
-					
+
 				}
 
 			}else{
 				$rel = new $relacion();
-				$this->consultaRelaciones[$relacion] = 
+				$this->consultaRelaciones[$relacion] =
 				$rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])
-				
+
 				->obtQuery();
 			}
 
@@ -458,7 +459,7 @@ class DataModel{
      * @param int $id Identificador unico del registro;
      */
     private function instanciarObjeto($id,$data=[]) {
-    	
+
     	if(count($data)<1){
     		$data = $this->__obtConsultaInstancia($id)->fila();
     	}
@@ -659,9 +660,9 @@ class DataModel{
     function join($clase,$campos="",$data=[],$tipoJoin=""){
 
 		$tablaRelacion = $this->tablaBD;
-		
+
         if(class_exists($clase)){
-        	
+
             $clase = new $clase();
             $tablaJoin = $clase->__get('tablaBD');
 			$clavePrimaria = $clase->__get('pk');
@@ -952,7 +953,7 @@ class DataModel{
                if(is_array($value)){
 	               	if(!strpos($key, "."))
 		           		$this->query.="$this->tablaQuery.$value[1].'$value[0]'";
-				   else 
+				   else
 	               		$this->query.=" $key'.$value[1].'$value[0]'";
                }else{
                	if(!strpos($key, "."))
@@ -969,7 +970,7 @@ class DataModel{
 		   		$this->query.=" or (";
 		   		foreach ($arrayOr as $key => $value) {
 	               if($o>0) $this->query.=" and ";
-				
+
 			   if(!strpos($key, "."))
 	           		$this->query.=" $this->tablaQuery.$key='$value'";
 			   else

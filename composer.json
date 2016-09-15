@@ -15,9 +15,10 @@
     	"psr-4":{
     		"Jida\\":[
     			"/","elementos/",
-    			"core/",
-    			"core/GeneradorCodigo/",
-    			"ModelFramework/"
+    			"Core/",
+    			"Core/GeneradorCodigo/",
+    			"ModelFramework/",
+    			"Helpers/"
     			],
 			"JComponentes\\":[
 				"Componentes/"

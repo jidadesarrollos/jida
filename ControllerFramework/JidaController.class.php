@@ -585,7 +585,7 @@
         $controlador=& $this->controladorObject;
 
         if(method_exists($controlador, $metodo)){
-
+			//Validacion de ejecucion de un metodo previo al solicitado por url
 			if(!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)){
 
 				call_user_func_array([$controlador,$controlador->preEjecucion], $args);
@@ -594,19 +594,18 @@
             if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
 				throw new \Exception("aaa", 404);
             }
-
+			// Ejecucion del metodo solicitado
 			if($controlador->manejoParams){
 
 				call_user_func_array([$controlador,$metodo], $args);
             }else{
 
-            	$_GET = $this->arrayGetCompatibilidad;
-				$_REQUEST = array_merge($_POST,$_GET);
+            	$_GET 		= $this->arrayGetCompatibilidad;
+				$_REQUEST 	= array_merge($_POST,$_GET);
 				$controlador->validarVarGlobales(true);
-
-            	$controlador->$metodo($params);
+            	$controlador->$metodo(null);
 			}
-
+			//Validacion ejecucion post metodo
 			if(!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)){
 				call_user_func_array([$controlador,$controlador->postEjecucion], $args);
 			}
