@@ -717,10 +717,30 @@ class Controller {
 	/**
 	 * Define el layout a utilizar
 	 * @method addLayout
+	 * @since 1.4
 	 */
-	protected function addLayout($layout){
+	protected function layout($layout){
+		if(!strpos($layout, ".tpl.php")) $layout .=".tpl.php";
 		$this->layout = $layout;
 	}
+	/**
+	 * Asigna los parametros pasados para que puedan ser accedidos desde la vista
+	 * @method data
+	 * @param mixed $data Arreglo de variables a pasar a la vista o nombre de variable a pasar
+	 * @param int $valor [opcional] Si $data es un string $valor sera asignado como valor de la variable $data
+	 * @since 1.4
+	 *
+	 */
+	protected function data($data,$valor=""){
+		if(is_array($data)){
+			foreach ($data as $key => $value) {
+				$this->dv->{$key} = $value;
+			}
+		}else $this->dv->{$data} = $valor;
+	}
+
+
+
 
 
 
