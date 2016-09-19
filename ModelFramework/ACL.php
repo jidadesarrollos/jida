@@ -10,7 +10,7 @@
 */
 
 namespace Jida;
-use \Debug as Debug;
+use Jida\Debug as Debug;
 use \Session as Session;
 use \Arrays as Arrays;
 class ACL{
