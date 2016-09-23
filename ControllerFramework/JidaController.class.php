@@ -7,6 +7,7 @@
   * @date 27/12/2013
   */
   global $JD;
+use Jida\Debug as Debug;
  class JidaController {
     /**
      * Define el nombre del Controlador requerido
@@ -156,7 +157,7 @@
 
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
-
+			
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
@@ -244,11 +245,11 @@
             endif;
 
         }else{
-
+			
             $this->modulo=$param;
 
             if(count($url)>0){
-
+				
             	$paramDos = array_shift($url);
 
 				$URL.="/".$paramDos;
@@ -264,6 +265,9 @@
 						$URL.="/".$paramTres;
                         $param =$this->validarNombre($paramTres,1);
 						$this->checkMetodo($param,true);
+                    }else{
+                    	
+						$this->metodo='index';
                     }
 
 
@@ -277,7 +281,7 @@
             }
         }
 
-
+		
 		// Debug::mostrarArray($this->args);
 		JD('QueryString',$this->args);
 
