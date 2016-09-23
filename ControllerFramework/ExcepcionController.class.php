@@ -35,13 +35,13 @@ class ExcepcionController extends Controller{
         parent::__construct();
         $this->excepcion = $e;
 		$this->dv->moduloCss = $this->moduloCss;
-		
-		
+
+
 		$this->dv->moduloJS = $this->moduloJS;
         if($this->solicitudAjax()) {
 
             $this->layoutExcepcion = $this->layout = 'ajax.tpl.php';
-			
+
         }
 
     }
@@ -49,7 +49,7 @@ class ExcepcionController extends Controller{
 	 * Retorna el layout a utilizar para las excepciones
 	 * @method layout
 	 */
-	function layout(){
+	function obtLayout(){
 		return $this->layoutExcepcion;
 	}
 

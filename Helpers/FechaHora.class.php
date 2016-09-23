@@ -1,20 +1,20 @@
 <?php
 /**
  * Helpers Formatos para Fecha y Horas
- * 
+ *
  * Definición  de las funciones formatos de fechas y horas a utlilizar.
- * 
+ *
  * @category	framework
  * @package		Helpers
- * 
+ *
  * @author      Daniel Suniaga <dsuniaga@sundecop.gob.ve>
  * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
  * @version     0.1 - 09/09/2013
  */
 class FechaHora{
-    
+
     static $diasSemana =    [
-            
+
             'en'=>[
             1=>['abr' => 'mon', 'dia'=>'Monday'],
             2=>['abr' => 'tue', 'dia'=>'Tuesday'],
@@ -42,8 +42,8 @@ class FechaHora{
                 6=>['abr' => 'sab', 'dia'=>'Sábado'],
                 7=>['abr' => 'dom', 'dia'=>'Domingo'],
             ]
-             
-          ]; 
+
+          ];
 
     static $meses = [
     	'en'=>[
@@ -92,71 +92,75 @@ class FechaHora{
     /**
      * Retorna el nombre del día solicitado
      * @method obtenerDia
-     * @param $dia int 
+     * @param $dia int
      */
     static function nombreDia($dia="",$lang="es"){
         if($dia!=0 and empty($dia))  $dia = date('w');
- 
-        return self::$diasSemana[$lang][$dia];
+ 		if(!array_key_exists($lang, self::$diasSemana)) throw new Exception("No existe traducción de días para el lenguaje $lang", 1);
+		if(!array_key_exists($dia, self::$diasSemana[$lang]))
+			throw new Exception("No existe el key $dia para un dia registrado", 1);
+
+
+        return self::$diasSemana[$lang][$dia]['dia'];
     }
-	
+
     static function diasSemana($lang='es'){
-        
+
         return self::$diasSemana[$lang];
     }
 
 	function LTaDatetime($fecha){
-	    
+
 	}
 	/**
 	 * Función que retorna el año en dos digitos.
-	 * 
+	 *
 	 * @return string
 	 */
 	static function anioDosDigitos() {
 		return date ( 'y' );
 	}
-	
+
 	/**
 	 * Función que retorna el año en cuatro digitos.
-	 * 
+	 *
 	 * @return string
 	 */
 	static function anioCuatroDigitos() {
 		return date ( 'Y' );
 	}
-	
+
 	/**
 	 * Función que retorna la hora en formato 24 de dos digitos.
-	 * 
+	 *
 	 * @return string
 	 */
 	static function hora24($hora="") {
 		if(empty($hora)) $hora=date ( 'H' );
 		else{
 			$date = new DateTime($hora);
-			$hora = $date->format('H');	
+			$hora = $date->format('H');
 		}
 		return $hora;
 	}
 
     static function horaFormato12($hora=""){
-        
+
         $periodo =(date($hora)>11)?"pm":"am";
         $horaConFormato =date('h:i',strtotime($hora));
-        
+
         return $horaConFormato." ".$periodo;
     }
 	/**
 	 * Función que retorna los minutos.
-	 * 
+	 *
 	 * @return string
 	 */
 	static function minutos() {
 		self::mesNumero ();
 		return date ( 'i' );
 	}
-		
+
 
 	/**
 	 * Timestamp Unix
@@ -169,23 +173,23 @@ class FechaHora{
 	 * @return int $caracasDateTime Timestamp de Unix de la Hora de Caracas.
 	 */
 	public static function timestampUnix($fecha='') {
-		
+
 		if($fecha==''){
-			
+
 			$dateTimeZoneCaracas = new DateTimeZone ( "America/Caracas" );
 			$dateTimeCaracas = new DateTime ( "now", $dateTimeZoneCaracas );
 			$caracasOffset = $dateTimeZoneCaracas->getOffset ( $dateTimeCaracas );
 			$caracasDateTime = strtotime ( date ( "Y-m-d H:i:s", time () + $caracasOffset ) );
-			
+
 		}else{
-			
+
 			$caracasDateTime = strtotime($fecha);
-			
-		}	
-		
+
+		}
+
 		return $caracasDateTime;
 	}
-	
+
 	/**
 	 * Conviente Timestamp Unix a Date con la hora
 	 *
@@ -204,16 +208,16 @@ class FechaHora{
 	 * Convierte a DATE una fecha timestamp de unix y la devuelve
 	 * en formato d-m-Y
 	 */
-	
+
 	public static function convertirUnixADate($epoch) {
 		$dt = new DateTime ( "@$epoch" );
 		return $dt->format ( 'd-m-Y' );
 	}
-	
+
 	/**
 	 * Función que convierte la fecha con formato '/' o '-'
-	 * 
-	 * @param string $fecha        	
+	 *
+	 * @param string $fecha
 	 * @param string $parametro
 	 *        	si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
 	 * @return string
@@ -228,7 +232,7 @@ class FechaHora{
 				return $fechaCortada [0] . $parametro . $fechaCortada [1] . $parametro . $fechaCortada [2];
 				// return date('d'.$parametro.'m'.$parametro.'Y',strtotime($fecha));
 			} elseif ($fecha [4] == '/' || $fecha [2] == '/') {
-				
+
 				$fechaCortada = explode ( '/', $fecha );
 				return $fechaCortada [0] . $parametro . $fechaCortada [1] . $parametro . $fechaCortada [2];
 			}
@@ -236,8 +240,8 @@ class FechaHora{
 	}
 	/**
 	 * Función que invierte el formato de la fecha
-	 * 
-	 * @param string $fecha.        	
+	 *
+	 * @param string $fecha.
 	 * @param string $parametro.
 	 *        	si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
 	 * @return string
@@ -247,29 +251,29 @@ class FechaHora{
 			return date ( 'Y' . $parametro . 'm' . $parametro . 'd', $fecha );
 		} else {
 			$fechaTipoFormato = self::fechaTipoFormato ( $fecha, $parametro );
-			
+
 			if ($fechaTipoFormato [4] == '-' || $fechaTipoFormato [4] == '/') {
-				
+
 				return date ( 'd' . $fechaTipoFormato [4] . 'm' . $fechaTipoFormato [4] . 'Y', strtotime ( $fechaTipoFormato ) );
 			} elseif ($fechaTipoFormato [2] == '-' || $fechaTipoFormato [2] == '/') {
-				
+
 				return date ( 'Y' . $fechaTipoFormato [2] . 'm' . $fechaTipoFormato [2] . 'd', strtotime ( $fechaTipoFormato ) );
 			}
 		}
 	}
     /**
      * Retorna una fecha dada en Formato datetime
-     * 
+     *
      * @method datetime
      */
-    
+
     static function datetime($fecha=""){
         if(!empty($fecha)){
-            return date ( 'Y-m-d H:i:s',$fecha );    
+            return date ( 'Y-m-d H:i:s',$fecha );
         }else{
             return date ( 'Y-m-d H:i:s' );
         }
-        
+
     }
     /**
      * @method fecha
@@ -277,7 +281,7 @@ class FechaHora{
      */
     static function fecha($fecha=""){
         $fecha = new DateTime($fecha);
-        
+
         return $fecha->format('d-m-Y');
     }
     /**
@@ -289,13 +293,13 @@ class FechaHora{
         $datetime = new DateTime($fecha);
         return $datetime->format('d-m-Y');
     }
-    
+
     /**
      * Retorna el número del día del mes de una fecha dada
      * @method numeroDia
      */
     static function numeroDia($f=""){
-        
+
         $f = new DateTime($f);
         return $f->format('d');
     }
@@ -309,7 +313,7 @@ class FechaHora{
     }
     static function mesAbr($f){
         $f = new DateTime($f);
-        return self::$meses['es'][$f->format('n')]['abr'];        
+        return self::$meses['es'][$f->format('n')]['abr'];
     }
 	/**
 	 * Retorna el mes
@@ -336,5 +340,5 @@ class FechaHora{
 	    $date = DateTime::createFromFormat($formato, $fecha);
 	    return $date && $date->format($formato) == $fecha;
 	}
-	
+
 }

@@ -378,7 +378,7 @@ class Pagina{
 
     		$ctrl  =new $ctrlExcepcion($e);
 			if(method_exists($ctrlExcepcion, 'layout'))
-				$this->layout = $ctrl->layout();
+				$this->layout = $ctrl->obtLayout();
     	}
     	$codigo = $e->codigo();
 
@@ -673,7 +673,7 @@ class Pagina{
 			if(is_array($value) and $key!=ENTORNO_APP and $key!=$modulo)
 				unset($data[$key]);
 		}//fin forech
-		
+
 		if(array_key_exists(ENTORNO_APP, $data)){
 			$dataInclude = $data[ENTORNO_APP];
 			//Se eliminan

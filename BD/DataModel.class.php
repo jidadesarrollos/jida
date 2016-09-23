@@ -1222,7 +1222,7 @@ class DataModel{
                     }
                 }
             }else{
-                $datos[]=$arrayDatos;
+                $datos[]="\"".$arrayDatos."\"";
             }
         }
 		if(is_array($campo)){

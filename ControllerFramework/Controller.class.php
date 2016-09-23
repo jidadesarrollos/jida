@@ -716,7 +716,7 @@ class Controller {
 
 	/**
 	 * Define el layout a utilizar
-	 * @method addLayout
+	 * @method layout
 	 * @since 1.4
 	 */
 	protected function layout($layout){

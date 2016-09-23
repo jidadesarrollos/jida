@@ -125,7 +125,7 @@ if(!defined('FECHA_MODIFICACION')){
 if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
-if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components');
+if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
 if(!defined('LAYOUT_JIDA'))
 
 
@@ -137,13 +137,13 @@ if(!defined('URL_APP'))
 define('URL_APP',"/");
 
 /**
- * @constant MANEJADOR_PARAMS 
+ * @constant MANEJADOR_PARAMS
  * Mantiene el funcionamiento del pase de parametros en las URLs entre las distintas versiones del Framework
  * TRUE para utilizar el manejo actualizado desde V-1.4
  * FALSE para versiones inferiores
  */
 if(!defined('MANEJADOR_PARAMS'))
-define('MANEJADOR_PARAMS',TRUE); 
+define('MANEJADOR_PARAMS',TRUE);
 
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
 
