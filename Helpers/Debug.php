@@ -32,7 +32,7 @@ class Debug{
 		for($i=0;$i<$numero;++$i)
 		{
 			$arg = func_get_arg($i);
-			if(is_array($arg)) self::mostrarArray($arg,0);
+			if(is_array($arg) or is_object($arg)) self::mostrarArray($arg,0);
 			elseif(is_string($arg)) self::string($arg,0);
 			elseif(is_bool($arg) and $arg){
 				exit;
