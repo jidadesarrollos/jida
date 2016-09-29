@@ -1044,6 +1044,7 @@ class DataModel{
 
         if(is_array($arrayFiltro)){
            $i=0;
+			$this->query.="(";
            foreach ($arrayFiltro as $key => $value) {
 
 			   if(is_array($value)){
@@ -1086,8 +1087,10 @@ class DataModel{
 	                        break;
 	                }
 			   }
+
                ++$i;
            }
+			$this->query.=")";
         }else{
             throw new Exception("No se ha definido correctamente el filtro", 200);
         }
