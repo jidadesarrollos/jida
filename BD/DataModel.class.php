@@ -996,9 +996,9 @@ class DataModel{
     function agrupar($agrupacion){
 
     	if(is_array($agrupacion))
-			$this->query.="group by ".implode(",", $agrupacion);
+			$this->query.=" group by ".implode(",", $agrupacion);
 		else
-			$this->query.="group by ".$agrupacion;
+			$this->query.=" group by ".$agrupacion;
 		return $this;
     }
     /**
