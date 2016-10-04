@@ -1,6 +1,8 @@
 <?php
 /**
 * Clase Padre de modelos
+* 
+* @internal encargada de todo el manejo y logica para el ORM del Framework
 * @author Julio Rodriguez
 * @package Framework
   @subpackage BD
