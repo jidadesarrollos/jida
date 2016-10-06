@@ -9,7 +9,9 @@
             "email": "jirc48@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "phpmailer/phpmailer": "^5.2"
+    },
     "autoload":{
         "files" : ["funciones.php"],
     	"psr-4":{
@@ -19,9 +21,17 @@
     			"Core/GeneradorCodigo/",
     			"ModelFramework/",
     			"Helpers/"
+
+
     			],
 			"JComponentes\\":[
 				"Componentes/"
+			],
+			"App\\":[
+				"../Aplicacion/"
+			],
+			"App\\Config\\":[
+				"../Aplicacion/Config/"
 			]
 
     	}
