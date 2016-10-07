@@ -1327,26 +1327,35 @@ class DataModel{
      * Inserta multiples registros en Base de Datos
      * @method crearTodo
      * @param array $data Data a insertar
+	 * @param boolean [$insertPK] bandera para indicarle al metodo si incluye la clave primaria en el query
 	 * @return object ResultBD
 	 * @see ResultBD
      */
-    function salvarTodo($data){
+    function salvarTodo($data,$insertPK=false){
         if(is_array($data)){
 
             $insert = "INSERT INTO ".$this->tablaBD." ";
-            $insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0])).") VALUES ";
+			
+			if($insertPK)
+				$insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0],false)).") VALUES ";
+			else
+				$insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0])).") VALUES ";
+			
+            
             $i=0;
 
 			$this->totalInserciones = count($data);
             foreach ($data as $key => $registro) {
                 if($i>0) $insert.=",";
-                $datos = $this->estructuraInsert($registro);
+                $datos = $this->estructuraInsert($registro,$insertPK);
                 $insert.=" (".implode(',', $datos).")";
                 ++$i;
             }
 
+
             $this->bd->ejecutarQuery($insert);
 			$this->armarIdsInsertados();
+			
             return $this->resultBD->setValores($this);
         }else{
             throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
@@ -1406,11 +1415,13 @@ class DataModel{
      * @method obtenerCamposQuery
      * @return array $campos
      */
-    private function obtenerCamposQuery($campos=""){
+    private function obtenerCamposQuery($campos="",$unsetPK=true){
         if(empty($campos) or !is_array($campos))
             $campos = $this->propiedades;
 
-        unset($campos[$this->pk]);
+		if($unsetPK)
+        	unset($campos[$this->pk]);
+			
         $campos = array_keys($campos);
         if($this->registroMomentoGuardado){
             $campos[]='fecha_creacion';
@@ -1422,15 +1433,15 @@ class DataModel{
         return $campos;
     }
 
-    private function estructuraInsert($data=array()){
+    private function estructuraInsert($data=array(),$insertPK=false){
 
         if(count($data)<1){
             $data = $this->propiedades;
         }
 
         foreach($data as $campo => $valor) {
-            if ($campo != $this->pk) {
-
+        	
+            if ( ($campo != $this->pk) || $insertPK ) {
                 switch ($valor) {
                     case '':
                         if(!filter_var($valor,FILTER_VALIDATE_INT) and $valor!==0){
