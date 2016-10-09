@@ -66,16 +66,13 @@ class Correo{
 			throw new \Exception("No se ha realizado la configuraci&oacute;n para el envio de correos", 1);
 
 		}
-		if(!property_exists($this->configMail, $configuracion))
-		{
-			throw new \Exception("La configuracion pasada no existe", 1);
 
-		}
 
 		$this->phpMailer = new \PHPMailer();
+		$this->phpMailer->CharSet = 'UTF-8';
 		if(property_exists($this->configMail, 'general'))
 			$this->_configGeneral = $this->configMail->general;
-		$this->configuracion = array_merge($this->_default,$this->_general,$this->configMail->{$configuracion});
+		$this->config($configuracion);
 		$this->checkConfiguracion();
     }
 	private function checkConfiguracion(){
@@ -163,6 +160,7 @@ class Correo{
 		$this->phpMailer->IsHTML();
 		$this->phpMailer->isSMTP();
 		$html = $this->construirMail();
+		$this->phpMailer->Subject = $asunto;
 		if(!is_array($destinatarios)) $destinatarios = [$destinatarios];
 		$enviado=true;
 		if(is_array($destinatarios)){
@@ -185,11 +183,27 @@ class Correo{
 		return $enviado;
 	}
 	/**
+	 * Edita el valor de configuracion para envio de correos
+	 * @method config
+	 * @param string $var Configuracion a usar, el valor pasado debe estar definido
+	 * como propiedad de la clase App\Config\Mail
+	 * @throws Excepion
+	 */
+	function config($configuracion){
+			if(!property_exists($this->configMail, $configuracion))
+		{
+			throw new \Exception("La configuracion pasada no existe", 1);
+
+		}
+		$this->configuracion = array_merge($this->_default,$this->_general,$this->configMail->{$configuracion});
+
+	}
+	/**
 	 * Retorna los errores obtenidos en el envio de correos
 	 * @method obtError
 	 * @return string
 	 */
-	private function obtError(){
+	function obtError(){
 		return $this->_error;
 	}
 }
