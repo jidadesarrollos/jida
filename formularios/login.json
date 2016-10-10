@@ -1,0 +1,22 @@
+{
+	"nombre" : "Inicio de Sesion",
+	"query":"false",
+	"clave_primaria":"false",
+	"identificador":"Login",
+	"campos":[
+		{
+			"name":"Usuario",
+			"type":"text",
+			"id":"usuario"
+
+		},
+		{
+			"name":"Clave",
+			"id":"clave",
+			"type":"password"
+
+		}
+	]
+
+
+}

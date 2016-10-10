@@ -106,4 +106,12 @@ class JadminController extends JController{
 
     }
 
+	function tstforms(){
+		$form = new Jida\Form('login');
+		//$form->generarInputs(['nombre','apellido','cedula']);
+
+		$this->data('form',$form);
+
+	}
+
 }

@@ -20,7 +20,8 @@
     			"Core/",
     			"Core/GeneradorCodigo/",
     			"ModelFramework/",
-    			"Helpers/"
+    			"Helpers/",
+    			"Render"
 
 
     			],
