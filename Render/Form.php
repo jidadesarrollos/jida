@@ -50,12 +50,16 @@ class Form extends  \Selector{
 	 *
 	 * @var mixed $_estructura
 	 */
-	private $_estructura;
+	private $_estructura=[
+		8,2,5,7
+	];
 	/**
 	 * Numero total de campos en el Formulario
 	 * @var $_totalCampos;
 	 */
 	private $_totalCampos;
+
+	private $_filaPivote;
 
 	function __construct($form=""){
 		if($form){
@@ -64,6 +68,7 @@ class Form extends  \Selector{
 		parent::__construct('form');
 
 	}
+
 	private function _cargarFormulario($form){
 		if(\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
 
@@ -83,7 +88,8 @@ class Form extends  \Selector{
 	}
 	private function _procesarEstructura(){
 		if(property_exists($this->_configuracion, 'estructura')){
-			$this->_estructura = $this->_configuracion->_estructura;
+			$this->_estructura = $this->_configuracion->estructura;
+
 		}else{
 			$this->_estructura = "1x".$this->_totalCampos;
 		}
@@ -97,12 +103,21 @@ class Form extends  \Selector{
 
 	}
 	function armarFormulario(){
-
+		$i=0;
+		Debug::imprimir($this->_estructura);
+		$columnas=0;
 		foreach($this->_campos as $id => $campo){
+			$content="";
 
-			$columna = 12;
+			if($columnas==0){
+				$filaPivote = new Selector('section',['class'=>'row']);
+
+			}
+
+			$columna = $this->_estructura[$i];
+			$columnas+=$columna;
 			$campo->addClass($this->_cssInput);
-			$content = $campo->render();
+			$content .= $campo->render();
 			$configuracion = $campo->configuracion;
 			$html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
 
@@ -111,8 +126,14 @@ class Form extends  \Selector{
 				$label->innerHTML((property_exists($configuracion, 'label')?$configuracion->label:$configuracion->name));
 				$content = $label->render().$content;
 			}
+
 			$html = str_replace("{{:contenido}}", $content,$html);
-			$this->addFinal($html);
+			$filaPivote->addFinal($html);
+			if($columnas>=12){
+				$columnas=0;
+				$this->addFinal($filaPivote->render());
+			}
+			++$i;
 		}
 		return parent::render();
 

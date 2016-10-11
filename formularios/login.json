@@ -3,11 +3,24 @@
 	"query":"false",
 	"clave_primaria":"false",
 	"identificador":"Login",
+	"estructura":'3[4,2]x5;2x3',
 	"campos":[
 		{
 			"name":"Usuario",
 			"type":"text",
 			"id":"usuario"
+
+		},
+		{
+			"name":"Claves",
+			"id":"claves",
+			"type":"password"
+
+		},
+		{
+			"name":"Usuarios",
+			"type":"text",
+			"id":"usuarios"
 
 		},
 		{
