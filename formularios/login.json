@@ -3,7 +3,7 @@
 	"query":"false",
 	"clave_primaria":"false",
 	"identificador":"Login",
-	"estructura":'3[4,2]x5;2x3',
+	"estructura":"2[10,2]x2",
 	"campos":[
 		{
 			"name":"Usuario",
