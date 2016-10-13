@@ -872,9 +872,10 @@
             $argumentos=func_get_args();
             $params=[];
             foreach ($argumentos as $key => $value) {
-                $params[]=$value;
+            	if($key!=0)
+					$params[$nombreClausula][]=$value;
             }
-            $this->clausulas=$argumentos;
+            $this->clausulas=$params;
         }
 
     }
