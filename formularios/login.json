@@ -3,30 +3,44 @@
 	"query":"false",
 	"clave_primaria":"false",
 	"identificador":"Login",
-	"estructura":"2[10,2]x2",
+	"estructura":"4[4,2,4,2]",
 	"campos":[
 		{
 			"name":"Usuario",
 			"type":"text",
-			"id":"usuario"
+			"id":"usuario",
+			"label":"Nombre de Usuario",
+			"eventos":{
+				"obligatorio":{
+					"mensaje":"Debe ingresar su nombre de Usuario"
+				}
+			}
 
 		},
 		{
 			"name":"Claves",
 			"id":"claves",
-			"type":"password"
+			"type":"password",
+			"label":"Clave",
+			"eventos":{
+				"obligatorio":{
+					"mensaje":"Debe ingresar su clave"
+				}
+			}
 
 		},
 		{
 			"name":"Usuarios",
 			"type":"text",
-			"id":"usuarios"
+			"id":"usuarios",
+			"label":"Nombre de Usuarios"
 
 		},
 		{
 			"name":"Clave",
 			"id":"clave",
-			"type":"password"
+			"type":"password",
+			"label":"Password"
 
 		}
 	]

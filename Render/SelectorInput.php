@@ -48,6 +48,7 @@ class SelectorInput extends \Selector{
 			case 'select':
 					$this->_crearSelect();
 				break;
+			case 'button':
 
 			default:
 					$this->_crearInput();
@@ -71,7 +72,7 @@ class SelectorInput extends \Selector{
 	 */
 	function text(){
 
-
 	}
+
 
 }
