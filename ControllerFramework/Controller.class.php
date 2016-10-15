@@ -420,12 +420,12 @@ class Controller {
     /**
      * Convierte el nombre pasado en la estructura estandard de urls
      *
-     * La estructura consiste en todo en minusculas y separado por guiones
+     * @internal La estructura consiste en todo en minusculas y separado por guiones
      * @method convertirNombreAUrl
      * @param string $nombre Nombre a convertir (metodo o controlador);
      * @return string $url
      */
-    protected function convertirNombreAUrl($nombre){
+    static function convertirNombreAUrl($nombre){
         $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $nombre, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         return strtolower(implode("-",$coincidencias));
