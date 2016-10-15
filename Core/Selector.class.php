@@ -365,7 +365,10 @@ class Selector{
                		#echo "if()";
                		$atribs.=$attr."='".$value."'";
                }else{
-               	#echo "elsee())";
+
+               		if(!is_string($attr) or !is_string($value))
+						throw new Exception("Debe ser un string el valor pasado", 1);
+
                		$atribs.=$attr."=\"".$value."\"";
                }
 
