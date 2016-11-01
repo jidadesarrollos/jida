@@ -272,6 +272,48 @@ class Imagen extends Archivo{
         return ['ancho'=>$ancho,'alto'=>$alto,'mime'=>$mime,'attr'=>$attr];
 
     }
+	
+	
+	/**
+     * Crea imagenes recortadas en los distintos formatos a partir de una imagen dada
+	 * 
+	 * @internal Utiliza por defectos los formatos 1024, 720, 350 y 140. Le asocia un identificador
+	 * al final del nombre lg, md, sm, xs para cada formato.
+	 * 
+     * @param string $ruta Ruta origen de la imagen que se desea redirecciona
+     * @param string $nombre Prefijo para las imagenes generadas
+	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
+     *
+     */
+	function resize($ruta,$nombre='img',$directorio=false){
+			$arr=[];
+			$bandera = FALSE;
+			
+			if(!$directorio)
+				$directorio = $ruta;
+			else
+				Directorios::crear($directorio);
+			
+			if(preg_match('/\.[jpg|png|jpeg]/', $ruta)){
+				$imagenes[] = $ruta;
+			}else{
+				$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
+				$bandera = TRUE;
+			}
+			
+			foreach ($imagenes as $key => $img){
+				$origen = ($bandera)?$ruta.'/'.$img:$img;
+				$ext = preg_split('/\./', $img);
+
+				$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext[1]);
+				$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext[1]);
+				$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext[1]);
+				$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
+			}
+			
+			// $imagenesRedimensionadas = Directorios::listarDirectoriosRuta($directorio, $arr, '/.*\.[jpg|png|jpeg]/');
+			// Jida\Debug::imprimir($imagenesRedimensionadas);
+	}
 
 
 
