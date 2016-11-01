@@ -276,6 +276,9 @@
 	}
 	/**
 	 * Procesa la informacion para una vista a partir de un arreglo
+	 * @method procesarArrayData
+	 * @param array $data
+	 *
 	 */
 	private function procesarArrayData($data){
 		$this->totalRegistros = count($data);
@@ -688,6 +691,15 @@
 		return $this;
 	}
 	//Geters===========================================
+	/**
+	 * Retorna el objeto Table Selector
+	 * @internal Retorna el objeto Table que hereda de selector, para poder configurarle
+	 * valores para el renderizado
+	 * @method tabla;
+	 * @return object Table;
+	 * @see Table
+	 * @link Selector
+	 */
 	function tabla(){
 		return $this->tabla;
 	}
