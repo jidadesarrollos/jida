@@ -183,11 +183,22 @@ class Form extends  \Selector{
 
 		}
 
+		$this
+			->validarJson()
+			->_instanciarCamposConfiguracion();
+			$this->_configuaricionInicial();
+			$this->_procesarEstructura();
+
+
+
+	}
+	private function validarJson(){
 		$this->_configuracion = json_decode(file_get_contents($this->_path));
 
-		$this->_instanciarCamposConfiguracion();
-		$this->_configuaricionInicial();
-		$this->_procesarEstructura();
+		if(json_last_error()!=JSON_ERROR_NONE){
+			throw new Excepcion("El formulario  ".$this->_path." no esta estructurado correctamente",$this->_ce."0");
+		}
+		return $this;
 	}
 	private function _configuaricionInicial(){
 		$this->_id =$this->_configuracion->identificador;
@@ -342,10 +353,13 @@ class Form extends  \Selector{
 
 		$this->_totalCampos = count($this->_configuracion->campos);
 		if($this->_totalCampos<1){
-			throw new Excepcion("El formulario ".$this->_formulario," no tiene campos registrados", $this->_ce."1");
+			throw new Excepcion("El formulario ".$this->_formulario." no tiene campos registrados", $this->_ce."1");
 
 		}
 		foreach ($this->_configuracion->campos as $id => $campo) {
+			if(!property_exists($campo,'type'))
+				$campo->type="text";
+
 			$this->_campos[$campo->id] = new SelectorInput($campo->name,$campo->type);
 			if($this->labels){
 				$label = new Selector('label',['for'=>$campo->id]);

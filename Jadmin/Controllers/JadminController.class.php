@@ -107,7 +107,7 @@ class JadminController extends JController{
     }
 
 	function tstforms(){
-		$form = new Jida\Form('login');
+		$form = new Jida\Form('GestionUsuarios');
 		$form->boton('borrar','Borrar');
 		$form->titulo('Formulario de prueba');
 		//$form->generarInputs(['nombre','apellido','cedula']);
