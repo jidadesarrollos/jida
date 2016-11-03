@@ -521,7 +521,17 @@ class Form extends  \Selector{
 		}
 	}
 
+	/**
+	 * Valida un formulario
+	 *
+	 * @internal Verifica que la data pasada cumpla con las validaciones registradas en el formulario
+	 *
+	 * @method validar
+	 * @param  array $data Arreglo de data a validar, generalmente corresponde a la data post.
+	 */
+	function validar($data){
 
+	}
     /**
      * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
      *
