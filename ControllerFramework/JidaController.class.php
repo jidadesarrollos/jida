@@ -14,6 +14,12 @@
      */
  	private $appRoot;
     private $controlador;
+	/**
+	 * Arreglo de lenguajes manejados en la aplicacion
+	 * @var array $lenguajes
+	 */
+	private $idiomas=[];
+	private $idiomaActual;
     /**
      * Objeto controlador instanciado
      * @var object $controladorObject
@@ -72,7 +78,12 @@
              * Seteo de zona horaria
              */
             date_default_timezone_set(ZONA_HORARIA);
-             
+			/**
+			 * validacion lenguajes existentes
+			 */
+            if(array_key_exists('idiomas', $GLOBALS)){
+            	$this->idiomas=$GLOBALS['idiomas'];
+            }
             Session::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
             
@@ -86,7 +97,7 @@
             $_SESSION['urlActual'] = $_GET['url'];
 			
 			
-            Session::set('URL_ACTUAL', $_GET['url']);
+            Session::set('URL_ACTUAL_COMPLETA', $_GET['url']);
             /*Manejo de url*/
             if(isset($_GET['url'])){
                 
@@ -94,6 +105,16 @@
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);    
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
                 $url = array_filter($url);
+				if(in_array($url[0], $this->idiomas)){
+					
+					$this->idiomaActual=$url[0];
+					array_shift($url);
+					if(count($url)<1){
+						$url[0]='index';
+					}	
+				}
+				
+				
             }
 			
             unset($_GET['url']);
@@ -120,11 +141,8 @@
             }
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
-			
-			
-            
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
-            
+            $this->vista->idioma=$this->idiomaActual;
             $this->validacion();
         
         }catch(Exception $e){
@@ -138,8 +156,10 @@
      * @method procesarURL
      */
     private function procesarURL($url){
-        
-        $param = $this->validarNombre(array_shift($url),1);
+        $primerParam = array_shift($url);
+		
+		$URL = "/".$primerParam;
+        $param = $this->validarNombre($primerParam,1);
        //Se valida si se ha solicitado un modulo por medio de un subdominio
         if(in_array($this->validarNombre($this->subdominio,1),$this->modulosExistentes)){
             $this->modulo=$this->validarNombre($this->subdominio,1);
@@ -164,7 +184,10 @@
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
                     if(count($url)>0 ){
-                        $param =$this->validarNombre(array_shift($url),1);
+                    	
+                    	$paramDos =array_shift($url);
+						$URL.="/".$paramDos;
+                        $param =$this->validarNombre($paramDos,1);
                         $this->checkMetodo($param,TRUE);
                     }else{
                         $this->metodo='index';
@@ -186,13 +209,17 @@
         }else{
             $this->modulo=$param;
             if(count($url)>0){
-                $param =$this->validarNombre(array_shift($url),1);
+            	$paramDos = array_shift($url);
+				$URL.="/".$paramDos;
+                $param =$this->validarNombre($paramDos,1);
 
                 //Se valida si existe un controlador en la url
                 if($this->checkController($param."Controller")){
                     $this->controlador=$param;
                     if(count($url)>0){
-                        $param =$this->validarNombre(array_shift($url),1);
+                    	$paramTres = array_shift($url);
+						$URL.="/".$paramTres;
+                        $param =$this->validarNombre($paramTres,1);
                         
                     }
                     $this->checkMetodo($param,true);
@@ -205,7 +232,7 @@
                 $this->metodo='index';
             }
         }
-        
+        Session::set('URL_ACTUAL', $URL);
         $this->args = array_merge($this->args, $url);
 
     }
@@ -304,6 +331,7 @@
             }
             
             $_GET = array_merge($this->args,$gets);
+			$_REQUEST = array_merge($_POST,$_GET);
         
     }
     function get(){
@@ -325,14 +353,20 @@
      */
     function validacion(){ 
         try{
+        	
             if(BD_REQUERIDA===TRUE){
+            	
 				$acl = new ACL();
 				
-            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));	
+            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+					
 			}else{
 				$acceso=TRUE;
 			}
             if($acceso===TRUE){
+            	
+            	$this->vista->data = new DataVista($this->modulo,$this->controlador,$this->metodo);
+				
                 $nombreArchivo = $this->controlador . "Controller.class.php";
                 /*
                  * Se verifica si es llamado el controlador principal del framework.
@@ -482,7 +516,10 @@
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
-        $this->controladorObject = new $controlador;
+		$this->vista->data->idioma=$this->idiomaActual;
+		$GLOBALS['dv']=$this->vista->data;
+		
+        $this->controladorObject = new $controlador();
         
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
@@ -510,7 +547,8 @@
      */
     private function procesarExcepcion(Exception $excepcion){
         try{
-            Debug::mostrarArray($excepcion);
+        	if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404) 	Debug::mostrarArray($excepcion);
+			
             if(strpos($this->controlador, 'Controller')===false)
                 $ctrlError = $this->controlador."Controller";        
             else
@@ -528,20 +566,24 @@
             $this->metodo=METODO_EXCEPCION;
             
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+			
             $this->vista->rutaPagina=3;
             if(!class_exists($ctrlError)) throw new Exception("No existe la clase utilizada para excepciones $ctrlError", 300);
             $ctrlExcepcion = new $this->controlador($excepcion,$ctrlError);
             
             $metodo = $this->metodo;
             $ctrlExcepcion->$metodo();
-            
+              
             $this->vista->layout = $ctrlExcepcion->layout;
+			
             $this->vista->definirDirectorios();
+			//Debug::string($this->controlador." ".$this->metodo);
             $this->controladorObject = $ctrlExcepcion;
             $this->mostrarContenido($ctrlExcepcion->vista);
        
 //            
         }catch(Exception $e){
+        	Debug::mostrarArray($e);
             $ctrlError = $this->controlador;
             $ctrlExcepcion = new $this->controlador($e,$ctrlError);
             $metodo = $this->metodo;
@@ -573,7 +615,7 @@
         //Compatibilidad con sistemas sin objeto DataVista
         if(! $this->vista->data instanceof DataVista){
             
-            $this->vista->data=new DataVista();
+            $this->vista->data=new DataVista($this->modulo,$this->controlador,$this->metodo);
         }
         
         $this->vista->renderizar($vista);

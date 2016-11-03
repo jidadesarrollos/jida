@@ -19,6 +19,7 @@ class String {
 	 * @return string $upperC
 	 **/
 	static function upperCamelCase($cadena,$espacios=true){
+		
 		$strUpperCase =ucwords($cadena);
 		if($espacios===true){
 			$strUpperCase = str_replace(" ", "", $strUpperCase);
@@ -157,6 +158,7 @@ class String {
             $arrCadena = array ();
             foreach ( $cadena as $valor ) {
                 $band = 0;
+				
                 foreach ( $arrAcentos as $key => $value ) {
                     if($inversa) {
                            $valorBuscado = $value; $modificador=$key;
@@ -164,9 +166,13 @@ class String {
                     else{
                          $valorBuscado = $key; $modificador=$value;
                     }
+					
                     if (strpos ( $valor, $valorBuscado ) !== false) {
+						
                         $valor = str_replace ( $valorBuscado, $modificador, $valor );
                         $band = 2;
+                    }else{
+                  	
                     }
                 } // fin foreach interno
                 $arrCadena [] = trim ( $valor );
@@ -186,8 +192,10 @@ class String {
      * @return string $string;
      */
     public static function guionCase($string){
-        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $string);
-        return strtolower(str_replace(" ", "-", $string)); 
+        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/','', $string);
+		$string = self::removerAcentos($string);
+		
+        return self::removerAcentos(strtolower(str_replace(" ", "-", $string))); 
     }
     /**
      * Modifica un string en formato guionCase a la frase original
@@ -199,7 +207,7 @@ class String {
     public static function guionCaseToString($guionCase){
         $cadena= '/\/\\\'\?\¿\_';
         //$guionCase= str_replace(["¿","?","/"], $replace, $subject)
-        preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|)/','', $guionCase);
+        preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|&)/','', $guionCase);
         
         return str_replace("-", " ", $guionCase);
     }
@@ -308,5 +316,16 @@ class String {
         }
         
     }
+	/**
+	 * Imprime un valor de reemplazo si el string pasado es vacio
+	 * 
+	 * @method vacio
+	 * @param string $string Valor a validar si es vacio
+	 * @param string $reemplazo Texto de reemplazo
+	 */
+	public static function vacio($string,$reemplazo){
+		if(empty($string)) return $reemplazo;
+		return $string;
+	}
 
 } // END

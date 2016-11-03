@@ -6,8 +6,15 @@
  * en los archivos appSetting. initConfig y BDConfig.
  * 
  */
- 
-$GLOBALS['modulos']=['Jadmin'];
+ if(!array_key_exists('modulos', $GLOBALS)){
+ 	$GLOBALS['modulos']=['Jadmin'];
+ }
+
+
+if(!defined('MODELO_USUARIO')){
+	define('MODELO_USUARIO','User');
+}
+	
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if(!defined('MANEJADOR_BD'))
 define('MANEJADOR_BD',FALSE); 

@@ -5,7 +5,7 @@
  * @package Framework
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
-class OpcionMenu extends DBContainer {
+class OpcionMenu extends DataModel {
     
     /**
      * Identificador de la opcion
@@ -65,35 +65,22 @@ class OpcionMenu extends DBContainer {
      
      * @param $id valor de la clave a instanciar 
      */
-    function __construct($id=""){
-        
-            $this->nombreTabla = 's_opciones_menu';
-            $this->clavePrimaria = 'id_opcion_menu';    
-            parent::__construct(__CLASS__,$id);
-    }//final constructor
-    
+    protected $pk = 'id_opcion_menu';
+	protected $tablaBD = 's_opciones_menu';
+    protected $registroMomentoGuardado = FALSE;
+	protected $registroUser = FALSE;
+	
+	
     function setOpcion($post){
-        
-        $this->establecerAtributos($post, __CLASS__);
+    	
         $this->hijo = (empty($this->hijo))?0:$this->hijo;
-        $proceso = $this->salvar(null,TRUE);
         if($this->padre!=0){
             $this->setHijoPadre(1);
         }
-        return $proceso;
+		return $this->salvar($post);
+        
     }
-    /**
-     * Elimina una opción de menu
-     */
-    function eliminarOpcion($id=""){
-    
-        if(!empty($id)){
-            $this->id_opcion = $id;
-            $this->inicializarObjeto($this->id_opcion);       
-        }
-        $this->eliminarObjeto();
-        $this->verificarHermanosAntesEliminar();
-    }
+
     /**
      * Verifica que la opción padre tenga la propiedad hijo en 1, si se encuentra en 0 la modifica.
      * @method setHijoPadre
@@ -102,6 +89,7 @@ class OpcionMenu extends DBContainer {
     private function setHijoPadre($valor=1){
        $query = "update $this->nombreTabla set hijo=$valor where $this->clavePrimaria=$this->padre";
        $this->bd->ejecutarQuery($query); 
+	   
     }
     /**
      * valida si la opción tiene padre y hermanos

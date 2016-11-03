@@ -1,4 +1,5 @@
 <?PHP
+
 /**
  * Modelo de Usuario de la aplicacion
  * 
@@ -72,7 +73,7 @@ class User extends DataModel{
      * @access private
      */
     protected $perfiles=[];
-    
+
     protected $tablaBD = "s_usuarios";
     protected $pk = "id_usuario";
     protected $unico =['nombre_usuario'];
@@ -86,7 +87,7 @@ class User extends DataModel{
      * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
      * @return mixed array si la sesion es iniciada, false caso contrario 
      */
-    function validarLogin($usuario,$clave,$validacion=true){
+    function validarLogin($usuario,$clave,$validacion=true,$callback=null){
         $clave = md5($clave);
         
         $result = $this ->select()
@@ -95,10 +96,14 @@ class User extends DataModel{
         if($this->bd->totalRegistros>0){
             
             $this->establecerAtributos($result);
+			
+			$this->__obtConsultaInstancia($this->id_usuario);
+			$this->obtenerDataRelaciones();
             $this->registrarSesion();
             $this->activo=1;
             $this->salvar();
             $this->obtenerPerfiles();
+			
             return $result;
         }else{
             return false;
@@ -206,7 +211,7 @@ class User extends DataModel{
             
             $this->asociarPerfiles($perfiles); 
         }
-        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico()];
+        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico(),'validacion'=>$this->validacion];
     }
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
@@ -226,6 +231,7 @@ class User extends DataModel{
             $this->establecerAtributos($data);
             $this->activo=1;
             $this->validacion=1;
+			$this->id_estatus=1;
             if($this->salvar()->ejecutado()){
                 return true;
             }else{
@@ -265,6 +271,18 @@ class User extends DataModel{
 		}
 		$this->perfiles[]=$perfil;
 		
+	}
+	function crearSesionUsuario(){
+		Session::sessionLogin();
+        Session::set('Usuario',$this);
+        //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        if(isset($data))
+        Session::set('usuario',$data);
+        return $this;
+	}
+	
+	function guardarSesion(){
+		Session::set('Usuario',$this);
 	}
 
 }

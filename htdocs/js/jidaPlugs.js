@@ -1,14 +1,10 @@
-
+if(!jd) var jd = Object();
 /**
  * Conjunto de funcionalidades para las vistas
  * 
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @version 1.2
  * @fecha : 13/11/2013 
- */
-
-/**
- * Crea funcionalidades a una vista dada
  */
  jd.vista = function(nombreVista,tipoControl){
       /**
@@ -136,7 +132,7 @@
         opcion="seleccionar";
         if(campo)
             opcion=campo;
-         console.log("llego a la seleccion "+opcion);
+         
          seleccion  = validarRadio(opcion);
         
         if(seleccion===false){
@@ -159,7 +155,7 @@
          $ctrl = $("[data-jvista=seleccion]");
          
          if($ctrl.size()>0){
-             console.log("yeah man");
+             
              $ctrl.on('click',function(e){
                 
                 var $this = $( this );
@@ -205,7 +201,7 @@
                     var url = $this.data('link')?$this.data('link'):$this.attr('href');
                           new jd.ajax({
                                 url:url,
-                                metodo:'POST',
+                                metodo:'GET',
                                 respuesta:"html",
                                 funcionCarga: function(){
                                     bootbox.dialog({message:this.respuesta});
@@ -319,9 +315,9 @@
 
 
     $("[data-liparent] > a").on('click',function(){
-        console.log('dimelo');
-        ele = $( this ).parent();
         
+        ele = $( this ).parent();
+        console.log("hola");
         if(ele.children('ul').size()>0){
             if(ele.children('ul').hasClass('show')){
                 $("ul.show").removeClass('show');
@@ -365,3 +361,30 @@ function activarPaginador(){
         });
     });
 }
+
+var activarJidaDependientes = function (){
+        
+        $("[data-dependiente]").each(function(valor,campo){
+            
+            $campo = $( campo );
+            var padre = $campo.data('dependiente');
+            var urlAccion = $campo.data('accion');
+            $("#"+padre).off();
+            $("#"+padre).on('change',function(){
+                var $padre = $( this );
+                var id= $padre.attr('id');
+                var v = $padre.val();
+                var data = new Object();
+                data[id]=v;
+                new jd.ajax({
+                    metodo:"POST",
+                    url: urlAccion,
+                    parametros:data,
+                    funcionCarga:function(ajax){
+                        $(campo).html(this.respuesta);
+                    }
+                });
+            });
+        }) ;
+    
+};

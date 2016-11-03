@@ -65,7 +65,8 @@ class Arrays {
         $nuevoArreglo = array();
         
         foreach ($arr as $key => $value) {
-                if($value[$filtro]==$busqueda){
+                if(array_key_exists($filtro, $arr) and $value[$filtro]==$busqueda){
+                	
                     $nuevoArreglo[]=$value;   
                 }
                     
@@ -74,7 +75,7 @@ class Arrays {
             //echo "SI again<hr>";
             return $nuevoArreglo;
         }else{
-            return false;
+            return [];
         }
         
     }
@@ -120,7 +121,7 @@ class Arrays {
                     
                     $datos=[];
                     foreach ($clave as $key => $value) {
-                        Debug::string($value."   1");
+                        
                         if(array_key_exists($value, $fila))
                             $datos[$value]=$fila[$value];
                     }
@@ -138,7 +139,7 @@ class Arrays {
         if(count($array)>0){
             return $arrayResult;
         }else{
-            return false;
+            return [];
         }
     }
     
@@ -189,7 +190,8 @@ class Arrays {
     static function convertirAObjeto($array){
         $objeto = new stdClass();
         foreach ($array as $key => $value) {
-            $objeto->$key=$value;
+        	if(is_array($value)) $objeto->$key = self::convertirAObjeto($value);
+			else $objeto->$key=$value;
         }
         return $objeto;
         

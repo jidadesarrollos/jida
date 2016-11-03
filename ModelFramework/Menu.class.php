@@ -5,7 +5,7 @@
  * @package default
  * @author  
  */
-class Menu extends DBContainer {
+class Menu extends DataModel {
 	
 	/**
 	 * Clave principal del menu
@@ -29,25 +29,20 @@ class Menu extends DBContainer {
 	private $tablaOpcionesAcceso = 's_opciones_menu_perfiles';
     private $tablaOpciones = 's_opciones_menu';
     private $perfilesAcceso=[];
-	function __construct($id_menu = ''){
-		
-        $this->clavePrimaria = 'id_menu';
-        $this->nombreTabla = 's_menus';
-        if(!is_numeric($id_menu)){
-            
-            parent::__construct();
-            $this->obtenerMenuByNombre($id_menu);    
-        }else{
-            parent::__construct(__CLASS__,$id_menu);    
-        }
-        
-        
-        // if(!empty($id_menu)){
-            // $this->id_menu = $id_menu;
-            // $this->obtenerMenu();
-        // }
-	}//final constructor
+	protected $pk = "id_menu";
+	protected $tablaBD = "s_menus";
 	
+	function __construct($id=""){
+		if(!empty($id) and !is_numeric($id)){
+			parent::__construct();
+			
+			$this->obtenerBy($id,'nombre_menu');
+			
+		}else{
+			parent::__construct($id);
+		}
+		
+	}
 	function setPerfilesAccesoMenu($perfiles){
 	    if(is_array($perfiles)){
 	        $this->perfilesAcceso=array_merge($this->perfilesAcceso,$perfiles);

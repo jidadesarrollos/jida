@@ -68,8 +68,8 @@ class ExcepcionController extends Controller{
         }
         
     }
-    protected function procesarError($view=""){
-          Debug::string($view);
+    function procesarError($view=""){
+          
         if(!empty($view)){
           
                $this->vista=$view;        
@@ -106,7 +106,7 @@ class ExcepcionController extends Controller{
      * Retorna la excepción en formato HTML
      * @method getHTMLMessage
      */
-    private function getHTMLMessage(){
+    function getHTMLMessage(){
         $e =& $this->excepcion;
         $msj = '<h3>Error Capturado!</h3><hr>';
             $msj.="<strong>Mensaje : </strong>".$e->getMessage()."<br/>";
@@ -133,7 +133,7 @@ class ExcepcionController extends Controller{
      * un mail de notificacion
      * @method excepcionProduccion
      */
-    private function excepcionProduccion(){
+    function excepcionProduccion(){
         $msj = $this->getHTMLMessage();
 
         if(defined('MAIL_ADMIN') and defined('MAIL_NO_RESPONDER') and defined('MAIL_NO_RESPONDER')){

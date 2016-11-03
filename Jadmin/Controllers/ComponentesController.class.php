@@ -10,13 +10,12 @@
 
  
 class ComponentesController extends JController{
-    
+    var $layout="jadmin.tpl.php";
     function __construct($id=""){
         parent::__construct();        
         $this->url="/jadmin/componentes/";
-        $this->layout="jadmin.tpl.php";
+        
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
-		#Debug::mostrarArray($this->usuario);        
         
     }
     function index(){
@@ -38,7 +37,7 @@ class ComponentesController extends JController{
           1=>['a'   =>[ 'atributos' =>[ 'class' =>'btn',
                                         'title' =>'Asignar perfiles de acceso',
                                         'href'  =>"/jadmin/componentes/asignar-acceso/comp/{clave}",
-                                        'data-jvista'=>'modal'
+                                        //'data-jvista'=>'modal'
                                     ],
                         'html'      =>[ 'span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]
                        ]
@@ -58,7 +57,7 @@ class ComponentesController extends JController{
             $tipoForm=2;
         }
 
-         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
+         $F = new Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
          $F->valueSubmit = "Guardar Componente";
          
@@ -67,22 +66,16 @@ class ComponentesController extends JController{
 			 
 			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Componente($idComponente);
-                 $validacion = $F->validarFormulario($_POST);
-                 
-                 if($validacion===TRUE){
+                 if($F->validarFormulario()){
                      $_POST['componente'] = strtolower($this->post('componente'));
-                     $guardado  = $comp->guardarComponente($_POST);
-                     if($guardado['ejecutado']==1){
-                         Session::set('__idVista', 'componentes');
-                         Session::set('__msjVista',Mensajes::mensajeSuceso('Componente <strong>'.$this->post('componente').'</strong> guardado'));
-                         redireccionar($this->url."");    
+                     if($comp->salvar($_POST)->ejecutado()==1){
+						 Vista::msj('componentes','suceso','Componente <strong>'.$this->post('componente').'</strong> guardado',$this->url.'');    
                      }else{
-                         Session::set('__msjForm', Mensajes::mensajeError('No se pudo registrar el componente'));
-                     }
-                     
+                         Formulario::msj('error', 'No se pudo registrar el componente');
+                     }                     
                  }
 			 }else{
-		         Session::set('__msjForm', Mensajes::mensajeError('El componente no existe'));	 	
+			 	Formulario::msj('error', 'El componente no existe');
 			 }   
          }
 
@@ -91,11 +84,10 @@ class ComponentesController extends JController{
 
 
 	private function validarComponente($componente){
-		if(in_array($componente, $GLOBALS['modulos'])){
+		if(in_array($componente, $GLOBALS['modulos']))
 			return true;
-		}else{
+		else
 			return false;
-		}
 	}
     function asignarAcceso(){
         
@@ -108,37 +100,26 @@ class ComponentesController extends JController{
             $form->action=$this->url."asignar-acceso/comp/".$this->get('comp');
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
+            
             if($this->post('btnPerfilesAComponentes')){
                 $validacion = $form->validarFormulario($_POST);
                 if($validacion===TRUE){
-                    
                     $accion = $comp->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
                         Vista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente '.$comp->componente,$this->urlController());
-                        
-                    }else{
-                        
-                        $msj = Mensajes::mensajeError("No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
-                        Session::set('__msjForm', $msj);
-                    }
-                }else{
-                    
-                    Session::set('__msjForm',Mensajes::mensajeError("No se han asignado perfiles"));
-                }
+                    }else
+                        Formulario::msj('error', 'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
+                }else
+                    Formulario::msj('error', 'No se han asignado perfiles');
             }
-
             $this->dv->formAcceso =$form->armarFormulario();
         }else{
-            
             Vista::msj('componentes', 'error', "Debe seleccionar un componente");
             if(!$this->solicitudAjax())
                 redireccionar($this->url);
             else{
                 echo Mensajes::mensajeError("Debe seleccionar un componente");
             }  
-        }
-    
+        }    
     }
 }
-
-

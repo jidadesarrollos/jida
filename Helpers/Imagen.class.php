@@ -8,7 +8,28 @@
 */
 class Imagen extends Archivo{
     
-    
+	
+	private $mimes = array(
+		'image/gif' => 'gif',
+		'image/jpeg' => 'jpeg',
+		'image/png' => 'png',
+		'application/x-shockwave-flash' => 'swf',
+		'image/psd' => 'psd',
+		'image/bmp' => 'bmp',
+		'image/tiff' => 'tiff',
+		'image/tiff' => 'tiff',
+		'image/jp2' => 'jp2',
+		'image/iff' => 'iff',
+		'image/vnd.wap.wbmp' => 'bmp',
+		'image/xbm' => 'xbm',
+		'image/vnd.microsoft.icon' => 'ico'
+	);
+	 private $mimesAceptados=[
+	 	'image/gif' => 'gif',
+      	'image/jpeg'=> 'jpeg',
+      	'image/png'	=> 'png',
+	 
+	 ];    
      /**
      * Permite redimensionar una imagen sin quitar la calidad de la misma
      * Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada
@@ -158,31 +179,60 @@ class Imagen extends Archivo{
      * Verifica que el archivo cargado sea una imagen
      */
     function validarCargaImagen(){
-        $arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
-        
-        if($this->totalArchivosCargados>1){
-            $total = $this->getTotalArchivosCargados();
-            for($i=0;$i<$total;++$i){
-                
-                if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
-                    return true;
-                }else{
-                    
-                    return false;
-                }
-            } 
-        }else{
-           
-          if(is_array($this->files['tmp_name'])){
-            $valor = exif_imagetype($this->files['tmp_name'][0]);
-          }else{
-            $valor = exif_imagetype($this->files['tmp_name']);
-          }
-          if(in_array($valor, $arrayMimes)){
-                return true;
-            }
-            return false;
-        }
+    	if(function_exists('exif_imagetype')){
+    		return $this->useExifImagetype();
+    	}else{
+    		return $this->validarImagenFileInfo();
+    	}
+	        
         
     }
+	private function validarImagenFileInfo(){
+		
+	}
+	/**
+	 * Verifica si una imagen es valida haciendo uso de la funcion exif_imagetype
+	 * 
+	 * Esta es la función de validacion por defecto, siempre y cuando las librerias
+	 * necesarias se encuentren activas en el php.ini
+	 * @method useExifImagetype
+	 * @access private
+	 * 
+	 */
+	private function useExifImagetype(){
+		$arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+	        if($this->totalArchivosCargados>1){
+	            $total = $this->getTotalArchivosCargados();
+	            for($i=0;$i<$total;++$i){
+	                
+	                if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
+	                    return true;
+	                }else{
+	                    
+	                    return false;
+	                }
+	            } 
+	        }else{
+	        	
+				if(count($this->files)>0){
+	          	
+					$tmpName = is_array($this->files['tmp_name'])?$this->files['tmp_name'][0]:$this->files['tmp_name'];
+					
+	          		if(!empty($tmpName)){
+	          			
+	          			$valor = exif_imagetype($tmpName);
+						if(in_array($valor, $arrayMimes)) return true;
+								        		
+					}
+	          	} 
+				return false;  
+	        }
+	}
+	/**
+	 * Edita los tipos de mymes aceptados para la carga de imagenes
+	 */
+	function setMimesAceptados($arr){
+		$this->mimesAceptados=$arr;
+	}	
+	function redimension(){}
 }

@@ -67,7 +67,7 @@ class Archivo{
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
         else {
-            Debug::string($file);
+            
             if(!empty($file) and self::validarExistencia($file)){
                 $this->directorio = $file;
                 $this->existencia = TRUE;
@@ -82,6 +82,7 @@ class Archivo{
      * @method checkCarga
      */
     private function checkCarga($file){
+    	
         $this->files = $file;
         if(!isset($file) or is_array($file)){
             
@@ -145,6 +146,7 @@ class Archivo{
             
         }else{
           $explode = explode("/",$this->type);
+		  
 		  $this->extension[0] = $explode[1];
         }
 		

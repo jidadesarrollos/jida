@@ -33,10 +33,14 @@ function guardarOrden(){
 
 $( document ).ready(function(){
    $("#btnEditOrden").on('click',function(){
+       $this = $( this );
+       console.log(this.value);
        if(this.value==1){
-        addSortable();
-        $(this).html("<span class=\"fa fa-save fa-lg\"></span> Finalizar").val(2);        
-       }else if(this.value==2){
+            addSortable();
+            console.log("aqui");
+            $this.html("<span class=\"fa fa-save fa-lg\"></span> Finalizar").val(2);        
+       }else
+       if(this.value==2){
            
            $(this).val(1).html('<span class=\"fa fa-edit fa-lg\"></span> Editar Orden');
            guardarOrden();

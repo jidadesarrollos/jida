@@ -9,7 +9,7 @@
  */
 
  
-class Componente extends DBContainer{
+class Componente extends DataModel{
     
     
     /**
@@ -22,14 +22,12 @@ class Componente extends DBContainer{
      * @var $componente
      */
     var $componente;
-    function __construct($id=""){
-        $this->nombreTabla="s_componentes";
-        $this->clavePrimaria="id_componente";
-        parent::__construct(__CLASS__,$id);
-        
-    }
-    
-    
+	
+	protected $pk='id_componente';
+	protected $tablaBD='s_componentes';
+	protected $registroMomentoGuardado=FALSE;
+	protected $registroUser=FALSE;
+	
     /**
      * Guarda o modifica un componente en base de datos
      * 
@@ -37,17 +35,16 @@ class Componente extends DBContainer{
      * @acces public
      */
     function guardarComponente($datos=""){
-        
-        $guardado = $this->salvarObjeto(__CLASS__,$datos);
-        return $guardado;
+    	   
+        return $this->salvar($datos);
+		
     }
-    
     
     /**
      * Elimina un componente de base de datos.
      */
     function eliminarComponente(){
-        $this->eliminarObjeto();
+        $this->eliminar();
     }
       /**
      * Registra los perfiles que tienen acceso a un objeto determinado
@@ -61,28 +58,12 @@ class Componente extends DBContainer{
             $i=0;
             foreach ($perfiles as $key => $idPerfil) {
                 if($i>0)$insert.=",";
-                $insert.="(null,$idPerfil,$this->id_componente)";
-                $i++;
+                $insert.="(null,$idPerfil,$this->id_componente)";++$i;
             }
-            
             $delete = "delete from s_componentes_perfiles where id_componente=$this->id_componente;";
-            // $obj = new Objeto();
-            // $idsObjetos = array_keys($obj->getTabla(['id_objeto'],['id_componente'=>$this->id_componente],null,'id_objeto'));
-            // $deleteObjetos = "DELETE from s_objetos_perfiles where id_objetos in (".implode(",",$idsObjetos).");";
-            // $insertPermisosObjetos = "INSERT INTO s_objetos_perfiles (id_perfil,id_objeto) VALUES ";
-            // $cont=0;
-             // for($i=0;$i<count($idsObjetos);++$i){
-                    // foreach ($perfiles as $key => $idPerfil) {
-                        // if($cont>0) $insertPermisosObjetos.=",";
-                        // $insertPermisosObjetos.="($idPerfil,".$idsObjetos[$i].")";
-                        // ++$cont;
-                    // }   
-             // }
             $this->bd->ejecutarQuery($delete.$insert,2);
-            #$this->bd->ejecutarQuery($delete.$insert.$deleteObjetos.$insertPermisosObjetos);
             
             return array('ejecutado'=>1);
-        
     }
     
     /**
@@ -94,16 +75,12 @@ class Componente extends DBContainer{
      * 
      */
     function validarAccesoComponente($perfiles){
-        echo "ak";
         $query = "";
         foreach ($perfiles as $key => $idPerfil) {
                 if($i>0)$insert.=",";
                 $insert.="(null,$idPerfil,$this->id_objeto)";
                 $i++;
-            }
-        #Arrays::mostrarArray($perfiles);exit;
-        
+            }    
     }
-    
     
 }

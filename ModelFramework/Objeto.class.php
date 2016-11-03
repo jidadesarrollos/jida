@@ -9,8 +9,7 @@
  */
 
  
-class Objeto extends DBContainer{
-    
+class Objeto extends DataModel{
     
     /**
      * Identificador unico numerico del  objeto
@@ -31,31 +30,26 @@ class Objeto extends DBContainer{
      * @var string $descripcion Registra una descripcion o nombre entendible para el usuario
      */
     var $descripcion;
-    /**
-     * Clase constructora
-     * @method __construct
-     */
-    function __construct($id=""){
-        $this->nombreTabla="s_objetos";
-        $this->clavePrimaria="id_objeto";
-        parent::__construct(__CLASS__,$id);
-    }
+	
+	protected $registroMomentoGuardado=FALSE;
+	protected $registroUser=FALSE;
+	
+	protected $pk="id_objeto";
+    protected $tablaBD="s_objetos";
+	
     
+	
     /**
      * Registra un objeto en base de datos
      * 
      * @method setObjeto
      * @param array $data $_POST capturado del formulario
-     * @return array $accion Arreglo $guardado en caso de que se realice el registro, arreglo con msj de error caso contrario
-     * @see DBContainer::salvar
+     * @return array $accion Arreglo $guardado en caso de que se realice el registro
+     * @see DataModel::salvar
      */
     function setObjeto($data){
-    	$this->establecerAtributos($data, __CLASS__);	
-		$accion =  $this->salvar($data);
-		return $accion;	
-		
-		
-        
+    	$this->establecerAtributos($data);
+		return $this->salvar($data);
     }
 	
 	/**
@@ -67,7 +61,7 @@ class Objeto extends DBContainer{
 	 */
 	private function obtenerObjetoByName($name=""){
 		if(!empty($name)) $this->objeto = $name;
-		$query = "select * from $this->nombreTabla where objeto = \"".$this->objeto."\"";
+		$query = "select * from $this->tablaBD where objeto = \"".$this->objeto."\"";
 		$result = $this->bd->ejecutarQuery($query);
 		
 		if($this->bd->totalRegistros>0){
@@ -97,11 +91,12 @@ class Objeto extends DBContainer{
         $insert.=";";
         $delete = "delete from s_objetos_perfiles where id_objeto=$this->id_objeto;";
         $metodos = new Metodo();
-        $dataMetodos = array_keys($metodos->getTabla(['id_metodo'],['id_objeto'=>$this->id_objeto],null,'id_metodo'));
+		$dataMetodos = array_column($metodos->consulta('id_metodo')->filtro(['id_objeto'=>$this->id_objeto])->obt(),'id_metodo');
+		
         $borradoAccesoMetodos = "Delete from s_metodos_perfiles where id_metodo in(".implode(",", $dataMetodos).");";
         $insertMetodos = 
             "INSERT INTO s_metodos_perfiles
-            (id_perfil,".$metodos->_get('clavePrimaria').") VALUES ";
+            (id_perfil,".$metodos->__get($this->pk).") VALUES ";
         
         $cont=0;
         for($i=0;$i<count($dataMetodos);++$i){
@@ -109,12 +104,10 @@ class Objeto extends DBContainer{
                 if($cont>0) $insertMetodos.=",";
                 $insertMetodos.="($idPerfil,$dataMetodos[$i])";
                 ++$cont;
-            }
-            
+            }   
         }
         
         $this->bd->ejecutarQuery($delete.$insert.$borradoAccesoMetodos.$insertMetodos,2);
-        
         
         return array('ejecutado'=>1);
     
@@ -135,14 +128,10 @@ class Objeto extends DBContainer{
         
         $queryMetodos = "select id_metodo,metodo,descripcion,id_objeto from s_metodos where id_objeto in (".implode(",", $idsObjetos).") order by id_objeto";
         $resultMetodos = $this->bd->ejecutarQuery($queryMetodos);
-        while ($metodo = $this->bd->obtenerArrayAsociativo()) {
+        while ($metodo = $this->bd->obtenerArrayAsociativo()){
             $objetos[$metodo['id_objeto']]['metodos'][$metodo['id_metodo']]=$metodo;
-            
         }
-        return $objetos;   
-        
+		
+        return $objetos;
     }
 }
-
-
-?>

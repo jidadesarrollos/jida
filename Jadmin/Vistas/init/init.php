@@ -10,7 +10,7 @@ $data =& $this->data;
 		Solo debes realizar unos cortos pasos y estaremos listos
 	</small>
 </h1>
-<form action="/<?= $this->url?>" method="post" class="row" >
+<form action="<?= $this->url?>" method="post" class="row" >
 	<?=Mensajes::imprimirMensaje('__msjForm')?>
 	<div class="row">
 	    <fieldset class="col-md-6 col-md-offset-3" id="formBdConfig">

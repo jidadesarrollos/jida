@@ -25,7 +25,8 @@ class JadminController extends JController{
     }
     function index(){
         $this->layout="jadminIntro.tpl.php";
-		$this->tituloPagina = "Jida Framework - Formularios";        
+		$this->tituloPagina = "Jida Framework - Formularios";
+     
         $jctrl= new JidaControl();
         if(Session::checkLogg()){
             $a=0;

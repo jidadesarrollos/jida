@@ -20,17 +20,14 @@ jd.cargandoAjaxDos=2;
 jd.listoInteraccionAjax=3;
 jd.listoAjaxCompleto=4;
 jd.contentTypeForm="application/x-www-form-urlencoded";
-/**
- * Funcion para llamados ajax
- * json con  
- */
+
 jd.ajax=function(json){
     try{
         this.parametros = json;
         this.valores = this.inicializarValores();
         this.enviarData();  
     }catch(err){
-        console.log(err.message);
+        console.error(err);
     }
     
 };
@@ -46,7 +43,10 @@ jd.ajax.prototype = {
       "parametros":null,
       "respuesta":"html",
       "cargando" :"<div class='cargaAjax'> Cargando...</div>",
-      "pushstate":null
+      "contexto" :'body',
+      "funcionProgreso":false,
+      
+      "pushstate":false
     },
     inicializarValores:function(){
         var valores = $.extend(this.valoresPredeterminados,this.parametros);
@@ -72,9 +72,8 @@ jd.ajax.prototype = {
       return xmlhttp;
     },
     enviarData:function(){
-        var data;
+        var data="s-ajax=true";
         this.obAjax=this.httpr();
-        
         objeto = this;
         ajax = this.obAjax;
         
@@ -86,19 +85,30 @@ jd.ajax.prototype = {
         //validar contentype
         if(this.valores.contentype==true){  
             ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            ajax.setRequestHeader('HTTP_X_REQUESTED_WITH','XMLHttpRequest');
+            ajax.setRequestHeader('X-Requested-With','XMLHttpRequest');
             
         }//fin if
         
-        data="s-ajax=true";
-        if(this.valores.parametros && typeof this.valores.parametros=='object'){
-        	
+        if(typeof this.valores.parametros=='object' && this.valores.parametros!=null){
+            data+="&";
             $.each(this.valores.parametros,function(key,value){
-                data+="&"+key+"="+value;
+                data+="&"+encodeURI(key)+"="+encodeURI(value);
             });
         }else if(typeof this.valores.parametros=='string'){
-            data =+"&"+ this.valores.parametros;
+            data +="&"+this.valores.parametros;
         }
+        // else{
+            // throw "No se encuentra definido correctamente el objeto parametros";
+        // }
         ajax.send(data);
+        setTimeout(function(){
+            console.log(ajax.readyState);
+            if(ajax.readyState==1 || ajax.readyState==0){
+                ajax.abort();
+                console.log("La llamada ajax a tardado demasiado");    
+            }
+        },15000);
         
     },
     Listo:function(){
@@ -106,14 +116,20 @@ jd.ajax.prototype = {
         ajax = this.obAjax;
         if(ajax.readyState==jd.cargandoAjaxUno || ajax.readyState==jd.cargandoAjaxDos){
             $(".cargaAjax").remove();
-            $('body').prepend(this.valores.cargando);
+            console.log(typeof this.valores.cargando);
+            $(this.valores.contexto).prepend(this.valores.cargando);
         }
         if(ajax.readyState==jd.listoAjaxCompleto){
             $(".cargaAjax").remove();
             var httpStatus= ajax.status;
+            console.log(typeof this.valores.cargando);
             if(httpStatus==200 || httpStatus ==0){
                 //this.valores.funcionCarga.call(this);
                 this.procesarRespuesta();
+                
+                if(typeof this.valores.pushState!==false){
+                    this.validarPushState();
+                }
                 this.valores.funcionCarga.call(this);
                 
             }else{
@@ -121,6 +137,20 @@ jd.ajax.prototype = {
             }//fin if httpStatus
         }//fin if readyState
     },//fin funcion Listo
+    validarPushState:function (){
+        
+        if(typeof this.valores.pushState=='object'){
+            pushStateDefault = {'id':null,'title':null,'url':null};
+            state = $.extend(pushStateDefault,this.valores.pushState);
+            history.pushState(state.id,state.title,state.url);
+        }else
+        if(typeof this.valores.pushState=='string'){
+            history.pushState(null,null,this.valores.pushState);
+        }
+        window.addEventListener('popstate',function(e){
+          console.log('im here');  
+        });
+    },
     /**
      * Muestra un error posible en la ejecución de la llamada ajax. 
      */

@@ -16,6 +16,8 @@ class Pagina{
      * @param mixed $data
      */
     var $data;
+	
+	var $idioma;
     
     /**
      * Indica si la ruta de la página a mostrar pertenece a la aplicación
@@ -141,7 +143,8 @@ class Pagina{
            
         }
             
-        $this->url = Session::get('URL_ACTUAL');
+        $this->url = (Session::get('URL_ACTUAL')[0]!="/")?"/".Session::get('URL_ACTUAL'):Session::get('URL_ACTUAL');
+		
      
     }
 
@@ -236,6 +239,7 @@ class Pagina{
     private function renderizarLayout(){
         
         /* Permitimos almacenamiento en bufer */
+        
         ob_start();
         
         $this->layout = $this->directorioLayout.$this->layout;
@@ -327,41 +331,48 @@ class Pagina{
         $this->checkData();
         $cont=0;
         $code= array();
-		if(!is_array($this->data->js)) return $js;
-        if(array_key_exists('code',$this->data->js)){
-            $code = $this->data->js['code'];
-            unset($this->data->js['code']);
-        }
-        
-        foreach ($this->data->js as $key => $archivo) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                    
-                    foreach ($archivo as $key => $value){
-                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
-                        if($cont==0) $cont=2;
-                    }           
-                }
-            }
-            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
-            if($cont==0) $cont=2;
-        }
-        if(count($code)>0){
-            foreach ($code as $key => $value){
-                if(array_key_exists('archivo',$value)){
-                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
-                    $js.=Selector::crear('script',null,$contenido,$cont);    
-                }else{
-                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
-                }
-                
-            }
-    
-        }
+       
+		if(is_array($this->data->js)){
+			if(array_key_exists('code',$this->data->js)){
+	            $code = $this->data->js['code'];
+	            unset($this->data->js['code']);
+	        }
+			foreach ($this->data->js as $key => $archivo) {
+	            
+	            if(is_string($key)){
+	                if($key==ENTORNO_APP){
+	                    
+	                    foreach ($archivo as $key => $value){
+	                        $js.=Selector::crear('script',['src'=>$value],null,$cont);
+	                        if($cont==0) $cont=2;
+	                    }           
+	                }
+	            }
+	            else $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+	            if($cont==0) $cont=2;
+	        }
+			
+	        if(count($code)>0){
+	            foreach ($code as $key => $value){
+	                if(array_key_exists('archivo',$value)){
+	                    $contenido = file_get_contents($this->obtenerRutaVista().$value['archivo'].".js");
+	                    $js.=Selector::crear('script',null,$contenido,$cont);    
+	                }else{
+	                    $js.=Selector::crear('script',null,$value['codigo'],$cont);
+	                }
+	                
+	            }
+	    
+	        }
+		}
+	        
         return $js;
     }
-
+	/**
+	 * Imprime los archivos js incluidos en e
+	 * 
+	 * @method printJSAjax
+	 */
     function printJSAjax(){
         $js="";
         $this->checkData();
@@ -408,29 +419,34 @@ class Pagina{
         
         $this->checkData();
         $cont=0;
-		if(!is_array($this->data->css)) return $css;
-        foreach ($this->data->css as $key => $files) {
-            
-            if(is_string($key)){
-                if($key==ENTORNO_APP){
-                	
-                    foreach ($files as $key => $value) {
-                        if(is_array($value)) 
-                            $css.=Selector::crear('link',$value,null,$cont);
-                        else 
-                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
-                        if($cont==0) $cont=2;
-                    }    
-                }   
-            }else{
-                if(is_array($files)){
-                    $css.=Selector::crear('link',$files,null,$cont);
-                }else{
-                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
-                }
-                if($cont==0) $cont=2;       
-            }
-        }
+
+		if(is_array($this->data->css)){
+			foreach ($this->data->css as $key => $files) {
+	            
+	            if(is_string($key)){
+	            	
+	                if($key==ENTORNO_APP){
+	                    foreach ($files as $key => $value) {
+	                        if(is_array($value)) 
+	                            $css.=Selector::crear('link',$value,null,$cont);
+	                        else 
+	                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
+	                        if($cont==0) $cont=2;
+	                    }    
+	                }   
+	            }else{
+	                if(is_array($files)){
+	                    $css.=Selector::crear('link',$files,null,$cont);
+	                }else{
+	                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
+	                }
+	                if($cont==0) $cont=2;       
+	            }
+	        }
+		}else{
+			
+		}
+
         return $css;
     }
     private function checkData(){
@@ -483,7 +499,13 @@ class Pagina{
             //$itemprop.=$metaAdicional;
             $meta.=$metaAdicional;
         }
-		
+		if($this->data->google_verification!=FALSE){
+			$meta.=Selector::crear('meta',["name"=>"google-site-verification", "content"=>$this->data->google_verification]);
+		}
+		if($this->data->responsive){
+			
+			$meta.=Selector::crear('meta',["name"=>"viewport",'content'=>"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);
+		}
         if(!empty($this->data->title)){
             $meta.=Selector::crear('TITLE',null,$this->data->title,0);
             $initTab=2;
@@ -522,5 +544,22 @@ class Pagina{
             
         return $meta.$itemprop."\n";
     }
+	/**
+	 * Renderiza una URL
+	 * 
+	 * En estos momentos el metodo solo verifica si se estan manejando multiples
+	 * lenguajes y antepone el lenguaje actual a la url
+	 * @version beta
+	 * 
+	 */
+	function renderURL($url,$lang=""){
+		
+		if(defined('USO_IDIOMAS') and USO_IDIOMAS){
+			if(empty($lang) and !empty($this->idioma)) $lang = $this->idioma;
+		}
+		if(!empty($lang)) $lang='/'.$lang;
+			
+		return $lang.$url;
+	}
     
 }

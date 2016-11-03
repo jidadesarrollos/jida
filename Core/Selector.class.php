@@ -16,37 +16,66 @@ class Selector{
       * @var $selector
       * @access public
       */
-    var $selector="";
-    var $id="";
-    var $class="";
-    var $style="";
+    protected $selector="";
+    protected $id="";
+    protected $atributos=[];
+    protected $envoltorio="";
     /**
      * Atributos data para el selector
      * @var array $data
      */
-    var $data=array();
-    /**
+    var $data=[];
+    var $class="";
+    var $style="";
+    
+        /**
      * Arreglo para agregar atributos adicionales al selector
      * @var array $attr
      */
     var $attr=array();
     /**
-     * Contenido del selector
+     * Contenido del selector, que puede incluir el innerHTML
+	 * y otros selectores
      * @var mixed $contenido
      */
-    var $contenido;
+    var $contenido="";
+	/**
+	 * Define si es el selector contenedor del InnerHTML
+	 * o no
+	 * @var boolean $padreInner
+	 * @unuse
+	 */
+	var $padreInner=FALSE;
+	/**
+	 * Nodo de selectores hijos del selector
+	 * var array $nodo;
+	 */
+	private $nodos=[];
     /**
      * Contiene el HTML que se genera al crear el selector
      * @var string $selectorCreado;
      * 
      */
     private $selectorCreado;
+	/**
+	 * Contenido especifico a agregar
+	 */
+	protected $innerHTML;
     /**
      * Permite agregar propiedades adicionales al selector
      */
     private $propiedades=array();
-    function __construct($selector=""){
-        $this->selector=$selector;
+
+    protected $noCierre=[
+    'hr',
+    'br',
+    'img'
+    ];
+    function __construct($selector="",$attr=[]){
+    	if(!empty($selector))
+        	$this->selector=$selector;
+		if(count($attr)>0) $this->attr($attr);
+        
     }
     /**
      * Genera el HTML del selector instanciado
@@ -101,6 +130,7 @@ class Selector{
      * y los agrega
      * @method getElementosData
      * @access private;
+     * @deprecta
      */
     private function getAttr(){
         if(count($this->attr)>0){
@@ -117,6 +147,20 @@ class Selector{
      * @param string $content Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "",$tabs=0) {
+    	$selector = explode("#",$selector);
+		if(count($selector)>1){
+			 $atributos['id']=$selector[1];
+			$selector=$selector[0];
+		}else{
+			$selector = $selector[0];
+		}
+		$clases = explode(".",$selector);
+		if(count($clases)>1){
+			$selector = $clases[0];
+			unset($clases[0]);
+			$atributos['class']=implode(" ",$clases);
+		}
+		
         $tabulaciones = self::addTabs($tabs);
         $selectorHTML ="".$tabulaciones;
         $selectorHTML .= "<$selector";
@@ -261,6 +305,218 @@ class Selector{
         endfor;
         return $tabs;
     }
+    
+    /**
+     * Genera una instancia selector y la retorna
+     */
+    static function obt($selector){
+        $tag = new Selector($selector);
+        return $tag;
+    }
+    
+    function render(){
+        $html="";
+		
+        if(!$this->selectorCierre()){
+            if(!empty($this->selector)){
+                $html = "<".$this->selector." ".$this->renderAttr()." />\n";
+            }
+        }else{
+            if(!empty($this->selector)){
+                $html = "\n<".$this->selector."".$this->renderAttr().">\n\t";
+
+                $html.=$this->renderContenido()."\n</".$this->selector.">";
+				
+            }
+                    
+        }
+        
+        return $html;
+    }
+	
+	protected function renderContenido(){
+		$contenido ="";
+		
+		if($this->contenido instanceOf Selector){
+			$this->contenido->innerHTML($this->innerHTML);
+			$contenido = $this->contenido->render();
+		}else{
+			
+			return $this->innerHTML;
+		}
+		
+		return $contenido;
+	}
+    private function selectorCierre(){
+        if(in_array($this->selector, $this->noCierre)){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    protected function renderAttr(){
+        $atribs="";$i=0;
+        if(count($this->attr)>0){
+            
+            foreach ($this->attr as $attr => $value) {
+               $atribs.=" ";
+                
+               $atribs.=$attr."=\"".$value."\"";
+                ++$i;
+            }
+        }
+        if(count($this->data)>0){
+            foreach ($this->data as $data => $value) {
+               if($i>0) $atribs.=" ";
+                if(is_array($value))$value=json_encode($value);
+               $atribs.="data-".$data."='".$value."'";
+                ++$i;
+            }
+        }
+        return $atribs;
+        
+    } 
+    
+    protected function obtClases(){
+        $this->class=$this->attr['class'];
+        return $this->attr['class'];
+    }
+    function addClass($clase){
+        if(!empty($this->attr['class']))
+            $this->attr['class'].=" ". $clase;
+        else{
+            $this->attr['class']=$clase;
+        }
+    }
+    function removerClass(){
+        $clases = explode(",",$this->attr['class']);
+        if(in_array($clase, $clases)){
+            unset($clases[$clase]);
+        }
+    }
+    
+    function html($html){
+        $this->contenido=$html;
+        return $this;
+    }
+    
+    function data($data,$valor=""){
+        if(!empty($valor)){
+            $this->data[$data]=$valor;
+        }else{
+        	if(is_array($data)){
+        		$this->data = array_merge($this->data,$data);
+				return $this;	
+        	}else
+            if(array_key_exists($data, $this->data)){
+              return $this->data[$data];  
+            }
+        }
+    }
+    /**
+	 * Manejo de atributos del Selector
+	 * 
+	 * Permite obtener o asignar valor a un selector.
+	 * @method attr
+	 * @param mixed $attr Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es un arreglo será tomado para asignar un conjunto de atributos
+	 * @param $valor [opcional] Valor a asignar al string $attr
+	 * 
+	 * 
+	 */
+    function attr($attr,$valor=""){
+        if(!empty($valor)){
+        	
+    		$this->attr[$attr]=$valor;	
+        	
+            return $this;
+        }else{
+        	if(is_array($attr)){
+        		$this->attr = array_merge($this->attr,$attr);
+				return $this;	
+        	}else
+            if(array_key_exists($attr, $this->attr)){
+                return $this->attr[$attr];
+            }
+            return false;
+        }
+    }
+	/**
+	 * Define el contenido inner del Selector
+	 * @method innerHTML
+	 * 
+	 */
+	function innerHTML($innerHTML=""){
+		if(empty($innerHTML)) return $this->innerHTML;
+		else{
+			$this->innerHTML = $innerHTML;
+			return $this;
+		}
+	}
+	
+	/**
+	 * Agrega un nodo Selector al contenido inner del selector instanciado
+	 * @method addNodo
+	 * @param string $selector Objeto Selector a crear
+	 */
+	function addNodo(Selector $selector){
+		//$this->innerHTML($selector->innerHTML());
+	}
+	/**
+	 * Agrega contenido al principio del innerHTML
+	 * @method addInicio
+	 * @param string html a insertar
+	 */
+	function addInicio($html){
+		$this->innerHTML($html.$this->innerHTML);
+		return $this;
+		
+	}
+	/**
+	 * Agrega contenido al final del innerHTML
+	 * @method addFinal
+	 */
+	function addFinal($html){
+		$this->innerHTML($this->innerHTML()."\n".$html);
+		return $this;
+	}
+	/**
+	 * Envuelve el innerHTML del Selector creado en otro selector
+	 * 
+	 * El nuevo selector creado se convertirá en el innerHTML.
+	 * @method envolver
+	 * @param $selector
+	 */
+	function envolver($selector,$attr=[]){
+		$envoltorio = new Selector($selector);
+		$envoltorio->attr($attr);
+		$this->contenido= $envoltorio;
+		
+		//$this->innerHTML($envoltorio->innerHTML($this->innerHTML));
+		
+		return $this;
+	}
+	
+	/**
+	 *  Ejecuta una funcion del programador sobre el selector
+	 *  
+	 *  @method ejecutarFuncion
+	 */
+	function ejecutarFuncion($funcion){
+		 $numeroArgs = func_num_args();
+
+		 if($numeroArgs>1){
+		 	$args = func_get_args();
+		 	$args[0] = $this;
+		 	
+			call_user_func_array($funcion, $args);
+		 	
+		 }else{
+		 	$funcion($this);	
+		 }	
+
+		 return $this;
+	}	
+	
 }
 
 
