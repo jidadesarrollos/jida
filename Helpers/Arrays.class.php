@@ -54,7 +54,7 @@ class Arrays {
     /**
      * Recorre un array recursivo buscando los valores solicitados
      *
-     * Recorre un arreglo de forma recursiva buscando todos los valores que coincidan
+     * @internal Recorre un arreglo de forma recursiva buscando todos los valores que coincidan
      * con una clave dada y retorna un nuevo arreglo ordenado con las posiciones relacionadas
      * a la clave
      * @param array $arr Arreglo a recorrer

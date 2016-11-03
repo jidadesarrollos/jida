@@ -1,7 +1,7 @@
 <?php
 /**
 * Clase Padre de modelos
-* 
+*
 * @internal encargada de todo el manejo y logica para el ORM del Framework
 * @author Julio Rodriguez
 * @package Framework
@@ -985,7 +985,7 @@ class DataModel{
 				$this->query.=")";
 		   }
        }else{
-           throw new Exception("No se ha definido correctamente el filtro", 200);
+           throw new Exception("No se ha definido correctamente el filtro", 201);
        }
       return $this;
     }//fin función filtro
@@ -1335,13 +1335,13 @@ class DataModel{
         if(is_array($data)){
 
             $insert = "INSERT INTO ".$this->tablaBD." ";
-			
+
 			if($insertPK)
 				$insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0],false)).") VALUES ";
 			else
 				$insert.="(".implode(",", $this->obtenerCamposQuery(array_slice($data,0,1)[0])).") VALUES ";
-			
-            
+
+
             $i=0;
 
 			$this->totalInserciones = count($data);
@@ -1355,7 +1355,7 @@ class DataModel{
 
             $this->bd->ejecutarQuery($insert);
 			$this->armarIdsInsertados();
-			
+
             return $this->resultBD->setValores($this);
         }else{
             throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
@@ -1421,7 +1421,7 @@ class DataModel{
 
 		if($unsetPK)
         	unset($campos[$this->pk]);
-			
+
         $campos = array_keys($campos);
         if($this->registroMomentoGuardado){
             $campos[]='fecha_creacion';
@@ -1440,7 +1440,7 @@ class DataModel{
         }
 
         foreach($data as $campo => $valor) {
-        	
+
             if ( ($campo != $this->pk) || $insertPK ) {
                 switch ($valor) {
                     case '':
