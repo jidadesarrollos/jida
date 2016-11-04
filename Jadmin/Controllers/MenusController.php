@@ -1,3 +1,4 @@
+<<<<<<< HEAD:Jadmin/Controllers/MenusController.class.php
 <?PHP
 /**
  * Controlador de Menus
@@ -80,7 +81,7 @@ class MenusController extends JController {
         $post =& $_POST;
 		$tipoForm = 1;
         $seleccion = "";
-        $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
+        $form = new RenderHTML\Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $validacion = $form->validarFormulario($post);
         if(!is_array($validacion) and $validacion==TRUE){
             $idMenu = ($this->post('id_menu'))?$this->post('id_menu'):"";
@@ -123,7 +124,7 @@ class MenusController extends JController {
             $seleccion = $get['menu'];
         }
 
-        $form = new Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
+        $form = new RenderHTML\Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $form -> action = '/jadmin/menus/set-menu/';
         $this->dv->tituloForm = ($tipoForm == 1) ? 'Registrar Menu' : 'Modificar Menu';
         $this->dv->formMenu = $form -> armarFormulario();
@@ -185,6 +186,7 @@ class MenusController extends JController {
             $menu = new Menu($idMenu);
 
             $this->dv->titulo = "Registro de Opción para menu $menu->nombre_menu";
+
             $padre=0;
             if($this->getEntero($this->get('opcion'))){
                 $idOpcion=$this->get('opcion');
