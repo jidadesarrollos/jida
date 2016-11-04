@@ -9,10 +9,10 @@
 * @category
 */
 
-namespace Jida;
-use Jida\Debug as Debug;
-use \Session as Session;
-use \Arrays as Arrays;
+namespace Jida\ModelFramework;
+use Jida\Helpers\Debug as Debug;
+use Jida\Core\Session as Session;
+use Jida\Helpers\Arrays as Arrays;
 class ACL{
 
 	var $accesos;

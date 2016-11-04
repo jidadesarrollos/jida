@@ -3,13 +3,13 @@
 /**
  * Clase Modelo para s_objetos
  * 
- * 
  * @package Aplicacion
  * @category Modelo
-
 */
-namespace Jida;
-class Objeto extends \DataModel{
+
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Objeto extends BD\DataModel{
 	
 
 	/**

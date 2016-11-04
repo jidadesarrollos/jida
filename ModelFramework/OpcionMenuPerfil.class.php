@@ -7,7 +7,9 @@
 * @category
 */
 
-class OpcionMenuPerfil extends DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class OpcionMenuPerfil extends BD\DataModel{
     var $id_opcion_menu_perfil;
     var $id_opcion_menu;
     var $id_perfil;

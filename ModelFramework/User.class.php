@@ -10,8 +10,9 @@
  * @version 0.1 14-02-2014
  */
 
- 
-class User extends DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class User extends BD\DataModel{
     /**
      * 
 	 * 
@@ -157,7 +158,7 @@ class User extends DataModel{
 	/**
      * Registra la sesion del usuario
      * 
-     * Registra la fecha actual como ultima sesion del usuario y cambia el
+     * @internal Registra la fecha actual como ultima sesion del usuario y cambia el
      * estatus activo a 1
      * @method registrarSesion
      * @return boolean
@@ -234,7 +235,7 @@ class User extends DataModel{
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
      * 
-     * Si el codigo de activacion coincide con el de un usuario registrado, el 
+     * @internal Si el codigo de activacion coincide con el de un usuario registrado, el 
      * valor es cambiado a 1 quedando el usuario activo
      * 
      * 

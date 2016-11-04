@@ -22,9 +22,14 @@ class Debug{
         if($exit==TRUE){
             exit;
         }
-
     }
-
+	
+	/**
+     * Muestra el contenido de las variables pasadas como parametros en bloques de impresion
+	 * 
+	 * @internal Mantiene la ejecucion a menos que reciba como parametro explicito true 
+     *
+     */
 	static function imprimir(){
 		$numero = func_num_args();
 		for($i=0;$i<$numero;++$i)
@@ -38,6 +43,7 @@ class Debug{
 			}
 		}
 	}
+	
     /**
      * Muestra el contenido de una variable String
      *
@@ -51,8 +57,6 @@ class Debug{
         }elseif(is_array($content) or is_object($content)){
             self::mostrarArray($content,$exit);
         }
-
-
     }
 }
 ?>

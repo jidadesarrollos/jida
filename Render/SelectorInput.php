@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase para SelectorInput
 * @author Julio Rodriguez
 * @package
 * @version

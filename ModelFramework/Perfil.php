@@ -9,11 +9,11 @@
 
 */
 
-namespace Jida;
-use Jida\Debug as Debug;
-class Perfil extends \DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+use Jida\Helpers\Debug as Debug;
+class Perfil extends BD\DataModel{
 	
-
 	/**
 	* @var int id_perfil 
 	*/
@@ -47,7 +47,7 @@ class Perfil extends \DataModel{
 		->in($perfiles,'clave_perfil')
 		->obtQuery();
 		
-		
 		return $this->obt();	
 	}
-}//fin clase
+	
+}

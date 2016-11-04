@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Clase para TablaSelector
+ */
 namespace Jida\Render;
 class TablaSelector extends Selector{
 

@@ -7,7 +7,7 @@
  * @version
  * @category
 */
-namespace Jida;
+namespace Jida\Elementos;
 abstract class JElemento{
 
 	protected $nombre;

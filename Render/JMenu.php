@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase para JMenu
 * @author Julio Rodriguez
 * @package
 * @version

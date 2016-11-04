@@ -1,11 +1,10 @@
 <?php
 
 
-namespace JIDA;
-class BD extends \DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class BD extends BD\DataModel{
 
-	function obtTablasBD()
-	{
-
-	}
+	function obtTablasBD(){}
+	
 }

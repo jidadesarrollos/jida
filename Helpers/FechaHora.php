@@ -2,7 +2,7 @@
 /**
  * Helpers Formatos para Fecha y Horas
  *
- * Definición  de las funciones formatos de fechas y horas a utlilizar.
+ * @internal Definición  de las funciones formatos de fechas y horas a utlilizar.
  *
  * @category	framework
  * @package		Helpers
@@ -11,6 +11,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html    GNU General Public License
  * @version     0.1 - 09/09/2013
  */
+ 
+namespace Jida\Helpers;
 class FechaHora{
 
     static $diasSemana =    [
@@ -100,7 +102,6 @@ class FechaHora{
 		if(!array_key_exists($dia, self::$diasSemana[$lang]))
 			throw new Exception("No existe el key $dia para un dia registrado", 1);
 
-
         return self::$diasSemana[$lang][$dia]['dia'];
     }
 
@@ -109,9 +110,6 @@ class FechaHora{
         return self::$diasSemana[$lang];
     }
 
-	function LTaDatetime($fecha){
-
-	}
 	/**
 	 * Función que retorna el año en dos digitos.
 	 *
@@ -151,6 +149,7 @@ class FechaHora{
 
         return $horaConFormato." ".$periodo;
     }
+	
 	/**
 	 * Función que retorna los minutos.
 	 *
@@ -165,7 +164,7 @@ class FechaHora{
 	/**
 	 * Timestamp Unix
 	 *
-	 * Funcion que genera el Timestamp de Unix tomando en cuenta
+	 * @internal Funcion que genera el Timestamp de Unix tomando en cuenta
 	 * la zona horaria de -4:30 GMT. Esta fecha/hora se inserta tomando
 	 * en cuenta la hora de Venezuela y no la hora del meridiano 0 como
 	 * generalmente lo hace la funcion el Timestamp de Unix.
@@ -193,20 +192,19 @@ class FechaHora{
 	/**
 	 * Conviente Timestamp Unix a Date con la hora
 	 *
-	 * Recibe una fecha Timestamp de Unix y la convierte
+	 * @internal Recibe una fecha Timestamp de Unix y la convierte
 	 * a una fecha tipo Date con el siguiente formato
 	 * (d-m-Y H:i:s)
 	 *
-	 * @param int $epoch
-	 *        	Timestamp Unix
+	 * @param int $epoch Timestamp Unix
 	 */
 	public static function convertirUnixADateYHora($epoch) {
 		$dt = new DateTime ( "@$epoch" );
 		return $dt->format ( 'd-m-Y H:i:s' );
 	}
 	/**
-	 * Convierte a DATE una fecha timestamp de unix y la devuelve
-	 * en formato d-m-Y
+	 * Convierte a DATE una fecha timestamp de unix y la devuelve en formato d-m-Y
+	 * 
 	 */
 
 	public static function convertirUnixADate($epoch) {
@@ -218,8 +216,7 @@ class FechaHora{
 	 * Función que convierte la fecha con formato '/' o '-'
 	 *
 	 * @param string $fecha
-	 * @param string $parametro
-	 *        	si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
+	 * @param string $parametro si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
 	 * @return string
 	 */
 	static function fechaTipoFormato($fecha = '', $parametro = '-') {
@@ -242,8 +239,7 @@ class FechaHora{
 	 * Función que invierte el formato de la fecha
 	 *
 	 * @param string $fecha.
-	 * @param string $parametro.
-	 *        	si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
+	 * @param string $parametro si no se envia un segundo valor,esta variable tiene predeterminado un guion '-'.
 	 * @return string
 	 */
 	static function fechaInvertida($fecha = '', $parametro = '-') {

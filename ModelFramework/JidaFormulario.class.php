@@ -9,8 +9,9 @@
  * @version 1.0
  */
 
- 
-class JidaFormulario extends DBContainer{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class JidaFormulario extends BD\DBContainer{
         
      /**
      * Id del formulario

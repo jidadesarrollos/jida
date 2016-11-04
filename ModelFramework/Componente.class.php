@@ -9,8 +9,9 @@
 
 */
 
-use \Datamodel as DataModel;
-class Componente extends DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Componente extends BD\DataModel{
 
 
 	/**

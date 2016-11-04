@@ -2,7 +2,7 @@
 /**
  * Archivo contenedor de constantes de configuración establecidas con valores por defecto.
  *
- * Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
+ * @internal Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
  * en los archivos appSetting. initConfig y BDConfig.
  *
  */

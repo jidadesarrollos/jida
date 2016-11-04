@@ -7,7 +7,7 @@
 * @category Elemento
  * @since 1.4
 */
-namespace Jida;
+namespace Jida\Elementos;
 class Contenido extends JElemento{
 
 
