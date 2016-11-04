@@ -30,7 +30,7 @@ class JController extends Core\Controller{
 		  $this->layout="jadminIntro.tpl.php";
 
 
-		$this->dv->addCssModulo('jida.css');
+		$this->dv->addCss('jida.css');
 		$this->definirJSGlobals();
 
 		// $this->dv->addJsModulo([

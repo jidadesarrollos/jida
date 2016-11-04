@@ -6,9 +6,9 @@
  * @category Helpers
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
- 
+
 namespace Jida\Helpers;
-class Directorios extends Directory{
+class Directorios extends \Directory{
 
 	/**
      * Verifica si un directorio existe, hace uso de funcion file_exists de PHP
@@ -55,7 +55,7 @@ class Directorios extends Directory{
 		}
 		return $listado;
 	}
-	
+
     /**
     * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
     *
@@ -121,7 +121,7 @@ class Directorios extends Directory{
             throw new Exception("La ruta a listar no es una ruta valida $ruta", 333);
         }
     }
-	
+
     /**
      * Elimina un directorio y su contenido
      *

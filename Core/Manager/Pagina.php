@@ -13,6 +13,7 @@
 
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
+use Jida\Render\Selector as Selector;
 use Exception;
 class Pagina{
     /**
@@ -38,14 +39,7 @@ class Pagina{
 	var $temaApp;
 	var $idioma;
 
-    /**
-     * Indica si la ruta de la página a mostrar pertenece a la aplicación
-     * en desarrollo o, si es una plantilla prederminada del framework
-     * @var $rutaPagina
-     * @access public
-     * @example 1 =>Aplicacion 2=>Framework 3=>Excepcion
-     */
-    var $rutaPagina=1;
+
     /**
      * Determina si el contenido de la vista sera mostrado en un layout o entre un pre y un post
      * @var $usoLayout
@@ -58,14 +52,12 @@ class Pagina{
      */
 
     var $layout;
+
     /**
-     * Define la ruta de ubicación de las vistas de la aplicación en desarrollo
-     * Por defecto es 1
-     * <ul>
-     * <li>1 : Ruta Aplicación</li>
-     * <li>2: Ruta Framework</li>
-     * @var $rutaApp
-     */
+	 * Directorio fisico de la vista a incluir
+	 * @var $directorioVista
+	 */
+    private $directorioVista;
     /**
      * Define directorio de layout a usar
      * @var $directorioLayout
@@ -113,11 +105,18 @@ class Pagina{
 	 * URL Actual
 	 */
     private $url;
-
-    function __construct($controlador,$metodo="",$modulo=""){
+	private $_ruta;
+	/**
+	 * Define si la vista pertenece a un controlador de un modulo del Jadmin
+	 * @var $_esJadmin;
+	 */
+	private $_esJadmin=false;
+    function __construct($controlador,$metodo="",$modulo="",$ruta="app",$jadmin=false){
 
        $this->validarDefiniciones($controlador,$metodo,$modulo);
 	   $this->validarEstructuraApp();
+	   $this->_esJadmin = $jadmin;
+	   $this->_ruta=$ruta;
 
     }
 
@@ -149,31 +148,25 @@ class Pagina{
     function validarDefiniciones($controlador,$metodo="",$modulo=""){
 
 
-         if(!empty($controlador))    $this->controlador = $controlador;
-        if(!empty($metodo)){ $this->nombreVista=$metodo;}
+        if(!empty($controlador))    $this->controlador = $controlador;
+        if(!empty($metodo)) $this->nombreVista=$metodo;
         if(!empty($modulo)) $this->modulo = $modulo;
 
-        if($controlador==CONTROLADOR_EXCEPCIONES){
-            $this->rutaPagina=3;
 
+        if(defined('DIR_FRAMEWORK')){
+            $this->rutaFramework=DIR_FRAMEWORK."Jadmin/Vistas/";
         }else{
-
-            if(defined('DIR_FRAMEWORK')){
-                $this->rutaFramework=DIR_FRAMEWORK."Jadmin/Vistas/";
-            }else{
-                throw new Exception("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
-
-            }
-
-            #Ruta para vistas de la aplicacion
-            if(!empty($modulo)){
-                $this->rutaApp=DIR_APP ."Modulos/".ucwords($modulo)."/Vistas/";
-            }
-            else{
-                $this->rutaApp=DIR_APP ."Vistas" . "/" ;
-            }
-
+            throw new Exception("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
         }
+        #Ruta para vistas de la aplicacion
+        if(!empty($modulo)){
+            $this->rutaApp=DIR_APP ."Modulos/".ucwords($modulo)."/Vistas/";
+        }
+        else{
+            $this->rutaApp=DIR_APP ."Vistas" . "/" ;
+        }
+
+
 
         $this->url = (Helpers\Sesion::get('URL_ACTUAL')[0]!="/")?"/".Helpers\Sesion::get('URL_ACTUAL'):Helpers\Sesion::get('URL_ACTUAL');
 
@@ -190,7 +183,7 @@ class Pagina{
    function definirDirectorios(){
          /*Verificación de ruta de plantillas*/
 
-        if(strtolower($this->modulo)!='jadmin'){
+        if(!$this->_esJadmin){
 
             $this->urlPlantilla=DIR_PLANTILLAS_APP;
             $this->directorioLayout=DIR_LAYOUT_APP;
@@ -218,6 +211,7 @@ class Pagina{
 				}
             }
         }else{
+        	echo "ak?";
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
@@ -249,8 +243,33 @@ class Pagina{
 		}
 	}
 
+	/**
+	 * Define el directorio donde debe ser buscada la vista
+	 * @method directorioVista
+	 */
+	private function directorioVista(){
 
+		if($this->_ruta=='framework'){
+			$this->directorioVista = DIR_FRAMEWORK."Jadmin/";
+			if(!empty($this->modulo)){
+				$this->directorioVista.=$this->modulo."/Vistas/";
+			}else{
+				$this->directorioVista.='Vistas/';
+			}
+		}else{
+			$this->directorioVista = DIR_APP;
+			$vistaFolder  = ($this->_esJadmin)?"/Jadmin/Vistas/":'/Vistas/';
+			if(!empty($this->modulo)){
+				$this->directorioVista.=$this->modulo . $vistaFolder;
+			}else{
+				$this->directorioVista.=$vistaFolder;
+			}
+		}
+		$controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $this->controlador));
+		$this->directorioVista  .= $controller."/";
 
+		return $this->directorioVista;
+	}
     /**
      * Muestra la vista del metodo solicitado
      * @method renderizar
@@ -276,16 +295,14 @@ class Pagina{
 
         }else{
             // Se accede a un archivo vista
-            $rutaVista = $this->obtenerRutaVista();
+
+            $rutaVista = $this->directorioVista();
 
             //Arma la estructura para una vista cualquiera
             if($excepcion)
 				$rutaVista = $rutaVista . $nombreVista .'.php';
 			else
-            $rutaVista = $rutaVista.Helpers\Cadenas::lowerCamelCase($this->controlador )."/". Helpers\Cadenas::lowerCamelCase($this->nombreVista).".php";
-
-
-
+            $rutaVista = $rutaVista . Helpers\Cadenas::lowerCamelCase($this->nombreVista).".php";
 
         }
 
@@ -355,18 +372,6 @@ class Pagina{
     private function requiresJs(){
 
     }
-	/**
-	 * Obtiene la vista del error generado
-	 * @deprecated 2.0
-	 */
-    private function obtenerVistaError($rutaVista,$vistaError="404"){
-
-        $directorioError="";
-        $_SESSION['ruta'] = $rutaVista;
-        $directorioError = $this->rutaExcepciones."$vistaError.php";
-        return $directorioError;
-
-    }
 
     /**
 	 * Procesa la excepción generada
@@ -388,8 +393,6 @@ class Pagina{
 		$path= $this->directorioPlantillas.'error/';
 
 		$tpl = 'error';
-
-		$this->rutaPagina=3;
 		$this->directorioLayout='Framework/Layout/';
 		if(Directorios::validar(DIR_APP.'plantillas/error/')){
 			$path =DIR_APP.'plantillas/error/';
@@ -420,29 +423,6 @@ class Pagina{
 
 
 
-    }
-    /**
-     * Verifica la ruta a utilizar para la vista
-     * @return string $rutaPagina
-	 * @deprecated Será eliminado en la versión 2 del Framework
-     */
-    private function obtenerRutaVista(){
-
-        switch ($this->rutaPagina) {
-            case 1:
-                $rutaVista = $this->rutaApp;
-
-                break;
-
-            case 2:
-                $rutaVista = $this->rutaFramework;
-                break;
-            default:
-                $rutaVista = $this->rutaExcepciones;
-                break;
-        }
-
-        return $rutaVista;
     }
 
     function establecerAtributos($arr) {

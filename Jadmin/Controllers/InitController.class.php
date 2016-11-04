@@ -21,7 +21,7 @@ class InitController extends JController{
 		$this->dv->addCSS([
 			$this->urlHtdocs.'bootstrap/dist/css/bootstrap.min.css',
 			$this->urlHtdocs."font-awesome/css/font-awesome.min.css",
-			$this->obtURLApp()."htdocs/css/jida/jida.css",
+			$this->obtURLApp()."/htdocs/css/jida/jida.css",
 			]
 			,false);
 		$this->dv->addJS([

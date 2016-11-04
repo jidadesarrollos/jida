@@ -695,6 +695,7 @@ class Controller {
 			$idioma=(empty($this->idioma))?"":$this->idioma."/";
 
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
+
 			return $GLOBALS['__URL_APP'].$idioma;
 		}else{
 

@@ -4,14 +4,14 @@
   *
   * @package Framework
   * @author  Julio Rodriguez <jirc48@gmail.com>
-  * @date 27/12/2013
-  * @since 0.1
+  * @date 4/11/2016
+  * @since 0.5
   *
   */
 
 
 namespace Jida\Core\Manager;
-use Jida\Helpers as Helper;
+use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
@@ -25,7 +25,14 @@ global $JD;
      * @access private
      */
  	private $appRoot;
-    private $controlador;
+
+	/**
+	 * Define la ruta donde deben buscarse los archivos
+	 * @var $_ruta;
+	 * @default 'app';
+	 * @since 0.5
+	 */
+	private $_ruta = 'app';
 	private $_metodoDefault = 'index';
 	private $_controladorDefault = 'Index';
 	/**
@@ -42,11 +49,16 @@ global $JD;
 	private $_metodo;
 	/**
 	 * Controlador solicitado
-	 * @var $_controlador
+	 * @var string $_controlador
 	 * @access private
 	 * @since 0.5
 	 */
 	private $_controlador;
+	/**
+	 * Nombre del controlador sin namespace
+	 * @var string $_nombreControlador
+	 */
+	private $_nombreControlador;
 	/**
 	 * Controlador solicitado
 	 * @var $_modulo
@@ -127,7 +139,7 @@ global $JD;
             /**
              * Registro de tiempo inicial de ejecución
              */
-            Helper\Sesion::set('__TIEjecucion',microtime(true) );
+            Helpers\Sesion::set('__TIEjecucion',microtime(true) );
             /**
              * Seteo de zona horaria
              */
@@ -138,7 +150,7 @@ global $JD;
             if(array_key_exists('idiomas', $GLOBALS)){
             	$this->idiomas=$GLOBALS['idiomas'];
             }
-            Helper\Sesion::destroy('__formValidacion');
+            Helpers\Sesion::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
 
             if(array_key_exists('modulos', $GLOBALS)){
@@ -148,8 +160,8 @@ global $JD;
             }
 
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-			JD('URL_ANTERIOR',Helper\Sesion::get('urlActual'));
-			Helper\Sesion::set('urlActual',$_GET['url']);
+			JD('URL_ANTERIOR',Helpers\Sesion::get('urlActual'));
+			Helpers\Sesion::set('urlActual',$_GET['url']);
 			Debug::imprimir($this->modulosExistentes);
 			JD('URL_COMPLETA',"/".$_GET['url']);
 
@@ -180,8 +192,8 @@ global $JD;
 
 			$ini = substr($this->appRoot, 1);
 
-			Helper\Sesion::set('URL_ACTUAL', $ini.Helper\Sesion::get('URL_ACTUAL'));
-			JD('URL',Helper\Sesion::get('URL_ACTUAL'));
+			Helpers\Sesion::set('URL_ACTUAL', $ini.Helpers\Sesion::get('URL_ACTUAL'));
+			JD('URL',Helpers\Sesion::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -196,9 +208,9 @@ global $JD;
 
 
             //Debug::mostrarArray($_SERVER);
-            $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
-			Helper\Debug::imprimir($this->controlador,$this->metodo,$this->modulo);
-            $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
+            $GLOBALS['_MODULO_ACTUAL'] = $this->_modulo;
+			Helpers\Debug::imprimir($this->_controlador,$this->_metodo,$this->_modulo,$this->_ruta,"ak-->");
+            $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
 
@@ -216,10 +228,10 @@ global $JD;
 	 */
 
     private function generarVariables(){
-    	JD('Controlador',$this->controlador);
+    	JD('Controlador',$this->_controlador);
 		JD('Vista',$this->vista);
-		JD('Metodo',$this->metodo);
-		JD('Modulo',$this->modulo);
+		JD('Metodo',$this->_metodo);
+		JD('Modulo',$this->_modulo);
 
 
 
@@ -248,7 +260,7 @@ global $JD;
 	private function _procesarJadmin(){
 		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
 		$checkModulo = FALSE;
-		Debug::imprimir($posModulo);
+
 
 		if(in_array($posModulo,$this->modulosExistentes))
 		{
@@ -256,22 +268,30 @@ global $JD;
 		}else{
 			//Accede aqui si se busca un modulo del Framework
 			$namespace = 'Jida\\Jadmin\\';
+			$this->_ruta='framework';
+			if(Helpers\Directorios::validar(DIR_FRAMEWORK."Jadmin/Modulos/".$posModulo)){
 
-			if(class_exists($namespace.'Modulos\\'.$posModulo.'\\'.$this->validarNombre($this->_arrayUrl[0],1)."Controller")){
-				/**
-				 * Accede acá si existe el modulo como carpeta
-				 */
-				$this->_controlador = $namespace.$posModulo.'\\'.$ctrl;
+				$this->_modulo = $posModulo;
+				if(class_exists($namespace.'Modulos\\'.$posModulo.'\\'.$this->validarNombre($this->_arrayUrl[0],1)."Controller")){
+					/**
+					 * Accede acá si existe el modulo como carpeta
+					 */
+					$this->_controlador = $namespace.$posModulo.'\\'.$ctrl;
+					$this->_nombreControlador = $ctrl;
+				}
 			}else{
-
+				$this->_modulo="";
 				if(class_exists($namespace."Controllers\\".$posModulo."Controller")){
 					$this->_controlador = $namespace."Controllers\\".$posModulo."Controller";
+					$this->_nombreControlador = $posModulo;
 					$this->procesarMetodo();
 				}else{
 					$this->_controlador = $namespace."Controllers\\JadminController";
+					$this->_nombreControlador = 'jadmin';
 					$this->procesarMetodo();
 				}
 			}
+
 		}
 
 
@@ -284,12 +304,7 @@ global $JD;
 	private function procesarMetodo(){
 		if(count($this->_arrayUrl)>0){
 
-
-			Debug::imprimir("-->",$this->_controlador);
 			$clase = new ReflectionClass($this->_controlador);
-
-
-			Debug::imprimir("k");
 			$metodoOriginal = array_shift($this->_arrayUrl);
 			$metodo = $this->validarNombre($metodoOriginal,2);
 
@@ -327,7 +342,7 @@ global $JD;
                 $this->controlador = 'init';
 				$this->metodo="index";
 				$init = substr($this->appRoot, 1);
-				Helper\Sesion::set('URL_ACTUAL', $init.'jadmin/init');
+				Helpers\Sesion::set('URL_ACTUAL', $init.'jadmin/init');
 
             else:
 
@@ -399,7 +414,7 @@ global $JD;
 		// Debug::mostrarArray($this->args);
 		JD('QueryString',$this->args);
 
-        Helper\Sesion::set('URL_ACTUAL', $URL);
+        Helpers\Sesion::set('URL_ACTUAL', $URL);
 
         $this->args = array_merge($this->args, $url);
 
@@ -534,7 +549,7 @@ global $JD;
         try{
             if(BD_REQUERIDA===TRUE){
 				// $acl = new ACL();
-				$acl = new Jida\ACL();
+				$acl = new Jida\Modelos\ACL();
             	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
 			}else $acceso=TRUE;
@@ -543,7 +558,7 @@ global $JD;
            	Debug::imprimir("si papa",$this->_controlador);
             	global $dataVista;
 
-                $dataVista= new DataVista($this->modulo,$this->controlador,$this->metodo);
+                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo);
             	$this->vista->data = $dataVista;
 				$this->ejecucion($this->_controlador);
 
@@ -618,7 +633,7 @@ global $JD;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-        $metodo = Helper\Cadenas::lowerCamelCase($this->_metodo);
+        $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
@@ -627,11 +642,11 @@ global $JD;
 
 
 		if(!class_exists($controlador)){
-			Helper\Debug::imprimir($controlador);
+			Helpers\Debug::imprimir($controlador);
 			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
 		}else{
 
-			Helper\Debug::imprimir($controlador);
+			Helpers\Debug::imprimir($controlador);
 		}
 
         $this->controladorObject = new $controlador();
@@ -755,9 +770,9 @@ global $JD;
     private function validarNombre($str,$tipoCamelCase){
         if(!empty($str)){
             if($tipoCamelCase==1){
-                $nombre = str_replace(" ","",Helper\Cadenas::upperCamelCase(str_replace("-", " ",$str)));
+                $nombre = str_replace(" ","",Helpers\Cadenas::upperCamelCase(str_replace("-", " ",$str)));
             }else{
-                $nombre = str_replace(" ","",Helper\Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
+                $nombre = str_replace(" ","",Helpers\Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
             }
             return $nombre;
         }
