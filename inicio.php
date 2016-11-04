@@ -2,7 +2,8 @@
 /**
  * Archivo de Arranque de la aplicación
  *
- * Ejecuta las configuraciones requeridas para que una
+ * @internal
+ *  Ejecuta las configuraciones requeridas para que una
  * aplicación arranque correctamente.
  *
  *
@@ -116,9 +117,9 @@ if(ENTORNO_APP == 'dev'){
     error_reporting(0);
 }
 
-include_once 'Core/Autoload.class.php';
+#include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente
-Autoload::init();
+#Autoload::init();
 
 if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
 
@@ -127,5 +128,4 @@ if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
 }
 global $elementos;
 $elementos=['areas'=>[],'elementos'=>[]];
-Session::iniciarSession();
-?>
+Jida\Helpers\Sesion::iniciar();

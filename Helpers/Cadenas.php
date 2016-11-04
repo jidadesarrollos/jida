@@ -4,11 +4,11 @@
  *
  * Clase helper para manejo de Strings
  *
- *
  * @package Framework
  * @category Helper
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
+namespace Jida\Helpers;
 class Cadenas {
 
 	/**

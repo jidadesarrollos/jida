@@ -8,9 +8,9 @@
 */
 namespace Jida\Jadmin\Controllers;
 use Jida\Componentes;
-use \Controller as Controller;
+use Jida\Core as Core;
 
-class JController extends Controller{
+class JController extends Core\Controller{
 
 	protected $urlHtdocs;
 	var $idioma = 'es';
