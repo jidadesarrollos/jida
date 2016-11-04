@@ -13,6 +13,7 @@
 * @category View
 */
 
+namespace Jida\Core\Manager;
 class DataVista{
     /**
      * @var array $css Arreglo Global de archivos javascript a usar por la vista 

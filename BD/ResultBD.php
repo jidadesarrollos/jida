@@ -2,7 +2,7 @@
 /**
  * Representa un objeto Result de Base de datos
  *
- * Permite acceder y manejar la matriz resultado de una consulta a base de datos
+ * @internal Permite acceder y manejar la matriz resultado de una consulta a base de datos
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package Framework
@@ -10,7 +10,7 @@
  * @version 1.0
  */
 
-
+namespace Jida\BD;
 class ResultBD{
     /**
      * @var object $bd Objeto Instanciado manejador de base de datos

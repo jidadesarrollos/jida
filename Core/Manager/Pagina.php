@@ -10,6 +10,8 @@
  * @category Router
  *
  */
+ 
+namespace Jida\Core\Manager;
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar

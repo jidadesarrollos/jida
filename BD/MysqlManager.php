@@ -2,7 +2,7 @@
 /**
  * Clase Controladora del RDBMS Mysql
  * 
- * Esta clase permite manipular y consultar estructuras generales de la base de datos.
+ * @internal Esta clase permite manipular y consultar estructuras generales de la base de datos.
  * @author Julio Rodriguez
  * @version 0.1
  * @package Framework
@@ -10,6 +10,7 @@
  * @class MysqlManager
  */
 
+namespace Jida\BD;
 class MysqlManager extends Mysql{
     
     protected $servidor="127.0.0.1";

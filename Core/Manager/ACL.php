@@ -15,8 +15,9 @@
  * 
  */
  
- 
-class ACL extends DataModel{
+namespace Jida\Core\Manager;
+use Jida\BD as BD;
+class ACL extends BD\DataModel{
     
     /**
      * Arreglo que contiene los objetos y metodos a los que

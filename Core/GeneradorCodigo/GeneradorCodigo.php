@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida;
+namespace Jida\Core\GeneradorCodigo;
 trait GeneradorCodigo{
 	use GeneradorArchivo;
 

@@ -1,6 +1,6 @@
 <?php
 /**
-* Helper para envio de correoos
+* Helper para envio de correos
  *
 * @author Julio Rodriguez
 * @package Framework
@@ -8,10 +8,11 @@
 * @category Helper
  *
 */
-namespace JComponentes;
+namespace Jida\Componentes;
 use App\Config as Config;
-use Jida\Debug as Debug;
-use \Directorios as Directorios;
+use Jida\Helpers as Helpers;
+use Helpers\Debug as Debug;
+use Helpers\Directorios as Directorios;
 require_once 'vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 class Correo{
 

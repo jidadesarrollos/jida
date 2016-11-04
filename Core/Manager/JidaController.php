@@ -9,7 +9,8 @@
   *
   */
   global $JD;
-use Jida\Debug as Debug;
+namespace Jida\Core\Manager;
+use Jida\Helpers\Debug as Debug;
  class JidaController {
     /**
      * Define el nombre del Controlador requerido

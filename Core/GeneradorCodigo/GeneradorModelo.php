@@ -3,7 +3,7 @@
 
 
 //require_once 'GeneradorObjeto.class.php';
-namespace Jida;
+namespace Jida\Core\GeneradorCodigo;
 class GeneradorModelo extends GeneradorObjeto{
 
     private $tabla;
