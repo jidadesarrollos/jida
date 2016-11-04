@@ -7,6 +7,9 @@
  */
 
 namespace Jida\Jadmin\Controllers;
+use Jida\Modelos\JidaControl as JidaControl;
+use Jida\Helpers as Helpers;
+use Jida\RenderHTML\Formulario as Formulario;
 class JadminController extends JController{
     /**
      * objeto modelo jidaControl
@@ -30,12 +33,13 @@ class JadminController extends JController{
 		$this->tituloPagina = "Jida Framework - Formularios";
 
         $jctrl= new JidaControl();
-        if(Session::checkLogg()){
+        if(Helpers\Sesion::checkLogg()){
             $a=0;
         }
         if($jctrl->testBD()){
 
-            if(Session::checkPerfilAcceso('jidaAdministrador')){
+            if(Helpers\Sesion::checkPerfilAcceso('jidaAdministrador')){
+
                 redireccionar("/jadmin/forms/");
             }else{
 
@@ -55,10 +59,10 @@ class JadminController extends JController{
                         }else{
                             /*** Habilitar datos de usuario*/
                             $perfiles = $User->getPerfiles();
-                            Session::sessionLogin();
-                            Session::set('usuario',$checkUser);
-                            Session::set('Usuario',$User);
-                            Session::set('usuario','perfiles',$perfiles);
+                            Helpers\Sesion::sessionLogin();
+                            Helpers\Sesion::set('usuario',$checkUser);
+                            Helpers\Sesion::set('Usuario',$User);
+                            Helpers\Sesion::set('usuario','perfiles',$perfiles);
 
                             /*fin variables de usuario*/
                             Vista::msj('formularios', 'info', 'Bienvenido '.$User->nombre_usuario,'/jadmin/forms/');
@@ -67,7 +71,7 @@ class JadminController extends JController{
 
 
                     }else{
-                        Session::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
+                        Helpers\Sesion::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
 
                     }
                 }
@@ -77,7 +81,7 @@ class JadminController extends JController{
             $this->dv->formLoggin = $form->armarFormulario();
 
         }else{
-
+	Helpers\Debug::imprimir("ak");
             $this->dv->testBD= "La conexión a base de datos no ha podido establecerse";
         }
         $tablasBD = $jctrl->obtenerTablasBD();

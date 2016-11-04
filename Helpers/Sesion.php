@@ -67,10 +67,10 @@ class Sesion {
 	 * @access static public
      */
     static function sessionLogin(){
-        Session::destroy('acl');
-        Session::set('isLoggin',TRUE);
+        self::destroy('acl');
+        self::set('isLoggin',TRUE);
         session_regenerate_id();
-        Session::set('__idSession', self::getIdSession());
+        self::set('__idSession', self::getIdSession());
     }
 
     /**
@@ -121,7 +121,7 @@ class Sesion {
      */
     static function checkLogg(){
 
-        if(Session::get('isLoggin'))
+        if(self::get('isLoggin'))
             return true;
         else {
             return false;
@@ -148,8 +148,8 @@ class Sesion {
      */
     static function checkPerfilAcceso($perfil){;
 
-		if(Session::get('Usuario') instanceof User)
-			$perfiles = Session::get('Usuario')->perfiles;
+		if(self::get('Usuario') instanceof User)
+			$perfiles = self::get('Usuario')->perfiles;
 		else
 			$perfiles = [];
 
@@ -167,7 +167,7 @@ class Sesion {
      * @return boolean
      */
     static function checkAdm(){
-        $perfiles = Session::get('usuario','perfiles');
+        $perfiles = self::get('usuario','perfiles');
         if(in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
             return true;
         return false;

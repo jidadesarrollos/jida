@@ -11,6 +11,8 @@
  */
 
 namespace Jida\Core;
+use Jida\Core\Manager\Datavista;
+use Jida\Helpers as Helpers;
 class Controller {
 
 	/**
@@ -200,8 +202,8 @@ class Controller {
 
 
         $this->url = $this->urlController();
-		if(Session::get('Usuario')instanceof User)
-        	$this->usuario = Session::get('Usuario');
+		if(Helpers\Sesion::get('Usuario')instanceof User)
+        	$this->usuario = Helpers\Sesion::get('Usuario');
 		else{
 			$clase = MODELO_USUARIO;
 			$this->usuario = new $clase;
@@ -216,7 +218,7 @@ class Controller {
         }
 
         $this->getModelo();
-        $this->dv->usuario = Session::get('Usuario');
+        $this->dv->usuario = Helpers\Sesion::get('Usuario');
         if(count($this->helpers)>0){
             for($i=0;$i<count($this->helpers);++$i){
                 $object = $this->helpers[$i];

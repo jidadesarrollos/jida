@@ -25,6 +25,10 @@
  */
 namespace Jida\RenderHTML;
 use Jida\BD as BD;
+use Jida\Modelos\Viejos\JidaFormulario as JidaFormulario;
+use Jida\Helpers as Helpers;
+use Jida\Render\Selector as Selector;
+use Exception;
 class Formulario extends BD\DBContainer {
     /**
      * Define un esquema de ubicacion de base de datos para la tabla
@@ -440,7 +444,7 @@ class Formulario extends BD\DBContainer {
     protected function obtenerCamposFormulario() {
         if($this->totalForms==1){
             $clave = (is_array($this->claveFormulario))?$this->claveFormulario[0]:$this->claveFormulario;
-            $clave = Cadenas::upperCamelCase($clave);
+            $clave = Helpers\Cadenas::upperCamelCase($clave);
             $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";
         }elseIf($this->totalForms>1){
 
@@ -490,8 +494,8 @@ class Formulario extends BD\DBContainer {
      */
     protected function inicializarValoresForm() {
         #Debug::mostrarArray($this->formularios,false);
-        if(array_key_exists(Cadenas::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
-            $data  = $this->formularios[Cadenas::upperCamelCase($this->claveFormulario[0])];
+        if(array_key_exists(Helpers\Cadenas::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
+            $data  = $this->formularios[Helpers\Cadenas::upperCamelCase($this->claveFormulario[0])];
         }else{
 
             throw new Exception("No existe la clave del formulario ".$this->claveFormulario[0], 1);
@@ -531,7 +535,7 @@ class Formulario extends BD\DBContainer {
 
         if ($this->mostrarMensajes === TRUE and ! empty ( $_SESSION ['__msjForm'] )) {
             $formulario .= $_SESSION ['__msjForm'];
-            Session::destroy('__msjForm');
+            Helpers\Sesion::destroy('__msjForm');
         }
 
         foreach ( $camposForm as $campo ) {
@@ -853,7 +857,7 @@ class Formulario extends BD\DBContainer {
      * @return mixed [boolean,array] True si la validacion es correcta, caso contrario arreglo con los errores
      */
     public function validarFormulario(&$datos="") {
-        Session::destroy ( '__erroresForm' );
+        Helpers\Sesion::destroy ( '__erroresForm' );
         if(empty($datos)){
             $datos =& $_POST;
         }
@@ -914,8 +918,8 @@ class Formulario extends BD\DBContainer {
         }//final foreach
         if (count ( $arrErrores ) > 0) {
             $this->errores = $arrErrores;
-            Session::set ( '__erroresForm', $this->errores );
-            Session::set ( '__dataPostForm', $datos );
+            Helpers\Sesion::set ( '__erroresForm', $this->errores );
+            Helpers\Sesion::set ( '__dataPostForm', $datos );
             $_SESSION ['__dataPostForm'] ['id_form'] = $this->claveFormulario;
             return $arrErrores;
         } else {
@@ -1125,7 +1129,7 @@ class Formulario extends BD\DBContainer {
      */
     static function msj($type,$msj,$redirect=false){
         $msj = Mensajes::crear($type, $msj);
-        Session::set('__msjForm',$msj);
+        Helpers\Sesion::set('__msjForm',$msj);
         if($redirect){
             redireccionar($redirect);
         }

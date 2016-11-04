@@ -19,6 +19,8 @@
 #require_once 'BaseDeDatos.interface.php';
 
 namespace Jida\BD;
+use Mysqli;
+use Exception;
 class Mysql extends ConexionBD{
     var $enTransaccion=false;
     var $valoresReservados = [
@@ -78,7 +80,7 @@ class Mysql extends ConexionBD{
      */
     function establecerConexion(){
 
-        $this->mysqli = @new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
 
         if($this->mysqli->connect_error){
 
@@ -162,7 +164,7 @@ class Mysql extends ConexionBD{
 
             $result = array("query"=>$insert,'idResultado'=>"");
 
-            if(!Session::get('__queryInsert')){
+            if(!Helpers\Sesion::get('__queryInsert')){
                 $validadoUnico=FALSE;
                 $validarExistencia=0;
                 if(count($unico)>=1){
@@ -185,7 +187,7 @@ class Mysql extends ConexionBD{
 
                 if($validarExistencia===0){
                     $this->ejecutarQuery($insert);
-                    Session::set('__queryInsert',$insert);
+                    Helpers\Sesion::set('__queryInsert',$insert);
                     if($this->mysqli->insert_id!=""){$ejecutado=1;}else{$ejecutado=0;}
                     $result['idResultado'] = $this->mysqli->insert_id;
                     $result['ejecutado']=$ejecutado;

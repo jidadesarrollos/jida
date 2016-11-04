@@ -22,7 +22,7 @@
 * @version
 * @category
 */
-namespace JComponentes;
+namespace Jida\Componentes;
 use Jida\Helpers\Directorios as Directorios;
 class Traductor{
 

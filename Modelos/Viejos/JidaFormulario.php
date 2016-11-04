@@ -1,30 +1,30 @@
-<?PHP 
+<?PHP
 /**
  * Definición de la clase
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @category Modelo
  * @version 1.0
  */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos\Viejos;
 use Jida\BD as BD;
 class JidaFormulario extends BD\DBContainer{
-        
+
      /**
      * Id del formulario
       * @var int $id_form
      */
     public $id_form;
-    
+
     /**
      * Nombre del formulario
-     * @var string $nombre_f 
+     * @var string $nombre_f
      */
     public $nombre_f;
-    
+
     /**
      *@var string $query_f Query que crea el formulario.
      */
@@ -36,9 +36,9 @@ class JidaFormulario extends BD\DBContainer{
      * Si se desea emplear el mismo grid de columnas en varias filas se puede usar el simbolo "x" de modo que
      * "3x5" repetirá 5 filas de 3 columnas
      * @var string $estructura
-     * @example 1;3;2x4;3;1  
+     * @example 1;3;2x4;3;1
      * @access public
-     * @see @armarFormularioEstructura 
+     * @see @armarFormularioEstructura
      */
     public $estructura;
     /**
@@ -56,19 +56,19 @@ class JidaFormulario extends BD\DBContainer{
      * Constructor
      * @param $tabla 2 Si es JidaFramework 1 Si es aplicacion
      * @param $id Id del formulario [opcional]
-     */    
+     */
     function __construct($tabla,$id=""){
         if($tabla==1){
             $this->nombreTabla="s_formularios";
-            $this->clavePrimaria="id_form";    
+            $this->clavePrimaria="id_form";
         }elseif($tabla==2){
             $this->nombreTabla="s_jida_formularios";
             $this->clavePrimaria="id_form";
         }
-        
-        
+
+
         parent::__construct(__CLASS__,$id);
-                
+
     }
     /**
      * Inicializa los valores del objeto a partir de un arreglo asociativo

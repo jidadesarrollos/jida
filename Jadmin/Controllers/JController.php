@@ -9,7 +9,7 @@
 namespace Jida\Jadmin\Controllers;
 use Jida\Componentes;
 use Jida\Core as Core;
-
+use Jida\Componentes\Traductor as Traductor;
 class JController extends Core\Controller{
 
 	protected $urlHtdocs;

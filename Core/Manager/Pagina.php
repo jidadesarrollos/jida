@@ -13,6 +13,7 @@
 
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
+use Exception;
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar

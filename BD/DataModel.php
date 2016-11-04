@@ -10,10 +10,13 @@
 * @category Model
 */
 
-include_once 'ResultBD.class.php';
 
-use Jida\Helpers\Debug as Debug;
+
 namespace Jida\BD;
+use Jida\Helpers\Debug as Debug;
+use ReflectionClass;
+use ReflectionProperty;
+//include_once 'ResultBD.class.php';
 class DataModel{
 	protected $debug=FALSE;
     protected $tablaBD;

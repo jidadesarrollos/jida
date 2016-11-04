@@ -618,7 +618,7 @@ global $JD;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-        $metodo = Helper\Cadenas::lowerCamelCase($this->metodo);
+        $metodo = Helper\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
@@ -665,8 +665,8 @@ global $JD;
 				call_user_func_array([$controlador,$controlador->postEjecucion], $args);
 			}
         }else{
-            throw new Exception("No existe el metodo $metodo del controlador $nombreControlador", 404);
-            Debug::string("No existe el metodo $metodo del controlador $nombreControlador",true);
+            throw new Excepcion("No existe el metodo $metodo del controlador $nombreControlador", 404);
+
         }
         if($checkDirs){
             $this->checkDirectoriosView();

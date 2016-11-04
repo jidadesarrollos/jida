@@ -9,6 +9,8 @@
  */
 
 namespace Jida\Jadmin\Controllers;
+use Jida\RenderHTML\Vista as Vista;
+
 class ComponentesController extends JController{
     var $layout="jadmin.tpl.php";
     function __construct($id=""){
