@@ -3,7 +3,7 @@
 /**
  * Clase Modelo para s_formularios
  *
- * Clase creada para la transición de Formularios creados con la clase Formulario del Framework
+ * @internal Clase creada para la transición de Formularios creados con la clase Formulario del Framework
  * en versiones anteriores a la version 0.5
  *
  *
@@ -13,7 +13,7 @@
 
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 class Formulario extends JFormulario{
 
 	protected $tablaBD='s_formularios';

@@ -1,12 +1,18 @@
 <?php
 
+namespace Jida\Jadmin\Controllers;
+use Jida\Helpers as Helpers;
+use Jida\Render as Render;
+use Jida\RenderHTML as RenderHTML;
+use Jida\Modelos as Modelos;
+use Exception;
 
 class FormulariosController extends  JController{
 
 	var $preEjecucion = 'validarModelo';
 	function __construct(){
 
-		$this->modelo = new Jida\Formulario();
+		$this->modelo = new Modelos\Formulario();
 		$this->layout="jadmin.tpl.php";
 		//se llama al constructor luego de instanciar el modelo
 		//para que no sea llamado por la clase padre
@@ -18,10 +24,10 @@ class FormulariosController extends  JController{
 	function validarModelo($app="app",$form=""){
 
 		if($app=='jida'){
-			$this->modelo = new Jida\JFormulario($form);
+			$this->modelo = new Modelos\JFormulario($form);
 		}else{
 
-			$this->modelo = new Jida\Formulario($form);
+			$this->modelo = new Modelos\Formulario($form);
 
 		}
 
@@ -37,9 +43,9 @@ class FormulariosController extends  JController{
 		];
 
 		if($app=='jida'){
-			$vista = new JVista('Jida\Formulario.obtJida',$params);
+			$vista = new Render\JVista('Jida\Formulario.obtJida',$params);
 		}else{
-			$vista = new JVista('Jida\Formulario.obtFormulario',$params);
+			$vista = new Render\JVista('Jida\Formulario.obtFormulario',$params);
 
 		}
 
@@ -62,14 +68,14 @@ class FormulariosController extends  JController{
 		$this->vista="jform";
 		$tipoForm = 1;
 		if(!empty($id)) $tipoForm=2;
-		$form = new Formulario('Formularios',$tipoForm,$id);
+		$form = new Modelos\Formulario('Formularios',$tipoForm,$id);
 		$form->action = $this->obtUrl('gestion',[$app,$id]);
 		if($this->post('btnFormularios')){
 			if($form->validarFormulario()){
 				if(!$this->modelo->validarConsulta($this->post('query_f')))
 				{
 
-					Formulario::msj('error', $this->tr->cadena('errorQuery','Formularios') ."<hr /> ".$this->post('query_f'));
+					RenderHTML\Formulario::msj('error', $this->tr->cadena('errorQuery','Formularios') ."<hr /> ".$this->post('query_f'));
 				}else{
 					$this->post('query_f',addslashes($this->post('query_f')));
 					if($tipoForm==1)
@@ -78,13 +84,13 @@ class FormulariosController extends  JController{
 					if($this->modelo->salvar($this->post()))
 					{
 
-						Formulario::msj('suceso', $this->tr->cadena('procesoFormFormulario'),$this->obtUrl('gestionCampos',[$app,$id]));
+						RenderHTML\Formulario::msj('suceso', $this->tr->cadena('procesoFormFormulario'),$this->obtUrl('gestionCampos',[$app,$id]));
 					}else{
-						Debug::string("algo raro",1);
+						Helpers\Debug::string("algo raro",1);
 					}
 				}
 			}else{
-				Formulario::msj('error', $this->tr->cadena('errorFormFormularios','Formularios'));
+				RenderHTML\Formulario::msj('error', $this->tr->cadena('errorFormFormularios','Formularios'));
 			}
 		}
 		$form->tituloFormulario = $this->tr->cadena('formGestionForms','Formularios');
@@ -122,7 +128,7 @@ class FormulariosController extends  JController{
 			{
 				if($this->modelo->guardarCampo($this->post()))
 				{
-					Formulario::msj('suceso', 'El campo <strong>'.$this->post('name').'</strong> ha sido actualizado exitosamente');
+					RenderHTML\Formulario::msj('suceso', 'El campo <strong>'.$this->post('name').'</strong> ha sido actualizado exitosamente');
 
 				}
 
@@ -130,7 +136,7 @@ class FormulariosController extends  JController{
 		}
 	}
 	private function obtFormularioCampo($idCampo,$tipoForm){
-		$form = new \Formulario('CamposFormulario',2,$idCampo,$tipoForm);
+		$form = new Modelos\Formulario('CamposFormulario',2,$idCampo,$tipoForm);
 		$form->action = "#";
 		$form->tipoBoton = "submit";
 		$form->valueBotonForm = "Guardar Configuracion";

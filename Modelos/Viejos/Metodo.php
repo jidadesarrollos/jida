@@ -8,8 +8,9 @@
  * @version
  */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos\Viejos;
 use Jida\BD as BD;
+use Exception;
 class Metodo extends BD\DataModel{
     
     /**

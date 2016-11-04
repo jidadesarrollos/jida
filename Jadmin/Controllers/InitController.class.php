@@ -6,15 +6,23 @@
 * @version
 * @category Controller
 */
-use \Directorios as Directorios;
+
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\BD as BD;
+use Jida\Render as Render;
+use Jida\Helpers as Helpers;
+use Jida\Modelos as Modelos;
+use Jida\RenderHTML as RenderHTML;
+use Jida\Core\GeneradorCodigo as GeneradorCodigo;
 class InitController extends JController{
 	use Jida\GeneradorCodigo;
 	private $GeneradorModelo;
 	private $gController;
 	function __construct(){
 		parent::__construct();
-		$this->GeneradorModelo=new Jida\GeneradorModelo();
-		$this->gController= new Jida\GeneradorController();
+		$this->GeneradorModelo=new GeneradorCodigo\GeneradorModelo();
+		$this->gController= new GeneradorCodigo\GeneradorController();
 		/**
 		 * Esta forma de insertar los archivos debe ser mejorada
 		 */
@@ -37,10 +45,10 @@ class InitController extends JController{
 	function index(){
 		$this->vista="init";
 		if($this->post('btnBdConfig')){
-			if(!Session::get('dirApp')) $this->crearDirApp();
+			if(!Helpers\Sesion::get('dirApp')) $this->crearDirApp();
 			if(!$this->validarDatosBD()){
 
-				Formulario::msj('error', 'Faltan algunos datos, por favor valida y vuelve a intentarlo');
+				RenderHTML\Formulario::msj('error', 'Faltan algunos datos, por favor valida y vuelve a intentarlo');
 			}else{
 				if($this->configurarBD()){
 					$this->crearControllerApp();
@@ -50,7 +58,7 @@ class InitController extends JController{
 					$this->redireccionar($this->getUrl('modelos'));
 				}else{
 
-					Formulario::msj('error','No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
+					RenderHTML\Formulario::msj('error','No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
 				}
 
 				//Debug::string("final funcion",true);
@@ -78,8 +86,8 @@ class InitController extends JController{
 
 			$bdConfig="";
 			#Debug::mostrarArray($bdConfig);
-			if(!Directorios::validar(DIR_APP)) Directorios::crear(DIR_APP);
-			Directorios::crear(DIR_APP."/Config");
+			if(!Helpers\Directorios::validar(DIR_APP)) Helpers\Directorios::crear(DIR_APP);
+			Helpers\Directorios::crear(DIR_APP."/Config");
 			$bdConfig.=$this->abrirPHP().$this->docBlock(
 				"Archivo de Configuración de Base de Datos"
 				);
@@ -196,13 +204,13 @@ class InitController extends JController{
         if($this->post('btnCrearModelos')){
             if(count($this->post('tablas_bd')>0)){
                 if($this->crearModelos()){
-                	Vista::msj('componentes','suceso', 'Se han creado los objetos correctamente');
+                	RenderHTML\Vista::msj('componentes','suceso', 'Se han creado los objetos correctamente');
                 	$this->redireccionar($this->obtURLApp()."jadmin/componentes/");
 //
                 }
 
             }else{
-                Session::set('__msj',Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
+                Helpers\Sesion::set('__msj',Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
             }
 
         }
@@ -240,8 +248,8 @@ class InitController extends JController{
 			'Aplicacion/Layout',
 			'Aplicacion/Vistas'
 		];
-		Directorios::crear($directorios);
-		Session::set('dirApp', TRUE);
+		Helpers\Directorios::crear($directorios);
+		Helpers\Sesion::set('dirApp', TRUE);
 	}
 
 
@@ -251,7 +259,7 @@ class InitController extends JController{
 		try{
 			switch ($manejador) {
 				case 'MySQL':
-						$bd = new Mysql();
+						$bd = new BD\Mysql();
 					$GLOBALS['conexiones']['default']['puerto']=3306;
 					break;
 
@@ -287,7 +295,7 @@ class InitController extends JController{
 
 		$this->crearVista(
 				'index', 'index',
-				Selector::crear("a",
+				Render\Selector::crear("a",
 						['href'=>$this->urlController(),'class'=>"text-center"],
 			 			'Configurar Aplicaci&oacute;n'
 				)
@@ -310,7 +318,7 @@ class InitController extends JController{
 		}
 
 
-		if(!Directorios::validar($ubicacion)) Directorios::crear($ubicacion);
+		if(!Helpers\Directorios::validar($ubicacion)) Helpers\Directorios::crear($ubicacion);
 
 		$view =
 			$this->abrirPHP()
@@ -323,17 +331,17 @@ class InitController extends JController{
 	}
 
 	private function agregarLayout(){
-		if(!Directorios::validar(DIR_APP."Layout")) Directorios::crear(DIR_APP."Layout");
+		if(!Helpers\Directorios::validar(DIR_APP."Layout")) Helpers\Directorios::crear(DIR_APP."Layout");
 		copy(DIR_FRAMEWORK."Layout/jadminIntro.tpl.php",DIR_APP."Layout/default.tpl.php");
 		return $this;
 	}
 	private function copiarHtdocs(){
-		Directorios::copiar(DIR_FRAMEWORK."htdocs/js/", HTDOCS_DIR."js/jida/");
-		Directorios::copiar(DIR_FRAMEWORK."htdocs/css/", HTDOCS_DIR."css/jida/");
+		Helpers\Directorios::copiar(DIR_FRAMEWORK."htdocs/js/", HTDOCS_DIR."js/jida/");
+		Helpers\Directorios::copiar(DIR_FRAMEWORK."htdocs/css/", HTDOCS_DIR."css/jida/");
 		return $this;
 	}
 	private function crearUsuarioJadmin(){
-		$user = new User();
+		$user = new Modelos\User();
 
 		$user->initBD('MySQL');
 
@@ -346,9 +354,9 @@ class InitController extends JController{
 		$user->registrarUsuario($data,[1],FALSE);
 		$user->agregarPerfilSesion('JidaAdministrador');
 
-		Session::sessionLogin();
+		Helpers\Sesion::sessionLogin();
 		$user->registrarSesion();
-		Session::set('Usuario',$user);
+		Helpers\Sesion::set('Usuario',$user);
 		return $this;
 	}
 

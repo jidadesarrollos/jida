@@ -1,5 +1,7 @@
 <?PHP 
-
+namespace Jida\Jadmin\Controllers;
+use Jida\Helpers as Helpers;
+use Jida\RenderHTML as RenderHTML;
 class UsersController extends JController{
     protected $urlCierreSession="/jadmin/";
     var $layout = 'jadmin.tpl.php';    
@@ -36,7 +38,7 @@ class UsersController extends JController{
                  from s_usuarios a 
                  join s_estatus b on (a.id_estatus=b.id_estatus)";
         
-        $vista = new Vista($query,$GLOBALS['configPaginador'],"Usuarios");
+        $vista = new RenderHTML\Vista($query,$GLOBALS['configPaginador'],"Usuarios");
         $vista->tipoControl=2;
         $vista->setParametrosVista($GLOBALS['configVista']);
         $vista->filaOpciones=[  0=>['a'=>[
@@ -62,7 +64,7 @@ class UsersController extends JController{
 	/**
      * Muestra formulario de gestión de usuarios
      * 
-     * El metodo puede ser configurado en controladores que hereden de UsersControllers por
+     * @internal El metodo puede ser configurado en controladores que hereden de UsersControllers por
      * medio de los parametros que solo son pasados al ser llamado explicitamente
      * @param string $url Url del metodo que hereda
      * @param $externo Consulta sql para filtrar los perfiles a mostrar
@@ -83,9 +85,9 @@ class UsersController extends JController{
             $_POST['clave_usuario']=md5($this->post('clave_usuario'));
             if($datosForm['guardado'] and $datosForm['guardado']['ejecutado']==1){
                 $msj = 'El usuario '.$this->post('nombre_usuario')." ha sido creado exitosamente";
-                Vista::msj($idVista, 'suceso', $msj,$urlVista);
+                RenderHTML\Vista::msj($idVista, 'suceso', $msj,$urlVista);
             }else{
-                Session::set('__msjForm',Mensajes::crear('error',"No se ha podido registrar el usuario, vuelva a intentarlo"),false);
+                Helpers\Sesion::set('__msjForm',Mensajes::crear('error',"No se ha podido registrar el usuario, vuelva a intentarlo"),false);
             }
         endif;
         $this->data['form'] = $form->armarFormulario();
@@ -94,7 +96,7 @@ class UsersController extends JController{
     /**
      * Devuelve el formulario para gestion de usuarios
      * 
-     * Devuelve el html del usuario configurado con el action del form hacia un metodo 'set-componente' del
+     * @internal Devuelve el html del usuario configurado con el action del form hacia un metodo 'set-componente' del
      * controlador en el cual sea llamado
      * @method formGestionUser
      * @param int $tipoform
@@ -132,7 +134,7 @@ class UsersController extends JController{
 	    /**
      * Devuelve el formulario para gestion de usuarios
      * 
-     * Devuelve el html del usuario configurado con el action del form hacia un metodo 'asociar-perfiles' del
+     * @internal Devuelve el html del usuario configurado con el action del form hacia un metodo 'asociar-perfiles' del
      * controlador en el cual sea llamado
      * @method formAsignacionPerfiles
      * @param int $tipoform
@@ -157,7 +159,7 @@ class UsersController extends JController{
     /**
      * Realiza el proceso de registro de usuarios
      * 
-     * La data a registrar debe haber sido validada previamente
+     * @internal La data a registrar debe haber sido validada previamente
      *
      * @method registrarPerfilesDeUsuario
      * @param object $formulario Objeto Formulario de Perfiles a Usuario instanciado
@@ -188,7 +190,7 @@ class UsersController extends JController{
                 if($validacion===TRUE){
                     $accion = $user->asociarPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Vista::msj('componentes', 'suceso','Asignados los perfiles al usuario '.$user->nombre_usuario,$this->urlController());
+                        RenderHTML\Vista::msj('componentes', 'suceso','Asignados los perfiles al usuario '.$user->nombre_usuario,$this->urlController());
                         #redireccionar($this->url);
                     }else{
                         Formulario::msj('error',"No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
@@ -200,16 +202,16 @@ class UsersController extends JController{
             $this->data['form'] =$form->armarFormulario();
 			$this->dv->form = $form->armarFormulario();
         }else{
-            Vista::msj('usuarios', 'error',"Debe seleccionar un usuario",$this->urlController());
+            RenderHTML\Vista::msj('usuarios', 'error',"Debe seleccionar un usuario",$this->urlController());
             
             redireccionar($this->url);  
         }
         
     }//fin función
     function cierresesion($url=""){
-	    if(Session::destroy()){
-	    	if(Session::get('Usuario') instanceof MODELO_USUARIO)
-				Session::get('Usuario')->cerrarSesion();
+	    if(Helpers\Sesion::destroy()){
+	    	if(Helpers\Sesion::get('Usuario') instanceof MODELO_USUARIO)
+				Helpers\Sesion::get('Usuario')->cerrarSesion();
 			if(empty($url)) $url = $this->urlCierreSession;
 	    	$this->redireccionar($url);  
 	    }
@@ -217,7 +219,7 @@ class UsersController extends JController{
     /**
      * Verifica los datos para iniciar sesion
      * 
-     * Verifica los datos del usuario y si el mismo existe registra la sesion y lo habilita
+     * @internal Verifica los datos del usuario y si el mismo existe registra la sesion y lo habilita
      * caso contrario retorna falso
      * @method validarInicioSesion
      */
@@ -234,15 +236,15 @@ class UsersController extends JController{
     /**
      * Registra la sesion de un usuario
      * 
-     * Crea la variable de Sesion Usuario con el usuario en sesión actual
+     * @internal Crea la variable de Sesion Usuario con el usuario en sesión actual
      * @method crearSesionUsuario
      */
     protected function crearSesionUsuario(){
-        Session::sessionLogin();
-        Session::set('Usuario',$this->modelo);
+        Helpers\Sesion::sessionLogin();
+        Helpers\Sesion::set('Usuario',$this->modelo);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if(isset($data))
-        Session::set('usuario',$data);
+        Helpers\Sesion::set('usuario',$data);
         return $this;
     }
     /**
@@ -254,8 +256,8 @@ class UsersController extends JController{
      */
     function formularioLogin($called=FALSE){
         if($called){
-            if(Session::get('FormLoggin') and Session::get('FormLoggin') instanceof Formulario){
-                $form = Session::get('FormLoggin');
+            if(Helpers\Sesion::get('FormLoggin') and Helpers\Sesion::get('FormLoggin') instanceof Formulario){
+                $form = Helpers\Sesion::get('FormLoggin');
                  
             }else{
                 $form = new Formulario('Login',1,null,2);

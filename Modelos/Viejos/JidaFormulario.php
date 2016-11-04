@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Definición de la clase
+ * Definición de la clase JidaFormulario
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package
@@ -31,7 +31,7 @@ class JidaFormulario extends BD\DBContainer{
     public $query_f;
     /**
      * Define la estructura de un formulario a renderizar por medio del metodo armarFormularioEstructura
-     * La estructura se define colocando el numero de campos que se desean por culumnas, teniendo en cuenta
+     * @internal La estructura se define colocando el numero de campos que se desean por culumnas, teniendo en cuenta
      * que se utiliza el sistema grid de bootstrap y q el max. de columnas es 12.
      * Si se desea emplear el mismo grid de columnas en varias filas se puede usar el simbolo "x" de modo que
      * "3x5" repetirá 5 filas de 3 columnas

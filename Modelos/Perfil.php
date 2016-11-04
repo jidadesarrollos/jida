@@ -9,7 +9,7 @@
 
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 use Jida\BD as BD;
 use Jida\Helpers\Debug as Debug;
 class Perfil extends BD\DataModel{

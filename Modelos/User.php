@@ -12,6 +12,8 @@
 
 namespace Jida\Modelos;
 use Jida\BD as BD;
+use Jida\Helpers as Helpers;
+use Exception;
 class User extends BD\DataModel{
     /**
      *
@@ -166,7 +168,7 @@ class User extends BD\DataModel{
 	function registrarSesion(){
 	    if(!empty($this->id_usuario)){
     		$this->salvar(['ultima_session'=>'current_timestamp','activo'=>1]);
-            Session::sessionLogin();
+            Helpers\Session::sessionLogin();
 		}else return false;
 
 	}
@@ -292,16 +294,16 @@ class User extends BD\DataModel{
 
 	}
 	function crearSesionUsuario(){
-		Session::sessionLogin();
-        Session::set('Usuario',$this);
+		Helpers\Session::sessionLogin();
+        Helpers\Session::set('Usuario',$this);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if(isset($data))
-        Session::set('usuario',$data);
+        Helpers\Session::set('usuario',$data);
         return $this;
 	}
 
 	function guardarSesion(){
-		Session::set('Usuario',$this);
+		Helpers\Session::set('Usuario',$this);
 	}
 
 }

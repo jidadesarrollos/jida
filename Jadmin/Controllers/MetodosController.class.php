@@ -8,7 +8,9 @@
  * @version 0.1
  */
 
- 
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\RenderHTML as RenderHTML;
 class MetodosController	 extends JController{
     
     function __construct($id=""){
@@ -63,11 +65,11 @@ class MetodosController	 extends JController{
                 $validacion = $form->validarFormulario();
                 if($validacion===TRUE){
                     if($metodo->salvar($_POST)->ejecutado()==1){
-                        Vista::msj('metodos', 'suceso', "La descripci&oacute;n del Metodo <strong>$metodo->metodo</strong> ha sido registrada exitosamente");
+                        RenderHTML\Vista::msj('metodos', 'suceso', "La descripci&oacute;n del Metodo <strong>$metodo->metodo</strong> ha sido registrada exitosamente");
                     }else
-                        Vista::msj('metodos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
+                        RenderHTML\Vista::msj('metodos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
                 }else
-                    Vista::msj('metodos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego",'/jadmin/objetos/metodos/obj/'.$metodo->id_objeto);
+                    RenderHTML\Vista::msj('metodos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego",'/jadmin/objetos/metodos/obj/'.$metodo->id_objeto);
             }
             
             $this->dv->form = $form->armarFormulario();
@@ -130,17 +132,17 @@ class MetodosController	 extends JController{
                 if($validacion===TRUE){
                     $accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$metodo->metodo,"/jadmin/objetos/metodos/obj/".$metodo->id_objeto);
+                        RenderHTML\Vista::msj('metodos', 'suceso', 'Asignados los perfiles de acceso al metodo '.$metodo->metodo,"/jadmin/objetos/metodos/obj/".$metodo->id_objeto);
                     }else{
-                        Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                        RenderHTML\Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
                 }else{
-                    Formulario::msj('error', "No se han asignado perfiles");
+                    RenderHTML\Formulario::msj('error', "No se han asignado perfiles");
                 }
             }
             $this->dv->formAcceso =$form->armarFormulario();
         }else{
-            Vista::msj('metodos', 'error',"Debe seleccionar un objeto","jadmin/objetos/metodos/obj".$metodo->id_objeto);
+            RenderHTML\Vista::msj('metodos', 'error',"Debe seleccionar un objeto","jadmin/objetos/metodos/obj".$metodo->id_objeto);
         }    
     }
 }

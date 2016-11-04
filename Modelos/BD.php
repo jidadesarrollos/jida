@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 use Jida\BD as BD;
 class BD extends BD\DataModel{
 

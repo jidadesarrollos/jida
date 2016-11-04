@@ -10,6 +10,7 @@ namespace Jida\Jadmin\Controllers;
 use Jida\Modelos\JidaControl as JidaControl;
 use Jida\Helpers as Helpers;
 use Jida\RenderHTML\Formulario as Formulario;
+use Exception;
 class JadminController extends JController{
     /**
      * objeto modelo jidaControl

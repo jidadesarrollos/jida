@@ -3,11 +3,15 @@
  * 
  */
  
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\Modelos as Modelos;
+
 class DebugController extends JController{
     private $jctrl="";
     
     function __construct(){
-        $this->jctrl = new JidaControl();
+        $this->jctrl = new Modelos\JidaControl();
 		parent::__construct();
         $this->layout="jadmin.tpl.php";
     }      
@@ -75,7 +79,7 @@ class DebugController extends JController{
                     
                 }
             }
-            $jctrl = new JidaControl();
+            $jctrl = new Modelos\JidaControl();
             $tablasBD = $jctrl->obtenerTablasBD();
             
             

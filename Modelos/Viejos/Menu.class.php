@@ -1,6 +1,6 @@
 <?PHP
 /**
- * undocumented class
+ * Clase Menu
  *
  * @package default
  * @author
@@ -8,6 +8,8 @@
 
 namespace Jida\Modelos\Viejos;
 use Jida\BD as BD;
+use Jida\Helpers as Helpers;
+use Exception;
 class Menu extends BD\DataModel {
 
 	/**
@@ -62,7 +64,7 @@ class Menu extends BD\DataModel {
      */
 	function getPerfilesAcceso(){
 
-	     $perfiles = Session::get('Usuario')->perfiles();
+	     $perfiles = Helpers\Session::get('Usuario')->perfiles();
          return array_merge($perfiles,$this->perfilesAcceso);
 
 	}
@@ -131,7 +133,7 @@ class Menu extends BD\DataModel {
          }else{
          	#throw new Exception("Menu no definido", 1);
          }
-         #Debug::mostrarArray(Session::get('usuario','perfiles'),false);
+         #Helpers\Debug::mostrarArray(Helpers\Session::get('usuario','perfiles'),false);
 
 
          $perfilesUser = "'".implode("','", $this->getPerfilesAcceso())."'";

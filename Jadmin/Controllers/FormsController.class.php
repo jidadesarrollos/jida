@@ -7,7 +7,11 @@
  * @edited 0.1.8	30/03/2014
 */
 
-
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\Modelos as Modelos;
+use Jida\Helpers as Helpers;
+use Jida\RenderHTML as RenderHTML;
 class FormsController extends JController{
     /**
      * objeto modelo jidaControl
@@ -21,7 +25,7 @@ class FormsController extends JController{
      */
     function __construct(){
 
-        $this->jctrl = new JidaControl();
+        $this->jctrl = new Modelos\JidaControl();
         $this->url="/jadmin/forms/";
         parent::__construct();
 
@@ -42,7 +46,7 @@ class FormsController extends JController{
         $conForms = "select id_form,nombre_f as \"Nombre Formulario\",clave_primaria_f as \"Clave Primaria\",
                     nombre_identificador as \"Identificador\" from s_jida_formularios";
 
-        $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios del Framework");
+        $vForms = new RenderHTML\Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios del Framework");
 
         $vForms->acciones=[
         'Nuevoo'=>['href'=>'/jadmin/forms/gestion-jida-form/','class'=>'btn'],
@@ -91,7 +95,7 @@ class FormsController extends JController{
                     nombre_identificador as \"Identificador\" from s_formularios";
 
 
-        $vForms = new Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
+        $vForms = new RenderHTML\Vista($conForms,$GLOBALS['PaginadorJida'],"Formularios");
 
         $vForms->acciones=[
         'Nuevoo'=>['href'=>$this->getUrl('gestionFormulario'),'class'=>'btn btn-adm'],
@@ -137,7 +141,7 @@ class FormsController extends JController{
 		$this->dv->title="Registro de Formulario";
 		$this->dv->totalCampos =0;
 
-        $jctrol =  new JidaControl($id_form,$ambito);
+        $jctrol =  new Modelos\JidaControl($id_form,$ambito);
 
         if($this->getEntero($this->get('id'))){
 
@@ -149,7 +153,7 @@ class FormsController extends JController{
         }
 
 
-		$formulario = new Formulario('Formularios',$tipoForm,$id_form,$ambito);
+		$formulario = new RenderHTML\Formulario('Formularios',$tipoForm,$id_form,$ambito);
         if($ambito==2){
             $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->getUrl('gestionJidaForm',['id'=>$id_form]):$this->getUrl('gestionJidaForm');
         }else{
@@ -182,10 +186,10 @@ class FormsController extends JController{
 					}
                 }else{
 
-                    Session::set('__msjForm',Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
+                    Helpers\Sesion::set('__msjForm',Helpers\Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
                 }
 			}else{
-				Session::set('__msjForm',Mensajes::mensajeError("No se ha podido registrar el formulario"));
+				Helpers\Sesion::set('__msjForm',Helpers\Mensajes::mensajeError("No se ha podido registrar el formulario"));
 			}
 		}
         $this->dv->formulario = $formulario->armarFormulario();
@@ -224,9 +228,9 @@ class FormsController extends JController{
             $arrayIds[$key] = $this->getEntero($id);
         }
         if($this->jctrl->eliminarFormulario($arrayIds)){
-         Session::set('__msjVista', Mensajes::mensajeSuceso("Se han eliminados los formularios"));
+         Helpers\Sesion::set('__msjVista', Helpers\Mensajes::mensajeSuceso("Se han eliminados los formularios"));
 
-         Session::set('__idVista','formularios');
+         Helpers\Sesion::set('__idVista','formularios');
          redireccionar('/jadmin/forms/');
         }else{
             throw new Exception("No se pudo eliminar el formulario", 1);
@@ -236,7 +240,7 @@ class FormsController extends JController{
 
     }
     private function crearFormularioRegistroForms($update="",$seleccion=""){
-            $formulario = new Formulario('Formularios',$update,$seleccion);
+            $formulario = new RenderHTML\Formulario('Formularios',$update,$seleccion);
             $formulario->action="/jadmin/forms/configuracion-formulario";
             $form = $formulario->armarFormulario('Formularios');
             return $form;
@@ -264,7 +268,7 @@ class FormsController extends JController{
         }else{
             $this->dv->formFramework=1;
         }
-    	$jctrl = new JidaControl(null,$form);
+    	$jctrl = new Modelos\JidaControl(null,$form);
 
         $this->tituloPagina="Configuracion de Formulario";
         /**
@@ -278,9 +282,9 @@ class FormsController extends JController{
             if($formCampo->validarFormulario()===TRUE){
 
                 $proceso = $jctrl->procesarCampos($_POST,$form);
-                Session::set('__msj',Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
+                Helpers\Sesion::set('__msj',Helpers\Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
             }else{
-                Session::set('__msj',Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));
+                Helpers\Sesion::set('__msj',Helpers\Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));
             }
           $this->dv->formCampo=$formCampo->armarFormularioEstructura();
         }
@@ -305,7 +309,7 @@ class FormsController extends JController{
             $campos = explode(",", $_POST['campos']);
             $orden = 1;
             $arrayOrden=array();
-            $jctrl = new JidaControl(null,$_POST['ambito']);
+            $jctrl = new Modelos\JidaControl(null,$_POST['ambito']);
             foreach($campos as $campo){
                 $idCampo = explode("-", $campo);
                 $arrayOrden[]=array('id_campo'=>$idCampo[1],'orden'=>$orden);
@@ -313,7 +317,7 @@ class FormsController extends JController{
             }
 
             $jctrl->setOrdenCamposForm($arrayOrden,$form="");
-            $msj = Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
+            $msj = Helpers\Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
             respuestaAjax(json_encode(array("ejecutado"=>TRUE,'msj'=>$msj)));
         }
     }
@@ -326,7 +330,7 @@ class FormsController extends JController{
      */
     private function getFormCampo($idCampo="",$tipoForm=1){
 
-        $form = new Formulario ( 'CamposFormulario',2,$idCampo,$tipoForm );
+        $form = new RenderHTML\Formulario ( 'CamposFormulario',2,$idCampo,$tipoForm );
         $form->action = "#";
         $form->tipoBoton = "submit";
         $form->valueBotonForm="Guardar Configuración";
@@ -338,7 +342,7 @@ class FormsController extends JController{
      */
 
     function configuracionCampo(){
-       $campo = new CampoHTML();
+       $campo = new RenderHTML\CampoHTML();
 
         $this->layout="ajax.tpl.php";
 

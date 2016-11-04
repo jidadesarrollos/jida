@@ -7,7 +7,7 @@
 * @category
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 class JExcepcion{
 	private $excepcion;
 

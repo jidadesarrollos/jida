@@ -9,7 +9,7 @@
 
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 use Jida\BD as BD;
 class JCampoFormulario extends BD\DataModel{
 

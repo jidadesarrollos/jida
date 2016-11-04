@@ -15,6 +15,7 @@
 namespace Jida\Modelos;
 use Jida\BD as BD;
 use Jida\Helpers as Helpers;
+use Exception;
 class JidaControl extends BD\DBContainer{
 
     var $id_form;

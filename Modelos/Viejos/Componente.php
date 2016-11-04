@@ -9,7 +9,7 @@
 
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos\Viejos;
 use Jida\BD as BD;
 class Componente extends BD\DataModel{
 

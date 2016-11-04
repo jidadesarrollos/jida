@@ -7,7 +7,7 @@
  * @category Modelo
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 use Jida\BD as BD;
 class Objeto extends BD\DataModel{
 	
