@@ -6,11 +6,11 @@
  *
  * @package Aplicacion
  * @category Modelo
-
 */
-namespace Jida;
-use \DataModel as DataModel;
-class JFormulario extends DataModel{
+
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class JFormulario extends BD\DataModel{
 
 
 	/**

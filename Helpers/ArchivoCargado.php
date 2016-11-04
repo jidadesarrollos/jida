@@ -6,6 +6,8 @@
  * @category Helpers
  * @author  Julio Rodriguez <jirc48@gmail.com>
  */
+
+namespace Jida\Helpers;
 class ArchivoCargado extends Archivo {
 	
 	var $name;

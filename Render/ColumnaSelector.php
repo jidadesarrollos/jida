@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase Modelo para ColumnaSelector
 * @author Julio Rodriguez
 * @package
 * @version

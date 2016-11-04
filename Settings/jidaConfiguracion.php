@@ -3,7 +3,7 @@
  * Archivo con configuracion por defecto para que la aplicación arranque, todos los valores
  * que se encuentran en este archivo pueden ser sobreescritos o reemplazados
  * 
- * Se recomienda que el reemplazo se realice en un archivo externo a la carpeta framework
+ * @internal Se recomienda que el reemplazo se realice en un archivo externo a la carpeta framework
  * @see Aplicacion\Config\AppConfig
  * @author Julio Rodriguez 
  * @version 1.0

@@ -9,9 +9,10 @@
 
 */
 
-namespace Jida;
-use Jida\Debug as Debug;
-class Componente extends \DataModel{
+namespace Jida\ModelFramework;
+use Jida\Helpers\Debug as Debug;
+use Jida\BD as BD;
+class Componente extends BD\DataModel{
 
 
 	/**

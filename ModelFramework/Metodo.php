@@ -3,13 +3,13 @@
 /**
  * Clase Modelo para s_metodos
  * 
- * 
  * @package Aplicacion
  * @category Modelo
-
 */
-namespace Jida;
-class Metodo extends \DataModel{
+
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Metodo extends BD\DataModel{
 	
 
 	/**

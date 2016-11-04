@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase para Formularios
 * @author Julio Rodriguez
 * @package
 * @version

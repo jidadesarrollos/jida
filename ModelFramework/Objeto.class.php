@@ -8,8 +8,9 @@
  * @version
  */
 
- 
-class Objeto extends DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Objeto extends BD\DataModel{
     
     /**
      * Identificador unico numerico del  objeto

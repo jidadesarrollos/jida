@@ -2,15 +2,15 @@
 /**
  * Clase Modelo de metodos de un objeto
  * 
- * 
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package
  * @category
  * @version
  */
 
- 
-class Metodo extends DataModel{
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Metodo extends BD\DataModel{
     
     /**
      * Identificador numerico del metodo

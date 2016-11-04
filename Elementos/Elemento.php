@@ -7,9 +7,9 @@
 * @category Jida Model
 */
 
-namespace Jida;
-
-class Elemento extends \DataModel{
+namespace Jida\Elementos;
+use Jida\BD as BD;
+class Elemento extends BD\DataModel{
 
     #Aqui tus propiedades publicas================
 	var $id_elemento;

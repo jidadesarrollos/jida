@@ -5,7 +5,10 @@
  * @package default
  * @author  
  */
-class Menu extends DataModel {
+ 
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Menu extends BD\DataModel {
 	
 	/**
 	 * Clave principal del menu

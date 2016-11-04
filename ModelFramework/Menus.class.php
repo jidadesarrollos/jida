@@ -8,8 +8,10 @@
  * @category Modelo
 
 */
-namespace Jida;
-class Menu extends \DataModel{
+
+namespace Jida\ModelFramework;
+use Jida\BD as BD;
+class Menu extends BD\DataModel{
 
 
 	/**

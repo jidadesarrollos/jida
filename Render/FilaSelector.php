@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase FilaSelector
 * @author Julio Rodriguez
 * @package
 * @version

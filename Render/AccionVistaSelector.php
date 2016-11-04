@@ -1,6 +1,6 @@
 <?php
 /**
-* Clase Modelo
+* Clase Modelo para AccionVistaSelector
 * @author Julio Rodriguez
 * @package
 * @version

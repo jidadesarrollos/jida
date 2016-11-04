@@ -12,8 +12,8 @@
  * @version 0.4
 
 */
-namespace Jida;
 
+namespace Jida\ModelFramework;
 class Formulario extends JFormulario{
 
 	protected $tablaBD='s_formularios';

@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Definición de la clase
+ * Clase para Selector
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package

@@ -1,34 +1,36 @@
 <?php
 /**
-* Clase Modelo
+* Helper para Imagenes
 * @author Julio Rodriguez
 * @package
 * @version
 * @category
 */
+
+namespace Jida\Helpers;
 class Imagen extends Archivo{
 
 
-	private $mimes = array(
-		'image/gif' => 'gif',
-		'image/jpeg' => 'jpeg',
-		'image/png' => 'png',
-		'application/x-shockwave-flash' => 'swf',
-		'image/psd' => 'psd',
-		'image/bmp' => 'bmp',
-		'image/tiff' => 'tiff',
-		'image/tiff' => 'tiff',
-		'image/jp2' => 'jp2',
-		'image/iff' => 'iff',
-		'image/vnd.wap.wbmp' => 'bmp',
-		'image/xbm' => 'xbm',
-		'image/vnd.microsoft.icon' => 'ico'
-	);
+	private $mimes = [
+		'image/gif' 					=> 'gif',
+		'image/jpeg' 					=> 'jpeg',
+		'image/png' 					=> 'png',
+		'image/psd' 					=> 'psd',
+		'image/bmp' 					=> 'bmp',
+		'image/tiff' 					=> 'tiff',
+		'image/tiff' 					=> 'tiff',
+		'image/jp2' 					=> 'jp2',
+		'image/iff' 					=> 'iff',
+		'image/xbm' 					=> 'xbm',
+		'image/vnd.wap.wbmp' 			=> 'bmp',
+		'image/vnd.microsoft.icon' 		=> 'ico',
+		'application/x-shockwave-flash' => 'swf'
+	];
+	
 	 private $mimesAceptados=[
 	 	'image/gif' => 'gif',
       	'image/jpeg'=> 'jpeg',
-      	'image/png'	=> 'png',
-
+      	'image/png'	=> 'png'
 	 ];
 
      /**
@@ -40,13 +42,9 @@ class Imagen extends Archivo{
      private $atributos;
      private $peso;
 
-
-
-
-
      /**
      * Permite redimensionar una imagen sin quitar la calidad de la misma
-     * Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada
+     * @internal Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada
      * reemplazará la imagen actual.
      * @method redimiensionar
      * @param mixed $anchoEsperado Ancho al que se desea redimencionar la imagen
@@ -55,8 +53,6 @@ class Imagen extends Archivo{
      * @param string $nombreImg Nombre de la imagen a redimensionar
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
      */
-
-
     function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
         if(empty($rutaImg)) $rutaImg = $this->directorio;
         if(empty($nombreImg) or is_null($nombreImg)){
@@ -132,7 +128,7 @@ class Imagen extends Archivo{
 
     /**
      * Crea una nueva imagen a partir de un fichero o de una URL
-     * Las imagenes pueden ser gift,png o jpg
+     * @internal Las imagenes pueden ser gift,png o jpg
      * @method crearLienzoImagen
      * @param unknown $tipoImagen
      * @param string $url
@@ -154,8 +150,8 @@ class Imagen extends Archivo{
     }
 
     /**
-     * Crea una imagen recortada a partir de una imagen dada;
-
+     * Crea una imagen recortada a partir de una imagen dada
+	 * 
      * @param int $alto Pixeles de altura de la imagen a crear
      * @param int $ancho Pixeles de largo de la imagen a crear
      * @param int $x inicio de recorte de eje x de la imagen
@@ -199,14 +195,12 @@ class Imagen extends Archivo{
      * Verifica que el archivo cargado sea una imagen
      */
     function validarCargaImagen(){
-    	if(function_exists('exif_imagetype')){
+    	if(function_exists('exif_imagetype'))
     		return $this->useExifImagetype();
-    	}else{
+    	else
     		return $this->validarImagenFileInfo();
-    	}
-
-
     }
+	
 	private function validarImagenFileInfo(){
 
         if($this->totalArchivosCargados>1){
@@ -215,13 +209,11 @@ class Imagen extends Archivo{
           $r = getimagesize( $image );
           return $r[2];
         }
-
-
 	}
 	/**
 	 * Verifica si una imagen es valida haciendo uso de la funcion exif_imagetype
 	 *
-	 * Esta es la función de validacion por defecto, siempre y cuando las librerias
+	 * @internal Esta es la función de validacion por defecto, siempre y cuando las librerias
 	 * necesarias se encuentren activas en el php.ini
 	 * @method useExifImagetype
 	 * @access private
@@ -229,34 +221,29 @@ class Imagen extends Archivo{
 	 */
 	private function useExifImagetype(){
 		$arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
-	        if($this->totalArchivosCargados>1){
-	            $total = $this->getTotalArchivosCargados();
-                $band = true;
-	            for($i=0;$i<$total;++$i){
+        if($this->totalArchivosCargados>1){
+            $total = $this->getTotalArchivosCargados();
+            $band = true;
+            for($i=0;$i<$total;++$i){
+            	if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes))
+                    $band=true;
+                else
+                    $band=false;
+            }
+            return $band;
+        }else{
 
-	                if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes)){
-	                    $band=true;
-	                }else{
-	                    $band=false;
+			if(count($this->files)>0){
 
-	                }
-	            }
-                return $band;
-	        }else{
+				$tmpName = is_array($this->files['tmp_name'])?$this->files['tmp_name'][0]:$this->files['tmp_name'];
 
-				if(count($this->files)>0){
-
-					$tmpName = is_array($this->files['tmp_name'])?$this->files['tmp_name'][0]:$this->files['tmp_name'];
-
-	          		if(!empty($tmpName)){
-
-	          			$valor = exif_imagetype($tmpName);
-						if(in_array($valor, $arrayMimes)) return true;
-
-					}
-	          	}
-				return false;
-	        }
+          		if(!empty($tmpName)){
+          			$valor = exif_imagetype($tmpName);
+					if(in_array($valor, $arrayMimes)) return true;
+				}
+          	}
+			return false;
+        }
 	}
 	/**
 	 * Edita los tipos de mymes aceptados para la carga de imagenes
@@ -286,36 +273,30 @@ class Imagen extends Archivo{
      *
      */
 	function resize($ruta,$nombre='img',$directorio=false){
-			$arr=[];
-			$bandera = FALSE;
-			
-			if(!$directorio)
-				$directorio = $ruta;
-			else
-				Directorios::crear($directorio);
-			
-			if(preg_match('/\.[jpg|png|jpeg]/', $ruta)){
-				$imagenes[] = $ruta;
-			}else{
-				$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
-				$bandera = TRUE;
-			}
-			
-			foreach ($imagenes as $key => $img){
-				$origen = ($bandera)?$ruta.'/'.$img:$img;
-				$ext = preg_split('/\./', $img);
+		$arr=[];
+		$bandera = FALSE;
+		
+		if(!$directorio)
+			$directorio = $ruta;
+		else
+			Directorios::crear($directorio);
+		
+		if(preg_match('/\.[jpg|png|jpeg]/', $ruta)){
+			$imagenes[] = $ruta;
+		}else{
+			$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
+			$bandera = TRUE;
+		}
+		
+		foreach ($imagenes as $key => $img){
+			$origen = ($bandera)?$ruta.'/'.$img:$img;
+			$ext = preg_split('/\./', $img);
 
-				$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext[1]);
-				$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext[1]);
-				$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext[1]);
-				$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
-			}
-			
-			// $imagenesRedimensionadas = Directorios::listarDirectoriosRuta($directorio, $arr, '/.*\.[jpg|png|jpeg]/');
-			// Jida\Debug::imprimir($imagenesRedimensionadas);
+			$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext[1]);
+			$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext[1]);
+			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext[1]);
+			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
+		}
 	}
-
-
-
 
 }
