@@ -12,9 +12,11 @@
 
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helper;
-
+//use Jida\Core\ExcepcionController as Excepcion;
+use Exception as Excepcion;
 global $JD;
  class JidaController {
+ 	private $_ce="001";
     /**
      * Define el nombre del Controlador requerido
      * @var string $controlador
@@ -589,6 +591,24 @@ global $JD;
         $nombreControlador = $controlador;
 		$this->vista->data->idioma=$this->idiomaActual;
 		$GLOBALS['dv']=$this->vista->data;
+
+		Helper\Debug::imprimir($this->modulo);
+		if($this->modulo=="jadmin"){
+			$controlador = "Jida\\".$this->modulo."\\".$controlador;
+		}else{
+			$namespace = "App\\";
+			if(!empty($this->modulo)){
+				$namespace.=$this->modulo."\\";
+			}
+			$controlador = $namespace.$controlador;
+		}
+		if(!class_exists($controlador)){
+
+			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
+		}else{
+
+			Helper\Debug::imprimir($controlador);
+		}
 
         $this->controladorObject = new $controlador();
 
