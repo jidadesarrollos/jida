@@ -20,10 +20,6 @@ $jdOpciones=[];
 
 include_once 'Helpers/FuncionesBasicas.php';
 set_time_limit(180);
-/**
- * Directorio del directorio de aplicación.
- */
-define ('app_dir', ROOT. 'Aplicacion'.DS);
 
 /**
  * Directorio del directorio del framework
@@ -56,7 +52,7 @@ if(function_exists('ini_set')){
 	/**
 	 * Inclusión de directorios de aplicación, framework y libs dentro del path
 	 */
-	ini_set('include_path',app_dir . PS . framework_dir .PS . libs_dir . PS . get_include_path());
+	ini_set('include_path',DIR_APP . PS . DIR_FRAMEWORK .PS . libs_dir . PS . get_include_path());
 }else{
 	echo "<h5>No existe la funci&oacute;n</h5>";
 }

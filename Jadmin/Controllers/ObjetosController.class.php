@@ -97,9 +97,9 @@ class ObjetosController extends \JController{
         $objetosNuevos=array();
         $nombreComponente = Cadenas::upperCamelCase($componente->componente);
 		if($nombreComponente=='Principal'){
-			$rutaComponente= app_dir."Controller/";
+			$rutaComponente= DIR_APP."Controller/";
 		}else{
-			$rutaComponente = ($nombreComponente=='Jadmin')?framework_dir.'Jadmin/Controllers/':app_dir."Modulos/".$nombreComponente."/Controller/";
+			$rutaComponente = ($nombreComponente=='Jadmin')?DIR_FRAMEWORK.'Jadmin/Controllers/':DIR_APP."Modulos/".$nombreComponente."/Controller/";
 		}
 
         $objetosCarpeta = [];
