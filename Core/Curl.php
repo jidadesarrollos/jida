@@ -8,7 +8,7 @@
  * @version 0.1
  */
 
- 
+namespace Jida\Core;
 class Curl extends Controller{
     /**
      * @var int $id Identificador de la llamada curl
