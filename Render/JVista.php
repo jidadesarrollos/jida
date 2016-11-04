@@ -234,14 +234,6 @@ class JVista{
 
 		$this->queryString = JD('QueryString');
 
-		// if(!empty($urlActual))
-			// $this->paginaConsulta = (Session::get('URL_ACTUAL')[0]=="/")?Session::get('URL_ACTUAL'):"/".Session::get('urlActual');
-//
-		// Debug::string(JD('QueryString'));
-		// Debug::string($this->paginaConsulta,1);
-		// if(isset($_GET['busqueda']) and !strpos($this->paginaConsulta,'busqueda')){
-			// $this->paginaConsulta.="?busqueda=".$_GET['busqueda'];
-		// }
 	}
 	private function establecerValoresDefault(){
 		if(empty($this->titulo)){

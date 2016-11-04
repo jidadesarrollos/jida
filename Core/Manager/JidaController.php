@@ -141,8 +141,6 @@ global $JD;
              * Registro de tiempo inicial de ejecución
              */
             Helpers\Sesion::set('__TIEjecucion',microtime(true) );
-			Helpers\Sesion::destroy();
-			#Helpers\Debug::imprimir($_SESSION,true);
             /**
              * Seteo de zona horaria
              */
@@ -162,9 +160,9 @@ global $JD;
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
             }
 
-            $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-			JD('URL_ANTERIOR',Helpers\Sesion::get('urlActual'));
-			Helpers\Sesion::set('urlActual',$_GET['url']);
+            $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL'] )?$_SESSION['URL_ACTUAL'] :"";
+			JD('URL_ANTERIOR',Helpers\Sesion::get('URL_ACTUAL'));
+			Helpers\Sesion::set('URL_ACTUAL',$_GET['url']);
 
 			JD('URL_COMPLETA',"/".$_GET['url']);
 
@@ -187,11 +185,8 @@ global $JD;
 
             unset($_GET['url']);
             if(count($_GET)>0)   $this->args=$_GET;
-
             $this->appRoot = str_replace(['index.php'], "", $_SERVER['PHP_SELF']);
-
 			$GLOBALS['__URL_APP'] = $this->appRoot;
-
 			//$ini = substr($this->appRoot, 1);
 			$ini = $this->appRoot;
 			Helpers\Sesion::set('URL_ACTUAL', $ini.Helpers\Sesion::get('URL_ACTUAL'));
@@ -201,15 +196,11 @@ global $JD;
              * variable global con todos los parametros pasados via url
              */
             $GLOBALS['arrayParametros'] = $url;
-
-            // $this->getSubdominio($url);
-
+			//se procesa la URL
             $this->procesarURL();
-            if(count($this->args)>0){
-                $this->procesarArgumentos();
-            }
+			//se procesan los argumentos
+            if(count($this->args)>0) $this->procesarArgumentos();
 
-            $GLOBALS['_MODULO_ACTUAL'] = $this->_modulo;
 			// Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;

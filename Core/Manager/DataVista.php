@@ -117,7 +117,8 @@ class DataVista{
 	 * @param boolean $ruta
 	 */
 	function addJsModulo($js,$ruta=true){
-		$modulo = $GLOBALS['_MODULO_ACTUAL'];
+
+		$modulo = $this->modulo;
 		(Helpers\Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
 
 		if(is_array($js)){
