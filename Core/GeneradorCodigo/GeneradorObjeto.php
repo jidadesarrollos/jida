@@ -6,8 +6,9 @@
 * @version
 * @category
 */
-include_once 'GeneradorArchivo.trait.php';
-class GeneradorObjeto extends DataModel{
+namespace Jida;
+use \Cadenas as Cadenas;
+class GeneradorObjeto extends \DataModel{
     use GeneradorCodigo;
     protected $clase;
     protected $propiedades=[];
@@ -19,33 +20,34 @@ class GeneradorObjeto extends DataModel{
     protected $extends;
     private $Directorio;
 	protected $modulo;
+	var $extensionClass=TRUE;
     /**
      * @var dir $ubicacion Directorio donde se guardara el archivo del objeto
      */
-    protected $ubicacion;    
+    protected $ubicacion;
     /**
      * @var string $nombreObjeto Nombre del objeto
      */
     protected $nombreObjeto;
-    /** 
+    /**
      * Funcion constructora
      * @method __construct
      */
-     
+
     function __construct(){
         parent::__construct();
-        $this->String= new String();
-        $this->Directorio = new Directorios();
+        $this->String= new \String();
+        $this->Directorio = new \Directorios();
         $this->extension="class.php";
     }
-	
+
 	function agregarExtend($nombreClase){
 		$this->extends = $nombreClase;
 		return $this;
 	}
     /**
      * Retorna un string con la estructura de nombre de Un Objeto
-     * 
+     *
      * @method nombreObjeto
      * @param string $string Cadena de texto a convertir
      * @param mixed $prefijos Lista de prefijos que se desean ignorar para el nombre del objeto
@@ -56,25 +58,32 @@ class GeneradorObjeto extends DataModel{
             return $this->nombreObjeto;
         }else{
         	if(!empty($prefijos))$objeto=preg_replace($prefijos, "", $objeto);
-			
+
 			$nombre = explode("_",$objeto);
 				array_walk($nombre,function(&$valor,$clave){
-					$valor = String::upperCamelCase(String::obtenerSingular($valor));
+					$valor = Cadenas::upperCamelCase(Cadenas::obtenerSingular($valor));
 				});
-				
+
 			$nombre = implode("_", $nombre);
             $nombre = $this->String->upperCamelCase(
                       $this->String->obtenerSingular(str_replace("_", " ", $objeto))
-                    );  
-            $this->nombreObjeto=$nombre;  
+                    );
+            $this->nombreObjeto=$nombre;
         }
-        
+
         return $nombre;
-    } 
+    }
+	/**
+	 * Crea un objeto 
+	 */
     protected function crearClase(){
       if(!$this->Directorio->validar($this->ubicacion)) $this->Directorio->crear($this->ubicacion);
-      $this->crear($this->ubicacion.$this->nombreObjeto.".class.php");
-      $this->contenido='<?php'.$this->saltodeLinea();     
+	  if($this->extensionClass)
+      	$this->crear($this->ubicacion.$this->nombreObjeto.".class.php");
+	  else {
+		$this->crear($this->ubicacion.$this->nombreObjeto.".php");  
+	  }
+      $this->contenido='<?php'.$this->saltodeLinea();
       $this->contenido.=
           $this->docBlock
         . $this->saltodeLinea()
@@ -82,33 +91,33 @@ class GeneradorObjeto extends DataModel{
         . $this->saltodeLinea()
         . $this->definirPropiedades($this->propiedades)
         . $this->cerrarClase();
-    
+
       //$this->saltodeLinea();
       //$this->definirVariables();
       //$this->saltodeLinea()->cerrarClase();
-      
+
       $this->escribir()->cerrar();
     }
-    
+
     function cerrarClase(){
         return "\n}//fin clase";
-        
-        
+
+
     }
-    
+
 
     /**
      * Estructura las variables del objeto
      * @param array $vars Arreglo de variables del objeto, debe poseer los siguientes keys
      * 1. propiedad. 2. valor. 3. type. 4. doc. 5. Ambito
-     * 
-        
+     *
+
      */
     function definirPropiedades($vars="",$doc=""){
     	if(empty($vars))
 			$vars = $this->propiedades;
         $props="";
-		  
+
         foreach ($vars as $key => $prop) {
             $this->saltodeLinea();
             if(is_array($prop)){
@@ -120,18 +129,18 @@ class GeneradorObjeto extends DataModel{
                 if(array_key_exists("valor", $prop))
                     $props.="='".$prop['valor']."';\n";
                 else
-                    $props.=";\n"; 
+                    $props.=";\n";
             }else{
                 $props.=$this->tab();
-                $props.='var $'.$prop.";\n";    
-            }      
+                $props.='var $'.$prop.";\n";
+            }
         }
         return $props;
     }
-    
+
     function definicion($extends=""){
     	if(empty($extends)) $extends=$this->extends;
-		
+
         $def="class ";
         $def.=$this->nombreObjeto."";
         if(!empty($extends) and class_exists($extends))
@@ -139,18 +148,18 @@ class GeneradorObjeto extends DataModel{
         $def.=$this->apertura();
         return $def;
     }
-    
-      
-    
+
+
+
     private function addExtends($extends){
         return " extends $extends";
     }
-    
+
     protected function lineaDoc($content){
         $linea = " * ".$content."\n";
         return $linea;
     }
-    
+
     function generarDocObjeto($intro,$content="",$tags=[]){
         $doc = "/**\n";
         $doc.=  $this->lineaDoc($intro)
@@ -163,15 +172,15 @@ class GeneradorObjeto extends DataModel{
             }
         }
         $doc.="\n*/";
-        return $doc;  
+        return $doc;
     }
-	
+
 	function obtMetodos(){
 		$lista="";
-		
+
 		if(!empty($this->metodos) and is_array($this->metodos)){
 			for($i=0;$i<count($this->metodos);++$i){
-				$lista.=$this->metodos[$i];	
+				$lista.=$this->metodos[$i];
 			}
 		}
 		return $lista;

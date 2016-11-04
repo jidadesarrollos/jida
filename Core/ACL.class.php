@@ -30,7 +30,7 @@ class ACL extends DataModel{
      * @access private
      */
      
-    private $acl;
+    private $acl=[];
     /**
      * Perfiles asociados al usuario que inicia sesión
      * @var $perfiles
@@ -42,27 +42,49 @@ class ACL extends DataModel{
      * @var array $componentes Conjunto de componentes a los que tiene el usuario
      */
     private $componentes =array();
+	private $usuario;
     /**
      * Funcion constructora
      */
     protected $tablaBD = '';
     function __construct(){
         parent::__construct();
-        
+        $this->layout="";
+        $this->usuario = Session::get('Usuario');
+		
         if(!isset($_SESSION['usuario']['perfiles'])){
-            
+        	   
             Session::set('usuario', 'perfiles',array('UsuarioPublico'));
             Session::set('acl_default',true);
         }
+       	/**
+		 * El objeto de instancia debe ser user siempre pues es el objeto usuario padre
+		 * del framework.
+		 */
+       	$objetoUser = 'User';
+        if($this->usuario instanceof $objetoUser){
+        	
+			$this->perfiles = Session::get('Usuario')->perfiles;
+        	if(count($this->perfiles)<1){
+        		$this->perfiles = array('UsuarioPublico');		
+        	}
+            
+        }else{
+        	if(array_key_exists('usuario', $_SESSION) and array_key_exists('perfiles', $_SESSION['usuario']))
+        		$this->perfiles = $_SESSION['usuario']['perfiles'];
+			else {
+				
+				$this->perfiles=[];
+			}
+		}
         
-        if(Session::get('Usuario') instanceof Usuario)
-            $this->perfiles = Session::get('Usuario')->perfiles;
-        $this->perfiles = $_SESSION['usuario']['perfiles'];
-		if($this->usoBD===TRUE){
+		if($this->usoBD!==FALSE){
 			
 		    $this->obtenerAccesoComponentes();
-		    
+            
 		    $this->obtenerAccesoObjetos();
+		}else{
+			
 		}
     }
     /**
@@ -71,8 +93,10 @@ class ACL extends DataModel{
      * @method obtenerAccesoComponentes
      */
     private function obtenerAccesoComponentes(){
-       
-        $query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
+        $componentes=[];
+		
+        // $query = "select id_componente,componente from s_componentes ";/**
+		$query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
         $i=0;
 
         foreach ($this->perfiles as $key => $value) {
@@ -81,19 +105,21 @@ class ACL extends DataModel{
             
         }
         $query.=") group by componente, id_componente;";
+		
         $result = $this->bd->ejecutarQuery($query);
         $componentes = array();
         $access = array();
         while($data = $this->bd->obtenerArrayAsociativo($result)){
+            $this->acl[$data['componente']]=[];
             $access[$data['componente']] =[]; 
             $componentes[$data['id_componente']] =['componente'=>$data['componente']];           
         }
                 
         //EL componente PRINCIPAL siempre es visible;
-        $componentes[1]=array('componente'=>'principal');
-        $this->componentes = $componentes;
-        $this->acl = $access;
         
+        $this->componentes = $componentes;
+        
+           
     }
     
     /**
@@ -107,8 +133,7 @@ class ACL extends DataModel{
      */
     private function obtenerAccesoObjetos(){
         if(ENTORNO_APP=='dev')	Session::destroy('acl');
-        
-        if(!isset($_SESSION['acl'])){
+        if(!Session::get('acl') and count($this->componentes)>0){
                     
             $perfiles ="";
              $i=0;
@@ -117,11 +142,12 @@ class ACL extends DataModel{
                 $perfiles.="'$value'";
                 
             }
-            $query = sprintf("select * from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
+
+            $query = sprintf("select  id_objeto_perfil,id_perfil,clave_perfil,nombre_perfil,id_objeto,objeto,
+								id_componente from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
                                 implode(",",array_keys($this->componentes)),
-                                $perfiles
-                                );
-            //Debug::string($query,false);
+                                $perfiles);
+			
             $objetos        =   $this->bd->obtenerDataCompleta($query);
             $accesoObjetos  =   array();
             $accesoMetodos  =   $this->obtenerAccesoMetodos();
@@ -153,7 +179,7 @@ class ACL extends DataModel{
         			
                     $componente = $dataMetodo['componente'];
                     $soloElMetodo=false;
-                     if($dataMetodo['loggin']===0){
+                     if($dataMetodo['loggin']==1){
                         
                         if(!array_key_exists($componente, $this->acl)){
                             
@@ -165,32 +191,59 @@ class ACL extends DataModel{
                             
                             $objetosComponente =& $this->acl[$componente]['objetos'];
                             if(!array_key_exists($dataMetodo['objeto'],$objetosComponente)){
-                                $objetosComponente[]= $dataMetodo['objeto'];
+                                //$objetosComponente[]= $dataMetodo['objeto'];
                                 $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
                             }elseif(array_key_exists('metodos', $objetosComponente[$dataMetodo['objeto']])){
                                 $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];    
                                 
-                            }
-                           // if(!array_key_exists('metodos',$objetosComponente['objetos'] )){
-                                // $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                           // }         1
-//                             
-                            // $this->acl[$componente]['objetos'][$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                        }
+                            }}
+                    }else{
+                    	$valores = Arrays::convertirAObjeto($dataMetodo);
+						/**
+						 * Se agregan los metodos que no requieren loggin, solo si los perfiles actuales no tienen acceso al componente o,
+						 * si tienen acceso solo a algunos metodos del componente.
+						 */
+						if(!array_key_exists($valores->componente, $this->acl) or (is_array($this->acl[$valores->componente]) and array_key_exists('objetos', $this->acl[$valores->componente]))){
+							$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
+							$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;	
+						}
+                    	
                     }
                 }//fin foreach
-            
-            #Debug::mostrarArray($this->acl);
-            
             /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
             
-            Session::set('acl',$this->acl);
+            
+            
 #            $this->accesos  =  $accesoObjetos;
             
-        }//fin validacion existencia
+        }else{
+        	$this->obtenerMetodosSinLogin();
+        }
+    	if(!array_key_exists('principal', $this->acl)) $this->acl['principal']=[];
+            
+        
+        
+        Session::set('acl',$this->acl);
         
     }
     
+	/**
+	 * Devuelve los metodos a los que puede acceder un usuario sin logguearse.
+	 * 
+	 * @method obtenerMetodosSinLogin
+	 */
+	function obtenerMetodosSinLogin(){
+        $query ="select id_metodo,id_objeto,objeto,metodo,loggin,id_perfil,clave_perfil,perfil,id_componente,componente
+         from vj_acceso_metodos where loggin=0";
+        $accesoMetodos = $this->bd->obtenerDataCompleta($query);
+		
+		foreach ($accesoMetodos as $key => $valores) {
+			$valores = Arrays::convertirAObjeto($valores);
+			$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
+			$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;
+		}
+		
+	}
     
     /**
      * Verifica los accesos del perfil a los metodos de cada objeto
@@ -230,9 +283,16 @@ class ACL extends DataModel{
         }
         
         $listaAcl  = Session::get('acl');
+		
+		if(defined('DEBUG_ACL') and DEBUG_ACL==TRUE){
+		  Debug::mostrarArray($listaAcl,0);    
+		}
+        
 		//Se da acceso si no existe una lista acl creada
-        if(!is_array($listaAcl)) return true;
-        Debug::mostrarArray($listaAcl,false);
+        if(!is_array($listaAcl)){
+        	return true;
+        } 
+        
         
         $accesosUser = array();
         $acceso=FALSE;
@@ -249,7 +309,8 @@ class ACL extends DataModel{
                     
                     if(!array_key_exists('objetos', $arrComponentes)){
                         //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
-                        if($componente=='Social') Debug::string("si tengo acceso");
+                        
+                      //  if($componente=='Social') //Debug::string("si tengo acceso");
                         $acceso=TRUE;
                     }else{
                         $arrObjetos =$arrComponentes['objetos'];

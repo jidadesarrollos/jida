@@ -1,44 +1,44 @@
-<?PHP 
+<?PHP
 /**
  * Representa un objeto Result de Base de datos
- * 
+ *
  * Permite acceder y manejar la matriz resultado de una consulta a base de datos
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package Framework 
+ * @package Framework
  * @subpackage BD
  * @version 1.0
  */
 
- 
+
 class ResultBD{
     /**
      * @var object $bd Objeto Instanciado manejador de base de datos
      */
-    private $dataModel; 
+    private $dataModel;
     /**
      * @var $result Resultado obtenido de la consulta de base de datos
      */
-    
+
     private $result;
     private $bdObject;
     protected $query;
     protected $idResultado;
     protected $unico;
     private $ejecutado=FALSE;
-    
+
     function __construct(DataModel $DataModel){
         $this->setValores($DataModel);
-        
+
     }
-    
+
     function setValores(DataModel $DataModel){
         $this->dataModel = $DataModel;
         $this->bdObject = $this->dataModel->__get('bd');
         $this->idResultado= $this->bdObject->__get('idResult');
+
         $this->result = $this->dataModel->bd->result;
-        if(!empty($this->idResultado) or $this->result)
-            $this->ejecutado=TRUE;
+        if(!empty($this->idResultado) or $this->result) $this->ejecutado=TRUE;
         return $this;
     }
     function getData(){
@@ -76,6 +76,15 @@ class ResultBD{
         if(property_exists($this, $property))
             $this->$property=$valor;
     }
-    
+	/**
+	 * Retorna el listado de ids insertados en un salvar multiple
+	 * @method ids
+	 * @return array $idsInsertados
+	 * @since 1.4
+	 */
+	function ids(){
+		return $this->dataModel->obtIdsResultados();
+	}
+
 }
 

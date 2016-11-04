@@ -17,7 +17,7 @@
 
         <?=$this->printHeadTags()?>
         
-        <?=$this->printCss()?>
+        <?=$this->imprimirLibrerias('css','jadmin')?>
     </head>
 
     <body>
@@ -25,11 +25,7 @@
      <div  class="jida-container">
          <div class="container-fluid">
              
-             <div class="row">
-                <nav id="nav-top" class="navbar bg-jida navbar-fixed-top">    
-                    <a class="navbar-brand pull-right" href="#">Jida-Framework Desarrollo</a>
-                </nav>
-            </div>
+             
             
                 <div class="col-md-12 col-md-12 contenido-principal">
                     <!-- <div class="row"> -->
@@ -43,13 +39,7 @@
                     
                 </div>
             </div><!--Cierre div full-container-->
-        </div>    
-        <footer class="footer container-fluid">
-            <p>
-                &copy; Copyright  by jirc Prueba
-            </p>
-        </footer>
-        
+        </div>
 		<?=$this->printJS()?>
     </body>
 </html>

@@ -6,9 +6,9 @@
 * @version
 * @category
 */
-
+namespace Jida;
 trait GeneradorArchivo{
-    
+
     /**
      * Nombre del Archivo
      */
@@ -23,16 +23,16 @@ trait GeneradorArchivo{
     var $dir;
     /**
      * Define el contenido del Archivo
-     * 
+     *
      * @var string $contenido;
      */
-    protected $contenido;    
+    protected $contenido;
     /**
      * Funcion constructora
      * @method __construct
      */
     function __construct(){
-                
+
     }
     /**
      * Crea un archivo
@@ -46,7 +46,7 @@ trait GeneradorArchivo{
     }
     /**
      * Permite definir u obtener el directorio del archivo
-     * 
+     *
      * Si es pasado un parametro, será definido como el directorio del archivo.
      * Caso contrario se devolvera el directorio existente
      * @method directorio
@@ -56,11 +56,11 @@ trait GeneradorArchivo{
     function directorio($dir=""){
         if(!empty($dir)){
             $this->dir=$dir;
-            return $this;   
+            return $this;
         }else{
            return $this->dir;
         }
-        
+
     }
     function escribir($contenido=""){
     	if(!empty($contenido)) $this->contenido=$contenido;
@@ -70,20 +70,20 @@ trait GeneradorArchivo{
     function cerrar(){
         fclose($this->archivo);
     }
-    
+
     function saltodeLinea($total=1){
     	$saltos="";
 		for($i=0;$i<=$total;++$i){
 			$saltos.="\n";
 		}
           return $saltos;
-                  
+
     }
     /**
      * Agrega tabulaciones al archivo
      * @method tab
      * @access protected
-     * @param int $cantidad Define el número de tabulaciones a ingresar 
+     * @param int $cantidad Define el número de tabulaciones a ingresar
      */
     function tab($cantidad=1){
         $tabs="";
@@ -91,7 +91,7 @@ trait GeneradorArchivo{
             $tabs.="\t";
         return $tabs;
     }
-    
+
     function retorno(){
         $this->contenido.="\r";
         return $this;
@@ -99,10 +99,10 @@ trait GeneradorArchivo{
     function addContenido($contenido){
         $this->contenido.=$contenido;
         return $this;
-        
+
     }
-	
-	function imprimir($contenido=""){
+
+	function imprimirContenido($contenido=""){
 		echo "<pre>";
 		echo $contenido;
 		echo "</pre>";

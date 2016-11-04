@@ -1,4 +1,5 @@
 <?PHP
+
 /**
  * Modelo de Usuario de la aplicacion
  * 
@@ -72,11 +73,12 @@ class User extends DataModel{
      * @access private
      */
     protected $perfiles=[];
-    
+
     protected $tablaBD = "s_usuarios";
     protected $pk = "id_usuario";
     protected $unico =['nombre_usuario'];
     protected $registroUser = FALSE;
+	
     /**
      * Verifica que los datos para iniciar session sean validos
      * 
@@ -86,7 +88,7 @@ class User extends DataModel{
      * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
      * @return mixed array si la sesion es iniciada, false caso contrario 
      */
-    function validarLogin($usuario,$clave,$validacion=true){
+    function validarLogin($usuario,$clave,$validacion=true,$callback=null){
         $clave = md5($clave);
         
         $result = $this ->select()
@@ -95,15 +97,34 @@ class User extends DataModel{
         if($this->bd->totalRegistros>0){
             
             $this->establecerAtributos($result);
+			
+			$this->__obtConsultaInstancia($this->id_usuario);
+			$this->obtenerDataRelaciones();
             $this->registrarSesion();
             $this->activo=1;
             $this->salvar();
             $this->obtenerPerfiles();
+			
             return $result;
         }else{
             return false;
         }
     }
+	private function  stringConsulta(){
+		return "select 
+			a.id_usuario_perfil AS id_usuario_perfil,
+			a.id_perfil AS id_perfil,
+			a.id_usuario AS id_usuario,
+			c.nombre_usuario,
+			c.nombres,
+			c.apellidos,
+			b.clave_perfil AS clave_perfil
+		from
+			s_usuarios_perfiles a
+			join s_perfiles b ON (a.id_perfil = b.id_perfil)
+			join s_usuarios c on (a.id_usuario = c.id_usuario)";
+		
+	}
     /**
      * Obtiene los perfiles asociados a un usuario de base de datos
      * @method obtenerPerfiles
@@ -114,12 +135,14 @@ class User extends DataModel{
             $this->id_usuario = $idUser;
         }
         if(count($this->perfiles)<1){
-            $query = "select * from vj_perfiles_usuarios where id_usuario=$this->id_usuario";
+            $query = $this->stringConsulta()." where a.id_usuario=$this->id_usuario";
             $data  = $this->bd->ejecutarQuery($query);
             if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
             while($perfil = $this->bd->obtenerArrayAsociativo($data))	
                 $this->perfiles[]=$perfil['clave_perfil'];
             
+        }else{
+        	$this->perfiles[]='UsuarioPublico';
         }
     }
     /**
@@ -206,7 +229,7 @@ class User extends DataModel{
             
             $this->asociarPerfiles($perfiles); 
         }
-        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico()];
+        return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico(),'validacion'=>$this->validacion];
     }
     /**
      * Verifica el codigo de activacion creado en el registro de un usuario
@@ -226,6 +249,7 @@ class User extends DataModel{
             $this->establecerAtributos($data);
             $this->activo=1;
             $this->validacion=1;
+			$this->id_estatus=1;
             if($this->salvar()->ejecutado()){
                 return true;
             }else{
@@ -265,6 +289,18 @@ class User extends DataModel{
 		}
 		$this->perfiles[]=$perfil;
 		
+	}
+	function crearSesionUsuario(){
+		Session::sessionLogin();
+        Session::set('Usuario',$this);
+        //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        if(isset($data))
+        Session::set('usuario',$data);
+        return $this;
+	}
+	
+	function guardarSesion(){
+		Session::set('Usuario',$this);
 	}
 
 }

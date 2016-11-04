@@ -6,7 +6,7 @@
 $data =& $this->data;
 ?>
 
-<form action="/<?= $this->url?>" method="post">
+<form action="<?= $this->url?>" method="post">
     <fieldset>
         
    <legend>Tablas Encontradas</legend>

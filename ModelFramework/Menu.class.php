@@ -5,7 +5,7 @@
  * @package default
  * @author  
  */
-class Menu extends DBContainer {
+class Menu extends DataModel {
 	
 	/**
 	 * Clave principal del menu
@@ -29,25 +29,20 @@ class Menu extends DBContainer {
 	private $tablaOpcionesAcceso = 's_opciones_menu_perfiles';
     private $tablaOpciones = 's_opciones_menu';
     private $perfilesAcceso=[];
-	function __construct($id_menu = ''){
-		
-        $this->clavePrimaria = 'id_menu';
-        $this->nombreTabla = 's_menus';
-        if(!is_numeric($id_menu)){
-            
-            parent::__construct();
-            $this->obtenerMenuByNombre($id_menu);    
-        }else{
-            parent::__construct(__CLASS__,$id_menu);    
-        }
-        
-        
-        // if(!empty($id_menu)){
-            // $this->id_menu = $id_menu;
-            // $this->obtenerMenu();
-        // }
-	}//final constructor
+	protected $pk = "id_menu";
+	protected $tablaBD = "s_menus";
 	
+	function __construct($id=""){
+		if(!empty($id) and !is_numeric($id)){
+			parent::__construct();
+			
+			$this->obtenerBy($id,'nombre_menu');
+			
+		}else{
+			parent::__construct($id);
+		}
+		
+	}
 	function setPerfilesAccesoMenu($perfiles){
 	    if(is_array($perfiles)){
 	        $this->perfilesAcceso=array_merge($this->perfilesAcceso,$perfiles);
@@ -64,11 +59,7 @@ class Menu extends DBContainer {
      */
 	function getPerfilesAcceso(){
 	    
-	     if(Session::get('Usuario') instanceof User){
-             $perfiles = array_merge(Session::get('usuario','perfiles'),Session::get('Usuario')->perfiles);
-         }else{
-             $perfiles = Session::get('usuario','perfiles');
-         }
+	     $perfiles = Session::get('Usuario')->perfiles();
          return array_merge($perfiles,$this->perfilesAcceso);
             
 	}
@@ -141,21 +132,25 @@ class Menu extends DBContainer {
          
          
          $perfilesUser = "'".implode("','", $this->getPerfilesAcceso())."'";
-         
-         $query  = "
-                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
-                    selector_icono, id_metodo
-                    from 
-                    $this->tablaOpciones a
-                    join $this->tablaOpcionesAcceso b on (a.id_opcion_menu = b.id_opcion_menu)
-                    join s_perfiles c on(b.id_perfil=c.id_perfil)
-                    where id_menu = $this->id_menu
-                    and c.clave_perfil in($perfilesUser)
-                    and  (id_estatus=1 or id_estatus=null)
-                    order by padre,orden,nombre_opcion";
-		 
-         $data = $this->bd->obtenerDataCompleta($query);
-         return $data;     
+         if(!empty($this->id_menu)){
+         	$query  = "
+	                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
+	                    selector_icono, id_metodo
+	                    from 
+	                    $this->tablaOpciones a
+	                    join $this->tablaOpcionesAcceso b on (a.id_opcion_menu = b.id_opcion_menu)
+	                    join s_perfiles c on(b.id_perfil=c.id_perfil)
+	                    where id_menu = $this->id_menu
+	                    and c.clave_perfil in($perfilesUser)
+	                    and  (id_estatus=1 or id_estatus=null)
+	                    order by padre,orden,nombre_opcion";
+			 
+	         $data = $this->bd->obtenerDataCompleta($query);
+	         return $data;
+         }else{
+         	return[];
+         }
+	              
      }
     
 	

@@ -40,7 +40,7 @@ class Formulario extends DBContainer {
      * Id del formulario
      */
     public $id_form;
-    
+    protected $cssSelectorTitulo="titulo-formulario";    
     /**
      * Nombre del formulario
      */
@@ -439,7 +439,7 @@ class Formulario extends DBContainer {
     protected function obtenerCamposFormulario() {
         if($this->totalForms==1){
             $clave = (is_array($this->claveFormulario))?$this->claveFormulario[0]:$this->claveFormulario;
-            $clave = String::upperCamelCase($clave);
+            $clave = Cadenas::upperCamelCase($clave);
             $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";    
         }elseIf($this->totalForms>1){
             
@@ -489,8 +489,8 @@ class Formulario extends DBContainer {
      */
     protected function inicializarValoresForm() {
         #Debug::mostrarArray($this->formularios,false);
-        if(array_key_exists(String::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
-            $data  = $this->formularios[String::upperCamelCase($this->claveFormulario[0])];    
+        if(array_key_exists(Cadenas::upperCamelCase($this->claveFormulario[0]), $this->formularios)){
+            $data  = $this->formularios[Cadenas::upperCamelCase($this->claveFormulario[0])];    
         }else{
             
             throw new Exception("No existe la clave del formulario ".$this->claveFormulario[0], 1);
@@ -523,7 +523,8 @@ class Formulario extends DBContainer {
         #";
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-lg-12\">\n\t\t\t";
-            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
+            $formulario.=Selector::crear($this->selectorTitulo.".".$this->cssSelectorTitulo,null,$this->tituloFormulario);
+//            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
             $formulario.="\n\t\t</div>\n\t</div>";    
         }
         
@@ -982,7 +983,7 @@ class Formulario extends DBContainer {
                 
         if(!empty($this->tituloFormulario)){
             $formulario.="\n\t<div class=\"row\">\n\t\t<div class=\"col-md-12 col-xs-12 col-sm-12\">\n\t\t\t";
-            $formulario.="<$this->selectorTitulo>$this->tituloFormulario</$this->selectorTitulo>";
+            $formulario.=Selector::crear($this->selectorTitulo.".".$this->cssSelectorTitulo,null,$this->tituloFormulario);
             $formulario.="\n\t\t</div>\n\t</div>";    
         }
         if ($this->mostrarMensajes === TRUE and ! empty ( $_SESSION ['__msjForm'] )) {
@@ -1124,9 +1125,8 @@ class Formulario extends DBContainer {
     static function msj($type,$msj,$redirect=false){
         $msj = Mensajes::crear($type, $msj);
         Session::set('__msjForm',$msj);
-        
         if($redirect){
-            $this->redireccionar($redirect);
+            redireccionar($redirect);
         }
     }
     /**

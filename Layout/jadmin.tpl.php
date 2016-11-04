@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 /**
  * Layout por defecto para modulo jadmin del framework
  * @author Julio Rodriguez
@@ -16,14 +16,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
         <?=$this->printHeadTags()?>
-        <?=$this->printCSS()?>
-         
-        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">         
-        <!--libs--> 
+        <?=$this->imprimirLibrerias('css','jadmin')?>
+
+        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
+        <!--libs-->
     </head>
 
     <body>
-        
+
      <div  class="jida-container">
      	<nav class="navbar navbar-default navbar-fixed-top">
 			  <div class="container-fluid">
@@ -35,23 +35,23 @@
 			  </div>
 		</nav>
          <div class="container-fluid">
-             
-             
+
+
             <div class="row">
 	            <aside class="col-md-2 aside">
-	                    <?PHP 
-	                    
+	                    <?PHP
+
 	                    $menuControl  = new MenuHTML('Principal');
 	                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
 	                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
 	                    $menuControl->configuracion['li']['caret']="li-caret";
 	                     echo $menuControl->showMenu();
 	                    ?>
-	                
+
 	            </aside>
 	            <main class="col-md-offset-2 col-lg-10 col-md-10 col-sm-12 col-xs-12 cp">
 	                <!-- <div class="row"> -->
-	        
+
 	                 <?=$contenido?>
 	            </main><!--Cierre col-lg-9 del contenido-->
             </div>
@@ -60,16 +60,11 @@
                     <hr>
                     <a class="pull-right" href="#" data-jida="goback">P&aacute;gina Anterior</a>
                 </div>
-            </div>                    
+            </div>
             <div class="separador-footer"></div>
             </div><!--Cierre div full-container-->
         </div>
-        <footer class="footer container-fluid">
-            
-            <p>
-                &copy; Copyright  by jirc Prueba
-            </p>
-        </footer>
-         <?=$this->printJS()?>
+
+         <?=$this->imprimirLibrerias('js','jadmin')?>
     </body>
 </html>

@@ -7,14 +7,13 @@
 * @category
 */
 
-class Form extends Selector{
+class Selectore{
     
-    private $layout;
-    var $name;
-    var $tagPost="true";
-    var $action="";
-    var $method="POST";
-    var $attr;
+    
+    var $selector="";
+    var $atributos=[];
+    var $data=[];
+    var $contenido;
     /**
      * Funcion constructora
      * @method __construct

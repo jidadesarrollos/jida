@@ -1,8 +1,9 @@
 <?php
-require_once 'GeneradorArchivo.trait.php';
+
+namespace Jida;
 trait GeneradorCodigo{
 	use GeneradorArchivo;
-	
+
 	function abrirPHP(){
 		return "<?php\n";
 	}
@@ -19,12 +20,12 @@ trait GeneradorCodigo{
 		if(!empty($contenido)) 	$doc.=" * $contenido\n";
 		$doc.=$this->tags($tags);
 		$doc.="\n*/\n\n";
-		return $doc;		
+		return $doc;
 	}
 	private function tags($tags){
 		$doc="";
 		foreach ($tags as $key => $value) {
-			
+
 			$doc.=" * @".$key;
 			if(is_array($value)){
 				if(array_key_exists('type', $value)) $doc.= " ".$value['type']." ";
@@ -34,10 +35,10 @@ trait GeneradorCodigo{
 				$doc.=" $value \n";
 			}
 		}//fin foreach-------------
-		
+
 		return $doc;
 	}
-	
+
 	function cadena($string){
 		return '\''.$string.'\'';
 	}
@@ -53,15 +54,15 @@ trait GeneradorCodigo{
 		$doc.=" @constante $nombre $descripcion \n */";
 		return $doc;
 	}
-	
+
 	function constante($nombre,$valor,$type,$descripcion){
 		$constante = $this->docConstante($nombre, $type, $descripcion);
-		$constante.="\n".'define(\''.$nombre.'\',\''.$valor.'\');';
+		$constante.="\n".'define(\''.$nombre.'\',\''.$valor.'\');'.$this->saltodeLinea();
 		return $constante;
 	}
 	/**
 	 * Crea la estructura de un arreglo
-	 * 
+	 *
 	 * @method definirArray
 	 * @param $name Nombre del arreglo
 	 * @param array $valores Arreglo de valores a escribir en el arreglo creado
@@ -70,8 +71,8 @@ trait GeneradorCodigo{
 	function definirArray($name,$valores=[]){
 		$array =$name."=[\n";
 		$ini=0;
-		
-		
+
+
 		foreach ($valores as $key => $value) {
 			if(is_array($value)){
 				if($ini>0)
@@ -86,17 +87,17 @@ trait GeneradorCodigo{
 				$array.="\t".$this->cadena($key)."".$this->tab($tabs)."=>".$this->tab(2).$this->cadena($value);
 				++$ini;
 			}
-				
+
 		}
 		$array.="\n\r];";
 		return $array;
 	}
-	
+
 	private function valorArray($key,&$array,$value,$margen=2){
 			$margen=2;
 			$array.=$this->tab($margen-1).$this->cadena($key)."=>[\n";
 			$ini2=0;
-			
+
 			foreach ($value as $key2 => $value2) {
 
 				if(is_array($value2)) $this->valorArray($array, $value2,$margen+1);
@@ -111,35 +112,35 @@ trait GeneradorCodigo{
 			}
 			$array.="\r".$this->tab($margen-1)."]";
 	}
-	
+
 	/**
 	 * Permite agregar una funcion
 	 * @method definirFuncion
-	 * 
+	 *
 	 */
 	protected function crearFuncion($nombre,$params=[],$ambito,$contenido=""){
-		
+
 		$arrayAmbito=['public','private','protected','static'];
 		$funcion = "";
 		if(!in_array($ambito, $arrayAmbito)) $ambito="";
 		if(!empty($ambito)) $funcion.=$ambito." ";
-		$funcion = 
+		$funcion =
 			"function ".String::lowerCamelCase($nombre)."(";
 		if(count($params)>0) $funcion.= implode(",", $params);
 		$funcion.=")".$this->apertura();
 		if(!empty($contenido)){
 			$funcion .= call_user_func($contenido);
-		
+
 		}
 		$funcion .= $this->saltodeLinea().$this->tab(1).$this->cierre();
-		
+
 		return $funcion;
 	}
-	
+
 	protected function apertura(){	return "{\n\t"; }
 	protected function cierre(){   	return "}"; }
-	
+
 	protected function cerrarPHP(){
 		 return "\r?>";
-	}	
+	}
 }

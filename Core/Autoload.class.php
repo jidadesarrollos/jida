@@ -40,6 +40,7 @@
             'Componentes/',
             'Modelos/',
             'Core/GeneradorCodigo/',
+            'Render/'
         );
         
         if(isset($GLOBALS['modulos'] )){
@@ -70,14 +71,21 @@
         $bandera=FALSE;
         foreach ($this->directorios as $key => $directorio) {
             $archivo = $directorio . $clase .".class.php";
+			$archivo2 = $directorio . $clase .".php";
             if($bandera!==TRUE){
-                if(file_exists(framework_dir . $archivo)){
+                if(file_exists(DIR_FRAMEWORK . $archivo)){
                     require_once $archivo;
                     $bandera = TRUE;
-                }elseif(file_exists(app_dir . $archivo)){
+                }elseif(file_exists(DIR_APP . $archivo)){
                     require_once $archivo;
                     $bandera = TRUE;
-                }else{
+                }elseif(file_exists(DIR_FRAMEWORK . $archivo2)){
+                	require_once $archivo2;
+                    $bandera = TRUE;
+            	}elseif(file_exists(DIR_APP . $archivo2)){
+                	require_once $archivo2;
+                    $bandera = TRUE;
+            	}else{
                     $bandera=FALSE;
                     $dir = "$archivo";
                 }

@@ -1,25 +1,32 @@
-<?PHP 
+<?PHP
 /**
  * Archivo contenedor de constantes de configuración establecidas con valores por defecto.
- * 
+ *
  * Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
  * en los archivos appSetting. initConfig y BDConfig.
- * 
+ *
  */
- 
-$GLOBALS['modulos']=['Jadmin'];
+ if(!array_key_exists('modulos', $GLOBALS)){
+ 	$GLOBALS['modulos']=['Jadmin'];
+ }
+
+
+if(!defined('MODELO_USUARIO')){
+	define('MODELO_USUARIO','\User');
+}
+
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if(!defined('MANEJADOR_BD'))
-define('MANEJADOR_BD',FALSE); 
+define('MANEJADOR_BD',FALSE);
 /**
  * @constante TITULO_SISTEMA Nombre de la aplicación
  */
 if(!defined('TITULO_SISTEMA'))
     define ('TITULO_SISTEMA','Aplicación Jida - Framework');
-/** 
- * Nombre de la aplicacion, 
- * @deprecated 
- * @see TITULO_SISTEMA 
+/**
+ * Nombre de la aplicacion,
+ * @deprecated
+ * @see TITULO_SISTEMA
  * */
 if(!defined('titulo_sistema'))
     define ('titulo_sistema',TITULO_SISTEMA);
@@ -39,6 +46,7 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
  * Define el directorio en el que se encuentran las plantillas
  * de exepciones
  * @constant DIR_EXCEPCION_PLANTILLAS
+ * @deprecated 2.0
  */
  define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."jidaPlantillas/error/");
  if(!defined('DIR_PLANTILLAS_APP'))
@@ -47,12 +55,12 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
   * @default Aplicacion/plantillas
   */
   define('DIR_PLANTILLAS_APP',DIR_APP.'plantillas/');
-if(!defined('METODO_EXCEPCION'))        
+if(!defined('METODO_EXCEPCION'))
 /**
  * Nombre del metodo a ejecutar en el CONTROLADOR_EXCEPCIONES
  * al conseguir una excepción.
  * @constant METODO_EXCEPCION
- * 
+ *
  */
 define('METODO_EXCEPCION','error');
 
@@ -62,14 +70,14 @@ define('METODO_EXCEPCION','error');
 
 if(!defined('ENTORNO_APP')){
     /**
-     * @constante ENTORNO_APP Define el entorno de la aplicación 
+     * @constante ENTORNO_APP Define el entorno de la aplicación
      */
     define('ENTORNO_APP',dev);
 }
 if(!defined('entorno_app'))    define('entorno_app',ENTORNO_APP);
 if(!defined('TEST_PLATFORM')){
     define('TEST_PLATFORM',FALSE);
-  
+
 }
 #===============================================================================
 # Configuración del Framework
@@ -117,7 +125,7 @@ if(!defined('FECHA_MODIFICACION')){
 if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
-if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components');
+if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
 if(!defined('LAYOUT_JIDA'))
 
 
@@ -127,8 +135,18 @@ if(!defined('URL_APP'))
  * @constant URL_APP Dirección url de la aplicación
  */
 define('URL_APP',"/");
+
+/**
+ * @constant MANEJADOR_PARAMS
+ * Mantiene el funcionamiento del pase de parametros en las URLs entre las distintas versiones del Framework
+ * TRUE para utilizar el manejo actualizado desde V-1.4
+ * FALSE para versiones inferiores
+ */
+if(!defined('MANEJADOR_PARAMS'))
+define('MANEJADOR_PARAMS',TRUE);
+
 define('LAYOUT_JIDA','jadminIntro.tpl.php');
-   
+
 /**
  * Constantes Framework
  */
@@ -136,11 +154,17 @@ if(!defined('LAYOUT_DEFAULT'))
 /**
  * Define el layout a usar por defecto
  */
-define('LAYOUT_DEFAULT','jadminIntro.tpl.php');
+define('LAYOUT_DEFAULT','default.tpl.php');
+
+if(!defined('LAYOUT_EXCEPCIONES'))
+/**
+ * Nombre del layout para excepciones
+ */
+define('LAYOUT_EXCEPCIONES','error.tpl.php');
 if(!defined('DIR_LAYOUT_JIDA'))
 /**
  * Definición de la ubicacion de los templates para el backend del Framework
- * 
+ *
  * Puede ser modificada su ubicación si desea personalizarse el disenio.
  */
 define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
@@ -163,3 +187,9 @@ if(!defined('ZONA_HORARIA')){
 if(!defined('CODIFICAR_HTML_BD'))   define('CODIFICAR_HTML_BD',FALSE);
 
 if(!defined('BD_REQUERIDA')) define('BD_REQUERIDA',true);
+/**
+ * Determina
+ */
+if(!defined('PATH_APP')) define('PATH_APP','/');
+
+$GLOBALS['idiomas']=['es'=>'Espa&ntilde;ol'];

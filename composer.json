@@ -1,0 +1,40 @@
+{
+    "name": "julio/framework",
+    "description": "Framework Hmvc para el desarrollo de aplicaciones en entorno web",
+    "type": "Framework",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "jrodriguez",
+            "email": "jirc48@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^5.2"
+    },
+    "autoload":{
+        "files" : ["funciones.php"],
+    	"psr-4":{
+    		"Jida\\":[
+    			"/","elementos/",
+    			"Core/",
+    			"Core/GeneradorCodigo/",
+    			"ModelFramework/",
+    			"Helpers/",
+    			"Render"
+
+
+    			],
+			"JComponentes\\":[
+				"Componentes/"
+			],
+			"App\\":[
+				"../Aplicacion/"
+			],
+			"App\\Config\\":[
+				"../Aplicacion/Config/"
+			]
+
+    	}
+    }
+}
