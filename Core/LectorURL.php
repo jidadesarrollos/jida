@@ -8,6 +8,7 @@
   * 
  */
  
+ namespace Jida\Core;
  class LectorURL{
  	
 	var $url;

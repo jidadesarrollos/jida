@@ -1,14 +1,15 @@
 <?php
-    /***
-	 * Clase Generica para validaciones del framework
-     * 
-	 * 
-	 * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve
-	 * @package Framework
-	 * @category Validate
-	 * @version 0.1
-	 */
-	 
+/***
+ * Clase Generica para validaciones del framework
+ * 
+ * 
+ * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve
+ * @package Framework
+ * @category Validate
+ * @version 0.1
+ */
+
+namespace Jida\Core;
 class Validador{
 	
        /**
@@ -26,63 +27,57 @@ class Validador{
      * @var array dataValidaciones
      */
     protected $dataValidaciones=
-            array(
-                    'numerico'      =>array("expresion" =>  "/^(?:\+|-)?\d+$/",
-                                            "mensaje"   =>  "Debe ser numerico"),
-                    'obligatorio'   =>array("expresion" =>  "/^.*$/",
-                                            "mensaje"   =>  "Es Obligatorio"),
-                    'decimal'       =>array("expresion" =>  "/^([0-9])*[.]?[0-9]*$/",
-                                            "mensaje"   =>  "Debe ser decimal y los decimales deben estar separados por coma"),
-                    'caracteres'    =>array("expresion" =>  "/^[A-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
-                                            "mensaje"   =>  "solo puede contener caractares"),
-                    'alfanumerico'  =>array("expresion" =>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
-                                            "mensaje"   =>  "no puede contener caracteres especiales"),
-                    'programa'      =>array("expresion" =>  "/^[\d\/\.A-Za-z_-]*$/",
-                                            "mensaje"   =>  "Solo puede poseer caracteres alfanumericos,underscore o guion"),
-                    'email'         =>array("expresion" =>  "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
-                                            "mensaje"   =>  "El formato del email no es valido"),
-
-                    'telefono'      =>array("expresion" =>  "/^0?2[0-9]{9,13}$/",
-
-                                            "mensaje"   =>  "El formato del telefono debe ser 212 4222211"),
-                    'celular'       =>array("expresion" =>  "/^0?(412|416|414|424|426)\d{7}$/",
-                                            "mensaje"   =>  "El formato del celular debe ser 4212 4222211"),
-                                    
-                    'coordenada'    =>array("expresion" =>  "/^\-?[0-9]{2}\.[0-9]{3,15}/",
-                                            "mensaje"   =>  "La coordenada debe tener el siguiente formato"),
-                    'contrasenia'   =>array("expresion" =>  "",
-                                            "mensaje"   =>  "Debe cumplir con las especificaciones establecidas."),
-                    'internacional' =>array("expresion" =>  "/^[0-9]{9,18}$/",
-                                            "mensaje"   =>  "El telefono internacional no es valido"),
-                    'minuscula'     =>array("expresion" =>  "/[a-z]/",
-                                            "mensaje"   =>  "El telefono internacional no es valido"),
-                    'mayuscula'     =>array("expresion" =>  "/[A-Z]/",
-                                            "mensaje"   =>  "El telefono internacional no es valido"),
-                    'numero'        =>array("expresion" =>  "/[0-9]/",
-                                            "mensaje"   =>  "El telefono internacional no es valido"),
-                    'caracteresEsp' =>array("expresion" =>  "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
-                                            "mensaje"   =>  "El campo debe contener alg&uacute;n caracter especial"),
-                    'twitter'       =>array("expresion" =>  "/^[A-Za-z0-9._-]*$/",
-                                            "mensaje"   =>  "Formato de twitter incorrecto"),
-                    "url"           =>array("expresion" =>  "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
-                                            "mensaje"   =>  "El formato de la URL no es correcto"),
-                    
-                    "seguridadComillas"     =>array("expresion" =>  "(([A-Za-z0-9])*\'([A-Za-z0-9])*|\'([A-Za-z0-9])*|([A-Za-z0-9])*\')",
-                                                    "mensaje"   =>  ""/*NO PUEDEN HABER DOS COMILLAS SIMPLES EN EL MISMO CAMPO '' */),
-                    "seguridadComentario"   =>array("expresion" =>  "([A-Za-z0-9\|\!\"\#\$\%\&\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+\*]|\/[A-Za-z0-9\|\!\"\#\$\%\&\/\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+])*/?",
-                                                    "mensaje"   =>  ""/*NO PUEDE HABER UN COMENTARIO EN EL CAMPO /* */),
-                    "seguridadGuiones"      =>array("expresion" =>  "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
-                                                    "mensaje"   =>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/),
-                    "fecha"                 =>array("expresion" => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
-                                                    "mensaje"   => 'El formato de fecha debe ser dd-mm-yyyy'),
-                    "fechaHora"             =>[ 'expresion'=>'/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
-                                                'mensaje' =>'Formato de Fecha u hora incorrecto.'
-                                            ],
-                    "limiteCaracteres"      =>array("mensaje"=>"La cadena no puede superar el total de caracteres permitidos"),
-                    "documentacion"         =>array("mensaje"=>"El campo debe tener el siguiente formato J-18935170",
-                                                    "expresion"=>"/^([V|E|G|J|P|N]{1}\d{8,10})*$/",),
-                    
-        );
+            [
+                    'numerico'      		=>[ 'expresion'		=>	"/^(?:\+|-)?\d+$/",
+                                            	'mensaje'   	=>  "Debe ser numerico"],
+                    'obligatorio'   		=>[	'expresion' 	=>  "/^.*$/",
+                                            	'mensaje'   	=>  "Es Obligatorio"],
+                    'decimal'       		=>[	'expresion' 	=>  "/^([0-9])*[.]?[0-9]*$/",
+                                            	'mensaje'   	=>  "Debe ser decimal y los decimales deben estar separados por coma"],
+                    'caracteres'    		=>[	'expresion' 	=>  "/^[A-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
+                                            	'mensaje'   	=>  "solo puede contener caractares"],
+                    'alfanumerico'  		=>[	'expresion' 	=>  "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
+                                            	'mensaje'   	=>  "no puede contener caracteres especiales"],
+                    'programa'      		=>[	'expresion' 	=>  "/^[\d\/\.A-Za-z_-]*$/",
+                                            	'mensaje'   	=>  "Solo puede poseer caracteres alfanumericos,underscore o guion"],
+                    'email'         		=>[	'expresion' 	=>  "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
+                                            	'mensaje'   	=>  "El formato del email no es valido"],
+                    'telefono'      		=>[	'expresion' 	=>  "/^0?2[0-9]{9,13}$/",
+                                            	'mensaje'   	=>  "El formato del telefono debe ser 212 4222211"],
+                    'celular'       		=>[	'expresion' 	=>  "/^0?(412|416|414|424|426)\d{7}$/",
+                                            	'mensaje'   	=>  "El formato del celular debe ser 4212 4222211"],
+                    'coordenada'    		=>[	'expresion' 	=>  "/^\-?[0-9]{2}\.[0-9]{3,15}/",
+                                        	   	'mensaje'   	=>  "La coordenada debe tener el siguiente formato"],
+                    'contrasenia'   		=>[	'expresion' 	=>  "",
+                                            	'mensaje'   	=>  "Debe cumplir con las especificaciones establecidas."],
+                    'internacional' 		=>[	'expresion' 	=>  "/^[0-9]{9,18}$/",
+                                            	'mensaje'   	=>  "El telefono internacional no es valido"],
+                    'minuscula'     		=>[	'expresion' 	=>  "/[a-z]/",
+                                            	'mensaje'   	=>  "El telefono internacional no es valido"],
+                    'mayuscula'     		=>[	'expresion' 	=>  "/[A-Z]/",
+                                            	'mensaje'   	=>  "El telefono internacional no es valido"],
+                    'numero'        		=>[	'expresion' 	=>  "/[0-9]/",
+                                            	'mensaje'   	=>  "El telefono internacional no es valido"],
+                    'caracteresEsp' 		=>[	'expresion' 	=>  "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
+                                            	'mensaje'   	=>  "El campo debe contener alg&uacute;n caracter especial"],
+                    'twitter'       		=>[	'expresion' 	=>  "/^[A-Za-z0-9._-]*$/",
+                                            	'mensaje'   	=>  "Formato de twitter incorrecto"],
+                    'url'           		=>[	'expresion' 	=>  "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
+                                            	'mensaje'   	=>  "El formato de la URL no es correcto"],
+                    'seguridadComillas'     =>[ 'expresion'		=>  "(([A-Za-z0-9])*\'([A-Za-z0-9])*|\'([A-Za-z0-9])*|([A-Za-z0-9])*\')",
+                                                'mensaje'		=>  ""/*NO PUEDEN HABER DOS COMILLAS SIMPLES EN EL MISMO CAMPO '' */],
+                    'seguridadComentario'   =>[	'expresion' 	=>  "([A-Za-z0-9\|\!\"\#\$\%\&\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+\*]|\/[A-Za-z0-9\|\!\"\#\$\%\&\/\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+])*/?",
+                                                'mensaje'   	=>  ""/*NO PUEDE HABER UN COMENTARIO EN EL CAMPO /* */],
+                    'seguridadGuiones'      =>[	'expresion' 	=>  "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
+                                                'mensaje'   	=>  ""/*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/],
+                    'fecha'                 =>[	'expresion' 	=>  "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
+                                                'mensaje'   	=>  'El formato de fecha debe ser dd-mm-yyyy'],
+                    'fechaHora'             =>[	'expresion' 	=>  '/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
+                                                'mensaje' 		=>	'Formato de Fecha u hora incorrecto.'],
+                    'limiteCaracteres'      =>[	'mensaje'		=>	"La cadena no puede superar el total de caracteres permitidos"],
+                    'documentacion'         =>[	'expresion'		=>	"/^([V|E|G|J|P|N]{1}\d{8,10})*$/",
+                    							'mensaje'		=>	"El campo debe tener el siguiente formato J-12345678"]
+        ];
     /**
      * Arreglo que registra los errores
      * @var array $errors
@@ -137,7 +132,7 @@ class Validador{
             $this->valorCampo = str_replace(",",".",$this->valorCampo);
             
         }
-        if($this -> dataValidaciones[$nombreValidacion]["expresion"]!=""){
+        if($this -> dataValidaciones[$nombreValidacion]['expresion']!=""){
             
         }else{
            throw new Exception("Se llama a una expresion $nombreValidacion, la cual se encuentra indefinida", 1);
@@ -147,14 +142,14 @@ class Validador{
         if(is_array($this -> valorCampo)){
             $band = TRUE;
             foreach ($this->valorCampo as $key => $value) {
-                $result=preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $value);
+                $result=preg_match($this -> dataValidaciones[$nombreValidacion]['expresion'], $value);
                 if($result!=1){
                     $band=FALSE;
                 }
             }
             $resultValidacion=($band===TRUE)?TRUE:FALSE;
         }else{
-            $resultValidacion=(preg_match($this -> dataValidaciones[$nombreValidacion]["expresion"], $this -> valorCampo))?TRUE:FALSE;
+            $resultValidacion=(preg_match($this -> dataValidaciones[$nombreValidacion]['expresion'], $this -> valorCampo))?TRUE:FALSE;
         }
         if ($resultValidacion===TRUE) {
             /**
@@ -178,7 +173,7 @@ class Validador{
         if(isset($datos['mensaje'])){
             $this->mensajeError = $datos['mensaje'];
         }else{
-            $this->mensajeError = "El campo ".$this->dataValidaciones[$validacion]["mensaje"];
+            $this->mensajeError = "El campo ".$this->dataValidaciones[$validacion]['mensaje'];
         }
     }//fin función
     /**

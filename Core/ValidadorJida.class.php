@@ -2,12 +2,13 @@
 /**
  * Validador de Controles de Formulario
  *
- * Basado en realizar las validaciones del Plug-in "validadorJida.js" a nivel del Servidor
+ * @internal Basado en realizar las validaciones del Plug-in "validadorJida.js" a nivel del Servidor
  * @author Julio Rodriguez <jirodriguez@sundecop.gob.ve>
  * Fecha : 28/10/2013
  * @version 1.7.1 05/04/2014
  */
 
+namespace Jida\Core;
 class ValidadorJida extends Validador{
     /**
      * @var array $validaciones Arreglo opcional con parametros de la validación

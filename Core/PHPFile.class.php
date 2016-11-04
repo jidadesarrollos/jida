@@ -10,7 +10,7 @@
  * @revision
  */
 
-
+namespace Jida\Core;
 class PHPFile extends File{
 
 

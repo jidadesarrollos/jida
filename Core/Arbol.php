@@ -4,6 +4,7 @@
  * 
  */
 
+namespace Jida\Core;
 class Arbol{
     
     var $keyPadre;

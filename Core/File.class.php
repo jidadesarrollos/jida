@@ -14,7 +14,7 @@
  *
  */
 
-
+namespace Jida\Core;
 class File{
     /**
      * @var string Directorio Ubicación Física del archivo a crear/editar

@@ -3,7 +3,7 @@
 /**
  * Controlador de Funcionamiento del JIDA
  * 
- * Clase Modelo para manejar los formularios del framework.
+ * @internal Clase Modelo para manejar los formularios del framework.
  *
  * @package FRAMEWORK
  * @subpackage JIDA
@@ -12,7 +12,9 @@
  * Fecha : 23/10/2013
  */
 
-class JidaControl extends DBContainer{
+namespace Jida\Core;
+use Jida\BD as BD;
+class JidaControl extends BD\DBContainer{
     
     var $id_form;
     var $nombre_f;
