@@ -55,6 +55,7 @@ class DataVista{
 	var $idioma;
 	var $jsAgregado=[];
 	var $cssAgregado=[];
+	var $_esJadmin  = false;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
@@ -62,12 +63,13 @@ class DataVista{
      */
     private $_template="";
     private $_path="app";
-    function __construct($modulo="",$controlador="",$metodo=""){
+
+    function __construct($modulo="",$controlador="",$metodo="",$jadmin=false){
 
     	$this->modulo=$modulo;
 		$this->controlador=$controlador;
 		$this->metodo=$metodo;
-
+		$this->_esJadmin = $jadmin;
         if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
         if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
         if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];

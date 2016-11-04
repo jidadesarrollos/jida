@@ -449,32 +449,37 @@ class Controller {
      * @method urlController
      */
     protected function urlController($ctrl=""){
-
+		$this->url="/";
         if(empty($ctrl)){
            	$controller =  $this->_nombreController;
-
         }else{
-
 
             if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller") or class_exists(Cadenas::upperCamelCase($ctrl))){
                 $controller = str_replace('Controller', "", $ctrl);
-            }else{
+            }else
                 throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
 
-            }
         }
-
         if(!empty($controller)){
 
             if(strtolower($this->_modulo)==strtolower($controller)){
-                $this->url = "/".strtolower($this->_modulo)."/";
+            	if($this->dv->_esJadmin) $this->url.="jadmin";
+                $this->url .= "/".strtolower($this->_modulo)."/";
             }else{
 
                 if(empty($this->_modulo)){
-                	if(strtolower($this->_controlador)=='index')
+
+                	if(strtolower($this->_nombreController)=='index'){
+
 						$this->url =$this->obtURLApp();
-					else
-                    $this->url = $this->obtURLApp().$this->convertirNombreAUrl($controller)."/";
+						if($this->dv->_esJadmin) $this->url.="jadmin/";
+					}else{
+                  	  	$this->url = $this->obtURLApp();
+                  	  	if($this->dv->_esJadmin) $this->url.="jadmin/";
+                  	  	$this->url .= $this->convertirNombreAUrl($controller)."/";
+
+
+					}
                 }else{
 
                     $this->url = $this->obtURLApp().strtolower($this->_modulo)."/".$this->convertirNombreAUrl($controller)."/";
@@ -709,15 +714,10 @@ class Controller {
 			$idioma=(empty($this->idioma))?"":$this->idioma."/";
 
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
-
 			return $GLOBALS['__URL_APP'].$idioma;
 		}else{
-
 			return URL_APP.$idioma;
 		}
-
-
-
 	}
 
 		/**

@@ -152,8 +152,8 @@ global $JD;
             	$this->idiomas=$GLOBALS['idiomas'];
             }
             Helpers\Sesion::destroy('__formValidacion');
-            $_SERVER = array_merge($_SERVER,getallheaders());
 
+            $_SERVER = array_merge($_SERVER,getallheaders());
             if(array_key_exists('modulos', $GLOBALS)){
                 $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
@@ -184,9 +184,7 @@ global $JD;
             }
 
             unset($_GET['url']);
-            if(count($_GET)>0){
-               $this->args=$_GET;
-            }
+            if(count($_GET)>0)   $this->args=$_GET;
 
             $this->appRoot = str_replace(['index.php'], "", $_SERVER['PHP_SELF']);
 			$GLOBALS['__URL_APP'] = $this->appRoot;
@@ -212,7 +210,6 @@ global $JD;
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
-
             $this->validacion();
         }catch(Exception $e){
             $this->procesarExcepcion($e);
@@ -256,7 +253,6 @@ global $JD;
 		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
 		$checkModulo = FALSE;
 
-
 		if(in_array($posModulo,$this->modulosExistentes))
 		{
 
@@ -272,12 +268,14 @@ global $JD;
 					 * Accede acá si existe el modulo como carpeta
 					 */
 					$this->_controlador = $namespace.$posModulo.'\\'.$ctrl;
+					$this->_modulo = $posModulo;
 					$this->_nombreControlador = $ctrl;
 				}
 			}else{
-				$this->_modulo="jadmin";
+
 				if(class_exists($namespace."Controllers\\".$posModulo."Controller")){
 					$this->_controlador = $namespace."Controllers\\".$posModulo."Controller";
+
 					$this->_nombreControlador = $posModulo;
 					$this->procesarMetodo();
 				}else{
@@ -551,7 +549,7 @@ global $JD;
            if($acceso===TRUE){
             	global $dataVista;
 			   	//Helpers\Debug::imprimir($this->_modulo,$this->_nombreControlador,$this->_metodo,true);
-                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo);
+                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin);
             	$this->vista->data = $dataVista;
 				$this->ejecucion($this->_controlador);
 

@@ -211,7 +211,7 @@ class Pagina{
 				}
             }
         }else{
-        	echo "ak?";
+
             $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
             $this->directorioLayout=DIR_LAYOUT_JIDA;
         }
@@ -251,6 +251,7 @@ class Pagina{
 
 		if($this->_ruta=='framework'){
 			$this->directorioVista = DIR_FRAMEWORK."Jadmin/";
+			Helpers\Debug::imprimir("ak",$this->modulo);
 			if(!empty($this->modulo)){
 				$this->directorioVista.=$this->modulo."/Vistas/";
 			}else{
@@ -259,6 +260,7 @@ class Pagina{
 		}else{
 			$this->directorioVista = DIR_APP;
 			$vistaFolder  = ($this->_esJadmin)?"/Jadmin/Vistas/":'/Vistas/';
+
 			if(!empty($this->modulo)){
 				$this->directorioVista.=$this->modulo . $vistaFolder;
 			}else{
@@ -306,7 +308,8 @@ class Pagina{
 
         }
 
-        if(!is_readable($rutaVista)) throw new Exception("No se consigue el archivo $rutaVista", 1);
+        if(!is_readable($rutaVista))
+        	throw new Exception("No se consigue el archivo $rutaVista", 1);
 
         $this->template=$rutaVista;
 		#Debug::mostrarArray($rutaVista);
