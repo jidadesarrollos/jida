@@ -7,6 +7,12 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1 13/01/2014
  */
+ 
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\Helpers as Helpers;
+use Jida\RenderHTML as RenderHTML;
+use Jida\Modelos\Viejos as Modelos;
 class MenusController extends JController {
 
     function __construct(){
@@ -21,7 +27,7 @@ class MenusController extends JController {
         $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
         $this -> vista = 'menus';
 
-        $vistaMenu = new Vista($query, $GLOBALS['configPaginador'], 'Menus');
+        $vistaMenu = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Menus');
         $vistaMenu->setParametrosVista($GLOBALS['configVista']);
 
         $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
@@ -78,29 +84,29 @@ class MenusController extends JController {
         $validacion = $form->validarFormulario($post);
         if(!is_array($validacion) and $validacion==TRUE){
             $idMenu = ($this->post('id_menu'))?$this->post('id_menu'):"";
-            $classMenu = new Menu($idMenu);
+            $classMenu = new Modelos\Menu($idMenu);
 
             $valor = $classMenu->procesarMenu($post);
             if(isset($valor['result']['ejecutado']) and $valor['result']['ejecutado']==1){
                 $msj = Mensajes::mensajeSuceso('Menu <strong>'.$valor['accion'].'</strong> exitosamente');
-                Session::set('__msjVista',$msj);
-                Session::set('__idVista','menus');
+                Helpers\Sesion::set('__msjVista',$msj);
+                Helpers\Sesion::set('__idVista','menus');
                 redireccionar('/jadmin/menus/');
             }else{
 
                 $msj= Mensajes::mensajeError($valor);
 
-                Session::set('__msjForm',$msj);
+                Helpers\Sesion::set('__msjForm',$msj);
 
-                Session::set('__dataPostForm',$post);
+                Helpers\Sesion::set('__dataPostForm',$post);
                 redireccionar('/jadmin/menus/procesar-menu/');
             }
 
         }else{
 
             $msj= Mensajes::mensajeError('No se ha podido procesar el menu');
-            Session::set('__msjForm',$msj);
-            Session::set('__DataPostForm',$post);
+            Helpers\Sesion::set('__msjForm',$msj);
+            Helpers\Sesion::set('__DataPostForm',$post);
             redireccionar('/jadmin/procesar-menu/');
         }
     }//final funcion
@@ -132,10 +138,10 @@ class MenusController extends JController {
 			$cMenu = new Menu($seleccion);
 	        if(!empty($cMenu->id_menu)){
 	        	$cMenu->eliminarObjeto($cMenu->id_menu);
-				Vista::msj('menus','suceso', 'Menu eliminado');
+				RenderHTML\Vista::msj('menus','suceso', 'Menu eliminado');
 
 	        }else{
-	        	Vista::msj('menus',"error","No se ha eliminado menu");
+	        	RenderHTML\Vista::msj('menus',"error","No se ha eliminado menu");
 	        }
 
             $this->redireccionar('/jadmin/menus/');
@@ -143,7 +149,7 @@ class MenusController extends JController {
 
         }else
         if(is_array($this->get('menu'))){
-        	Debug::mostrarArray($this->get('menu'));
+        	Helpers\Debug::mostrarArray($this->get('menu'));
 
         } else {
             throw new Exception("Debe seleccionar un menu", 1);
@@ -225,16 +231,16 @@ class MenusController extends JController {
                             $opcionesPerfil = new OpcionMenuPerfil();
                             $opcionesPerfil->eliminarAccesos($opcionMenu->getResult()->idResultado())->salvarTodo($perfiles);
                         }else{
-                            Debug::mostrarArray($this->obtPost('id_perfil'),0);
-                            Debug::string("No entramos");
+                            Helpers\Debug::mostrarArray($this->obtPost('id_perfil'),0);
+                            Helpers\Debug::string("No entramos");
                         }
-                        Vista::msj('opciones', 'sucess', $msj,$this->url.'opciones/menu/'.$idMenu.'/padre/'.$post['padre']);
+                        RenderHTML\Vista::msj('opciones', 'sucess', $msj,$this->url.'opciones/menu/'.$idMenu.'/padre/'.$post['padre']);
                     }else{
-                        Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
+                        RenderHTML\Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
                     }
 
                 }else{
-                    Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
+                    RenderHTML\Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
                 }
 
             }
@@ -258,9 +264,9 @@ class MenusController extends JController {
             $Opcion = new OpcionMenu($idOpcion);
 
             if($Opcion->eliminar([$idOpcion],'id_opcion_menu')){
-            	Vista::msj('opciones', 'info', 'La opci&oacute;n <strong> '.$Opcion->nombre_opcion.' </strong> ha sido eliminada','/jadmin/menus/opciones/menu/'.$idmenu);
+            	RenderHTML\Vista::msj('opciones', 'info', 'La opci&oacute;n <strong> '.$Opcion->nombre_opcion.' </strong> ha sido eliminada','/jadmin/menus/opciones/menu/'.$idmenu);
             }else{
-            	Vista::msj('opciones', 'error', 'La acci&acute;n solicitada no es valida',$this->getUrl('opciones',['menu'=>$idmenu]));
+            	RenderHTML\Vista::msj('opciones', 'error', 'La acci&acute;n solicitada no es valida',$this->getUrl('opciones',['menu'=>$idmenu]));
             }
 
 
@@ -312,7 +318,7 @@ class MenusController extends JController {
         }
 
 
-        $vista = new Vista($query, $GLOBALS['configPaginador'], 'Opciones');
+        $vista = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Opciones');
         $vista->opcionesBreadCrumb=$dataBC;
 
         $vista->filaOpciones=array(0=>array('a'=>array(

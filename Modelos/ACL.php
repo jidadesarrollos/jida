@@ -9,7 +9,7 @@
 * @category
 */
 
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 use Jida\Helpers\Debug as Debug;
 use Jida\Core\Session as Session;
 use Jida\Helpers\Arrays as Arrays;

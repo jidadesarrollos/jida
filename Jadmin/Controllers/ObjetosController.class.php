@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Definición de la clase
+ * Definición de la clase ObjetosController
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package
@@ -8,7 +8,9 @@
  * @version 0.1
  */
 
-
+namespace Jida\Jadmin\Controllers;
+use Exception;
+use Jida\RenderHTML as RenderHTML;
 class ObjetosController extends \JController{
 
 
@@ -154,7 +156,7 @@ class ObjetosController extends \JController{
         $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
         $this->dv->vista = $vista->obtenerVista();
       }else{
-      	Vista::msj('componentes','alert','Debe seleccionar un componente');
+      	RenderHTML\Vista::msj('componentes','alert','Debe seleccionar un componente');
       }
    }
 
@@ -217,12 +219,12 @@ class ObjetosController extends \JController{
                 $validacion = $form->validarFormulario();
                 if($validacion===TRUE){
                     if($Objeto->salvar($_POST)->ejecutado()==1){
-                        Vista::msj('objetos', 'suceso', "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
+                        RenderHTML\Vista::msj('objetos', 'suceso', "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
                     }else{
-                        Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
+                        RenderHTML\Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
                     }
                 }else{
-                    Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
+                    RenderHTML\Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
                 }
                 redireccionar('/jadmin/objetos/lista/comp/'.$Objeto->id_componente);
             }
@@ -282,17 +284,17 @@ class ObjetosController extends \JController{
 				if($validacion===TRUE){
 					$accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
 					if($accion['ejecutado']==1){
-						Vista::msj('metodosObjeto','suceso','Asignado los perfiles de acceso al metodo '.$metodo->nombre_metodo,$this->url."metodos/obj/".$metodo->id_objeto);
+						RenderHTML\Vista::msj('metodosObjeto','suceso','Asignado los perfiles de acceso al metodo '.$metodo->nombre_metodo,$this->url."metodos/obj/".$metodo->id_objeto);
 					}else{
-						Formulario::msj('error','No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
+						RenderHTML\Formulario::msj('error','No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
 					}
 				}else{
-					Formulario::msj('error','No se han asignado perfiles');
+					RenderHTML\Formulario::msj('error','No se han asignado perfiles');
 				}
 			}
 				$this->dv->formAcceso =$form->armarFormulario();
 			}else{
-				Vista::msj('objetos','error','Debe seleccionar un metodo',$this->url);
+				RenderHTML\Vista::msj('objetos','error','Debe seleccionar un metodo',$this->url);
 			}
 
 	}
@@ -317,17 +319,17 @@ class ObjetosController extends \JController{
                 if($validacion===TRUE){
                     $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if($accion['ejecutado']==1){
-                        Vista::msj("objetos", 'suceso', 'Asignados los perfiles de acceso al objeto '.$obj->objeto,$this->getUrl('lista',['comp'=>$obj->id_componente]));
+                        RenderHTML\Vista::msj("objetos", 'suceso', 'Asignados los perfiles de acceso al objeto '.$obj->objeto,$this->getUrl('lista',['comp'=>$obj->id_componente]));
                     }else{
-                        Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                        RenderHTML\Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
                 }else{
-                    Formulario::msj('error', "No se han asignado perfiles");
+                    RenderHTML\Formulario::msj('error', "No se han asignado perfiles");
                 }
             }
             $this->dv->formAcceso =$form->armarFormulario();
         }else{
-            Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());
+            RenderHTML\Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto",$this->urlController());
         }
     }
 

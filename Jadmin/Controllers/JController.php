@@ -6,6 +6,7 @@
 * @version
 * @category Controller
 */
+
 namespace Jida\Jadmin\Controllers;
 use Jida\Componentes;
 use Jida\Core as Core;

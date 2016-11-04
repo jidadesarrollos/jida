@@ -8,7 +8,7 @@
  * @category Modelo
 
 */
-namespace Jida\ModelFramework;
+namespace Jida\Modelos;
 class CampoFormulario extends JCampoFormulario{
 
 

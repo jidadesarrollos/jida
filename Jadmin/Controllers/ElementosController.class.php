@@ -9,7 +9,10 @@
  *
 */
 
-class ElementosController extends \JController{
+namespace Jida\Jadmin\Controllers;
+use Jida\Helpers as Helpers;
+use Jida\Elementos as Elementos;
+class ElementosController extends JController{
 	var $layout="jadmin.tpl.php";
 	var $helpers=['Arrays','Cadenas','Debug'];
 	function __construct(){
@@ -18,15 +21,15 @@ class ElementosController extends \JController{
 	}
     function index(){
     	global $elementos;
-		$elemento = new Jida\Elemento;
+		$elemento = new Elementos\Elemento();
 
 
 
 
-		if(Directorios::validar(DIR_APP."Contenido/elementos.php")){
+		if(Helpers\Directorios::validar(DIR_APP."Contenido/elementos.php")){
 			include_once 'Contenido/elementos.php';
 		}else{
-			Debug::string(DIR_APP."Contenido/elementos.php");
+			Helpers\Debug::string(DIR_APP."Contenido/elementos.php");
 		}
 		$this->dv->areas = $elementos['areas'];
 
@@ -42,7 +45,7 @@ class ElementosController extends \JController{
 
 	function guardar(){
 		if($this->solicitudAjax() and $this->post('btnGuardarElemento')){
-			$eleUsado = new Jida\Elemento();
+			$eleUsado = new Elementos\Elemento();
 
 			$elementoName = str_replace(".", "\\", $this->post('elemento'));
 			if($this->post('elemento') and class_exists($elementoName)){

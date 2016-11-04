@@ -8,7 +8,9 @@
  * @version 0.1
  */
 
- 
+namespace Jida\Jadmin\Controllers;
+use Jida\RenderHTML as RenderHTML;
+use Jida\Helpers as Helpers;
 class PerfilesController extends JController{
     
 	/**
@@ -64,19 +66,19 @@ class PerfilesController extends JController{
             $validacion = $form->validarFormulario();
             if($validacion===TRUE){
                 $perfil = New Perfil($pk);
-                $_POST['clave_perfil'] = Cadenas::upperCamelCase($_POST['perfil']);
+                $_POST['clave_perfil'] = Helpers\Cadenas::upperCamelCase($_POST['perfil']);
                 #Debug::mostrarArray($_POST);
                 $guardado = $perfil->salvar($_POST);
                 if($guardado['ejecutado']){
                     $msj = "El perfil <strong>$perfil->perfil</strong> ha sido registrado exitosamente";
-                    Vista::msj('perfiles', 'suceso', $msj,'/jadmin/perfiles/');
+                    RenderHTML\Vista::msj('perfiles', 'suceso', $msj,'/jadmin/perfiles/');
                 }else{
                     if($guardado['unico']==1){
                         $msj = "El perfil <strong>$_POST[nombre_perfil]</strong> ya se encuentra registrado";
                     }
                 }
             }
-            Formulario::msj('error', $msj);            
+            RenderHTML\Formulario::msj('error', $msj);            
         }
         $this->dv->form=$form->armarFormulario();
 	}//final funcion
@@ -90,7 +92,7 @@ class PerfilesController extends JController{
             if(count($total)==1 and $this->get('perfil')>0){    
                 $perfil->eliminarObjeto($this->get('perfil'));
                 $msj = "Perfil eliminado exitosamente";
-                Vista::msj('perfiles', 'error',$msj,$this->urlController());
+                RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
             }else{
                 $noNumerico = false;
                 foreach ($total as $key => $value) {
@@ -102,15 +104,15 @@ class PerfilesController extends JController{
                 if($noNumerico!==true){
                     $perfil->eliminarMultiplesDatos($total, 'id_perfil');
                     $msj = "Perfiles eliminados exitosamente";
-                    Vista::msj('perfiles', 'error',$msj,$this->urlController());
+                    RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
                 }else{
                     $msj = "No se ha logro eliminar el perfil, porfavor vuelva a intentarlo";
-                    Vista::msj('perfiles', 'error',$msj,$this->urlController());        
+                    RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());        
                 }
             }              
         }else{
             $msj = "No se ha podido realizar la acci&oacute;n vuelva a intentarlo";
-            Vista::msj('perfiles', 'error',$msj,$this->urlController());    
+            RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());    
         }
         
         
