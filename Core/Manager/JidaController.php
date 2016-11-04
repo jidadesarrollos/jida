@@ -141,6 +141,8 @@ global $JD;
              * Registro de tiempo inicial de ejecución
              */
             Helpers\Sesion::set('__TIEjecucion',microtime(true) );
+			Helpers\Sesion::destroy();
+			#Helpers\Debug::imprimir($_SESSION,true);
             /**
              * Seteo de zona horaria
              */
@@ -187,11 +189,13 @@ global $JD;
             if(count($_GET)>0)   $this->args=$_GET;
 
             $this->appRoot = str_replace(['index.php'], "", $_SERVER['PHP_SELF']);
+
 			$GLOBALS['__URL_APP'] = $this->appRoot;
 
-			$ini = substr($this->appRoot, 1);
-
+			//$ini = substr($this->appRoot, 1);
+			$ini = $this->appRoot;
 			Helpers\Sesion::set('URL_ACTUAL', $ini.Helpers\Sesion::get('URL_ACTUAL'));
+			//Helpers\Debug::imprimir($ini,true);
 			JD('URL',Helpers\Sesion::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
