@@ -141,7 +141,7 @@ class DataVista{
 	 * @method addcssModulo
 	 */
 	function addCssModulo($css,$ruta=true){
-		$modulo = $GLOBALS['_MODULO_ACTUAL'];
+		$modulo = $this->modulo;
 		(Helpers\Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework":$modulo="Aplicacion/Modulos/".$modulo;
 		if(is_array($css)){
 			foreach ($css as $key => $archivo) {

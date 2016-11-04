@@ -17,6 +17,7 @@ use Jida\Modelos\ACL as ACL;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
 use Exception as Excepcion;
+use App as App;
 global $JD;
  class JidaController {
  	private $_ce="001";
@@ -36,6 +37,11 @@ global $JD;
 	private $_ruta = 'app';
 	private $_metodoDefault = 'index';
 	private $_controladorDefault = 'Index';
+	/**
+	 * Define el namespace usado
+	 * @var string $_namespace;
+	 */
+	private $_namespace;
 	/**
 	 * Arreglo de componentes de la url
 	 * @var $_arrayUrl
@@ -72,7 +78,7 @@ global $JD;
 	 * @var $_esJadmin;
 	 * @since 0.5
 	 */
-	private $_esJadmin;
+	private $_esJadmin=FALSE;
 
 	/**
 	 * Arreglo de lenguajes manejados en la aplicacion
@@ -172,14 +178,13 @@ global $JD;
                 $_GET['url'] = utf8_encode($_GET['url']);
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
+
                 $this->_arrayUrl = array_filter($url);
 
 				if(array_key_exists($this->_arrayUrl[0], $this->idiomas)){
 					$this->idiomaActual=$this->_arrayUrl[0];
 					array_shift($this->_arrayUrl);
-					if(count($this->_arrayUrl)<1){
-						$this->_arrayUrl[0]='index';
-					}
+
 				}
             }
 
@@ -197,6 +202,7 @@ global $JD;
              */
             $GLOBALS['arrayParametros'] = $url;
 			//se procesa la URL
+			Helpers\Debug::imprimir($this->_arrayUrl);
             $this->procesarURL();
 			//se procesan los argumentos
             if(count($this->args)>0) $this->procesarArgumentos();
@@ -232,13 +238,109 @@ global $JD;
     private function procesarURL(){
 
 		$primerParam =array_shift($this->_arrayUrl);
+
 		if($primerParam=='jadmin'){
 			$this->_esJadmin=TRUE;
 			$this->_procesarJadmin();
 		}else{
+			$namespace = 'App\\';
+			if($this->esModulo($primerParam)){
+				$namespace.="Modulos\\".$this->_modulo."\\Controllers\\";
+				//Se verifica controlador
+				$posController = array_shift($this->_arrayUrl);
+				//El controlador por defecto tiene el nombre del modulo
+				$this->_controladorDefault = $this->_modulo;
+			}else{
+				$namespace.="Controllers\\";
+				$posController = $primerParam;
+			}
+
+			if(!$this->esControlador($namespace, $posController)){
+				Helpers\Debug::imprimir($posController);
+				array_unshift($this->_arrayUrl,$posController);
+			}else{
+
+			}
+			$this->procesarMetodo();
+
 
 		}
     }
+	/**
+	 * Procesa el metodo a ejecutar
+	 * @method procesarMetodo
+	 */
+	private function procesarMetodo(){
+		$band = false;
+		if($this->_arrayUrl){
+			$posMetodo = array_shift($this->_arrayUrl);
+			Helpers\Debug::imprimir($this->_arrayUrl,$posMetodo);
+			if(!$this->esMetodoValido($posMetodo)){
+				$metodo = $this->_metodoDefault;
+			}else{
+				$band = true;
+			}
+		}else{
+			Helpers\Debug::imprimir("Entro ak",$this->_arrayUrl);
+			$metodo = $this->_metodoDefault;
+		}
+		// buscara el metodo por defecto y arrojara un error sino lo consigue.
+		if(!$band) $this->esMetodoValido($metodo,true);
+	}
+	/**
+	 * Verifica que el metodo exista
+	 * @method validarMetodo
+	 * @param string $metodo Nombre del metodo a validar
+	 * @return boolean
+	 */
+	private function esMetodoValido($metodo,$error=false){
+		$clase = new ReflectionClass($this->_controlador);
+		$metodo = $this->validarNombre($metodo, 1);
+
+		if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
+			$this->_metodo = $metodo;
+			return true;
+		}
+		if($error)	throw new Excepcion("El metodo no es valido", 404);
+
+		return false;
+	}
+	/**
+	 * Verifica si el parametro pasado es un controlador
+	 * @method esControlador
+	 * @param string $namespace Namespace sobre el cual se validara la existencia del controlador
+	 * @param string $controller Nombre del posible controlador pedido
+	 */
+	private function esControlador($namespace,$posController){
+		$controller = $this->validarNombre($posController,1)."Controller";
+		#Helpers\Debug::imprimir($namespace.$controller);
+		$controllerAbsoluto = $namespace.$controller;
+		$a = new $controllerAbsoluto();
+		if(class_exists($controllerAbsoluto)){
+			$this->_controlador = $namespace.$controller;
+			$this->_nombreControlador = $posController;
+			$this->_namespace = $namespace;
+			return true;
+		}else{
+
+			$this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1)."Controller";
+			$this->_nombreControlador = $this->_controladorDefault;
+		}
+		return false;
+	}
+	/**
+	 * Verifica si el parametro apsado es un modulo cargado
+	 * @method esModulo
+	 */
+	private function esModulo($modulo){
+		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
+		if(in_array($posModulo,$this->modulosExistentes)){
+			$this->_modulo = $posModulo;
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Procesa las urls dirigidas al administrador de la aplicacion
 	 * @param procesarJadmin
@@ -248,13 +350,13 @@ global $JD;
 		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
 		$checkModulo = FALSE;
 
-		if(in_array($posModulo,$this->modulosExistentes))
-		{
+		if($this->esModulo($posModulo)){
 
 		}else{
 			//Accede aqui si se busca un modulo del Framework
 			$namespace = 'Jida\\Jadmin\\';
 			$this->_ruta='framework';
+
 			if(Helpers\Directorios::validar(DIR_FRAMEWORK."Jadmin/Modulos/".$posModulo)){
 
 				$this->_modulo = $posModulo;
@@ -268,214 +370,14 @@ global $JD;
 				}
 			}else{
 
-				if(class_exists($namespace."Controllers\\".$posModulo."Controller")){
-					$this->_controlador = $namespace."Controllers\\".$posModulo."Controller";
-
-					$this->_nombreControlador = $posModulo;
-					$this->procesarMetodo();
-				}else{
-					$this->_controlador = $namespace."Controllers\\JadminController";
-					$this->_nombreControlador = 'jadmin';
-					$this->procesarMetodo();
+				if(!$this->esControlador($namespace."Controllers\\", $posModulo)){
+					array_unshift($this->_arrayUrl,$posModulo);
 				}
+				$this->procesarMetodo();
+
 			}
-
 		}
-
-
 	}
-	/**
-	 * Procesa el metodo a ejecutar
-	 * @method procesarMetodo
-	 * @deprecated
-	 */
-	private function procesarMetodo(){
-		if(count($this->_arrayUrl)>0){
-
-			$clase = new ReflectionClass($this->_controlador);
-			$metodoOriginal = array_shift($this->_arrayUrl);
-			$metodo = $this->validarNombre($metodoOriginal,2);
-
-			if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
-			//if(method_exists($this->_controlador, $metodo))
-				return $this->_metodo = $metodo;
-			}
-			array_unshift($this->_arrayUrl,$metodoOriginal);
-			$metodo = $this->_metodoDefault;
-		}
-		$this->_metodo = $this->_metodoDefault;
-		if(!method_exists($this->_controlador, $this->_metodo))
-			throw new Excepcion("No existe el metodo solicitado", 404);
-
-		return $this->_metodo;
-
-
-
-	}
-    private function _procesarURL($url){
-
-        $primerParam = array_shift($url);
-
-		$URL = "/".$primerParam;
-        $param = $this->validarNombre($primerParam,1);
-
-
-        if(!in_array($param,$this->modulosExistentes) or $this->moduloSubdominio===TRUE){
-
-            if(!Directorios::validar(DIR_APP)):
-                /**
-                 * Entra aca si es una app nueva
-                 */
-                $this->modulo="Jadmin";
-                $this->controlador = 'init';
-				$this->metodo="index";
-				$init = substr($this->appRoot, 1);
-				Helpers\Sesion::set('URL_ACTUAL', $init.'jadmin/init');
-
-            else:
-
-                //Se verifica si existe el controlador
-                if($this->checkController($param."Controller")){
-                    $this->controlador=$param;
-
-                    if(count($url)>0 ){
-
-                    	$paramDos =array_shift($url);
-						$URL.="/".$paramDos;
-                        $param =$this->validarNombre($paramDos,1);
-                        $this->checkMetodo($param,TRUE);
-                    }else{
-                        $this->metodo='index';
-                    }
-                }else{
-                    /**
-                     * Si entra aqui el controlador a ejecutar es el Index publico
-                     * */
-                    if($this->moduloSubdominio===TRUE){
-                        $this->controlador =$this->validarNombre($this->modulo, 1);
-                    }else
-                        $this->controlador='Index';
-
-
-                    $this->checkMetodo($param,TRUE);
-                }
-            endif;
-
-        }else{
-
-            $this->modulo=$param;
-
-            if(count($url)>0){
-
-            	$paramDos = array_shift($url);
-
-				$URL.="/".$paramDos;
-                $param =$this->validarNombre($paramDos,1);
-
-                //Se valida si existe un controlador en la url
-                if($this->checkController($param."Controller")){
-                    $this->controlador=$param;
-
-
-                    if(count($url)>0){
-                    	$paramTres = array_shift($url);
-						$URL.="/".$paramTres;
-                        $param =$this->validarNombre($paramTres,1);
-						$this->checkMetodo($param,true);
-                    }else{
-
-						$this->metodo='index';
-                    }
-
-
-                }else{
-                    $this->controlador=$this->modulo;
-                    $this->checkMetodo($param,TRUE);
-                }
-            }else{
-                $this->controlador=$this->modulo;
-                $this->metodo='index';
-            }
-        }
-
-
-		// Debug::mostrarArray($this->args);
-		JD('QueryString',$this->args);
-
-        Helpers\Sesion::set('URL_ACTUAL', $URL);
-
-        $this->args = array_merge($this->args, $url);
-
-    }
-    /**
-     * Verifica la existencia de un metodo solicitado
-     * @method checkMetodo
-     * @param string $metodo Nombre del metodo a consultar
-     */
-    private function checkMetodo($metodo='index',$insertArg=FALSE){
-
-        if(method_exists($this->controlador."Controller", $this->validarNombre($metodo,2))){
-            $clase = new ReflectionClass($this->controlador."Controller");
-            if($clase->getMethod($this->validarNombre($metodo,2))->isPublic()){
-                $this->metodo=$metodo;
-                return true;
-            }else{
-
-                 $this->metodo="index";
-                if($insertArg and !empty($metodo)){
-                    $this->args[]=strtolower($metodo);
-                }
-            }
-
-        }else{
-
-            $this->metodo="index";
-            if($insertArg and !empty($metodo)){
-                $this->args[]=strtolower($metodo);
-            }
-            return false;
-        }
-    }
-    /**
-     * Verifica si existe un controlador
-     * @method checkController
-     * @param string $controller Nombre del controlador a consultar
-     * @return boolean True si existe false caso contrario
-     */
-    private function checkController($controller){
-    	$controlador="";
-		if(!empty($this->modulo)){
-
-			$controlador=$this->modulo."\\";
-		}
-        if(class_exists($controller)){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    /**
-     * Verifica si se encuentra un modulo definido para un subdominio de la aplicación
-     * @method checkModulo
-     * @access private
-     *
-     */
-    private function getSubdominio(){
-
-        $divisionUrlArray = explode('.', $_SERVER['SERVER_NAME']);
-        if(count($divisionUrlArray)>0){
-            $this->subdominio = $divisionUrlArray[0];
-        }else{
-            $this->subdominio="";
-        }
-
-
-    }
-
-
-    private function validarExistenciaController(){
-
-    }
 
     /**
      * CREA arreglo de parametros get
@@ -549,37 +451,16 @@ global $JD;
 				$this->ejecucion($this->_controlador);
 
 
-           }else{
+           }else throw new Excepcion("No tiene permisos", 403);
 
-                 throw new Exception("No tiene permisos", 403);
+			if(isset($controlador))
+           		$this->ejecucion($controlador);
 
-           }
-           if(isset($controlador)){
-
-               $this->ejecucion($controlador);
-           }
          }catch(Exception $e){
-
-            $this->procesarExcepcion($e);
-        }
-
-
+         	$this->procesarExcepcion($e);
+		}
     }//final funcion validacion
 
-    /**
-     * Obtiene el controlador requerido de un modulo especifico
-     */
-    private function obtenerControladorModulo($nombreArchivo){
-
-        $rutaModulo="";
-        if(!empty($this->modulo)){
-            $rutaModulo =app_dir . "Modulos/" .$this->modulo."/Controller/".$nombreArchivo;
-        }else{
-            $rutaModulo = app_dir.'Controller/'.$nombreArchivo;
-        }
-        return $rutaModulo;
-
-    }
     /**
      * Ejecuta el metodo solicitado
      *
@@ -594,9 +475,7 @@ global $JD;
     private function ejecucion($controlador){
 
         $controlador = $this->ejecutarController($controlador);
-
         $this->mostrarContenido($controlador->vista);
-
 
     }//fin funcion ejecucion
     /**
@@ -621,18 +500,15 @@ global $JD;
         $args = $this->args;
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
+
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
 		$this->vista->data->idioma=$this->idiomaActual;
 		$GLOBALS['dv']=$this->vista->data;
 
-
-		if(!class_exists($controlador)){
-
-			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
-		}
         $this->controladorObject = new $controlador();
         $this->controladorObject->modulo=$this->modulo;
+
         $controlador=& $this->controladorObject;
 
         if(method_exists($controlador, $metodo)){
@@ -701,11 +577,7 @@ global $JD;
 
         }catch(Exception $e){
         	Debug::mostrarArray($e,0);
-
-
             $metodo = $this->metodo;
-
-
             $this->vista->data->setVistaAsTemplate('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
 			$this->vista->pathLayout('Framework/Layout');
