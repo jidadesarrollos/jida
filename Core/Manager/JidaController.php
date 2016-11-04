@@ -202,7 +202,7 @@ global $JD;
              */
             $GLOBALS['arrayParametros'] = $url;
 			//se procesa la URL
-			Helpers\Debug::imprimir($this->_arrayUrl);
+
             $this->procesarURL();
 			//se procesan los argumentos
             if(count($this->args)>0) $this->procesarArgumentos();
@@ -213,6 +213,7 @@ global $JD;
 			$this->generarVariables();
             $this->validacion();
         }catch(Exception $e){
+        	Helpers\Debug::imprimir("llego ak?",true);
             $this->procesarExcepcion($e);
         }
 
@@ -254,13 +255,10 @@ global $JD;
 				$namespace.="Controllers\\";
 				$posController = $primerParam;
 			}
-
 			if(!$this->esControlador($namespace, $posController)){
-				Helpers\Debug::imprimir($posController);
 				array_unshift($this->_arrayUrl,$posController);
-			}else{
-
 			}
+
 			$this->procesarMetodo();
 
 
@@ -274,14 +272,13 @@ global $JD;
 		$band = false;
 		if($this->_arrayUrl){
 			$posMetodo = array_shift($this->_arrayUrl);
-			Helpers\Debug::imprimir($this->_arrayUrl,$posMetodo);
+
 			if(!$this->esMetodoValido($posMetodo)){
 				$metodo = $this->_metodoDefault;
 			}else{
 				$band = true;
 			}
 		}else{
-			Helpers\Debug::imprimir("Entro ak",$this->_arrayUrl);
 			$metodo = $this->_metodoDefault;
 		}
 		// buscara el metodo por defecto y arrojara un error sino lo consigue.
@@ -313,7 +310,6 @@ global $JD;
 	 */
 	private function esControlador($namespace,$posController){
 		$controller = $this->validarNombre($posController,1)."Controller";
-		#Helpers\Debug::imprimir($namespace.$controller);
 		$controllerAbsoluto = $namespace.$controller;
 		$a = new $controllerAbsoluto();
 		if(class_exists($controllerAbsoluto)){
@@ -378,7 +374,6 @@ global $JD;
 			}
 		}
 	}
-
     /**
      * CREA arreglo de parametros get
      * @method procesarAgumentos
@@ -450,13 +445,15 @@ global $JD;
             	$this->vista->data = $dataVista;
 				$this->ejecucion($this->_controlador);
 
-
-           }else throw new Excepcion("No tiene permisos", 403);
+           }else{
+           	throw new Excepcion("No tiene permisos", 403);
+           }
 
 			if(isset($controlador))
            		$this->ejecucion($controlador);
 
-         }catch(Exception $e){
+         }catch(Excepcion $e){
+
          	$this->procesarExcepcion($e);
 		}
     }//final funcion validacion
@@ -508,7 +505,6 @@ global $JD;
 
         $this->controladorObject = new $controlador();
         $this->controladorObject->modulo=$this->modulo;
-
         $controlador=& $this->controladorObject;
 
         if(method_exists($controlador, $metodo)){
@@ -519,11 +515,10 @@ global $JD;
 			}
 
             if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
-				throw new \Exception("aaa", 404);
+				throw new Excepcion("aaa", 404);
             }
 			// Ejecucion del metodo solicitado
 			if($controlador->manejoParams){
-
 				call_user_func_array([$controlador,$metodo], $args);
             }else{
 
@@ -543,8 +538,6 @@ global $JD;
         if($checkDirs){
             $this->checkDirectoriosView();
         }
-        #llamada al metodo solicitado via url
-
         return $controlador;
     }
     /**
@@ -552,7 +545,7 @@ global $JD;
      *
      * @method procesarExcepcion
      */
-    private function procesarExcepcion(Exception $excepcion){
+    private function procesarExcepcion(Excepcion $excepcion){
         try{
         	//if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
         	global $dataVista;
@@ -572,11 +565,10 @@ global $JD;
             }
 
             $this->vista->data = $dataVista;
-
             $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
 
-        }catch(Exception $e){
-        	Debug::mostrarArray($e,0);
+        }catch(Excepcion $e){
+
             $metodo = $this->metodo;
             $this->vista->data->setVistaAsTemplate('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
@@ -585,8 +577,6 @@ global $JD;
 
             //$this->mostrarContenido($ctrlExcepcion->vista);
         }
-
-
     }
     /**
      * Muestra contenido de la vista y controlador requeridos
