@@ -7,6 +7,7 @@
 * @category
 */
 
+namespace Jida\Render;
 class AccionVistaSelector extends Selector{
     /**
 	 * @var object Span Objeto Selector Span dentro del objeto Accion
@@ -15,10 +16,10 @@ class AccionVistaSelector extends Selector{
 	private $dataAccion;
 	private $nombreAccion;
 	/**
-	 * 
+	 *
 	 */
 	function __construct($inner,$data,$selector = "a"){
-		
+
 		parent::__construct($selector);
 		$this->innerHTML($inner);
 		$this->dataAccion = $data;
@@ -28,7 +29,7 @@ class AccionVistaSelector extends Selector{
 			unset($this->dataAccion['span']);
 		}
 		$this->armarValores();
-		
+
 	}
 	function nombreAccion(){
 		return $this->nombreAccion;
@@ -39,7 +40,7 @@ class AccionVistaSelector extends Selector{
 	private function armarValores(){
 		$this->nombreAccion = Cadenas::lowerCamelCase($this->innerHTML());
 		$this->attr('id',Cadenas::lowerCamelCase("accion ".$this->innerHTML()));
-		
+
 		$this->attr($this->dataAccion);
 	}
 	function render(){
@@ -48,9 +49,9 @@ class AccionVistaSelector extends Selector{
 			if(empty($valor)){
 				$this->innerHTML($this->span->render().$this->innerHTML());
 			}
-			
+
 		}
-		
+
 		return parent::render();
 	}
 }

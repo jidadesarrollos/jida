@@ -7,6 +7,7 @@
 * @category
 */
 
+namespace Jida\Render;
 class FilaSelector extends Selector{
 
 	var $selector = "TR";

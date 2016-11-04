@@ -6,8 +6,8 @@
 * @version
 * @category
 */
-namespace Jida;
-class SelectorInput extends \Selector{
+namespace Jida\Render;
+class SelectorInput extends Selector{
 
 	var $name;
 	var $type;

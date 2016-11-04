@@ -48,7 +48,7 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
  * @constant DIR_EXCEPCION_PLANTILLAS
  * @deprecated 2.0
  */
- define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."jidaPlantillas/error/");
+ define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."plantillas/error/");
  if(!defined('DIR_PLANTILLAS_APP'))
  /**
   * Define la ubicacion de las plantillas de una aplicacion
@@ -97,7 +97,7 @@ if(!defined('APP_MANTENIMIENTO')){
     define('APP_MANTENIMIENTO',FALSE);
 }
 if(!defined('TPL_MANTENIMIENTO')){
-    define('TPL_MANTENIMIENTO','Framework/jidaPlantillas/mantenimiento.tpl.php');
+    define('TPL_MANTENIMIENTO','Framework/plantillas/mantenimiento.tpl.php');
 }
 
 if(!defined('PREFIJO_TABLA'))
@@ -169,7 +169,7 @@ if(!defined('DIR_LAYOUT_JIDA'))
  */
 define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
 if(!defined('DIR_LAYOUT_APP'))              define('DIR_LAYOUT_APP',DIR_APP.'Layout/');
-if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."jidaPlantillas/");
+if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."plantillas/");
 
 if(!defined('ZONA_HORARIA')){
     /**

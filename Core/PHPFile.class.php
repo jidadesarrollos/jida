@@ -1,26 +1,27 @@
-<?PHP 
+<?PHP
 /**
  * Definición de la clase
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @category Modelo
  * @version 1.0
+ * @revision
  */
 
- 
+
 class PHPFile extends File{
-    
-    
+
+
     private $content;
     private $accion;
-        
+
     function __construct($directorio,$name){
         parent::__construct($directorio,$name);
-        
-        
-                
+
+
+
     }
     /**
      * Crea una clase php
@@ -31,24 +32,24 @@ class PHPFile extends File{
      */
     function crearClase($nombre,$tipo,$extends){
         $this->archivo;
-        
+
     }
-    
+
     private function addCommentBlock($linea=0,$content=null){
         $coment = "\/**".PHP_EOL."*";
         // if(!is_null($content) and !is_empty($content)){
-            // $coment.=   
-        // }       
+            // $coment.=
+        // }
         $coment.=PHP_EOL."*/";
         $this->archivo;
     }
-    
-    
+
+
     function agregarSaltoLinea(){
         return $this->content.="\n";
     }
-    
-    
+
+
 }//fin clase
 
 ?>

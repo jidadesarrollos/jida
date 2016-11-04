@@ -1,24 +1,25 @@
 <?php
 /**
- * 
+ *
  */
- 
- class ListaSelector extends Selector{
- 	
-	
+
+namespace Jida\Render;
+class ListaSelector extends Selector{
+
+
 	protected $selector = "UL";
 	protected $selectorItems = "LI";
-	
+
 	private $items =[];
-	
-	
+
+
 	function __construct($numeroItems=0,$attr=[]){
 		parent::__construct($this->selector,$attr);
 	}
-	
+
 	/**
 	 * Agrega un item a la lista
-	 * 
+	 *
 	 * El item agregado sera un objeto de Tipo Selector con valor de
 	 * $selectorItem
 	 * @method addItem
@@ -30,16 +31,16 @@
 		$item->innerHTML($contenido);
 		$this->items[] = $item;
 
-		return end($this->items);	
+		return end($this->items);
 	}
-	
+
 	function render(){
-		
+
 		foreach ($this->items as $key => $item) {
-			
+
 			$this->innerHTML.=$item->render();
 		}
 		return parent::render();
 	}
-	
- }
+
+}

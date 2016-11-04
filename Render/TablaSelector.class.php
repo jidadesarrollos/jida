@@ -1,6 +1,6 @@
 <?php
 
-
+namespace Jida\Render;
 class TablaSelector extends Selector{
 
 	private $filas=[];

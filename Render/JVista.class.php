@@ -3,7 +3,9 @@
  * Clase para manejo de Vistas Dinamicas
  *
  */
- class JVista{
+
+namespace Jida\Render;
+class JVista{
 
 	//Contenido Vista============================================
 	private $dataVista;

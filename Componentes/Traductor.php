@@ -2,6 +2,7 @@
 /**
 * Clase para manejo de Traducciones del sitio Web
  *
+ * @internal
  * El archivo permite ubicar las cadenas a mostrar en la web, las cuales son buscadas
  * en un archivo [idioma].php, por tanto las cadenas para español deben encontrarse en el archivo
  * "es.php".

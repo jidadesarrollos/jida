@@ -5,6 +5,8 @@
  *
  *
  */
+
+namespace Jida\Jadmin\Controllers;
 class JadminController extends JController{
     /**
      * objeto modelo jidaControl

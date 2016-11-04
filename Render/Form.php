@@ -7,11 +7,11 @@
 * @category
 */
 
-namespace Jida;
-use \Selector as Selector;
+namespace Jida\Render;
+
 use \Exception as Excepcion;
 use \Cadenas as Cadenas;
-class Form extends  \Selector{
+class Form extends  Selector{
 
     private $layout;
     var $name;

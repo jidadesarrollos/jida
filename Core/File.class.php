@@ -1,19 +1,20 @@
-<?PHP 
+<?PHP
 /**
  * Definición de la clase
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @category Modelo
  * @version 1.0
- * 
- * Archivos Requeridos : 
+ * @revision
+ *
+ * Archivos Requeridos :
  *  Directorios.class.php
- * 
+ *
  */
 
- 
+
 class File{
     /**
      * @var string Directorio Ubicación Física del archivo a crear/editar
@@ -22,27 +23,27 @@ class File{
     /**
      * @var string $nombre Nombre del Archivo
      */
-    protected $nombre; 
+    protected $nombre;
     /**
      * Archivo creado o abierto
      * @var $archivo
      * @access protected
-     */   
+     */
     protected $archivo;
     /**
-     * @var array $lineas Lineas del Archivo Guardadas en un array 
+     * @var array $lineas Lineas del Archivo Guardadas en un array
      */
     protected $lineas=array();
     /**
      * @var int $totalLineas Registra total de lineas del archivo
      */
     protected $totalLineas;
-        
+
     function __construct($directorio,$name){
         $this->directorio=$directorio;
         $this->name=$name;
     }
-    
+
     /**
      * Crea un archivo
      * @method crear
@@ -58,13 +59,13 @@ class File{
             return false;
         }
     }
-    
+
     function getLineas(){
         while(!feof($this->archivo)){
             $this->lineas[]=fgets($this->archivo);
         }
         $this->totalLineas=count($this->lineas);
-              
+
     }
     /**
      * Devuelve el total de lineas de un archivo
@@ -91,7 +92,7 @@ class File{
     /**
      * Cuenta las tabulaciones existentes en una linea
      * @method countTabs
-     * @param string $line Linea a leer 
+     * @param string $line Linea a leer
      */
     protected function countTabs($line){
         $count = strspn($line, "\t");
@@ -107,8 +108,8 @@ class File{
         for($i=0;$i<$numero;$i++)
             $tabs.="\n";
         return $tabs;
-    }       
-    
+    }
+
 }
 
 ?>
