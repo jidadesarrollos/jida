@@ -1129,7 +1129,7 @@ class Formulario extends BD\DBContainer {
      * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
     static function msj($type,$msj,$redirect=false){
-        $msj = Mensajes::crear($type, $msj);
+        $msj = Helpers\Mensajes::crear($type, $msj);
         Helpers\Sesion::set('__msjForm',$msj);
         if($redirect){
             redireccionar($redirect);
