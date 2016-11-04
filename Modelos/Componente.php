@@ -39,8 +39,8 @@ class Componente extends BD\DataModel{
 
 		$data = $this
 			->consulta(['id_componente','componente','descripcion descripcion_componente'])
-			->join('Jida\Objeto',['id_objeto','objeto','descripcion descripcion_objeto'],[],'LEFT')
-			->join('Jida\Metodo',['id_metodo','metodo','descripcion descripcion_metodo','loggin'],
+			->join('Jida\Modelos\Objeto',['id_objeto','objeto','descripcion descripcion_objeto'],[],'LEFT')
+			->join('Jida\Modelos\Metodo',['id_metodo','metodo','descripcion descripcion_metodo','loggin'],
 					['clave'=>'s_objetos.id_objeto','clave_relacion'=>'s_metodos.id_objeto'],'LEFT'
 			)->obt('id_metodo');
 		return $data;

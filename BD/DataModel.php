@@ -1137,6 +1137,7 @@ class DataModel{
 			$this->order="";
         }
 		if(!empty($this->limit)) $this->query.=" ".$this->limit;
+
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 	function addConsulta(){

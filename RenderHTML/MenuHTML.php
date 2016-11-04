@@ -14,6 +14,8 @@
 
 namespace Jida\RenderHTML;
 use Jida\BD as BD;
+use Jida\Modelos\Viejos\Menu as Menu;
+use Jida\Render\Selector as Selector;
 class MenuHTML extends BD\DBContainer{
 
     /**

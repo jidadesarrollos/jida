@@ -13,6 +13,7 @@
 namespace Jida\Core;
 use Jida\Core\Manager\Datavista;
 use Jida\Helpers as Helpers;
+use Jida\Helpers\Cadenas as Cadenas;
 class Controller {
 
 	/**
@@ -180,7 +181,12 @@ class Controller {
      * @var $manejoParams
      */
     var $manejoParams=MANEJADOR_PARAMS;
-
+	/**
+	 * Registra el nombre del controlador para la url
+	 * @var string $_controladorURL
+	 *
+	 */
+	private $_controladorURL;
     function __construct(){
     	global $dataVista;
 
@@ -197,8 +203,12 @@ class Controller {
         $this->instanciarHelpers();
         $this->instanciarModelos();
         $this->validarVarGlobales();
-        $this->_clase=get_class($this);
-        $this->_nombreController = str_replace("Controller", "", $this->_clase);
+		$this->_clase = get_class($this);
+		$clase= explode("\\", $this->_clase);
+
+
+
+        $this->_nombreController = str_replace("Controller", "", end($clase));
 
 
         $this->url = $this->urlController();
@@ -441,9 +451,11 @@ class Controller {
     protected function urlController($ctrl=""){
 
         if(empty($ctrl)){
-           $ctrl = $this->_clase;
-           $controller = str_replace("Controller", "", $this->_clase);
+           	$controller =  $this->_nombreController;
+
         }else{
+
+
             if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller") or class_exists(Cadenas::upperCamelCase($ctrl))){
                 $controller = str_replace('Controller', "", $ctrl);
             }else{
@@ -491,6 +503,7 @@ class Controller {
 
 
             $url = explode(".", $metodo);
+
             if(count($url)==2){
                 $ctrl = str_replace('Controller', "", Cadenas::upperCamelCase($url[0]));
                 $ctrl = $ctrl.'Controller';
@@ -500,6 +513,7 @@ class Controller {
             }
             else{
                 $ctrl = $this->_clase;
+
                 $urlController = $this->urlController();
 
             }
@@ -695,6 +709,7 @@ class Controller {
 			$idioma=(empty($this->idioma))?"":$this->idioma."/";
 
 		if(strtolower($_SERVER['SERVER_NAME'])=='localhost'){
+
 			return $GLOBALS['__URL_APP'].$idioma;
 		}else{
 

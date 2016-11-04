@@ -10,6 +10,8 @@ namespace Jida\Jadmin\Controllers;
 use Jida\Modelos\JidaControl as JidaControl;
 use Jida\Helpers as Helpers;
 use Jida\RenderHTML\Formulario as Formulario;
+use Jida\Modelos\User as User;
+use Jida\RenderHTML\Vista as Vista;
 use Exception;
 class JadminController extends JController{
     /**
@@ -72,7 +74,7 @@ class JadminController extends JController{
 
 
                     }else{
-                        Helpers\Sesion::set('__msjForm', Mensajes::mensajeError("Datos invalidos"));
+                        Helpers\Sesion::set('__msjForm', Helpers\Mensajes::mensajeError("Datos invalidos"));
 
                     }
                 }

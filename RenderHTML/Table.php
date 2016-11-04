@@ -7,6 +7,7 @@
 
 namespace Jida\RenderHTML;
 use Jida\Render as Render;
+use Jida\Render\Selector as Selector;
 class Table extends Render\Selector{
 
     var $thead;

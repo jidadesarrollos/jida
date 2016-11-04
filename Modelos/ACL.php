@@ -10,6 +10,7 @@
 */
 
 namespace Jida\Modelos;
+use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
 use Jida\Core\Session as Session;
 use Jida\Helpers\Arrays as Arrays;
@@ -34,17 +35,19 @@ class ACL{
     function __construct($id=""){
     	$this->componenteObject = $componenteObject = new Componente();
 		$this->perfilObject 	= new Perfil();
-		$this->usuario 			= Session::get('Usuario');
+		$this->usuario 			= Helpers\Sesion::get('Usuario');
 		$modeloUser = MODELO_USUARIO;
 
 		if(!$this->usuario instanceof MODELO_USUARIO)
 			$this->usuario = new $modeloUser();
+
 		if(empty($this->usuario->perfiles)) $this->usuario->agregarPerfilSesion('UsuarioPublico');
-		if(!Session::get('ACL')){
+		if(!Helpers\Sesion::get('ACL')){
 			$this->leerEstructura();
+
 			$this->leerPerfiles();
 		}else{
-			$this->_acl = Session::get('ACL');
+			$this->_acl = Helpers\Sesion::get('ACL');
 		}
 
 

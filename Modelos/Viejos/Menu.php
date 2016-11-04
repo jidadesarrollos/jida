@@ -64,7 +64,7 @@ class Menu extends BD\DataModel {
      */
 	function getPerfilesAcceso(){
 
-	     $perfiles = Helpers\Session::get('Usuario')->perfiles();
+	     $perfiles = Helpers\Sesion::get('Usuario')->perfiles();
          return array_merge($perfiles,$this->perfilesAcceso);
 
 	}
@@ -133,7 +133,7 @@ class Menu extends BD\DataModel {
          }else{
          	#throw new Exception("Menu no definido", 1);
          }
-         #Helpers\Debug::mostrarArray(Helpers\Session::get('usuario','perfiles'),false);
+         #Helpers\Debug::mostrarArray(Helpers\Helpers\Sesion::get('usuario','perfiles'),false);
 
 
          $perfilesUser = "'".implode("','", $this->getPerfilesAcceso())."'";

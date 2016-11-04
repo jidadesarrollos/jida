@@ -80,6 +80,7 @@ if(TEST_PLATFORM==TRUE){
 	include_once 'Config/BDConfig.php';
 
  }
+
 if(file_exists(DIR_APP . 'Config/initConfig.php'))
 	include_once 'Config/initConfig.php';
 include_once 'Settings/jConstantes.php';
