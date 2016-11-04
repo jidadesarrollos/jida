@@ -9,6 +9,7 @@
   *
   */
   global $JD;
+
 use Jida\Debug as Debug;
  class JidaController {
     /**
