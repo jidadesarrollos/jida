@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\RenderHTML as RenderHTML;
-class ObjetosController extends \JController{
+class ObjetosController extends JController{
 
 
 
@@ -142,7 +142,9 @@ class ObjetosController extends \JController{
      * @method lista
      *
      */
-    function lista(){
+    function lista($item){
+    	
+Helpers\Debug::imprimir('lista',$item);
 
 	  $this->tituloPagina="jida-Registro Componentes";
       $this->dv->vista="";

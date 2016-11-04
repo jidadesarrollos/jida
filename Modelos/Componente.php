@@ -35,8 +35,6 @@ class Componente extends BD\DataModel{
 	function obtComponentesData(){
 		$this->debug = new Debug();
 
-
-
 		$data = $this
 			->consulta(['id_componente','componente','descripcion descripcion_componente'])
 			->join('Jida\Modelos\Objeto',['id_objeto','objeto','descripcion descripcion_objeto'],[],'LEFT')
@@ -45,6 +43,10 @@ class Componente extends BD\DataModel{
 			)->obt('id_metodo');
 		return $data;
 
+	}
+	
+	function obtComponentes(){
+		return $this->consulta(['id_componente','componente'])->obt('id_metodo');
 	}
 
 }//fin clase

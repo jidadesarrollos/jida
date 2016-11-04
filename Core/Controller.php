@@ -449,36 +449,44 @@ class Controller {
      * @method urlController
      */
     protected function urlController($ctrl=""){
+    	
 		$this->url="/";
         if(empty($ctrl)){
            	$controller =  $this->_nombreController;
         }else{
+        	
+            if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller")){
+            	$controller = str_replace('Controller', '', $ctrl);
+            }elseif( class_exists(Cadenas::upperCamelCase($ctrl)) ){
 
-            if(class_exists(Cadenas::upperCamelCase($ctrl)."Controller") or class_exists(Cadenas::upperCamelCase($ctrl))){
-                $controller = str_replace('Controller', "", $ctrl);
+				$controller = (explode("\\", $ctrl));
+				$controller = end($controller);
+				$controller = str_replace('Controller', '', $controller);
+
             }else
                 throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
-
         }
-        if(!empty($controller)){
 
-            if(strtolower($this->_modulo)==strtolower($controller)){
+        if(!empty($controller)){
+        
+		    if(strtolower($this->_modulo)==strtolower($controller)){
             	if($this->dv->_esJadmin) $this->url.="jadmin";
                 $this->url .= "/".strtolower($this->_modulo)."/";
-            }else{
+        
+		    }else{
 
                 if(empty($this->_modulo)){
 
-                	if(strtolower($this->_nombreController)=='index'){
+                	if(strtolower($controller)=='index'){
 
 						$this->url =$this->obtURLApp();
 						if($this->dv->_esJadmin) $this->url.="jadmin/";
 					}else{
+
                   	  	$this->url = $this->obtURLApp();
                   	  	if($this->dv->_esJadmin) $this->url.="jadmin/";
-                  	  	$this->url .= $this->convertirNombreAUrl($controller)."/";
-
-
+						
+						$this->url .= $this->convertirNombreAUrl($controller)."/";
 					}
                 }else{
 
@@ -505,23 +513,29 @@ class Controller {
     protected function getUrl($metodo="",$data=array()){
         if(!empty($metodo)){
 
-
-
             $url = explode(".", $metodo);
-
+			
             if(count($url)==2){
-                $ctrl = str_replace('Controller', "", Cadenas::upperCamelCase($url[0]));
-                $ctrl = $ctrl.'Controller';
-
-                $urlController = $this->urlController($url[0]);
+            					
+				if(strpos($url[0],"/")){
+					
+					$urlExplode = explode('/', $url[0]);
+					foreach ($urlExplode as $key => $value)
+						$urlExplode[$key] = Cadenas::upperCamelCase($value);
+					
+					$ctrl = implode("\\", $urlExplode).'Controller';
+				}else
+					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
+				
+				
+                $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
-            }
-            else{
+            
+			}else{
                 $ctrl = $this->_clase;
-
                 $urlController = $this->urlController();
-
             }
+
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
                 $params= "";
@@ -530,7 +544,7 @@ class Controller {
                         $params.="$key/$value/";
                 }
 
-                //Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+                // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 
@@ -551,29 +565,47 @@ class Controller {
      * @return string $url
      */
     protected function obtUrl($metodo="",$data=array()){
+    		
+    	// Helpers\Debug::imprimir('obtUrl',$metodo,$data);
+		
         if(!empty($metodo)){
 
         	$url = explode(".", $metodo);
+			
             if(count($url)==2){
-                $ctrl = str_replace('Controller', "", Cadenas::upperCamelCase($url[0]));
-                $ctrl = $ctrl.'Controller';
+               
+			   if(strpos($url[0],"/")){
+					$urlExplode = explode('/', $url[0]);
+					foreach ($urlExplode as $key => $value)
+						$urlExplode[$key] = Cadenas::upperCamelCase($value);
+					
+					$ctrl = implode("\\", $urlExplode).'Controller';
+				}else{
+					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
+				}
+				
+// Helpers\Debug::imprimir('pila aqui',Cadenas::upperCamelCase($url[0]));
 
-                $urlController = $this->urlController($url[0]);
+// Helpers\Debug::imprimir('hereeee','$ctrl',$ctrl);
+                $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
+				
             }else{
                 $ctrl = $this->_clase;
                 $urlController = $this->urlController();
             }
+// Helpers\Debug::imprimir('akaka',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
+            
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
                 $params= "";
                 if(count($data)>0){
                     foreach ($data as $key => $value){
-						if(is_array($value)) Debug::mostrarArray(debug_backtrace());
+						if(is_array($value)) Helpers\Debug::mostrarArray(debug_backtrace());
                         $params.="$value/";
 					}
                 }
-                #Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+                // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 

@@ -8,6 +8,7 @@
 */
 
 namespace Jida\Render;
+use Jida\Helpers as Helpers;
 class AccionVistaSelector extends Selector{
     /**
 	 * @var object Span Objeto Selector Span dentro del objeto Accion
@@ -38,8 +39,8 @@ class AccionVistaSelector extends Selector{
 	 * @method armarValores
 	 */
 	private function armarValores(){
-		$this->nombreAccion = Cadenas::lowerCamelCase($this->innerHTML());
-		$this->attr('id',Cadenas::lowerCamelCase("accion ".$this->innerHTML()));
+		$this->nombreAccion = Helpers\Cadenas::lowerCamelCase($this->innerHTML());
+		$this->attr('id',Helpers\Cadenas::lowerCamelCase("accion ".$this->innerHTML()));
 
 		$this->attr($this->dataAccion);
 	}

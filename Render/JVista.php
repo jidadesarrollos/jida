@@ -5,6 +5,7 @@
  */
 
 namespace Jida\Render;
+use Jida\Helpers as Helpers;
 class JVista{
 
 	//Contenido Vista============================================
@@ -181,6 +182,7 @@ class JVista{
 	 *
 	 */
 	function __construct($ejecucion,$params=[],$titulo=""){
+		// Helpers\Debug::imprimir('__construct',$ejecucion,$params, $titulo);
 		if(is_array($ejecucion)){
 			$this->usaBD = FALSE;
 			$this->tabla = new TablaSelector($ejecucion);
@@ -206,7 +208,7 @@ class JVista{
 				$this->titulos = $params['titulos'];
 			}
 		}
-
+          
 		if(array_key_exists($this->parametroPagina, $this->queryString))
 			$this->paginaActual = $this->queryString[$this->parametroPagina];
 
@@ -226,13 +228,13 @@ class JVista{
 
 		if($this->analizaURL)
 		{
-			$urlActual=Session::get('URL_ACTUAL_COMPLETA');
+			$urlActual = Helpers\Sesion::get('URL_ACTUAL_COMPLETA');
 
 		}
 
 		$this->paginaConsulta = JD('URL_COMPLETA');
 
-		$this->queryString = JD('QueryString');
+		$this->queryString = (empty(JD('QueryString')))?[]:JD('QueryString');
 
 	}
 	private function establecerValoresDefault(){
@@ -242,9 +244,9 @@ class JVista{
 			$nombre=$this->titulo;
 		}
 
-		$this->idVista = Cadenas::lowerCamelCase($nombre);
-		$this->configArticleVista['id'] = Cadenas::lowerCamelCase('Vista '.$nombre);
-		$this->configTabla['id']=Cadenas::lowerCamelCase('data '.$nombre);
+		$this->idVista = Helpers\Cadenas::lowerCamelCase($nombre);
+		$this->configArticleVista['id'] = Helpers\Cadenas::lowerCamelCase('Vista '.$nombre);
+		$this->configTabla['id'] = Helpers\Cadenas::lowerCamelCase('data '.$nombre);
 
 
 	}
@@ -421,11 +423,11 @@ class JVista{
 	}
 
 	private function checkMensajes(){
-		if(Session::get('__msjVista')){
+		if(Helpers\Sesion::get('__msjVista')){
 
-			$msj = Session::get('__msjVista');
+			$msj = Helpers\Sesion::get('__msjVista');
 			if(is_array($msj) and array_key_exists('id', $msj) and $msj['id']==$this->idVista){
-				Session::destroy('__msjVista');
+				Helpers\Sesion::destroy('__msjVista');
 				return Selector::crear('div.row',null,Selector::crear('div.col-md-12',null,$msj['msj']));
 
 			}
@@ -810,7 +812,7 @@ class JVista{
 			return call_user_func_array($this->funcionNoRegistros, [$this]);
 		}else{
 			if($this->htmlPersonalizado) return Selector::crear('div.col-md-12',null,$this->mensajeNoRegistros);
-			return Selector::crear('div.col-md-12',null,Mensajes::crear('alert',$this->mensajeNoRegistros));
+			return Selector::crear('div.col-md-12',null,Helpers\Mensajes::crear('alert',$this->mensajeNoRegistros));
 		}
 	}
 
@@ -830,7 +832,7 @@ class JVista{
 	 * @param jidaUrl $redireccion Url a la cual redireccionar
 	 */
 	static function msj($idVista,$tipo,$msj,$redireccion=""){
-		Session::set('__msjVista',['msj'=>Mensajes::crear($tipo, $msj),'id'=>$idVista]);
+		Helpers\Sesion::set('__msjVista',['msj'=>Helpers\Mensajes::crear($tipo, $msj),'id'=>$idVista]);
 		if(!empty($redireccion)) redireccionar($redireccion);
 
 	}
