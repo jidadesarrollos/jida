@@ -10,6 +10,9 @@
  * @category Router
  *
  */
+
+namespace Jida\Core\Manager;
+use Jida\Helpers as Helpers;
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar
@@ -171,7 +174,7 @@ class Pagina{
 
         }
 
-        $this->url = (Session::get('URL_ACTUAL')[0]!="/")?"/".Session::get('URL_ACTUAL'):Session::get('URL_ACTUAL');
+        $this->url = (Helpers\Sesion::get('URL_ACTUAL')[0]!="/")?"/".Helpers\Sesion::get('URL_ACTUAL'):Helpers\Sesion::get('URL_ACTUAL');
 
 
     }
@@ -226,9 +229,9 @@ class Pagina{
     * @return string tpl recibe "nombreplantilla" y retorna "nombreplantilla.tpl.php";
     */
 	private function obtNombreTpl($tpl){
-		if(strpos($tpl, '.tpl.php')===false) return Cadenas::lowerCamelCase($tpl.'.tpl.php');
+		if(strpos($tpl, '.tpl.php')===false) return Helpers\Cadenas::lowerCamelCase($tpl.'.tpl.php');
 
-		return Cadenas::lowerCamelCase($tpl);
+		return Helpers\Cadenas::lowerCamelCase($tpl);
 
 	}
 	/**
@@ -278,7 +281,7 @@ class Pagina{
             if($excepcion)
 				$rutaVista = $rutaVista . $nombreVista .'.php';
 			else
-            $rutaVista = $rutaVista.Cadenas::lowerCamelCase($this->controlador )."/". Cadenas::lowerCamelCase($this->nombreVista).".php";
+            $rutaVista = $rutaVista.Helpers\Cadenas::lowerCamelCase($this->controlador )."/". Helpers\Cadenas::lowerCamelCase($this->nombreVista).".php";
 
 
 
@@ -305,7 +308,7 @@ class Pagina{
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
 
         }
-        return $this->urlPlantilla.Cadenas::lowerCamelCase($this->data->getTemplate()).".php";
+        return $this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->getTemplate()).".php";
     }
 
     /**

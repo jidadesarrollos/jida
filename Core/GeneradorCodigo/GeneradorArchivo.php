@@ -6,7 +6,8 @@
 * @version
 * @category
 */
-namespace Jida;
+
+namespace Jida\Core\GeneradorCodigo;
 trait GeneradorArchivo{
 
     /**

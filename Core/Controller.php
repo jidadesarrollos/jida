@@ -9,6 +9,7 @@
  *
  *
  */
+namespace Jida\Core;
 class Controller {
 
 	/**

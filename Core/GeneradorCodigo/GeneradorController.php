@@ -7,6 +7,7 @@
 * @category
 */
 
+namespace Jida\Core\GeneradorCodigo;
 class GeneradorController extends GeneradorObjeto{
     
 	

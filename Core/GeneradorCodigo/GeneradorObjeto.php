@@ -6,9 +6,11 @@
 * @version
 * @category
 */
-namespace Jida;
-use \Cadenas as Cadenas;
-class GeneradorObjeto extends \DataModel{
+
+namespace Jida\Core\GeneradorCodigo;
+use Jida\BD as BD;
+use Jida\Helpers\Cadenas as Cadenas;
+class GeneradorObjeto extends BD\DataModel{
     use GeneradorCodigo;
     protected $clase;
     protected $propiedades=[];

@@ -2,7 +2,7 @@
 /**
 * Clase Padre de modelos
 *
-* @internal encargada de todo el manejo y logica para el ORM del Framework
+* @internal Encargada de todo el manejo y logica para el ORM del Framework
 * @author Julio Rodriguez
 * @package Framework
   @subpackage BD
@@ -11,7 +11,9 @@
 */
 
 include_once 'ResultBD.class.php';
-use Jida\Debug as Debug;
+
+use Jida\Helpers\Debug as Debug;
+namespace Jida\BD;
 class DataModel{
 	protected $debug=FALSE;
     protected $tablaBD;

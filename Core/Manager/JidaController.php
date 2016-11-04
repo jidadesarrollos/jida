@@ -8,9 +8,12 @@
   * @since 0.1
   *
   */
-  global $JD;
 
-use Jida\Debug as Debug;
+
+namespace Jida\Core\Manager;
+use Jida\Helpers as Helper;
+
+global $JD;
  class JidaController {
     /**
      * Define el nombre del Controlador requerido
@@ -85,7 +88,7 @@ use Jida\Debug as Debug;
             /**
              * Registro de tiempo inicial de ejecución
              */
-            Session::set('__TIEjecucion',microtime(true) );
+            Helper\Sesion::set('__TIEjecucion',microtime(true) );
             /**
              * Seteo de zona horaria
              */
@@ -96,7 +99,7 @@ use Jida\Debug as Debug;
             if(array_key_exists('idiomas', $GLOBALS)){
             	$this->idiomas=$GLOBALS['idiomas'];
             }
-            Session::destroy('__formValidacion');
+            Helper\Sesion::destroy('__formValidacion');
             $_SERVER = array_merge($_SERVER,getallheaders());
 
             if(array_key_exists('modulos', $GLOBALS)){
@@ -106,8 +109,8 @@ use Jida\Debug as Debug;
             }
 
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
-			JD('URL_ANTERIOR',Session::get('urlActual'));
-			Session::set('urlActual',$_GET['url']);
+			JD('URL_ANTERIOR',Helper\Sesion::get('urlActual'));
+			Helper\Sesion::set('urlActual',$_GET['url']);
 			JD('URL_COMPLETA',"/".$_GET['url']);
 
 
@@ -142,8 +145,8 @@ use Jida\Debug as Debug;
 
 			$ini = substr($this->appRoot, 1);
 
-			Session::set('URL_ACTUAL', $ini.Session::get('URL_ACTUAL'));
-			JD('URL',Session::get('URL_ACTUAL'));
+			Helper\Sesion::set('URL_ACTUAL', $ini.Helper\Sesion::get('URL_ACTUAL'));
+			JD('URL',Helper\Sesion::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -216,7 +219,7 @@ use Jida\Debug as Debug;
                 $this->controlador = 'init';
 				$this->metodo="index";
 				$init = substr($this->appRoot, 1);
-				Session::set('URL_ACTUAL', $init.'jadmin/init');
+				Helper\Sesion::set('URL_ACTUAL', $init.'jadmin/init');
 
             else:
 
@@ -288,7 +291,7 @@ use Jida\Debug as Debug;
 		// Debug::mostrarArray($this->args);
 		JD('QueryString',$this->args);
 
-        Session::set('URL_ACTUAL', $URL);
+        Helper\Sesion::set('URL_ACTUAL', $URL);
 
         $this->args = array_merge($this->args, $url);
 
@@ -580,7 +583,7 @@ use Jida\Debug as Debug;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-        $metodo = Cadenas::lowerCamelCase($this->metodo);
+        $metodo = Helper\Cadenas::lowerCamelCase($this->metodo);
         $retorno= array();
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
@@ -708,9 +711,9 @@ use Jida\Debug as Debug;
     private function validarNombre($str,$tipoCamelCase){
         if(!empty($str)){
             if($tipoCamelCase==1){
-                $nombre = str_replace(" ","",Cadenas::upperCamelCase(str_replace("-", " ",$str)));
+                $nombre = str_replace(" ","",Helper\Cadenas::upperCamelCase(str_replace("-", " ",$str)));
             }else{
-                $nombre = str_replace(" ","",Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
+                $nombre = str_replace(" ","",Helper\Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
             }
             return $nombre;
         }

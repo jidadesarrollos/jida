@@ -23,7 +23,7 @@
 * @category
 */
 namespace JComponentes;
-use \Directorios as Directorios;
+use Jida\Helpers\Directorios as Directorios;
 class Traductor{
 
 	private $idiomas=[];
