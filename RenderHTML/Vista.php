@@ -15,6 +15,8 @@
 
 namespace Jida\RenderHTML;
 use Jida\BD as BD;
+use Jida\Helpers as Helpers;
+use Jida\Render\Selector as Selector;
 class Vista extends BD\DBContainer{
 
     /**
@@ -715,12 +717,12 @@ class Vista extends BD\DBContainer{
     }//fin funcion crearVista
 
     function getMensajeSesion(){
-         if(Session::get('__msjVista')):
-            if( Session::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Session::get('__idVista')) or
-                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista)== strtolower(Session::get('__idVista')))
+         if(Helpers\Sesion::get('__msjVista')):
+            if( Helpers\Sesion::get('__idVista') and strtolower($this->nombreVistaSinEspacios)==strtolower(Helpers\Sesion::get('__idVista')) or
+                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista)== strtolower(Helpers\Sesion::get('__idVista')))
                ){
-                 Session::destroy('__idVista');
-                 return Session::get('__msjVista');
+                 Helpers\Sesion::destroy('__idVista');
+                 return Helpers\Sesion::get('__msjVista');
                 }else{
                     return "";
                 }
@@ -1181,17 +1183,17 @@ class Vista extends BD\DBContainer{
      * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
     static function msj($idVista,$type,$msj,$redirect=false){
-        $msj = Mensajes::crear($type, $msj);
-        Session::set('__msjVista',$msj);
-        Session::set('__idVista',$idVista);
+        $msj = Helpers\Mensajes::crear($type, $msj);
+        Helpers\Sesion::set('__msjVista',$msj);
+        Helpers\Sesion::set('__idVista',$idVista);
         if($redirect){
             redireccionar($redirect);
         }
     }
 
     static function setMsj($idVista,$msj,$redirect=false){
-        Session::set('__msjVista',$msj);
-        Session::set('__idVista',$idVista);
+        Helpers\Sesion::set('__msjVista',$msj);
+        Helpers\Sesion::set('__idVista',$idVista);
         if($redirect){
             redireccionar($redirect);
         }

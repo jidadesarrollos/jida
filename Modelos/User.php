@@ -168,7 +168,7 @@ class User extends BD\DataModel{
 	function registrarSesion(){
 	    if(!empty($this->id_usuario)){
     		$this->salvar(['ultima_session'=>'current_timestamp','activo'=>1]);
-            Helpers\Session::sessionLogin();
+            Helpers\Sesion::sessionLogin();
 		}else return false;
 
 	}
@@ -294,16 +294,16 @@ class User extends BD\DataModel{
 
 	}
 	function crearSesionUsuario(){
-		Helpers\Session::sessionLogin();
-        Helpers\Session::set('Usuario',$this);
+		Helpers\Sesion::sessionLogin();
+        Helpers\Sesion::set('Usuario',$this);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if(isset($data))
-        Helpers\Session::set('usuario',$data);
+        Helpers\Sesion::set('usuario',$data);
         return $this;
 	}
 
 	function guardarSesion(){
-		Helpers\Session::set('Usuario',$this);
+		Helpers\Sesion::set('Usuario',$this);
 	}
 
 }

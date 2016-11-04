@@ -13,6 +13,7 @@
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
+use Jida\Modelos\ACL as ACL;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
 use Exception as Excepcion;
@@ -162,7 +163,7 @@ global $JD;
             $_SESSION['urlAnterior'] = isset($_SESSION['urlActual'] )?$_SESSION['urlActual'] :"";
 			JD('URL_ANTERIOR',Helpers\Sesion::get('urlActual'));
 			Helpers\Sesion::set('urlActual',$_GET['url']);
-			Debug::imprimir($this->modulosExistentes);
+
 			JD('URL_COMPLETA',"/".$_GET['url']);
 
             /*Manejo de url*/
@@ -206,10 +207,8 @@ global $JD;
                 $this->procesarArgumentos();
             }
 
-
-            //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->_modulo;
-			Helpers\Debug::imprimir($this->_controlador,$this->_metodo,$this->_modulo,$this->_ruta,"ak-->");
+			// Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
@@ -548,16 +547,13 @@ global $JD;
     function validacion(){
         try{
             if(BD_REQUERIDA===TRUE){
-				// $acl = new ACL();
-				$acl = new Jida\Modelos\ACL();
-            	$acceso = $acl->validarAcceso($this->controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+				$acl = new ACL();
+            	$acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
 			}else $acceso=TRUE;
 
            if($acceso===TRUE){
-           	Debug::imprimir("si papa",$this->_controlador);
             	global $dataVista;
-
                 $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo);
             	$this->vista->data = $dataVista;
 				$this->ejecucion($this->_controlador);
@@ -642,15 +638,11 @@ global $JD;
 
 
 		if(!class_exists($controlador)){
-			Helpers\Debug::imprimir($controlador);
-			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
-		}else{
 
-			Helpers\Debug::imprimir($controlador);
+			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
 		}
 
         $this->controladorObject = new $controlador();
-
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
 
@@ -696,7 +688,6 @@ global $JD;
      * @method procesarExcepcion
      */
     private function procesarExcepcion(Exception $excepcion){
-
         try{
         	//if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
         	global $dataVista;
@@ -705,7 +696,6 @@ global $JD;
                 $ctrlError = $this->controlador."Controller";
             else
                 $ctrlError = $this->controlador;
-
 
             if($ctrlError!=CONTROLADOR_EXCEPCIONES)
                 $this->controladorObject = new $ctrlError;

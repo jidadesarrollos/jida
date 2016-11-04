@@ -13,6 +13,7 @@
 namespace Jida\Core;
 use Jida\Core\Manager\Datavista;
 use Jida\Helpers as Helpers;
+use Jida\Helpers\Cadenas as Cadenas;
 class Controller {
 
 	/**

@@ -28,6 +28,7 @@ use Jida\BD as BD;
 use Jida\Modelos\Viejos\JidaFormulario as JidaFormulario;
 use Jida\Helpers as Helpers;
 use Jida\Render\Selector as Selector;
+use Jida\Render\ValidadorJida as ValidadorJida;
 use Exception;
 class Formulario extends BD\DBContainer {
     /**

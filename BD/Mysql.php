@@ -2,6 +2,7 @@
 /**
  * Clase para RDBMS MySQL
  *
+ * @internal
  * Emula todas las funcionalidades requeridas por el framework y usadas con
  * los manejadores como postgres para que pueda trabajar con MySQL de forma
  * transparente para el programador.
@@ -21,6 +22,7 @@
 namespace Jida\BD;
 use Mysqli;
 use Exception;
+use Jida\Helpers\Cadenas as Cadenas;
 class Mysql extends ConexionBD{
     var $enTransaccion=false;
     var $valoresReservados = [
