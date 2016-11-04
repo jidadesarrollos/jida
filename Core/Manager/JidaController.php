@@ -227,14 +227,10 @@ global $JD;
 	 */
 
     private function generarVariables(){
-    	JD('Controlador',$this->_controlador);
+    	JD('Controlador',$this->_nombreControlador);
 		JD('Vista',$this->vista);
 		JD('Metodo',$this->_metodo);
 		JD('Modulo',$this->_modulo);
-
-
-
-
     }
     /**
      * Procesa el contenido de la url
@@ -279,7 +275,7 @@ global $JD;
 					$this->_nombreControlador = $ctrl;
 				}
 			}else{
-				$this->_modulo="";
+				$this->_modulo="jadmin";
 				if(class_exists($namespace."Controllers\\".$posModulo."Controller")){
 					$this->_controlador = $namespace."Controllers\\".$posModulo."Controller";
 					$this->_nombreControlador = $posModulo;
@@ -554,6 +550,7 @@ global $JD;
 
            if($acceso===TRUE){
             	global $dataVista;
+			   	//Helpers\Debug::imprimir($this->_modulo,$this->_nombreControlador,$this->_metodo,true);
                 $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo);
             	$this->vista->data = $dataVista;
 				$this->ejecucion($this->_controlador);
@@ -641,7 +638,6 @@ global $JD;
 
 			new Excepcion("La clase pedida no existe ".$this->modulo."\\".$controlador,$this->_ce.'1');
 		}
-
         $this->controladorObject = new $controlador();
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
