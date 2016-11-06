@@ -10,13 +10,14 @@
 
 namespace Jida\Jadmin\Controllers;
 use Jida\Render as Render;
+use Jida\RenderHTML as RenderHTML;
 use Jida\Helpers as Helpers;
 use Jida\Modelos\Viejos as Modelos;
 class ComponentesController extends JController{
     var $layout="jadmin.tpl.php";
     function __construct($id=""){
         parent::__construct();
-        $this->manejoParams=TRUE;
+        // $this->manejoParams=TRUE;
         $this->url="/jadmin/componentes/";
 
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
@@ -25,38 +26,8 @@ class ComponentesController extends JController{
     function index(){
 
         $this->vista="vistaComponentes";
-		
-		
-        // $query = "select id_componente, Componente as \"Componente\" from s_componentes";
-        // $vista = new Render\Vista($query,$GLOBALS['configPaginador'],'Componentes');
-		// $vista->setParametrosVista($GLOBALS['configVista']);
-// 
-        // $vista->filaOpciones=[
-        // 0=>['a'=>['atributos'   =>[
-                                    // 'class'         =>'btn','title'=>'Ver objetos del componente',
-                                    // 'href'          =>$this->getUrl('objetos.lista',['comp'=>'{clave}']),
-                                    // //'data-jvista'   =>'modal'
-                                  // ],
-                    // 'html'      =>[ 'span'=>['atributos'=>['class' => 'glyphicon glyphicon-folder-open']]]
-                 // ]
-             // ],
-          // 1=>['a'   =>[ 'atributos' =>[ 'class' =>'btn',
-                                        // 'title' =>'Asignar perfiles de acceso',
-                                        // 'href'  =>"/jadmin/componentes/asignar-acceso/comp/{clave}",
-                                        // //'data-jvista'=>'modal'
-                                    // ],
-                        // 'html'      =>[ 'span'=>['atributos'=>['class' =>'glyphicon glyphicon-edit']]]
-                       // ]
-                // ]
-        // ];
-        // $vista->acciones=['Nuevo'=>['href'=>$this->getUrl('setComponente'),'data-jvista'=>'modal']];
-// 
-        // $vista->mensajeError = Helpers\Mensajes::mensajeAlerta("No hay registro de componentes <a href=\"".$this->url."set-componente\">Agregar uno</a>");
-        // $this->dv->vista = $vista->obtenerVista();
-		
-		
-		
-		
+
+
 		$vista = new Render\JVista('Jida\Modelos\Componente.obtComponentes',[
 				'titulos' =>['','Componente','Opciones']
 				], 'Componentes');
@@ -72,16 +43,13 @@ class ComponentesController extends JController{
 
 
 			$this->dv->vista = $vista->obtenerVista();
-		
+
     }
-    function setComponente(){
+    function setComponente($idComponente=""){
 
         $tipoForm=1;
-        $idComponente = "";
-        if($this->get('comp')){
-            $idComponente = $this->get('comp');
-            $tipoForm=2;
-        }
+
+        if(!empty($idComponente)) $tipoForm=2;
 
          $F = new RenderHTML\Formulario('Componente',$tipoForm,$idComponente,2);
          $F->action=$this->url.'set-componente';
@@ -100,9 +68,8 @@ class ComponentesController extends JController{
                          RenderHTML\Formulario::msj('error', 'No se pudo registrar el componente');
                      }
                  }
-			 }else{
-			 	RenderHTML\Formulario::msj('error', 'El componente no existe');
-			 }
+			 }else	RenderHTML\Formulario::msj('error', 'El componente no existe');
+
          }
 
          $this->dv->fComponente = $F->armarFormulario();
@@ -116,22 +83,22 @@ class ComponentesController extends JController{
 			return false;
 	}
     function asignarAcceso($acceso){
-Helpers\Debug::imprimir('asignarAcceso',$acceso,$this->get(),true);
-        if($this->getEntero($this->get('comp'))){
+		Helpers\Debug::imprimir($this->get(),true);
+        if($this->getEntero($acceso)){
 
             $this->vista="accesoPerfiles";
-            $form = new RenderHTML\Formulario('PerfilesAComponentes',2,$this->get('comp'),2);
-            $comp = new Modelos\Componente($this->getEntero($this->get('comp')));
+            $form = new RenderHTML\Formulario('PerfilesAComponentes',2,$acceso,2);
+            $comp = new Modelos\Componente($acceso);
 
-            $form->action=$this->url."asignar-acceso/comp/".$this->get('comp');
+            $form->action=$this->url."asignar-acceso/".$acceso;
             $form->valueSubmit="Asignar Perfiles a Objeto";
             $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
 
             if($this->post('btnPerfilesAComponentes')){
-                $validacion = $form->validarFormulario($_POST);
-                if($validacion===TRUE){
-                    $accion = $comp->asignarAccesoPerfiles($this->post('id_perfil'));
-                    if($accion['ejecutado']==1){
+
+                if($form->validarFormulario($this->post())){
+
+                    if($comp->asignarAccesoPerfiles($this->post('id_perfil'))->ejecutado()){
                         Render\JVista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente '.$comp->componente,$this->urlController());
                     }else
                         RenderHTML\Formulario::msj('error', 'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');

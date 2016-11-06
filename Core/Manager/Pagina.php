@@ -14,7 +14,9 @@
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
 use Jida\Render\Selector as Selector;
-use Exception;
+use Jida\Core\Manager\JExcepcion as JExcepcion;
+use Jida\Helpers\Directorios as Directorios;
+use Exception as Excepcion;
 class Pagina{
     /**
      * Información pasada al layout y vista a renderizar
@@ -181,7 +183,7 @@ class Pagina{
      * @method definirDirectorios
      */
    function definirDirectorios(){
-         /*Verificación de ruta de plantillas*/
+         /*Verificación de ruta de plantillas*/
 
         if(!$this->_esJadmin){
 
@@ -245,15 +247,15 @@ class Pagina{
 
 	/**
 	 * Define el directorio donde debe ser buscada la vista
-	 * @method directorioVista
+	 * @method obtenerDirectorioVista
 	 */
-	private function directorioVista(){
+	private function obtenerDirectorioVista(){
 
 		if($this->_ruta=='framework'){
 			$this->directorioVista = DIR_FRAMEWORK."Jadmin/";
-			Helpers\Debug::imprimir("ak",$this->modulo);
+
 			if(!empty($this->modulo)){
-				$this->directorioVista.=$this->modulo."/Vistas/";
+				$this->directorioVista.='Modulos/' . $this->modulo . "/Vistas/";
 			}else{
 				$this->directorioVista.='Vistas/';
 			}
@@ -262,14 +264,14 @@ class Pagina{
 			$vistaFolder  = ($this->_esJadmin)?"/Jadmin/Vistas/":'/Vistas/';
 
 			if(!empty($this->modulo)){
-				$this->directorioVista.=$this->modulo . $vistaFolder;
+				$this->directorioVista.= 'Modulos/' . $this->modulo . $vistaFolder;
 			}else{
 				$this->directorioVista.=$vistaFolder;
 			}
 		}
 		$controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $this->controlador));
 		$this->directorioVista  .= $controller."/";
-
+		// Helpers\Debug::imprimir($this->_ruta,$this->directorioVista,true);
 		return $this->directorioVista;
 	}
     /**
@@ -283,26 +285,21 @@ class Pagina{
 
     function renderizar($nombreVista="",$excepcion=FALSE){
 
-        if(!empty($nombreVista)){
+        if(!empty($nombreVista)) $this->nombreVista = $nombreVista;
 
-            $this->nombreVista = $nombreVista;
-        }
         $DataTpl = $this->data->getTemplate();
         /**
          * Se verifica si desea usarse una plantilla
          */
         if(!empty($DataTpl)){
-
             $rutaVista = $this->procesarVistaAbsoluta();
-
         }else{
             // Se accede a un archivo vista
-
-            $rutaVista = $this->directorioVista();
+            $rutaVista = $this->obtenerDirectorioVista();
 
             //Arma la estructura para una vista cualquiera
             if($excepcion)
-				$rutaVista = $rutaVista . $nombreVista .'.php';
+				$rutaVista = $this->rutaExcepciones . $nombreVista .'.php';
 			else
             $rutaVista = $rutaVista . Helpers\Cadenas::lowerCamelCase($this->nombreVista).".php";
 
@@ -338,34 +335,35 @@ class Pagina{
      * @access private
      */
     private function renderizarLayout($excepcion=FALSE){
-
-
+	// echo include_once $this->template;
+	// Helpers\Debug::imprimir($this->layout,$this->template,true);
         /* Permitimos almacenamiento en bufer */
-        if(ob_get_contents())
-        	ob_clean();
+        // if(ob_get_contents())
+        	// ob_clean();
         ob_start();
 
         $this->layout = $this->directorioLayout.$this->layout;
 
         if(empty($this->layout) and !$excepcion){
 
-                throw new Exception("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
+                throw new Excepcion("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
         }else
         if(!file_exists($this->layout) and !$excepcion){
 
-            throw new Exception('No existe el layout '.$this->layout, 1);
+            throw new Excepcion('No existe el layout '.$this->layout, 1);
 
             //Debug::string('No existe el layout '.$this->layout,true);
         }else{
-		   if(isset($this->template)) include_once $this->template;
-           $contenido = ob_get_clean();
-           include_once $this->layout;
-           $layout = ob_get_clean();
-           echo $layout;
+        	$contenido="";
+			if(isset($this->template)){
+				include_once $this->template;
+           		$contenido = ob_get_clean();
+		   	}
+           	include_once $this->layout;
+           	$layout = ob_get_clean();
+           	echo $layout;
         }
-
-
-        if (ob_get_length()) ob_end_clean();
+        //if (ob_get_length()) ob_end_clean();
 
 
 
@@ -398,7 +396,7 @@ class Pagina{
 		$tpl = 'error';
 		$this->directorioLayout='Framework/Layout/';
 		if(Directorios::validar(DIR_APP.'plantillas/error/')){
-			$path =DIR_APP.'plantillas/error/';
+			$path =DIR_APP . 'plantillas/error/';
 
 			if(Directorios::validar($path.$codigo.".php")){
 
@@ -408,19 +406,17 @@ class Pagina{
 			     $tpl = 'error';
             }else{
 
-                $path = DIR_FRAMEWORK.'jidaPlantillas/error/';
+                $path = DIR_FRAMEWORK . 'plantillas/error/';
 
             }
 
 		}else{
-
 
 			$this->directorioLayout='Framework/Layout/';
 
 		}
 
 		$this->rutaExcepciones = $path;
-
 		$this->renderizar($tpl,TRUE);
 
 

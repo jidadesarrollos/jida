@@ -40,7 +40,7 @@ if(!defined('CONTROLADOR_EXCEPCIONES'))
  * si se define la constante será reemplazado el controlador e intentará
  * ejecutarse el definido en la constante.
  */
-   define('CONTROLADOR_EXCEPCIONES','ExcepcionController');
+   define('CONTROLADOR_EXCEPCIONES','\Jida\Core\Excepcion');
 if(!defined('DIR_EXCEPCION_PLANTILLAS'))
 /**
  * Define el directorio en el que se encuentran las plantillas

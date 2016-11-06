@@ -7,7 +7,8 @@
 * @category
 */
 
-namespace Jida\Modelos;
+namespace Jida\Core\Manager;
+use Exception as Excepcion;
 class JExcepcion{
 	private $excepcion;
 
@@ -16,9 +17,9 @@ class JExcepcion{
      * Funcion constructora
      * @method __construct
      */
-    function __construct(Exception $e){
+    function __construct(Excepcion $e){
     	$this->excepcion = $e;
-	
+
     }
 	function trazaString(){
 		return $this->excepcion->getTraceAsString();
@@ -40,12 +41,12 @@ class JExcepcion{
 	}
 	private function procesarExcepcion()
 	{
-		
-			
+
+
 		foreach ($this->excepcion as $key => $property) {
 			if(property_exists(__CLASS__, $property)){
 				$this->{$property} = $property;
 			}
-		}	
+		}
 	}
 }

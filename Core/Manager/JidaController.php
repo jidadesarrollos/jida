@@ -17,7 +17,9 @@ use Jida\Modelos\ACL as ACL;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
 use Exception as Excepcion;
+use Jida\Core\Manager\JExcepcion as JExcepcion;
 use App as App;
+use Jida as Jida;
 global $JD;
  class JidaController {
  	private $_ce="001";
@@ -204,17 +206,14 @@ global $JD;
 			//se procesa la URL
 
             $this->procesarURL();
-			//se procesan los argumentos
-            if(count($this->args)>0) $this->procesarArgumentos();
-
 			// Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
             $this->validacion();
-        }catch(Exception $e){
-        	Helpers\Debug::imprimir("llego ak?",true);
-            $this->procesarExcepcion($e);
+        }catch(Excepcion $e){
+
+            $this->jidaExcepcion($e);
         }
 
     }//fin constructor
@@ -244,14 +243,18 @@ global $JD;
 			$this->_esJadmin=TRUE;
 			$this->_procesarJadmin();
 		}else{
+			array_unshift($this->_arrayUrl,$primerParam);
+
 			$namespace = 'App\\';
-			if($this->esModulo($primerParam)){
+			if($this->esModulo()){
+
 				$namespace.="Modulos\\".$this->_modulo."\\Controllers\\";
 				//Se verifica controlador
 				$posController = array_shift($this->_arrayUrl);
 				//El controlador por defecto tiene el nombre del modulo
 				$this->_controladorDefault = $this->_modulo;
 			}else{
+
 				$namespace.="Controllers\\";
 				$posController = $primerParam;
 			}
@@ -260,9 +263,9 @@ global $JD;
 			}
 
 			$this->procesarMetodo();
-
-
 		}
+		$this->procesarArgumentos();
+
     }
 	/**
 	 * Procesa el metodo a ejecutar
@@ -271,16 +274,15 @@ global $JD;
 	private function procesarMetodo(){
 		$band = false;
 		if($this->_arrayUrl){
+
 			$posMetodo = array_shift($this->_arrayUrl);
 
 			if(!$this->esMetodoValido($posMetodo)){
 				$metodo = $this->_metodoDefault;
-			}else{
-				$band = true;
-			}
-		}else{
-			$metodo = $this->_metodoDefault;
-		}
+			}else $band = true;
+
+		}else $metodo = $this->_metodoDefault;
+
 		// buscara el metodo por defecto y arrojara un error sino lo consigue.
 		if(!$band) $this->esMetodoValido($metodo,true);
 	}
@@ -291,16 +293,27 @@ global $JD;
 	 * @return boolean
 	 */
 	private function esMetodoValido($metodo,$error=false){
-		$clase = new ReflectionClass($this->_controlador);
-		$metodo = $this->validarNombre($metodo, 1);
+		$a = new $this->_controlador();
 
-		if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
-			$this->_metodo = $metodo;
-			return true;
+		if(class_exists($this->_controlador))
+		{
+			$clase = new ReflectionClass($this->_controlador);
+			$metodo = $this->validarNombre($metodo, 1);
+
+			if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
+				$this->_metodo = $metodo;
+				return true;
+			}else{
+				array_unshift($this->_arrayUrl,$metodo);
+			}
+			if($error)	throw new Excepcion("El metodo no es valido", 404);
+
+			return false;
+		}else{
+			throw new Excepcion("No existe el controlador soicitado para el metodo : ".$this->_controlador, $this->_ce.'4');
+
 		}
-		if($error)	throw new Excepcion("El metodo no es valido", 404);
 
-		return false;
 	}
 	/**
 	 * Verifica si el parametro pasado es un controlador
@@ -309,10 +322,17 @@ global $JD;
 	 * @param string $controller Nombre del posible controlador pedido
 	 */
 	private function esControlador($namespace,$posController){
-		$controller = $this->validarNombre($posController,1)."Controller";
-		$controllerAbsoluto = $namespace.$controller;
-		$a = new $controllerAbsoluto();
-		if(class_exists($controllerAbsoluto)){
+		$band = true;
+
+		if(empty($posController)){
+			$band = false;
+		}else{
+			$controller = $this->validarNombre($posController,1)."Controller";
+			$controllerAbsoluto = $namespace.$controller;
+
+		}
+		if($band and class_exists($controllerAbsoluto)){
+
 			$this->_controlador = $namespace.$controller;
 			$this->_nombreControlador = $posController;
 			$this->_namespace = $namespace;
@@ -321,6 +341,7 @@ global $JD;
 
 			$this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1)."Controller";
 			$this->_nombreControlador = $this->_controladorDefault;
+
 		}
 		return false;
 	}
@@ -328,12 +349,30 @@ global $JD;
 	 * Verifica si el parametro apsado es un modulo cargado
 	 * @method esModulo
 	 */
-	private function esModulo($modulo){
-		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
-		if(in_array($posModulo,$this->modulosExistentes)){
-			$this->_modulo = $posModulo;
-			return true;
+	private function esModulo($jadmin=false){
+
+		if(!empty($this->_arrayUrl)){
+			$posModulo = $this->validarNombre(array_shift($this->_arrayUrl),1);
+
+			if($jadmin){
+				$namespace = 'Jida\\Jadmin\\Modulos';
+
+				if(Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/'.$posModulo)){
+
+					$this->_controladorDefault = $posModulo;
+					$this->_namespace = $namespace ."\\". $posModulo . '\\Controllers\\';
+					$this->_modulo = $posModulo;
+					return true;
+				}
+
+			}elseif(in_array($posModulo,$this->modulosExistentes))
+			{
+				$this->_modulo = $posModulo;
+				return true;
+			}
+			array_unshift($this->_arrayUrl,$posModulo);
 		}
+
 		return false;
 	}
 
@@ -343,35 +382,31 @@ global $JD;
 	 * @since 0.5;
 	 */
 	private function _procesarJadmin(){
-		$posModulo = (count($this->_arrayUrl)>0)?$this->validarNombre(array_shift($this->_arrayUrl),1):"Jadmin";
+
 		$checkModulo = FALSE;
 
-		if($this->esModulo($posModulo)){
+		if($this->esModulo()){
+			//Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
 
 		}else{
-			//Accede aqui si se busca un modulo del Framework
-			$namespace = 'Jida\\Jadmin\\';
+			//validacion modulo interno jadmin
 			$this->_ruta='framework';
+			if($this->esModulo(true)){
 
-			if(Helpers\Directorios::validar(DIR_FRAMEWORK."Jadmin/Modulos/".$posModulo)){
+				//Accede aqui si se busca un modulo del Framework
+				$namespace = $this->_namespace;
 
-				$this->_modulo = $posModulo;
-				if(class_exists($namespace.'Modulos\\'.$posModulo.'\\'.$this->validarNombre($this->_arrayUrl[0],1)."Controller")){
-					/**
-					 * Accede acá si existe el modulo como carpeta
-					 */
-					$this->_controlador = $namespace.$posModulo.'\\'.$ctrl;
-					$this->_modulo = $posModulo;
-					$this->_nombreControlador = $ctrl;
-				}
 			}else{
-
-				if(!$this->esControlador($namespace."Controllers\\", $posModulo)){
-					array_unshift($this->_arrayUrl,$posModulo);
-				}
-				$this->procesarMetodo();
-
+				//controlador por defecto jadmin;
+				$this->_controladorDefault = 'Jadmin';
+				$this->_namespace = 'Jida\\Jadmin\\Controllers\\';
 			}
+			$posController = array_shift($this->_arrayUrl);
+
+			if(!$this->esControlador($this->_namespace, $posController))
+				array_unshift($this->_arrayUrl,$posController);
+			$this->procesarMetodo();
+
 		}
 	}
     /**
@@ -381,6 +416,10 @@ global $JD;
      *
      */
     private function procesarArgumentos($tipo=1){
+    		if(!empty($this->_arrayUrl))
+			{
+				$this->args = array_merge($this->args,$this->_arrayUrl);
+			}
             $band = 0;
             $clave = TRUE;
 
@@ -391,6 +430,7 @@ global $JD;
 			$totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
+
                 for($i = 0; $i<=$totalClaves;$i++){
 
                     if($clave===TRUE){
@@ -399,6 +439,7 @@ global $JD;
                     }
                     $i++;
                 }
+
             }if($tipo>1){
 
                 $GLOBALS['getsIndex']= "otro";
@@ -540,6 +581,10 @@ global $JD;
         }
         return $controlador;
     }
+	private function jidaExcepcion(Excepcion $excepcion)
+	{
+		Helpers\Debug::imprimir($excepcion,true);
+	}
     /**
      * Procesa una excepción capturarda
      *
@@ -549,17 +594,20 @@ global $JD;
         try{
         	//if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
         	global $dataVista;
-
-            if(strpos($this->controlador, 'Controller')===false)
-                $ctrlError = $this->controlador."Controller";
+			// Helpers\Debug::imprimir($excepcion);
+            if(strpos($this->_controlador, 'Controller')===false)
+                $ctrlError = $this->_controlador."Controller";
             else
-                $ctrlError = $this->controlador;
+                $ctrlError = $this->_controlador;
 
             if($ctrlError!=CONTROLADOR_EXCEPCIONES)
-                $this->controladorObject = new $ctrlError;
+				if(class_exists($ctrlError))
+                	$this->controladorObject = new $ctrlError;
+				else
+					$this->controladorObject=NULL;
 
             if(!defined('CONTROLADOR_EXCEPCIONES')){
-                $this->controlador='ExcepcionController';
+                $this->controlador='\Jida\Core\Excepcion';
             }else {
                 $this->controlador=CONTROLADOR_EXCEPCIONES;
             }
@@ -573,8 +621,8 @@ global $JD;
             $this->vista->data->setVistaAsTemplate('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
 			$this->vista->pathLayout('Framework/Layout');
-            $this->controladorObject =$ctrlExcepcion;
-
+            $this->controladorObject ='Jida\Core\Excepcion';
+			Helpers\Debug::imprimir($e);
             //$this->mostrarContenido($ctrlExcepcion->vista);
         }
     }

@@ -1,7 +1,7 @@
-<?PHP 
+<?PHP
 /**
  * Definición de la clase
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package
  * @category Controller
@@ -11,8 +11,10 @@
 namespace Jida\Jadmin\Controllers;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Helpers as Helpers;
+use Jida\RenderHTML\Vista as Vista;
+
 class PerfilesController extends JController{
-    
+
 	/**
 	 * Funcion constructora
 	 */
@@ -20,11 +22,11 @@ class PerfilesController extends JController{
         parent::__construct();
 		$this->url="/jadmin/perfiles/";
         $this->layout="jadmin.tpl.php";
-        
+
     }
-	
+
 	function index(){
-	    
+
 		$this->tituloPagina = "Lista de Perfiles";
 		$this->vista="vistaPerfiles";
 		$qVista = "select id_perfil,perfil  \"Perfil\" from s_perfiles";
@@ -39,29 +41,29 @@ class PerfilesController extends JController{
             'Eliminar'=>['href'=>$this->url.'eliminar',
                                             'data-jvista'=>'seleccion',
                                             'data-multiple'=>'true','data-jkey'=>'perfil'],
-                                                                            
+
                                 ];
 		$this->dv->vistaPerfiles = $vista->obtenerVista();
 	}
-	
+
 	/**
      * Procesar un perfil
      * @method process
      */
 	function setPerfiles(){
-	    
+
 	    $pk="";$tipoForm=1;
         if($this->getEntero($this->get('perfil'))){
-            
+
             $pk=$this->get('perfil');$tipoForm=2;
         }
-        
+
         $form=new Formulario('Perfiles',$tipoForm,$pk,2);
         $form->action=$this->url."set-perfiles/";
         $form->tituloFormulario="Gesti&oacute;n de Perfiles";
-        
+
         if($this->post('btnPerfiles')){
-            
+
             $msj = 'No se ha podido registrar el perfil, vuelva a intenarlo';
             $validacion = $form->validarFormulario();
             if($validacion===TRUE){
@@ -78,28 +80,28 @@ class PerfilesController extends JController{
                     }
                 }
             }
-            RenderHTML\Formulario::msj('error', $msj);            
+            RenderHTML\Formulario::msj('error', $msj);
         }
         $this->dv->form=$form->armarFormulario();
 	}//final funcion
-	
+
 	function eliminar(){
-	            
+
         if($this->get('perfil')){
             $total = explode(",",$this->get('perfil'));
             $perfil = new Perfil();
-            
-            if(count($total)==1 and $this->get('perfil')>0){    
+
+            if(count($total)==1 and $this->get('perfil')>0){
                 $perfil->eliminarObjeto($this->get('perfil'));
                 $msj = "Perfil eliminado exitosamente";
                 RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
             }else{
                 $noNumerico = false;
                 foreach ($total as $key => $value) {
-                    if($this->getEntero($value)==0){      
+                    if($this->getEntero($value)==0){
                         $noNumerico=TRUE;
                     }
-                    
+
                 }
                 if($noNumerico!==true){
                     $perfil->eliminarMultiplesDatos($total, 'id_perfil');
@@ -107,17 +109,17 @@ class PerfilesController extends JController{
                     RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
                 }else{
                     $msj = "No se ha logro eliminar el perfil, porfavor vuelva a intentarlo";
-                    RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());        
+                    RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
                 }
-            }              
+            }
         }else{
             $msj = "No se ha podido realizar la acci&oacute;n vuelva a intentarlo";
-            RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());    
+            RenderHTML\Vista::msj('perfiles', 'error',$msj,$this->urlController());
         }
-        
-        
+
+
     }//fin eliminarCategorias
-	
+
 }
 
 

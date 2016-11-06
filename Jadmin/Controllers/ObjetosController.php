@@ -11,6 +11,8 @@
 namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\RenderHTML as RenderHTML;
+use Jida\RenderHTML\Vista as Vista;
+use Jida\Helpers as Helpers;
 class ObjetosController extends JController{
 
 
@@ -23,7 +25,7 @@ class ObjetosController extends JController{
 
         if(!$this->solicitudAjax()) $this->layout="jadmin.tpl.php";
 		$this->url = "/jadmin/objetos/";
-		$this->modelo = new Objeto();
+		$this->modelo = new \Jida\Modelos\Objeto();
         $this->dv->title = "Objetos";
 
     }
@@ -63,7 +65,7 @@ class ObjetosController extends JController{
         });
 		$generador->extensionClass = FALSE;
 		if($generador->generar($objeto,$prefijos)){
-			$msj = Mensajes::crear('suceso', 'Objeto creado exitosamente');
+			$msj = Helpers\Mensajes::crear('suceso', 'Objeto creado exitosamente');
 			Session::set('__mensaje',$msj);
 		}
 
@@ -81,7 +83,7 @@ class ObjetosController extends JController{
 			$vista = $this->vistaObjetos($query);
             $vista->tituloVista="Objetos";
 			$msjError = "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto\">Agregar objeto</a>";
-			$vista->mensajeError= Mensajes::mensajeAlerta($msjError);
+			$vista->mensajeError= Helpers\Mensajes::mensajeAlerta($msjError);
 			$this->dv->vista = $vista->obtenerVista();
 
 	}
@@ -143,7 +145,7 @@ class ObjetosController extends JController{
      *
      */
     function lista($item){
-    	
+
 Helpers\Debug::imprimir('lista',$item);
 
 	  $this->tituloPagina="jida-Registro Componentes";
