@@ -197,7 +197,6 @@ class Controller {
 		if(!$dataVista instanceof DataVista)		$dataVista = new DataVista();
 		if(defined('APP_MULTIIDIOMA')) $this->multiidioma = APP_MULTIIDIOMA;
         $this->dv = $dataVista;
-        $dataVista->a = "hola";
 		$this->idioma=& $this->dv->idioma;
 
         $this->instanciarHelpers();
@@ -205,8 +204,6 @@ class Controller {
         $this->validarVarGlobales();
 		$this->_clase = get_class($this);
 		$clase= explode("\\", $this->_clase);
-
-
 
         $this->_nombreController = str_replace("Controller", "", end($clase));
 

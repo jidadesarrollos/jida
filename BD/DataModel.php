@@ -10,10 +10,9 @@
 * @category Model
 */
 
-
-
 namespace Jida\BD;
 use Jida\Helpers\Debug as Debug;
+use Exception;
 use ReflectionClass;
 use ReflectionProperty;
 //include_once 'ResultBD.class.php';

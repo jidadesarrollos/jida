@@ -327,22 +327,38 @@ global $JD;
 		if(empty($posController)){
 			$band = false;
 		}else{
-			$controller = $this->validarNombre($posController,1)."Controller";
+		    
+			$controller = $this->validarNombre($posController,1).'Controller';
 			$controllerAbsoluto = $namespace.$controller;
+            // $namespacePlugin = str_replace('Controllers\\', 'Plugins\\Controllers\\', $namespace);
+            // $controllerAbsolutoPlugin = $namespacePlugin.$controller;
+		
+        }
 
-		}
 		if($band and class_exists($controllerAbsoluto)){
 
-			$this->_controlador = $namespace.$controller;
+			$this->_controlador = $controllerAbsoluto;
 			$this->_nombreControlador = $posController;
 			$this->_namespace = $namespace;
 			return true;
 		}else{
-
-			$this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1)."Controller";
-			$this->_nombreControlador = $this->_controladorDefault;
-
-		}
+		    /**
+             * Logica para verificacion de Carpeta Pluguins dentro de Modulos
+             * Verificar funcionamiento y usabilidad
+             */
+           // if($band and class_exists($controllerAbsolutoPlugin)){  
+                // $this->_controlador = $controllerAbsolutoPlugin;
+                // $this->_nombreControlador = $posController;
+                // $this->_namespace = $namespacePlugin;
+                // return true;
+           // }else{
+               // $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
+               // $this->_nombreControlador = $this->_controladorDefault; 
+           // }
+		      
+		      $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
+              $this->_nombreControlador = $this->_controladorDefault;
+        }
 		return false;
 	}
 	/**
@@ -360,7 +376,7 @@ global $JD;
 				if(Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/'.$posModulo)){
 
 					$this->_controladorDefault = $posModulo;
-					$this->_namespace = $namespace ."\\". $posModulo . '\\Controllers\\';
+					$this->_namespace = $namespace .'\\'. $posModulo . '\\Controllers\\';
 					$this->_modulo = $posModulo;
 					return true;
 				}
