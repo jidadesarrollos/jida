@@ -25,5 +25,5 @@ define("PS", PATH_SEPARATOR);
 define('ROOT', realpath(dirname(__FILE__)) . DS);
 
 include_once 'Framework/inicio.php';
-$ctrlGeneral = new JidaController();
+$ctrlGeneral = new Jida\Core\Manager\JidaController();
 ?>

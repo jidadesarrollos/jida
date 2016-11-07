@@ -6,8 +6,14 @@
 * @version
 * @category
 */
+
+namespace Jida\Init;
+use Exception;
+use Jida\Helpers as Helpers;
+
 include_once 'Helpers/funcionesBasicas.php';
-include_once 'Helpers/Directorios.class.php';
+include_once 'Helpers/Directorios.php';
+
 class Init{
 
 	private $pathOriginal="init/";
@@ -21,9 +27,7 @@ class Init{
     	$this->dataServer=$_SERVER;
 		if(!array_key_exists('REQUEST_URI', $this->dataServer))
 			throw new Exception("No se encuentra definida la URL", 1);
-
     }
-
 
 	function inicializarJida(){
 
@@ -35,13 +39,13 @@ class Init{
 	}
 
 	private function copiarHtdocs(){
-		Directorios::crear('htdocs');
-		Directorios::copiar("htdocs/js/","../htdocs/js/jida/");
-		Directorios::copiar("htdocs/css/", "../htdocs/css/jida/");
+		Helpers\Directorios::crear('htdocs');
+		Helpers\Directorios::copiar("htdocs/js/","../htdocs/js/jida/");
+		Helpers\Directorios::copiar("htdocs/css/", "../htdocs/css/jida/");
 	}
 
 	private function crearArchivosRequeridos(){
-		Directorios::crear($this->obtDirectoriosRequeridos());
+		Helpers\Directorios::crear($this->obtDirectoriosRequeridos());
 
 		if(!copy($this->pathOriginal.'index-home.php', '../index.php')){
 			return false;

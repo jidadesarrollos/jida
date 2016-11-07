@@ -10,7 +10,6 @@
 namespace Jida\Core\GeneradorCodigo;
 class GeneradorController extends GeneradorObjeto{
     
-	
 	function crearController($nombreController,$callback=""){
 		$this->nombreObjeto($nombreController);
 		$controller = 	
