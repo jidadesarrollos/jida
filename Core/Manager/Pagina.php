@@ -158,7 +158,7 @@ class Pagina{
         if(defined('DIR_FRAMEWORK')){
             $this->rutaFramework=DIR_FRAMEWORK."Jadmin/Vistas/";
         }else{
-            throw new Exception("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
+            throw new Excepcion("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones", 1);
         }
         #Ruta para vistas de la aplicacion
         if(!empty($modulo)){
@@ -192,7 +192,7 @@ class Pagina{
             if(!empty($this->temaApp))
             {
             	if(!Directorios::validar(DIR_LAYOUT_APP.$this->temaApp))
-					throw new Exception("No se consigue el tema definido", 1);
+					throw new Excepcion("No se consigue el tema definido", 1);
 
 				$this->directorioLayout.=$this->temaApp."/";
 
@@ -306,14 +306,14 @@ class Pagina{
         }
 
         if(!is_readable($rutaVista))
-        	throw new Exception("No se consigue el archivo $rutaVista", 1);
+        	throw new Excepcion("No se consigue el archivo $rutaVista", 1);
 
         $this->template=$rutaVista;
 		#Debug::mostrarArray($rutaVista);
         if((!empty($this->layout) and $this->layout!==FALSE) or $excepcion===TRUE)
             $this->renderizarLayout($excepcion);
         else
-            throw new Exception("No se encuentra definida la plantilla", 120);
+            throw new Excepcion("No se encuentra definida la plantilla", 120);
 
     }//final funcion
 
@@ -939,12 +939,12 @@ class Pagina{
 				if(file_exists($path.$ar.'.php'))
 					include_once $path.$ar.'.php';
 				else
-					throw new Exception("No existe la plantilla solicitada ".$path.$ar, 100);
+					throw new Excepcion("No existe la plantilla solicitada ".$path.$ar, 100);
 
 			}
 		}elseif(is_string($archivo)){
 			if(file_exists($path.$archivo.'.php')) include_once $path.$archivo.'.php';
-			else throw new Exception("No existe la plantilla solicitada ".$path.$archivo, 100);
+			else throw new Excepcion("No existe la plantilla solicitada ".$path.$archivo, 100);
 
 		}
 	}

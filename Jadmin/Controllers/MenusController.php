@@ -1,4 +1,3 @@
-<<<<<<< HEAD:Jadmin/Controllers/MenusController.class.php
 <?PHP
 /**
  * Controlador de Menus
@@ -13,14 +12,15 @@ namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\Helpers as Helpers;
 use Jida\RenderHTML as RenderHTML;
-use Jida\Modelos\Viejos as Modelos;
+use Jida\Modelos\Viejos as ModelosViejos;
+use Jida\Modelos as Modelos;
 class MenusController extends JController {
 
     function __construct(){
         $this->layout="jadmin.tpl.php";
         $this->url="/jadmin/menus/";
         parent::__construct();
-        $jctrl = new JidaControl();
+        $jctrl = new Modelos\JidaControl();
         $tablas = $jctrl->obtenerTablasBD();
     }
 
@@ -85,7 +85,7 @@ class MenusController extends JController {
         $validacion = $form->validarFormulario($post);
         if(!is_array($validacion) and $validacion==TRUE){
             $idMenu = ($this->post('id_menu'))?$this->post('id_menu'):"";
-            $classMenu = new Modelos\Menu($idMenu);
+            $classMenu = new ModelosViejos\Menu($idMenu);
 
             $valor = $classMenu->procesarMenu($post);
             if(isset($valor['result']['ejecutado']) and $valor['result']['ejecutado']==1){
@@ -161,7 +161,7 @@ class MenusController extends JController {
 
         $this->vista = "opcionesMenu";
         if ($this->get('menu')) {
-            $menu = new Menu($this->get('menu'));
+            $menu = new ModelosViejos\Menu($this->get('menu'));
             $idMenu = $this->get('menu');
             $this->dv->vistaOpciones = $this -> vistaOpciones($idMenu);
         } else {
@@ -183,7 +183,7 @@ class MenusController extends JController {
 
             $idMenu=$this->get('menu');
             $idOpcion="";
-            $menu = new Menu($idMenu);
+            $menu = new ModelosViejos\Menu($idMenu);
 
             $this->dv->titulo = "Registro de Opción para menu $menu->nombre_menu";
 
@@ -195,7 +195,7 @@ class MenusController extends JController {
             }
 
 
-            $formulario = new Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
+            $formulario = new RenderHTML\Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
             $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
             $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu]);
             if(!empty($idOpcion)){
@@ -369,4 +369,3 @@ class MenusController extends JController {
 
 
 } // END
-?>
