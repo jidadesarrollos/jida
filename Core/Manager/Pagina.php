@@ -198,13 +198,13 @@ class Pagina{
 
 				if(empty($this->layout) or !Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->layout))){
 
-					if(\Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->controlador))){
+					if(Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->controlador))){
 						$this->layout=$this->obtNombreTpl($this->controlador);
 					}else
-					if(!empty($this->modulo) and \Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->modulo))){
+					if(!empty($this->modulo) and Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->modulo))){
 
 						$this->layout=$this->obtNombreTpl($this->modulo);
-					}elseif(\Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->temaApp))){
+					}elseif(Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->temaApp))){
 						$this->layout=$this->obtNombreTpl($this->temaApp);
 					}else{
 						$this->layout=$this->obtNombreTpl($this->layoutDefault);
