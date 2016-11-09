@@ -324,7 +324,7 @@ class Controller {
            }
            $formulario = new Formulario($nombreForm,$tipoForm,$pk);
        }else{
-           throw new Exception("No se ha definido el formulario a ejecutar", 100);
+           throw new \Exception("No se ha definido el formulario a ejecutar", 100);
        }
     }
 
@@ -547,7 +547,7 @@ class Controller {
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 
-                throw new Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
+                throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
 
         }else{
@@ -608,7 +608,7 @@ class Controller {
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 
-                throw new Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
+                throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
 
         }else{
@@ -645,7 +645,7 @@ class Controller {
 	                $this->modelo = new $this->modelo;
 	            }else{
 
-	                throw new Exception("El objeto $this->modelo especificado como modelo no existe", 1);
+	                throw new \Exception("El objeto $this->modelo especificado como modelo no existe", 1);
 
 	            }
 	        }else{
@@ -680,7 +680,7 @@ class Controller {
             if($this->getEntero($id)==0){
                 $id = $this->obtenerListaGet($id);
                 if(!$id)
-                    throw new Exception("El valor pasado para eliminar el objeto no es valido", 602);
+                    throw new \Exception("El valor pasado para eliminar el objeto no es valido", 602);
             }
             return ($this->modelo->eliminar($id));
 
@@ -689,7 +689,7 @@ class Controller {
      * Genera una excepción 404.
      */
     protected function _404(){
-        throw new Exception("No se consigue el enlace solicitado", 404);
+        throw new \Exception("No se consigue el enlace solicitado", 404);
 
     }
 
