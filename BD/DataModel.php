@@ -17,6 +17,9 @@ use ReflectionClass;
 use ReflectionProperty;
 //include_once 'ResultBD.class.php';
 class DataModel{
+    
+    use \Jida\Core\ObjetoManager;
+    
 	protected $debug=FALSE;
     protected $tablaBD;
     protected $esquema;
@@ -581,34 +584,11 @@ class DataModel{
     }
 
     function __establecerAtributos($arr){
-        $this->establecerAtributos($arr);
+        $this->establecerAtributos($arr,$this->_clase);
         return $this;
     }
 
-    /**
-     * Establece los atributos de una clase.
-     *
-     * Valida si los valores pasados en el arreglo corresponden a los atributos de la clase en uso
-     * y asigna el valor correspondiente
-     *
-     * @access protected
-     * @param array @arr Arreglo con valores
-     * @param instance @clase Instancia de la clase
-     */
-    protected function establecerAtributos($arr, $clase="") {
-        if(empty($clase)){
-            $clase=$this->_clase;
-        }
 
-        $metodos = get_class_vars($clase);
-        foreach($metodos as $k => $valor) {
-
-            if (isset($arr[$k])) {
-                $this->$k = $arr[$k];
-            }
-        }
-
-    }
      /**
      * Inicializa el objeto correspondiente para el manejo de la base de datos
      * @method initBD

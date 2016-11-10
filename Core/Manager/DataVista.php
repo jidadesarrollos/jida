@@ -316,6 +316,7 @@ class DataVista{
      * @param instance @clase Instancia de la clase
      */
     protected function establecerAtributos($arr, $clase="") {
+        Helpers\Debug::imprimir('data Vista',true);
         if(empty($clase)){
             $clase=$this->_clase;
         }

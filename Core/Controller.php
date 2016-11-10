@@ -15,7 +15,9 @@ use Jida\Core\Manager\Datavista;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
 class Controller {
-
+    
+    use \Jida\Core\ObjetoManager;
+    
 	/**
 	 * Define el tema de diseño a implementar en la aplicacion
 	 *
@@ -782,6 +784,8 @@ class Controller {
 	 *
 	 */
 	protected function data($data,$valor=""){
+	    // Helpers\Debug::imprimir('Controleeer');
+        // $this->establecerAtributos($data);
 		if(is_array($data)){
 			foreach ($data as $key => $value) {
 				$this->dv->{$key} = $value;
