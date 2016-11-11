@@ -120,7 +120,7 @@ class Mensajes {
         
        if(isset($_SESSION[$msj])){
             echo $_SESSION[$msj];
-            Session::destroy($msj);
+            Sesion::destroy($msj);
         }
     }
     

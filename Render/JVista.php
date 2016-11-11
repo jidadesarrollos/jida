@@ -260,13 +260,13 @@ class JVista{
 
 				if(method_exists($dataConsulta[0], $dataConsulta[1])){
 					$this->obtInformacionObjeto($dataConsulta[1]);
-				}else throw new Exception("No existe el metodo pasado", 1);
+				}else throw new \Exception("No existe el metodo pasado", 1);
 
 			}else{
 				$this->obtInformacionObjeto();
 			}
 		}else{
-			throw new Exception("No existe el objeto pasado", 2);
+			throw new \Exception("No existe el objeto pasado", 2);
 		}
 
 	}
@@ -562,7 +562,7 @@ class JVista{
 
 					return $contenido;
 				}else{
-					throw new Exception("Las acciones pasadas a la fila no son validas", 1);
+					throw new \Exception("Las acciones pasadas a la fila no son validas", 1);
 
 				}
 			},$this->accionesFila);
@@ -802,7 +802,7 @@ class JVista{
 			// Debug::string($this->paginaConsulta,1);
 			return $this->paginaConsulta.$querystring;
 		}else{
-			throw new Exception("No se han pasado bien los parametros para la url", 1);
+			throw new \Exception("No se han pasado bien los parametros para la url", 1);
 
 		}
 	}

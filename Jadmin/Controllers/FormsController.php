@@ -176,7 +176,7 @@ class FormsController extends JController{
 
 					if($guardado['ejecutado']==1){
 						$jctrol->procesarCamposFormulario($guardado);
-						Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
+						RenderHTML\Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
 
                         if($ambito==2){
                             redireccionar('/jadmin/forms/configuracion-jida-form/formulario/'.$guardado['idResultado']);

@@ -3,6 +3,7 @@
  * 
  */
  $data = $this->data;
+use Jida\Helpers as Helpers;
 ?>
 <style>
     textarea{
@@ -26,7 +27,7 @@
     </ol>
 </div>
 <?PHP
-    echo Mensajes::imprimirMsjSesion();
+    echo Helpers\Mensajes::imprimirMsjSesion();
 ?>
 
 <article id="jidaConfiguracion" data-formulario="<?=$data->formFramework?>">

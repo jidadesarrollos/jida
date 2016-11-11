@@ -64,7 +64,7 @@ class GeneradorModelo extends GeneradorObjeto{
                 'doc'           =>      $this->generarDocPropiedad($metodos[$i]['data_type'], $metodos[$i]['column_name']),
             ];
         }
-        if(empty($pk)) throw new Exception("La tabla $tablaBD no tiene definida una clave primaria", 200);
+        if(empty($pk)) throw new \Exception("La tabla $tablaBD no tiene definida una clave primaria", 200);
         $propiedades[]=['propiedad'=>'pk','ambito'=>'protected','valor'=>$pk['column_name']];
         $propiedades[]=[
                     'propiedad'         =>      'tablaBD',

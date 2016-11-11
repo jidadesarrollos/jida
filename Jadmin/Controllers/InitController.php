@@ -17,7 +17,9 @@ use Jida\RenderHTML as RenderHTML;
 use Jida\Core\GeneradorCodigo as GeneradorCodigo;
 
 class InitController extends JController{
-	    
+
+    use GeneradorCodigo\GeneradorCodigo;
+    
 	private $GeneradorModelo;
     private $gController;
     
@@ -47,7 +49,7 @@ class InitController extends JController{
     
 	function index(){
 		$this->vista="init";
-        Helpers\Debug::imprimir($this,'init',true);
+        // Helpers\Debug::imprimir($this->post(),'init');
 		if($this->post('btnBdConfig')){
 			if(!Helpers\Sesion::get('dirApp')) $this->crearDirApp();
 			if(!$this->validarDatosBD()){
@@ -178,7 +180,7 @@ class InitController extends JController{
         return $this;
     }
 	
-    static function validarDatosBD(){
+    private function validarDatosBD(){
         $bandera=FALSE;
         $validaciones = ['obligatorio'];
 
@@ -303,10 +305,10 @@ class InitController extends JController{
 
         if(count($modulo)>1){
 
-            $ubicacion.=Cadenas::upperCamelCase(Cadenas::upperCamelCase($modulo[0]))."/Vistas/".Cadenas::lowerCamelCase($modulo[1])."/";
+            $ubicacion.=Helpers\Cadenas::upperCamelCase(Helpers\Cadenas::upperCamelCase($modulo[0]))."/Vistas/".Helpers\Cadenas::lowerCamelCase($modulo[1])."/";
         }else{
 
-            $ubicacion.="Vistas/".Cadenas::lowerCamelCase($controller)."/";
+            $ubicacion.="Vistas/".Helpers\Cadenas::lowerCamelCase($controller)."/";
         }
 
 

@@ -12,7 +12,7 @@ use Jida\BD as BD;
 use Jida\Helpers\Cadenas as Cadenas;
 use Jida\Helpers as Helpers;
 class GeneradorObjeto extends BD\DataModel{
-    
+    use GeneradorCodigo;
     protected $clase;
     protected $propiedades=[];
     protected $metodos=[];

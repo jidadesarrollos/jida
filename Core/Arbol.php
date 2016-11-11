@@ -61,7 +61,7 @@ class Arbol{
             }
             return $arbol;
         }else{
-            throw new Exception("No existe la clave $id en el arreglo", 200);
+            throw new \Exception("No existe la clave $id en el arreglo", 200);
         }
         
         

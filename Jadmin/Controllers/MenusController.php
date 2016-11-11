@@ -206,7 +206,7 @@ class MenusController extends JController {
             if($this->getEntero($this->get('padre'))>0){
 
                 $post['padre']=$this->getEntero($this->get('padre'));
-                $opcionPadre = new OpcionMenu($this->get('padre'));
+                $opcionPadre = new RenderHTML\OpcionMenu($this->get('padre'));
                 $this->dv->subtitulo = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
                 $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu,'padre'=>$this->get('padre')]);
             }
@@ -215,7 +215,7 @@ class MenusController extends JController {
                 if($formulario->validarFormulario()){
 
 					$this->post('id_menu',$idMenu);
-                    $opcionMenu = new OpcionMenu($idOpcion);
+                    $opcionMenu = new RenderHTML\OpcionMenu($idOpcion);
 
                     if($opcionMenu->setOpcion($this->post())){
 
@@ -230,7 +230,7 @@ class MenusController extends JController {
                                                 ];
                             }
 
-                            $opcionesPerfil = new OpcionMenuPerfil();
+                            $opcionesPerfil = new ModelosViejos\OpcionMenuPerfil();
                             $opcionesPerfil->eliminarAccesos($opcionMenu->getResult()->idResultado())->salvarTodo($perfiles);
                         }else{
                             Helpers\Debug::mostrarArray($this->obtPost('id_perfil'),0);
@@ -263,7 +263,7 @@ class MenusController extends JController {
             $idmenu = $this->getEntero($this->get('menu'));
             $idOpcion = $this->getEntero($this->get('opcion'));
 
-            $Opcion = new OpcionMenu($idOpcion);
+            $Opcion = new RenderHTML\OpcionMenu($idOpcion);
 
             if($Opcion->eliminar([$idOpcion],'id_opcion_menu')){
             	RenderHTML\Vista::msj('opciones', 'info', 'La opci&oacute;n <strong> '.$Opcion->nombre_opcion.' </strong> ha sido eliminada','/jadmin/menus/opciones/menu/'.$idmenu);
@@ -298,9 +298,9 @@ class MenusController extends JController {
         if($this->getEntero($this->get('padre'))){
 
             $query.=" and padre=".$this->get('padre')."";
-            $omObject= new OpcionMenu();
+            $omObject= new RenderHTML\OpcionMenu();
             $opcionesMenu = $omObject->getOpcionesByMenu($idMenu);
-            $arbolObject = new Arbol($opcionesMenu);
+            $arbolObject = new \Jida\Core\Arbol($opcionesMenu);
 
             $arbolObject->estructurarArbolById('id_opcion_menu');
             $arbol = $arbolObject->obtenerArbol($this->get('padre'));

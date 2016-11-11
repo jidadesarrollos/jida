@@ -15,6 +15,7 @@
 namespace Jida\BD;
 use ReflectionClass;
 use ReflectionProperty;
+use Jida\Helpers as Helpers;
 class DBContainer {
 
     protected $fecha_creacion;
@@ -407,7 +408,7 @@ class DBContainer {
 					$valores[]= "'".FechaHora::datetime()."'";
 				}
         $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria,$this->unico);
-		Session::destroy('__queryInsert');
+		Helpers\Sesion::destroy('__queryInsert');
         return $result;
 
     }//fin funcion insertarObjeto

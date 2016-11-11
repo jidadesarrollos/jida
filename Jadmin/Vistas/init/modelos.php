@@ -23,7 +23,7 @@ $data =& $this->data;
    		<b>Total tablas : <?=count($this->data->tablas)?> </b>
    	</div>
    	<hr />
-   <?=Mensajes::imprimirMsjSesion()?>
+   <?=Jida\Helpers\Mensajes::imprimirMsjSesion()?>
     <?php foreach ($this->data->tablas as $key => $tabla): ?>
         <div class="col-md-3 col-sm-4">
             <div class="checkbox">
@@ -43,7 +43,7 @@ $data =& $this->data;
     	    </section>
     	</div>
     	<div class="col-md-6">
-    	    <?=Mensajes::crear('info', 'Si deseas ignorar algunos prefijo de base de datos puedes agregarlos separandolos por coma (,)')?>
+    	    <?=Jida\Helpers\Mensajes::crear('info', 'Si deseas ignorar algunos prefijo de base de datos puedes agregarlos separandolos por coma (,)')?>
     	</div>
     </div>
     <section class="row">
