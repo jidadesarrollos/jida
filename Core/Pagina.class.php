@@ -894,45 +894,37 @@ class Pagina{
 		return $this->urlPlantilla;
 
 	}
-	/**
-	 * Permite incluir "segmento" de código en una vista
-	 *
-	 * Los segmentos de código pueden ser declaradas como archivos
-	 * independientes. Son especialmente útiles cuando se requiere
-	 * reutilizar código del lado de las vistas.
-	 * @method parte
-	 * @param string $parte Nombre de la parte, sin la extensión, la misma será buscada
-	 * por defecto en la carpeta "partes" del modulo, sino se consigue se buscara en la carpeta
-	 * "partes" del modulo principal.
-	 * @param array $variables Matriz de variables a pasar al segmento
-	 */
-	function segmento($segmento,$params=[]){
-			if(!is_array($params)) $params = array($params);
-			extract($params);
-			$directorio = DIR_APP;
-			$data = $this->dv;
-			if(!empty($this->modulo)){
+	
+    /**
+     * Permite incluir "segmento" de código en una vista
+     *
+     * @internal Los segmentos de código pueden ser declaradas como archivos
+     * independientes. Son especialmente útiles cuando se requiere
+     * reutilizar código del lado de las vistas.
+     * El segmento será buscado por defecto en la carpeta "segmentos" en la raiz de Aplicacion
+     * @method segmento
+     * @param string $segmento Nombre del segmento, sin la extensión. (Debe ser pasado como primer parametro)
+     * @param array $variables Matriz de variables a pasar al segmento
+     */
+    function segmento($segmento,$params=[]){
+        
+        if(!is_array($params)) $params = array($params);
+            
+        foreach ($params as $key => $p)
+            $this->data->$key = $p;
+            
+        $directorio = DIR_APP.'Segmentos/';
+        if(file_exists($directorio . $segmento . '.php')){
+            echo  $this->incluir('Aplicacion/Segmentos/'.$segmento);
+            // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
+            // return true;
+        }else{
+            throw new Exception("No existe el segmento $segmento en la carpeta ".$directorio, 100);
+        }
+        return false;
 
-				if(file_exists($directorio . 'Modulos/'.$this->modulo . '/Vistas/segmentos/' .$segmento . '.php')){
-					echo $this->obtenerContenidos('Aplicacion/Modulos/'.$this->modulo.'/Vistas/segmentos/'.$segmento.".php");
-				return true;
-				}else
-					{
-						Debug::string($directorio . 'Modulos/'.$this->modulo . '/Vistas/segmentos/' .$segmento . '.php');
-					}
-
-			}
-			$directorio.='Vistas/segmentos/';
-			if(file_exists($directorio . $segmento . '.php')){
-				echo  $this->obtenerContenidos('Aplicacion/Vistas/segmentos/'.$segmento.".php");
-				return true;
-			}else{
-				Debug::String("nothing to do madafakar ".$directorio . $segmento . '.php',1);
-			}
-			return false;
-
-	}
-
+    }
+    
 	private function obtenerContenidos($archivo){
 
 			ob_start();
@@ -957,6 +949,29 @@ class Pagina{
 			include_once $archivo.'.php';
 		}
 	}
+    
+    /**
+     * Función para incluir templates
+     * @param mixed $archivo Nombre del archivo a incluir
+     *
+     */
+    function incluirLayout($archivo){
+        $tema = $GLOBALS['configuracion']['tema'];
+        $directorio = 'Aplicacion/Layout/'.$tema.'/';
+        $extension = '.php';
+        
+        if(is_array($archivo)){
+            foreach ($archivo as $key => $ar) {
+                if(file_exists($directorio . $ar . $extension)) include_once $directorio . $ar . $extension;
+                else throw new Exception('No existe la plantilla'. $ar . $extension, 100);
+            }
+        }elseif(is_string($archivo)){
+            if(file_exists($directorio . $archivo . $extension)) include_once $directorio.$archivo.$extension;
+            else throw new Exception('No existe la plantilla '. $archivo . $extension, 100);
+            
+        }
+    }
+    
 	/**
 	 * Agrega un template en otra
 	 *
