@@ -178,7 +178,7 @@ class InitController extends JController{
         return $this;
     }
 	
-    private function validadDatosBD(){
+    static function validarDatosBD(){
         $bandera=FALSE;
         $validaciones = ['obligatorio'];
 
