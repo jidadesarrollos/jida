@@ -4,7 +4,10 @@
   *
   * @package Framework
   * @author  Julio Rodriguez <jirc48@gmail.com>
+  * @version 0.5
   * @date 27/12/2013
+  * @update 2/11/2016
+  *
   */
   global $JD;
 use Jida\Debug as Debug;
@@ -157,7 +160,7 @@ use Jida\Debug as Debug;
 
             //Debug::mostrarArray($_SERVER);
             $GLOBALS['_MODULO_ACTUAL'] = $this->modulo;
-			
+
             $this->vista = new Pagina($this->controlador,$this->metodo,$this->modulo);
             $this->vista->idioma=$this->idiomaActual;
 			$this->generarVariables();
@@ -245,11 +248,11 @@ use Jida\Debug as Debug;
             endif;
 
         }else{
-			
+
             $this->modulo=$param;
 
             if(count($url)>0){
-				
+
             	$paramDos = array_shift($url);
 
 				$URL.="/".$paramDos;
@@ -266,7 +269,7 @@ use Jida\Debug as Debug;
                         $param =$this->validarNombre($paramTres,1);
 						$this->checkMetodo($param,true);
                     }else{
-                    	
+
 						$this->metodo='index';
                     }
 
@@ -281,7 +284,7 @@ use Jida\Debug as Debug;
             }
         }
 
-		
+
 		// Debug::mostrarArray($this->args);
 		JD('QueryString',$this->args);
 

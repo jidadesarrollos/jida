@@ -148,7 +148,7 @@ class Pagina{
          if(!empty($controlador))    $this->controlador = $controlador;
         if(!empty($metodo)){ $this->nombreVista=$metodo;}
         if(!empty($modulo)) $this->modulo = $modulo;
-		
+
         if($controlador==CONTROLADOR_EXCEPCIONES){
             $this->rutaPagina=3;
 
@@ -257,9 +257,9 @@ class Pagina{
      */
 
     function renderizar($nombreVista="",$excepcion=FALSE){
-		
+
         if(!empty($nombreVista)){
-        
+
             $this->nombreVista = $nombreVista;
         }
         $DataTpl = $this->data->getTemplate();
@@ -273,7 +273,7 @@ class Pagina{
         }else{
             // Se accede a un archivo vista
             $rutaVista = $this->obtenerRutaVista();
-            
+
             //Arma la estructura para una vista cualquiera
             if($excepcion)
 				$rutaVista = $rutaVista . $nombreVista .'.php';
