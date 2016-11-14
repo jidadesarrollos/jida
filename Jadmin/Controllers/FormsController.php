@@ -5,6 +5,7 @@
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1.7 16/03/2014
  * @edited 0.1.8	30/03/2014
+ * @update 0.1.9   	13/11/2016
 */
 
 namespace Jida\Jadmin\Controllers;

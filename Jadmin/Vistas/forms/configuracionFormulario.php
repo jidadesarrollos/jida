@@ -1,14 +1,14 @@
-<?PHP 
+<?PHP
  /**
- * 
+ *
  */
  $data = $this->data;
 use Jida\Helpers as Helpers;
 ?>
 <style>
     textarea{
-     
-        height:150px;     
+
+        height:150px;
         width:100%;
         resize: vertical;
     }
@@ -31,14 +31,14 @@ use Jida\Helpers as Helpers;
 ?>
 
 <article id="jidaConfiguracion" data-formulario="<?=$data->formFramework?>">
-    
+
     <div class="row">
         <section id="jidaCampos" class="col-lg-3">
-            
+
             <div class="row top-15">
-              
+
                 <div class="col-md-6">
-                    <h4>Campos</h4>        
+                    <h4>Campos</h4>
                 </div>
                   <div class="col-md-6">
                     <button id="btnEditOrden" title="editar orden" class="btn btn-primary pull-right" value="1">
@@ -47,10 +47,10 @@ use Jida\Helpers as Helpers;
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    
-                    
-                    <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data->formFramework?>">
-                     
+
+
+                    <ul class="list-form-item" id="listCamposFormulario" data-form="<?=$data->formFramework?>" data-url="/jadmin/forms/configuracion-campo/">
+
                     <?PHP foreach($data->camposFormulario as $key =>$campo):?>
                         <li id="campoform-<?=$campo['id_campo']?>" data-id-campo="<?=$campo['id_campo']?>"><?=$campo['name']?></li>
                     <?PHP endforeach; ?>
@@ -59,14 +59,14 @@ use Jida\Helpers as Helpers;
             </div>
         </section>
         <section id="jidaFormConfiguracion" class="col-lg-9">
-            <?PHP 
+            <?PHP
                 if(isset($data->formCampo)){
                     echo $data->formCampo;
                 }
             ?>
         </section>
      </div>
-     
-     
+
+
 </article>
 

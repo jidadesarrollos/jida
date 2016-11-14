@@ -55,8 +55,9 @@ $( document ).ready(function(){
         var $ul 	= $this.parent();
         var form	= $ul.data('form');
         var urlCall	= $ul.data('url');
+        console.log($ul.data());
         e.preventDefault();
-        console.log("ak");
+
         if(valorSeleccion){
 
 			parametros ={
