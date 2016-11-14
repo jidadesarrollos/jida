@@ -298,5 +298,33 @@ class Imagen extends Archivo{
 			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
 		}
 	}
+    
+    /**
+     * Crea una imagen recortada con las dimensiones pasadas por parametro
+     * 
+     * @internal Asocia un identificador al final del nombre lg, md, sm, xs para cada formato.
+     * 
+     * @param string $ruta Ruta origen de la imagen que se desea redirecciona
+     * @param string $nombre Prefijo para las imagenes generadas
+     * @param string $dimAlto Alto de redimension de la imagen
+     * @param string $dimAlto Ancho de redimension de la imagen
+     * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
+     * @return string nombre de la imagen redimensionada
+     */
+     
+    function resizeImagen($ruta,$nombre='img',$dimAlto,$dimAncho,$directorio=false){
+        
+        if(!$directorio)
+            $directorio = $ruta;
+        else
+            Directorios::crear($directorio);
+        
+        $origen = $ruta;
+        $ext = preg_split('/\./', $ruta);
+
+        $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext[1]);
+
+        return $nombre.'.'.$ext[1];
+    }
 
 }

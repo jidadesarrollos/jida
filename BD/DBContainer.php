@@ -186,7 +186,7 @@ class DBContainer {
 
             if (substr($prop, 0,2)=='id' and $prop!=$this->clavePrimaria){
                 $propiedad = str_replace("id_", "", $prop);
-                $objeto =Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
+                $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
                 if($propiedad!=$this->clase and class_exists($objeto,FALSE))
                     $this->propiedadesObjetos[$propiedad]=new $objeto();
             }
