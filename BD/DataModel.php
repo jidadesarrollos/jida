@@ -11,6 +11,7 @@
 */
 
 namespace Jida\BD;
+use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
 use Exception;
 use ReflectionClass;
@@ -530,7 +531,7 @@ class DataModel{
 		foreach ($this->propiedades as $prop => $value) {
 			if(substr($prop, 0,2)=='id' and $prop!=$this->pk){
 
-				$objeto = Cadenas::upperCamelCase(str_replace("_"," ",str_replace("id_", "", $prop)));
+				$objeto = Helpers\Cadenas::upperCamelCase(str_replace("_"," ",str_replace("id_", "", $prop)));
 				if(class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto, $this->tieneUno))
 					$this->tieneUno[$objeto]=['obj'=>$objeto,'pk'=>$prop];
 			}
@@ -548,7 +549,7 @@ class DataModel{
             foreach ($this->propiedades as $prop => $val) {
                 if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
                     $propiedad = str_replace("id_", "", $prop);
-                    $objeto =Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
+                    $objeto =Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
                     if($propiedad!=$this->_clase and class_exists($objeto)){
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
                         //ninguna relacion del objeto relacionado
@@ -1450,15 +1451,15 @@ class DataModel{
             $valores[]= "'".FechaHora::datetime()."'";
         }
         if($this->registroUser){
-            if(Session::get('Usuario')){
-                $user=Session::get('Usuario');
+            if(Helpers\Sesion::get('Usuario')){
+                $user=Helpers\Sesion::get('Usuario');
                 if(is_array($user) and array_key_exists('id_usuario', $user))
                     $idUser = $user['id_usuario'];
                 elseif(is_object($user) and property_exists($user, 'id_usuario'))
                     $idUser= ($user->id_usuario>0)?$user->id_usuario:0;
             }else{
-               if(is_array(Session::get('usuario')) and array_key_exists('id_usuario', Session::get('usuario')))
-                    $idUser = Session::get('usuario')['id_usuario'];
+               if(is_array(Helpers\Sesion::get('usuario')) and array_key_exists('id_usuario', Helpers\Sesion::get('usuario')))
+                    $idUser = Helpers\Sesion::get('usuario')['id_usuario'];
                else
                 $idUser=0;
             }
@@ -1476,14 +1477,14 @@ class DataModel{
 
         if(count($dataUpdate)>0){
             if($this->registroUser){
-                $idUser = Session::get('id_usuario');
+                $idUser = Helpers\Sesion::get('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
-                if(Session::checkLogg()){
+                if(Helpers\Sesion::checkLogg()){
 
 
-                    if(is_object(Session::get('Usuario'))) $dataUpdate['id_usuario_modificador'] = Session::get('Usuario')->id_usuario;
-					elseif(array_key_exists('id_usuario', Session::get('usuario'))){
-                    	$dataUpdate['id_usuario_modificador'] = Session::get('usuario','id_usuario');
+                    if(is_object(Helpers\Sesion::get('Usuario'))) $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('Usuario')->id_usuario;
+					elseif(array_key_exists('id_usuario', Helpers\Sesion::get('usuario'))){
+                    	$dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('usuario','id_usuario');
                     }
                 }
 
