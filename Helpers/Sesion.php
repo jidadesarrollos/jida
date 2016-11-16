@@ -148,7 +148,7 @@ class Sesion {
      */
     static function checkPerfilAcceso($perfil){;
 
-		if(self::get('Usuario') instanceof User)
+		if(self::get('Usuario') instanceof \Jida\Modelos\User)
 			$perfiles = self::get('Usuario')->perfiles;
 		else
 			$perfiles = [];

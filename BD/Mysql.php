@@ -22,6 +22,7 @@
 namespace Jida\BD;
 use Mysqli;
 use Exception;
+use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
 class Mysql extends ConexionBD{
     var $enTransaccion=false;

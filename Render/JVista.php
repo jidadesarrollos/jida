@@ -109,6 +109,7 @@ class JVista{
 	private $configTitulo=[
 		'section'=>['class'=>'col-md-12'],
 		'titulo' =>[
+			'class'	=>'vista-titulo',
 			'selector'=>'h1'
 		],
 	];
@@ -208,7 +209,7 @@ class JVista{
 				$this->titulos = $params['titulos'];
 			}
 		}
-          
+
 		if(array_key_exists($this->parametroPagina, $this->queryString))
 			$this->paginaActual = $this->queryString[$this->parametroPagina];
 
@@ -260,13 +261,13 @@ class JVista{
 
 				if(method_exists($dataConsulta[0], $dataConsulta[1])){
 					$this->obtInformacionObjeto($dataConsulta[1]);
-				}else throw new Exception("No existe el metodo pasado", 1);
+				}else throw new \Exception("No existe el metodo pasado", 1);
 
 			}else{
 				$this->obtInformacionObjeto();
 			}
 		}else{
-			throw new Exception("No existe el objeto pasado", 2);
+			throw new \Exception("No existe el objeto pasado", 2);
 		}
 
 	}
@@ -285,7 +286,7 @@ class JVista{
 	/**
 	 * Obtiene la información a renderizar desde un objeto dado
 	 *
-	 * Esta funcion se implementa al no ser pasado un metodo especifico, y trata
+	 * @internal Esta funcion se implementa al no ser pasado un metodo especifico, y trata
 	 * de obtener los registros haciendo uso de la funcionalidad del DataModel
 	 * @method obtInformacionObjeto
 	 *
@@ -297,6 +298,7 @@ class JVista{
 		if($metodo){
 			$this->objeto->$metodo();
 		}else{
+
 			if(count($this->campos)<1){
 				$this->campos = array_keys($this->objeto->obtenerPropiedades());
 				$this->objeto->consulta();
@@ -305,6 +307,9 @@ class JVista{
 
 			}
 		}
+
+
+
         if(count($this->clausulas)>0){
             foreach ($this->clausulas as $clausula => $params) {
 
@@ -326,7 +331,10 @@ class JVista{
 			$this->objeto->like($filtros,'or');
 
 		}
+		if(isset($_GET['ordenar'])){
 
+			$this->objeto->order($_GET['ordenar']);
+		}
 		$keysFiltro = array_keys($this->filtros);
 		foreach ($keysFiltro as $key => $value) {
 			if(array_key_exists($value, $_GET)){
@@ -397,7 +405,9 @@ class JVista{
 
 
 		if($this->totalRegistros){
-			$this->tabla->attr($this->configTabla);
+
+			$this->tabla->attr(array_merge($this->configTabla,$this->tabla->attr));
+
 			if(count($this->titulos)>0){
 				 $this->crearTitulos();
 			}
@@ -444,6 +454,7 @@ class JVista{
 			$attrSeccion = (array_key_exists('section', $this->configTitulo))?$this->configTitulo['section']:[];
 			$seccionTitulo = new Selector('seccion',$attrSeccion);
 			$titulo = new Selector($this->configTitulo['titulo']['selector']);
+			$titulo->attr('class',$this->configTitulo['titulo']['class']);
 			$titulo->innerHTML($this->titulo);
 			$seccionTitulo->innerHTML($titulo->render());
 			return $seccionTitulo->render();
@@ -460,11 +471,10 @@ class JVista{
 
 
 				$types =[1=>'radio','2'=>'checkbox',3=>"hidden"];
+
 				if($this->tabla->tHead() instanceof Selector){
 					$columnasTitulo = $this->tabla->tHead()->Fila->columnas();
 					if($control==2){
-
-
 						$inputTitle = new Selector('input',
 							[	"type"			=>$types[$control],
 								'id'			=>'obtTotalCol',
@@ -482,6 +492,7 @@ class JVista{
 						'value'	=>$selector->innerHTML(),
 						'name'	=>$this->nameInputLinea,
 					]);
+					$selector->attr('style','display:none');
 					$selector->innerHTML($input->render());
 
 				}
@@ -562,7 +573,7 @@ class JVista{
 
 					return $contenido;
 				}else{
-					throw new Exception("Las acciones pasadas a la fila no son validas", 1);
+					throw new \Exception("Las acciones pasadas a la fila no son validas", 1);
 
 				}
 			},$this->accionesFila);
@@ -571,19 +582,29 @@ class JVista{
 	}
 	private function crearTitulos(){
 		$this->tabla->crearTHead($this->titulos);
+		if($this->controlFila==3){
+			$this->tabla->tHead()->Fila->columna(0)->attr('style','display:none');
+		}
 		if($this->ordenamientos){
 			$columnasTitulos = $this->tabla->tHead()->Fila->columnas();
 
 			for($i=0;$i<count($columnasTitulos);++$i){
 				if($this->controlFila and $i==0) continue;
 				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
+					#Helpers\Debug::imprimir($this->accionesFila,true);
+					$indiceMenu = ($this->controlFila!=3)?$indice:$indice;
+					if(($this->accionesFila and $indiceMenu<=count($titulos)-1) or !$this->accionesFila)
+					{
 
-					$params = ['href'=>$this->procesarURL([
-								'ordenar'	=>$titulos[$indice-1],
-								'pagina'	=>$this->paginaActual
-							],0)];
+						$params = ['href'=>$this->procesarURL([
+									'ordenar'	=>$titulos[$indiceMenu],
+									'pagina'	=>$this->paginaActual
+								],0)];
+						$col->envolver('a',$params);
+					}
 
-					$col->envolver('a',$params);
+
+
 				},$i,$this->titulosKey,$this->paginaConsulta);
 			}
 
@@ -802,7 +823,7 @@ class JVista{
 			// Debug::string($this->paginaConsulta,1);
 			return $this->paginaConsulta.$querystring;
 		}else{
-			throw new Exception("No se han pasado bien los parametros para la url", 1);
+			throw new \Exception("No se han pasado bien los parametros para la url", 1);
 
 		}
 	}

@@ -15,6 +15,7 @@
 namespace Jida\Modelos;
 use Jida\BD as BD;
 use Jida\Helpers as Helpers;
+use Jida\RenderHTML as RenderHTML;
 use Exception;
 class JidaControl extends BD\DBContainer{
 
@@ -133,9 +134,9 @@ class JidaControl extends BD\DBContainer{
 
 				if($total == 0){
 				    if($this->ambito==2){
-				        $campo = new CampoHTML($this->ambito,null);
+				        $campo = new RenderHTML\CampoHTML($this->ambito,null);
 				    }else{
-				        $campo = new CampoHTML($this->ambito);
+				        $campo = new RenderHTML\CampoHTML($this->ambito);
 				    }
 
                     $campo->procesarCampo(array("name"=>$nombreCampo,"id_propiedad"=>$nombreCampo,"id_form"=>$this->id_form));
@@ -177,7 +178,7 @@ class JidaControl extends BD\DBContainer{
      */
     function procesarCampos($post,$form){
 
-        $claseCampo = new CampoHTML($form,$post['id_campo']);
+        $claseCampo = new RenderHTML\CampoHTML($form,$post['id_campo']);
         $guardado = $claseCampo->procesarCampo($_POST);
         if($guardado['ejecutado']===TRUE){
             return true;

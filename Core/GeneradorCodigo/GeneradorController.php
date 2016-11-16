@@ -8,6 +8,7 @@
 */
 
 namespace Jida\Core\GeneradorCodigo;
+use Jida\Helpers as Helpers;
 class GeneradorController extends GeneradorObjeto{
     
 	function crearController($nombreController,$callback=""){
@@ -22,8 +23,8 @@ class GeneradorController extends GeneradorObjeto{
 		
 		$controller.=$this->saltodeLinea().$this->cierre();
 		$directorio = DIR_APP.$this->modulo."Controller/";
-		if(!Directorios::validar($directorio)) 
-			Directorios::crear($directorio);
+		if(!Helpers\Directorios::validar($directorio)) 
+			Helpers\Directorios::crear($directorio);
 		$this
 		->crear($directorio.$this->nombreArchivo())
 		->escribir($controller)
@@ -48,7 +49,7 @@ class GeneradorController extends GeneradorObjeto{
 	function nombreArchivo($nombre=""){
 		if(!empty($nombre)) 
 			$this->nombreController($nombre);
-		return $this->nombreObjeto.".class.php";
+		return $this->nombreObjeto.".php";
 	}
 	function nombreController($nombre){
 		$this->nombreObjeto = $this->nombreObjeto($nombre)."Controller";
