@@ -11,7 +11,7 @@
  */
 
 namespace Jida\Core;
-use Jida\Core\Manager\Datavista;
+use Jida\Core\Manager\DataVista as DataVista;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
 class Controller {

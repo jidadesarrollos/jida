@@ -319,10 +319,17 @@ class Imagen extends Archivo{
         else
             Directorios::crear($directorio);
         
-        $origen = $ruta;
-        $ext = preg_split('/\./', $ruta);
-
-        $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext[1]);
+        $corte = explode('.', $ruta);
+        $extensiones = ['jpg'=>'jpg','png'=>'png','jpeg'=>'jpeg'];
+        $ext='';
+        foreach ($extensiones as $key => $formato){
+            $aux=array_search($formato,$corte);
+            if($aux){
+                $ext=$key;
+            }
+        }
+        
+        $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext);
 
         return $nombre.'.'.$ext[1];
     }
