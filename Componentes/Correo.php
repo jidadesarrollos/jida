@@ -11,8 +11,8 @@
 namespace Jida\Componentes;
 use App\Config as Config;
 use Jida\Helpers as Helpers;
-use Helpers\Debug as Debug;
-use Helpers\Directorios as Directorios;
+use Jida\Helpers\Debug as Debug;
+use Jida\Helpers\Directorios as Directorios;
 require_once 'vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 class Correo{
 

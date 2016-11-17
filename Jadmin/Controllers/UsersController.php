@@ -5,20 +5,26 @@ use Jida\RenderHTML as RenderHTML;
 class UsersController extends JController{
     protected $urlCierreSession="/jadmin/";
     var $layout = 'jadmin.tpl.php';    
+	
 	function __construct(){
-        parent::__construct();
-        //$this->modelo = new User();
 
+        parent::__construct();
+
+        if(defined('MODELO_USUARIO') and class_exists(MODELO_USUARIO)){
+            $clase = MODELO_USUARIO;
+            $this->modelo = new $clase();
+        }
+        
         $this->url='/jadmin/users/';
     }
     
 	function index(){
 	    
 		$vista = $this->vistaUser();
-		if(defined('MODELO_USUARIO') and class_exists(MODELO_USUARIO)){
-			$clase = MODELO_USUARIO;
-			$this->modelo = new $clase();
-		}
+		// if(defined('MODELO_USUARIO') and class_exists(MODELO_USUARIO)){
+            // $clase = MODELO_USUARIO;
+            // $this->modelo = new $clase();
+        // }
         $this->vista="vistaUsuarios";
 		$this->dv->vista = $vista->obtenerVista();
 			
@@ -224,6 +230,7 @@ class UsersController extends JController{
      * @method validarInicioSesion
      */
     protected function validarInicioSesion($usuario,$clave){
+        
         $data = $this->modelo->validarLogin($usuario, $clave);
         
         if($data){
@@ -240,6 +247,7 @@ class UsersController extends JController{
      * @method crearSesionUsuario
      */
     protected function crearSesionUsuario(){
+        Helpers\Debug::imprimir('crearSesionUsuario',$this->modelo);
         Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario',$this->modelo);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
@@ -260,7 +268,7 @@ class UsersController extends JController{
                 $form = Helpers\Sesion::get('FormLoggin');
                  
             }else{
-                $form = new Formulario('Login',1,null,2);
+                $form = new RenderHTML\Formulario('Login',1,null,2);
                 $form->tituloFormulario = "Iniciar Sesi&oacute;n";
                 $form->valueBotonForm="Iniciar Sesi&oacute;n";
             }        
@@ -280,7 +288,7 @@ class UsersController extends JController{
      */
     protected function formCambioContrasenia(){
         
-        $form = new Formulario('CambioClave',1,null,2);
+        $form = new RenderHTML\Formulario('CambioClave',1,null,2);
         
         return $form;
         
