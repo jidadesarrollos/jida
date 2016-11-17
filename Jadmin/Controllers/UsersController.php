@@ -247,7 +247,7 @@ class UsersController extends JController{
      * @method crearSesionUsuario
      */
     protected function crearSesionUsuario(){
-        Helpers\Debug::imprimir('crearSesionUsuario',$this->modelo);
+        // Helpers\Debug::imprimir('crearSesionUsuario',$this->modelo);
         Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario',$this->modelo);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
