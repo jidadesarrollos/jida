@@ -206,7 +206,7 @@ class DataModel{
         $param = func_get_args(0);
         $this->_clase = get_class($this);
 		$this->usoBD=$this->manejadorBD;
-
+		$this->namespace = $this->obtNamespace($this->_clase);
 		if($this->usoBD!==FALSE)
         	$this->initBD();
 		else{
@@ -289,10 +289,12 @@ class DataModel{
 	}
 
 	private function instanciarTieneMuchos(){
+		
 		foreach ($this->tieneMuchos as $key => $value) {
-			if(!is_array($value)) $this->{$value}=[];
-			else{
-				#Debug::mostrarArray($key);
+			if(!is_array($value)){ $this->{$value}=[];
+			Debug::mostrarArray($key,$value,"-");
+			}else{
+				Debug::mostrarArray($key,$value);
 				$this->{$key}=[];
 			}
 		}
@@ -327,22 +329,24 @@ class DataModel{
 	}
 	private function instanciarRelaciones(){
 
-
+	
 		$data = $this->bd->obtenerDataMultiQuery(
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
 		);
 
 		foreach ($data as $relacion => $info) {
-
-
+			$claseSola = $this->obtClaseNombre($relacion);
+			
 			if(in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->tieneMuchos)){
-
-				$this->{$relacion} = [];
+				
+				
+				
+				$this->{$this->obtClaseNombre($claseSola)} = [];
 				if($info['totalRegistros']>0){
 
 					foreach ($info['result'] as $key => $value) {
-						$this->{$relacion}[$key] = $value;
+						$this->{$claseSola}[$key] = $value;
 
 					}
 				}
@@ -356,7 +360,7 @@ class DataModel{
 					$rel->__establecerAtributos($info['result'][0]);
 				}
 
-				$this->{$relacion} = $rel;
+				$this->{$claseSola} = $rel;
 
 			}else
 			if(array_key_exists($relacion, $this->perteneceAUno)){
@@ -367,7 +371,7 @@ class DataModel{
 				else{
 
 				}
-				$this->{$relacion} = $rel;
+				$this->{$claseSola} = $rel;
 
 			}else{
 
@@ -411,7 +415,9 @@ class DataModel{
 				}
 
 			}else{
+				
 				$rel = new $relacion();
+				//Debug::imprimir(get_class($this),__NAMESPACE__,__CLASS__,$relacion,true);
 				$this->consultaRelaciones[$relacion] =
 				$rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])
 

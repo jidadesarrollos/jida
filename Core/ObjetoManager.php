@@ -40,5 +40,43 @@ trait ObjetoManager{
         }
         // Debug::imprimir('$this',$this,true);
     }
+	/**
+	 * Retorna el namespace de un nombre de clase pasado
+	 * @method obtNamespace
+	 * @param string $clase Nombre de la clase a evaluar
+	 * @param string $namespace Namespace de la clase que consulta, puede no ser la misma
+	 * 
+	 */
+	private function obtNamespace($clase,$namespace=""){
+		
+		if($this->tieneNamespace($clase))
+		{
+				
+			$partes = explode('\\',$clase);
+			$actual = array_pop($partes);
+			return implode('\\',$partes);
+		}	
+		//Debug::imprimir($this->{$this->pk} ,"$actual -> en obtnamespace",__NAMESPACE__,$clase,$partes,"---------------");
+	}
+	/**
+	 * Verifica si el nombre de clase pasado contiene un namespace
+	 * @method tieneNamespace
+	 * @param {string} $clase Nombre de la clase
+	 */
+	private function tieneNamespace($clase){
+		if(strrpos($clase,'\\')!==false)
+			return true;
+		return false;
+	}
+	/**
+	 * Retorna el nombre de la clase sin el namespace
+	 * @return obtClaseNombre
+	 */
+	private function obtClaseNombre($clase){
+		if($this->tieneNamespace($clase)){
+			$exp = explode('\\',$clase);
+			return array_pop($exp);
+		}else return $clase;
+	}
 	
 }
