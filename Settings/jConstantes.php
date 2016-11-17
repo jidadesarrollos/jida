@@ -10,7 +10,6 @@
  	$GLOBALS['modulos']=['Jadmin'];
  }
 
-
 if(!defined('MODELO_USUARIO')){
 	define('MODELO_USUARIO','Jida\Modelos\User');
 }
@@ -126,7 +125,7 @@ if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
-if(!defined('LAYOUT_JIDA'))
+
 
 
 
@@ -167,7 +166,7 @@ if(!defined('DIR_LAYOUT_JIDA'))
  *
  * Puede ser modificada su ubicación si desea personalizarse el disenio.
  */
-define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
+define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/jadmin/");
 if(!defined('DIR_LAYOUT_APP'))              define('DIR_LAYOUT_APP',DIR_APP.'Layout/');
 if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."plantillas/");
 
@@ -180,6 +179,7 @@ if(!defined('ZONA_HORARIA')){
     define('ZONA_HORARIA','America/Caracas');
 }
 
+if(!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN','/Framework/htdocs/');
 /**
  * Determina si los caracteres especiales son codificados en código ASCII HTML
  * antes de ser guardados en base de datos

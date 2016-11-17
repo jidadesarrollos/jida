@@ -1,0 +1,20 @@
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="radio"],
+input[type="checkbox"],
+input[type="search"],
+select{
+  outline: none;
+  
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  border:2px solid @gray-lighter;
+  &:hover{
+  	border-color:darken(@gray-lighter,10%);
+  }
+  &:focus{
+  	border-color:@brand-primary;
+  }
+}

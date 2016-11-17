@@ -1,0 +1,76 @@
+@import "../../../../../htdocs/bower_components/bootstrap/less/variables.less";
+@import "../../../../../htdocs/bower_components/bootstrap/less/mixins.less";
+@import '../../../../../htdocs/bower_components/font-awesome/less/font-awesome.less';
+@import "../jadminvars.less";
+
+//mixins 
+
+@import '../mixins/mixins.less';
+
+//-Panel admin
+@import '../estructura/estructura.less';
+@import '../estructura/aside.less';
+
+//-Componentes
+@import '../componentes/vista-component.less';
+@import '../componentes/forms.less';
+@import '../componentes/login.less';
+@import '../componentes/galeria.less';
+//@import '../admin/nav-aside.less';
+
+#content-video{
+	iframe{
+		width:100%;
+		height:100%;
+	}
+}
+#contenedor-comentarios{
+	overflow-y:auto;
+	min-height:500px;
+	.comentario-conversa{
+		position: relative;
+		padding: .625rem 1rem;
+		background-color: #e8e8e8;
+		border-radius: 4px;
+		font-size:15px;
+		padding:16px;
+		display:flex;
+		.pull-left;
+		&.other-user{
+			&:after{
+				position: absolute;
+		    top: 0;
+		    width: 0;
+		    height: 0;
+		    content: '';
+		    border: 5px solid #e8e8e8;
+		    border-bottom-color: transparent;
+		    left: -8px;
+		    border-left-color: transparent;
+			}
+				
+		}
+		&.current-user{
+			background:lighten(@brand-primary,20%);
+			.pull-right;
+				color:#fff;
+				&:after{
+					position: absolute;
+					bottom: 0;
+					width: 0;
+					height: 0;
+					content: '';
+					border: 5px solid lighten(@brand-primary,20%);
+					border-top-color: transparent;
+					border-right-color: transparent;
+					right: -8px;
+				    
+				}
+				
+		}
+	}
+	
+}
+
+
+

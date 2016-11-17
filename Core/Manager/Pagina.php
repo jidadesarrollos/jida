@@ -216,9 +216,16 @@ class Pagina{
 				}
             }
         }else{
-
-            $this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
-            $this->directorioLayout=DIR_LAYOUT_JIDA;
+        	
+			if(array_key_exists('configuracion', $GLOBALS) and array_key_exists('temaJadmin', $GLOBALS['configuracion']))
+			{
+				echo "el tema es ". $GLOBALS['configuracion']['temaJadmin'];
+			}else{
+				
+				$this->directorioLayout = DIR_LAYOUT_JIDA;
+				$this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
+			}
+            
         }
 
     }
