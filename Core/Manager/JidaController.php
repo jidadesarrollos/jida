@@ -323,7 +323,7 @@ global $JD;
      */
     private function esControlador($namespace,$posController){
         $band = true;
-
+		
         if(empty($posController)){
             $band = false;
         }else{
@@ -369,7 +369,7 @@ global $JD;
 
         if(!empty($this->_arrayUrl)){
             $posModulo = $this->validarNombre(array_shift($this->_arrayUrl),1);
-
+			
             if($jadmin){
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
@@ -381,8 +381,7 @@ global $JD;
                     return true;
                 }
 
-            }elseif(in_array($posModulo,$this->modulosExistentes))
-            {
+            }elseif(in_array($posModulo,$this->modulosExistentes)){
                 $this->_modulo = $posModulo;
                 return true;
             }
@@ -400,10 +399,13 @@ global $JD;
     private function _procesarJadmin(){
 
         $checkModulo = FALSE;
-
+		
         if($this->esModulo()){
             //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
-
+			$this->_ruta="app";
+			$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
+			$this->_controladorDefault = $this->_modulo;
+			
         }else{
             //validacion modulo interno jadmin
             $this->_ruta='framework';
@@ -417,13 +419,14 @@ global $JD;
                 $this->_controladorDefault = 'Jadmin';
                 $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
             }
-            $posController = array_shift($this->_arrayUrl);
+		}
+	    $posController = array_shift($this->_arrayUrl);
 
-            if(!$this->esControlador($this->_namespace, $posController))
-                array_unshift($this->_arrayUrl,$posController);
-            $this->procesarMetodo();
+        if(!$this->esControlador($this->_namespace, $posController))
+            array_unshift($this->_arrayUrl,$posController);
+        $this->procesarMetodo();
 
-        }
+        
     }
     /**
      * CREA arreglo de parametros get
@@ -560,7 +563,7 @@ global $JD;
         $this->vista->data->idioma=$this->idiomaActual;
         
         $GLOBALS['dv']=$this->vista->data;
-
+		
         $this->controladorObject = new $controlador();
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
