@@ -9,7 +9,7 @@ $data =& $this->data;
     <div class="panel panel-default panel-login">
         <section class="panel-heading" role="title">
             <h1>
-                JIDA Framework
+                JIDA Framework <br />
                 <small>Desarrollo de aplicaciones </small>
             </h1>
         </section>

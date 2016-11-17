@@ -27,7 +27,7 @@ class JController extends Core\Controller{
 		$this->tr = new Traductor($this->idioma,['path'=>'Framework/Traducciones/']);
 		$this->dv->traductor = $this->tr;
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
-        $this->layout('inicio');
+        $this->layout('jadmin');
 
 
 		$this->dv->addCss('jida.css');

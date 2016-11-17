@@ -25,14 +25,10 @@ class JadminController extends JController{
     function __construct(){
         parent::__construct();
         $this->url = "/jadmin/";
-
         $this->jctrl = new JidaControl();
-        $this->layout="jadmin.tpl.php";
-
-
     }
     function index(){
-        $this->layout="jadminIntro.tpl.php";
+        $this->layout('jadminIntro');
 		$this->tituloPagina = "Jida Framework - Formularios";
 
         $jctrl= new JidaControl();
@@ -84,7 +80,7 @@ class JadminController extends JController{
             $this->dv->formLoggin = $form->armarFormulario();
 
         }else{
-	Helpers\Debug::imprimir("ak");
+		
             $this->dv->testBD= "La conexión a base de datos no ha podido establecerse";
         }
         $tablasBD = $jctrl->obtenerTablasBD();
