@@ -291,11 +291,12 @@ class DataModel{
 	private function instanciarTieneMuchos(){
 		
 		foreach ($this->tieneMuchos as $key => $value) {
-			if(!is_array($value)){ $this->{$value}=[];
-			Debug::mostrarArray($key,$value,"-");
+			if(!is_array($value)){
+			    $this->{$value}=[];
+			    // Debug::imprimir($key,$value,"-");
 			}else{
-				Debug::mostrarArray($key,$value);
-				$this->{$key}=[];
+			    // Debug::imprimir($key,$value);
+                $this->{$key}=[];
 			}
 		}
 	}

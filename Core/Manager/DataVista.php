@@ -17,6 +17,9 @@ namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
 use Exception;
 class DataVista{
+        
+    use \Jida\Core\ObjetoManager;
+    
     /**
      * @var array $css Arreglo Global de archivos javascript a usar por la vista
      */
@@ -316,18 +319,20 @@ class DataVista{
      * @param instance @clase Instancia de la clase
      */
     protected function establecerAtributos($arr, $clase="") {
-        Helpers\Debug::imprimir('data Vista',true);
+        
         if(empty($clase)){
             $clase=$this->_clase;
         }
-
-        $metodos = get_class_vars($clase);
-        foreach($metodos as $k => $valor) {
-
-            if (isset($arr[$k])) {
-                $this->$k = $arr[$k];
-            }
-        }
+        
+        $this->establecerAtributos($arr,$this->_clase);
+        
+        // $metodos = get_class_vars($clase);
+        // foreach($metodos as $k => $valor) {
+// 
+            // if (isset($arr[$k])) {
+                // $this->$k = $arr[$k];
+            // }
+        // }
 
     }
 
