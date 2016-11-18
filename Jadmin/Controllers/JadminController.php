@@ -27,68 +27,12 @@ class JadminController extends JController{
         $this->url = "/jadmin/";
         $this->jctrl = new JidaControl();
     }
-    function index(){
-        $this->layout('jadminIntro');
-		$this->tituloPagina = "Jida Framework - Formularios";
+    function index(){        
 
-        $jctrl= new JidaControl();
-        if(Helpers\Sesion::checkLogg()){
-            $a=0;
-        }
-        if($jctrl->testBD()){
-
-            if(Helpers\Sesion::checkPerfilAcceso('jidaAdministrador')){
-
-                redireccionar("/jadmin/forms/");
-            }else{
-
-                $form =  new Formulario('Login',null,null,2);
-                $form->valueSubmit="Iniciar Sesi&oacute;n";
-                $form->nombreSubmit="btnJidaAdminLogin";
-                $form->action=$this->url;
-                $form->valueBotonForm="Iniciar Session";
-                if($this->post("btnJidaAdminLogin")){
-                    $validacion = $form->validarFormulario($_POST);
-                    if($validacion===TRUE){
-                        $User = new User();
-                        $clave = $this->post('clave_usuario');
-                        $checkUser = $User->validarLogin($this->post('nombre_usuario'),$clave);
-                        if($checkUser===FALSE){
-                           Formulario::msj('error',"Usuario o clave invalidos");
-                        }else{
-                            /*** Habilitar datos de usuario*/
-                            $perfiles = $User->getPerfiles();
-                            Helpers\Sesion::sessionLogin();
-                            Helpers\Sesion::set('usuario',$checkUser);
-                            Helpers\Sesion::set('Usuario',$User);
-                            Helpers\Sesion::set('usuario','perfiles',$perfiles);
-
-                            /*fin variables de usuario*/
-                            Vista::msj('formularios', 'info', 'Bienvenido '.$User->nombre_usuario,'/jadmin/forms/');
-                            $this->redireccionar('/jadmin/forms/');
-                        }
-
-
-                    }else{
-                        Helpers\Sesion::set('__msjForm', Helpers\Mensajes::mensajeError("Datos invalidos"));
-
-                    }
-                }
-            }//fin validación post
-
-
-            $this->dv->formLoggin = $form->armarFormulario();
-
-        }else{
-		
-            $this->dv->testBD= "La conexión a base de datos no ha podido establecerse";
-        }
-        $tablasBD = $jctrl->obtenerTablasBD();
-
-
-
+        //$jctrl= new JidaControl();
+        // if($this->validarSesion())
+			// $this->redireccionar($this->obtUrl('forms'));
     }
-
 
 
     function json(){

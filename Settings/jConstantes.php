@@ -11,7 +11,7 @@
  }
 
 if(!defined('MODELO_USUARIO')){
-	define('MODELO_USUARIO','Jida\Modelos\User');
+	define('MODELO_USUARIO','\Jida\Modelos\User');
 }
 
 //Debug::mostrarArray($GLOBALS['modulos'],false);

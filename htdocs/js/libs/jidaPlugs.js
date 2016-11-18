@@ -297,41 +297,6 @@ if(!jd) var jd = Object();
 
  };/*fin prototype*/
 
-+function($){
-    var contenedor= '[data-liparent]';
-    var menu = function(ele){
-        $(contenedor).on('click',this.checksubnivel);
-    };
-    menu.prototype.checksubnivel=function(){
-        var ele = $( this );
-        if(ele.children('ul').size()>0){
-            if(ele.children('ul').hasClass('show')){
-                $("ul.show").removeClass('show');
-                ele.removeClass('selected');
-            }else{
-
-                $("ul.show").removeClass('show');
-                $("li").removeClass('selected');
-                ele.addClass('selected');
-                ele.children('ul').addClass('show');
-            }
-        }
-    };
-
-
-    var vSelector = '[data-jida="vista"]';
-
-    $(vSelector).each(function(){
-        var $vista = $(this);
-        var id = $vista.attr('id');
-        var tipoControl = $vista.data('tipocontrol');
-        jdVista = new jd.vista(id,tipoControl);
-        jdVista.armarVista();
-    });
-
-
-
-}(jQuery);
 
 
  $( document ).ready(function(){
@@ -381,6 +346,15 @@ if(!jd) var jd = Object();
     });
     $('[data-jida="goback"]').on('click',function(){
          window.history.back();
+    });
+       var vSelector = '[data-jida="vista"]';
+
+    $(vSelector).each(function(){
+        var $vista = $(this);
+        var id = $vista.attr('id');
+        var tipoControl = $vista.data('tipocontrol');
+        jdVista = new jd.vista(id,tipoControl);
+        jdVista.armarVista();
     });
 });
 

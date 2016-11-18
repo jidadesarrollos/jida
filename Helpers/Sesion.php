@@ -146,19 +146,21 @@ class Sesion {
      * @param string $perfil Clave del perfil a consultar
      * @return boolean TRUE si es conseguida o FALSE si no se consigue
      */
-    static function checkPerfilAcceso($perfil){;
-
-		if(self::get('Usuario') instanceof \Jida\Modelos\User)
+    static function checkPerfilAcceso($perfil){
+		#Debug::imprimir(self::get('Usuario'),"akika",true);
+		#var_dump(self::get('Usuario')); 
+		
+		
+		if(is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')){
 			$perfiles = self::get('Usuario')->perfiles;
-		else
-			$perfiles = [];
-
-        if(is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil),$perfiles)){
-            return true;
+			#Debug::imprimir($perfiles,true);
+			if(is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil),$perfiles)){
+				return true;
+			}    
         }else{
-            return false;
+        	exit("no");
         }
-
+        return false;
     }
     /**
      * Verifica si el usuario en sesion es administrador

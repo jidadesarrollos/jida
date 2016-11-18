@@ -6,11 +6,10 @@ function setLinkMenuClass($linkToggle){
  	}
 }
 function addMenuTooltip(){
-	console.log("ak");
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
  			var $icon =$item.find('.fa');
- 			console.log($item);
+
  			if($icon.size()){
  				var $text = $icon.next();
  		
@@ -26,7 +25,6 @@ function removeMenuTooltip(){
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
  			var $icon =$item.find('.fa');
- 			console.log($item);
  			if($icon.size()){
  				var $text = $icon.next();
  				$icon.parent().removeAttr('data-toggle');
@@ -36,15 +34,14 @@ function removeMenuTooltip(){
 }
 function toggleMenu(open){
 	var $content = $('#content-wrapper');
-	console.log($content);
+	
 	if(open){
-		
 		if(!$content.hasClass('short-menu')){
 			$content.addClass('short-menu');
 			addMenuTooltip();
 		}
 	}else{
-		
+		$('.li-parent').removeClass('selected').find('ul').removeClass('show');
 		if($content.hasClass('short-menu')){
 			$content.removeClass('short-menu');
 			removeMenuTooltip();
@@ -65,62 +62,17 @@ function toggleMenu(open){
 }
 (function($){
 	console.log('Jida Administrador');
-	
-	// var lisId = $('#step1');
-	// var $pasos=[];
-	// var cadenas ={
-		// '/admin/clientes':'<h4>Texto Clientes</h4>',
-		// '/admin/recursos/proyecto':'<h4>Texto Proyectos</h4>',
-		// '/admin/recursos/director':'<h4>Texto Directores</h4>',
-		// '/admin/recursos/fotografo':'<h4>Texto Fotografos</h4>',
-		// '/admin/recursos/digital':'<h4>Texto Digitales</h4>',
-		// '/admin/recursos/novedad':'<h4>Texto Novedades</h4>',
-	// };
-	// $pasos.push({
-		// intro: "<h4>Bienvenido al Administrador de Alfonsa!</h4>"
-	// });
-// 	
-	// cont=0;
-	// lisId.find('li').each(function(key,item){
-// 		
-		// var $this = $(item);
-		// var link = $this.find('a');
-		// var texto = cadenas[link.attr('href')];
-		// $this.attr('id','li'+cont);
-// 		
-		// if(typeof texto != 'undefined'){
-			// $pasos.push({
-				// intro: texto,
-		        // element: item
-			// });	
-		// }
-		// ++cont;
-	// });
-// 	
-	// $pasos.push({
-		// intro: "<h4>Fin del Demo Alfonsa!</h4>"
-	// });
-	// var intro = introJs();
-  	// intro.setOptions({
-	    // steps: $pasos
-  	// });
-//  
-  	// intro.setOption('showProgress', true).start();
-	
+
 	var $linkToggle = $('.menu-toggle');
+	console.log($linkToggle);
 	if($('#content-wrapper').hasClass('short-menu'));
 		addMenuTooltip();
 	 
-	 $("body").tooltip({
-	 	selector:'[data-toggle="tooltip"]'
-	 });
-	 
-	 $('.li-parent').on('click',function(){
-	 	
+	 $('.li-parent').on('click',function(e){
+	 		
 	 	var $this = $( this );
-	 	
-	 	if($this.find('ul').size()>0)
-	 	{
+	 	if($this.find('ul').length>1){
+	 		
 	 		setLinkMenuClass($linkToggle);
 		 	toggleMenu(true);	
 	 	}
