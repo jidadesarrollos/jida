@@ -266,18 +266,6 @@ class JidaControl extends BD\DBContainer{
 
     } //fin funcion crearTablasBD
 
-    /**
-     * Verifica la conexión a base de datos
-     *
-     */
-    function testBD(){
-       if($this->bd->establecerConexion()){
-
-           return true;
-       } else{
-           return false;
-       }
-    }
 
     function obtenerTablasBD(){
         return $this->bd->obtenerTablasBD();

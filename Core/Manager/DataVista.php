@@ -238,7 +238,7 @@ class DataVista{
     function removerJs(){
 
     }
-    /**
+	/**
      * Permite definir una vista para usar fuera del ambito del controlador
      *
      * Este metodo está disponible para vistas estandard que puedan tener un mismo comportamiento en diversos
@@ -248,10 +248,16 @@ class DataVista{
      * @param string $path a utilizar opciones disponibles 'app' 'jida' cualquier valor distinto será tomado como app
      * @return void
      */
-    function setVistaAsTemplate($nombreVista,$path=""){
-        if($path=='jida')
+	function usarPlantilla($nombreVista,$path=""){
+		if($path=='jida')
             $this->_path="jida";
         $this->_template = $nombreVista;
+	}
+    /**
+	 * @deprecated
+	 */
+    function setVistaAsTemplate($nombreVista,$path=""){
+        $this->usarPlantilla($nombreVista,$path);
 
     }
 

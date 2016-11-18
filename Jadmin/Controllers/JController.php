@@ -11,6 +11,9 @@ namespace Jida\Jadmin\Controllers;
 use Jida\Componentes;
 use Jida\Core as Core;
 use Jida\Componentes\Traductor as Traductor;
+use Jida\Helpers as Helpers;
+use Jida\RenderHTML\Formulario as Formulario;
+
 class JController extends Core\Controller{
 
 	protected $urlHtdocs;
@@ -19,7 +22,8 @@ class JController extends Core\Controller{
 	var $manejoParams=FALSE;
     function __construct(){
     	parent::__construct();
-
+		$this->__url = JD('URL_COMPLETA');
+		
 		$this->dv->title="JIDAPanel";
 		if(empty($this->idioma)){
 			$this->idioma='es';
@@ -29,21 +33,65 @@ class JController extends Core\Controller{
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         $this->layout('jadmin');
 
-
+#		echo "ak <hr />";
 		$this->dv->addCss('jida.css');
 		$this->definirJSGlobals();
-
-		// $this->dv->addJsModulo([
-				// 'min/jd.plugs.js',
-		// ]);
-
 
 
 		$this->dv->addJS([
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
 		],false);
+		$this->validarSesion();
     }
 
+	protected function validarSesion(){
+	//	Helpers\Debug::imprimir();
+		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or 
+			Helpers\Sesion::checkPerfilAcceso('Administrador')){
+				#echo "ak aja";exit;
+				return true;
+				
+		}else{
+			echo "nop";
+			$this->formularioInicioSesion();
+		}
+		#exit;
+//		Helpers\Debug::imprimir('Final',true);
+	}
+	
+	protected function formularioInicioSesion(){
+		
+		$form = new Formulario('Login',null,null,2);
+		
+		if($this->post('btnJadminLogin')){
+			
+			$userClass = MODELO_USUARIO;
+			$user = new $userClass();
+			if($user->validarLogin($this->post('nombre_usuario'),$this->post('clave_usuario')))
+			{
+				$perfiles = $user->getPerfiles();
+				#Helpers\Debug::imprimir($user->perfiles,true);
+				Helpers\Sesion::set('Usuario',$user);
+				Helpers\Sesion::set('__msjInicioSesion',Helpers\Mensajes::crear('suceso','Bienvenido '.$user->nombre_usuario));
+				return true;	
+			}else{
+				Helpers\Debug::imprimir("no",true);
+				 Formulario::msj('error','Usuario o clave invalidos');
+			 }
+		}
+		
+		$this->layout('jadminIntro');
+		$this->dv->usarPlantilla('login');
+		$this->tituloPagina = NOMBRE_APP;
+		$form->setParametrosFormulario([
+			'action'		=> JD('URL'),
+			'nombreSubmit'	=> 'btnJadminLogin',
+			'valueBotonForm'=> 'Iniciar Sesi&oacute;n'
+			
+		]);
+		//echo $form->armarFormulario();
+		$this->data('formLoggin',$form->armarFormulario());
+	} 
 	/**
 	 * Redefine el arreglo Global de Archivos JS
 	 *

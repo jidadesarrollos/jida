@@ -1,0 +1,29 @@
+{
+  "name": "JidaFramework",
+  "version": "0.5.0",
+  "description": "Framework para desarrollo optimo de aplicaciones en entorno web",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://jirodriguez@bitbucket.org/jidadesarrollos/jidaframework.git"
+  },
+  "keywords": [
+    "Framework",
+    "php",
+    "javascript",
+    "bootstrap"
+  ],
+  "author": "Julio Rodriguez",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-notify": "^2.2.0",
+    "gulp-uglify": "^2.0.0"
+  }
+}

@@ -1,352 +1,221 @@
-<?PHP 
-
-
+<?php
 /**
- * Clase para manejar listas de accesos en el framework
- * 
- * Permite manejar distintos roles y grupos de usuario para administrar los accesos y permisos
- * a los mismos a partir de los controladores creados.
- * 
- * @package Framework
- * @subpackage Core
- * @category permisologia
- * @author Julio Rodriguez <jirc48@gmail.com>
- * @version 0.1 10/02/2014
- * 
- */
- 
+* Objeto Manager de Permisologia JidaFramework
+ *
+ *
+* @author Julio Rodriguez
+* @package Framework
+* @version 2.0 2/9/2016
+* @category
+*/
+
 namespace Jida\Core\Manager;
-use Jida\BD as BD;
-class ACL extends BD\DataModel{
-    
-    /**
-     * Arreglo que contiene los objetos y metodos a los que
-     * tiene acceso el usuario
-     * @var $accesos
-     */
-    var $accesos=array();
-    /**
-     * Perfiles asociados al usuario actual
-     * @var $perfiles
-     * @access private
-     */
-     
-    private $acl=[];
-    /**
-     * Perfiles asociados al usuario que inicia sesión
-     * @var $perfiles
-     * @access public
-     * 
-     */
-    private $perfiles =array();
-    /**
-     * @var array $componentes Conjunto de componentes a los que tiene el usuario
-     */
-    private $componentes =array();
+use Jida\Helpers as Helpers;
+use Jida\Helpers\Debug as Debug;
+use Jida\Core\Session as Session;
+use Jida\Helpers\Arrays as Arrays;
+class ACL{
+
+	var $accesos;
+	var $usoBD=TRUE;
+	private $acl;
+	private $perfiles;
+	private $componentes;
 	private $usuario;
+
+	private $componenteObject;
+	private $_componentes;
+	private $estructura;
+	private $accesoPerfiles;
+	private $_acl=[];
     /**
      * Funcion constructora
+     * @method __construct
      */
-    protected $tablaBD = '';
-    function __construct(){
-        parent::__construct();
-        $this->layout="";
-        $this->usuario = Session::get('Usuario');
-		
-        if(!isset($_SESSION['usuario']['perfiles'])){
-        	   
-            Session::set('usuario', 'perfiles',array('UsuarioPublico'));
-            Session::set('acl_default',true);
-        }
-       	/**
-		 * El objeto de instancia debe ser user siempre pues es el objeto usuario padre
-		 * del framework.
-		 */
-       	$objetoUser = 'User';
-        if($this->usuario instanceof $objetoUser){
-        	
-			$this->perfiles = Session::get('Usuario')->perfiles;
-        	if(count($this->perfiles)<1){
-        		$this->perfiles = array('UsuarioPublico');		
-        	}
-            
-        }else{
-        	if(array_key_exists('usuario', $_SESSION) and array_key_exists('perfiles', $_SESSION['usuario']))
-        		$this->perfiles = $_SESSION['usuario']['perfiles'];
-			else {
-				
-				$this->perfiles=[];
-			}
-		}
-        
-		if($this->usoBD!==FALSE){
-			
-		    $this->obtenerAccesoComponentes();
-            
-		    $this->obtenerAccesoObjetos();
-		}else{
-			
-		}
-    }
-    /**
-     * Define los componentes a los que tiene acceso el perfil
-     * 
-     * @method obtenerAccesoComponentes
-     */
-    private function obtenerAccesoComponentes(){
-        $componentes=[];
-		
-        // $query = "select id_componente,componente from s_componentes ";/**
-		$query = "select id_componente,componente from vj_acceso_componentes where clave_perfil in (";
-        $i=0;
-
-        foreach ($this->perfiles as $key => $value) {
-            ($i==0)?$i++:$query.=",";
-            $query.="'$value'";
-            
-        }
-        $query.=") group by componente, id_componente;";
-		
-        $result = $this->bd->ejecutarQuery($query);
-        $componentes = array();
-        $access = array();
-        while($data = $this->bd->obtenerArrayAsociativo($result)){
-            $this->acl[$data['componente']]=[];
-            $access[$data['componente']] =[]; 
-            $componentes[$data['id_componente']] =['componente'=>$data['componente']];           
-        }
-                
-        //EL componente PRINCIPAL siempre es visible;
-        
-        $this->componentes = $componentes;
-        
-           
-    }
-    
-    /**
-     * Define el acceso del usuario a los objetos de la aplicación
-     * 
-     * Valida si el perfil tiene acceso a los objetos principales de la aplicación
-     * y a los objetos de cada componente, si el perfil no tiene definido acceso a un componente
-     * por defecto se niega el acceso a todos los objetos del mismo
-     * @method obtenerAccesoObjetos
-     * @access private 
-     */
-    private function obtenerAccesoObjetos(){
-        if(ENTORNO_APP=='dev')	Session::destroy('acl');
-        if(!Session::get('acl') and count($this->componentes)>0){
-                    
-            $perfiles ="";
-             $i=0;
-            foreach ($this->perfiles as $key => $value) {
-                ($i==0)?$i++:$perfiles.=",";
-                $perfiles.="'$value'";
-                
-            }
-
-            $query = sprintf("select  id_objeto_perfil,id_perfil,clave_perfil,nombre_perfil,id_objeto,objeto,
-								id_componente from vj_acceso_objetos where id_componente in(%s)and clave_perfil in (%s)",
-                                implode(",",array_keys($this->componentes)),
-                                $perfiles);
-			
-            $objetos        =   $this->bd->obtenerDataCompleta($query);
-            $accesoObjetos  =   array();
-            $accesoMetodos  =   $this->obtenerAccesoMetodos();
-            
-//            Debug::mostrarArray($accesoMetodos,false);
-            
-            foreach($objetos as $key =>$dataObjeto){
-                    
-                $componente     = $this->componentes[$dataObjeto['id_componente']]['componente'];
-                $perfil         = $dataObjeto['clave_perfil'];    
-                $accesoObjetos[$perfil][$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
-                
-                $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['nombre'] =$dataObjeto['objeto'];
-                foreach ($accesoMetodos as $key => $dataMetodo) {
-                    if($dataMetodo['objeto']==$dataObjeto['objeto'] and $dataObjeto['clave_perfil']==$dataMetodo['clave_perfil']){
-                        $this->acl[$componente]['objetos'][$dataObjeto['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                    }
-                }
-                
-            }//fin foreach recorrido de objetos
-            
-            #Debug::mostrarArray($this->acl,false);
-            /**
-             * Se recorren solo los metodos para validar la existencia de metodos que no requieran validación de sesion y perfiles
-             */
-            
-           
-            foreach($accesoMetodos as $key=>$dataMetodo){
-        			
-                    $componente = $dataMetodo['componente'];
-                    $soloElMetodo=false;
-                     if($dataMetodo['loggin']==1){
-                        
-                        if(!array_key_exists($componente, $this->acl)){
-                            
-                            $this->acl[$componente]=['objetos'=>[]];
-                            $soloElMetodo=TRUE;
-                        }
-                        
-                        if(array_key_exists('objetos', $this->acl[$componente]) or $soloElMetodo===TRUE){
-                            
-                            $objetosComponente =& $this->acl[$componente]['objetos'];
-                            if(!array_key_exists($dataMetodo['objeto'],$objetosComponente)){
-                                //$objetosComponente[]= $dataMetodo['objeto'];
-                                $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];
-                            }elseif(array_key_exists('metodos', $objetosComponente[$dataMetodo['objeto']])){
-                                $objetosComponente[$dataMetodo['objeto']]['metodos'][$dataMetodo['metodo']]=$dataMetodo['metodo'];    
-                                
-                            }}
-                    }else{
-                    	$valores = Arrays::convertirAObjeto($dataMetodo);
-						/**
-						 * Se agregan los metodos que no requieren loggin, solo si los perfiles actuales no tienen acceso al componente o,
-						 * si tienen acceso solo a algunos metodos del componente.
-						 */
-						if(!array_key_exists($valores->componente, $this->acl) or (is_array($this->acl[$valores->componente]) and array_key_exists('objetos', $this->acl[$valores->componente]))){
-							$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
-							$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;	
-						}
-                    	
-                    }
-                }//fin foreach
-            /* El arreglo es guardado en sesión para que la BD solo sea consultada 1na vez*/
-            
-            
-            
-#            $this->accesos  =  $accesoObjetos;
-            
-        }else{
-        	$this->obtenerMetodosSinLogin();
-        }
-    	if(!array_key_exists('principal', $this->acl)) $this->acl['principal']=[];
-            
-        
-        
-        Session::set('acl',$this->acl);
-        
-    }
-    
-	/**
-	 * Devuelve los metodos a los que puede acceder un usuario sin logguearse.
-	 * 
-	 * @method obtenerMetodosSinLogin
-	 */
-	function obtenerMetodosSinLogin(){
-        $query ="select id_metodo,id_objeto,objeto,metodo,loggin,id_perfil,clave_perfil,perfil,id_componente,componente
-         from vj_acceso_metodos where loggin=0";
-        $accesoMetodos = $this->bd->obtenerDataCompleta($query);
-		
-		foreach ($accesoMetodos as $key => $valores) {
-			$valores = Arrays::convertirAObjeto($valores);
-			$this->acl[$valores->componente]['objetos'][$valores->objeto]['nombre']=$valores->objeto;
-			$this->acl[$valores->componente]['objetos'][$valores->objeto]['metodos'][$valores->metodo]=$valores->metodo;
-		}
-		
-	}
-    
-    /**
-     * Verifica los accesos del perfil a los metodos de cada objeto
-     * 
-     * @method obtenerAccesoMetodos
-     * 
-     */
-    
-    private function obtenerAccesoMetodos(){
-        $query ="select * from vj_acceso_metodos";
-        
-        $accesoMetodos = $this->bd->obtenerDataCompleta($query);
-        return $accesoMetodos;
-    }
-    /**
-     * Verifica si el perfil tiene acceso a la url requerida
-     * 
-     * Valida el acceso del perfil al componente, objeto y metodo solicitado,
-     * si la funcion no recibe un componente definira el componente como el componente "principal"
-     * @method validarAcceso
-     * @access public
-     * @param string $controlador Nombre del controlador requerido
-     * @param string $metodo Nombre del metodo requerido
-     * @param string $componente [opcional] Componente al que pertenece el objeto, x defecto se hace referencia al principal
-     * @return boolean TRUE or FALSE
-     */
-    function validarAcceso($controlador,$metodo,$componente=""){
+    function __construct($id=""){
     	
-    	if($this->usoBD===FALSE)
-    		return true;
+    	$this->componenteObject = $componenteObject = new \Jida\Modelos\Componente();
+		$this->perfilObject 	= new \Jida\Modelos\Perfil();
+		$this->usuario 			= Helpers\Sesion::get('Usuario');
+		$modeloUser = MODELO_USUARIO;
 		
-        $componente = strtolower($componente);
 		
-        $perfilesUser = $this->perfiles;
-        if(empty($componente)){
-            $componente = "principal";
-        }
-        
-        $listaAcl  = Session::get('acl');
-		
-		if(defined('DEBUG_ACL') and DEBUG_ACL==TRUE){
-		  Debug::mostrarArray($listaAcl,0);    
+		if(!is_a($this->usuario, MODELO_USUARIO)){
+			
+			$this->usuario = new $modeloUser();
+			Helpers\Sesion::set('Usuario',$this->usuario);
 		}
-        
-		//Se da acceso si no existe una lista acl creada
-        if(!is_array($listaAcl)){
-        	return true;
-        } 
-        
-        
-        $accesosUser = array();
-        $acceso=FALSE;
-        $i=0;
-        
-        while($acceso == FALSE and $i<count($perfilesUser)){
-            
-            $perfil = $perfilesUser[$i];
-                //Se valida acceso al componente
-                        
-                if(array_key_exists($componente, $listaAcl)){
-                	
-                    $arrComponentes = $listaAcl[$componente];
-                    
-                    if(!array_key_exists('objetos', $arrComponentes)){
-                        //Si el arreglo no tiene especificado ningun objeto, es porque tiene acceso a todos los objetos
-                        
-                      //  if($componente=='Social') //Debug::string("si tengo acceso");
-                        $acceso=TRUE;
-                    }else{
-                        $arrObjetos =$arrComponentes['objetos'];
-                        
-                                
-                        if(array_key_exists($controlador,$arrObjetos)){
-                              
-                            $arObjeto = $arrObjetos[$controlador];
-                            /**
-                             * Validación de los metodos, si no existe un arreglo de metodos, el usuario tiene acceso
-                             * a todos los metodos del objeto
-                             */
-                            if(!array_key_exists('metodos',$arObjeto)){
-                            	
-                                $acceso=TRUE;
-                            }else
-                            if(isset($arObjeto['metodos'][$metodo])){
-                           
-                                $acceso=TRUE;
-                            }else{
-                                $acceso=FALSE;
-                            }
-                        }else{
-                            $acceso=FALSE;
-                        }
-                    }
-                
-                }else{
-                   $acceso=FALSE;
-                }
-            $i++;    
-        }
-        #if($acceso===TRUE) Debug::string("TIENE ACCESO",TRUE);
-        #else Debug::string("NO TIENES ACCESO",TRUE);
-        return $acceso;
-    }//fin funcion
-}//fin clase
+		if(empty($this->usuario->perfiles)) $this->usuario->agregarPerfilSesion('UsuarioPublico');
+		if(!Helpers\Sesion::get('ACL')){
+			$this->leerEstructura();
 
+			$this->leerPerfiles();
+		}else{
+			$this->_acl = Helpers\Sesion::get('ACL');
+		}
+
+
+
+
+    }
+	/**
+	 * Verifica los perfiles del usuario actual y establece la estructua del ACL
+	 * @method leerPerfiles
+	 * @private
+	 */
+	private function leerPerfiles(){
+		$this->accesoPerfiles = $this->perfilObject->obtAclPerfiles($this->usuario->perfiles);
+		#Debug::mostrarArray($this->estructura,0);
+
+		$componentesPerfil 	= array_filter(array_unique(Arrays::obtenerKey('id_componente',$this->accesoPerfiles)));
+			foreach ($this->estructura as $key => $componente) {
+
+					$this->_acl[$componente['componente']] = array('objetos'=>[]);
+					$this->validarAccesoObjetos($componente);
+
+			}
+		if(!array_key_exists('principal', $this->_acl)) $this->_acl['principal']=['objetos'=>[]];
+
+
+	}
+	/**
+	 * Verifica la permisologia sobre objetos y metodos de los perfiles actuales de un componente dado
+	 *
+	 * @method validarAccesoObjetos
+	 * @private
+	 * @param $estructuraComponente Estructura del componente actual
+	 */
+	private function validarAccesoObjetos($estructuraComponente){
+		$objetosPerfil	= array_filter(array_unique(Arrays::obtenerKey('id_objeto',$this->accesoPerfiles)));
+		$totalObjetos 	= count($objetosPerfil);
+
+		$componente = $estructuraComponente['componente'];
+		if($totalObjetos){
+
+			foreach ($estructuraComponente['objetos'] as $key => $objeto) :
+				if(in_array($objeto['id'], $objetosPerfil))
+				{
+
+					$this->_acl[$componente]['objetos'][$objeto['objeto']] = [
+						'nombre' => $objeto['objeto'],
+						'metodos'=>[]
+					];
+
+					$metodosObjeto =& $this->estructura[$componente]['objetos'][$objeto['objeto']]['metodos'];
+					;
+					if(count($metodosObjeto))
+					{
+						$metogosAcl =& $this->_acl[$componente]['objetos'][$objeto['objeto']]['metodos'];
+
+						foreach ($metodosObjeto as $key => $dataMetodo) {
+
+							if(in_array($dataMetodo['id'], $objetosPerfil) or $dataMetodo['login']==0)
+								$metogosAcl[$dataMetodo['metodo']] = $dataMetodo['metodo'];
+						}
+					}//fin if count
+
+				}
+			endforeach;
+
+		}
+
+	}
+
+
+	/**
+	 * Lee la estructura de componentes,objetos y metodos registrada en base de datos
+	 * @method leerEstructura
+	 * @private
+	 * @since 1.4
+	 */
+	private function leerEstructura(){
+
+		$data = $this->componenteObject->obtComponentesData();
+		$estructura=[];
+
+		foreach ($data as $key => $info) {
+
+			$componente =$info['componente'];
+			if(!array_key_exists($componente, $estructura)){
+				$estructura[$componente] =[
+					'componente'	=>$info['componente'],
+					'id'			=>$info['id_componente'],
+					'descripcion'	=>$info['descripcion_componente'],
+					'objetos'=>[]
+				];
+			}
+
+			if(!array_key_exists($info['objeto'], $estructura[$componente]['objetos']))
+			{
+				$objeto = [
+					'objeto'=>$info['objeto'],'id'=>$info['id_objeto'],'metodos'=>[],
+					'descripcion'	=>$info['descripcion_objeto'],
+				];
+				$estructura[$componente]['objetos'][$info['objeto']] = $objeto;
+			}
+			$metodo = [
+				'metodo'		=>$info['metodo'],
+				'id'			=>$info['id_metodo'],
+				'descripcion'	=>$info['descripcion_metodo'],
+				'login'			=>$info['loggin']
+				];
+			$estructura[$componente]['objetos'][$info['objeto']]['metodos'][$info['metodo']]=$metodo;
+
+
+		}
+		$this->estructura = $estructura;
+
+	}
+	/**
+	 * Verifica el acceso de la session actual al controlador, metodo o componente dado
+	 *
+	 * @method validarAcceso
+	 * @private
+	 * @param string $controlador Controlador a validar
+	 * @param string $metodo Nombre del metodo a validar
+	 * @param string $componente [opcional] Nombre del componente a validar
+	 * @return boolean
+	 */
+	function validarAcceso($controlador,$metodo,$componente=""){
+		if($this->usoBD===FALSE) return true;
+		$componente = strtolower($componente);
+		$perfiles 	= $this->usuario->perfiles;
+		if(empty($componente)) $componente='principal';
+
+		if(defined('DEBUG_ACL') and DEBUG_ACL==TRUE){
+		  Debug::mostrarArray($this->_acl,0);
+		}
+		if(!is_array($this->_acl) or count($this->_acl)<1) return true;
+
+		$acceso = FALSE;
+		$i = 0;
+		while ($acceso===FALSE and $i<count($perfiles)) {
+			$perfilActual = $perfiles[$i];
+			if(array_key_exists($componente, $this->_acl)){
+				$dataComponente = $this->_acl[$componente];
+				if(count($dataComponente['objetos'])>0)
+				{
+					$objetos = $dataComponente['objetos'];
+					if(array_key_exists($controlador, $objetos)){
+						$metodos = $objetos[$controlador]['metodos'];
+						if(count($metodos)>0){
+							if(array_key_exists($metodo, $metodos))
+								$acceso = TRUE;
+							else{
+								Debug::String("no tiene acceso al metodo");
+							}
+						}else
+							// Tiene acceso a todo el objeto
+							$acceso = TRUE;
+					}else{ Debug::String("no al objeto");
+						//No tiene acceso al objeto
+						$acceso = FALSE;}
+				}else{
+				// No hay objetos registrados, por tanto tiene acceso a todo el componente
+				$acceso = TRUE;}
+			}else{ Debug::string("no componente ".$componente);}
+			++$i;
+		}//fin while
+		return $acceso;
+	}// fin metodo validarAcceso
+}//fin clase;

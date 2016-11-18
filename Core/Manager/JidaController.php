@@ -9,17 +9,18 @@
   *
   */
 
-
+//_-----------------------------------------
 namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
-use Jida\Modelos\ACL as ACL;
+use Jida\Core\Manager\ACL as ACL;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
 use Exception as Excepcion;
 use Jida\Core\Manager\JExcepcion as JExcepcion;
 use App as App;
 use Jida as Jida;
+//_-----------------------------------------
 global $JD;
  class JidaController {
     private $_ce="001";
@@ -173,7 +174,7 @@ global $JD;
             Helpers\Sesion::set('URL_ACTUAL',$_GET['url']);
 
             JD('URL_COMPLETA',"/".$_GET['url']);
-
+			JD('URL',"/".$_GET['url']);
             /*Manejo de url*/
             if(isset($_GET['url'])){
 
@@ -492,11 +493,15 @@ global $JD;
      */
     function validacion(){
         try{
+        	
             if(BD_REQUERIDA===TRUE){
+            	
                 $acl = new ACL();
                 $acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
-            }else $acceso=TRUE;
+            }else{
+            	echo "aka";
+            } $acceso=TRUE;
 
            if($acceso===TRUE){
                 global $dataVista;
