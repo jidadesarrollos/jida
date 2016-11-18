@@ -21,6 +21,7 @@ class JController extends Core\Controller{
 
 	var $manejoParams=FALSE;
     function __construct(){
+    	
     	parent::__construct();
 		$this->__url = JD('URL_COMPLETA');
 		
@@ -33,7 +34,6 @@ class JController extends Core\Controller{
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         $this->layout('jadmin');
 
-#		echo "ak <hr />";
 		$this->dv->addCss('jida.css');
 		$this->definirJSGlobals();
 
@@ -52,7 +52,7 @@ class JController extends Core\Controller{
 				return true;
 				
 		}else{
-			echo "nop";
+			
 			$this->formularioInicioSesion();
 		}
 		#exit;
@@ -75,7 +75,7 @@ class JController extends Core\Controller{
 				Helpers\Sesion::set('__msjInicioSesion',Helpers\Mensajes::crear('suceso','Bienvenido '.$user->nombre_usuario));
 				return true;	
 			}else{
-				Helpers\Debug::imprimir("no",true);
+	
 				 Formulario::msj('error','Usuario o clave invalidos');
 			 }
 		}

@@ -157,8 +157,6 @@ class Sesion {
 			if(is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil),$perfiles)){
 				return true;
 			}    
-        }else{
-        	exit("no");
         }
         return false;
     }
