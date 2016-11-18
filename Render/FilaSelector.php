@@ -25,6 +25,7 @@ class FilaSelector extends Selector{
 
 
 	private function crearColumnas(){
+		\Jida\Helpers\Debug::imprimir($this->dataColumnas);
 		foreach ($this->dataColumnas as $key => $col) {
 
 			$this->columnas[$key] = new ColumnaSelector($this->selectorColumnas);
