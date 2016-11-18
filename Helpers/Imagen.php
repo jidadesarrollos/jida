@@ -331,7 +331,7 @@ class Imagen extends Archivo{
         
         $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext);
 
-        return $nombre.'.'.$ext[1];
+        return $nombre.'.'.$ext;
     }
 
 }
