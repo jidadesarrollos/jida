@@ -405,11 +405,6 @@ class Selector{
         }
     }
 
-    function html($html){
-        $this->contenido=$html;
-        return $this;
-    }
-
     function data($data,$valor=""){
         if(!empty($valor)){
             $this->data[$data]=$valor;
