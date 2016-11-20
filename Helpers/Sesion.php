@@ -147,9 +147,6 @@ class Sesion {
      * @return boolean TRUE si es conseguida o FALSE si no se consigue
      */
     static function checkPerfilAcceso($perfil){
-		#Debug::imprimir(self::get('Usuario'),"akika",true);
-		#var_dump(self::get('Usuario')); 
-		
 		
 		if(is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')){
 			$perfiles = self::get('Usuario')->perfiles;

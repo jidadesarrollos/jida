@@ -13,8 +13,10 @@
  */
 
 namespace Jida\BD;
+use \Exception as Excepcion;
 class ConexionBD {
-    
+	use \Jida\Core\ObjetoManager;
+	private $_ce="003";
     protected $bd;
     /**
      * 
@@ -61,40 +63,21 @@ class ConexionBD {
     protected $puerto;
     
     /**
-     * Constructor
-     * 
-     * Asigna los valores por defecto a los atributos de la clase y Establece 
-     * 
+     
      * @throws Exception Error de Conexion a la Base de Datos
      */
     public function __construct($conexion="default") {
-       		 
-            if(array_key_exists('conexiones',$GLOBALS) and array_key_exists($conexion,$GLOBALS['conexiones'])){
-                $arr = $GLOBALS['conexiones'][$conexion];
-                $metodos = get_class_vars(__CLASS__);
-                
-                foreach($metodos as $k => $valor) {
-                    
-                    if (isset($arr[$k])) {
-                        $this->$k = $arr[$k];
-                    }
-                }
-            }else       
-            if (defined('usuarioBD') and defined('servidorBD') and defined('manejadorBD') and defined('claveBD') and defined('puerto') and defined('BDutilizada')) {
-                $this->usuario = usuarioBD;
-                $this->servidor= servidorBD;
-                
-                $this->clave = claveBD;
-                $this->puerto = puerto;
-                $this->bd = BDutilizada;
-            
-            }else {
-                throw new Exception ( "Error en constantes de configuración a base de datos", 101 );
-            }
-        
+		if(class_exists('\App\Config\BD')){
+			$configuracion = new \App\Config\BD();
+			 
+			if(property_exists($configuracion, $conexion))
+			{
+				$this->establecerAtributos($configuracion->{$conexion},$this);
+			}
+			
+		}else{
+			throw new Excepcion("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
+			
+		}       
     }
-    
-    
-    
-    
 }
