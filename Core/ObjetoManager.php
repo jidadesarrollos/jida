@@ -35,8 +35,14 @@ trait ObjetoManager{
         
                 
         foreach($atributos as $k => $valor){
-            if (isset($arr[$k]))
-                $this->$k = $arr[$k];
+        	if(is_object($arr)){
+        		if(property_exists($arr, $k))
+					$this->$k = $arr->$k;
+        	}else{
+        		if (isset($arr[$k]))
+	                $this->$k = $arr[$k];
+        	}
+	            
         }
         // Debug::imprimir('$this',$this,true);
     }

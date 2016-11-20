@@ -10,8 +10,9 @@
 namespace Jida\Render;
 
 use \Exception as Excepcion;
-use \Cadenas as Cadenas;
-class Form extends  Selector{
+use Jida\Helpers as Helpers;
+use Jida\BD\BD as BD;
+class Formulario extends  Selector{
 
     private $layout;
     var $name;
@@ -173,10 +174,10 @@ class Form extends  Selector{
 	 * @param string $form Nombre del Formulario
 	 */
 	private function _cargarFormulario($form){
-		if(\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
+		if(Helpers\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
 
 			$this->_path = DIR_APP . 'formularios/' . $form .'.json';
-		}elseif(\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form .'.json')){
+		}elseif(Helpers\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form .'.json')){
 			$this->_path = DIR_FRAMEWORK . 'formularios/' . $form .'.json';
 		}else{
 			throw new Excepcion("No se consigue el archivo de configuracion del formulario ".$form, $this->_ce.'2');
@@ -360,8 +361,8 @@ class Form extends  Selector{
 			if(!property_exists($campo,'type'))
 				$campo->type="text";
 
-			$this->_campos[$campo->id] = new SelectorInput($campo->name,$campo->type);
-			if($this->labels){
+			$this->_campos[$campo->id] = new SelectorInput($campo);
+			if($this->labels and $campo->type!='hidden'){
 				$label = new Selector('label',['for'=>$campo->id]);
 				$label->innerHTML((property_exists($campo, 'label')?$campo->label:$campo->name));
 
@@ -430,11 +431,10 @@ class Form extends  Selector{
 			$content .= $campo->render();
 			$configuracion = $campo->configuracion;
 			$html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
-
-			if($campo->label){
-
+			
+			if($campo->label)
 				$content = $campo->label->render().$content;
-			}
+			
 
 			$html = str_replace("{{:contenido}}", $content,$html);
 			$filaPivote->addFinal($html);
@@ -452,10 +452,7 @@ class Form extends  Selector{
 		if($this->tagForm){
 
 			if($this->botonEnvio)
-			{
 				$this->addFinal($this->imprimirBotones());
-
-			}
 			$contenedor->addFinal(parent::render());
 		}
 
@@ -508,7 +505,7 @@ class Form extends  Selector{
 	}
 
 	function render(){
-		$this->armarFormulario();
+		return $this->armarFormulario();
 
 	}
 	/**

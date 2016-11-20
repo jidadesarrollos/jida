@@ -8,18 +8,16 @@ use Jida\Modelos as Modelos;
 use Exception;
 
 class FormulariosController extends  JController{
-
+	use \Jida\Core\GeneradorCodigo;
 	var $preEjecucion = 'validarModelo';
 	function __construct(){
 
 		$this->modelo = new Modelos\Formulario();
-		$this->layout="jadmin.tpl.php";
-		//se llama al constructor luego de instanciar el modelo
-		//para que no sea llamado por la clase padre
 		parent::__construct();
 
 	}
 
+	
 
 	function validarModelo($app="app",$form=""){
 

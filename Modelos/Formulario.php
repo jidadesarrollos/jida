@@ -15,11 +15,16 @@
 
 namespace Jida\Modelos;
 class Formulario extends JFormulario{
-
+	var $id_form;
+	var $nombre_f;
+	var $query_f;
+	var $clave_primaria_f;
+	var $nombre_identificador;
+	var $estructura;
 	protected $tablaBD='s_formularios';
 	protected $objetoCampos = 'Jida\CampoFormulario';
 	protected $tieneMuchos= [
-		'Jida\CampoFormulario'
+		'\Jida\Modelos\CampoFormulario'
 	];
 
 

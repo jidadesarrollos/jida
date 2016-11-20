@@ -7,8 +7,10 @@
 * @category
 */
 namespace Jida\Render;
+use Jida\BD\BD as BD;
+use Jida\Helpers as Helpers;
 class SelectorInput extends Selector{
-
+	use \Jida\Core\ObjetoManager;
 	var $name;
 	var $type;
 	var $id;
@@ -22,12 +24,19 @@ class SelectorInput extends Selector{
 
 	 */
 	private $_tipo="text";
-	private $_attr=[];
+	/**
+	 * Opciones del selector
+	 * @internal Posee las opciones a agregar a un control
+	 * de selección multiple
+	 * @var array $_opciones 
+	 */
+	private $_opciones;
 	/**
 	 * Atributos pasados en el constructor
 	 * @var mixed $_attr;
 	 * @access private
 	 */
+	 private $_attr=[];
 	/**
 	 * Items u opciones para agregar en campos pasados por el usuario
 	 * @var mixed $_items
@@ -56,7 +65,10 @@ class SelectorInput extends Selector{
 
 	}
 
-	private function __constructorObject(){
+	private function __constructorObject($params){
+		$this->establecerAtributos($params,$this);
+		$this->_name = $params->name;
+		$this->_tipo = $params->type;
 
 	}
 	private function __constructorParametros($name,$tipo="text",$attr=[],$items=""){
@@ -86,12 +98,40 @@ class SelectorInput extends Selector{
 	 * Procesa los item a agregar en controles de seleccion
 	 *
 	 */
-	private function procesarOpciones(){
-
+	private function obtOpciones(){
+		$revisiones = explode(";",$this->opciones);
+		
+		foreach ($revisiones as $key => $opcion) {
+			
+			if(stripos($opcion, 'select')!==FALSE){
+				
+				$data = BD::query($opcion);
+				return $data;
+				
+			}elseif(stripos($opcion,'externo')!==FALSE){
+				
+			}else{
+				$opciones = explode("=",$opcion);
+			}
+		}
+		
 	}
-	function _crearSelect(){
+	private function _crearSelect(){
 		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
+		
 		parent::__construct($this->_tipo,$this->_attr);
+		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
+		$options = $this->obtOpciones();
+		$optionsHTML ="";	
+		foreach ($options as $key => $data) {
+			$key = array_keys($data);
+			
+			$optionsHTML .= Selector::crear('option',['value'=>$data[$key[0]]],$data[$key[1]]);
+		}
+		
+		$this->html($optionsHTML);
+		
+		
 	}
 	function _crearInput(){
 
