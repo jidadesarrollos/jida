@@ -207,7 +207,7 @@ global $JD;
             //se procesa la URL
 
             $this->procesarURL();
-            // Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
+            #Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
             $this->generarVariables();
@@ -330,15 +330,21 @@ global $JD;
         }else{
             
             $controller = $this->validarNombre($posController,1).'Controller';
+			
             $controllerAbsoluto = $namespace.$controller;
-            // $namespacePlugin = str_replace('Controllers\\', 'Plugins\\Controllers\\', $namespace);
-            // $controllerAbsolutoPlugin = $namespacePlugin.$controller;
+			$controller = $namespace.$this->validarNombre($posController,1);
+			//echo $controller . "<hr />";
         
         }
 
-        if($band and class_exists($controllerAbsoluto)){
-
-            $this->_controlador = $controllerAbsoluto;
+        if($band and (class_exists($controllerAbsoluto) or class_exists($controller))){
+			if(class_exists($controllerAbsoluto))
+			{
+				$this->_controlador = $controllerAbsoluto;	
+			}else{
+				$this->_controlador = $controller;
+			}
+            
             $this->_nombreControlador = $posController;
             $this->_namespace = $namespace;
             return true;
@@ -400,31 +406,44 @@ global $JD;
     private function _procesarJadmin(){
 
         $checkModulo = FALSE;
-		
-        if($this->esModulo()){
-            //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
-			$this->_ruta="app";
-			$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
-			$this->_controladorDefault = $this->_modulo;
-			
-        }else{
-            //validacion modulo interno jadmin
-            $this->_ruta='framework';
-            if($this->esModulo(true)){
+		$path = '\\App\\Jadmin\\Controllers\\';
+		$posController = array_shift($this->_arrayUrl);
+		if(!$this->esControlador($path, $posController)){
+	
+			array_unshift($this->_arrayUrl,$posController);
+			if($this->esModulo()){
+				
+	            //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
+				$this->_ruta="app";
+				$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
+				$this->_controladorDefault = $this->_modulo;
+				
+	        }else{
+	        	
+        		$posController = array_shift($this->_arrayUrl);		
+        
+        		//validacion modulo interno jadmin
+	            $this->_ruta='framework';
+	            if($this->esModulo(true)){
+	
+	                //Accede aqui si se busca un modulo del Framework
+	                $namespace = $this->_namespace;
+	
+	            }else{
+	                //controlador por defecto jadmin;
+	                $this->_controladorDefault = 'Jadmin';
+	                $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
+	            }
+        	}
+			$posController = array_shift($this->_arrayUrl);
 
-                //Accede aqui si se busca un modulo del Framework
-                $namespace = $this->_namespace;
-
-            }else{
-                //controlador por defecto jadmin;
-                $this->_controladorDefault = 'Jadmin';
-                $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
-            }
+			if(!$this->esControlador($this->_namespace, $posController))
+            	array_unshift($this->_arrayUrl,$posController);
 		}
-	    $posController = array_shift($this->_arrayUrl);
+        
+	    
 
-        if(!$this->esControlador($this->_namespace, $posController))
-            array_unshift($this->_arrayUrl,$posController);
+        
         $this->procesarMetodo();
 
         
