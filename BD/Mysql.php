@@ -94,6 +94,15 @@ class Mysql extends ConexionBD{
         }
 
     }// final funcion establecerConexión
+    /**
+	 * Realiza una conexion a base de datos
+	 * @internal Es un atajo a la funcion ejecutarQuery
+	 * @method consulta
+	 * @see ejecutarQuery
+	 */
+    function consulta($query,$tipoQuery=1){
+    	return $this->ejecutarQuery($query,$tipoQuery);
+    }
      /**
       * Ejecuta una consulta a base de datos
       *

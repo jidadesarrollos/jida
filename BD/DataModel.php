@@ -117,11 +117,14 @@ class DataModel{
      */
     protected $bd;
     /**
-     * Define la conexion a base de datos a utilizar
+     * Define la configuración a usar para la conexión a base de datos
+	 * @internal Este valor debe corresponder a una propiedad declarada
+	 * en el objeto \App\Config\BD
+	 * 
      * @var string $configuracionBD
      * @access protected
      */
-    protected $configuracionBD;
+    protected $configuracionBD="default";
     /**
      * Arreglo con las propiedades de base de datos del objeto
      * @var array $propiedades
@@ -616,7 +619,7 @@ class DataModel{
                 break;
             case 'MySQL' :
                 #include_once 'Mysql.class.php';
-                $this->bd = new Mysql();
+                $this->bd = new Mysql($this->configuracionBD);
                 break;
             default:
                 throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);

@@ -47,6 +47,11 @@ class ConexionBD {
      * @var unknown
      */
     protected $manejadorBD;
+	/**
+	 * Nombre del manejador de base de datos
+	 * @param $manejador
+	 */
+	protected $manejador;
     
     /**
      * 
@@ -62,22 +67,47 @@ class ConexionBD {
      */
     protected $puerto;
     
+	private $_conexion;
     /**
      
      * @throws Exception Error de Conexion a la Base de Datos
      */
     public function __construct($conexion="default") {
 		if(class_exists('\App\Config\BD')){
-			$configuracion = new \App\Config\BD();
-			 
-			if(property_exists($configuracion, $conexion))
-			{
-				$this->establecerAtributos($configuracion->{$conexion},$this);
-			}
+			$this->_conexion = $conexion;
+			
+			$this->_establecerConfiguracion();
 			
 		}else{
 			throw new Excepcion("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
 			
 		}       
     }
+	/**
+	 * Define una nueva configuracion para la base de datos
+	 * 
+	 * @internal  
+	 * @method cambiarBD
+	 * @param string $conexion Nombre de la conexion a crear debe ser una propiedad
+	 * del objeto \App\Config\BD
+	 * @see \App\Config\BD
+	 * 
+	 * 
+	 */
+	function cambiarBD($conexion){
+		$this->_conexion = $conexion;
+		$this->_establecerConfiguracion();
+	}
+	/**
+	 * Establece los atributos de la conexion a partir de la propiedad del objeto BD
+	 * @method _establecerConfiguracion
+	 */
+	private function _establecerConfiguracion(){
+		$configuracion = new \App\Config\BD();
+		 $this->manejador = $configuracion->manejador;
+		if(property_exists($configuracion, $this->_conexion))
+		{
+			$this->establecerAtributos($configuracion->{$this->_conexion},$this);
+		}
+	}
 }
