@@ -21,6 +21,12 @@ class Formulario extends  Selector{
     var $method 	="POST";
 	var $enctype 	= "application/x-www-form-urlencoded";
 	var $target 	="";
+    /**
+     * Determina si los valores del formulario deben ser validados o cambiados a entidades HTML
+     * @var $setHtmlEntities
+	 * @revision
+     */
+    public $setHtmlEntities=TRUE;
 	/**
 	 * Define si la etiqueta form debe ser integrada
 	 * @var boolean $tagForm
@@ -150,18 +156,68 @@ class Formulario extends  Selector{
 	 * @var array $_botones
 	 */
 	private $_botones;
-
-	function __construct($form=""){
+	/**
+	 * Define el identificador para buscar data en modo update
+	 * 
+	 * @internal Si su valor es vacio el formulario se armara en modo
+	 * insert, caso contrario modo update
+	 * @param mixed $_idUpdate;
+	 * 
+	 */
+	private $_idUpdate;
+	/**
+	 * Data obtenida para mostrar en modo update
+	 * @var array $_dataUpdate;
+	 */
+	private $_dataUpdate;
+	/**
+	 * Registra los campos leidos desde el json como arreglos
+	 * @internal Esto esta usado por compatibilidad con el objeto ValidadorJida Luego será suprimido.
+	 * @deprecated
+	 */
+	private $_camposArray;
+	/**
+	 * Registra los errores obtenidos en el formulario luego de la validación
+	 * @var array $_errores;
+	 */
+	private $_errores=[];
+	function __construct($form="",$idUpdate=""){
 		if($form){
 			$this->_cargarFormulario($form);
 		}
+		$this->_idUpdate=$idUpdate;
 		debug_backtrace()[1]['function'];
-
-		$this->action = JD('URL_COMPLETA');
-
+		if(!empty($idUpdate)){
+			$this->_obtenerDataUpdate();
+			$this->addDataUpdate();
+		}
+		$this->action = JD('URL');
+		$this->attr('action',$this->action);
 
 		parent::__construct('form');
 
+	}
+	/**
+	 * Agrega los valores a modificar con el formulario
+	 * @method addDataUpdate
+	 */
+	function addDataUpdate($data=""){
+		if(empty($data)) $data = $this->_dataUpdate;
+		foreach ($data as $campo => $valor) {
+			if(array_key_exists($campo, $this->_campos))
+			{
+				#Helpers\Debug::imprimir($this->_campos[$campo]);
+				$this->_campos[$campo]->attr('value',$valor);
+			}
+		}
+		#exit;
+	}
+	private function _obtenerDataUpdate(){
+		$query = $this->_configuracion->query. ' where '.$this->_configuracion->clave_primaria."='".$this->_idUpdate."'";
+		$data = BD::query($query);
+		if(count($data)>0){
+			$this->_dataUpdate=$data[0];
+		}
 	}
 	/**
 	 * Carga el Formulario a mostrar
@@ -175,7 +231,7 @@ class Formulario extends  Selector{
 	 */
 	private function _cargarFormulario($form){
 		if(Helpers\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
-
+			
 			$this->_path = DIR_APP . 'formularios/' . $form .'.json';
 		}elseif(Helpers\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form .'.json')){
 			$this->_path = DIR_FRAMEWORK . 'formularios/' . $form .'.json';
@@ -194,8 +250,10 @@ class Formulario extends  Selector{
 
 	}
 	private function validarJson(){
-		$this->_configuracion = json_decode(file_get_contents($this->_path));
-
+		$contenido = file_get_contents($this->_path);
+		$this->_configuracion = json_decode($contenido);
+		$array = json_decode($contenido,TRUE);
+		$this->_camposArray = $array['campos'];
 		if(json_last_error()!=JSON_ERROR_NONE){
 			throw new Excepcion("El formulario  ".$this->_path." no esta estructurado correctamente",$this->_ce."0");
 		}
@@ -223,10 +281,12 @@ class Formulario extends  Selector{
 		if($this->botonEnvio){
 			$id = 'btn'.$this->_id;
 
-			$btn = new Selector('button');
-			$btn ->attr(['id'=>$id,'name'=>$id,'type'=>'submit'])
-				 ->innerHTML($this->_labelBotonEnvio)
-				->addClass($this->css('botonEnvio'));
+			$btn = new Selector('input');
+			$btn ->attr([
+				'id'=>$id,
+				'name'=>$id,'type'=>'submit',
+				'value'=>$this->_labelBotonEnvio
+				])->addClass($this->css('botonEnvio'));
 			if($this->jidaValidador){
 				$btn->data('jida','validador');
 			}
@@ -540,8 +600,50 @@ class Formulario extends  Selector{
 	 * @method validar
 	 * @param  array $data Arreglo de data a validar, generalmente corresponde a la data post.
 	 */
-	function validar($data){
-
+	function validar(&$data=""){
+		if(empty($data)){
+			$data=& $_POST;
+		}
+		foreach ($this->_camposArray as $key => $dataCampo) {
+			// Se agrega el valor en una variable aparte ya que el mismo
+			//puede ser seteado por el validadorJida. se asigna asi para disminuir
+			//lineas de codigo
+			$valorCampo =& $data[$dataCampo['name']];
+			if(array_key_exists('eventos',$dataCampo))
+			{
+				$data[$dataCampo['name']] = trim($data[$dataCampo['name']]);
+				
+				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
+				$result = $validador->validarCampo($data[$dataCampo['name']]);
+				if($result['validacion']!==TRUE){
+					$this->_errores[$dataCampo['campo']] = $result['validacion'];
+				}else{
+					$valorCampo = $result['campo'];
+				}
+				
+#				Helpers\Debug::imprimir("validando",$dataCampo,$result);				
+			}
+			if(!is_array($data[$dataCampo['name']])){
+				if($this->setHtmlEntities)
+				{
+					$datos[$dataCampo['name']] = htmlspecialchars($valorCampo);
+				}else{
+					$datos[$dataCampo['name']] = $valorCampo;
+				}
+			}else{
+				$datos[$dataCampo['name']] = $valorCampo;
+			}
+			
+		}
+		if($this->_errores){
+			Helpers\Sesion::set('__erroresForm',$this->errores);
+			Helpers\Sesion::set('_dataPostForm',$datos);
+			Helpers\Sesion::set('__dataPostForm','id_form',$this->_idUpdate);
+			return false;
+		}else{
+			return true;
+		}
+		
 	}
     /**
      * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
