@@ -25,6 +25,7 @@ class JadminController extends JController{
     function __construct(){
         parent::__construct();
         $this->url = "/jadmin/";
+		
         $this->jctrl = new JidaControl();
     }
     function index(){        

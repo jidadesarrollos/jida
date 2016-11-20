@@ -328,13 +328,10 @@ global $JD;
         if(empty($posController)){
             $band = false;
         }else{
-            
-            $controller = $this->validarNombre($posController,1).'Controller';
-			
+            $controller = $this->validarNombre($posController,1).'Controller';			
             $controllerAbsoluto = $namespace.$controller;
 			$controller = $namespace.$this->validarNombre($posController,1);
-			//echo $controller . "<hr />";
-        
+
         }
 
         if($band and (class_exists($controllerAbsoluto) or class_exists($controller))){
@@ -419,17 +416,18 @@ global $JD;
 				$this->_controladorDefault = $this->_modulo;
 				
 	        }else{
-	        	
+	        	array_unshift($this->_arrayUrl,$posController);
         		$posController = array_shift($this->_arrayUrl);		
-        
+        		$this->_namespace='Jida\\Jadmin\\';
         		//validacion modulo interno jadmin
 	            $this->_ruta='framework';
 	            if($this->esModulo(true)){
-	
+
 	                //Accede aqui si se busca un modulo del Framework
 	                $namespace = $this->_namespace;
 	
 	            }else{
+	            	
 	                //controlador por defecto jadmin;
 	                $this->_controladorDefault = 'Jadmin';
 	                $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
@@ -439,11 +437,9 @@ global $JD;
 
 			if(!$this->esControlador($this->_namespace, $posController))
             	array_unshift($this->_arrayUrl,$posController);
+		}else{
+			// exit("intenta entrar a la app");
 		}
-        
-	    
-
-        
         $this->procesarMetodo();
 
         

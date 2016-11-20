@@ -28,6 +28,7 @@ class DataModel{
 	private $consultaMultiple=FALSE;
 	private $join=FALSE;
 	private $usoLimit=FALSE;
+	private $_ce = '006';
 	private $condicion='and';
 	/**
 	 * @var string $limit estring de la clausula limit
