@@ -128,8 +128,8 @@ class SelectorInput extends Selector{
 			
 			$optionsHTML .= Selector::crear('option',['value'=>$data[$key[0]]],$data[$key[1]]);
 		}
-		
-		$this->html($optionsHTML);
+		#Helpers\Debug::imprimir($optionsHTML);exit;
+		$this->innerHTML($optionsHTML);
 		
 		
 	}
