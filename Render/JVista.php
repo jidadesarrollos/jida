@@ -22,7 +22,17 @@ class JVista{
 	private $contenedorPaginador;
 	private $accionesFila=FALSE;
 	private $listadoFiltros;
-
+	/**
+	 * Define la configuracion para la fila de opciones de la vista
+	 * @var $configFilaOpciones
+	 */
+	private $configFilaOpciones=[
+		"html"	=>'Opciones',
+		"attr"	=>[
+			'class' =>'fila-opciones'
+		]
+	
+	];
 	private $ejecucion;
 	private $titulo;
 	/**
@@ -157,6 +167,7 @@ class JVista{
 	private $paginador;
 	private $paginaActual=1;
 	private $configPaginador=[
+		'tpl'=>'<div class="col-md-12 col-sm-12 col-xs-12">{{:paginador}}</div>',
 		'classLink'				=>"link-paginador",
 		'classPaginaActual'		=>"active",
 		'classListaPaginador'	=>"pagination",
@@ -438,7 +449,7 @@ class JVista{
 			$msj = Helpers\Sesion::get('__msjVista');
 			if(is_array($msj) and array_key_exists('id', $msj) and $msj['id']==$this->idVista){
 				Helpers\Sesion::destroy('__msjVista');
-				return Selector::crear('div.row',null,Selector::crear('div.col-md-12',null,$msj['msj']));
+				return Selector::crear('div.col-md-12',null,$msj['msj']);
 
 			}
 		}
@@ -580,37 +591,59 @@ class JVista{
 			#Debug::string("a");
 		}
 	}
+	/**
+	 * Crea los titulos de la tabla
+	 * @internal Verifica si la vista tiene habilitado ordenamientos, el tipo de control
+	 * y hace el renderizado correspondiente
+	 * @method crearTitulos
+	 */
 	private function crearTitulos(){
+			
+		$tieneOpciones = ($this->accionesFila)?TRUE:FALSE;
+		if($tieneOpciones)
+		{
+			array_push($this->titulos,$this->configFilaOpciones['html']);
+		}
 		$this->tabla->crearTHead($this->titulos);
+		$columnasTitulos = $this->tabla->tHead()->Fila->columnas();
+		$totalLinks = count($columnasTitulos);
+		if($tieneOpciones){
+			
+			$this->tabla->tHead()->Fila
+									->columna($totalLinks-1)
+									->attr($this->configFilaOpciones['attr']);	
+		}
 		if($this->controlFila==3){
 			$this->tabla->tHead()->Fila->columna(0)->attr('style','display:none');
 		}
+		
+		
 		if($this->ordenamientos){
-			$columnasTitulos = $this->tabla->tHead()->Fila->columnas();
-
-			for($i=0;$i<count($columnasTitulos);++$i){
-				if($this->controlFila and $i==0) continue;
+			
+			#Helpers\Debug::imprimir($columnasTitulos);
+			if($tieneOpciones) $columnasTitulos--;
+			#Helpers\Debug::imprimir($columnasTitulos);
+			
+			if($tieneOpciones) $totalLinks--;
+			for($i=0;$i<$totalLinks;$i++){
 				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
-					#Helpers\Debug::imprimir($this->accionesFila,true);
-					$indiceMenu = ($this->controlFila!=3)?$indice:$indice;
-					if(($this->accionesFila and $indiceMenu<=count($titulos)-1) or !$this->accionesFila)
-					{
-
-						$params = ['href'=>$this->procesarURL([
-									'ordenar'	=>$titulos[$indiceMenu],
-									'pagina'	=>$this->paginaActual
-								],0)];
-						$col->envolver('a',$params);
-					}
+						
+					$indiceMenu = ($this->controlFila!=3)?$indice:$indice-1;	
+					$params = ['href'=>$this->procesarURL([
+								'ordenar'	=>$titulos[$indiceMenu],
+								'pagina'	=>$this->paginaActual
+							],0)];
+					$col->envolver('a',$params);
+				
 
 
 
 				},$i,$this->titulosKey,$this->paginaConsulta);
 			}
+		}//fin ordenamientos
+		
 
-		}
-
-
+#exit;
 	}
 
 	function procesarAcciones(){
@@ -665,7 +698,7 @@ class JVista{
 
 		}
 
-		return $this->paginador->render();
+		return $this->_obtTemplate($this->configPaginador['tpl'], ['paginador'=>$this->paginador->render()]);
 		//----------------------------------------------------------
 	}
 
@@ -972,5 +1005,16 @@ class JVista{
 		}else{
 			if(property_exists($this, $configuracion)) $this->{$configuracion} = $valor;
 		}
+	}
+	/**
+	 * Renderiza el contenido en plantillas predeterminadas
+	 * @method _obtTemplate
+	 * @param $plantilla;
+	 */
+	private function _obtTemplate($template,$params){
+		foreach ($params as $key => $value) {
+			$template = str_replace("{{:".$key."}}", $value,$template);
+		}
+		return $template;
 	}
  }//fin clase

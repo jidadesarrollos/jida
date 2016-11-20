@@ -393,7 +393,7 @@ class Controller {
 
         if(empty($param)){
             return $_POST;
-        }elseif($nuevoValor!=""){
+        }elseif($nuevoValor!==""){
 
              $this->post[$param]=$nuevoValor;
              return $this;

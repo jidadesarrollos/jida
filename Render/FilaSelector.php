@@ -8,8 +8,9 @@
 */
 
 namespace Jida\Render;
+use Jida\Helpers as Helpers;
 class FilaSelector extends Selector{
-
+	use \Jida\Core\ObjetoManager;
 	var $selector = "TR";
 	private $selectorColumnas="TD";
 	var $columnas;
@@ -17,6 +18,7 @@ class FilaSelector extends Selector{
 	private $totalColumnas;
 	function __construct($columnas,$selectorColumnas="TD"){
 		parent::__construct();
+		#Helpers\Debug::imprimir($columnas);
 		$this->dataColumnas = $columnas;
 		$this->selectorColumnas = $selectorColumnas;
 		$this->totalColumnas = count($this->dataColumnas);

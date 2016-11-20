@@ -53,6 +53,13 @@ class ValidadorJida extends \Jida\Core\Validador{
         $this -> campo =& $campo;
 
         $this->getDataValidaciones();
+		if(is_object($validaciones)){
+			$validacionesArray=[];
+			foreach ($validaciones as $key => $value) {
+				$validacionesArray[$key] = $value;
+			}
+			$validaciones = $validacionesArray;
+		}
         $this -> validaciones = array_merge($this -> validacionesDefault,$validaciones);
     }//fin funcion
 

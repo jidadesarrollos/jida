@@ -3,8 +3,9 @@
  * Clase para TablaSelector
  */
 namespace Jida\Render;
+use Jida\Helpers as Helpers;
 class TablaSelector extends Selector{
-
+	use \Jida\Core\ObjetoManager;
 	private $filas=[];
 	private $totalFilas;
 	private $htmlFilas;
@@ -44,12 +45,18 @@ class TablaSelector extends Selector{
 
 		$this->crearFilas();
 	}
-
+	/**
+	 * Crea un selector thead dentro de la tabla
+	 * @method validarTHead
+	 * @param array $data Arreglo de Titulos a ser pasados al objeto
+	 * FilaSelector
+	 * @see Jida\Render\FilaSelector
+	 */
 	function crearTHead($data){
 		$this->dataThead = $data;
 		$this->tHead = new Selector('THEAD');
-		$this->validarTHead();
-		$this->tHead->fila = new FilaSelector($this->dataThead);
+		#Helpers\Debug::imprimir($data);
+		$this->tHead->Fila = new FilaSelector($this->dataThead,'TH');		
 
 	}
 	function thead(){
@@ -61,11 +68,8 @@ class TablaSelector extends Selector{
 	function tfoot(){
 		return $this->tFoot;
 	}
-	private function validarTHead(){
-		$this->tHead = new Selector('THEAD');
-		$this->tHead->Fila = new FilaSelector($this->dataThead,'TH');
 
-	}
+
 	function obtTotalColumnas(){
 		return count($this->dataTabla[0]);
 	}
