@@ -296,7 +296,10 @@ class DataModel{
 		
 		foreach ($this->tieneMuchos as $key => $value) {
 			if(!is_array($value)){
-			    $this->{$value}=[];
+				$explode = explode('\\', $value);
+				$class = array_pop($explode);
+				
+			    $this->{$class}=[];
 			    // Debug::imprimir($key,$value,"-");
 			}else{
 			    // Debug::imprimir($key,$value);
