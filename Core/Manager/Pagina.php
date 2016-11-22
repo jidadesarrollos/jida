@@ -18,9 +18,9 @@ use Jida\Core\Manager\JExcepcion as JExcepcion;
 use Jida\Helpers\Directorios as Directorios;
 use Exception as Excepcion;
 class Pagina{
-      
+
     use \Jida\Core\ObjetoManager;
-    
+
     /**
      * Información pasada al layout y vista a renderizar
      * @param mixed $data
@@ -105,7 +105,7 @@ class Pagina{
     private $modulo;
     private $rutaExcepciones="";
 
-	private $directorioPlantillas='Framework/jidaPlantillas/';
+	private $directorioPlantillas='Framework/plantillas/';
 	/**
 	 * URL Actual
 	 */
@@ -216,16 +216,16 @@ class Pagina{
 				}
             }
         }else{
-        	
+
 			if(array_key_exists('configuracion', $GLOBALS) and array_key_exists('temaJadmin', $GLOBALS['configuracion']))
 			{
 				echo "el tema es ". $GLOBALS['configuracion']['temaJadmin'];
 			}else{
-				
+
 				$this->directorioLayout = DIR_LAYOUT_JIDA;
 				$this->urlPlantilla=DIR_PLANTILLAS_FRAMEWORK;
 			}
-            
+
         }
 
     }
@@ -868,7 +868,7 @@ class Pagina{
 		return $this->urlPlantilla;
 
 	}
-	
+
     /**
      * Permite incluir "segmento" de código en una vista
      *
@@ -881,12 +881,12 @@ class Pagina{
      * @param array $variables Matriz de variables a pasar al segmento
      */
     function segmento($segmento,$params=[]){
-        
+
         if(!is_array($params)) $params = array($params);
-            
+
         foreach ($params as $key => $p)
             $this->data->$key = $p;
-            
+
         $directorio = DIR_APP.'Segmentos/';
         if(file_exists($directorio . $segmento . '.php')){
             echo  $this->incluir('Aplicacion/Segmentos/'.$segmento);
@@ -923,7 +923,7 @@ class Pagina{
 			include_once $archivo.'.php';
 		}
 	}
-    
+
     /**
      * Función para incluir templates
      * @param mixed $archivo Nombre del archivo a incluir
@@ -933,7 +933,7 @@ class Pagina{
         $tema = $GLOBALS['configuracion']['tema'];
         $directorio = 'Aplicacion/Layout/'.$tema.'/';
         $extension = '.php';
-        
+
         if(is_array($archivo)){
             foreach ($archivo as $key => $ar) {
                 if(file_exists($directorio . $ar . $extension)) include_once $directorio . $ar . $extension;
@@ -942,10 +942,10 @@ class Pagina{
         }elseif(is_string($archivo)){
             if(file_exists($directorio . $archivo . $extension)) include_once $directorio.$archivo.$extension;
             else throw new Exception('No existe la plantilla '. $archivo . $extension, 100);
-            
+
         }
     }
-    
+
 	/**
 	 * Agrega un template en otra
 	 *
