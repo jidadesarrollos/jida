@@ -197,8 +197,9 @@ class Pagina{
             	if(!Directorios::validar(DIR_LAYOUT_APP.$this->temaApp))
 					throw new Excepcion("No se consigue el tema definido", 1);
 
-				$this->directorioLayout.=$this->temaApp."/";
 
+				$this->directorioLayout.=$this->temaApp."/";
+			//echo $this->directorioLayout.$this->obtNombreTpl($this->layout);Exit;
 				if(empty($this->layout) or !Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->layout))){
 
 					if(Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->controlador))){
@@ -210,6 +211,7 @@ class Pagina{
 					}elseif(Directorios::validar($this->directorioLayout.$this->obtNombreTpl($this->temaApp))){
 						$this->layout=$this->obtNombreTpl($this->temaApp);
 					}else{
+				
 						$this->layout=$this->obtNombreTpl($this->layoutDefault);
 					}
 
@@ -294,7 +296,7 @@ class Pagina{
      */
 
     function renderizar($nombreVista="",$excepcion=FALSE){
-
+		$this->procesarVariables();
         if(!empty($nombreVista)) $this->nombreVista = $nombreVista;
 
         $DataTpl = $this->data->getTemplate();
@@ -945,33 +947,26 @@ class Pagina{
             
         }
     }
-    
 	/**
-	 * Agrega un template en otra
-	 *
-	 * Busca la plantilla en el directorio Aplicacion/Layout o Aplicacion/layout/tema si existe uno
-	 * y la agrega. Si la plantilla no es conseguida arrojará error
-	 *
-	 * @method addTpl
-	 * @param string $archivo Nombre de la plantilla a agregar
-	 * @return boolean
+	 * Procesa todas las variables del dataVista para que sean accedidas desde la vista
+	 * 
+	 * @internal Recorre las propiedades del objeto DataVista instanciado y las asigna 
+	 * en ejecucion al objeto.
+	 * @method procesarVariables
 	 */
-	function addTpl($archivo){
-		$path = $this->directorioLayout;
-
-		if(is_array($archivo)){
-			foreach ($archivo as $key => $ar) {
-				if(file_exists($path.$ar.'.php'))
-					include_once $path.$ar.'.php';
-				else
-					throw new Excepcion("No existe la plantilla solicitada ".$path.$ar, 100);
-
-			}
-		}elseif(is_string($archivo)){
-			if(file_exists($path.$archivo.'.php')) include_once $path.$archivo.'.php';
-			else throw new Excepcion("No existe la plantilla solicitada ".$path.$archivo, 100);
-
+	function procesarVariables(){
+		$propiedades = get_object_vars($this->data);
+		foreach ($propiedades as $k => $value) {
+			//Helpers\Debug::imprimir("procesamos la propiedad ".$k);
+			$this->$k = $this->data->$k;
 		}
+	}
+	/**
+	 * Permite acceder a un nexo
+	 * 
+	 */
+	function nexo(){
+		
 	}
 
 }
