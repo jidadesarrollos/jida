@@ -237,7 +237,7 @@ global $JD;
      * @method procesarURL
      */
     private function procesarURL(){
-
+        
         $primerParam =array_shift($this->_arrayUrl);
 
         if($primerParam=='jadmin'){
@@ -259,12 +259,13 @@ global $JD;
                 $namespace.="Controllers\\";
                 $posController = $primerParam;
             }
-            if(!$this->esControlador($namespace, $posController)){
+            if(!$this->esControlador($namespace, $posController)){                
                 array_unshift($this->_arrayUrl,$posController);
             }
 
             $this->procesarMetodo();
         }
+
         $this->procesarArgumentos();
 
     }
@@ -286,6 +287,7 @@ global $JD;
 
         // buscara el metodo por defecto y arrojara un error sino lo consigue.
         if(!$band) $this->esMetodoValido($metodo,true);
+        
     }
     /**
      * Verifica que el metodo exista
@@ -299,14 +301,16 @@ global $JD;
         if(class_exists($this->_controlador))
         {
             $clase = new ReflectionClass($this->_controlador);
+            $nombreOriginal = $metodo;
             $metodo = $this->validarNombre($metodo, 1);
 
             if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
                 $this->_metodo = $metodo;
                 return true;
             }else{
-                array_unshift($this->_arrayUrl,$metodo);
+                array_unshift($this->_arrayUrl,$nombreOriginal);
             }
+            
             if($error)  throw new Excepcion("El metodo no es valido", 404);
 
             return false;
@@ -372,7 +376,8 @@ global $JD;
     private function esModulo($jadmin=false){
 
         if(!empty($this->_arrayUrl)){
-            $posModulo = $this->validarNombre(array_shift($this->_arrayUrl),1);
+            $nombreOriginal = array_shift($this->_arrayUrl);
+            $posModulo = $this->validarNombre($nombreOriginal,1);
 			
             if($jadmin){
                 $namespace = 'Jida\\Jadmin\\Modulos';
@@ -389,7 +394,7 @@ global $JD;
                 $this->_modulo = $posModulo;
                 return true;
             }
-            array_unshift($this->_arrayUrl,$posModulo);
+            array_unshift($nombreOriginal,$posModulo);
         }
 
         return false;
@@ -451,6 +456,7 @@ global $JD;
      *
      */
     private function procesarArgumentos($tipo=1){
+
             if(!empty($this->_arrayUrl))
             {
                 $this->args = array_merge($this->args,$this->_arrayUrl);
@@ -488,6 +494,7 @@ global $JD;
             // $_GET = array_merge($this->args,$gets);
             $_GET = $this->args;
             $_REQUEST = array_merge($_POST,$_GET);
+// Helpers\Debug::imprimir($_GET,$this->_arrayUrl,$this->arrayGetCompatibilidad,$this->args,true);
     }
     function get(){
         Debug::mostrarArray($this);
