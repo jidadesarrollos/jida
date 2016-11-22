@@ -943,7 +943,7 @@ class Pagina{
             }
         }elseif(is_string($archivo)){
             if(file_exists($directorio . $archivo . $extension)) include_once $directorio.$archivo.$extension;
-            else throw new Exception('No existe la plantilla '. $archivo . $extension, 100);
+            else throw new Excepcion('No existe la plantilla '. $archivo . $extension, 100);
 
         }
     }
