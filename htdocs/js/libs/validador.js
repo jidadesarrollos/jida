@@ -288,7 +288,7 @@
                     msj = jValidador.validaciones[errorCampo].mensaje;
                     
                 }
-                if(divError.size()>0){
+                if(divError.length>0){
             
                     //$input = this.$form.find('[name="'+$campo.attr('name')+'"]');
                     if($input.parent().hasClass('control-multiple')){
