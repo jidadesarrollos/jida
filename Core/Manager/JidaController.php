@@ -563,6 +563,7 @@ global $JD;
         if(is_object($this->controladorObject)):
 
             $this->vista->layout = $this->controladorObject->layout;
+			
             $this->vista->definirDirectorios();
 
         endif;
