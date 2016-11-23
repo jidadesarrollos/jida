@@ -376,6 +376,7 @@ global $JD;
     private function esModulo($jadmin=false){
 
         if(!empty($this->_arrayUrl)){
+            
             $nombreOriginal = array_shift($this->_arrayUrl);
             $posModulo = $this->validarNombre($nombreOriginal,1);
 			
@@ -394,7 +395,8 @@ global $JD;
                 $this->_modulo = $posModulo;
                 return true;
             }
-            array_unshift($nombreOriginal,$posModulo);
+            
+            array_unshift($this->_arrayUrl,$posModulo);
         }
 
         return false;

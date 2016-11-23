@@ -276,14 +276,18 @@ class DataModel{
 					$relacion =& $key;
 					if(array_key_exists('fk', $class))
 						$this->$relacion = new $relacion(null,$this->nivelActualORM);
-					//Debug::mostrarArray($this->$relacion);
+					// Debug::imprimir($this->$relacion,true);
 
 			  }else{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);
 			  }
 		    }else{
 			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
-					$this->$class = new $class(null,$this->nivelActualORM);
+			        $explode = explode('\\', $class);
+                    $nombreClass = array_pop($explode);
+                    // Debug::imprimir($class,$nombreClass);
+                    
+					$this->$nombreClass = new $class(null,$this->nivelActualORM);
 				}
 		    }
 
