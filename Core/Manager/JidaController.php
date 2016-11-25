@@ -160,6 +160,7 @@ global $JD;
             if(array_key_exists('idiomas', $GLOBALS)){
                 $this->idiomas=$GLOBALS['idiomas'];
             }
+
             Helpers\Sesion::destroy('__formValidacion');
 
             $_SERVER = array_merge($_SERVER,getallheaders());
@@ -186,6 +187,7 @@ global $JD;
 
                 if(array_key_exists($this->_arrayUrl[0], $this->idiomas)){
                     $this->idiomaActual=$this->_arrayUrl[0];
+
                     array_shift($this->_arrayUrl);
 
                 }
@@ -237,7 +239,7 @@ global $JD;
      * @method procesarURL
      */
     private function procesarURL(){
-        
+
         $primerParam =array_shift($this->_arrayUrl);
 
         if($primerParam=='jadmin'){
@@ -259,7 +261,7 @@ global $JD;
                 $namespace.="Controllers\\";
                 $posController = $primerParam;
             }
-            if(!$this->esControlador($namespace, $posController)){                
+            if(!$this->esControlador($namespace, $posController)){
                 array_unshift($this->_arrayUrl,$posController);
             }
 
@@ -287,7 +289,7 @@ global $JD;
 
         // buscara el metodo por defecto y arrojara un error sino lo consigue.
         if(!$band) $this->esMetodoValido($metodo,true);
-        
+
     }
     /**
      * Verifica que el metodo exista
@@ -310,7 +312,7 @@ global $JD;
             }else{
                 array_unshift($this->_arrayUrl,$nombreOriginal);
             }
-            
+
             if($error)  throw new Excepcion("El metodo no es valido", 404);
 
             return false;
@@ -328,11 +330,11 @@ global $JD;
      */
     private function esControlador($namespace,$posController){
         $band = true;
-		
+
         if(empty($posController)){
             $band = false;
         }else{
-            $controller = $this->validarNombre($posController,1).'Controller';			
+            $controller = $this->validarNombre($posController,1).'Controller';
             $controllerAbsoluto = $namespace.$controller;
 			$controller = $namespace.$this->validarNombre($posController,1);
 
@@ -341,11 +343,11 @@ global $JD;
         if($band and (class_exists($controllerAbsoluto) or class_exists($controller))){
 			if(class_exists($controllerAbsoluto))
 			{
-				$this->_controlador = $controllerAbsoluto;	
+				$this->_controlador = $controllerAbsoluto;
 			}else{
 				$this->_controlador = $controller;
 			}
-            
+
             $this->_nombreControlador = $posController;
             $this->_namespace = $namespace;
             return true;
@@ -354,16 +356,16 @@ global $JD;
              * Logica para verificacion de Carpeta Pluguins dentro de Modulos
              * Verificar funcionamiento y usabilidad
              */
-           // if($band and class_exists($controllerAbsolutoPlugin)){  
+           // if($band and class_exists($controllerAbsolutoPlugin)){
                 // $this->_controlador = $controllerAbsolutoPlugin;
                 // $this->_nombreControlador = $posController;
                 // $this->_namespace = $namespacePlugin;
                 // return true;
            // }else{
                // $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
-               // $this->_nombreControlador = $this->_controladorDefault; 
+               // $this->_nombreControlador = $this->_controladorDefault;
            // }
-              
+
               $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
               $this->_nombreControlador = $this->_controladorDefault;
         }
@@ -376,10 +378,10 @@ global $JD;
     private function esModulo($jadmin=false){
 
         if(!empty($this->_arrayUrl)){
-            
+
             $nombreOriginal = array_shift($this->_arrayUrl);
             $posModulo = $this->validarNombre($nombreOriginal,1);
-			
+
             if($jadmin){
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
@@ -395,7 +397,7 @@ global $JD;
                 $this->_modulo = $posModulo;
                 return true;
             }
-            
+
             array_unshift($this->_arrayUrl,$posModulo);
         }
 
@@ -413,18 +415,18 @@ global $JD;
 		$path = '\\App\\Jadmin\\Controllers\\';
 		$posController = array_shift($this->_arrayUrl);
 		if(!$this->esControlador($path, $posController)){
-	
+
 			array_unshift($this->_arrayUrl,$posController);
 			if($this->esModulo()){
-				
+
 	            //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
 				$this->_ruta="app";
 				$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
 				$this->_controladorDefault = $this->_modulo;
-				
+
 	        }else{
 	        	array_unshift($this->_arrayUrl,$posController);
-        		$posController = array_shift($this->_arrayUrl);		
+        		$posController = array_shift($this->_arrayUrl);
         		$this->_namespace='Jida\\Jadmin\\';
         		//validacion modulo interno jadmin
 	            $this->_ruta='framework';
@@ -432,9 +434,9 @@ global $JD;
 
 	                //Accede aqui si se busca un modulo del Framework
 	                $namespace = $this->_namespace;
-	
+
 	            }else{
-	            	
+
 	                //controlador por defecto jadmin;
 	                $this->_controladorDefault = 'Jadmin';
 	                $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
@@ -449,7 +451,7 @@ global $JD;
 		}
         $this->procesarMetodo();
 
-        
+
     }
     /**
      * CREA arreglo de parametros get
@@ -517,9 +519,9 @@ global $JD;
      */
     function validacion(){
         try{
-        	
+
             if(BD_REQUERIDA===TRUE){
-            	
+
                 $acl = new ACL();
                 $acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
@@ -572,7 +574,7 @@ global $JD;
         if(is_object($this->controladorObject)):
 
             $this->vista->layout = $this->controladorObject->layout;
-			
+
             $this->vista->definirDirectorios();
 
         endif;
@@ -591,13 +593,14 @@ global $JD;
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
         $this->vista->data->idioma=$this->idiomaActual;
-        
+
         $GLOBALS['dv']=$this->vista->data;
-		
+
         $this->controladorObject = new $controlador();
         $this->controladorObject->modulo=$this->modulo;
         $controlador=& $this->controladorObject;
-        
+		$controlador->idioma = $this->idiomaActual;
+
         if(method_exists($controlador, $metodo)){
             //Validacion de ejecucion de un metodo previo al solicitado por url
             if(!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)){
