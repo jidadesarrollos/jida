@@ -20,7 +20,7 @@ use Exception as Excepcion;
 class Pagina{
 
     use \Jida\Core\ObjetoManager;
-
+	private $_ce='007';
     /**
      * Información pasada al layout y vista a renderizar
      * @param mixed $data
@@ -969,5 +969,40 @@ class Pagina{
 	function nexo(){
 
 	}
+	/**
+	 * Retorna la url publica de los archivos htdocs de un tema
+	 * @method htdocs
+	 * @params string $folder Carpeta a obtener
+	 * @params string $item nombre del archivo
+	 * @params boolean $tema Determina si el archivo debe buscarse en el contenido
+	 * de un tema o en el contenido general.
+	 *
+	 */
+	 function htdocs($folder,$item,$tema=TRUE){
+		$url = URL_HTDOCS_TEMAS . $this->temaApp . '/htdocs/' . $folder .'/'. $item;
+		if($tema)
+			return $url;
+		return URL_HTDOCS . $folder .'/'. $item;
+
+	 }
+	 /**
+	  * Obtiene el texto correspondiente a una traduccion
+	  *
+	  * @internal Es un atajo para acceder al objeto traductor, el cual debe
+	  * haber sido instanciado en el controlador previamente. El traductor debe
+	  * haber sido pasado con el nombre de varible "traductor" al objeto DataVista
+	  * @method cadena
+	  * @param string $texto Texto a imprimir
+	  * @param string $ubicacion Ubicacion dentro del sistema de traducciones
+	  * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
+	  *
+	  */
+	 function cadena($texto,$ubicacion,$seccion=""){
+		if(!property_exists($this, 'traductor'))
+			throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente", $this->_ce.'10');
+
+		return $this->traductor->cadena($texto,$ubicacion);
+
+	 }
 
 }

@@ -57,6 +57,7 @@ class Traductor{
 		$file = strtolower($this->idiomaActual).".php";
 		if(file_exists($this->path.$file)){
 			include_once $this->path.$file;
+
 		}else{
 			throw new \Exception("No existe el archivo de traducciones ".$this->idiomaActual ."en ".$this->path.$file, 950);
 
