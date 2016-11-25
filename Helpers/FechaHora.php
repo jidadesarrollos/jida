@@ -160,7 +160,12 @@ class FechaHora{
 		return date ( 'i' );
 	}
 
+	static function horaMinutos($hora,$formato='G:i:s'){
+		$hora = \DateTime::createFromFormat($formato,$hora);
+		return $hora->format('G:i');
 
+
+	}
 	/**
 	 * Timestamp Unix
 	 *
