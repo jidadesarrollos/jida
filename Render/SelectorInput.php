@@ -10,6 +10,7 @@ namespace Jida\Render;
 use Jida\BD\BD as BD;
 use Jida\Helpers as Helpers;
 class SelectorInput extends Selector{
+    
 	use \Jida\Core\ObjetoManager;
 	var $name;
 	var $type;
@@ -99,8 +100,9 @@ class SelectorInput extends Selector{
 	 *
 	 */
 	private function obtOpciones(){
+		    
 		$revisiones = explode(";",$this->opciones);
-		
+
 		foreach ($revisiones as $key => $opcion) {
 			
 			if(stripos($opcion, 'select')!==FALSE){
@@ -111,9 +113,12 @@ class SelectorInput extends Selector{
 			}elseif(stripos($opcion,'externo')!==FALSE){
 				
 			}else{
-				$opciones = explode("=",$opcion);
+			    
+				$opciones[] = explode("=",$opcion);
+                
 			}
 		}
+        return $opciones;
 		
 	}
 	private function _crearSelect(){
@@ -133,6 +138,9 @@ class SelectorInput extends Selector{
 		
 		
 	}
+    
+    private function _crearRadio(){}
+    
 	function _crearInput(){
 
 		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
