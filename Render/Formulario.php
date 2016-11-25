@@ -422,6 +422,8 @@ class Formulario extends  Selector{
 				$campo->type="text";
 
 			$this->_campos[$campo->id] = new SelectorInput($campo);
+			if($this->_campos[$campo->id]=='radio')
+			
 			if($this->labels and $campo->type!='hidden'){
 				$label = new Selector('label',['for'=>$campo->id]);
 				$label->innerHTML((property_exists($campo, 'label')?$campo->label:$campo->name));
@@ -433,6 +435,7 @@ class Formulario extends  Selector{
 			}
 			$this->_campos[$campo->id]->configuracion =$campo;
 		}
+		#Helpers\Debug::imprimir($this->_campos,true);
 
 	}
 	/**
@@ -488,11 +491,12 @@ class Formulario extends  Selector{
 			$columna = $this->_estructura[$i];
 			$columnas+=$columna;
 			$campo->addClass($this->css('input'));
+			
 			$content .= $campo->render();
 			$configuracion = $campo->configuracion;
 			$html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
 			
-			if($campo->label)
+			if(is_object($campo->label))
 				$content = $campo->label->render().$content;
 			
 

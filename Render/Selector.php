@@ -20,6 +20,7 @@ class Selector{
     protected $id="";
     protected $atributos=[];
     protected $envoltorio="";
+	
     /**
      * Atributos data para el selector
      * @var array $data
@@ -317,7 +318,8 @@ class Selector{
 
     function render(){
         $html="";
-		#Jida\Debug::imprimir($this->selector,true);
+		
+		
         if(!$this->selectorCierre()){
             if(!empty($this->selector)){
                 $html = "<".$this->selector." ".$this->renderAttr()." />\n";
