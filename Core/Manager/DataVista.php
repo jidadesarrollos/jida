@@ -118,22 +118,32 @@ class DataVista{
 	 * @method addJsModulo
 	 * @param string js Nombre o ruta del archivo
 	 * @param boolean $ruta
+	 * @deprecated 0.6
 	 */
 	function addJsModulo($js,$ruta=true){
 
 		$modulo = $this->modulo;
-		(Helpers\Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
-
+	
+		if($ruta===TRUE){
+			$ruta = '/Aplicacion/Modulos/' . strtolower($modulo) .'/htdocs/js/';	
+		}
+		if(!is_array($js)){ $js = explode(' ',$js);}
+		
+		#Helpers\Debug::imprimir($this->js);
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
-
-				if($ruta)$this->js[]="/".$modulo."/htdocs/js/".$archivo;
-				else $this->js[]=$archivo;
+				if(array_key_exists(strtolower($this->modulo), $this->js))
+				{	
+					$this->js[strtolower($this->modulo)][] = $ruta . $archivo;
+				}else{
+					if($this->_esJadmin and array_key_exists('jadmin', $this->js)){
+						$this->js['jadmin'][] = $ruta . $archivo;	
+					}
+					$this->js[] = $ruta . $archivo;	
+				}
 			}
-		}elseif(is_string($js)){
-			if($ruta)$this->js[]="/".$modulo."/htdocs/js/".$js;
-				else $this->js[]=$js;
 		}
+		#Helpers\Debug::imprimir($this->js,$js,true);
 
 	}
 	/**

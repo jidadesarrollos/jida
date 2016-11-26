@@ -656,7 +656,7 @@ class Pagina{
 	 */
 	function imprimirLibrerias($lang,$modulo=""){
 		$dataInclude=[];
-
+		#\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};
 

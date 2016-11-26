@@ -209,6 +209,7 @@ global $JD;
             //se procesa la URL
 
             $this->procesarURL();
+			
             #Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
@@ -298,8 +299,6 @@ global $JD;
      * @return boolean
      */
     private function esMetodoValido($metodo,$error=false){
-        $a = new $this->_controlador();
-
         if(class_exists($this->_controlador))
         {
             $clase = new ReflectionClass($this->_controlador);
@@ -526,12 +525,12 @@ global $JD;
                 $acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
             }else{
-            	echo "aka";
+            	//echo "aka";
             } $acceso=TRUE;
-
+			
            if($acceso===TRUE){
                 global $dataVista;
-                //Helpers\Debug::imprimir($this->_modulo,$this->_nombreControlador,$this->_metodo,true);
+                
                 $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin);
                 $this->vista->data = $dataVista;
                 $this->ejecucion($this->_controlador);

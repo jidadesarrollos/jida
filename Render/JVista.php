@@ -278,7 +278,7 @@ class JVista{
 				$this->obtInformacionObjeto();
 			}
 		}else{
-			throw new \Exception("No existe el objeto pasado", 2);
+			throw new \Exception("No existe el objeto pasado: ".$dataConsulta[0], 2);
 		}
 
 	}
