@@ -567,7 +567,7 @@ class Controller {
      */
     protected function obtUrl($metodo="",$data=array()){
 
-    	// Helpers\Debug::imprimir('obtUrl',$metodo,$data);
+// Helpers\Debug::imprimir('obtUrl',$metodo,$data);
 
         if(!empty($metodo)){
 
@@ -585,17 +585,21 @@ class Controller {
 					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
 				}
 
-// Helpers\Debug::imprimir('pila aqui',Cadenas::upperCamelCase($url[0]));
+// Helpers\Debug::imprimir('$ctrl',$ctrl,'$url',$url);
 
-// Helpers\Debug::imprimir('hereeee','$ctrl',$ctrl);
                 $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
 
             }else{
+// Helpers\Debug::imprimir('$this->urlController()',$this->urlController(),'$this->_clase',strtolower($this->_clase));
+                $urlController = (strpos(strtolower($this->_clase), 'jadmin'))?'/jadmin':'';
+                
+                $urlController .= $this->urlController();
                 $ctrl = $this->_clase;
-                $urlController = $this->urlController();
+                
             }
-// Helpers\Debug::imprimir('akaka',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
+            
+// Helpers\Debug::imprimir('$urlController',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
 
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
@@ -606,7 +610,7 @@ class Controller {
                         $params.="$value/";
 					}
                 }
-                // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+// Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 
