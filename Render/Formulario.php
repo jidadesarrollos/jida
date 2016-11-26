@@ -659,8 +659,8 @@ class Formulario extends  Selector{
      * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
     static function msj($type,$msj,$redirect=false){
-        $msj = Mensajes::crear($type, $msj);
-        Session::set('__msjForm',$msj);
+        $msj = Helpers\Mensajes::crear($type, $msj);
+        Helpers\Sesion::set('__msjForm',$msj);
         if($redirect){
             redireccionar($redirect);
         }
