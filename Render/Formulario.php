@@ -75,7 +75,14 @@ class Formulario extends  Selector{
 	 *
 	 * @var $_ce;
 	 */
-	private $_ce="1002";
+	private $_ce="00100";
+	/**
+	 * Registra el orden de los campos
+	 * @internal esta funcion deberia ser provisional para que luego sea 
+	 * reemplazada por una lógica de ordenamiento sobre el arreglo de campos
+	 * @var array $_arrayOrden
+	 */
+	private $_arrayOrden=[];
 	/**
 	 * Estructura html que se implementa por cada item del formulario
 	 * @var $_plantillaItem
@@ -333,7 +340,7 @@ class Formulario extends  Selector{
 				$estructura = '1x'.$this->_totalCampos;
 		}
 		if(!preg_match($this->_exprEstructura, $estructura))
-			throw new Excepcion("La estructura pasada no es valida", $this->_ce.'3');
+			throw new Excepcion("La estructura pasada no es válida", $this->_ce.'3');
 
 
 		$estructura = explode(";",$estructura);
@@ -410,6 +417,15 @@ class Formulario extends  Selector{
 
 
 	}
+	/**
+	 * Instancia los campos configurados del formulairo
+	 * 
+	 * @internal gestiona los campos del formulario realizando una instancia
+	 * del objeto SelectorInput sobre cada campo para su posterior renderizacion
+	 * @method _instanciarCamposConfiguracion
+	 * @see \Jida\Render\SelectorInput
+	 * @use self::labels
+	 */
 	private function _instanciarCamposConfiguracion(){
 
 		$this->_totalCampos = count($this->_configuracion->campos);
@@ -420,10 +436,10 @@ class Formulario extends  Selector{
 		foreach ($this->_configuracion->campos as $id => $campo) {
 			if(!property_exists($campo,'type'))
 				$campo->type="text";
-
+			$this->_arrayOrden[$campo->orden] = $campo->id;
 			$this->_campos[$campo->id] = new SelectorInput($campo);
-			if($this->_campos[$campo->id]=='radio')
-			
+			#if($this->_campos[$campo->id]=='radio')
+			#Helpers\Debug::imprimir($this->_campos[$campo->id]);
 			if($this->labels and $campo->type!='hidden'){
 				$label = new Selector('label',['for'=>$campo->id]);
 				$label->innerHTML((property_exists($campo, 'label')?$campo->label:$campo->name));
@@ -434,20 +450,12 @@ class Formulario extends  Selector{
 				$this->_campos[$campo->id]->data('validacion',json_encode((array)$campo->eventos));
 			}
 			$this->_campos[$campo->id]->configuracion =$campo;
-		}
-		#Helpers\Debug::imprimir($this->_campos,true);
+		}//fin foreach
+		ksort($this->_arrayOrden);
+		
 
 	}
-	/**
-	 * Permite acceder a un selector Campo
-	 */
-	function campo($campo){
-		if(array_key_exists($campo, $this->_campos))
-			return $this->_campos[$campo];
-		else {
-			new Excepcion ("No se consigue el campo solicitado: ".$campo,$this->_ce."5");
-		}
-	}
+
 	/**
 	 * Permite agregar un titulo al formulario
 	 * @method titulo
@@ -481,9 +489,9 @@ class Formulario extends  Selector{
 		{
 			$contenedor->addInicio($this->_titulo->render());
 		}
-		foreach($this->_campos as $id => $campo){
+		foreach($this->_arrayOrden as $id => $position){
 			$content="";
-
+			$campo = $this->_campos[$position];
 			if($columnas==0){
 				$filaPivote = new Selector('section',['class'=>'row']);
 
@@ -665,5 +673,19 @@ class Formulario extends  Selector{
             redireccionar($redirect);
         }
     }
+	/**
+	 * Permite acceder al objeto selector de un campo
+	 * @method campo
+	 * @param string $id Identificador del campo
+	 * @return object SelectorInput
+	 */
+	function campo($id){
+		if(array_key_exists($id, $this->_campos))
+			return $this->_campos[$id];
+		else {
+			throw new Excepcion("No existe el campo solicitado", $this->_ce.'2');
+			
+		}
+	}
 
 }

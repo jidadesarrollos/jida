@@ -17,11 +17,13 @@ class SelectorInput extends Selector{
 	var $id;
 	var $label;
 	var $opciones;
+	
 	/**
 	 * @var string $labelOpcion Label para cada selector multiple radio o inputs
 	 */
 	var $labelOpcion="";
 	var $multiplesInline=TRUE;
+	private $_ce = '00101';
 	/**
 	 * Selectores que requieren de multiples instancias
 	 * @var array $_controlesMultiples;
@@ -108,29 +110,16 @@ class SelectorInput extends Selector{
 		{
 				
 			$this->opciones = $params->opciones;
-			$this->_tipo = $params->type; 
-			$opciones = $this->obtOpciones();
-			
-			for($i=0;$i<count($opciones);++$i){
-				
-				$class = new \stdClass();
-				$class->labelOpcion=$opciones[$i][1];
-				$class->value=$opciones[$i][0];
-				$class->name=$params->name;
-				$class->type = $params->type;
-				$class->_tipo = $params->type;
-				$class->_identif = 'objectSelectorInputInterno';
-				$class->id=$params->id."_".($i+1);
-				
-				$selector = new SelectorInput($class,$params->type);
-				array_push($this->_selectoresOpcion,$selector);
-			}
+			$this->_tipo = $params->type;
+			$opciones = $this->obtOpciones(); 
+			$this->_crearOpcionesSelectorMultiple($opciones);
 			$this->_crear=FALSE;
 			//Helpers\Debug::imprimir("es multiple",$params,$opciones,TRUE);
 		}
 			
 
 	}
+	
 	private function __constructorParametros($name,$tipo="text",$attr=[],$items=""){
 
 		$this->_name = $name;
@@ -144,14 +133,49 @@ class SelectorInput extends Selector{
 			case 'select':
 					$this->_crearSelect();
 				break;
-			
-			case 'button':
-
+			case 'textarea':
+				$this->_crearTextArea();
+				break;
 			default:
-					$this->_crearInput();
+				$this->_crearInput();
 				break;
 		}
 
+	}
+	/**
+	 * Crea los objetos selector para cada opcion de un selector multiple
+	 * @method crearOpcionesSelectorMultiple
+	 */
+	private function _crearOpcionesSelectorMultiple($opciones){
+		
+		for($i=0;$i<count($opciones);++$i){
+			
+			$class = new \stdClass();
+			$class->value=array_shift($opciones[$i]);
+			$class->labelOpcion=array_shift($opciones[$i]);
+			$class->name=$this->name;
+			$class->type = $this->type;
+			$class->_tipo = $this->type;
+			$class->_identif = 'objectSelectorInputInterno';
+			$class->id=$this->id."_".($i+1);
+			
+			$selector = new SelectorInput($class,$this->type);
+			array_push($this->_selectoresOpcion,$selector);
+		}
+	}
+	/**
+	 * Genera los objeto selector para las opciones de un select
+	 * @method crearOpcionesSelect
+	 */
+	private function _crearOpcionesSelect($options){
+		
+		foreach ($options as $key => $data) {
+			$key = array_keys($data);
+			$opcion = new Selector('option',['value'=>$data[$key[0]]]);
+			$opcion->innerHTML($data[$key[1]]);
+			//$optionsHTML .= Selector::crear('option',,$data[$key[1]]);
+			array_push($this->_selectoresOpcion,$opcion);
+		}
 	}
 	/**
 	 * Procesa los item a agregar en controles de seleccion
@@ -160,46 +184,64 @@ class SelectorInput extends Selector{
 	private function obtOpciones(){
 		    
 		$revisiones = explode(";",$this->opciones);
-
 		foreach ($revisiones as $key => $opcion) {
-			
-			if(stripos($opcion, 'select')!==FALSE){
-				
+			if(stripos($opcion, 'select')!==FALSE)
+			{	
 				$data = BD::query($opcion);
 				return $data;
-				
+					
 			}elseif(stripos($opcion,'externo')!==FALSE){
-				
+				continue;
 			}else{
-			    
 				$opciones[] = explode("=",$opcion);
-                
 			}
 		}
         return $opciones;
 		
 	}
-	private function _crearSelect(){
-		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
-		
-		parent::__construct($this->_tipo,$this->_attr);
+	private function _crearTextArea(){
 		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
-		$options = $this->obtOpciones();
-		$optionsHTML ="";	
-		foreach ($options as $key => $data) {
-			$key = array_keys($data);
-			
-			$optionsHTML .= Selector::crear('option',['value'=>$data[$key[0]]],$data[$key[1]]);
-		}
-		#Helpers\Debug::imprimir($optionsHTML);exit;
-		$this->innerHTML($optionsHTML);
+		parent::__construct($this->_tipo,$this->_attr);
 		
 		
 	}
-    
-    private function _crearRadio(){
-    	
-    }
+	/**
+	 * Permite editar las opciones de un selector multiple
+	 * 
+	 * @internal
+	 * 
+	 * @method editarOpciones
+	 */
+	function editarOpciones($opciones,$add=FALSE){
+		$this->opciones = $opciones;
+		if(!in_array($this->type, $this->_controlesMultiples) and $this->_tipo!='select')
+			throw new Exception("El selector ".$this->id." no es un control de seleccion", $this->_ce.'08');
+			
+		if(!is_array($opciones)){
+			$this->opciones = $opciones;
+			$opciones  = $this->obtOpciones();
+		}
+		if(!$add) $this->_selectoresOpcion =[];
+		if($this->type=='select'){
+			$this->_crearOpcionesSelect($opciones);
+		}else{
+			$this->_crearOpcionesSelectorMultiple($opciones);
+		}
+		
+		
+	}
+	/**
+	 * Crea un selector Select
+	 * @method _crearSelect
+	 */
+	private function _crearSelect(){
+		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
+		
+		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
+		parent::__construct($this->_tipo,$this->_attr);
+		$options = $this->obtOpciones();
+		$this->_crearOpcionesSelect($options);
+	}
     
 	function _crearInput(){
 
@@ -207,13 +249,6 @@ class SelectorInput extends Selector{
 		parent::__construct('input',$this->_attr);
 
 		}
-	/**
-	 * Genera un input de texto
-	 * @method text
-	 */
-	function text(){
-
-	}
 	/**
 	 * Imprime los selectores multiples incluidos en $_controlesMultiples
 	 * @method renderMultiples
@@ -235,13 +270,20 @@ class SelectorInput extends Selector{
 		
 		return $tpl;
 	}
-	
+	private function renderSelect(){
+		$options = "";
+		foreach ($this->_selectoresOpcion as $key => $option) {
+			$options.=$option->render();
+		}
+		return $this->innerHTML($options)->render(TRUE);
+	}
 	function render($parent=FALSE){
 		
-
 		if(!$parent and in_array($this->_tipo,$this->_controlesMultiples)){
 			
 			return $this->renderMultiples();
+		}elseif(!$parent and $this->_tipo=='select'){
+			return $this->renderSelect();
 		}else{
 	
 			return parent::render();	
