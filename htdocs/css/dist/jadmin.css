@@ -2377,7 +2377,8 @@ label {
   display: block;
   padding-left: 0!important;
 }
-label + .radio {
+label + .radio,
+label + .checkbox {
   margin-top: 0!important;
 }
 body.login {

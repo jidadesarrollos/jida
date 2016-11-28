@@ -127,6 +127,10 @@ if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
 
+/**
+ * Define la ubicacion fisica de las carpetas para archivos publicos y del lado cliente.
+ */
+if(!defined('DIR_HTDOCS')) define('DIR_HTDOCS', ROOT .'htdocs/');
 
 
 
