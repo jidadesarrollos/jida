@@ -1,6 +1,10 @@
 <?php
 /**
 * Clase para Formularios
+ * 
+ * @internal Renderiza formularios configurados en html visible para el usuario,
+ * permite la validación de los mismos y la definición de su estructura.
+ * 
 * @author Julio Rodriguez
 * @package
 * @version
@@ -44,6 +48,11 @@ class Formulario extends  Selector{
 	 * @var boolean $jidaValidador
 	 */
 	var $jidaValidador=TRUE;
+	/**
+	 * Registra el query realizado para obtener la data en modo update
+	 * @var string $_consultaUpdate 
+	 */
+	private $_consultaUpdate="";
 	/**
 	 * Label a usar en el boton de envio por defecto
 	 * @var string $_labelBotonEnvio
@@ -178,6 +187,12 @@ class Formulario extends  Selector{
 	 */
 	private $_dataUpdate;
 	/**
+	 * Guarda el total de registros traidos en la consulta a base de datos
+	 * para manejarlo en campos de selección multiple
+	 * @var array $_dataUpdateMultiple
+	 */
+	private $_dataUpdateMultiple;
+	/**
 	 * Registra los campos leidos desde el json como arreglos
 	 * @internal Esto esta usado por compatibilidad con el objeto ValidadorJida Luego será suprimido.
 	 * @deprecated
@@ -188,6 +203,9 @@ class Formulario extends  Selector{
 	 * @var array $_errores;
 	 */
 	private $_errores=[];
+	/**
+	 * 
+	 */
 	function __construct($form="",$idUpdate=""){
 		if($form){
 			$this->_cargarFormulario($form);
@@ -207,14 +225,25 @@ class Formulario extends  Selector{
 	/**
 	 * Agrega los valores a modificar con el formulario
 	 * @method addDataUpdate
+	 * @revision
 	 */
 	function addDataUpdate($data=""){
 		if(empty($data)) $data = $this->_dataUpdate;
+
 		foreach ($data as $campo => $valor) {
 			if(array_key_exists($campo, $this->_campos))
 			{
-				#Helpers\Debug::imprimir($this->_campos[$campo]);
-				$this->_campos[$campo]->attr('value',$valor);
+				//esta logica debe mejorarse
+				if($this->_campos[$campo]->type=='checkbox'){
+					foreach ($this->_dataUpdateMultiple as $key => $dataUpdate) {
+						if(!array_key_exists($campo, $dataUpdate))
+							break;
+						$this->_campos[$campo]->valor($dataUpdate[$campo]);	
+					}
+				}else{
+					$this->_campos[$campo]->valor($valor);	
+				}
+				
 			}
 		}
 		#exit;
@@ -222,8 +251,10 @@ class Formulario extends  Selector{
 	private function _obtenerDataUpdate(){
 		$query = $this->_configuracion->query. ' where '.$this->_configuracion->clave_primaria."='".$this->_idUpdate."'";
 		$data = BD::query($query);
+		$this->_consultaUpdate = $query;
 		if(count($data)>0){
 			$this->_dataUpdate=$data[0];
+			$this->_dataUpdateMultiple = $data;
 		}
 	}
 	/**
@@ -436,7 +467,9 @@ class Formulario extends  Selector{
 		foreach ($this->_configuracion->campos as $id => $campo) {
 			if(!property_exists($campo,'type'))
 				$campo->type="text";
-			$this->_arrayOrden[$campo->orden] = $campo->id;
+			
+			$orden = (property_exists($campo, 'orden'))?$campo->orden:$id;
+			$this->_arrayOrden[$orden] = $campo->id;
 			$this->_campos[$campo->id] = new SelectorInput($campo);
 			#if($this->_campos[$campo->id]=='radio')
 			#Helpers\Debug::imprimir($this->_campos[$campo->id]);
@@ -470,6 +503,16 @@ class Formulario extends  Selector{
 
 		$this->_titulo = new Selector($selector,['class'=>$class]);
 		$this->_titulo->innerHTML($titulo);
+	}
+	/**
+	 * Retorna los campos del formularo en un arreglo
+	 * @method enArreglo
+	 */
+	function enArreglo(){
+		foreach ($this->_campos as $key => $campo) {
+			$this->_campos[$key]->addClass($this->css('input'));
+		}
+		return $this->_campos;
 	}
 	/**
 	 * Renderiza un formulario
@@ -686,6 +729,10 @@ class Formulario extends  Selector{
 			throw new Excepcion("No existe el campo solicitado", $this->_ce.'2');
 			
 		}
+	}
+	
+	function obtConsultaUpdate(){
+		return $this->_consultaUpdate;
 	}
 
 }

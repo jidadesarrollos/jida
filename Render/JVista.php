@@ -899,6 +899,7 @@ class JVista{
 	 * Las opciones a pasar son : cssContendor,link,cssLink,txtLink
 	 */
 	function addMensajeNoRegistros($msj,$cssDiv=[]){
+		
 		$dataDefault=[
 			'link'=>false,
 			'cssContenedor'=>'alert alert-warning',
@@ -908,17 +909,20 @@ class JVista{
 
 		];
 		$msj= Selector::crear('div.'.$dataDefault['cssContenedor'],[],$msj);
-		foreach ($cssDiv as $key => $value){
-			$dataDefault=array_merge($dataDefault,$value);
+		$dataDefault=array_merge($dataDefault,$cssDiv);
+		//Helpers\Debug::imprimir($dataDefault,true);
+		//foreach ($cssDiv as $key => $value){
+			
 			if($dataDefault['link']){
 				$this->htmlPersonalizado=TRUE;
 				$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
 				array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
 				$dataDefault['txtLink']);
 			}
-		}
+		//}
 
 		$this->mensajeNoRegistros=$msj;
+		#Helpers\Debug::imprimir($msj,true);
 	}
     /**
      * Permite agregar clausulas a la consulta realizada por la vista
