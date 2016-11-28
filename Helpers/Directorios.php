@@ -125,7 +125,8 @@ class Directorios extends \Directory{
     /**
      * Elimina un directorio y su contenido
      *
-     * @internal Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la carpeta pasada
+     * @internal Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la
+	 *  carpeta pasada
      * @method eliminar
      */
     static function eliminar($dir){
