@@ -240,11 +240,6 @@ class DataModel{
         		}
 
             }
-			#$this->debug('llego al nivel '.$this->nivelActualORM);
-			#Debug::string($this->_clase);
-			#Debug::mostrarArray(func_get_args(),0);
-			#call_user_func_array([$this,'instanciarPerteneceAUno'], func_get_args());
-
         }else{
 
 	        //se obtienen propiedades de relacion de pertenencia
@@ -1217,6 +1212,7 @@ class DataModel{
      * @param array [$arrayDatos ] Arreglo de valores a ser eliminados
      * @param string $campo Campo o propiedad por medio de la cual se eliminaran los objetos, si no es pasado sera usada
      * la clave primaria.
+	 * @return boolean
      */
     function eliminar($arrayDatos="",$campo="",$cond="and"){
         $totalParams = func_num_args();
