@@ -27,7 +27,7 @@ class Numeros{
 	 
 	 * @return string $numero Numero resultante
 	 */
-	public static function moneda($valor,$decimales=2,$moneda=TRUE){
+	public static function moneda($valor,$decimales=2,$moneda=FALSE){
 		
 	
 		$numero = number_format($valor,$decimales,self::$separadorDecimales,self::$separadorMiles);

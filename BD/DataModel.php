@@ -403,46 +403,46 @@ class DataModel{
 	 *
 	 */
 	private function obtTieneMuchos(){
+	    
+        $dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
+        
+        foreach ($this->tieneMuchos as $nombreRelacion => $data) {
+            
+            if(is_array($data)){
+                $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
+                
+                $objRelacion =new $nombreObj();
+                
+                $campos = array_key_exists('campos', $data)?$data['campos']:'';
+                
+                $objRelacion->consulta($campos);
+                
+                if((array_key_exists('relacion', $data))){
+                    $explode = explode('\\', $data['relacion']);
+                    if($explode > 1){
+                        $objJoin = new $data['relacion']();
+                        $relacion = $objJoin->tablaBD;
+                    }else{
+                        $relacion = $data['relacion'];
+                    }
+                }
+                
+                $camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
+                if($relacion){
+                    $objRelacion->join($relacion,$camposRelacion)
+                                ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
+                                ->agrupar($camposRelacion);
+                }
+                
+                $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
+            }
+        }
 
-		foreach ($this->tieneMuchos as $key => $relacion) {
-
-			if(is_array($relacion)){
-				
-				$rel = new $key();
-				$consulta = $rel->consulta();
-				if(array_key_exists('rel', $relacion)){
-					$campos=['*'];
-					$tipoJoin = '';
-					$clave=$rel->__get('pk');
-					$fk = $clave;
-					if(array_key_exists('campos', $relacion))
-						$campos=$relacion['campos'];
-					if(array_key_exists('join', $relacion)) $tipoJoin=$relacion['join'];
-
-
-					if(array_key_exists('pk', $relacion)) $clave=$relacion['pk'];
-					if(array_key_exists('fk', $relacion)) $fk=$relacion['fk'];
-					$this->consultaRelaciones[$key]=
-					$rel->join($relacion['rel'],$campos,['clave'=>$clave,'clave_relacion'=>$fk],$tipoJoin)
-						->filtro([$this->pk=>$this->{$this->pk}])
-
-						->obtQuery();
-
-				}
-
-			}else{
-				
-				$rel = new $relacion();
-				//Debug::imprimir(get_class($this),__NAMESPACE__,__CLASS__,$relacion,true);
-				$this->consultaRelaciones[$relacion] =
-				$rel->consulta()->filtro([$this->pk=>$this->{$this->pk}])
-
-				->obtQuery();
-			}
-
-		}
+        // Helpers\Debug::imprimir('$this->consultaRelaciones[$nombreRelacion]',$this->consultaRelaciones);
 		return $this;
 	}
+
+
 	/**
 	 * Genera las consultas para las relaciones 1:1 del Objeto
 	 *
