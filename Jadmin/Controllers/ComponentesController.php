@@ -9,33 +9,36 @@
  */
 
 namespace Jida\Jadmin\Controllers;
+
 use Jida\Render as Render;
-use Jida\RenderHTML as RenderHTML;
 use Jida\Helpers as Helpers;
 use Jida\Modelos\Viejos as Modelos;
+
 class ComponentesController extends JController{
+        
     var $layout="jadmin.tpl.php";
+    var $manejoParams=TRUE;
+    
     function __construct($id=""){
         parent::__construct();
-        // $this->manejoParams=TRUE;
+        
         $this->url="/jadmin/componentes/";
-
         $this->dv->title="Componentes de ".TITULO_SISTEMA;
-
     }
+    
     function index(){
 
         $this->vista="vistaComponentes";
 
 
 		$vista = new Render\JVista('Jida\Modelos\Componente.obtComponentes',[
-				'titulos' =>['','Componente','Opciones']
+				'titulos' =>['Componente']
 				], 'Componentes');
 
 			$vista->controlFila=1;
 			$vista->accionesFila([
-					['span'=>'glyphicon glyphicon-folder-open','title'=>"Ver objetos del componente",'href'=>$this->obtUrl('objetos.lista',['comp'=>'{clave}'])],
-					['span'=>'glyphicon glyphicon-edit','title'=>"Asignar perfiles de acceso",'href'=>$this->obtUrl('asignarAcceso',['comp'=>'{clave}'])]
+					['span'=>'glyphicon glyphicon-folder-open','title'=>"Ver objetos del componente",'href'=>$this->obtUrl('objetos.lista',['{clave}']),'data-jvista'=>'modal'],
+					['span'=>'glyphicon glyphicon-edit','title'=>"Asignar perfiles de acceso",'href'=>$this->obtUrl('asignarAcceso',['{clave}']),'data-jvista'=>'modal']
 				]);
 
 			$vista->addMensajeNoRegistros('No hay Componentes');
@@ -51,9 +54,9 @@ class ComponentesController extends JController{
 
         if(!empty($idComponente)) $tipoForm=2;
 
-         $F = new RenderHTML\Formulario('Componente',$tipoForm,$idComponente,2);
-         $F->action=$this->url.'set-componente';
-         $F->valueSubmit = "Guardar Componente";
+         $form = new Render\Formulario('Componente',$tipoForm,$idComponente,2);
+         $form->action=$this->url.'set-componente';
+         $form->valueSubmit = "Guardar Componente";
 
          if($this->post('btnComponente')){
              $this->getEntero($this->post('id_componente'));
@@ -71,8 +74,10 @@ class ComponentesController extends JController{
 			 }else	RenderHTML\Formulario::msj('error', 'El componente no existe');
 
          }
-
-         $this->dv->fComponente = $F->armarFormulario();
+         if($this->solicitudAjax())
+               $this->layout = '../ajax.tpl.php';
+         
+         $this->dv->fComponente = $form->armarFormulario();
     }
 
 
@@ -82,22 +87,23 @@ class ComponentesController extends JController{
 		else
 			return false;
 	}
-    function asignarAcceso($acceso){
-		Helpers\Debug::imprimir($this->get(),true);
-        if($this->getEntero($acceso)){
+    function asignarAcceso($acceso=''){
 
+        
+        if(!empty($acceso)){
+            
             $this->vista="accesoPerfiles";
-            $form = new RenderHTML\Formulario('PerfilesAComponentes',2,$acceso,2);
+            $form = new Render\Formulario('PerfilesAComponentes',$acceso);
             $comp = new Modelos\Componente($acceso);
 
-            $form->action=$this->url."asignar-acceso/".$acceso;
+            $form->action = $this->obtUrl('asignarAcceso',[$acceso]);
             $form->valueSubmit="Asignar Perfiles a Objeto";
-            $form->tituloFormulario="Asignar acceso de perfiles al componente $comp->componente";
+            $form->titulo("Asignar acceso de perfiles al componente <strong> $comp->componente</strong>");
 
             if($this->post('btnPerfilesAComponentes')){
 
-                if($form->validarFormulario($this->post())){
-
+                if($form->validar()){
+Helpers\Debug::imprimir('$this->post(',$this->post(),true);
                     if($comp->asignarAccesoPerfiles($this->post('id_perfil'))->ejecutado()){
                         Render\JVista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente '.$comp->componente,$this->urlController());
                     }else
@@ -105,14 +111,20 @@ class ComponentesController extends JController{
                 }else
                     RenderHTML\Formulario::msj('error', 'No se han asignado perfiles');
             }
+            
+            if($this->solicitudAjax())
+               $this->layout = '../ajax.tpl.php';
+            
             $this->dv->formAcceso =$form->armarFormulario();
+            
         }else{
-            Render\JVista::msj('componentes', 'error', "Debe seleccionar un componente");
+            
+            
             if(!$this->solicitudAjax())
                 redireccionar($this->url);
-            else{
-                echo Helpers\Mensajes::mensajeError("Debe seleccionar un componente");
-            }
+            else
+                Render\JVista::msj('componentes', 'error', "Debe seleccionar un componente");
+            
         }
     }
 }

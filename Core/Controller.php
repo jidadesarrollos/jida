@@ -565,7 +565,7 @@ class Controller {
      * @param string $data parametros pasados a la funcion
      * @return string $url
      */
-    protected function obtUrl($metodo="",$data=array()){
+    protected function obtUrl($metodo="",$data=[]){
 
 // Helpers\Debug::imprimir('obtUrl',$metodo,$data);
 
@@ -591,10 +591,12 @@ class Controller {
                 $metodo=$url[1];
 
             }else{
-// Helpers\Debug::imprimir('$this->urlController()',$this->urlController(),'$this->_clase',strtolower($this->_clase));
-                $urlController = (strpos(strtolower($this->_clase), 'jadmin'))?'/jadmin':'';
+// Helpers\Debug::imprimir('$this->urlController() -> '.$this->urlController(),'$this->_clase '.strtolower($this->_clase));
+                if(strpos(strtolower($this->_clase), 'jadmin')){
+                    $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
+                    $urlController .= $this->urlController();
+                }
                 
-                $urlController .= $this->urlController();
                 $ctrl = $this->_clase;
                 
             }
@@ -618,6 +620,7 @@ class Controller {
             }
 
         }else{
+            Helpers\Debug::string($this->urlActual(2),true);
             return $this->urlActual(2);
         }
 

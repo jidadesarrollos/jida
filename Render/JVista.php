@@ -322,13 +322,15 @@ class JVista{
 
 
         if(count($this->clausulas)>0){
-            foreach ($this->clausulas as $clausula => $params) {
+            foreach ($this->clausulas as $key => $arrParams) {
+                foreach ($arrParams as $clausula => $param) {
 
-                if(is_array($params)){
-                    call_user_func_array([$this->objeto,$clausula], $params);
-
-                }else{
-                    $this->objeto->{$clausula}($params);
+                    if(is_array($param)){
+                        call_user_func_array([$this->objeto,$clausula], $param);
+    
+                    }else{
+                        $this->objeto->{$clausula}($param);
+                    }
                 }
             }
         }
@@ -941,7 +943,8 @@ class JVista{
             	if($key!=0)
 					$params[$nombreClausula][]=$value;
             }
-            $this->clausulas=$params;
+            
+            $this->clausulas[$nombreClausula]=$params;
         }
 
     }

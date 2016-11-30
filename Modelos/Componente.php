@@ -46,7 +46,7 @@ class Componente extends BD\DataModel{
 	}
 	
 	function obtComponentes(){
-		return $this->consulta(['id_componente','componente'])->obt('id_metodo');
+		return $this->consulta(['id_componente','componente'])->obt('id_componente');
 	}
 
 }//fin clase
