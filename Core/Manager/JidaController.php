@@ -697,6 +697,11 @@ global $JD;
     private function mostrarContenido($vista=""){
         global $dataVista;
         $this->vista->data = $dataVista;
+		$this->vista->_namespace = $this->_namespace;
+		$this->vista->_controller = $this->_controlador;
+		
+		$this->vista->_modulo = ($this->_modulo);
+		
         $this->vista->renderizar($vista);
 
     }
