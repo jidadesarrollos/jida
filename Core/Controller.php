@@ -269,13 +269,21 @@ class Controller {
         }
     }
     /**
+     * @see self::obtString
+	 * @deprecated 0.4
+     */
+    protected function getString($valor){
+    	return $this->obtString($valor);
+	}
+	/**
      * Filtra contenido de Texto
      *
      * Convierte el contenido de una variable en codigo aceptado HTML
      * @param string $valor Valor capturado a validar
      * @return string $valor Valor sanado.
+	 * @since 1.5
      */
-    protected function getString($valor){
+    protected function obtString($valor){
 
         if(!empty($valor)){
             $valor  = htmlspecialchars($valor,ENT_QUOTES);
@@ -283,26 +291,41 @@ class Controller {
         return $valor;
 
     }
+	/**
+	 * @deprecated 0.5
+	 * @see self::obtEntero
+	 */
+	protected function getEntero($valor){
+		return $this->obtEntero($valor);
+	}
     /**
      * Valida y filtra el contenido de una variable como Entero
      *
      * @param $string $valor
      * @return int $valor;
+	 * @since 1.5
      */
-    protected function getEntero($valor){
+    protected function obtEntero($valor){
        if(!empty($valor)){
            $valor = filter_var($valor,FILTER_VALIDATE_INT);
            return $valor;
        }
        return false;
     }
+	/**
+     * @see self:obtDecimal
+	 * @deprecated
+     */
+    protected function getDecimal($valor){
+    	return obtDecimal($valor);
+	} 
     /**
      * Valida y filta el contenido de una variable como Float
      * @method getDecimal
      * @param $string $valor
      * @return flaot $valor;
      */
-    protected function getDecimal($valor){
+    protected function obtDecimal($valor){
        if(!empty($valor) and is_float($valor)){
            return $valor;
        }
