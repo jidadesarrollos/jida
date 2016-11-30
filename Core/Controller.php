@@ -643,7 +643,6 @@ class Controller {
             }
 
         }else{
-            Helpers\Debug::string($this->urlActual(2),true);
             return $this->urlActual(2);
         }
 

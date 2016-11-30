@@ -230,8 +230,6 @@ class Formulario extends  Selector{
 	function addDataUpdate($data=""){
 		if(empty($data)) $data = $this->_dataUpdate;
         
-Helpers\Debug::imprimir('$data',$data,'$this->_dataUpdate',$this->_dataUpdate);
-        
 		foreach ($data as $campo => $valor) {
 			if(array_key_exists($campo, $this->_campos))
 			{
