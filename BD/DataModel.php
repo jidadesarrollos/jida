@@ -81,15 +81,16 @@ class DataModel{
      */
     protected $tieneMuchos = [];
     /**
-     * Arreglo que define las relaciones muchos a muchos
-     * @var $muchosAMuchos
+     * Arreglo que define las relaciones muchos a muchos del objeto
+	 * 
+     * @property $pertenece
      * @access protected
      *
      */
-    protected $perteneceAMuchos=array();
+    protected $pertenece=[];
     /**
      * Registra la relacion inversa Uno a Muchos
-     * @var $pertenece
+     * @property $pertenece
      * @access protected
      *
      */
@@ -310,11 +311,12 @@ class DataModel{
      * Verifica las relaciones declaradas del Objeto
      */
     protected function obtenerDataRelaciones(){
-        $a=0;
+        
 
 		$this 	->obtTieneUno()
 				->obtTieneMuchos()
 				->obtPerteneceAUno()
+				->obtPertenece()
 				->instanciarRelaciones();
 
 
@@ -334,9 +336,13 @@ class DataModel{
 
 		return $this;
 	}
+	/**
+	 * Define todas las propiedades de relación del objeto instanciado
+	 * @method instanciarRelaciones
+	 */
 	private function instanciarRelaciones(){
 
-	
+			
 		$data = $this->bd->obtenerDataMultiQuery(
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
@@ -345,8 +351,10 @@ class DataModel{
 		foreach ($data as $relacion => $info) {
 			$claseSola = $this->obtClaseNombre($relacion);
 			
-			if(in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->tieneMuchos)){
-				
+			if(	in_array($relacion, $this->tieneMuchos) 		or 
+				array_key_exists($relacion, $this->tieneMuchos)	or 
+				array_key_exists($relacion, $this->pertenece)	
+			){
 				
 				
 				$this->{$this->obtClaseNombre($claseSola)} = [];
@@ -399,6 +407,7 @@ class DataModel{
 		foreach ($this->tieneMuchos as $key => $relacion) {
 
 			if(is_array($relacion)){
+				
 				$rel = new $key();
 				$consulta = $rel->consulta();
 				if(array_key_exists('rel', $relacion)){
@@ -467,7 +476,33 @@ class DataModel{
 		return $this;
 	//	$this->debug($consultas);
 	}
-
+	/**
+	 * Genera las consultas para las relaciones MaN
+	 * @method obtPertenece
+	 * @since 0.5
+	 */
+	private function obtPertenece(){
+		$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
+		
+		foreach ($this->pertenece as $nombreRelacion => $data) {
+			if(is_array($data)){
+				$nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
+				$objRelacion =new $nombreObj();
+				$campos = array_key_exists('campos', $data)?$data['campos']:'';
+				
+				$objRelacion->consulta($campos);
+				$relacion = (array_key_exists('relacion', $data))?$data['relacion']:FALSE;
+				$camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
+				if($relacion){
+					$objRelacion->join($relacion,$camposRelacion)
+								->filtro([$relacion.".".$this->pk=>$this->{$this->pk}]);
+				}
+				
+				$this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
+			}
+		}
+		return $this;
+	} 
     /**
      * Permite instanciar un objeto ya inicializado
      * @method instanciar
@@ -690,6 +725,9 @@ class DataModel{
                 $tablaRelacion = $data['tabla_join'];
             }
 
+        }else{
+        	$clave = $claveRelacion = $this->pk;
+			
         }
 
         if(!empty($campos)){
@@ -943,7 +981,7 @@ class DataModel{
      * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
      * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
      * @return object $this Objeto DataModel instanciado
-     * 02418586494 karen
+     *
      *
      */
     function filtro($arrayFiltro=[],$arrayOr=[]){
