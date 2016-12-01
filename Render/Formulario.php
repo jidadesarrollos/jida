@@ -223,6 +223,20 @@ class Formulario extends  Selector{
 
 	}
 	/**
+	 * Remueve la etiqueta FORM del formulario
+	 * 
+	 * Esta funcion puede llamarse cuando se deseen integrar multiples formularios
+	 * en una misma pantalla
+	 * @method removerTagForm
+	 * @param string $class Clase CSS que se desee agregar al div
+	 * @return void
+	 */
+	function removerTagForm($class="form-alone"){
+		$this->selector = 'DIV';
+		$this->attr=[];
+		$this->addClass($class);
+	}
+	/**
 	 * Agrega los valores a modificar con el formulario
 	 * @method addDataUpdate
 	 * @revision
