@@ -243,7 +243,7 @@ class Formulario extends  Selector{
 	 */
 	function addDataUpdate($data=""){
 		if(empty($data)) $data = $this->_dataUpdate;
-
+        
 		foreach ($data as $campo => $valor) {
 			if(array_key_exists($campo, $this->_campos))
 			{
@@ -685,7 +685,8 @@ class Formulario extends  Selector{
 				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
 				if($result['validacion']!==TRUE){
-					$this->_errores[$dataCampo['campo']] = $result['validacion'];
+				Helpers\Debug::imprimir($dataCampo);
+					$this->_errores[$dataCampo['name']] = $result['validacion'];
 				}else{
 					$valorCampo = $result['campo'];
 				}
@@ -705,7 +706,7 @@ class Formulario extends  Selector{
 			
 		}
 		if($this->_errores){
-			Helpers\Sesion::set('__erroresForm',$this->errores);
+			Helpers\Sesion::set('__erroresForm',$this->_errores);
 			Helpers\Sesion::set('_dataPostForm',$datos);
 			Helpers\Sesion::set('__dataPostForm','id_form',$this->_idUpdate);
 			return false;

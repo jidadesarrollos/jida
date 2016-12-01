@@ -66,8 +66,8 @@ class Sesion {
 	 * @deprecated
 	 * @see self::destruir
 	 */
-	static function destroy(){
-		
+	static function destroy($key=false){
+		self::destruir($key);
 	}
     /**
      * Registra el inicio de una sesion loggeada

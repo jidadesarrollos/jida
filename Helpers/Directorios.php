@@ -92,7 +92,7 @@ class Directorios extends \Directory{
                 closedir($directorio);
             }//fin if openRuta
         }else{
-            throw new Exception("La ruta a listar no es una ruta valida $ruta", 333);
+            throw new \Exception("La ruta a listar no es una ruta valida $ruta", 333);
         }
         return $arr;
     }

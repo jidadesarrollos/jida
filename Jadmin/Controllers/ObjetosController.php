@@ -10,15 +10,16 @@
 
 namespace Jida\Jadmin\Controllers;
 use Exception;
-use Jida\RenderHTML as RenderHTML;
+use Jida\Render as Render;
+use Jida\Modelos as Modelos;
 use Jida\RenderHTML\Vista as Vista;
 use Jida\Helpers as Helpers;
 class ObjetosController extends JController{
 
 
-
-
 	var $Mperfil = "";
+    var $manejoParams=TRUE;
+    
     function __construct($id=""){
         $this->helpers=array('Arrays');
         parent::__construct();
@@ -90,16 +91,16 @@ class ObjetosController extends JController{
     /**
      * Verifica los objetos existentes en un directorio especificado o en todos.
      *
-     * Si la funcion consigue nuevos controladores Los registra en base de datos, si valida que se encuentran
+     * @internal Si la funcion consigue nuevos controladores Los registra en base de datos, si valida que se encuentran
      * registrados controladores que ya no existen, los elimina
      *
      * @method validarObjetos
      * @access private
      */
-    private function validarObjetos(Componente  $componente){
-        $objetosInexistentes =array();
-        $objetosNuevos=array();
-        $nombreComponente = Cadenas::upperCamelCase($componente->componente);
+    private function validarObjetos(Componente $componente){
+        $objetosInexistentes = [];
+        $objetosNuevos = [];
+        $nombreComponente = Helpers\Cadenas::upperCamelCase($componente->componente);
 		if($nombreComponente=='Principal'){
 			$rutaComponente= DIR_APP."Controller/";
 		}else{
@@ -107,7 +108,7 @@ class ObjetosController extends JController{
 		}
 
         $objetosCarpeta = [];
-        Directorios::listarDirectoriosRuta($rutaComponente,$objetosCarpeta,"/^.*Controller.class.php$/");
+        Helpers\Directorios::listarDirectoriosRuta($rutaComponente,$objetosCarpeta,"/^.*Controller.class.php$/");
         array_walk($objetosCarpeta,function(&$objeto,$key){
                      $objeto =str_replace("Controller.class.php", "", $objeto);
                 });
@@ -146,13 +147,12 @@ class ObjetosController extends JController{
      */
     function lista($item){
 
-Helpers\Debug::imprimir('lista',$item);
-
 	  $this->tituloPagina="jida-Registro Componentes";
       $this->dv->vista="";
-      if($this->get('comp')){
+      if(!empty($item)){
       	$idComponente = $this->getEntero($this->get('comp'));
-	    $comp = new Componente($idComponente);
+	    $comp = new Modelos\Componente($idComponente);
+
         $this->validarObjetos($comp);
         $query = "select id_objeto,objeto as \"Objeto\",descripcion \"Descripci&oacute;n\" from s_objetos where id_componente = $idComponente";
         $vista =$this->vistaObjetos($query);
@@ -160,8 +160,11 @@ Helpers\Debug::imprimir('lista',$item);
         $vista->mensajeError= "No hay registros de ".$vista->tituloVista . " <a href=\"".$this->url."set-objeto/comp/$idComponente\">Agregar objeto</a>";
         $this->dv->vista = $vista->obtenerVista();
       }else{
-      	RenderHTML\Vista::msj('componentes','alert','Debe seleccionar un componente');
+      	Render\JVista::msj('componentes','alert','Debe seleccionar un componente');
       }
+      
+      if($this->solicitudAjax())
+        $this->layout = '../ajax.tpl.php';
    }
 
 
