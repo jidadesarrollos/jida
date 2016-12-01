@@ -14,8 +14,9 @@
 
 namespace Jida\RenderHTML;
 use Jida\BD as BD;
-use Jida\Modelos\Viejos\Menu as Menu;
-use Jida\Render\Selector as Selector;
+use Jida\Modelos\Viejos\Menu 	as Menu;
+use Jida\Helpers 				as Helpers;
+use Jida\Render\Selector 		as Selector;
 class MenuHTML extends BD\DBContainer{
 
     /**
@@ -191,12 +192,18 @@ class MenuHTML extends BD\DBContainer{
                         if(!array_key_exists('atributos', $this->tagAdicionalLIpadre)):
                             $this->tagAdicionalLIpadre['atributos']=array();
                         endif;
-                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.
-                        Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']),3,true);
+						
+						$atributoslink = $this->tagAdicionalLIpadre['atributos'];
+						
+                        $opc = Selector::crear(
+                        $this->tagAdicionalLIpadre['selector'],$atributoslink,$icono.
+                        Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']
+						)
+                        ,3,true);
                     }else{
                         $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
                     }
-
+					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);
                     $listaMenu.=Selector::crear("li",$atributos,$opc.$submenu['html'],2,true);
                 }else{
 
@@ -204,6 +211,7 @@ class MenuHTML extends BD\DBContainer{
                     $span =Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
 
                     $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$icono.$span,3);
+					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);					
                     $listaMenu.=Selector::crear("li",$atributos,$enlace,2,true);
                 }
 
@@ -242,16 +250,17 @@ class MenuHTML extends BD\DBContainer{
         $listaMenu="";
         if(array_key_exists($nivel, $config['li'])){
         	if(is_array($config['li'][$nivel]) and array_key_exists('class', $config['li'][$nivel]))
-            	$cssli['class'] = $config['li'][$nivel]['class'];
+            	$configCSS = $config['li'][$nivel]['class'];
 			else {
-				$cssli['class'] = $config['li'][$nivel];
+				$configCSS = $config['li'][$nivel];
 			}
         }else{
-            $cssli['class'] ="";
+            $configCSS ="";
         }
+		
         foreach ($opciones as $key => $subopcion) {
 
-
+			$cssli['class'] = $configCSS;
             $icono="";
             if(!empty($subopcion['icono'])):
 
@@ -263,9 +272,13 @@ class MenuHTML extends BD\DBContainer{
                 }
             endif;
             if($subopcion['padre']==$padre){
+            	
                 if($subopcion['hijo']==1){
+                	
                    $cssli = array_merge($cssli,$this->atributosLIParent);
                     $submenus = $this->armarMenuRecursivoHijos($opciones,$config,$subopcion['id_opcion_menu'],$nivel+1);
+					
+
                     //Se agrega separador para lis padres si existe;
                     if(array_key_exists('caret', $config['li']))
                         $cssli['class']=$cssli['class']." ".$this->configuracion['li']['caret'];
@@ -288,6 +301,7 @@ class MenuHTML extends BD\DBContainer{
                         $ulOpen=TRUE;
                         $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
                     }
+					
                     $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$icono.$span,$ident+3);
                     $listaMenu.=Selector::crear("li",$cssli,$enlace,$nivel+2,true);
                 }

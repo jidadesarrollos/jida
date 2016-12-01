@@ -37,6 +37,10 @@ class Numeros{
 		}
 		return $numero;
 	}
+	
+	public static function validarInt($valor){
+		return filter_var($valor,FILTER_VALIDATE_INT);
+	}
 	/**
 	 * @deprecated 0.5
 	 */
