@@ -269,13 +269,21 @@ class Controller {
         }
     }
     /**
+     * @see self::obtString
+	 * @deprecated 0.4
+     */
+    protected function getString($valor){
+    	return $this->obtString($valor);
+	}
+	/**
      * Filtra contenido de Texto
      *
      * Convierte el contenido de una variable en codigo aceptado HTML
      * @param string $valor Valor capturado a validar
      * @return string $valor Valor sanado.
+	 * @since 1.5
      */
-    protected function getString($valor){
+    protected function obtString($valor){
 
         if(!empty($valor)){
             $valor  = htmlspecialchars($valor,ENT_QUOTES);
@@ -283,26 +291,41 @@ class Controller {
         return $valor;
 
     }
+	/**
+	 * @deprecated 0.5
+	 * @see self::obtEntero
+	 */
+	protected function getEntero($valor){
+		return $this->obtEntero($valor);
+	}
     /**
      * Valida y filtra el contenido de una variable como Entero
      *
      * @param $string $valor
      * @return int $valor;
+	 * @since 1.5
      */
-    protected function getEntero($valor){
+    protected function obtEntero($valor){
        if(!empty($valor)){
            $valor = filter_var($valor,FILTER_VALIDATE_INT);
            return $valor;
        }
        return false;
     }
+	/**
+     * @see self:obtDecimal
+	 * @deprecated
+     */
+    protected function getDecimal($valor){
+    	return obtDecimal($valor);
+	} 
     /**
      * Valida y filta el contenido de una variable como Float
      * @method getDecimal
      * @param $string $valor
      * @return flaot $valor;
      */
-    protected function getDecimal($valor){
+    protected function obtDecimal($valor){
        if(!empty($valor) and is_float($valor)){
            return $valor;
        }
@@ -565,9 +588,9 @@ class Controller {
      * @param string $data parametros pasados a la funcion
      * @return string $url
      */
-    protected function obtUrl($metodo="",$data=array()){
+    protected function obtUrl($metodo="",$data=[]){
 
-    	// Helpers\Debug::imprimir('obtUrl',$metodo,$data);
+// Helpers\Debug::imprimir('obtUrl',$metodo,$data);
 
         if(!empty($metodo)){
 
@@ -585,17 +608,23 @@ class Controller {
 					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
 				}
 
-// Helpers\Debug::imprimir('pila aqui',Cadenas::upperCamelCase($url[0]));
+// Helpers\Debug::imprimir('$ctrl',$ctrl,'$url',$url);
 
-// Helpers\Debug::imprimir('hereeee','$ctrl',$ctrl);
                 $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
 
             }else{
+// Helpers\Debug::imprimir('$this->urlController() -> '.$this->urlController(),'$this->_clase '.strtolower($this->_clase));
+                if(strpos(strtolower($this->_clase), 'jadmin')){
+                    $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
+                    $urlController .= $this->urlController();
+                }
+                
                 $ctrl = $this->_clase;
-                $urlController = $this->urlController();
+                
             }
-// Helpers\Debug::imprimir('akaka',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
+            
+// Helpers\Debug::imprimir('$urlController',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
 
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
@@ -606,7 +635,7 @@ class Controller {
                         $params.="$value/";
 					}
                 }
-                // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+// Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
             }else{
 

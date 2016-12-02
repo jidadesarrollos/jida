@@ -278,7 +278,7 @@ class JVista{
 				$this->obtInformacionObjeto();
 			}
 		}else{
-			throw new \Exception("No existe el objeto pasado", 2);
+			throw new \Exception("No existe el objeto pasado: ".$dataConsulta[0], 2);
 		}
 
 	}
@@ -322,13 +322,15 @@ class JVista{
 
 
         if(count($this->clausulas)>0){
-            foreach ($this->clausulas as $clausula => $params) {
+            foreach ($this->clausulas as $key => $arrParams) {
+                foreach ($arrParams as $clausula => $param) {
 
-                if(is_array($params)){
-                    call_user_func_array([$this->objeto,$clausula], $params);
-
-                }else{
-                    $this->objeto->{$clausula}($params);
+                    if(is_array($param)){
+                        call_user_func_array([$this->objeto,$clausula], $param);
+    
+                    }else{
+                        $this->objeto->{$clausula}($param);
+                    }
                 }
             }
         }
@@ -899,6 +901,7 @@ class JVista{
 	 * Las opciones a pasar son : cssContendor,link,cssLink,txtLink
 	 */
 	function addMensajeNoRegistros($msj,$cssDiv=[]){
+		
 		$dataDefault=[
 			'link'=>false,
 			'cssContenedor'=>'alert alert-warning',
@@ -908,17 +911,20 @@ class JVista{
 
 		];
 		$msj= Selector::crear('div.'.$dataDefault['cssContenedor'],[],$msj);
-		foreach ($cssDiv as $key => $value){
-			$dataDefault=array_merge($dataDefault,$value);
+		$dataDefault=array_merge($dataDefault,$cssDiv);
+		//Helpers\Debug::imprimir($dataDefault,true);
+		//foreach ($cssDiv as $key => $value){
+			
 			if($dataDefault['link']){
 				$this->htmlPersonalizado=TRUE;
 				$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
 				array_merge(['href'=>$dataDefault['link']],$dataDefault['attrLink']),
 				$dataDefault['txtLink']);
 			}
-		}
+		//}
 
 		$this->mensajeNoRegistros=$msj;
+		#Helpers\Debug::imprimir($msj,true);
 	}
     /**
      * Permite agregar clausulas a la consulta realizada por la vista
@@ -937,7 +943,8 @@ class JVista{
             	if($key!=0)
 					$params[$nombreClausula][]=$value;
             }
-            $this->clausulas=$params;
+            
+            $this->clausulas[$nombreClausula]=$params;
         }
 
     }

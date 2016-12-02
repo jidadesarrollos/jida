@@ -183,8 +183,10 @@ global $JD;
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
 
-                $this->_arrayUrl = array_filter($url);
-
+                $this->_arrayUrl = array_filter($url,function($var){	
+            		return ($var !== NULL && $var !== FALSE && $var !== '');
+                });
+				
                 if(array_key_exists($this->_arrayUrl[0], $this->idiomas)){
                     $this->idiomaActual=$this->_arrayUrl[0];
 
@@ -209,6 +211,7 @@ global $JD;
             //se procesa la URL
 
             $this->procesarURL();
+			
             #Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
@@ -298,8 +301,6 @@ global $JD;
      * @return boolean
      */
     private function esMetodoValido($metodo,$error=false){
-        $a = new $this->_controlador();
-
         if(class_exists($this->_controlador))
         {
             $clase = new ReflectionClass($this->_controlador);
@@ -410,7 +411,7 @@ global $JD;
      * @since 0.5;
      */
     private function _procesarJadmin(){
-
+		
         $checkModulo = FALSE;
 		$path = '\\App\\Jadmin\\Controllers\\';
 		$posController = array_shift($this->_arrayUrl);
@@ -467,11 +468,11 @@ global $JD;
             }
             $band = 0;
             $clave = TRUE;
-
+			
             $this->args = array_filter($this->args,function($value){
                 return !empty($value);
             });
-
+			
             $totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
@@ -526,12 +527,12 @@ global $JD;
                 $acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
 
             }else{
-            	echo "aka";
+            	//echo "aka";
             } $acceso=TRUE;
-
+			
            if($acceso===TRUE){
                 global $dataVista;
-                //Helpers\Debug::imprimir($this->_modulo,$this->_nombreControlador,$this->_metodo,true);
+                
                 $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin);
                 $this->vista->data = $dataVista;
                 $this->ejecucion($this->_controlador);
@@ -587,6 +588,7 @@ global $JD;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
+		
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
 
@@ -695,6 +697,11 @@ global $JD;
     private function mostrarContenido($vista=""){
         global $dataVista;
         $this->vista->data = $dataVista;
+		$this->vista->_namespace = $this->_namespace;
+		$this->vista->_controller = $this->_controlador;
+		
+		$this->vista->_modulo = ($this->_modulo);
+		
         $this->vista->renderizar($vista);
 
     }

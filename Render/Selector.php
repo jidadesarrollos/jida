@@ -9,6 +9,7 @@
  */
 
 namespace Jida\Render;
+use Exception as Excepcion;
 class Selector{
 
  /**
@@ -20,6 +21,7 @@ class Selector{
     protected $id="";
     protected $atributos=[];
     protected $envoltorio="";
+	
     /**
      * Atributos data para el selector
      * @var array $data
@@ -171,7 +173,7 @@ class Selector{
 
             foreach ( $atributos as $key => $value ) {
                 if(is_array($value)){
-                	throw new Exception("se ha pasado un arreglo para el key ".$key, 1);
+                	throw new Excepcion("se ha pasado un arreglo para el key ".$key, 1);
 
                 }
                 $selectorHTML .= " $key=\"$value\"";
@@ -237,7 +239,7 @@ class Selector{
                     }
                 }
             }else{
-                throw new Exception("No se ha definido el arreglo de contenido para la lista", 1);
+                throw new Excepcion("No se ha definido el arreglo de contenido para la lista", 1);
 
             }
 
@@ -317,16 +319,23 @@ class Selector{
 
     function render(){
         $html="";
-		#Jida\Debug::imprimir($this->selector,true);
+		
+		
         if(!$this->selectorCierre()){
             if(!empty($this->selector)){
                 $html = "<".$this->selector." ".$this->renderAttr()." />\n";
             }
         }else{
             if(!empty($this->selector)){
-                $html = "\n<".$this->selector."".$this->renderAttr().">\n\t";
-
-                $html.=$this->renderContenido()."\n</".$this->selector.">";
+            	if($this->selector=='textarea')
+				{
+					$html = "\n<".$this->selector."".$this->renderAttr().">";
+                	$html.=trim($this->renderContenido())."</".$this->selector.">";
+				}else{
+					$html = "\n<".$this->selector."".$this->renderAttr().">\n\t";
+	                $html.=$this->renderContenido()."\n</".$this->selector.">";	
+				}
+                
 
             }
 
@@ -367,7 +376,7 @@ class Selector{
                }else{
 
                		if(!is_string($attr) or !is_string($value))
-						throw new Exception("Debe ser un string el valor pasado", 1);
+						throw new Excepcion("Debe ser un string el valor pasado", 1);
 
                		$atribs.=$attr."=\"".$value."\"";
                }

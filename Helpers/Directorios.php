@@ -92,7 +92,7 @@ class Directorios extends \Directory{
                 closedir($directorio);
             }//fin if openRuta
         }else{
-            throw new Exception("La ruta a listar no es una ruta valida $ruta", 333);
+            throw new \Exception("La ruta a listar no es una ruta valida $ruta", 333);
         }
         return $arr;
     }
@@ -125,7 +125,8 @@ class Directorios extends \Directory{
     /**
      * Elimina un directorio y su contenido
      *
-     * @internal Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la carpeta pasada
+     * @internal Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la
+	 *  carpeta pasada
      * @method eliminar
      */
     static function eliminar($dir){

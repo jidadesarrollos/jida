@@ -33,11 +33,11 @@ class Sesion {
      * Si es pasado un key se elimina una variable especifica,
      * caso contrario se elimina la session completa
      * @var $key clave o arreglo de claves de variable de session que se desea eliminar
-     * @method cerrarSession
+     * @method destruir
      * @access public
      */
-
-    static function destroy($key=false){
+	
+    static function destruir($key=false){
         if($key){
             if(is_array($key)){
                 foreach ($key as $clave) {
@@ -59,7 +59,16 @@ class Sesion {
         }
         return true;
     }
-
+	/**
+	 * Alias de funcion destruir
+	 * @method destroy
+	 * @access static
+	 * @deprecated
+	 * @see self::destruir
+	 */
+	static function destroy($key=false){
+		self::destruir($key);
+	}
     /**
      * Registra el inicio de una sesion loggeada
      * cambiando el id de la sesion.

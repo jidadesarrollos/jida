@@ -10,16 +10,41 @@
 
 namespace Jida\Helpers;
 class Numeros{
-        
+    
+	
+	static $moneda = 'Bs.';
+	static $separadorMiles = ".";
+	static $separadorDecimales = ",";
+	static $monedaAntes = FALSE; 
     /**
 	 * Devuelve un número en formato de moneda
 	 * @method moneda
-	 * @param mixed $numero
-	 * @param int $decimales Por defecto es 2
-	 * @param string $type de moneda
+	 * @param mixed $valor Numero a formatear
+	 * @param string $post Texto A agregar posteriormente. 
+	 * @param int $decimales
+	 * @param string $separador Separador de miles
+	 * @param boolean $textPre Define si $post va antes o despues del número
+	 
 	 * @return string $numero Numero resultante
 	 */
-    public static function moneda($numero,$decimales=2,$type="bolivar"){
+	public static function moneda($valor,$decimales=2,$moneda=FALSE){
+		
+	
+		$numero = number_format($valor,$decimales,self::$separadorDecimales,self::$separadorMiles);
+		if($moneda){
+			if(self::$monedaAntes) return self::$moneda." ".$numero;
+			return $numero." ".self::$moneda;
+		}
+		return $numero;
+	}
+	
+	public static function validarInt($valor){
+		return filter_var($valor,FILTER_VALIDATE_INT);
+	}
+	/**
+	 * @deprecated 0.5
+	 */
+    public static function _moneda($numero,$decimales=2,$type="bolivar"){
         switch ($type) {
             case 'dolar':
                 $numero =($numero=="")?"":number_format($numero,$decimales,".",",");

@@ -14,23 +14,20 @@ namespace Jida\Modelos;
 use Jida\BD as BD;
 use Jida\Helpers as Helpers;
 use Exception;
+
 class User extends BD\DataModel{
     /**
-     *
-	 *
 	 * @var int $id_usuario Identificador del usuario
 	 * @access public
      */
     var $id_usuario;
 
     /**
-     *
 	 * @var string $nombre_usuario Nombre del usuario
 	 * @access public
      */
     var $nombre_usuario;
     /**
-     *
      * @var string $clave_usuario Clave de acceso del usuario
      * @access public
      */
@@ -94,10 +91,10 @@ class User extends BD\DataModel{
     function validarLogin($usuario,$clave,$validacion=true,$callback=null){
         $clave = md5($clave);
 
-        $result = $this ->select()
+        $result = $this ->consulta()
                         ->filtro(['clave_usuario'=>$clave,'nombre_usuario'=>$usuario,'validacion'=>1])
                         ->fila();
-        if($this->bd->totalRegistros>0){
+        if( count($result) > 0 ){
 
             $this->establecerAtributos($result);
 
@@ -109,10 +106,11 @@ class User extends BD\DataModel{
             $this->obtenerPerfiles();
 
             return $result;
-        }else{
+        }else
             return false;
-        }
+        
     }
+    
 	private function  stringConsulta(){
 		return "select
 			a.id_usuario_perfil AS id_usuario_perfil,
@@ -128,25 +126,29 @@ class User extends BD\DataModel{
 			join s_usuarios c on (a.id_usuario = c.id_usuario)";
 
 	}
+    
     /**
      * Obtiene los perfiles asociados a un usuario de base de datos
      * @method obtenerPerfiles
      * @access private
      */
     private function obtenerPerfiles($idUser=""){
-        if($idUser!=""){
+        if($idUser!="")
             $this->id_usuario = $idUser;
-        }
-        if(count($this->perfiles)<1){
+        
+        
+        if( count($this->perfiles) < 1 ){
             $query = $this->stringConsulta()." where a.id_usuario=$this->id_usuario";
             $data  = $this->bd->ejecutarQuery($query);
+            
             if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
+            
             while($perfil = $this->bd->obtenerArrayAsociativo($data))
-                $this->perfiles[]=$perfil['clave_perfil'];
+                $this->perfiles[] = $perfil['clave_perfil'];
 
-        }else{
-        	$this->perfiles[]='UsuarioPublico';
-        }
+        }else
+        	$this->perfiles[] = 'UsuarioPublico';
+        
     }
     /**
      * Retorna los perfiles asociados al usuario inicializado
@@ -172,6 +174,7 @@ class User extends BD\DataModel{
 		}else return false;
 
 	}
+    
 	/**
 	 * Registra los perfiles asociados a un usuario
 	 * @method asociarPerfiles
@@ -182,16 +185,19 @@ class User extends BD\DataModel{
             $insert="insert into s_usuarios_perfiles values ";
             $i=0;
             foreach ($perfiles as $key => $idPerfil) {
-                if($i>0)$insert.=",";
+                    
+                if($i>0)    $insert.=",";
+                
                 $insert.="(null,$this->id_usuario,$idPerfil)";
-
                 $i++;
             }
+            
             $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
 
             $this->bd->ejecutarQuery($delete.$insert,2);
-            return array('ejecutado'=>1);
+            return ['ejecutado'=>1];
 	}
+    
     /**
      * Cambia la clave de un usuario
      * @method cambiarClave
@@ -216,22 +222,25 @@ class User extends BD\DataModel{
      * @param array $perfiles Perfiles que se asocian al usuario a registrar
      */
     function registrarUsuario($datos,$perfiles="",$validacion=TRUE){
-        if(empty($perfiles)){
+        if(empty($perfiles))
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
-
-        }
+        
         $this->establecerAtributos($datos);
+        
         if($validacion===TRUE){
-        	$codigo =hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
+        	$codigo = hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
 	        $this->validacion=$codigo;
 	        $this->activo=0;
         }
+        
         $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
-        if($this->salvar()->ejecutado()){
+        
+        if($this->salvar()->ejecutado() == 1){
             $this->id_usuario=$this->resultBD->idResultado();
 
             $this->asociarPerfiles($perfiles);
         }
+        
         return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico(),'validacion'=>$this->validacion];
     }
     /**
@@ -264,16 +273,18 @@ class User extends BD\DataModel{
     }
 
     function obtenerUsuarioByEmail($correo){
-        $data  = $this->select()->filtro(['correo'=>$correo])->fila();
+        $data  = $this->consulta()->filtro(['correo'=>$correo])->fila();
 
-        if($this->bd->totalRegistros>0){
+        if( count($data) > 0 ){
 
             $this->establecerAtributos($data);
             $this->registrarSesion();
             return true;
+            
         }else return false;
 
     }
+    
     /**
      * Cierra la sesión de un usuario
      * @method cerrarSesion
@@ -282,17 +293,19 @@ class User extends BD\DataModel{
     function cerrarSesion($idUser=""){
         if(empty($idUser))
             $idUser=$this->id_usuario;
+        
         $this->activo=0;
         $this->salvar();
     }
 
 	function agregarPerfilSesion($perfil){
-		if(is_array($perfil)){
+		if(is_array($perfil))
 			$this->perfiles = array_merge($this->perfiles,$perfil);
-		}
+		
 		$this->perfiles[]=$perfil;
 
 	}
+    
 	function crearSesionUsuario(){
 		Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario',$this);
@@ -305,5 +318,11 @@ class User extends BD\DataModel{
 	function guardarSesion(){
 		Helpers\Sesion::set('Usuario',$this);
 	}
-
+    
+    function obtUsers(){
+        $this->consulta(['id_usuario','nombre_usuario','fecha_creacion','activo','ultima_session']);
+        $this->join('s_estatus','estatus',['clave'=>'id_estatus','clave_relacion'=>'id_estatus']);
+        
+        return $this->obt('id_usuario');
+    }
 }

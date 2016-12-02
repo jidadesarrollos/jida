@@ -2373,6 +2373,14 @@ input[type="search"]:focus,
 select:focus {
   border-color: #337ab7;
 }
+label {
+  display: block;
+  padding-left: 0!important;
+}
+label + .radio,
+label + .checkbox {
+  margin-top: 0!important;
+}
 body.login {
   width: 100%!important;
   margin: auto;

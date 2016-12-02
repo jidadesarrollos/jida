@@ -87,8 +87,11 @@ class Pagina{
      * @var $template
      * @access private
      */
-
-    private $template;
+	var $_modulo;
+	var  $_controlador;
+	
+	var  $_namespace;
+    var  $template;
     /**
      * Nombre de la vista requerida
      *
@@ -656,7 +659,7 @@ class Pagina{
 	 */
 	function imprimirLibrerias($lang,$modulo=""){
 		$dataInclude=[];
-
+		#\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};
 
@@ -966,8 +969,20 @@ class Pagina{
 	 * Permite acceder a un nexo
 	 *
 	 */
-	function nexo(){
-
+	function nexo($nexo){
+		
+		$partes = explode(".", $nexo);
+		if(count($partes)>1){
+					
+		}else{
+			$namespace = '\App\Modulos\\'.ucwords($this->_modulo).'\Nexos\\';	
+		}
+		$nexoAbsoluto = $namespace.ucfirst($nexo);
+		if(!class_exists($nexoAbsoluto))
+			throw new Excepcion("No existe el nexo solicitado ".$nexoAbsoluto, $this->_ce.'90');
+			
+		$objNexo = new $nexoAbsoluto;
+		return $objNexo;
 	}
 	/**
 	 * Retorna la url publica de los archivos htdocs de un tema
