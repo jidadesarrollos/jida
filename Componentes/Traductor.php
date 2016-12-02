@@ -63,9 +63,7 @@ class Traductor{
 
 		}
 
-
 		$this->textos=$traducciones;
-
     	if(array_key_exists('idiomas', $GLOBALS)){
     	$this->idiomas=$GLOBALS['idiomas'];
     	}else{
