@@ -1,10 +1,10 @@
 <?php
 /**
 * Clase para Formularios
- * 
+ *
  * @internal Renderiza formularios configurados en html visible para el usuario,
  * permite la validación de los mismos y la definición de su estructura.
- * 
+ *
 * @author Julio Rodriguez
 * @package
 * @version
@@ -50,7 +50,7 @@ class Formulario extends  Selector{
 	var $jidaValidador=TRUE;
 	/**
 	 * Registra el query realizado para obtener la data en modo update
-	 * @var string $_consultaUpdate 
+	 * @var string $_consultaUpdate
 	 */
 	private $_consultaUpdate="";
 	/**
@@ -87,7 +87,7 @@ class Formulario extends  Selector{
 	private $_ce="00100";
 	/**
 	 * Registra el orden de los campos
-	 * @internal esta funcion deberia ser provisional para que luego sea 
+	 * @internal esta funcion deberia ser provisional para que luego sea
 	 * reemplazada por una lógica de ordenamiento sobre el arreglo de campos
 	 * @var array $_arrayOrden
 	 */
@@ -174,18 +174,18 @@ class Formulario extends  Selector{
 	private $_botones;
 	/**
 	 * Define el identificador para buscar data en modo update
-	 * 
+	 *
 	 * @internal Si su valor es vacio el formulario se armara en modo
 	 * insert, caso contrario modo update
 	 * @param mixed $_idUpdate;
-	 * 
+	 *
 	 */
 	private $_idUpdate;
 	/**
 	 * Data obtenida para mostrar en modo update
 	 * @var array $_dataUpdate;
 	 */
-	private $_dataUpdate;
+	private $_dataUpdate=[];
 	/**
 	 * Guarda el total de registros traidos en la consulta a base de datos
 	 * para manejarlo en campos de selección multiple
@@ -204,7 +204,7 @@ class Formulario extends  Selector{
 	 */
 	private $_errores=[];
 	/**
-	 * 
+	 *
 	 */
 	function __construct($form="",$idUpdate=""){
 		if($form){
@@ -224,7 +224,7 @@ class Formulario extends  Selector{
 	}
 	/**
 	 * Remueve la etiqueta FORM del formulario
-	 * 
+	 *
 	 * Esta funcion puede llamarse cuando se deseen integrar multiples formularios
 	 * en una misma pantalla
 	 * @method removerTagForm
@@ -243,7 +243,7 @@ class Formulario extends  Selector{
 	 */
 	function addDataUpdate($data=""){
 		if(empty($data)) $data = $this->_dataUpdate;
-        
+
 		foreach ($data as $campo => $valor) {
 			if(array_key_exists($campo, $this->_campos))
 			{
@@ -252,12 +252,12 @@ class Formulario extends  Selector{
 					foreach ($this->_dataUpdateMultiple as $key => $dataUpdate) {
 						if(!array_key_exists($campo, $dataUpdate))
 							break;
-						$this->_campos[$campo]->valor($dataUpdate[$campo]);	
+						$this->_campos[$campo]->valor($dataUpdate[$campo]);
 					}
 				}else{
-					$this->_campos[$campo]->valor($valor);	
+					$this->_campos[$campo]->valor($valor);
 				}
-				
+
 			}
 		}
 		#exit;
@@ -283,7 +283,7 @@ class Formulario extends  Selector{
 	 */
 	private function _cargarFormulario($form){
 		if(Helpers\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
-			
+
 			$this->_path = DIR_APP . 'formularios/' . $form .'.json';
 		}elseif(Helpers\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form .'.json')){
 			$this->_path = DIR_FRAMEWORK . 'formularios/' . $form .'.json';
@@ -464,7 +464,7 @@ class Formulario extends  Selector{
 	}
 	/**
 	 * Instancia los campos configurados del formulairo
-	 * 
+	 *
 	 * @internal gestiona los campos del formulario realizando una instancia
 	 * del objeto SelectorInput sobre cada campo para su posterior renderizacion
 	 * @method _instanciarCamposConfiguracion
@@ -481,7 +481,7 @@ class Formulario extends  Selector{
 		foreach ($this->_configuracion->campos as $id => $campo) {
 			if(!property_exists($campo,'type'))
 				$campo->type="text";
-			
+
 			$orden = (property_exists($campo, 'orden'))?$campo->orden:$id;
 			$this->_arrayOrden[$orden] = $campo->id;
 			$this->_campos[$campo->id] = new SelectorInput($campo);
@@ -499,7 +499,7 @@ class Formulario extends  Selector{
 			$this->_campos[$campo->id]->configuracion =$campo;
 		}//fin foreach
 		ksort($this->_arrayOrden);
-		
+
 
 	}
 
@@ -556,14 +556,14 @@ class Formulario extends  Selector{
 			$columna = $this->_estructura[$i];
 			$columnas+=$columna;
 			$campo->addClass($this->css('input'));
-			
+
 			$content .= $campo->render();
 			$configuracion = $campo->configuracion;
 			$html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
-			
+
 			if(is_object($campo->label))
 				$content = $campo->label->render().$content;
-			
+
 
 			$html = str_replace("{{:contenido}}", $content,$html);
 			$filaPivote->addFinal($html);
@@ -681,7 +681,7 @@ class Formulario extends  Selector{
 			if(array_key_exists('eventos',$dataCampo))
 			{
 				$data[$dataCampo['name']] = trim($data[$dataCampo['name']]);
-				
+
 				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
 				if($result['validacion']!==TRUE){
@@ -690,8 +690,8 @@ class Formulario extends  Selector{
 				}else{
 					$valorCampo = $result['campo'];
 				}
-				
-#				Helpers\Debug::imprimir("validando",$dataCampo,$result);				
+
+#				Helpers\Debug::imprimir("validando",$dataCampo,$result);
 			}
 			if(!is_array($data[$dataCampo['name']])){
 				if($this->setHtmlEntities)
@@ -703,7 +703,7 @@ class Formulario extends  Selector{
 			}else{
 				$datos[$dataCampo['name']] = $valorCampo;
 			}
-			
+
 		}
 		if($this->_errores){
 			Helpers\Sesion::set('__erroresForm',$this->_errores);
@@ -713,7 +713,7 @@ class Formulario extends  Selector{
 		}else{
 			return true;
 		}
-		
+
 	}
     /**
      * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
@@ -742,10 +742,10 @@ class Formulario extends  Selector{
 			return $this->_campos[$id];
 		else {
 			throw new Excepcion("No existe el campo solicitado", $this->_ce.'2');
-			
+
 		}
 	}
-	
+
 	function obtConsultaUpdate(){
 		return $this->_consultaUpdate;
 	}

@@ -10,31 +10,31 @@ function addMenuTooltip(){
  			var $item =$( item );
  			var $icon =$item.find('.fa');
 
- 			if($icon.size()){
+ 			if($icon.length){
  				var $text = $icon.next();
- 		
+
  				$icon.parent().attr({
  					'data-toggle':'tooltip',
  					'data-placement':'right',
  					'title':$.trim($text.html())
  				});
- 			}  
+ 			}
  		});
 }
 function removeMenuTooltip(){
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
  			var $icon =$item.find('.fa');
- 			if($icon.size()){
+ 			if($icon.length){
  				var $text = $icon.next();
  				$icon.parent().removeAttr('data-toggle');
- 			}  
+ 			}
 	});
 	$('.tooltip').remove();
 }
 function toggleMenu(open){
 	var $content = $('#content-wrapper');
-	
+
 	if(open){
 		if(!$content.hasClass('short-menu')){
 			$content.addClass('short-menu');
@@ -46,10 +46,10 @@ function toggleMenu(open){
 			$content.removeClass('short-menu');
 			removeMenuTooltip();
 		}else
-			$content.addClass('short-menu'); 
+			$content.addClass('short-menu');
 	}
-		
-	
+
+
  	if($content.hasClass('short-menu')){
  		addMenuTooltip();
  	}else{
@@ -57,7 +57,7 @@ function toggleMenu(open){
  			var $item = $(item);
  			$item.removeAttr('data-toggle');
  		});
- 		
+
  	}
 }
 (function($){
@@ -67,27 +67,27 @@ function toggleMenu(open){
 	console.log($linkToggle);
 	if($('#content-wrapper').hasClass('short-menu'));
 		addMenuTooltip();
-	 
+
 	 $('.li-parent').on('click',function(e){
-	 		
+
 	 	var $this = $( this );
 	 	if($this.find('ul').length>1){
-	 		
+
 	 		setLinkMenuClass($linkToggle);
-		 	toggleMenu(true);	
+		 	toggleMenu(true);
 	 	}
-		 	
-	 	
+
+
 	 });
 	 $linkToggle.on('click',function(){
 	 	console.log("hola");
 		setLinkMenuClass($linkToggle);
 		toggleMenu();
-		
+
 	 });
-	 
-	 
-	 
+
+
+
 })(jQuery);
 
 

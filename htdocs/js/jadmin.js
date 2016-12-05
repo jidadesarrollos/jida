@@ -77,7 +77,7 @@ $( document ).ready(function(){
 
 
     });
-     if($('[data-selectall]').size()>0){
+     if($('[data-selectall]').length>0){
     	$seleccionador = $('[data-selectall]');
     	$seleccionador.on('click',function(){
 	    	console.log("click");

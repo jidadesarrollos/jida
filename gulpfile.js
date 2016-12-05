@@ -7,13 +7,13 @@ var gulp 		= require('gulp'),
 
 
 gulp.task('css',function(){
-	
+
 });
 gulp.task('js',function(){
-	gulp.src('htdocs/js/libs/*.js')
+	gulp.src(['htdocs/js/libs/*.js','htdocs/js/externos/ajaxupload.js'])
 		.pipe(concatJS('jd.plugs.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('htdocs/js/dist'))
 		.pipe(notify("compilados archivos js"));
-		
+
 });

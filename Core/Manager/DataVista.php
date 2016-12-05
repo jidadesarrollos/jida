@@ -17,9 +17,9 @@ namespace Jida\Core\Manager;
 use Jida\Helpers as Helpers;
 use Exception;
 class DataVista{
-        
+
     use \Jida\Core\ObjetoManager;
-    
+
     /**
      * @var array $css Arreglo Global de archivos javascript a usar por la vista
      */
@@ -89,16 +89,17 @@ class DataVista{
      * @param boolean footer True Define si el js se imprimirá arriba o abajo
      */
     function addJs($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+		#Helpers\DEbug::imprimir($this->js);
         if ($dir===TRUE) $dir=URL_JS;
-		if(!is_array($js)) $js = explode(",",$js );	
+		if(!is_array($js)) $js = explode(",",$js );
         foreach ($js as $key => $archivo) {
             if(!empty($ambito)){
             	if($this->_esJadmin){
-            		$this->js[$ambito]['jadmin'][$key] = $dir.$archivo;	
+            		$this->js[$ambito]['jadmin'][$key] = $dir.$archivo;
             	}else{
-            		$this->js[$ambito][$key] = $dir.$archivo;	
+            		$this->js[$ambito][$key] = $dir.$archivo;
             	}
-                
+
             }else{
             	if($this->_esJadmin){
             		$this->js['jadmin'][$key] = $dir.$archivo;
@@ -107,8 +108,8 @@ class DataVista{
 			}
 			array_push($this->jsAgregado,$dir.$archivo);
         }
-    
 
+		#Helpers\DEbug::imprimir($this->js,true);
         return $this;
     }
 	/**
@@ -124,23 +125,23 @@ class DataVista{
 	function addJsModulo($js,$ruta=true){
 
 		$modulo = $this->modulo;
-	
+
 		if($ruta===TRUE){
-			$ruta = '/Aplicacion/Modulos/' . strtolower($modulo) .'/htdocs/js/';	
+			$ruta = '/Aplicacion/Modulos/' . strtolower($modulo) .'/htdocs/js/';
 		}
 		if(!is_array($js)){ $js = explode(' ',$js);}
-		
+
 		#Helpers\Debug::imprimir($this->js);
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
 				if(array_key_exists(strtolower($this->modulo), $this->js))
-				{	
+				{
 					$this->js[strtolower($this->modulo)][] = $ruta . $archivo;
 				}else{
 					if($this->_esJadmin and array_key_exists('jadmin', $this->js)){
-						$this->js['jadmin'][] = $ruta . $archivo;	
+						$this->js['jadmin'][] = $ruta . $archivo;
 					}
-					$this->js[] = $ruta . $archivo;	
+					$this->js[] = $ruta . $archivo;
 				}
 			}
 		}
@@ -336,16 +337,16 @@ class DataVista{
      * @param instance @clase Instancia de la clase
      */
     protected function establecerAtributos($arr, $clase="") {
-        
+
         if(empty($clase)){
             $clase=$this->_clase;
         }
-        
+
         $this->establecerAtributos($arr,$this->_clase);
-        
+
         // $metodos = get_class_vars($clase);
         // foreach($metodos as $k => $valor) {
-// 
+//
             // if (isset($arr[$k])) {
                 // $this->$k = $arr[$k];
             // }

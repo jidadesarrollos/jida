@@ -21,10 +21,10 @@ class JController extends Core\Controller{
 
 	var $manejoParams=FALSE;
     function __construct(){
-    	
+
     	parent::__construct();
 		$this->__url = JD('URL_COMPLETA');
-		
+
 		$this->dv->title="JIDAPanel";
 		if(empty($this->idioma)){
 			$this->idioma='es';
@@ -38,33 +38,33 @@ class JController extends Core\Controller{
 		$this->definirJSGlobals();
 
 
-		$this->dv->addJS([
-			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
-		],false);
+		// $this->dv->addJS([
+			// $this->obtURLApp()."htdocs/js/jida/jadmin.js",
+		// ],false);
 		$this->validarSesion();
     }
 
 	protected function validarSesion(){
 	//	Helpers\Debug::imprimir();
-		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or 
+		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or
 			Helpers\Sesion::checkPerfilAcceso('Administrador')){
 				#echo "ak aja";exit;
 				return true;
-				
+
 		}else{
-			
+
 			$this->formularioInicioSesion();
 		}
 		#exit;
 //		Helpers\Debug::imprimir('Final',true);
 	}
-	
+
 	protected function formularioInicioSesion(){
-		
+
 		$form = new Formulario('Login',null,null,2);
-		
+
 		if($this->post('btnJadminLogin')){
-			
+
 			$userClass = MODELO_USUARIO;
 			$user = new $userClass();
 			if($user->validarLogin($this->post('nombre_usuario'),$this->post('clave_usuario')))
@@ -73,13 +73,13 @@ class JController extends Core\Controller{
 				#Helpers\Debug::imprimir($user->perfiles,true);
 				Helpers\Sesion::set('Usuario',$user);
 				Helpers\Sesion::set('__msjInicioSesion',Helpers\Mensajes::crear('suceso','Bienvenido '.$user->nombre_usuario));
-				return true;	
+				return true;
 			}else{
-	
+
 				 Formulario::msj('error','Usuario o clave invalidos');
 			 }
 		}
-		
+
 		$this->layout('jadminIntro');
 		$this->dv->usarPlantilla('login');
 		$this->tituloPagina = NOMBRE_APP;
@@ -87,11 +87,11 @@ class JController extends Core\Controller{
 			'action'		=> JD('URL'),
 			'nombreSubmit'	=> 'btnJadminLogin',
 			'valueBotonForm'=> 'Iniciar Sesi&oacute;n'
-			
+
 		]);
 		//echo $form->armarFormulario();
 		$this->data('formLoggin',$form->armarFormulario());
-	} 
+	}
 	/**
 	 * Redefine el arreglo Global de Archivos JS
 	 *

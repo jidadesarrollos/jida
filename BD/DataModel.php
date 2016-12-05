@@ -18,9 +18,9 @@ use ReflectionClass;
 use ReflectionProperty;
 //include_once 'ResultBD.class.php';
 class DataModel{
-    
+
     use \Jida\Core\ObjetoManager;
-    
+
 	protected $debug=FALSE;
     protected $tablaBD;
     protected $esquema;
@@ -82,7 +82,7 @@ class DataModel{
     protected $tieneMuchos = [];
     /**
      * Arreglo que define las relaciones muchos a muchos del objeto
-	 * 
+	 *
      * @property $pertenece
      * @access protected
      *
@@ -122,7 +122,7 @@ class DataModel{
      * Define la configuración a usar para la conexión a base de datos
 	 * @internal Este valor debe corresponder a una propiedad declarada
 	 * en el objeto \App\Config\BD
-	 * 
+	 *
      * @var string $configuracionBD
      * @access protected
      */
@@ -282,7 +282,7 @@ class DataModel{
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
                     // Debug::imprimir($class,$nombreClass);
-                    
+
 					$this->$nombreClass = new $class(null,$this->nivelActualORM);
 				}
 		    }
@@ -293,16 +293,18 @@ class DataModel{
 	}
 
 	private function instanciarTieneMuchos(){
-		
+
+
 		foreach ($this->tieneMuchos as $key => $value) {
 			if(!is_array($value)){
 				$explode = explode('\\', $value);
 				$class = array_pop($explode);
-				
+
 			    $this->{$class}=[];
 			    // Debug::imprimir($key,$value,"-");
 			}else{
-			    // Debug::imprimir($key,$value);
+			    $explode = explode('\\', $key);
+				$class = array_pop($explode);
                 $this->{$key}=[];
 			}
 		}
@@ -311,7 +313,7 @@ class DataModel{
      * Verifica las relaciones declaradas del Objeto
      */
     protected function obtenerDataRelaciones(){
-        
+
 
 		$this 	->obtTieneUno()
 				->obtTieneMuchos()
@@ -342,21 +344,22 @@ class DataModel{
 	 */
 	private function instanciarRelaciones(){
 
-			
+
 		$data = $this->bd->obtenerDataMultiQuery(
 			$this->bd->ejecutarQuery(implode(";",$this->consultaRelaciones),2),
 			array_keys($this->consultaRelaciones)
 		);
 
 		foreach ($data as $relacion => $info) {
+
 			$claseSola = $this->obtClaseNombre($relacion);
-			
-			if(	in_array($relacion, $this->tieneMuchos) 		or 
-				array_key_exists($relacion, $this->tieneMuchos)	or 
-				array_key_exists($relacion, $this->pertenece)	
+
+			if(	in_array($relacion, $this->tieneMuchos) 		or
+				array_key_exists($relacion, $this->tieneMuchos)	or
+				array_key_exists($relacion, $this->pertenece)
 			){
-				
-				
+
+
 				$this->{$this->obtClaseNombre($claseSola)} = [];
 				if($info['totalRegistros']>0){
 
@@ -403,20 +406,18 @@ class DataModel{
 	 *
 	 */
 	private function obtTieneMuchos(){
-	    
+
         $dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
-        
+
         foreach ($this->tieneMuchos as $nombreRelacion => $data) {
-            
+
             if(is_array($data)){
                 $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
-                
+
                 $objRelacion =new $nombreObj();
-                
                 $campos = array_key_exists('campos', $data)?$data['campos']:'';
-                
                 $objRelacion->consulta($campos);
-                
+
                 if((array_key_exists('relacion', $data))){
                     $explode = explode('\\', $data['relacion']);
                     if($explode > 1){
@@ -426,16 +427,29 @@ class DataModel{
                         $relacion = $data['relacion'];
                     }
                 }
-                
+
                 $camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
-                if($relacion){
-                    $objRelacion->join($relacion,$camposRelacion)
-                                ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
-                                ->agrupar($camposRelacion);
+				if($relacion){
+                    $objRelacion
+                    	->join($relacion,$camposRelacion)
+                        ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
+                        ->agrupar($camposRelacion);
+                                ;
                 }
-                
-                $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
+
+            }else{
+
+				$objRelacion = new $data();
+				$relacion = $objRelacion->__get('tablaBD');
+				$camposRelacion = array_keys($objRelacion->obtenerPropiedades());
+				$nombreRelacion = $data;
+				$objRelacion->consulta()
+							->filtro([$this->pk=>$this->{$this->pk}]);
+				;
             }
+
+
+                $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
         }
 
         // Helpers\Debug::imprimir('$this->consultaRelaciones[$nombreRelacion]',$this->consultaRelaciones);
@@ -483,13 +497,13 @@ class DataModel{
 	 */
 	private function obtPertenece(){
 		$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
-		
+
 		foreach ($this->pertenece as $nombreRelacion => $data) {
 			if(is_array($data)){
 				$nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
 				$objRelacion =new $nombreObj();
 				$campos = array_key_exists('campos', $data)?$data['campos']:'';
-				
+
 				$objRelacion->consulta($campos);
 				$relacion = (array_key_exists('relacion', $data))?$data['relacion']:FALSE;
 				$camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
@@ -497,12 +511,12 @@ class DataModel{
 					$objRelacion->join($relacion,$camposRelacion)
 								->filtro([$relacion.".".$this->pk=>$this->{$this->pk}]);
 				}
-				
+
 				$this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
 			}
 		}
 		return $this;
-	} 
+	}
     /**
      * Permite instanciar un objeto ya inicializado
      * @method instanciar
@@ -597,9 +611,9 @@ class DataModel{
             foreach ($this->propiedades as $prop => $val) {
                 if (substr($prop, 0,2)=='id' and $prop!=$this->pk){
                     $propiedad = str_replace("id_", "", $prop);
-                    
+
                     $objeto =Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
-                    
+
                     if($propiedad!=$this->_clase and class_exists($objeto)){
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
                         //ninguna relacion del objeto relacionado
@@ -727,7 +741,7 @@ class DataModel{
 
         }else{
         	$clave = $claveRelacion = $this->pk;
-			
+
         }
 
         if(!empty($campos)){
@@ -1723,4 +1737,3 @@ class DataModel{
     }
 
 }//fin clase;
-                    

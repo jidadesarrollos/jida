@@ -63,6 +63,7 @@ class Pagina{
 	 * @var $directorioVista
 	 */
     private $directorioVista;
+	private $urlPlantilla;
     /**
      * Define directorio de layout a usar
      * @var $directorioLayout
@@ -89,7 +90,7 @@ class Pagina{
      */
 	var $_modulo;
 	var  $_controlador;
-	
+
 	var  $_namespace;
     var  $template;
     /**
@@ -970,17 +971,17 @@ class Pagina{
 	 *
 	 */
 	function nexo($nexo){
-		
+
 		$partes = explode(".", $nexo);
 		if(count($partes)>1){
-					
+
 		}else{
-			$namespace = '\App\Modulos\\'.ucwords($this->_modulo).'\Nexos\\';	
+			$namespace = '\App\Modulos\\'.ucwords($this->_modulo).'\Nexos\\';
 		}
 		$nexoAbsoluto = $namespace.ucfirst($nexo);
 		if(!class_exists($nexoAbsoluto))
 			throw new Excepcion("No existe el nexo solicitado ".$nexoAbsoluto, $this->_ce.'90');
-			
+
 		$objNexo = new $nexoAbsoluto;
 		return $objNexo;
 	}
