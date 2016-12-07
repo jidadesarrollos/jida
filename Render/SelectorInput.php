@@ -73,6 +73,13 @@ class SelectorInput extends Selector{
 	  </div>
   ';
   
+  	private $_tplControlMultiple='
+  		<div class="control-multiple">
+  		{{:selector1}}{{:selector2}}
+  		</div>
+  	';
+  	
+  
   	/**
 	 * Bandera interna que determina si el constructor debe o no llamar al metodo crearSelector
 	 * @var boolean $_crear
@@ -84,6 +91,16 @@ class SelectorInput extends Selector{
 	 * @access private
 	 */
 	private $_items;
+	/**
+	 * Determina si la clase ha sido extendida o no.
+	 * @var boolean $_claseExtentida
+	 */
+	private $_claseExtendida=FALSE;
+	/**
+	 * Objeto que extiende las funcionalidades
+	 * @property object $_extension;
+	 */
+	private $_extension;
 	/**
 	 * Crea Selectores para un formulario
 	 * @internal Permite crear y definir selectores HTML para formularios
@@ -104,11 +121,17 @@ class SelectorInput extends Selector{
 		}else{
 			call_user_func_array([$this,'__constructorParametros'], func_get_args());
 		}
+		$this->_checkClaseExtendida();
 		if($this->_crear)
 			$this->_crearSelector();
 
 	}
-
+	private function _checkClaseExtendida(){
+		if(class_exists('\App\Config\SelectorInput')){
+			$this->_extension = new \App\Config\SelectorInput();
+			
+		}
+	}
 	private function __constructorObject($params,$type=FALSE){
 		$this->establecerAtributos($params,$this);
 		//Helpers\Debug::imprimir($this);
@@ -143,6 +166,9 @@ class SelectorInput extends Selector{
 		switch ($this->_tipo) {
 			case 'select':
 					$this->_crearSelect();
+				break;
+			case 'identificacion';
+					$this->_crearIdentificacion();
 				break;
 			case 'textarea':
 				$this->_crearTextArea();
@@ -296,7 +322,8 @@ class SelectorInput extends Selector{
 		foreach ($this->_selectoresOpcion as $key => $option) {
 			$options.=$option->render();
 		}
-		return $this->innerHTML($options)->render(TRUE);
+		$this->innerHTML($options);
+		return $this->render(TRUE);
 	}
 	function render($parent=FALSE){
 		
@@ -309,6 +336,14 @@ class SelectorInput extends Selector{
 	
 			return parent::render();	
 		}
+	}
+	
+	function _crearIdentificacion(){
+		$select = new CloneSelector($this);
+		Helpers\Debug::imprimir("ak",$select,true);
+		$select->type = 'select';
+		$select = new SelectorInput($select);
+		
 	}
 	/**
 	 * Asigna un valor al selector instanciado

@@ -461,6 +461,7 @@ class Selector{
 	 */
 	function innerHTML($innerHTML=""){
 		if(empty($innerHTML)) return $this->innerHTML;
+		
 		else{
 			$this->innerHTML = $innerHTML;
 			return $this;

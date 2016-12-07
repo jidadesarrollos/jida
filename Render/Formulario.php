@@ -25,6 +25,7 @@ class Formulario extends  Selector{
     var $method 	="POST";
 	var $enctype 	= "application/x-www-form-urlencoded";
 	var $target 	="";
+	
     /**
      * Determina si los valores del formulario deben ser validados o cambiados a entidades HTML
      * @var $setHtmlEntities
@@ -57,8 +58,9 @@ class Formulario extends  Selector{
 	 * Label a usar en el boton de envio por defecto
 	 * @var string $_labelBotonEnvio
 	 */
-	private $_labelBotonEnvio="Guardar";
+	var $_labelBotonEnvio="Guardar";
 	private $_numeroExcepciones=5;
+	private $_fieldsets=[];
 	/**
 	 * @var string $_id id del formulario
 	 * @access private
@@ -171,7 +173,7 @@ class Formulario extends  Selector{
 	 * Arreglo con botones del formulario
 	 * @var array $_botones
 	 */
-	private $_botones;
+	var $_botones;
 	/**
 	 * Define el identificador para buscar data en modo update
 	 *
@@ -342,7 +344,7 @@ class Formulario extends  Selector{
 			if($this->jidaValidador){
 				$btn->data('jida','validador');
 			}
-			$this->_botones['envio'] = $btn;
+			$this->_botones['principal'] = $btn;
 		}
 
 	}
@@ -529,24 +531,57 @@ class Formulario extends  Selector{
 		return $this->_campos;
 	}
 	/**
+	 * Agrega Fielsets y legends a la estructua del formulario
+	 * 
+	 */
+	function fieldsets($fieldsets){
+		if(is_array($fieldsets) and count($fieldsets)>0)
+		{
+			foreach ($fieldsets as $key => $value) {
+				$id="";
+				if(!Helpers\Numeros::validarInt($value)){
+					$id = $key;
+					$fieldset = new Selector('fieldset',['id'=>'field'.ucwords($this->_id).'-'.$key]);
+					
+					$legend = new Selector('legend');
+					$legend->innerHTML($value);
+					$fieldset->legend = $legend;
+					
+				}else{
+					$id = $value;
+					$fieldset = new Selector('fieldset',['id'=>$this->_id.'-'.$value]);
+				}
+				$this->_fieldsets[$id] = $fieldset;
+				
+			}
+			#Helpers\Debug::imprimir(array_keys($this->_fieldsets),true);	
+		}
+		
+	}
+	/**
 	 * Renderiza un formulario
 	 *
 	 * @internal Genera el HTML de un formulario creado en el Framework, con toda la personalizacion
 	 * creada
 	 * @method armarFormulario
 	 * @param array $titulos
-	 *
+	 * 
+	 * @example $titulos = [0=>['limite'=>10,'titulo'=>'Titulo del fieldset']]
 	 */
 	function armarFormulario(){
-		$i=0;
-
-		$columnas=0;
-		$contenedor = new Selector('article');
+		$i 				=0;
+		$actualFieldset =FALSE;
+		$columnas 		=0;
+		$contenedor 	= new Selector('article',['id'=>'container'.ucwords($this->_id)]);
+		$fields 		= (count($this->_fieldsets)>0)?TRUE:FALSE;		
+		
 		if($this->_titulo)
 		{
 			$contenedor->addInicio($this->_titulo->render());
 		}
+		
 		foreach($this->_arrayOrden as $id => $position){
+			#Helpers\Debug::imprimir($i." --");
 			$content="";
 			$campo = $this->_campos[$position];
 			if($columnas==0){
@@ -567,17 +602,38 @@ class Formulario extends  Selector{
 
 			$html = str_replace("{{:contenido}}", $content,$html);
 			$filaPivote->addFinal($html);
+			if($fields and array_key_exists($i, $this->_fieldsets)){
+				if($actualFieldset){
+					if($this->tagForm)
+						$this->addFinal($actualFieldset->render());
+					else {
+						$contenedor->addFinal($actualFieldset->render());
+					}
+				}
+				$actualFieldset = $this->_fieldsets[$i];
+				$actualFieldset->addFinal($actualFieldset->legend->render());
+			}
+
 			if($columnas>=12){
 				$columnas=0;
-				if($this->tagForm)
-					$this->addFinal($filaPivote->render());
-				else {
-					$contenedor->addFinal($filaPivote->render());
+				if($fields){
+					if($actualFieldset)
+						$actualFieldset->addFinal($filaPivote->render());
+					
+				}else{
+					if($this->tagForm)
+						$this->addFinal($filaPivote->render());
+					else {
+						$contenedor->addFinal($filaPivote->render());
+					}
 				}
+					
 			}
 			++$i;
 		}
-
+		if($actualFieldset){
+			$this->addFinal($actualFieldset->render());
+		}
 		if($this->tagForm){
 
 			if($this->botonEnvio)
@@ -597,7 +653,7 @@ class Formulario extends  Selector{
 	 */
 	function imprimirBotones($plantilla=TRUE){
 		$botones = "";
-
+		#Helpers\Debug::imprimir($this->_botones,true);
 		foreach (array_reverse($this->_botones) as $id => $boton) {
 			if($boton->attr('class')==""){
 				$boton->addClass($this->css('botones'));
@@ -651,10 +707,13 @@ class Formulario extends  Selector{
 	 */
 	function boton($boton,$label=""){
 		if(array_key_exists($boton, $this->_botones)){
+			
 			if(!empty($label)) $this->_botones[$boton]->innerHTML($label);
+			//Helpers\Debug::imprimir($this->_botones[$boton],true);
 			return $this->_botones[$boton];
 
 		}else{
+			#Helpers\DEbug::imprimir("no, aqui",$boton,true);
 			$btn = new Selector('button',['type'=>"button","name"=>$boton,"id"=>$boton]);
 			$btn->innerHTML($label);
 			return $this->_botones[$boton] = $btn;
@@ -749,5 +808,6 @@ class Formulario extends  Selector{
 	function obtConsultaUpdate(){
 		return $this->_consultaUpdate;
 	}
+	
 
 }

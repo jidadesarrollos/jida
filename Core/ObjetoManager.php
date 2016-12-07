@@ -11,7 +11,15 @@ namespace Jida\Core;
 use \Jida\Helpers\Debug as Debug;
 trait ObjetoManager{
     
-    
+    protected function copiarAtributos($clase){
+    	if(is_object($clase))
+            $atributos = get_object_vars($clase);
+        else
+            $atributos = get_class_vars($clase);
+		foreach ($atributos as $key => $value) {
+			$this->{$key} = $value;
+		}
+    }
     /**
      * Establece los atributos de una clase.
      *
