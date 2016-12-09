@@ -228,7 +228,7 @@ class User extends BD\DataModel{
         $this->establecerAtributos($datos);
         
         if($validacion===TRUE){
-        	$codigo = hash("sha256",FechaHora::timestampUnix().FechaHora::datetime());
+        	$codigo = hash("sha256",Helpers\FechaHora::timestampUnix().Helpers\FechaHora::datetime());
 	        $this->validacion=$codigo;
 	        $this->activo=0;
         }

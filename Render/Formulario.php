@@ -768,6 +768,9 @@ class Formulario extends  Selector{
 			Helpers\Sesion::set('__erroresForm',$this->_errores);
 			Helpers\Sesion::set('_dataPostForm',$datos);
 			Helpers\Sesion::set('__dataPostForm','id_form',$this->_idUpdate);
+            
+            Helpers\Debug::imprimir($this->_errores);
+            
 			return false;
 		}else{
 			return true;

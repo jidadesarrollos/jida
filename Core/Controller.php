@@ -495,7 +495,7 @@ class Controller {
 
 		    if(strtolower($this->_modulo)==strtolower($controller)){
             	if($this->dv->_esJadmin) $this->url.="jadmin";
-                $this->url .= "/".strtolower($this->_modulo)."/";
+                $this->url .= strtolower($this->_modulo)."/";
 
 		    }else{
 
@@ -614,7 +614,8 @@ class Controller {
                 $metodo=$url[1];
 
             }else{
-// Helpers\Debug::imprimir('$this->urlController() -> '.$this->urlController(),'$this->_clase '.strtolower($this->_clase));
+// Helpers\Debug::imprimir('$this->urlController() -> '.$this->urlController());
+                $urlController = $this->urlController();
                 if(strpos(strtolower($this->_clase), 'jadmin')){
                     $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
                     $urlController .= $this->urlController();
