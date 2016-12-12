@@ -10,7 +10,7 @@ class ListaSelector extends Selector{
 	protected $selector = "UL";
 	protected $selectorItems = "LI";
 
-	private $items =[];
+	protected $items =[];
 
 
 	function __construct($numeroItems=0,$attr=[]){
@@ -35,10 +35,12 @@ class ListaSelector extends Selector{
 	}
 
 	function render(){
-
-		foreach ($this->items as $key => $item) {
-
-			$this->innerHTML.=$item->render();
+#		\Jida\Helpers\Debug::imprimir($this->items);
+		for($i=0;$i<count($this->items);++$i){
+		#foreach ($this->items as $key => $item) {
+			if(array_key_exists($i, $this->items))
+				$this->addFinal($this->items[$i]->render());
+			//$this->innerHTML.=$item->render();
 		}
 		return parent::render();
 	}

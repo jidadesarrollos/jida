@@ -175,7 +175,7 @@ global $JD;
             Helpers\Sesion::set('URL_ACTUAL',$_GET['url']);
 
             JD('URL_COMPLETA',"/".$_GET['url']);
-			JD('URL',"/".$_GET['url']);
+			JD('URL',"/".$_GET['url']."/");
             /*Manejo de url*/
             if(isset($_GET['url'])){
 
