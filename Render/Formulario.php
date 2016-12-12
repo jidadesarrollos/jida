@@ -284,7 +284,7 @@ class Formulario extends  Selector{
 	 * @param string $form Nombre del Formulario
 	 */
 	private function _cargarFormulario($form){
-		if(Helpers\Directorios::validar(DIR_APP . 'formularios/' . strtolower($form) .'.json')){
+		if(Helpers\Directorios::validar(DIR_APP . 'formularios/' . $form .'.json')){
 
 			$this->_path = DIR_APP . 'formularios/' . $form .'.json';
 		}elseif(Helpers\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form .'.json')){
