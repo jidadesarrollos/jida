@@ -33,7 +33,7 @@ class DataModel{
 	/**
 	 * @var string $limit estring de la clausula limit
 	 */
-	private $limit="";
+	private $_limit="";
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      *
@@ -59,6 +59,7 @@ class DataModel{
     protected $unico=array();
     protected $registroMomentoGuardado=TRUE;
     protected $registroUser=TRUE;
+	
     /**
      * Arreglo que define las relaciones uno a uno del objeto
      * @var $tieneUno
@@ -194,8 +195,39 @@ class DataModel{
      * @var object Reflection
      */
     private $reflector;
-
-
+	/**
+	 * Define si una consulta realizada deberá ser paginada
+	 * 
+	 
+	 * @var boolean $paginar
+	 * @since 0.5
+	 */
+	private $_paginar=FALSE;
+	/**
+	 * @var int $_paginaConsultada Numero de pagina consultada en la paginacion
+	 */
+	private $_paginaConsultada = 1;
+	/**
+	 * Numero de paginas resultante de una consulta paginada
+	 * @var int $_paginas
+	 */
+	private $_paginas;
+	/**
+	 * Nro de registros a mostrar por página
+	 * @var int $filasPagina
+	 * @since 0.5
+	 */
+	protected $filasPagina = 10;
+	/**
+	 * Numero total de registros para una consulta.
+	 * 
+	 * Si la consulta se pide paginada, el valor de esta propiedad conrrespondera
+	 * al total de los registros
+	 * @var int $totalRegistros
+	 * @since 0.5
+	 */
+	protected $_totalRegistros;
+	
 
 
     /**
@@ -821,24 +853,31 @@ class DataModel{
      /**
      * Funcion para obtener datos de una tabla
      * @method consulta
+	 * @param array $campos Nombre de los campos a obtener
+	  * @param mixed $pagina [Opcional] Si es pasado algun valor, la
+	  * consulta será paginada segun los valores de las propiedasdes
+	  * $filasPagina
      *
      */
-    function consulta($campos="",$adicionales=[]){
+    function consulta($campos="",$nroPaginacion=FALSE){
         $banderaJoin = FALSE;
         $join="";
-
-         if(empty($campos)){
+		
+         if(empty($campos) or $campos=='*'){
              $campos =  array_keys($this->propiedades);
          }
 //
         if(is_array($campos)){
-
+			
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
             },$this->tablaQuery);
-
+ 
             $campos = implode(", ",$campos);
         }
+		if($nroPaginacion!==FALSE){
+			$this->paginar($nroPaginacion);
+		}
         if($this->consultaMultiple)
             $this->query.="SELECT $campos ";
         else $this->query="SELECT $campos ";
@@ -1183,10 +1222,54 @@ class DataModel{
             $this->query.=" ".$this->order;
             $this->order="";
         }
-        if(!empty($this->limit)) $this->query.=" ".$this->limit;
-
+        if(!empty($this->_limit)){
+        	if($this->_paginar){
+				throw new Excepcion("No puede agregar la clausula limit a una consulta paginada", $this->_ce."09");
+			}
+        	$this->query.=" ".$this->_limit;
+        } 
+		
+		if($this->_paginar){
+			$this->_paginarConsulta($key);
+		}
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
+	
+	/**
+	 * Convierte una consulta en una consulta paginada
+	 * @method _paginarConsulta
+	 * @since 0.5
+	 */
+	private function _paginarConsulta($key){
+		$data = explode('from',$this->query);
+		
+		$qCount = 'SELECT count(*) from '.array_pop($data);
+		$data = $this->bd->obtenerDataCompleta($this->query,$key);
+		$this->_totalRegistros = $this->bd->totalRegistros;
+		$division = $this->_totalRegistros/$this->filasPagina;
+		if(is_float($division)) $division = ceil($division);
+		$this->_paginas = $division;
+		
+		$inicio = ($this->_paginaConsultada==1)?1:$this->_paginaConsultada*$this->filasPagina;
+		$fin = ($this->_paginaConsultada==1)?$inicio+$this->filasPagina-1:$inicio+$this->filasPagina;
+		$this->query.= ' '.$this->bd->limit($this->filasPagina, $inicio);
+		//$this->limit($this->filasPagina,$inicio);
+	}
+	/**
+	 * Retorna la data resultante de una consulta paginada
+	 * Retorna un arreglo con los siguientes keys : filasPagina, registros, pagina, paginas
+	 * @method dataPaginacion
+	 * @return array 
+	 * @since 0.5
+	 */
+	function dataPaginacion(){
+		return [
+			'filasPagina'	=>$this->filasPagina,
+			'registros'		=>$this->_totalRegistros,
+			'paginaActual'	=>$this->_paginaConsultada,
+			'paginas' 		=>$this->_paginas
+		];	
+	}
     function addConsulta(){
         $this->query.=";";
         $this->consultaMultiple=TRUE;
@@ -1611,7 +1694,7 @@ class DataModel{
     function limit($limit=100,$offset=0){
 
         if(!$this->usoLimit){
-            $this->limit=$this->bd->limit($limit, $offset);
+            $this->_limit=$this->bd->limit($limit, $offset);
             $this->usoLimit=TRUE;
         }
 
@@ -1725,15 +1808,40 @@ class DataModel{
         }
         return $this;
     }
+	/**
+	 * Genera una consulta paginada
+	 * @method paginar
+	 * @since 0.5
+	 */
+	function paginar($pagina){
+		$this->_establecerPaginacion($pagina);
+		return $this;
+	}
+	/**
+	 * Activa la configuracion para una consulta paginada
+	 * @method pagina
+	 * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
+	 */
+	private function _establecerPaginacion($nroPagina = 1){
+		$this->_paginaConsultada = $nroPagina;	
+		$this->_paginar=true;
+		return $this;
+	}
 
     function imprimir($propiedad="query",$exit=1){
         Debug::string($this->{$propiedad},$exit);
     }
     /**
      * Utiliza la clausula between de mysql
+	 * @method entre
+	 * @param string $campo Nombre del campo a usar
+	 * @param mixed $ini Valor inicial
+	 * @param mixed $fin Valor final
      */
     function entre($campo,$ini,$fin){
         $this->query.=$campo.=' between \''.$ini.'\' and \''.$fin.'\'';
+		
     }
+    
 
 }//fin clase;
