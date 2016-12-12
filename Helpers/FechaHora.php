@@ -180,8 +180,8 @@ class FechaHora{
 
 		if($fecha==''){
 
-			$dateTimeZoneCaracas = new DateTimeZone ( "America/Caracas" );
-			$dateTimeCaracas = new DateTime ( "now", $dateTimeZoneCaracas );
+			$dateTimeZoneCaracas = new \DateTimeZone ( "America/Caracas" );
+			$dateTimeCaracas = new \DateTime ( "now", $dateTimeZoneCaracas );
 			$caracasOffset = $dateTimeZoneCaracas->getOffset ( $dateTimeCaracas );
 			$caracasDateTime = strtotime ( date ( "Y-m-d H:i:s", time () + $caracasOffset ) );
 

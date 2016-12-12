@@ -167,9 +167,9 @@ class SelectorInput extends Selector{
 			case 'select':
 					$this->_crearSelect();
 				break;
-			case 'identificacion';
-					$this->_crearIdentificacion();
-				break;
+			// case 'identificacion';
+					// $this->_crearIdentificacion();
+				// break;
 			case 'textarea':
 				$this->_crearTextArea();
 				break;

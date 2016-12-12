@@ -267,7 +267,7 @@ class ValidadorJida extends \Jida\Core\Validador{
 
     private function validarDocumentacion($validacion,$detalle){
         $valor =$this->valorCampo;
-        if(array_key_exists('campo_codigo', $detalle)):
+        if(array_key_exists('campo_codigo', $detalle) and $detalle['campo_codigo']===TRUE):
             $valor = $_POST[$this->campo['name']."-tipo-doc"].$this->valorCampo;
         endif;
         $_POST[$this->campo['name']] = $valor;
