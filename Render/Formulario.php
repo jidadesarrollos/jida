@@ -744,7 +744,7 @@ class Formulario extends  Selector{
 				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
 				if($result['validacion']!==TRUE){
-				Helpers\Debug::imprimir($dataCampo);
+				// Helpers\Debug::imprimir($dataCampo);
 					$this->_errores[$dataCampo['name']] = $result['validacion'];
 				}else{
 					$valorCampo = $result['campo'];
@@ -769,7 +769,7 @@ class Formulario extends  Selector{
 			Helpers\Sesion::set('_dataPostForm',$datos);
 			Helpers\Sesion::set('__dataPostForm','id_form',$this->_idUpdate);
             
-            Helpers\Debug::imprimir($this->_errores);
+            // Helpers\Debug::imprimir($this->_errores);
             
 			return false;
 		}else{

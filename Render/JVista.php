@@ -315,25 +315,21 @@ class JVista{
 				$this->objeto->consulta();
 			}else{
 				$this->objeto->consulta($this->campos);
-
 			}
 		}
-
-
 
         if(count($this->clausulas)>0){
             foreach ($this->clausulas as $key => $arrParams) {
                 foreach ($arrParams as $clausula => $param) {
 
-                    if(is_array($param)){
+                    if(is_array($param))
                         call_user_func_array([$this->objeto,$clausula], $param);
-    
-                    }else{
+                    else
                         $this->objeto->{$clausula}($param);
-                    }
                 }
             }
         }
+		
 		if(isset($_GET['busqueda'])){
 
 			$filtros = [];
@@ -935,7 +931,7 @@ class JVista{
     function clausula($nombreClausula,$valores){
         $argumentos = func_num_args();
         if($argumentos==2)
-            $this->clausulas[$nombreClausula][]=$valores;
+            $this->clausulas[$nombreClausula]=$valores;
         elseif($argumentos>2){
             $argumentos=func_get_args();
             $params=[];
