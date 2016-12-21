@@ -494,7 +494,7 @@ class Controller {
         if(!empty($controller)){
 
 		    if(strtolower($this->_modulo)==strtolower($controller)){
-            	if($this->dv->_esJadmin) $this->url.="jadmin";
+            	if($this->dv->_esJadmin) $this->url.="jadmin/";
                 $this->url .= strtolower($this->_modulo)."/";
 
 		    }else{

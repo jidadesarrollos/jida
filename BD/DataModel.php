@@ -449,7 +449,8 @@ class DataModel{
                 $objRelacion =new $nombreObj();
                 $campos = array_key_exists('campos', $data)?$data['campos']:'';
                 $objRelacion->consulta($campos);
-
+				
+				$relacion=false;
                 if((array_key_exists('relacion', $data))){
                     $explode = explode('\\', $data['relacion']);
                     if($explode > 1){
