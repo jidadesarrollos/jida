@@ -55,8 +55,7 @@ class TablaSelector extends Selector{
 	function crearTHead($data){
 		$this->dataThead = $data;
 		$this->tHead = new Selector('THEAD');
-		#Helpers\Debug::imprimir($data);
-		$this->tHead->Fila = new FilaSelector($this->dataThead,'TH');		
+		$this->tHead->Fila = new FilaSelector($this->dataThead,'TH');
 
 	}
 	function thead(){

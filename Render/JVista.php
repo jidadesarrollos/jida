@@ -23,6 +23,10 @@ class JVista{
 	private $accionesFila=FALSE;
 	private $listadoFiltros;
 	/**
+	 * Permite definir los campos de ordenamiento para cada titulo
+	 */
+	var $camposOrder=[];
+	/**
 	 * Define la configuracion para la fila de opciones de la vista
 	 * @var $configFilaOpciones
 	 */
@@ -31,9 +35,22 @@ class JVista{
 		"attr"	=>[
 			'class' =>'fila-opciones'
 		]
-	
+
 	];
 	private $ejecucion;
+	private $_ordenamientos =['asc','desc'];
+
+	/**
+	 * Tipo de ordenamiento, asc o desc
+	 * @property $_tipoOrdenamiento
+	 * @default asc
+	 */
+	private $_tipoOrdenamiento='asc';
+	/**
+	 * Nombre del campo con el cual se solicita ordenar la consulta
+	 *
+	 */
+	private $_campoOrdenar;
 	private $titulo;
 	/**
 	 * Funcion pasada por el usuario a ejecutar sobre la data obtenida
@@ -55,7 +72,7 @@ class JVista{
 	 * Define si las filas llevaran algún control
 	 * @var mixed $controlFila 1. Radio, 2. checkbox, 3. campo oculto
 	 */
-	var $controlFila=1;
+	var $controlFila=3;
 	var $funcionNoRegistros;
 	private $parametroPagina = "pagina";
 	private $usaBD = true;
@@ -194,7 +211,7 @@ class JVista{
 	 *
 	 */
 	function __construct($ejecucion,$params=[],$titulo=""){
-		// Helpers\Debug::imprimir('__construct',$ejecucion,$params, $titulo);
+
 		if(is_array($ejecucion)){
 			$this->usaBD = FALSE;
 			$this->tabla = new TablaSelector($ejecucion);
@@ -329,7 +346,7 @@ class JVista{
                 }
             }
         }
-		
+
 		if(isset($_GET['busqueda'])){
 
 			$filtros = [];
@@ -341,8 +358,13 @@ class JVista{
 
 		}
 		if(isset($_GET['ordenar'])){
+			$campoOrden = (array_key_exists($_GET['ordenar'], $this->camposOrder))?$this->camposOrder[$_GET['ordenar']]:$_GET['ordenar'];
+			$this->_campoOrdenar = $campoOrden;
+			if(isset($_GET['tipo_orden']) and in_array($_GET['tipo_orden'],$this->_ordenamientos)){
+				$this->_tipoOrdenamiento = $_GET['tipo_orden'];
+			}
 
-			$this->objeto->order($_GET['ordenar']);
+			$this->objeto->order($campoOrden,$this->_tipoOrdenamiento);
 		}
 		$keysFiltro = array_keys($this->filtros);
 		foreach ($keysFiltro as $key => $value) {
@@ -483,7 +505,7 @@ class JVista{
 
 				if($this->tabla->tHead() instanceof Selector){
 					$columnasTitulo = $this->tabla->tHead()->Fila->columnas();
-					if($control==2){
+					if($control!=3){
 						$inputTitle = new Selector('input',
 							[	"type"			=>$types[$control],
 								'id'			=>'obtTotalCol',
@@ -492,17 +514,19 @@ class JVista{
 								'value'=>""
 							]);
 						$columnasTitulo[0]->innerHTML($inputTitle->render());
-					}elseif($control==1){
+					}else{
 
+						$input = new Selector('input',[
+							"type"	=>$types[$control],
+							'id'	=>'radio'.$selector->innerHTML(),
+							'value'	=>$selector->innerHTML(),
+							'name'	=>$this->nameInputLinea,
+						]);
+						$selector->attr('style','display:none');
+						$selector->innerHTML($input->render());
 					}
-					$input = new Selector('input',[
-						"type"	=>$types[$control],
-						'id'	=>'radio'.$selector->innerHTML(),
-						'value'	=>$selector->innerHTML(),
-						'name'	=>$this->nameInputLinea,
-					]);
-					$selector->attr('style','display:none');
-					$selector->innerHTML($input->render());
+
+
 
 				}
 
@@ -596,54 +620,78 @@ class JVista{
 	 * @method crearTitulos
 	 */
 	private function crearTitulos(){
-			
+
 		$tieneOpciones = ($this->accionesFila)?TRUE:FALSE;
 		if($tieneOpciones)
 		{
 			array_push($this->titulos,$this->configFilaOpciones['html']);
 		}
+		if($this->controlFila==3)
+			array_unshift($this->titulos,"");
 		$this->tabla->crearTHead($this->titulos);
 		$columnasTitulos = $this->tabla->tHead()->Fila->columnas();
 		$totalLinks = count($columnasTitulos);
 		if($tieneOpciones){
-			
+
 			$this->tabla->tHead()->Fila
 									->columna($totalLinks-1)
-									->attr($this->configFilaOpciones['attr']);	
+									->attr($this->configFilaOpciones['attr']);
 		}
 		if($this->controlFila==3){
 			$this->tabla->tHead()->Fila->columna(0)->attr('style','display:none');
 		}
-		
-		
+
+
 		if($this->ordenamientos){
-			
-			#Helpers\Debug::imprimir($columnasTitulos);
+
+
 			if($tieneOpciones) $columnasTitulos--;
-			#Helpers\Debug::imprimir($columnasTitulos);
-			
+
 			if($tieneOpciones) $totalLinks--;
+			$camposOrden = $this->obtParametrosOrden();
 			for($i=0;$i<$totalLinks;$i++){
-				$columnasTitulos[$i]->ejecutarFuncion(function(Selector $col,$indice,$titulos,$pagina){
-						
-					$indiceMenu = ($this->controlFila!=3)?$indice:$indice-1;	
-					$params = ['href'=>$this->procesarURL([
-								'ordenar'	=>$titulos[$indiceMenu],
-								'pagina'	=>$this->paginaActual
-							],0)];
-					$col->envolver('a',$params);
-				
+				if($i==0 and $this->controlFila==3) continue;
 
+				$columnasTitulos[$i]->ejecutarFuncion(
+				function(Selector $col,$indice,$titulos,$pagina,$jvista){
 
+					$indiceMenu=$indice;
+					if(array_key_exists($indiceMenu,$titulos ))
+					{
+						$ordenamiento  = $this->_tipoOrdenamiento;
+						if($titulos[$indiceMenu]==$jvista->_campoOrdenar){
+							$ordenamiento =($this->_tipoOrdenamiento=='asc')?'desc':'asc';
+						}
+						$params = ['href'=>$this->procesarURL([
+									'ordenar'		=>$titulos[$indiceMenu],
+									'tipo_orden' 	=> $ordenamiento,
+									'pagina'		=>$this->paginaActual
+								],0)];
+						$col->envolver('a',$params);
+					}
 
-				},$i,$this->titulosKey,$this->paginaConsulta);
+				},$i,$camposOrden,$this->paginaConsulta,$this);
 			}
 		}//fin ordenamientos
-		
+
 
 #exit;
 	}
+	private function obtParametrosOrden(){
+		$params = [];
 
+		if(!$this->camposOrder) return $this->titulosKey;
+		foreach ($this->titulosKey as $key => $value) {
+			if(array_key_exists($value, $this->camposOrder))
+			{
+				$params[$key] = $this->camposOrder[$value];
+			}else{
+				$params[$key] = $value;
+			}
+		}
+		#Helpers\Debug::imprimir($params,$this->titulosKey,$this->camposOrder,true);
+		return $params;
+	}
 	function procesarAcciones(){
 		$inner="";
 		if(is_array($this->acciones)){
@@ -897,7 +945,7 @@ class JVista{
 	 * Las opciones a pasar son : cssContendor,link,cssLink,txtLink
 	 */
 	function addMensajeNoRegistros($msj,$cssDiv=[]){
-		
+
 		$dataDefault=[
 			'link'=>false,
 			'cssContenedor'=>'alert alert-warning',
@@ -910,7 +958,7 @@ class JVista{
 		$dataDefault=array_merge($dataDefault,$cssDiv);
 		//Helpers\Debug::imprimir($dataDefault,true);
 		//foreach ($cssDiv as $key => $value){
-			
+
 			if($dataDefault['link']){
 				$this->htmlPersonalizado=TRUE;
 				$msj.=Selector::crear('a.'.$dataDefault['cssLink'],
@@ -939,7 +987,7 @@ class JVista{
             	if($key!=0)
 					$params[$nombreClausula][]=$value;
             }
-            
+
             $this->clausulas[$nombreClausula]=$params;
         }
 
