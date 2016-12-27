@@ -10,7 +10,8 @@ gulp.task('css',function(){
 
 });
 gulp.task('js',function(){
-	gulp.src(['htdocs/js/libs/*.js','htdocs/js/externos/ajaxupload.js'])
+	gulp.src(['htdocs/js/libs/*.js','htdocs/js/externos/ajaxupload.js',
+			  'htdocs/js/funcionesGenerales.js'])
 		.pipe(concatJS('jd.plugs.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('htdocs/js/dist'))

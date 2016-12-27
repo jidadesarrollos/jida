@@ -427,7 +427,8 @@
                             
                             break;
                         default:
-                            if($campo.val()=="") resp=false;
+                        	
+                            if($campo.val().trim()=="") resp=false;
                             else  resp=true;
                             
                         break;  
