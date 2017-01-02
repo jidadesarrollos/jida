@@ -142,7 +142,9 @@ class Pagina{
 		if(array_key_exists('tema', $data))
 		{
 			$this->temaApp = $data['tema'];
+			JD('TEMA_APP',$this->temaApp);
 		}
+		
 		if(defined('LAYOUT_DEFAULT')) $this->layoutDefault=LAYOUT_DEFAULT;
 	}
     /**

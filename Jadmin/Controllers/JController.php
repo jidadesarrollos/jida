@@ -9,11 +9,11 @@
 
 namespace Jida\Jadmin\Controllers;
 use Jida\Componentes;
-use Jida\Core as Core;
-use Jida\Componentes\Traductor as Traductor;
-use Jida\Helpers as Helpers;
-use Jida\RenderHTML\Formulario as Formulario;
-
+use Jida\Core 					as Core;
+use Jida\Componentes\Traductor 	as Traductor;
+use Jida\Helpers 				as Helpers;
+use Jida\RenderHTML\Formulario 	as Formulario;
+use Jida\Render 				as Render; 
 class JController extends Core\Controller{
 
 	protected $urlHtdocs;
@@ -61,8 +61,14 @@ class JController extends Core\Controller{
 
 	protected function formularioInicioSesion(){
 
-		$form = new Formulario('Login',null,null,2);
-
+		//$form = new Formulario('Login',null,null,2);
+		$form = new Render\Formulario('Login');
+		$form 	->boton('principal')
+				->attr([
+					'value'	=>'Iniciar Sesi&oacute;n',
+					'id'	=>'btnJadminLogin',
+					'name'	=>'btnJadminLogin'
+				]);
 		if($this->post('btnJadminLogin')){
 
 			$userClass = MODELO_USUARIO;
@@ -83,12 +89,13 @@ class JController extends Core\Controller{
 		$this->layout('jadminIntro');
 		$this->dv->usarPlantilla('login');
 		$this->tituloPagina = NOMBRE_APP;
-		$form->setParametrosFormulario([
-			'action'		=> JD('URL'),
-			'nombreSubmit'	=> 'btnJadminLogin',
-			'valueBotonForm'=> 'Iniciar Sesi&oacute;n'
-
-		]);
+		#$form->
+		// $form->setParametrosFormulario([
+			// 'action'		=> JD('URL'),
+			// 'nombreSubmit'	=> 'btnJadminLogin',
+			// 'valueBotonForm'=> 'Iniciar Sesi&oacute;n'
+// 
+		// ]);
 		//echo $form->armarFormulario();
 		$this->data('formLoggin',$form->armarFormulario());
 	}

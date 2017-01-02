@@ -18,6 +18,7 @@ class SelectorInput extends Selector{
 	var $label;
 	var $opciones;
 	var $value="";
+	var $placeholder="";
 	/**
 	 * @var mixed $_valorUpdate Registra el valor en modo update para el selector
 	 */
@@ -289,8 +290,11 @@ class SelectorInput extends Selector{
 	}
     
 	function _crearInput(){
-
-		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name,'value'=>$this->value]);
+		
+		$this->_attr= array_merge($this->_attr,
+			['type'=>$this->_tipo,'name'=>$this->_name,'value'=>$this->value,
+			'placeholder'=>$this->placeholder]
+		);
 		parent::__construct('input',$this->_attr);
 		
 

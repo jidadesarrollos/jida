@@ -8,24 +8,20 @@
  * @since 1.4
 */
 namespace Jida\Elementos;
-class Contenido extends JElemento{
+use Jida\Core 			as Core;
+
+class Contenido extends Core\Elemento{
 
 
-	var $nombre="Contenido";
-	var $id="Jida.Contenido";
-	var $descripcion="Código HTML o Texto";
-    /**
-     * Funcion constructora
-     * @method __construct
-     */
-    function __construct($id=""){
+	var $nombre 		="Contenido";
+	var $id 			="Jida.Contenido";
+	var $descripcion 	="Código HTML o Texto";
 
-    }
 
 	function elemento(){
 
 	}
-	function jform($numero=1){
+	function form($numero=1){
 		ob_start();
 		include_once 'tpls/formContenido.tpl.php';
 		$contenido = ob_get_clean();

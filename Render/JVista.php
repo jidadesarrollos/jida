@@ -245,8 +245,8 @@ class JVista{
 		}
 
 		$this->paginaConsulta = JD('URL_COMPLETA');
-
-		$this->queryString = (empty(JD('QueryString')))?[]:JD('QueryString');
+		$query = JD('QueryString');
+		$this->queryString = (empty($query))?[]:$query;
 
 	}
 	private function establecerValoresDefault(){

@@ -7,11 +7,27 @@
  * @version
  * @category
 */
-namespace Jida\Elementos;
-abstract class JElemento{
-
+namespace Jida\Core;
+abstract class Elemento{
+	/**
+	 * Nombre publico del elemento creado
+	 * @property string $nombre
+	 * @since 0.5
+	 */
 	protected $nombre;
+	/**
+	 * Descripción breve del elemento creado
+	 * 
+	 * Se recomienda que la descripción no exeda los 100 caracteres
+	 * @property string $descripcion
+	 */
 	protected $descripcion;
+	/**
+	 * Identificador del elemento
+	 * 
+	 * Usado por el framework. no es público
+	 * @property string $id
+	 */
 	protected $id;
 
 	/**
@@ -25,7 +41,7 @@ abstract class JElemento{
 	 *
 	 * @method jform
 	 */
-	abstract function jform();
+	abstract function form();
 	abstract function gestion($data);
 
 	function nombre(){

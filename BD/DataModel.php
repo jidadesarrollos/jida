@@ -158,6 +158,10 @@ class DataModel{
 	 * @var boolean $usoBD Dedermina si es requerido el uso de base de datos
 	 */
 	protected $usoBD=FALSE;
+	/**
+	 * @property string $_groupby Registra la clausula order by de una consulta
+	 */
+	private $_groupBy = "";
     /**
      *@var string $order Registra la clausula order de una sentencia a ejecutar
      */
@@ -1089,9 +1093,9 @@ class DataModel{
     function agrupar($agrupacion){
 
         if(is_array($agrupacion))
-            $this->query.=" group by ".implode(",", $agrupacion);
+            $this->_groupBy.=" group by ".implode(",", $agrupacion);
         else
-            $this->query.=" group by ".$agrupacion;
+            $this->_groupBy.=" group by ".$agrupacion;
         return $this;
     }
     /**
@@ -1222,6 +1226,10 @@ class DataModel{
             $this->query.=" ".$this->order;
             $this->order="";
         }
+		if(!empty($this->_groupBy)){
+			$this->query.=' '.$this->_groupBy;
+			$this->_groupBy="";
+		}
         if(!empty($this->_limit)){
         	if($this->_paginar){
 				throw new Excepcion("No puede agregar la clausula limit a una consulta paginada", $this->_ce."09");
@@ -1232,6 +1240,7 @@ class DataModel{
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
+		
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 	
