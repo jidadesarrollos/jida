@@ -183,10 +183,10 @@ global $JD;
                 $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);
                 $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
 
-                $this->_arrayUrl = array_filter($url,function($var){	
+                $this->_arrayUrl = array_filter($url,function($var){
             		return ($var !== NULL && $var !== FALSE && $var !== '');
                 });
-				
+
                 if(array_key_exists($this->_arrayUrl[0], $this->idiomas)){
                     $this->idiomaActual=$this->_arrayUrl[0];
 
@@ -211,8 +211,8 @@ global $JD;
             //se procesa la URL
 
             $this->procesarURL();
-			
-            #Helpers\Debug::imprimir($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,true);
+
+#            Helpers\Debug::imprimir("Controller: ".$this->_nombreControlador,"metodo:".$this->_metodo,"modulo : ".$this->_modulo,$this->_ruta,true);
             $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
             $this->vista->idioma=$this->idiomaActual;
             $this->generarVariables();
@@ -249,8 +249,8 @@ global $JD;
             $this->_esJadmin=TRUE;
             $this->_procesarJadmin();
         }else{
-            array_unshift($this->_arrayUrl,$primerParam);
 
+			array_unshift($this->_arrayUrl,$primerParam);
             $namespace = 'App\\';
             if($this->esModulo()){
 
@@ -262,9 +262,10 @@ global $JD;
             }else{
 
                 $namespace.="Controllers\\";
-                $posController = $primerParam;
+                $posController = array_shift($this->_arrayUrl);
             }
             if(!$this->esControlador($namespace, $posController)){
+
                 array_unshift($this->_arrayUrl,$posController);
             }
 
@@ -289,6 +290,7 @@ global $JD;
             }else $band = true;
 
         }else $metodo = $this->_metodoDefault;
+
 
         // buscara el metodo por defecto y arrojara un error sino lo consigue.
         if(!$band) $this->esMetodoValido($metodo,true);
@@ -351,6 +353,7 @@ global $JD;
 
             $this->_nombreControlador = $posController;
             $this->_namespace = $namespace;
+
             return true;
         }else{
             /**
@@ -367,9 +370,11 @@ global $JD;
                // $this->_nombreControlador = $this->_controladorDefault;
            // }
 
+
               $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
               $this->_nombreControlador = $this->_controladorDefault;
         }
+
         return false;
     }
     /**
@@ -411,7 +416,7 @@ global $JD;
      * @since 0.5;
      */
     private function _procesarJadmin(){
-		
+
         $checkModulo = FALSE;
 		$path = '\\App\\Jadmin\\Controllers\\';
 		$posController = array_shift($this->_arrayUrl);
@@ -468,11 +473,11 @@ global $JD;
             }
             $band = 0;
             $clave = TRUE;
-			
+
             $this->args = array_filter($this->args,function($value){
                 return !empty($value);
             });
-			
+
             $totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
@@ -529,10 +534,10 @@ global $JD;
             }else{
             	//echo "aka";
             } $acceso=TRUE;
-			
+
            if($acceso===TRUE){
                 global $dataVista;
-                
+
                 $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin);
                 $this->vista->data = $dataVista;
                 $this->ejecucion($this->_controlador);
@@ -588,7 +593,7 @@ global $JD;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-		
+
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
 
@@ -699,9 +704,9 @@ global $JD;
         $this->vista->data = $dataVista;
 		$this->vista->_namespace = $this->_namespace;
 		$this->vista->_controller = $this->_controlador;
-		
+
 		$this->vista->_modulo = ($this->_modulo);
-		
+
         $this->vista->renderizar($vista);
 
     }

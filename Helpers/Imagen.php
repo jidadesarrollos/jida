@@ -272,7 +272,7 @@ class Imagen extends Archivo{
 	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
      *
      */
-	function resize($ruta,$nombre='img',$directorio=false){
+	function resize($ruta,$nombre='img',$directorio=false,$return=false){
 		$arr=[];
 		$bandera = FALSE;
 		
@@ -297,6 +297,16 @@ class Imagen extends Archivo{
 			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext[1]);
 			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
 		}
+		
+		if($return){
+			$arrImagen = ['img'=> $nombre.$key.'-lg.'.$ext[1],
+						  'md' => $nombre.$key.'-md.'.$ext[1],
+						  'sm' => $nombre.$key.'-sm.'.$ext[1],
+						  'xs' => $nombre.$key.'-xs.'.$ext[1]];
+		    
+		    return json_encode($arrImagen);
+		}
+			
 	}
     
     /**

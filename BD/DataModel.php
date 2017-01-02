@@ -59,7 +59,7 @@ class DataModel{
     protected $unico=array();
     protected $registroMomentoGuardado=TRUE;
     protected $registroUser=TRUE;
-	
+
     /**
      * Arreglo que define las relaciones uno a uno del objeto
      * @var $tieneUno
@@ -201,8 +201,8 @@ class DataModel{
     private $reflector;
 	/**
 	 * Define si una consulta realizada deberá ser paginada
-	 * 
-	 
+	 *
+
 	 * @var boolean $paginar
 	 * @since 0.5
 	 */
@@ -224,14 +224,14 @@ class DataModel{
 	protected $filasPagina = 10;
 	/**
 	 * Numero total de registros para una consulta.
-	 * 
+	 *
 	 * Si la consulta se pide paginada, el valor de esta propiedad conrrespondera
 	 * al total de los registros
 	 * @var int $totalRegistros
 	 * @since 0.5
 	 */
 	protected $_totalRegistros;
-	
+
 
 
     /**
@@ -454,6 +454,7 @@ class DataModel{
                 $campos = array_key_exists('campos', $data)?$data['campos']:'';
                 $objRelacion->consulta($campos);
 
+				$relacion=false;
                 if((array_key_exists('relacion', $data))){
                     $explode = explode('\\', $data['relacion']);
                     if($explode > 1){
@@ -866,17 +867,17 @@ class DataModel{
     function consulta($campos="",$nroPaginacion=FALSE){
         $banderaJoin = FALSE;
         $join="";
-		
+
          if(empty($campos) or $campos=='*'){
              $campos =  array_keys($this->propiedades);
          }
 //
         if(is_array($campos)){
-			
+
             array_walk($campos,function(&$key,$valor,$tabla){
                              $key=$tabla.".".$key;
             },$this->tablaQuery);
- 
+
             $campos = implode(", ",$campos);
         }
 		if($nroPaginacion!==FALSE){
@@ -1120,7 +1121,8 @@ class DataModel{
        if(is_array($order)){
         $order = implode(",", $order);
        }
-       $this->order = "Order by ".$this->tablaQuery.".".$order ." ".$type;
+	   $campoOrden = strpos($order,'.')?$order:$this->tablaQuery.".".$order;
+       $this->order = "Order by ".$campoOrden ." ".$type;
 
        //Debug::string($this->order." ".$this->_clase);
        return $this;
@@ -1235,15 +1237,15 @@ class DataModel{
 				throw new Excepcion("No puede agregar la clausula limit a una consulta paginada", $this->_ce."09");
 			}
         	$this->query.=" ".$this->_limit;
-        } 
-		
+        }
+
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
 		
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
-	
+
 	/**
 	 * Convierte una consulta en una consulta paginada
 	 * @method _paginarConsulta
@@ -1251,14 +1253,14 @@ class DataModel{
 	 */
 	private function _paginarConsulta($key){
 		$data = explode('from',$this->query);
-		
+
 		$qCount = 'SELECT count(*) from '.array_pop($data);
 		$data = $this->bd->obtenerDataCompleta($this->query,$key);
 		$this->_totalRegistros = $this->bd->totalRegistros;
 		$division = $this->_totalRegistros/$this->filasPagina;
 		if(is_float($division)) $division = ceil($division);
 		$this->_paginas = $division;
-		
+
 		$inicio = ($this->_paginaConsultada==1)?1:$this->_paginaConsultada*$this->filasPagina;
 		$fin = ($this->_paginaConsultada==1)?$inicio+$this->filasPagina-1:$inicio+$this->filasPagina;
 		$this->query.= ' '.$this->bd->limit($this->filasPagina, $inicio);
@@ -1268,7 +1270,7 @@ class DataModel{
 	 * Retorna la data resultante de una consulta paginada
 	 * Retorna un arreglo con los siguientes keys : filasPagina, registros, pagina, paginas
 	 * @method dataPaginacion
-	 * @return array 
+	 * @return array
 	 * @since 0.5
 	 */
 	function dataPaginacion(){
@@ -1277,7 +1279,7 @@ class DataModel{
 			'registros'		=>$this->_totalRegistros,
 			'paginaActual'	=>$this->_paginaConsultada,
 			'paginas' 		=>$this->_paginas
-		];	
+		];
 	}
     function addConsulta(){
         $this->query.=";";
@@ -1832,7 +1834,7 @@ class DataModel{
 	 * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
 	 */
 	private function _establecerPaginacion($nroPagina = 1){
-		$this->_paginaConsultada = $nroPagina;	
+		$this->_paginaConsultada = $nroPagina;
 		$this->_paginar=true;
 		return $this;
 	}
@@ -1849,8 +1851,8 @@ class DataModel{
      */
     function entre($campo,$ini,$fin){
         $this->query.=$campo.=' between \''.$ini.'\' and \''.$fin.'\'';
-		
+
     }
-    
+
 
 }//fin clase;
