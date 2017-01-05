@@ -1223,15 +1223,16 @@ class DataModel{
      */
     function obt($key=""){
 
+
+		if(!empty($this->_groupBy)){
+			$this->query.=' '.$this->_groupBy;
+			$this->_groupBy="";
+		}
         if(!empty($this->order)){
 
             $this->query.=" ".$this->order;
             $this->order="";
         }
-		if(!empty($this->_groupBy)){
-			$this->query.=' '.$this->_groupBy;
-			$this->_groupBy="";
-		}
         if(!empty($this->_limit)){
         	if($this->_paginar){
 				throw new Excepcion("No puede agregar la clausula limit a una consulta paginada", $this->_ce."09");
