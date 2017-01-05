@@ -972,13 +972,14 @@ class Pagina{
 	 * Permite acceder a un nexo
 	 *
 	 */
-	function nexo($nexo){
+	function nexo($nexo,$modulo=""){
 
 		$partes = explode(".", $nexo);
 		if(count($partes)>1){
-
+			
 		}else{
-			$namespace = '\App\Modulos\\'.ucwords($this->_modulo).'\Nexos\\';
+			$modulo = (empty($modulo))?ucwords($this->_modulo):ucwords($modulo);
+			$namespace = '\App\Modulos\\'. $modulo .'\Nexos\\';
 		}
 		$nexoAbsoluto = $namespace.ucfirst($nexo);
 		if(!class_exists($nexoAbsoluto))
