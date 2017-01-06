@@ -306,9 +306,18 @@ class DataModel{
 
 			  if(is_string($key) and is_array($class)){
 					$relacion =& $key;
+				  	
+					$explode = explode('\\', $key);
+                    $nombreClass = array_pop($explode);
+					
+					if(array_key_exists('objeto', $class)){
+						$relacion = $class['objeto'];
+					}
+				  
 					if(array_key_exists('fk', $class))
-						$this->$relacion = new $relacion(null,$this->nivelActualORM);
-					// Debug::imprimir($this->$relacion,true);
+						$this->$nombreClass = new $relacion(null,$this->nivelActualORM);					
+					
+					// Debug::imprimir($this->$nombreClass,'$this->$nombreClass',true);
 
 			  }else{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);

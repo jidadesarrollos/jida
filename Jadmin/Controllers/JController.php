@@ -41,6 +41,7 @@ class JController extends Core\Controller{
 		// $this->dv->addJS([
 			// $this->obtURLApp()."htdocs/js/jida/jadmin.js",
 		// ],false);
+		
 		$this->validarSesion();
     }
 
@@ -70,13 +71,13 @@ class JController extends Core\Controller{
 					'name'	=>'btnJadminLogin'
 				]);
 		if($this->post('btnJadminLogin')){
-
+			
 			$userClass = MODELO_USUARIO;
-			$user = new $userClass();
+			$user = new $userClass();			
 			if($user->validarLogin($this->post('nombre_usuario'),$this->post('clave_usuario')))
 			{
 				$perfiles = $user->getPerfiles();
-				#Helpers\Debug::imprimir($user->perfiles,true);
+				// Helpers\Debug::imprimir($user->perfiles,true);
 				Helpers\Sesion::set('Usuario',$user);
 				Helpers\Sesion::set('__msjInicioSesion',Helpers\Mensajes::crear('suceso','Bienvenido '.$user->nombre_usuario));
 				return true;
