@@ -127,7 +127,7 @@ class DataVista{
 		$modulo = $this->modulo;
 
 		if($ruta===TRUE){
-			$ruta = '/Aplicacion/Modulos/' . strtolower($modulo) .'/htdocs/js/';
+			$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/js/';
 		}
 		if(!is_array($js)){ $js = explode(' ',$js);}
 
