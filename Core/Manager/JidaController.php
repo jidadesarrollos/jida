@@ -466,14 +466,15 @@ global $JD;
      *
      */
     private function procesarArgumentos($tipo=1){
-
-            if(!empty($this->_arrayUrl))
-            {
-                $this->args = array_merge($this->args,$this->_arrayUrl);
-            }
+			//Helpers\Debug::imprimir($this->args,$this->_arrayUrl);
+            // if(!empty($this->_arrayUrl))
+            // {
+                // $this->args = array_merge($this->args,$this->_arrayUrl);
+            // }
             $band = 0;
             $clave = TRUE;
-
+			$this->args = $this->_arrayUrl;
+			//Helpers\Debug::imprimir($this->args);
             $this->args = array_filter($this->args,function($value){
                 return !empty($value);
             });
