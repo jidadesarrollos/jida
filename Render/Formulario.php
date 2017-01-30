@@ -580,6 +580,13 @@ class Formulario extends  Selector{
 			$contenedor->addInicio($this->_titulo->render());
 		}
 		
+		if(Helpers\Sesion::get('__msjForm')){
+			// $contenedor->addInicio(Helpers\Sesion::get('__msjForm'));
+			$this->addFinal(Helpers\Sesion::get('__msjForm'));
+			Helpers\Sesion::destroy('__msjForm');
+		}
+		
+		
 		foreach($this->_arrayOrden as $id => $position){
 			#Helpers\Debug::imprimir($i." --");
 			$content="";
@@ -744,8 +751,12 @@ class Formulario extends  Selector{
 				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
 				if($result['validacion']!==TRUE){
+					
 				// Helpers\Debug::imprimir($dataCampo);
 					$this->_errores[$dataCampo['name']] = $result['validacion'];
+					
+					$this->msj('error',$result['validacion']);
+					
 				}else{
 					$valorCampo = $result['campo'];
 				}
@@ -764,12 +775,11 @@ class Formulario extends  Selector{
 			}
 
 		}
+
 		if($this->_errores){
 			Helpers\Sesion::set('__erroresForm',$this->_errores);
 			Helpers\Sesion::set('_dataPostForm',$datos);
 			Helpers\Sesion::set('__dataPostForm','id_form',$this->_idUpdate);
-            
-            // Helpers\Debug::imprimir($this->_errores);
             
 			return false;
 		}else{
@@ -787,7 +797,7 @@ class Formulario extends  Selector{
      * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
     static function msj($type,$msj,$redirect=false){
-        $msj = Helpers\Mensajes::crear($type, $msj);
+        $msj = Helpers\Mensajes::crear($type, $msj,true);
         Helpers\Sesion::set('__msjForm',$msj);
         if($redirect){
             redireccionar($redirect);

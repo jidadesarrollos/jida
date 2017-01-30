@@ -24,6 +24,7 @@ class Paginador extends  ListaSelector{
 	var $urlPaginacion;
 	var $registros;
 	var $manejoParams = TRUE;
+	var $params;
 	//var $items 				= [];
     /**
      * Funcion constructora
@@ -38,6 +39,7 @@ class Paginador extends  ListaSelector{
 			//Helpers\Debug::imprimir(JD('URL'),true);
 			$this->urlPaginacion = JD('URL');}
 		$this->_configurarItems();
+		
     }
 	private function _configurarItems(){
 		$primeraPaginaMostrada = $this->paginaActual - $this->paginasMostradas;
@@ -74,8 +76,15 @@ class Paginador extends  ListaSelector{
 		#Helpers\Debug::imprimir($this->items,true);
 	}
 	private function _url($pagina){
+
+		$arrayParams = ['pagina'=>$pagina];
+
+		foreach ($this->params as $key => $param):
+			if(!empty($param))
+				$arrayParams[$key] = $param;
+		endforeach;
 		
-		return $this->urlPaginacion.'?'.http_build_query(['pagina'=>$pagina]);
+		return $this->urlPaginacion.'?'.http_build_query($arrayParams);
 		
 	}
 	

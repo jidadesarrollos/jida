@@ -95,7 +95,7 @@ class Mensajes {
        $css = self::obtenerEstiloMensaje('info');
        $mensaje = "
                     <DIV class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                        <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" aria-hidden=\"true\">&times;</button>
                         $mensaje
                     </DIV>";
         return $mensaje;      
