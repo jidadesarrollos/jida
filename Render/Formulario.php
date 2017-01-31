@@ -746,7 +746,8 @@ class Formulario extends  Selector{
 			$valorCampo =& $data[$dataCampo['name']];
 			if(array_key_exists('eventos',$dataCampo))
 			{
-				$data[$dataCampo['name']] = trim($data[$dataCampo['name']]);
+				if(!is_array($data[$dataCampo['name']]))
+					$data[$dataCampo['name']] = trim($data[$dataCampo['name']]);
 
 				$validador = new ValidadorJida($dataCampo,$dataCampo['eventos']);
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
