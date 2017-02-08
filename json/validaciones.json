@@ -7,7 +7,9 @@
 	    "fecha":"mensaje",
 	    "caracteres":"mensaje",
 	    "celular":"mensaje",
-	    "telefono":["code","ext","tipo"],
+	    "telefono":[
+	    {label:"tipo","valores":["multiple","local","celular","input":"checkbox"]}
+	    ,"ext","tipo",],
 	    "caracteresEspeciales":"mensaje",
 	    "tiny":"mensaje",
 	    "alfanumerico":"mensaje",
