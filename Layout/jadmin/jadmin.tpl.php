@@ -39,7 +39,7 @@
 			    </div>
 			  </div>
 		</nav>
-		<div id="content-wrapper" class="">
+		<div id="content-wrapper" class="short-menu">
 	         
 	            
             <aside class="aside row-offcanvas-left">
