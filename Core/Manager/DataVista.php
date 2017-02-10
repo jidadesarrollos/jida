@@ -64,7 +64,7 @@ class DataVista{
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
      * en la propiedad "vista del" controlador
      */
-    private $_template="";
+    private $_plantilla="";
     private $_path="app";
 
     function __construct($modulo="",$controlador="",$metodo="",$jadmin=false){
@@ -263,7 +263,7 @@ class DataVista{
 	function usarPlantilla($nombreVista,$path=""){
 		if($path=='jida')
             $this->_path="jida";
-        $this->_template = $nombreVista;
+        $this->_plantilla = $nombreVista;
 	}
     /**
 	 * @deprecated
@@ -273,12 +273,12 @@ class DataVista{
 
     }
 
-    function getTemplate(){
+    function obtPlantilla(){
 
 
-        if(!isset($this->_template))
-            $this->_template="";
-        return $this->_template;
+        if(!isset($this->_plantilla))
+            $this->_plantilla="";
+        return $this->_plantilla;
 
     }
     function getPath(){
