@@ -16,14 +16,14 @@
             	<?php if (defined('LOGO_APP')): ?>
 					<img src="<?=LOGO_APP?>" alt="<?=NOMBRE_APP?>"  class="logo-admin top-nav"/>
 				<?php else: ?>
-						<?=NOMBRE_APP?>	
+						<?=NOMBRE_APP?>
 				<?php endif ?>
                 <small>Administrador</small>
             </h1>
         </section>
         <section class="panel-body">
-            
+
             <?=$this->formLoggin?>
         </section>
-    </div>    
+    </div>
 </div>

@@ -1084,7 +1084,7 @@ class DataModel{
                if(!strpos($key, "."))
                     $this->query.=" $this->tablaQuery.$key='$value'";
                else
-                    $this->query.=$key.="'$value'";
+                    $this->query.=$key."='$value'";
                ++$o;
                }
                 $this->query.=")";
