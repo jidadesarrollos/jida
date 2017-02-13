@@ -569,6 +569,7 @@
         var $this = $(this);
         return this.each(function(k,v){
             $(this).on('click',function(e){
+            	
                 v = new jValidador(this,config,e);
                 
                 

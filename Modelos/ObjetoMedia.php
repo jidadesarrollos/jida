@@ -28,10 +28,23 @@ class ObjetoMedia extends BD\DataModel{
      * @var int $interno
      */
     var $interno;
+	private $tamanios=[];
     protected $tablaBD="s_objetos_media";
     protected $pk="id_objeto_media";
 
-
+	function __construct(){
+		parent::__construct();
+		$this->configuracion();
+		
+	}
+	private function configuracion(){
+		 $this->tamanios=[
+			'lg' => IMG_TAM_LG,
+			'md' => IMG_TAM_MD,
+			'sm' => IMG_TAM_SM,
+			'xs' => IMG_TAM_XS,
+		];
+	}
     function directorioMedia(){
         return URL_IMGS.$this->directorio.$this->objeto_media;
     }

@@ -17,6 +17,19 @@ class GaleriaController extends JController{
 		if($this->solicitudAjax())
 			$this->layout('ajax');
     }
+	/**
+	 * Testing de carga
+	 */
+	function form(){
+		$this->dv->addJs(
+		['/Framework/htdocs/js/libs/jArchivos.js',
+		'/Framework/htdocs/js/jadmin/cargaArchivos.js'],
+		false);
+	}
+	function cargaForm()
+	{
+		Helpers\Debug::imprimir($_POST,$_FILES,true);
+	}
     function index(){
 
         $this->vista="galeria";
