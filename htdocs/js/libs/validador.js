@@ -1,7 +1,7 @@
 /**
  * JidaFramework : validador v1.0
  * 
- * Copyright 2012 - 2015
+ * Copyright 2012 - 2017
  *  
  */
 (function($){
@@ -50,7 +50,6 @@
                 
                 this.$ele.data('jd.validador',this);
                 this.$form.data('jd.validador',this);
-                var jvalidador = this;
                 var vj = jvalidador;
                 if(!this.init()) e.preventDefault();
             }
@@ -93,7 +92,7 @@
             jv = this;
             
             if($ele.data('validacion') && bandera===true){
-                //console.log($ele);
+            
                 if(!jv.validar($ele,jv.verificarValidaciones($ele.data('validacion')))){
                     eval(jv.config.funcionError).call(this,$ele);
                     jv.erroresCampo=true;
@@ -119,10 +118,15 @@
                  * @var boolean bandera Encendida si no se encuentran errores 
                  */
                 var bandera = true;
+                
                 if(typeof $formulario != 'undefined' || typeof $formulario.elements!='undefined'){
                     $.each($formulario[0].elements, function(index, ele) {
                         var $ele = $( ele );
-                        var validacionesCampo = jv.obtValidacionesCampo($ele);                        
+                        var validacionesCampo = jv.obtValidacionesCampo($ele);
+                    	console.log($ele,validacionesCampo);
+		                console.log("fin");
+		                //return false;                        
+		                
                         if(validacionesCampo && bandera===true){
                             if(!jv.validar($ele,jv.verificarValidaciones(validacionesCampo))){
                                                                        
@@ -147,7 +151,12 @@
         obtValidacionesCampo : function($ele){
             
             if(this.config.viaData){
-                return $ele.data('validacion');
+            	validaciones =$ele.data('validacion');
+            	 if(typeof(validaciones)=='string'){
+            	 	console.log("i got it as string");
+            	 	validaciones = JSON.parse(validaciones);
+            	 }
+                return validaciones
             }else{
                 if(this.config.validaciones[$ele.attr('id')]!='undefined')
                     return this.config.validaciones[$ele.attr('id')];
@@ -182,12 +191,12 @@
                  
             }
             if(bandera){
-                
-                
                 $.each(validaciones,function(validacion,params){
                     type = typeof(parametros);
                     if(params!=false && bandera==true && validacion!='obligatorio'){
+                    	console.log("buacamos a",validacion)
                         if(jv[validacion]){
+                        	console.log("entramos?--");
                             if(!jv[validacion]($ele,validacion,params)){
                                 jv.errores[$ele.attr('id')]=validacion;
                                 bandera=false;
@@ -199,9 +208,10 @@
                                 bandera=false;
                             }
                         }else{
-                          console.log(validacion);
-                          console.log(params)
-                          throw new Error("No existe la validacion solicitada "+ validacion+" para el campo "+$ele.attr('id'));   
+                          console.log(validacion,params);
+						
+						
+                          console.error("No existe la validacion solicitada "+ validacion+" para el campo "+$ele.attr('id'));   
                         }
                         
                     }
