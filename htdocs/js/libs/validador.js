@@ -74,7 +74,7 @@
                 result = value.substring(0,posi);
                 result = result + valorReplace +value.substring(posi+1);
                 posi = result.indexOf(charte);
-                this.errores=TRUE;
+                this.errores=true;
                 value = result;
             }
         }
@@ -122,11 +122,7 @@
                 if(typeof $formulario != 'undefined' || typeof $formulario.elements!='undefined'){
                     $.each($formulario[0].elements, function(index, ele) {
                         var $ele = $( ele );
-                        var validacionesCampo = jv.obtValidacionesCampo($ele);
-                    	console.log($ele,validacionesCampo);
-		                console.log("fin");
-		                //return false;                        
-		                
+                        var validacionesCampo = jv.obtValidacionesCampo($ele);    
                         if(validacionesCampo && bandera===true){
                             if(!jv.validar($ele,jv.verificarValidaciones(validacionesCampo))){
                                                                        
@@ -153,7 +149,6 @@
             if(this.config.viaData){
             	validaciones =$ele.data('validacion');
             	 if(typeof(validaciones)=='string'){
-            	 	console.log("i got it as string");
             	 	validaciones = JSON.parse(validaciones);
             	 }
                 return validaciones
@@ -203,8 +198,9 @@
                             }
                         }else
                         if(jValidador.validaciones[validacion]){
+                        	
                             if(!jv.ejecutarValidacion($ele,validacion)){
-                                jv.errores[$ele.attr('name')]=validacion;
+                                jv.errores[$ele.attr('id')]=validacion;
                                 bandera=false;
                             }
                         }else{
@@ -254,9 +250,9 @@
          *
          */
         ejecutarValidacion:function($campo,validacion,expresion){
-            
+            console.log($campo,validacion);
             if(!expresion) expresion = jValidador.validaciones[validacion].expr;
-            
+            console.log(expresion);
             var valorCampo = $campo.val();
             if(validacion=='numerico' || validacion=='decimal'){
                 //Si el campo es numerico se eliminan los formatos de miles
@@ -292,6 +288,8 @@
                 var validacionesCampo = vj.obtValidacionesCampo($campo);
                 var msj="";
                 var divError = vj.$form.find("."+vj.config.cssError);
+                console.log(typeof validacionesCampo,validacionesCampo,jv.errores)
+                console.log(errorCampo,jValidador.validaciones[errorCampo])
                 if(validacionesCampo[errorCampo]!= undefined){
                 
                     msj = (validacionesCampo[errorCampo].mensaje)?validacionesCampo[errorCampo].mensaje:jValidador.validaciones[errorCampo].mensaje;    
@@ -488,20 +486,22 @@
             valorCampo = codigo+valorCampo+extension;
             if(valorCampo!=""){
                 
-            
+            	
                 var celularValido = (expresionCel.test(valorCampo))?1:0;
                 var TelefonoValido = (expresionTlf.test(valorCampo))?1:0;
                 var internacionalValido =(expresionInter.test(valorCampo))?1:0;
-                if( parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
+                console.log("valido?",celularValido,parametros.tipo)
+                if( 
+                	parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
                     parametros.tipo=='celular' && celularValido==1 ||
                     parametros.tipo=='internacional' && internacionalValido==1 || 
-                    parametros.tipo=="multiple" && (TelefonoValido==1 || celularValido==1))||
-                    !parametros.tipo && TelefonoValido==1){
+                    parametros.tipo=="multiple" && (TelefonoValido==1 || celularValido==1))
+                ){
                         
-                         return true;
-                     }else{
-                         return false;
-                     }
+                     return true;
+                 }else{
+                     return false;
+                 }
             }else{
                 return true;
             }
