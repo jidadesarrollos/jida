@@ -136,7 +136,7 @@
                     if(bandera) bandera = jv.validarFuncionesExternas('post');
                     
                 }
-            }
+            }else bandera=false;
             return bandera;
         },
         /**
@@ -167,6 +167,7 @@
                 }else{   
                     result = this.config[tipo].call(this);
                 }
+     
                 return result;
             }else{
                 return true;

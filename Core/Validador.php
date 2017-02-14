@@ -10,6 +10,7 @@
  */
 
 namespace Jida\Core;
+use Jida\Helpers as Helpers;
 class Validador{
 	
        /**
@@ -44,6 +45,8 @@ class Validador{
                                             	'mensaje'   	=>  "El formato del email no es valido"],
                     'telefono'      		=>[	'expresion' 	=>  "/^0?2[0-9]{9,13}$/",
                                             	'mensaje'   	=>  "El formato del telefono debe ser 212 4222211"],
+                	'multiple'      		=>[	'expresion' 	=>  "/^0?2[0-9]{9,13}$/",
+                                            	'mensaje'   	=>  "El tel&eacute;fono ingresado no es v&aacute;lido"],
                     'celular'       		=>[	'expresion' 	=>  "/^0?(412|416|414|424|426)\d{7}$/",
                                             	'mensaje'   	=>  "El formato del celular debe ser 4212 4222211"],
                     'coordenada'    		=>[	'expresion' 	=>  "/^\-?[0-9]{2}\.[0-9]{3,15}/",
@@ -173,6 +176,7 @@ class Validador{
         if(isset($datos['mensaje'])){
             $this->mensajeError = $datos['mensaje'];
         }else{
+        	
             $this->mensajeError = "El campo ".$this->dataValidaciones[$validacion]['mensaje'];
         }
     }//fin función

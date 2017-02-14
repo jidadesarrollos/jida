@@ -45,8 +45,8 @@
 			
 			$file = $('<input>').attr({
 				'type':'file',
-				'id':this.objeto.id+"_jcarga",
-				'name':this.objeto.name+"_jcarga",
+				'id':this._configuracion.name,
+				'name':this._configuracion.name,
 				'style':'display:none',
 				'multiple':this._configuracion.multiple
 				
