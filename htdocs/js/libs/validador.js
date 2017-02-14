@@ -189,9 +189,7 @@
                 $.each(validaciones,function(validacion,params){
                     type = typeof(parametros);
                     if(params!=false && bandera==true && validacion!='obligatorio'){
-                    	console.log("buacamos a",validacion)
                         if(jv[validacion]){
-                        	console.log("entramos?--");
                             if(!jv[validacion]($ele,validacion,params)){
                                 jv.errores[$ele.attr('id')]=validacion;
                                 bandera=false;
@@ -250,9 +248,9 @@
          *
          */
         ejecutarValidacion:function($campo,validacion,expresion){
-            console.log($campo,validacion);
+
             if(!expresion) expresion = jValidador.validaciones[validacion].expr;
-            console.log(expresion);
+
             var valorCampo = $campo.val();
             if(validacion=='numerico' || validacion=='decimal'){
                 //Si el campo es numerico se eliminan los formatos de miles
@@ -332,11 +330,9 @@
                         $('html,body').animate({
                             scrollTop: $input.offset().top - 200
                         });    
-                    }
-                    
-                        
+                    }                        
                 }
-                console.log(msj);
+
             }
             
             
@@ -383,65 +379,70 @@
             
             if(typeof arr.evaluacion =='undefined') arr.evaluacion = 'igual';
             var tipoCampo = $campo.attr('type');
-            if($campo.attr('id')=='montoPago'){
-                
-            }
-            
             var condicion=true;
             if(arr.condicional){
-                    var valor;
-                    var $condicional =  $("#"+arr.condicional);
-                    
-                    if(arr.tipo && arr.tipo=="radio" || $condicional.attr('type')=='radio'){  
-                            
-                          nombreCampo =$condicional.attr('name');
-                          valor = $("input[name="+nombreCampo+"]:checked").val();
-                          
-                        }else{
-                          valor = $condicional.val();
-                        }
-                    condicion=false;
-                    switch(arr.evaluacion){
-                        case 'igual':
-                            if(valor==arr.condicion) condicion=true;    
-                        break;
-                        case 'diff':
-                            if(valor!=arr.condicion) condicion=true;
-                        break;
-                        case 'mayor':
-                            if(valor>arr.condicion) condicion=true;
-                        break;
-                        case 'menor':
-                        if(valor<arr.condicion) condicion=true;
-                        break;
-                    }
-                    
-                    
+		        var valor;
+		        var $condicional =  $("#"+arr.condicional);
+		        
+		        if(arr.tipo && arr.tipo=="radio" || $condicional.attr('type')=='radio'){  
+	              
+				if($condicional.length<1){
+				 	$condicional = $("input[name="+arr.condicional+"]:checked");
+					valor = $("input[name="+arr.condicional+"]:checked").val();
+				  	
+				}
+				var nombreCampo =$condicional.attr('name');
+				if(typeof nombreCampo=='undefined'){
+					console.error("El condicional para "+$campo.attr('name')+" no ha sido definido correctamente");
+				}
+              	valor = $condicional.val();  
+	            console.log("==============");
+	            console.log($campo)
+	            console.log(arr,nombreCampo,valor);
+	            }else{
+	              valor = $condicional.val();
+	            }
+		        condicion=false;
+		        switch(arr.evaluacion){
+		            case 'igual':
+		            	console.log(valor,"==",arr.condicion);
+		                if(valor==arr.condicion) condicion=true;    
+		            break;
+		            case 'diff':
+		                if(valor!=arr.condicion) condicion=true;
+		            break;
+		            case 'mayor':
+		                if(valor>arr.condicion) condicion=true;
+		            break;
+		            case 'menor':
+		            if(valor<arr.condicion) condicion=true;
+		            break;
+		        }    
             }else condicion=true;
+            
             if(condicion===true){
-                    switch (tipoCampo){
-                        case 'RADIO':
-                        case 'radio':
-                        case 'CHECKBOX':
-                        case 'checkbox':
-                            nombreCampo = $campo.attr('name');
-                            //if($campo.prop('checked')){
-                            //resp.radio=true;
-                            if($('input[name="'+nombreCampo+'"]:checked').length>0){  
-                                
-                                resp= true;
-                            }else{    
-                                resp=false;
-                            }
+                switch (tipoCampo){
+                    case 'RADIO':
+                    case 'radio':
+                    case 'CHECKBOX':
+                    case 'checkbox':
+                        var nombreCampo = $campo.attr('name');
+                        
+                        if($('input[name="'+nombreCampo+'"]:checked').length>0){  
                             
-                            break;
-                        default:
-                        	
-                            if($campo.val().trim()=="") resp=false;
-                            else  resp=true;
-                            
-                        break;  
-                        }//final switch========================
+                            resp= true;
+                        }else{    
+                            resp=false;
+                        }
+                        
+                        break;
+                    default:
+                    	
+                        if($campo.val().trim()=="") resp=false;
+                        else  resp=true;
+                        
+                    break;  
+                }//final switch========================
                     
             }else  resp=true;
             
@@ -580,10 +581,7 @@
         var $this = $(this);
         return this.each(function(k,v){
             $(this).on('click',function(e){
-            	
                 v = new jValidador(this,config,e);
-                
-                
             });
             
         });

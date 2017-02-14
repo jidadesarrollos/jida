@@ -230,11 +230,12 @@ class SelectorInput extends Selector{
 	private function obtOpciones(){
 		    
 		$revisiones = explode(";",$this->opciones);
+	
+		$opciones = [];
 		foreach ($revisiones as $key => $opcion) {
 			if(stripos($opcion, 'select')!==FALSE)
 			{	
-				$data = BD::query($opcion);
-				return $data;
+				$opciones= array_merge($opciones,BD::query($opcion));
 					
 			}elseif(stripos($opcion,'externo')!==FALSE){
 				continue;
