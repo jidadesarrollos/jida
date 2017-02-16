@@ -144,7 +144,7 @@ class User extends BD\DataModel{
             if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
             
             while($perfil = $this->bd->obtenerArrayAsociativo($data))
-                $this->perfiles[] = $perfil['clave_perfil'];
+                $this->perfiles[$perfil['clave_perfil']] = $perfil['clave_perfil'];
 
         }else
         	$this->perfiles[] = 'UsuarioPublico';

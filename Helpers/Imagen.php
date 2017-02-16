@@ -273,6 +273,7 @@ class Imagen extends Archivo{
      *
      */
 	function resize($ruta,$nombre='img',$directorio=false,$return=false){
+		
 		$arr=[];
 		$bandera = FALSE;
 		
@@ -281,28 +282,29 @@ class Imagen extends Archivo{
 		else
 			Directorios::crear($directorio);
 		
-		if(preg_match('/\.[jpg|png|jpeg]/', $ruta)){
+		if(preg_match('/\.[jpg|png|jpeg]/', $ruta))
 			$imagenes[] = $ruta;
-		}else{
+		else{
 			$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
 			$bandera = TRUE;
 		}
 		
 		foreach ($imagenes as $key => $img){
+			
 			$origen = ($bandera)?$ruta.'/'.$img:$img;
-			$ext = preg_split('/\./', $img);
+			$ext = substr($img,strrpos($img,".")+1);
 
-			$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext[1]);
-			$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext[1]);
-			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext[1]);
-			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext[1]);
+			$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext);
+			$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext);
+			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext);
+			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext);
 		}
 		
 		if($return){
-			$arrImagen = ['img'=> $nombre.$key.'-lg.'.$ext[1],
-						  'md' => $nombre.$key.'-md.'.$ext[1],
-						  'sm' => $nombre.$key.'-sm.'.$ext[1],
-						  'xs' => $nombre.$key.'-xs.'.$ext[1]];
+			$arrImagen = ['img'=> $nombre.$key.'-lg.'.$ext,
+						  'md' => $nombre.$key.'-md.'.$ext,
+						  'sm' => $nombre.$key.'-sm.'.$ext,
+						  'xs' => $nombre.$key.'-xs.'.$ext];
 		    
 		    return json_encode($arrImagen);
 		}

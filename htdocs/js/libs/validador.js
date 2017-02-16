@@ -1,7 +1,7 @@
 /**
  * JidaFramework : validador v1.0
  * 
- * Copyright 2012 - 2015
+ * Copyright 2012 - 2017
  *  
  */
 (function($){
@@ -50,7 +50,6 @@
                 
                 this.$ele.data('jd.validador',this);
                 this.$form.data('jd.validador',this);
-                var jvalidador = this;
                 var vj = jvalidador;
                 if(!this.init()) e.preventDefault();
             }
@@ -75,7 +74,7 @@
                 result = value.substring(0,posi);
                 result = result + valorReplace +value.substring(posi+1);
                 posi = result.indexOf(charte);
-                this.errores=TRUE;
+                this.errores=true;
                 value = result;
             }
         }
@@ -93,7 +92,7 @@
             jv = this;
             
             if($ele.data('validacion') && bandera===true){
-                //console.log($ele);
+            
                 if(!jv.validar($ele,jv.verificarValidaciones($ele.data('validacion')))){
                     eval(jv.config.funcionError).call(this,$ele);
                     jv.erroresCampo=true;
@@ -119,10 +118,11 @@
                  * @var boolean bandera Encendida si no se encuentran errores 
                  */
                 var bandera = true;
+                
                 if(typeof $formulario != 'undefined' || typeof $formulario.elements!='undefined'){
                     $.each($formulario[0].elements, function(index, ele) {
                         var $ele = $( ele );
-                        var validacionesCampo = jv.obtValidacionesCampo($ele);                        
+                        var validacionesCampo = jv.obtValidacionesCampo($ele);    
                         if(validacionesCampo && bandera===true){
                             if(!jv.validar($ele,jv.verificarValidaciones(validacionesCampo))){
                                                                        
@@ -136,7 +136,7 @@
                     if(bandera) bandera = jv.validarFuncionesExternas('post');
                     
                 }
-            }
+            }else bandera=false;
             return bandera;
         },
         /**
@@ -147,7 +147,11 @@
         obtValidacionesCampo : function($ele){
             
             if(this.config.viaData){
-                return $ele.data('validacion');
+            	validaciones =$ele.data('validacion');
+            	 if(typeof(validaciones)=='string'){
+            	 	validaciones = JSON.parse(validaciones);
+            	 }
+                return validaciones
             }else{
                 if(this.config.validaciones[$ele.attr('id')]!='undefined')
                     return this.config.validaciones[$ele.attr('id')];
@@ -167,6 +171,7 @@
                 }else{   
                     result = this.config[tipo].call(this);
                 }
+     
                 return result;
             }else{
                 return true;
@@ -181,8 +186,6 @@
                  
             }
             if(bandera){
-                
-                
                 $.each(validaciones,function(validacion,params){
                     type = typeof(parametros);
                     if(params!=false && bandera==true && validacion!='obligatorio'){
@@ -193,14 +196,16 @@
                             }
                         }else
                         if(jValidador.validaciones[validacion]){
+                        	
                             if(!jv.ejecutarValidacion($ele,validacion)){
-                                jv.errores[$ele.attr('name')]=validacion;
+                                jv.errores[$ele.attr('id')]=validacion;
                                 bandera=false;
                             }
                         }else{
-                          console.log(validacion);
-                          console.log(params)
-                          throw new Error("No existe la validacion solicitada "+ validacion+" para el campo "+$ele.attr('id'));   
+                          console.log(validacion,params);
+						
+						
+                          console.error("No existe la validacion solicitada "+ validacion+" para el campo "+$ele.attr('id'));   
                         }
                         
                     }
@@ -243,9 +248,9 @@
          *
          */
         ejecutarValidacion:function($campo,validacion,expresion){
-            
+
             if(!expresion) expresion = jValidador.validaciones[validacion].expr;
-            
+
             var valorCampo = $campo.val();
             if(validacion=='numerico' || validacion=='decimal'){
                 //Si el campo es numerico se eliminan los formatos de miles
@@ -281,6 +286,8 @@
                 var validacionesCampo = vj.obtValidacionesCampo($campo);
                 var msj="";
                 var divError = vj.$form.find("."+vj.config.cssError);
+                console.log(typeof validacionesCampo,validacionesCampo,jv.errores)
+                console.log(errorCampo,jValidador.validaciones[errorCampo])
                 if(validacionesCampo[errorCampo]!= undefined){
                 
                     msj = (validacionesCampo[errorCampo].mensaje)?validacionesCampo[errorCampo].mensaje:jValidador.validaciones[errorCampo].mensaje;    
@@ -323,11 +330,9 @@
                         $('html,body').animate({
                             scrollTop: $input.offset().top - 200
                         });    
-                    }
-                    
-                        
+                    }                        
                 }
-                console.log(msj);
+
             }
             
             
@@ -374,65 +379,70 @@
             
             if(typeof arr.evaluacion =='undefined') arr.evaluacion = 'igual';
             var tipoCampo = $campo.attr('type');
-            if($campo.attr('id')=='montoPago'){
-                
-            }
-            
             var condicion=true;
             if(arr.condicional){
-                    var valor;
-                    var $condicional =  $("#"+arr.condicional);
-                    
-                    if(arr.tipo && arr.tipo=="radio" || $condicional.attr('type')=='radio'){  
-                            
-                          nombreCampo =$condicional.attr('name');
-                          valor = $("input[name="+nombreCampo+"]:checked").val();
-                          
-                        }else{
-                          valor = $condicional.val();
-                        }
-                    condicion=false;
-                    switch(arr.evaluacion){
-                        case 'igual':
-                            if(valor==arr.condicion) condicion=true;    
-                        break;
-                        case 'diff':
-                            if(valor!=arr.condicion) condicion=true;
-                        break;
-                        case 'mayor':
-                            if(valor>arr.condicion) condicion=true;
-                        break;
-                        case 'menor':
-                        if(valor<arr.condicion) condicion=true;
-                        break;
-                    }
-                    
-                    
+		        var valor;
+		        var $condicional =  $("#"+arr.condicional);
+		        
+		        if(arr.tipo && arr.tipo=="radio" || $condicional.attr('type')=='radio'){  
+	              
+				if($condicional.length<1){
+				 	$condicional = $("input[name="+arr.condicional+"]:checked");
+					valor = $("input[name="+arr.condicional+"]:checked").val();
+				  	
+				}
+				var nombreCampo =$condicional.attr('name');
+				if(typeof nombreCampo=='undefined'){
+					console.error("El condicional para "+$campo.attr('name')+" no ha sido definido correctamente");
+				}
+              	valor = $condicional.val();  
+	            console.log("==============");
+	            console.log($campo)
+	            console.log(arr,nombreCampo,valor);
+	            }else{
+	              valor = $condicional.val();
+	            }
+		        condicion=false;
+		        switch(arr.evaluacion){
+		            case 'igual':
+		            	console.log(valor,"==",arr.condicion);
+		                if(valor==arr.condicion) condicion=true;    
+		            break;
+		            case 'diff':
+		                if(valor!=arr.condicion) condicion=true;
+		            break;
+		            case 'mayor':
+		                if(valor>arr.condicion) condicion=true;
+		            break;
+		            case 'menor':
+		            if(valor<arr.condicion) condicion=true;
+		            break;
+		        }    
             }else condicion=true;
+            
             if(condicion===true){
-                    switch (tipoCampo){
-                        case 'RADIO':
-                        case 'radio':
-                        case 'CHECKBOX':
-                        case 'checkbox':
-                            nombreCampo = $campo.attr('name');
-                            //if($campo.prop('checked')){
-                            //resp.radio=true;
-                            if($('input[name="'+nombreCampo+'"]:checked').length>0){  
-                                
-                                resp= true;
-                            }else{    
-                                resp=false;
-                            }
+                switch (tipoCampo){
+                    case 'RADIO':
+                    case 'radio':
+                    case 'CHECKBOX':
+                    case 'checkbox':
+                        var nombreCampo = $campo.attr('name');
+                        
+                        if($('input[name="'+nombreCampo+'"]:checked').length>0){  
                             
-                            break;
-                        default:
-                        	
-                            if($campo.val().trim()=="") resp=false;
-                            else  resp=true;
-                            
-                        break;  
-                        }//final switch========================
+                            resp= true;
+                        }else{    
+                            resp=false;
+                        }
+                        
+                        break;
+                    default:
+                    	
+                        if($campo.val().trim()=="") resp=false;
+                        else  resp=true;
+                        
+                    break;  
+                }//final switch========================
                     
             }else  resp=true;
             
@@ -477,20 +487,22 @@
             valorCampo = codigo+valorCampo+extension;
             if(valorCampo!=""){
                 
-            
+            	
                 var celularValido = (expresionCel.test(valorCampo))?1:0;
                 var TelefonoValido = (expresionTlf.test(valorCampo))?1:0;
                 var internacionalValido =(expresionInter.test(valorCampo))?1:0;
-                if( parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
+                console.log("valido?",celularValido,parametros.tipo)
+                if( 
+                	parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
                     parametros.tipo=='celular' && celularValido==1 ||
                     parametros.tipo=='internacional' && internacionalValido==1 || 
-                    parametros.tipo=="multiple" && (TelefonoValido==1 || celularValido==1))||
-                    !parametros.tipo && TelefonoValido==1){
+                    parametros.tipo=="multiple" && (TelefonoValido==1 || celularValido==1))
+                ){
                         
-                         return true;
-                     }else{
-                         return false;
-                     }
+                     return true;
+                 }else{
+                     return false;
+                 }
             }else{
                 return true;
             }
@@ -570,8 +582,6 @@
         return this.each(function(k,v){
             $(this).on('click',function(e){
                 v = new jValidador(this,config,e);
-                
-                
             });
             
         });

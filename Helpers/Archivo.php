@@ -9,6 +9,7 @@
 
 namespace Jida\Helpers;
 use Jida\Helpers\Debug as Debug;
+use \Exception;
 class Archivo{
     /* Atributos para archivos cargados */
 
@@ -91,10 +92,13 @@ class Archivo{
             $this->tmp_name = $file['tmp_name'];
             $this->error = $file['error'];
             $this->size = $file['size'];
-            $this->obtenerExtension();
+			if(!empty($this->name)){
+            	$this->obtenerExtension();
 
-            $this->totalArchivosCargados = count($file['tmp_name']);
-            $this->validarCarga();
+            	$this->totalArchivosCargados = count($file['tmp_name']);
+			 	$this->validarCarga();				
+			}
+
 
         }
     }//fin checkCarga
@@ -249,7 +253,7 @@ class Archivo{
             }
         }else{
             $nombreArchivo= $this->validarNombreArchivoCargado(0, $nombreAleatorio,$prefijo);
-            $destino  =$directorio. "/".$nombreArchivo.".".$this->extension[0];
+            $destino  =$directorio. "/".$nombreArchivo;
             $this->archivosCargados[]=[
                 'path' => $destino,
                 'directorio'=>$directorio,
@@ -288,7 +292,7 @@ class Archivo{
             $name = $fecha.$ramdon;
             if(!empty($prefijo)) $name = $prefijo."-".$name;
 
-            return $name;
+            return $name.".".$this->extension[0];
         }else{
 
             if(is_array($this->nombresArchivosCargados)){
@@ -304,6 +308,7 @@ class Archivo{
         }
 
     }
+	
     function getArchivosCargados(){
         return $this->archivosCargados;
     }
@@ -338,7 +343,7 @@ class Archivo{
      * Elimina un archivo
      * @method eliminar
      */
-    function eliminar(){
+    function eliminar($dir){
         if(unlink($dir)){
             return true;
         }else{
