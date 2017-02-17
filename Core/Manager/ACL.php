@@ -45,7 +45,7 @@ class ACL{
 			$this->usuario = new $modeloUser();
 			Helpers\Sesion::set('Usuario',$this->usuario);
 		}
-		if(empty($this->usuario->perfiles)) $this->usuario->agregarPerfilSesion('UsuarioPublico');
+		if(count($this->usuario->perfiles)<1) $this->usuario->agregarPerfilSesion('UsuarioPublico');
 		if(!Helpers\Sesion::get('ACL')){
 			$this->leerEstructura();
 

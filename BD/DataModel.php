@@ -1248,7 +1248,7 @@ class DataModel{
 			}
         	$this->query.=" ".$this->_limit;
         }
-
+		
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
@@ -1336,6 +1336,7 @@ class DataModel{
      * @method obtQuery
      */
     protected function obtQuery(){
+    	
         return $this->query;
     }
     /**

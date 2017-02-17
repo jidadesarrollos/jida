@@ -336,14 +336,18 @@ class JVista{
 		}
 
         if(count($this->clausulas)>0){
-            foreach ($this->clausulas as $key => $arrParams) {
-                foreach ($arrParams as $clausula => $param) {
-
-                    if(is_array($param))
+        	//Helpers\Debug::imprimir('ima here',$this->clausulas);
+            foreach ($this->clausulas as $clausula => $parametros) {
+                //foreach ($arrParams as $clausula => $param) {
+/*
+                    if(is_array($param)){
+                    	Helpers\Debug::imprimir("array",$param);
                         call_user_func_array([$this->objeto,$clausula], $param);
-                    else
-                        $this->objeto->{$clausula}($param);
-                }
+                    }else{*/
+              //      	Helpers\Debug::imprimir("no array",$clausula,$parametros);
+                        $this->objeto->{$clausula}($parametros);
+	//				}
+                //}
             }
         }
 
@@ -373,7 +377,9 @@ class JVista{
 				$this->objeto->filtro([$value=>$_GET[$value]]);
 			}
 		}
+			//Helpers\Debug::imprimir("fin",true);	
 		$this->totalRegistros = count($this->objeto->obt());
+
 		$this->registros = $this->objeto->limit($this->nroFilas,$offset)->obt();
 		/**
 		 * Se llama a la funcion pasada por el usuario
