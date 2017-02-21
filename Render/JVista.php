@@ -12,7 +12,7 @@ class JVista{
 	private $dataVista;
 	var $ordenamientos=TRUE;
 	var $buscador = FALSE;
-
+    private $_debug=FALSE;
 	private $nroFilas=10;
 	private $paginasMostradas=9;
 	private $totalPaginas;
@@ -222,7 +222,8 @@ class JVista{
 			$this->tabla = new TablaSelector();
 		}
 
-
+        if(isset($_GET['pagina']))
+            $this->paginaActual = $_GET['pagina'];
 		if(!empty($titulo)) $this->titulo=$titulo;
 
 		$this->paginador = new ListaSelector();
@@ -281,7 +282,8 @@ class JVista{
 	}
 	private function realizarConsulta(){
 		$dataConsulta = explode(".",$this->ejecucion);
-
+        
+        $this->_imprimir("--realizarConsulta",$dataConsulta,FALSE);
 		if(class_exists($dataConsulta[0])){
 
 			$this->objeto = new $dataConsulta[0];
@@ -320,7 +322,7 @@ class JVista{
 	 *
 	 */
 	private function obtInformacionObjeto($metodo=false){
-
+        
 		$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->nroFilas);
 
 		if($metodo){
@@ -334,7 +336,7 @@ class JVista{
 				$this->objeto->consulta($this->campos);
 			}
 		}
-
+        $this->_imprimir($this->paginaActual,$_GET,TRUE);
         if(count($this->clausulas)>0){
         	//Helpers\Debug::imprimir('ima here',$this->clausulas);
             foreach ($this->clausulas as $clausula => $parametros) {
@@ -411,6 +413,7 @@ class JVista{
      */
     private function obtConsultaPaginada(){
     	$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->filasPorPagina);
+        Helpers\Debug::imprimir($this->paginaActual);
        $this->query=$this->bd->addLimit($this->filasPorPagina, $offset,$this->queryReal);
 
 
@@ -423,13 +426,13 @@ class JVista{
 	 */
 	function obtenerVista($function=""){
 		if(!empty($function)){
-
 			$this->funcionData=$function;
 		}
 
 		if($this->usaBD){
 			$this->realizarConsulta();
-		}else{
+            
+		}else{			    
 			$this->procesarArrayData($this->data);
 		}
 
@@ -1074,4 +1077,13 @@ class JVista{
 		}
 		return $template;
 	}
+    
+    protected function _imprimir(){
+        $params = func_get_args();
+        //array_push($params,$cortar);
+        if($this->_debug){
+            call_user_func_array(['\Jida\Helpers\Debug','imprimir'], $params);
+        }
+        
+    }
  }//fin clase
