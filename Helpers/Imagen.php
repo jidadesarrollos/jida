@@ -118,7 +118,6 @@ class Imagen extends Archivo{
           case "image/jpeg":
 
             $imagen = imagejpeg($lienzo, $url,90);
-              \Jida\Helpers\Debug::imprimir($lienzo,$url,$tipoImagen,true);
             break;
           case "image/png":
             $imagen = imagepng($lienzo, $url,2);
