@@ -101,6 +101,8 @@ function cargarArchivo(config){
         nombreArchivo:'imagen',
         callback:false,
         multiple:true,
+        
+        
         onsubmit:function(file, ext){
             
             if (ext && data.extensiones.test(ext)){

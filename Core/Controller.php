@@ -491,6 +491,9 @@ class Controller {
                 throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
         }
 
+
+
+
         if(!empty($controller)){
 
 		    if(strtolower($this->_modulo)==strtolower($controller)){
@@ -500,16 +503,16 @@ class Controller {
 		    }else{
 
                 if(empty($this->_modulo)){
-
                 	if(strtolower($controller)=='index'){
 
 						$this->url =$this->obtURLApp();
 						if($this->dv->_esJadmin) $this->url.="jadmin/";
+            
 					}else{
 
                   	  	$this->url = $this->obtURLApp();
                   	  	if($this->dv->_esJadmin) $this->url.="jadmin/";
-
+                        
 						$this->url .= $this->convertirNombreAUrl($controller)."/";
 					}
                 }else{
@@ -520,6 +523,7 @@ class Controller {
             }
 
         }
+
         return $this->url;
     }
     protected function urlModulo(){
@@ -608,25 +612,34 @@ class Controller {
 					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
 				}
 
-// Helpers\Debug::imprimir('$ctrl',$ctrl,'$url',$url);
-
                 $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
 
             }else{
-// Helpers\Debug::imprimir('$this->urlController() -> '.$this->urlController());
+
                 $urlController = $this->urlController();
+                
                 if(strpos(strtolower($this->_clase), 'jadmin')){
-                    $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
-                    $urlController .= $this->urlController();
+                    
+                    if(URL_APP != '/'){
+                        $parametros = explode(URL_APP, $urlController);
+                        $parametros = $parametros[1];
+                        
+                        $urlController = URL_APP;
+                        $urlController .= (strpos(strtolower($this->urlController()), 'jadmin'))?'':'jadmin/';
+                        $urlController .= $parametros;
+                        
+                    }else{
+                        $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
+                        $urlController .= $this->urlController();   
+                    }
+                    
                 }
                 
                 $ctrl = $this->_clase;
                 
             }
             
-// Helpers\Debug::imprimir('$urlController',$urlController,'metodo',$metodo,$this->convertirNombreAUrl($metodo));
-
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
                 $params= "";
@@ -636,8 +649,11 @@ class Controller {
                         $params.="$value/";
 					}
                 }
-// Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
-                return $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
+                
+                $urlCompleta = (empty($params))? $urlController.$this->convertirNombreAUrl($metodo) : $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
+
+                return $urlCompleta;
+                
             }else{
 
                 throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);

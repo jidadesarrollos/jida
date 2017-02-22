@@ -93,4 +93,12 @@ trait ObjetoManager{
 		}else return $clase;
 	}
 	
+    private function addAtributos($array){
+        if(is_array($array) or is_object($array)){
+            foreach ($array as $key => $value) {
+                $this->{$key} = $value;
+            }
+        }
+            
+    }
 }

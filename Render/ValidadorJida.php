@@ -9,6 +9,7 @@
  */
 
 namespace Jida\Render;
+use Jida\Helpers as Helpers;
 class ValidadorJida extends \Jida\Core\Validador{
     /**
      * @var array $validaciones Arreglo opcional con parametros de la validación
@@ -303,6 +304,7 @@ class ValidadorJida extends \Jida\Core\Validador{
 
                     return true;
                 }else{
+                	//Helpers\Debug::imprimir($detalle);
                     $this->obtenerMensajeError($detalle['tipo'], $detalle);
                     return false;
                 }

@@ -144,7 +144,7 @@ class Pagina{
 			$this->temaApp = $data['tema'];
 			JD('TEMA_APP',$this->temaApp);
 		}
-		
+
 		if(defined('LAYOUT_DEFAULT')) $this->layoutDefault=LAYOUT_DEFAULT;
 	}
     /**
@@ -305,7 +305,7 @@ class Pagina{
 		$this->procesarVariables();
         if(!empty($nombreVista)) $this->nombreVista = $nombreVista;
 
-        $DataTpl = $this->data->getTemplate();
+        $DataTpl = $this->data->obtPlantilla();
         /**
          * Se verifica si desea usarse una plantilla
          */
@@ -343,8 +343,21 @@ class Pagina{
         if($this->data->getPath()=="jida"){
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
 
+        }else{
+        	$_plantilla = $this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()).".php";
+			if(!file_exists($_plantilla)){
+
+				$this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
+				$_plantilla = $this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()).".php";
+
+				if(!file_exists($this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()).".php")){
+					throw new Exception("La plantilla solicitada no existe", $this->_ce.'10');
+
+				}
+			}
         }
-        return $this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->getTemplate()).".php";
+
+        return $_plantilla;
     }
 
     /**
@@ -901,7 +914,7 @@ class Pagina{
             // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
             // return true;
         }else{
-            throw new Exception("No existe el segmento $segmento en la carpeta ".$directorio, 100);
+            throw new \Exception("No existe el segmento $segmento en la carpeta ".$directorio, 100);
         }
         return false;
 
@@ -976,7 +989,7 @@ class Pagina{
 
 		$partes = explode(".", $nexo);
 		if(count($partes)>1){
-			
+
 		}else{
 			$modulo = (empty($modulo))?ucwords($this->_modulo):ucwords($modulo);
 			$namespace = '\App\Modulos\\'. $modulo .'\Nexos\\';

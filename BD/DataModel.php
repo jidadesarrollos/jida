@@ -1084,7 +1084,7 @@ class DataModel{
                if(!strpos($key, "."))
                     $this->query.=" $this->tablaQuery.$key='$value'";
                else
-                    $this->query.=$key.="'$value'";
+                    $this->query.=$key."='$value'";
                ++$o;
                }
                 $this->query.=")";
@@ -1248,7 +1248,7 @@ class DataModel{
 			}
         	$this->query.=" ".$this->_limit;
         }
-
+		
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
@@ -1336,6 +1336,7 @@ class DataModel{
      * @method obtQuery
      */
     protected function obtQuery(){
+    	
         return $this->query;
     }
     /**
