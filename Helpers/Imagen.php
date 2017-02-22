@@ -90,6 +90,9 @@ class Imagen extends Archivo{
 
         $imagen = $this->crearLienzo($tipoImagen,$rutaImg);
         $lienzo = imagecreatetruecolor($anchoRedimension, $altoRedimension);
+        imagecolortransparent($lienzo,imagecolorallocate($lienzo, 0,0,0));
+        imagealphablending($lienzo,false);
+        imagesavealpha($lienzo, true);
         imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
         if($this->exportarImagen($tipoImagen,$lienzo,$rutaAguardar)){
             return true;
@@ -109,11 +112,13 @@ class Imagen extends Archivo{
         if(!empty($nombreImagen)){
             $url=$url.$nombreImagen;
         }
+        
          switch ( $tipoImagen ){
           case "image/jpg":
           case "image/jpeg":
 
             $imagen = imagejpeg($lienzo, $url,90);
+              \Jida\Helpers\Debug::imprimir($lienzo,$url,$tipoImagen,true);
             break;
           case "image/png":
             $imagen = imagepng($lienzo, $url,2);
