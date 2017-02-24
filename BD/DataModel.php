@@ -1252,7 +1252,7 @@ class DataModel{
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
-		
+		#Helpers\Debug::imprimir($this->query,TRUE);
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 

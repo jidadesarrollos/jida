@@ -466,7 +466,7 @@ global $JD;
      *
      */
     private function procesarArgumentos($tipo=1){
-			// Helpers\Debug::imprimir($this->args,$this->_arrayUrl);
+			#Helpers\Debug::imprimir($this->args,$this->_arrayUrl);
             
             if(!empty($this->_arrayUrl))
             {
@@ -477,12 +477,12 @@ global $JD;
             $clave = TRUE;
 			
 			// $this->args = $this->_arrayUrl;
-			// Helpers\Debug::imprimir($this->args);
+			#Helpers\Debug::imprimir("before filter",$this->args);
             
             $this->args = array_filter($this->args,function($value){
-                return !empty($value);
+                return !empty($value) or $value==0;
             });
-
+            #Helpers\Debug::imprimir("after filter",$this->args);
             $totalClaves = count($this->args);
             $gets=array();
             if($totalClaves>=2){
@@ -598,7 +598,7 @@ global $JD;
     private function ejecutarController($controlador,$params=[],$checkDirs=true){
 
         $args = $this->args;
-
+        #Helpers\Debug::imprimir("jida",$params);
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
         $retorno= array();
 

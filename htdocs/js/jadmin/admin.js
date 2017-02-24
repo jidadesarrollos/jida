@@ -37,12 +37,12 @@ function setLinkMenuClass($linkToggle){
  	}
 }
 function addMenuTooltip(){
-	console.log($('.menu li a').length,'adding-tooltip');
+	
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
  			var $icon =$item.find('.fa');	
 			var $text = $item.find('.inner-text');
-			console.log($text,$text.parent());
+			
 			$text.parent().attr({
 				'data-toggle':'tooltip',
 				
@@ -65,9 +65,7 @@ function toggleMenu(open){
 	if(!open) open = false;
 	var $content = $('#content-wrapper');
 	var menuConfig = Storage.obtJson('menuAdmin');
-	console.log("al entrar open en",open);
-	
-	
+		
 	if(!open){
 		if(!$content.hasClass('short-menu')){
 			$content.addClass('short-menu');
@@ -96,7 +94,6 @@ function toggleMenu(open){
  		});
 
  	}
- 	console.log("ending",menuConfig);
  	Storage.set('menuAdmin',menuConfig);
 }
 (function($){
@@ -107,7 +104,6 @@ function toggleMenu(open){
 	 */
 	var dataMenu = Storage.obtJson('menuAdmin');
 	if(dataMenu){
-		console.log("getting it",dataMenu);
 		toggleMenu(dataMenu.showMenu);
 	}else{
 		Storage.set('menuAdmin',menuConfig);
