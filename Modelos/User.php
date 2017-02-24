@@ -108,9 +108,9 @@ class User extends BD\DataModel{
             return $result;
         }else
             return false;
-        
+
     }
-    
+
 	private function  stringConsulta(){
 		return "select
 			a.id_usuario_perfil AS id_usuario_perfil,
@@ -126,7 +126,7 @@ class User extends BD\DataModel{
 			join s_usuarios c on (a.id_usuario = c.id_usuario)";
 
 	}
-    
+
     /**
      * Obtiene los perfiles asociados a un usuario de base de datos
      * @method obtenerPerfiles
@@ -135,20 +135,20 @@ class User extends BD\DataModel{
     private function obtenerPerfiles($idUser=""){
         if($idUser!="")
             $this->id_usuario = $idUser;
-        
-        
+
+
         if( count($this->perfiles) < 1 ){
             $query = $this->stringConsulta()." where a.id_usuario=$this->id_usuario";
             $data  = $this->bd->ejecutarQuery($query);
-            
+
             if(count($data)>1)  throw new Exception("No se han obtenido los perfiles del usuario", 1);
-            
+
             while($perfil = $this->bd->obtenerArrayAsociativo($data))
                 $this->perfiles[$perfil['clave_perfil']] = $perfil['clave_perfil'];
 
         }else
         	$this->perfiles[] = 'UsuarioPublico';
-        
+
     }
     /**
      * Retorna los perfiles asociados al usuario inicializado
@@ -174,7 +174,7 @@ class User extends BD\DataModel{
 		}else return false;
 
 	}
-    
+
 	/**
 	 * Registra los perfiles asociados a un usuario
 	 * @method asociarPerfiles
@@ -185,19 +185,19 @@ class User extends BD\DataModel{
             $insert="insert into s_usuarios_perfiles values ";
             $i=0;
             foreach ($perfiles as $key => $idPerfil) {
-                    
+
                 if($i>0)    $insert.=",";
-                
+
                 $insert.="(null,$this->id_usuario,$idPerfil)";
                 $i++;
             }
-            
+
             $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
 
             $this->bd->ejecutarQuery($delete.$insert,2);
             return ['ejecutado'=>1];
 	}
-    
+
     /**
      * Cambia la clave de un usuario
      * @method cambiarClave
@@ -206,6 +206,7 @@ class User extends BD\DataModel{
      */
     function cambiarClave($clave,$nuevaClave){
         $clave = md5($clave);
+        //Helpers\Debug::imprimir("$clave===$this->clave_usuario",true);
         if($clave===$this->clave_usuario){
             $this->clave_usuario = md5($nuevaClave);
             $this->salvar();
@@ -224,23 +225,23 @@ class User extends BD\DataModel{
     function registrarUsuario($datos,$perfiles="",$validacion=TRUE){
         if(empty($perfiles))
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
-        
+
         $this->establecerAtributos($datos);
-        
+
         if($validacion===TRUE){
         	$codigo = hash("sha256",Helpers\FechaHora::timestampUnix().Helpers\FechaHora::datetime());
 	        $this->validacion=$codigo;
 	        $this->activo=0;
         }
-        
+
         $this->id_estatus=(empty($this->id_estatus))?1:$this->id_estatus;
-        
+
         if($this->salvar()->ejecutado() == 1){
             $this->id_usuario=$this->resultBD->idResultado();
 
             $this->asociarPerfiles($perfiles);
         }
-        
+
         return ['idResultado'=>$this->resultBD->idResultado(),'ejecutado'=>$this->resultBD->ejecutado(),'unico'=>$this->resultBD->esUnico(),'validacion'=>$this->validacion];
     }
     /**
@@ -280,11 +281,11 @@ class User extends BD\DataModel{
             $this->establecerAtributos($data);
             $this->registrarSesion();
             return true;
-            
+
         }else return false;
 
     }
-    
+
     /**
      * Cierra la sesión de un usuario
      * @method cerrarSesion
@@ -293,19 +294,26 @@ class User extends BD\DataModel{
     function cerrarSesion($idUser=""){
         if(empty($idUser))
             $idUser=$this->id_usuario;
-        
+
         $this->activo=0;
         $this->salvar();
     }
 
 	function agregarPerfilSesion($perfil){
-		if(is_array($perfil))
-			$this->perfiles = array_merge($this->perfiles,$perfil);
-		
-		$this->perfiles[]=$perfil;
+		if(is_array($perfil)){
+			if(!in_array($perfil, $this->perfiles))
+				$this->perfiles = array_merge($this->perfiles,$perfil);
+
+		}else{
+			$this->perfiles[]=$perfil;
+		}
+
+		$this->perfiles = array_unique($this->perfiles);
+
+
 
 	}
-    
+
 	function crearSesionUsuario(){
 		Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario',$this);
@@ -318,11 +326,11 @@ class User extends BD\DataModel{
 	function guardarSesion(){
 		Helpers\Sesion::set('Usuario',$this);
 	}
-    
+
     function obtUsers(){
         $this->consulta(['id_usuario','nombre_usuario','fecha_creacion','activo','ultima_session']);
         $this->join('s_estatus','estatus',['clave'=>'id_estatus','clave_relacion'=>'id_estatus']);
-        
+
         return $this->obt('id_usuario');
     }
 }

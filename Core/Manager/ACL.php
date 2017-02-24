@@ -33,19 +33,19 @@ class ACL{
      * @method __construct
      */
     function __construct($id=""){
-    	
+
     	$this->componenteObject = $componenteObject = new \Jida\Modelos\Componente();
 		$this->perfilObject 	= new \Jida\Modelos\Perfil();
 		$this->usuario 			= Helpers\Sesion::get('Usuario');
 		$modeloUser = MODELO_USUARIO;
-		
-		
+
+
 		if(!is_a($this->usuario, MODELO_USUARIO)){
-			
+
 			$this->usuario = new $modeloUser();
 			Helpers\Sesion::set('Usuario',$this->usuario);
 		}
-		if(empty($this->usuario->perfiles)) $this->usuario->agregarPerfilSesion('UsuarioPublico');
+		if(count($this->usuario->perfiles)<1) $this->usuario->agregarPerfilSesion('UsuarioPublico');
 		if(!Helpers\Sesion::get('ACL')){
 			$this->leerEstructura();
 
@@ -189,8 +189,9 @@ class ACL{
 
 		$acceso = FALSE;
 		$i = 0;
+
 		while ($acceso===FALSE and $i<count($perfiles)) {
-			$perfilActual = $perfiles[$i];
+
 			if(array_key_exists($componente, $this->_acl)){
 				$dataComponente = $this->_acl[$componente];
 				if(count($dataComponente['objetos'])>0)

@@ -37,29 +37,27 @@ function setLinkMenuClass($linkToggle){
  	}
 }
 function addMenuTooltip(){
+	console.log($('.menu li a').length,'adding-tooltip');
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
- 			var $icon =$item.find('.fa');
-
- 			if($icon.length){
- 				var $text = $icon.next();
-
- 				$icon.parent().attr({
- 					'data-toggle':'tooltip',
- 					'data-placement':'right',
- 					'title':$.trim($text.html())
- 				});
- 			}
+ 			var $icon =$item.find('.fa');	
+			var $text = $item.find('.inner-text');
+			console.log($text,$text.parent());
+			$text.parent().attr({
+				'data-toggle':'tooltip',
+				
+				'data-placement':'right',
+				'title':$.trim($text.html())
+			});
+ 			
  		});
 }
 function removeMenuTooltip(){
 	$('.menu li a').each(function(k,item){
  			var $item =$( item );
- 			var $icon =$item.find('.fa');
- 			if($icon.length){
- 				var $text = $icon.next();
- 				$icon.parent().removeAttr('data-toggle');
- 			}
+ 			var $text = $item.find('.inner-text');		
+			$text.parent().removeAttr('data-toggle');
+ 			
 	});
 	$('.tooltip').remove();
 }
@@ -137,8 +135,10 @@ function toggleMenu(open){
 
 	 });
 
-
-
+	 $("body").tooltip({
+	 	selector:'[data-toggle="tooltip"]',
+	 	placement:'right'
+	 });
 })(jQuery);
 
 

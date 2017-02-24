@@ -135,11 +135,15 @@ class Directorios extends \Directory{
             if (is_dir($files)){
                 self::eliminar($files);
             }else{
-                unlink($files);
+                
+                if(unlink($files)) return true;
             }
         }
 
-        rmdir($dir);
+        if(rmdir($dir)){
+            return true;
+        }
+        return false;
     }
 
     /**

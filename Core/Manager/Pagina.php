@@ -914,7 +914,7 @@ class Pagina{
             // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
             // return true;
         }else{
-            throw new Exception("No existe el segmento $segmento en la carpeta ".$directorio, 100);
+            throw new \Exception("No existe el segmento $segmento en la carpeta ".$directorio, 100);
         }
         return false;
 

@@ -1,0 +1,86 @@
+{
+    "nombre": "registro Usuarios",
+    "query": "select id_usuario,nombre_usuario,clave_usuario,nombres,apellidos,correo,id_estatus from s_usuarios",
+    "estructura": null,
+    "identificador": "RegistroUsuarios",
+    "clave_primaria": "id_usuario",
+    "campos": [
+        {
+            "name": "id_usuario",
+            "orden": "1",
+            "visibilidad": "1",
+            "id": "id_usuario",
+            "type": "hidden"
+        },
+        {
+            "label": "Clave",
+            "name": "clave_usuario",
+            "maxlength": "50",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Debe ingresar una clave para el usuario"
+                }
+            },
+            "orden": "5",
+            "placeholder": "Clave",
+            "visibilidad": "1",
+            "id": "clave_usuario",
+            "type": "password"
+        },
+        {
+            "label": "Nombres",
+            "name": "nombres",
+            "orden": "2",
+            "placeholder": "Nombres",
+            "visibilidad": "1",
+            "id": "nombres",
+            "type": "text"
+        },
+        {
+            "label": "Apellidos",
+            "name": "apellidos",
+            "orden": "3",
+            "placeholder": "Apellidos",
+            "visibilidad": "1",
+            "id": "apellidos",
+            "type": "text"
+        },
+        {
+            "label": "Nombre de Usuario",
+            "name": "nombre_usuario",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Debe ingresar un nombre de usuario o nickname"
+                }
+            },
+            "orden": "4",
+            "placeholder": "Nombre de Usuario",
+            "visibilidad": "1",
+            "id": "nombre_usuario"
+        },
+        {
+            "label": "Correo El&eacute;ctronico",
+            "name": "correo",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Debe ingresar el correo del usuario"
+                },
+                "email": {
+                    "mensaje": "El formato del correo es incorrecto"
+                }
+            },
+            "orden": "6",
+            "visibilidad": "1",
+            "id": "correo"
+        },
+        {
+            "label": "Estatus",
+            "name": "id_estatus",
+            "opciones": "select id_estatus,estatus from s_estatus where id_estatus in (1,2) order by id_estatus",
+            "orden": "7",
+            "visibilidad": "1",
+            "id": "id_estatus",
+            "type": "select"
+        }
+    ]
+}
