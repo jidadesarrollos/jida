@@ -20,7 +20,7 @@ class Directorios extends \Directory{
      * @see PHP file_exists
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 	static function validar($dir){
 	    if(file_exists($dir)){
@@ -36,7 +36,7 @@ class Directorios extends \Directory{
      * @param mixed $directorio String o Arreglo de Directorios a crear
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function crear($directorio,$mode=0777){
         if(is_array($directorio)){
@@ -57,7 +57,7 @@ class Directorios extends \Directory{
 		 * @return array todos los archivos y carpetaS
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
 	static function listar($ruta){
@@ -84,7 +84,7 @@ class Directorios extends \Directory{
     * @return $arr Array con todos las coincidencias de $expReg
 		* @access public
 		* @since 0.1
-		* @deprecated n/a
+		*
     */
     static public function listarDirectoriosRuta($ruta,&$arr,$expReg='',&$i=0){
     // Abrir un directorio y listarlo recursivamente
@@ -125,7 +125,7 @@ class Directorios extends \Directory{
      * @param boolean $recursive Si es colocado en TRUE la función se aplicara en los subdirectorios
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function recorrerDirectorio($ruta,$callback,$recursive=FALSE){
         // Abrir un directorio y listarlo recursivamente
@@ -155,7 +155,7 @@ class Directorios extends \Directory{
      * @method eliminar
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function eliminar($dir){
 
@@ -182,7 +182,7 @@ class Directorios extends \Directory{
      * @param url $directorio Ubicación del directorio a limpiar
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function limpiar($dir){
        foreach(glob($dir . "/*") as $files){
@@ -200,7 +200,7 @@ class Directorios extends \Directory{
      * @patrom Patron para contar Ejemplo {*.jpg,*.gif,*.png}
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function getTotalArchivos($ruta){
         $totalArchivos = 0;
@@ -222,7 +222,7 @@ class Directorios extends \Directory{
 	 * @patrom Patron para contar Ejemplo {*.jpg,*.gif,*.png}
 	 * @access public
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
 	 */
 	static function copiar($origen,$destino){
 		if(is_dir($origen) and is_readable($origen)){

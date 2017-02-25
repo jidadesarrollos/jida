@@ -27,7 +27,7 @@ class Mensajes {
 		 * @return string
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
     static function crear($tipo,$msj,$hidden=false){
@@ -56,7 +56,7 @@ class Mensajes {
 				 * @return string
 				 * @access public
 				 * @since 0.1
-				 * @deprecated n/a
+				 *
 		     */
 
     static function obtenerEstiloMensaje($clave){
@@ -82,7 +82,7 @@ class Mensajes {
 			* @return string
 			* @access public
 			* @since 0.1
-			* @deprecated n/a
+			*
 			*/
     static function mensajeError($mensaje){
        $css = self::obtenerEstiloMensaje('error');
@@ -101,7 +101,7 @@ class Mensajes {
 			* @return string
 			* @access public
 			* @since 0.1
-			* @deprecated n/a
+			*
 			*/
     static function mensajeAlerta($mensaje){
        $css = self::obtenerEstiloMensaje('alerta');
@@ -119,7 +119,7 @@ class Mensajes {
 			* @return string
 			* @access public
 			* @since 0.1
-			* @deprecated n/a
+			*
 			*/
     static function mensajeSuceso($mensaje){
        $css = self::obtenerEstiloMensaje('suceso');
@@ -137,7 +137,7 @@ class Mensajes {
 			* @return string
 			* @access public
 			* @since 0.1
-			* @deprecated n/a
+			*
 			*/
     static function mensajeInformativo($mensaje){
        $css = self::obtenerEstiloMensaje('info');
@@ -155,7 +155,7 @@ class Mensajes {
 		 * @method imprimirMensaje
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function imprimirMensaje($msj="__msj"){
         self::imprimirMsjSesion($msj);
@@ -168,7 +168,7 @@ class Mensajes {
      * @method imprimirMsjSesion
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      *
      */
     static function imprimirMsjSesion($msj="__msj"){

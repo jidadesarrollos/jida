@@ -16,7 +16,7 @@ class Sesion {
      * @method iniciarSession
      * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
 	static function iniciar(){
@@ -28,7 +28,7 @@ class Sesion {
 		 * @method getIdSession
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function getIdSession(){
         return session_id();
@@ -42,7 +42,7 @@ class Sesion {
      * @method destruir
      * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
     static function destruir($key=false){
@@ -83,7 +83,7 @@ class Sesion {
 		 * @method SessionLogin
 		 * @access static public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function sessionLogin(){
         self::destroy('acl');
@@ -101,7 +101,7 @@ class Sesion {
      * @param string $param3 Si es pasado, el parametro dos será tomado como una segunda clave de la variable de sessión
      * y este será el valor de la variable.
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function set($clave,$param2,$param3="")
         {
@@ -117,13 +117,13 @@ class Sesion {
     }
     /**
      * @internal Genera una nueva variable de sesión
-     * @method get
+     * @method obt
      * @access public
      * @param string clave key de la variable de session a obtener
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
-	static function get($clave,$clave2="") {
+	static function obt($clave,$clave2="") {
 
         if(!empty($clave2) and isset ( $_SESSION [$clave][$clave2] )){
             return $_SESSION [$clave][$clave2];
@@ -134,7 +134,21 @@ class Sesion {
             return false;
         }
     }
+		/**
+     * @internal Genera una nueva variable de sesión
+     * @method get
+     * @access public
+     * @param string clave key de la variable de session a obtener
+		 * @since 0.5
+		 * @deprecated
+		 *
+     */
 
+		public function get($clave,$clave2=''){
+
+			return self::obt($clave,$clave2);
+
+		}
 
     /**
      * @internal Verifica si el usuario actual tiene sesión iniciada
@@ -142,7 +156,7 @@ class Sesion {
      *
      * @return boolean true
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function checkLogg(){
 
@@ -161,7 +175,7 @@ class Sesion {
      * @param int $perfil Id del perfil requerido
      * @return boolean $acceso
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function checkAcceso($perfil){
         return self::checkPerfilAcceso($perfil);
@@ -173,7 +187,7 @@ class Sesion {
      * @param string $perfil Clave del perfil a consultar
      * @return boolean TRUE si es conseguida o FALSE si no se consigue
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function checkPerfilAcceso($perfil){
 
@@ -192,7 +206,7 @@ class Sesion {
      * @method checkAdm
      * @return boolean
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function checkAdm(){
         $perfiles = self::get('usuario','perfiles');

@@ -19,7 +19,7 @@ class Cadenas {
 	 * @return string $upperC
 	 * @access public
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
 	 **/
 	static function upperCamelCase($cadena,$espacios=true){
 
@@ -37,7 +37,7 @@ class Cadenas {
 	 * @return string $upperC
 	 * @access public
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
 	 */
 	static function lowerCamelCase($cadena,$espacios=true){
 
@@ -57,7 +57,7 @@ class Cadenas {
      * @return string
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
     static function resumen($texto='',$tamaño=50){
@@ -103,7 +103,7 @@ class Cadenas {
      * @return int
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     static function rellenarString($texto='',$tamaño=10,$remplazar){
 
@@ -129,7 +129,7 @@ class Cadenas {
      * @param array $array
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     public static function codificarArrayToHTML($array){
 
@@ -148,7 +148,7 @@ class Cadenas {
      * reemplazarlo por el caracter especial
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      *
      */
     public static function codificarHTML($cadena,$inversa=false) {
@@ -211,7 +211,7 @@ class Cadenas {
      * @return string $string;
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
 
      */
     public static function guionCase($string){
@@ -228,7 +228,7 @@ class Cadenas {
      * @return string $str
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     public static function guionCaseToString($guionCase){
         $cadena= '/\/\\\'\?\¿\_';
@@ -247,7 +247,7 @@ class Cadenas {
      * @return string $string cadena modificada
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     public static function removerAcentos($cadena,$enie="ni") {
         $arrAcentos = array (
@@ -298,7 +298,7 @@ class Cadenas {
      * @return string $singular Palabra resultante
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     public static function obtenerSingular($palabra){
         $arrayPalabra=array();
@@ -339,7 +339,7 @@ class Cadenas {
      * @return string $plural Palabra resultante
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     public static function obtenerPlural($palabra){
         $vocales = ['a','e','i','o','u'];
@@ -359,7 +359,7 @@ class Cadenas {
 	 * @param string $reemplazo Texto de reemplazo
 	 * @access public
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
 	 */
 	public static function vacio($string,$reemplazo){
 		if(empty($string)) return $reemplazo;

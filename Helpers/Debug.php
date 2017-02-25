@@ -16,7 +16,7 @@ class Debug{
      * @method mostrarArray
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function mostrarArray($ar,$exit=true){
         echo "\n<pre style=\"background:black;color:#dcdcdc\">\n";
@@ -34,7 +34,7 @@ class Debug{
      *
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
 	static function imprimir(){
 		$numero = func_num_args();
@@ -56,7 +56,7 @@ class Debug{
      *
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
 
     static function string($content,$exit=false,$tag="hr"){

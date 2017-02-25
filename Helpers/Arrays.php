@@ -26,7 +26,7 @@ class Arrays {
      * @return array $array Nuevo Arreglo armado
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      * @example
      *
      */
@@ -49,7 +49,7 @@ class Arrays {
      * @return array $ar1 arreglo inicial con valores insertados
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function combinar($ar1,$ar2){
       foreach ($ar1 as $key => $value) {
@@ -70,7 +70,7 @@ class Arrays {
      * @param string $filtro Campo de filtro en estructura del arreglo
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function obtenerHijosArray($arr,$busqueda,$filtro){
         $nuevoArreglo = [];
@@ -93,7 +93,7 @@ class Arrays {
      * @param array $array Arreglo multidimensional a filtrar
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function obtenerKey($clave,$array,$mantenerKey=FALSE){
         $arrayResult = array();
@@ -160,7 +160,7 @@ class Arrays {
      * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function addColumna($matriz,$valores,$usoKeyValores=FALSE){
 
@@ -196,7 +196,7 @@ class Arrays {
      * @return object $objeto Arreglo convertido en objeto
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      * @example ca
      *
      */

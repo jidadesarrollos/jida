@@ -54,7 +54,7 @@ class Imagen extends Archivo{
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
         if(empty($rutaImg)) $rutaImg = $this->directorio;
@@ -112,7 +112,7 @@ class Imagen extends Archivo{
      * @param string $nombreImagen [opcional] Nombre de la imagen, sino es pasado se asume que el nombre viene incluido en la variable $url
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     function exportarImagen($tipoImagen,$lienzo,$url,$nombreImagen=""){
         if(!empty($nombreImagen)){
@@ -144,7 +144,7 @@ class Imagen extends Archivo{
      * @param string $url
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
     private function crearLienzo($tipoImagen,$url){
        switch ( $tipoImagen ){
@@ -175,7 +175,7 @@ class Imagen extends Archivo{
      * @param string $rutaNueva Ruta donde se guardará la nueva imagen
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      *
      */
     function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
@@ -234,7 +234,7 @@ class Imagen extends Archivo{
 	 * @method useExifImagetype
 	 * @access private
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
 	 *
 	 */
 	private function useExifImagetype(){
@@ -290,7 +290,7 @@ class Imagen extends Archivo{
  	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
 	 * @access public
 	 * @since 0.1
-	 * @deprecated n/a
+	 *
      */
 	function resize($ruta,$nombre='img',$directorio=false,$return=false){
 
@@ -344,7 +344,7 @@ class Imagen extends Archivo{
      * @return string nombre de la imagen redimensionada
 		 * @access public
 		 * @since 0.1
-		 * @deprecated n/a
+		 *
      */
 
     function resizeImagen($ruta,$nombre='img',$dimAlto,$dimAncho,$directorio=false){

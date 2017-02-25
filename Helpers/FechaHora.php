@@ -101,7 +101,7 @@ class FechaHora{
      * @param $dia int
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function nombreDia($dia="",$lang="es"){
         if($dia!=0 and empty($dia))  $dia = date('w');
@@ -117,7 +117,7 @@ class FechaHora{
      * @param $dia int
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function diasSemana($lang='es'){
 
@@ -130,7 +130,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function anioDosDigitos() {
 		return date ( 'y' );
@@ -142,7 +142,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function anioCuatroDigitos() {
 		return date ( 'Y' );
@@ -154,7 +154,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function hora24($hora="") {
 		if(empty($hora)) $hora=date ( 'H' );
@@ -170,7 +170,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
     static function horaFormato12($hora=""){
 
@@ -186,7 +186,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function minutos() {
 		self::mesNumero ();
@@ -210,7 +210,7 @@ class FechaHora{
 	 * @return int $caracasDateTime Timestamp de Unix de la Hora de Caracas.
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	public static function timestampUnix($fecha='') {
 
@@ -240,7 +240,7 @@ class FechaHora{
 	 * @param int $epoch Timestamp Unix
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	public static function convertirUnixADateYHora($epoch) {
 		$dt = new DateTime ( "@$epoch" );
@@ -251,7 +251,7 @@ class FechaHora{
 	 *
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 
 	public static function convertirUnixADate($epoch) {
@@ -267,7 +267,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function fechaTipoFormato($fecha = '', $parametro = '-') {
 		if ($fecha == '') {
@@ -293,7 +293,7 @@ class FechaHora{
 	 * @return string
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function fechaInvertida($fecha = '', $parametro = '-') {
 		if ($fecha == '') {
@@ -316,7 +316,7 @@ class FechaHora{
      * @method datetime
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
 
     static function datetime($fecha=""){
@@ -332,7 +332,7 @@ class FechaHora{
      * @return date
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function fecha($fecha=""){
         $fecha = new DateTime($fecha);
@@ -345,7 +345,7 @@ class FechaHora{
      * @param date $fecha
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function fechaToDateTime($fecha){
         $datetime = new DateTime($fecha);
@@ -357,7 +357,7 @@ class FechaHora{
      * @method numeroDia
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function numeroDia($f=""){
 
@@ -369,7 +369,7 @@ class FechaHora{
      * @method anio
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function anio($f=""){
         $f = new DateTime($f);
@@ -386,7 +386,7 @@ class FechaHora{
 	 * @param string Lang es
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function nombreMes($mes,$lang='es'){
 		return self::$meses[$lang][$mes]['mes'];
@@ -404,7 +404,7 @@ class FechaHora{
 	 * @return boolean
    * @access public
    * @since 0.1
-   * @deprecated n/a
+   *
 	 */
 	static function validarFecha($fecha, $formato = 'Y-m-d H:i:s'){
 	    $date = DateTime::createFromFormat($formato, $fecha);

@@ -83,7 +83,7 @@ class Archivo{
      * @method checkCarga
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     private function checkCarga($file){
 
@@ -111,7 +111,7 @@ class Archivo{
      * @method validarCarga
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     function validarCarga(){
 
@@ -142,7 +142,7 @@ class Archivo{
      * @method obtenerExtension
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
 	   private function obtenerExtension(){
 
@@ -202,7 +202,7 @@ class Archivo{
      * @param mixed $nombreArchivo Archivo a mover
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     function moverArchivoCargado($directorio,$nombreArchivo){
 
@@ -220,7 +220,7 @@ class Archivo{
      * @return int see::archivosCargados
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     function getTotalArchivosCargados(){
         return $this->totalArchivosCargados;
@@ -244,7 +244,7 @@ class Archivo{
      * @return object
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     function moverArchivosCargados($directorio,$nombreAleatorio=FALSE,$prefijo=""){
         $bandera=TRUE;
@@ -283,8 +283,8 @@ class Archivo{
                 Directorios::crear($directorio);
             }
             if(!move_uploaded_file($this->tmp_name,$destino)){
-                
-                    
+
+
                 if(!is_writable($directorio)){
                     throw new Exception("No tiene permisos en la carpeta $directorio", 900);
                 }else
@@ -305,7 +305,7 @@ class Archivo{
      * @param $prefijo Prefijo agregado al archivo cuando el nombre es aleatorio.
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     private function validarNombreArchivoCargado($numero,$aleatorio,$prefijo=""){
 
@@ -359,7 +359,7 @@ class Archivo{
      * @param string $ruta Ruta donde debe ser guardado el archivo
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function crearArchivo($nombreArchivo,$contenido,$ruta){
 
@@ -386,7 +386,7 @@ class Archivo{
   	 * @return	boolean o array de elementos no eliminados
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *
      */
     static function eliminarMultiplesArchivos($arr){
 		if(is_array($arr)){
@@ -424,7 +424,7 @@ class Archivo{
      * @method existe;
      * @access public
      * @since 0.1
-     * @deprecated n/a
+     *  
      */
     function existe(){
         return $this->existencia;
