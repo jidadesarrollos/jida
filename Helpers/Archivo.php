@@ -279,10 +279,12 @@ class Archivo{
                 'extension'=>$this->extension[0]
             ];
 
-
+            if(!(Directorios::validar($directorio))){
+                Directorios::crear($directorio);
+            }
             if(!move_uploaded_file($this->tmp_name,$destino)){
-                if(!(Directorios::validar($directorio)))
-                    throw new Exception("No existe el directorio $directorio", 901);
+                
+                    
                 if(!is_writable($directorio)){
                     throw new Exception("No tiene permisos en la carpeta $directorio", 900);
                 }else

@@ -221,7 +221,7 @@ class DataModel{
 	 * @var int $filasPagina
 	 * @since 0.5
 	 */
-	protected $filasPagina = 10;
+	protected $filasPagina = 12;
 	/**
 	 * Numero total de registros para una consulta.
 	 *
@@ -1252,7 +1252,7 @@ class DataModel{
 		if($this->_paginar){
 			$this->_paginarConsulta($key);
 		}
-		
+
         return $this->bd->obtenerDataCompleta($this->query,$key);
     }
 
@@ -1262,19 +1262,29 @@ class DataModel{
 	 * @since 0.5
 	 */
 	private function _paginarConsulta($key){
+				
 		$data = explode('from',$this->query);
 
 		$qCount = 'SELECT count(*) from '.array_pop($data);
+
 		$data = $this->bd->obtenerDataCompleta($this->query,$key);
+		
 		$this->_totalRegistros = $this->bd->totalRegistros;
 		$division = $this->_totalRegistros/$this->filasPagina;
-		if(is_float($division)) $division = ceil($division);
-		$this->_paginas = $division;
+		
 
-		$inicio = ($this->_paginaConsultada==1)?1:$this->_paginaConsultada*$this->filasPagina;
-		$fin = ($this->_paginaConsultada==1)?$inicio+$this->filasPagina-1:$inicio+$this->filasPagina;
+		if(is_float($division)) $division = ceil($division);
+		
+		$this->_paginas = $division;
+		
+		$inicio = ($this->_paginaConsultada==0)?0:$this->_paginaConsultada*$this->filasPagina;
+		
+		$fin = ($this->_paginaConsultada==0)?$inicio+$this->filasPagina:$inicio+$this->filasPagina;
+		
 		$this->query.= ' '.$this->bd->limit($this->filasPagina, $inicio);
+		
 		//$this->limit($this->filasPagina,$inicio);
+		
 	}
 	/**
 	 * Retorna la data resultante de una consulta paginada
