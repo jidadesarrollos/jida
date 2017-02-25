@@ -12,8 +12,11 @@ namespace Jida\Helpers;
 class Debug{
 
     /**
-     * Muestra el contenido de un arreglo envuelto en tag <pre>
+     * @internal Muestra el contenido de un arreglo envuelto en tag <pre>
      * @method mostrarArray
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function mostrarArray($ar,$exit=true){
         echo "\n<pre style=\"background:black;color:#dcdcdc\">\n";
@@ -23,12 +26,15 @@ class Debug{
             exit;
         }
     }
-	
+
 	/**
      * Muestra el contenido de las variables pasadas como parametros en bloques de impresion
-	 * 
-	 * @internal Mantiene la ejecucion a menos que reciba como parametro explicito true 
+	   *
+	   * @internal Mantiene la ejecucion a menos que reciba como parametro explicito true
      *
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
 	static function imprimir(){
 		$numero = func_num_args();
@@ -36,7 +42,7 @@ class Debug{
 		{
 			$arg = func_get_arg($i);
 			if(is_array($arg) or is_object($arg)) self::mostrarArray($arg,0);
-			elseif(is_string($arg) or is_int($arg) or is_float($arg))  
+			elseif(is_string($arg) or is_int($arg) or is_float($arg))
 				self::string($arg,0);
 			elseif(is_bool($arg) and $arg){
 				exit;
@@ -44,11 +50,15 @@ class Debug{
 			}
 		}
 	}
-	
+
     /**
-     * Muestra el contenido de una variable String
+     * @internal Muestra el contenido de una variable String
      *
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
+
     static function string($content,$exit=false,$tag="hr"){
         if(!is_array($content)){
             echo $content."<$tag/>";

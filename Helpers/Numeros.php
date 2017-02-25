@@ -1,35 +1,43 @@
-<?PHP 
+<?PHP
 /**
  * Helper para Numeros
- * 
+ *
  * @author Julio Rodriguez <jirc48@gmail.com>
- * @package
- * @category
- * @version
+ * @package Framework
+ * @category Helpers
+ * @version 0.1
  */
 
 namespace Jida\Helpers;
 class Numeros{
-    
-	
+
+  /**
+   * @property string $moneda refleja nombre de moneda
+   */
 	static $moneda = 'Bs.';
+  /**
+   * @property string $separadorMiles
+   */
 	static $separadorMiles = ".";
+  /**
+   * @property string separadorDecimales
+   */
 	static $separadorDecimales = ",";
-	static $monedaAntes = FALSE; 
+
+	static $monedaAntes = FALSE;
     /**
 	 * Devuelve un número en formato de moneda
 	 * @method moneda
 	 * @param mixed $valor Numero a formatear
-	 * @param string $post Texto A agregar posteriormente. 
 	 * @param int $decimales
-	 * @param string $separador Separador de miles
-	 * @param boolean $textPre Define si $post va antes o despues del número
-	 
 	 * @return string $numero Numero resultante
+   * @access public
+   * @since 0.1
+   * @deprecated n/a
 	 */
 	public static function moneda($valor,$decimales=2,$moneda=FALSE){
-		
-	
+
+
 		$numero = number_format($valor,$decimales,self::$separadorDecimales,self::$separadorMiles);
 		if($moneda){
 			if(self::$monedaAntes) return self::$moneda." ".$numero;
@@ -37,7 +45,14 @@ class Numeros{
 		}
 		return $numero;
 	}
-	
+  /**
+   * @internal valida si un nomero es entero de lo contrario retorma false
+   * @method validarInt
+   * @return int
+   * @access public
+   * @since 0.1
+   * @deprecated n/a
+   */
 	public static function validarInt($valor){
 		return filter_var($valor,FILTER_VALIDATE_INT);
 	}
@@ -50,22 +65,26 @@ class Numeros{
                 $numero =($numero=="")?"":number_format($numero,$decimales,".",",");
                 return $numero;
                 break;
-            
+
             default:
                 $numero =($numero=="")?"":number_format($numero,$decimales,",",".");
                 return $numero;
                 break;
         }
     }
-    
+
     /**
-     * Convierte un numero en formato de moneda en el formato correcto para guardarlo en base de datos
+     * @internal Convierte un numero en formato de moneda en el formato correcto para guardarlo en base de datos
      * @method floatBD
+     * @return string
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     public static function floatBD($valor){
         $valor = str_replace(".","",$valor);
         $valor = str_replace(",",".",$valor);
         return $valor;
     }
-    
+
 }

@@ -81,6 +81,9 @@ class Archivo{
     /**
      * Instancia valores de un archivo cargado en la variable global $_FILES
      * @method checkCarga
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     private function checkCarga($file){
 
@@ -96,7 +99,7 @@ class Archivo{
             	$this->obtenerExtension();
 
             	$this->totalArchivosCargados = count($file['tmp_name']);
-			 	$this->validarCarga();				
+			 	$this->validarCarga();
 			}
 
 
@@ -106,6 +109,9 @@ class Archivo{
     /**
      * Verifica la carga de uno o varios archivos
      * @method validarCarga
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     function validarCarga(){
 
@@ -134,6 +140,9 @@ class Archivo{
 	/**
      * obtiene la extensión de un archivo
      * @method obtenerExtension
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
 	   private function obtenerExtension(){
 
@@ -191,14 +200,17 @@ class Archivo{
      * @method moverArchivo
      * @param string $directorio Url en la cual se movera el archivo
      * @param mixed $nombreArchivo Archivo a mover
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     function moverArchivoCargado($directorio,$nombreArchivo){
 
-		if(move_uploaded_file($nombreArchivo, $directorio)){
-			return true;
-		}else{
-			return false;
-		}
+  		if(move_uploaded_file($nombreArchivo, $directorio)){
+  			return true;
+  		}else{
+  			return false;
+  		}
 
 
 	}
@@ -206,6 +218,9 @@ class Archivo{
      * Retorna el número de archivos cargados
      * @method getTotalArchivosCargados
      * @return int see::archivosCargados
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     function getTotalArchivosCargados(){
         return $this->totalArchivosCargados;
@@ -227,6 +242,9 @@ class Archivo{
      * @param string $prefijo Si nombreAleatorio es pasado en true, puede definirse un prefijo
      * para agregar antes de la parte aleatoria del nombre del archivo
      * @return object
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     function moverArchivosCargados($directorio,$nombreAleatorio=FALSE,$prefijo=""){
         $bandera=TRUE;
@@ -283,6 +301,9 @@ class Archivo{
      * @param int $numero Número del archivo cargado
      * @param boolean $aleatorio. Define si el archivo es cargado de forma aleatoria o no
      * @param $prefijo Prefijo agregado al archivo cuando el nombre es aleatorio.
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     private function validarNombreArchivoCargado($numero,$aleatorio,$prefijo=""){
 
@@ -308,7 +329,7 @@ class Archivo{
         }
 
     }
-	
+
     function getArchivosCargados(){
         return $this->archivosCargados;
     }
@@ -334,6 +355,9 @@ class Archivo{
      * @param string $nombreArchivo Nombre del archivo a crear
      * @param string $contenido Contenido del archivo a crear
      * @param string $ruta Ruta donde debe ser guardado el archivo
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function crearArchivo($nombreArchivo,$contenido,$ruta){
 
@@ -356,8 +380,11 @@ class Archivo{
     /**
      * Elimina varios archivos
      * @method	eliminarMultiplesArchivos
-	 * @param	$arr de direccion fisica de archivos a eliminar
-	 * @return	boolean o array de elementos no eliminados
+  	 * @param	$arr de direccion fisica de archivos a eliminar
+  	 * @return	boolean o array de elementos no eliminados
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function eliminarMultiplesArchivos($arr){
 		if(is_array($arr)){
@@ -393,6 +420,9 @@ class Archivo{
     /**
      * Retorna el valor de existencia de un Archivo
      * @method existe;
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     function existe(){
         return $this->existencia;

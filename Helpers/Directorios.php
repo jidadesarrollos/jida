@@ -5,16 +5,22 @@
  * @package Framework
  * @category Helpers
  * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @package Framework
+ * @category Helpers
+ * @version 0.1
  */
 
 namespace Jida\Helpers;
 class Directorios extends \Directory{
 
 	/**
-     * Verifica si un directorio existe, hace uso de funcion file_exists de PHP
+     * @internal Verifica si un directorio existe, hace uso de funcion file_exists de PHP
      * @method validar
      * @param string $dir Ubicacion de la carpeta o archivo
      * @see PHP file_exists
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
 	static function validar($dir){
 	    if(file_exists($dir)){
@@ -25,9 +31,12 @@ class Directorios extends \Directory{
 	}
 
     /**
-     * Crea un directorio
+     * @internal Crea un directorio
      * @method crear
      * @param mixed $directorio String o Arreglo de Directorios a crear
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function crear($directorio,$mode=0777){
         if(is_array($directorio)){
@@ -41,6 +50,15 @@ class Directorios extends \Directory{
             }
         }
     }
+		/**
+     * @internal muestra todos los archivos de un directorio
+     * @method listar
+     * @param string direccion donde se va a buscar
+		 * @return array todos los archivos y carpetaS
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
+     */
 
 	static function listar($ruta){
 		$listado=[];
@@ -57,13 +75,16 @@ class Directorios extends \Directory{
 	}
 
     /**
-    * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
-    *
+    * @internal Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
+    * @method  listarDirectoriosRuta
     * @param string $ruta  Ddirectorio a recorrer
     * @param string $arr   Arreglo que guarda los archivos recorridos
     * @param string $expReg Expresion regular para filtrar por el nombre del archivo
     * @param string $i  Indice
     * @return $arr Array con todos las coincidencias de $expReg
+		* @access public
+		* @since 0.1
+		* @deprecated n/a
     */
     static public function listarDirectoriosRuta($ruta,&$arr,$expReg='',&$i=0){
     // Abrir un directorio y listarlo recursivamente
@@ -97,10 +118,14 @@ class Directorios extends \Directory{
         return $arr;
     }
     /**
-     * Recorre un directorio y aplica una funcion por cada archivo encontrado en el directorio
+     * @internal Recorre un directorio y aplica una funcion por cada archivo encontrado en el directorio
+		 * @method recorrerDirectorio
      * @param string $ruta URL del directorio
      * @param mixed $callback funcion o nombre de función a ejecutar, se le pasara como parametro el nombre del archivo
      * @param boolean $recursive Si es colocado en TRUE la función se aplicara en los subdirectorios
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function recorrerDirectorio($ruta,$callback,$recursive=FALSE){
         // Abrir un directorio y listarlo recursivamente
@@ -128,6 +153,9 @@ class Directorios extends \Directory{
      * @internal Se debe tener cuidado de su uso pues elimina absolutamente todo lo contenido en la
 	 *  carpeta pasada
      * @method eliminar
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function eliminar($dir){
 
@@ -135,7 +163,7 @@ class Directorios extends \Directory{
             if (is_dir($files)){
                 self::eliminar($files);
             }else{
-                
+
                 if(unlink($files)) return true;
             }
         }
@@ -152,6 +180,9 @@ class Directorios extends \Directory{
      * @internal Elimina todo lo que exista dentro de un directorio
      * @method limpiar
      * @param url $directorio Ubicación del directorio a limpiar
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function limpiar($dir){
        foreach(glob($dir . "/*") as $files){
@@ -163,9 +194,13 @@ class Directorios extends \Directory{
         }
     }
     /**
-     * Cuenta los archivos en un directorio
+     * @internal Cuenta los archivos en un directorio
+		 * @method getTotalArchivos
      * @param string $ruta Ruta del directorio
      * @patrom Patron para contar Ejemplo {*.jpg,*.gif,*.png}
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function getTotalArchivos($ruta){
         $totalArchivos = 0;
@@ -180,7 +215,14 @@ class Directorios extends \Directory{
 
     }
 	/**
-	 * Copia el contenido de un directorio a otro
+	 * @internal Copia el contenido de un directorio a otro
+	 * @method Copiar
+	 * @param string $origrn archivo donde se encuentra el archivo
+	 * @param string $origrn archivo donde se encuentra el archivo
+	 * @patrom Patron para contar Ejemplo {*.jpg,*.gif,*.png}
+	 * @access public
+	 * @since 0.1
+	 * @deprecated n/a
 	 */
 	static function copiar($origen,$destino){
 		if(is_dir($origen) and is_readable($origen)){

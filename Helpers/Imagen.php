@@ -26,7 +26,7 @@ class Imagen extends Archivo{
 		'image/vnd.microsoft.icon' 		=> 'ico',
 		'application/x-shockwave-flash' => 'swf'
 	];
-	
+
 	 private $mimesAceptados=[
 	 	'image/gif' => 'gif',
       	'image/jpeg'=> 'jpeg',
@@ -52,6 +52,9 @@ class Imagen extends Archivo{
      * @param string $rutaImg Ubicacion de imagen a Redimensionar
      * @param string $nombreImg Nombre de la imagen a redimensionar
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
         if(empty($rutaImg)) $rutaImg = $this->directorio;
@@ -107,12 +110,15 @@ class Imagen extends Archivo{
      * @param image $lienzo imagen a exportar
      * @param string $url Ubicación en la que será alojada la imágen
      * @param string $nombreImagen [opcional] Nombre de la imagen, sino es pasado se asume que el nombre viene incluido en la variable $url
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     function exportarImagen($tipoImagen,$lienzo,$url,$nombreImagen=""){
         if(!empty($nombreImagen)){
             $url=$url.$nombreImagen;
         }
-        
+
          switch ( $tipoImagen ){
           case "image/jpg":
           case "image/jpeg":
@@ -136,6 +142,9 @@ class Imagen extends Archivo{
      * @method crearLienzoImagen
      * @param unknown $tipoImagen
      * @param string $url
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     private function crearLienzo($tipoImagen,$url){
        switch ( $tipoImagen ){
@@ -155,7 +164,7 @@ class Imagen extends Archivo{
 
     /**
      * Crea una imagen recortada a partir de una imagen dada
-	 * 
+	 *
      * @param int $alto Pixeles de altura de la imagen a crear
      * @param int $ancho Pixeles de largo de la imagen a crear
      * @param int $x inicio de recorte de eje x de la imagen
@@ -164,6 +173,9 @@ class Imagen extends Archivo{
      * @param int $h alto de la nueva imagen
      * @param string $rutaImagen Ruta de la imagen a recortar
      * @param string $rutaNueva Ruta donde se guardará la nueva imagen
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      *
      */
     function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
@@ -204,7 +216,7 @@ class Imagen extends Archivo{
     	else
     		return $this->validarImagenFileInfo();
     }
-	
+
 	private function validarImagenFileInfo(){
 
         if($this->totalArchivosCargados>1){
@@ -221,6 +233,8 @@ class Imagen extends Archivo{
 	 * necesarias se encuentren activas en el php.ini
 	 * @method useExifImagetype
 	 * @access private
+	 * @since 0.1
+	 * @deprecated n/a
 	 *
 	 */
 	private function useExifImagetype(){
@@ -263,38 +277,40 @@ class Imagen extends Archivo{
         return ['ancho'=>$ancho,'alto'=>$alto,'mime'=>$mime,'attr'=>$attr];
 
     }
-	
-	
+
+
 	/**
      * Crea imagenes recortadas en los distintos formatos a partir de una imagen dada
-	 * 
+	 *
 	 * @internal Utiliza por defectos los formatos 1024, 720, 350 y 140. Le asocia un identificador
 	 * al final del nombre lg, md, sm, xs para cada formato.
-	 * 
-     * @param string $ruta Ruta origen de la imagen que se desea redirecciona
-     * @param string $nombre Prefijo para las imagenes generadas
-	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
-     *
+	 *
+   * @param string $ruta Ruta origen de la imagen que se desea redirecciona
+   * @param string $nombre Prefijo para las imagenes generadas
+ 	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
+	 * @access public
+	 * @since 0.1
+	 * @deprecated n/a
      */
 	function resize($ruta,$nombre='img',$directorio=false,$return=false){
-		
+
 		$arr=[];
 		$bandera = FALSE;
-		
+
 		if(!$directorio)
 			$directorio = $ruta;
 		else
 			Directorios::crear($directorio);
-		
+
 		if(preg_match('/\.[jpg|png|jpeg]/', $ruta))
 			$imagenes[] = $ruta;
 		else{
 			$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
 			$bandera = TRUE;
 		}
-		
+
 		foreach ($imagenes as $key => $img){
-			
+
 			$origen = ($bandera)?$ruta.'/'.$img:$img;
 			$ext = substr($img,strrpos($img,".")+1);
 
@@ -303,38 +319,41 @@ class Imagen extends Archivo{
 			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext);
 			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext);
 		}
-		
+
 		if($return){
 			$arrImagen = ['img'=> $nombre.$key.'-lg.'.$ext,
 						  'md' => $nombre.$key.'-md.'.$ext,
 						  'sm' => $nombre.$key.'-sm.'.$ext,
 						  'xs' => $nombre.$key.'-xs.'.$ext];
-		    
+
 		    return json_encode($arrImagen);
 		}
-			
+
 	}
-    
+
     /**
      * Crea una imagen recortada con las dimensiones pasadas por parametro
-     * 
+     *
      * @internal Asocia un identificador al final del nombre lg, md, sm, xs para cada formato.
-     * 
+     *
      * @param string $ruta Ruta origen de la imagen que se desea redirecciona
      * @param string $nombre Prefijo para las imagenes generadas
      * @param string $dimAlto Alto de redimension de la imagen
      * @param string $dimAlto Ancho de redimension de la imagen
      * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
      * @return string nombre de la imagen redimensionada
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
-     
+
     function resizeImagen($ruta,$nombre='img',$dimAlto,$dimAncho,$directorio=false){
-        
+
         if(!$directorio)
             $directorio = $ruta;
         else
             Directorios::crear($directorio);
-        
+
         $corte = explode('.', $ruta);
         $extensiones = ['jpg'=>'jpg','png'=>'png','jpeg'=>'jpeg'];
         $ext='';
@@ -344,7 +363,7 @@ class Imagen extends Archivo{
                 $ext=$key;
             }
         }
-        
+
         $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext);
 
         return $nombre.'.'.$ext;

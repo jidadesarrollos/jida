@@ -12,11 +12,14 @@ namespace Jida\Helpers;
 class Cadenas {
 
 	/**
-	 * Convierte una cadena a formato upperCamelCase
+	 * @internal Convierte una cadena a formato upperCamelCase
 	 * @method upperCamelCase
 	 * @param string $cadena
 	 * @param boolean $espacios Opcional, si el valor es true deben ser eliminados los espacios en blanco
 	 * @return string $upperC
+	 * @access public
+	 * @since 0.1
+	 * @deprecated n/a
 	 **/
 	static function upperCamelCase($cadena,$espacios=true){
 
@@ -27,11 +30,14 @@ class Cadenas {
 		return $strUpperCase;
 	}
 	 /**
-	 * Convierte una cadena a formato lowerCamelCase
+	 * @internal Convierte una cadena a formato lowerCamelCase
 	 * @method lowerCamelCase
 	 * @param string $cadena
 	 * @param boolean $espacios Opcional, si el valor es true deben ser eliminados los espacios en blanco
 	 * @return string $upperC
+	 * @access public
+	 * @since 0.1
+	 * @deprecated n/a
 	 */
 	static function lowerCamelCase($cadena,$espacios=true){
 
@@ -45,10 +51,13 @@ class Cadenas {
 
 	}
         /**
-     * Función que corta el texto de una vista y coloca tres puntos suspensivos.
+     * @internal Función que corta el texto de una vista y coloca tres puntos suspensivos.
      * @param string $texto
      * @param int $tamaño
      * @return string
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
 
     static function resumen($texto='',$tamaño=50){
@@ -86,12 +95,15 @@ class Cadenas {
     }
 
     /**
-     * Función que se encarga de colocar caracteres del lado izquierdo del texto enviado
-	 * dependiendo del tamaño establecido.
+     * @internal Función que se encarga de colocar caracteres del lado izquierdo del texto enviado
+	 	 * dependiendo del tamaño establecido.
      * @param string $texto
      * @param int $tamaño
      * @param string o int $remplazarecho
      * @return int
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     static function rellenarString($texto='',$tamaño=10,$remplazar){
 
@@ -111,10 +123,13 @@ class Cadenas {
         return hash('sha256', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy123456789' . $parametro . date('U'));
     }
     /**
-     * Codifica el contenido de un array convirtiendo los acentos y caracteres especiales
+     * @internal Codifica el contenido de un array convirtiendo los acentos y caracteres especiales
      * en formato html
      * @method codificarArrayToHTML
      * @param array $array
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     public static function codificarArrayToHTML($array){
 
@@ -126,11 +141,14 @@ class Cadenas {
         return $array;
     }
     /**
-     * Verifica los caracteres especiales y los cambia por la codificación asci correspondiente
+     * @internal  Verifica los caracteres especiales y los cambia por la codificación asci correspondiente
      * @method codificarHTML
      * @param string Cadena
      * @param boolean $inversa Defecto false, si es cambiado a true buscara los valores html para
      * reemplazarlo por el caracter especial
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      *
      */
     public static function codificarHTML($cadena,$inversa=false) {
@@ -186,11 +204,15 @@ class Cadenas {
     } // fin función
 
     /**
-     * Retorna un string en minusculas y seperado por guiones
+     * @internal Retorna un string en minusculas y seperado por guiones
      *
      * @method guionCase
      * @param string $string;
      * @return string $string;
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
+
      */
     public static function guionCase($string){
         $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/','', $string);
@@ -199,11 +221,14 @@ class Cadenas {
         return self::removerAcentos(strtolower(str_replace(" ", "-", $string)));
     }
     /**
-     * Modifica un string en formato guionCase a la frase original
+     * @internal Modifica un string en formato guionCase a la frase original
      *
      * @method guionCaseToString
      * @param string $guionCase
      * @return string $str
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     public static function guionCaseToString($guionCase){
         $cadena= '/\/\\\'\?\¿\_';
@@ -215,11 +240,14 @@ class Cadenas {
     /**
      * Remueve los acentos de un string
      *
-     * Coloca las letras con acentos en su representación sin el mismo
+     * @internal Coloca las letras con acentos en su representación sin el mismo
      * @method removerAcentos
      * @param string $cadena Cadena a modificar
      * @param string $enie Valor para modificar la letra Ñ, por defecto es "ni"
      * @return string $string cadena modificada
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     public static function removerAcentos($cadena,$enie="ni") {
         $arrAcentos = array (
@@ -261,13 +289,16 @@ class Cadenas {
      /**
      * Obtiene el singular de una palabra
      *
-     * Esta función trabaja en el lenguaje español principalmente, basandose en las constantes
+     * @internal Esta función trabaja en el lenguaje español principalmente, basandose en las constantes
      * PLURAL_ATONO y PLURAL CONSONANTE, las mismas pueden ser editadas para configurar el funcionamiento
      * del metodo
      *
      * @method obtenerSingular
      * @param string $palabra Palabra sobre la cual se desea obtener el plural
      * @return string $singular Palabra resultante
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     public static function obtenerSingular($palabra){
         $arrayPalabra=array();
@@ -299,13 +330,16 @@ class Cadenas {
     /**
      * Obtiene el plural de una palabra
      *
-     * Esta función se basa en el lenguaje español principalmente, basandose en las constantes
+     * @internal Esta función se basa en el lenguaje español principalmente, basandose en las constantes
      * PLURAL_ATONO y PLURAL CONSONANTE, las mismas pueden ser editadas para configurar el funcionamiento
      * del metodo
      *
      * @method obtenerPlural
      * @param string $palabra Palabra sobre la cual se desea obtener el plural
      * @return string $plural Palabra resultante
+		 * @access public
+		 * @since 0.1
+		 * @deprecated n/a
      */
     public static function obtenerPlural($palabra){
         $vocales = ['a','e','i','o','u'];
@@ -318,11 +352,14 @@ class Cadenas {
 
     }
 	/**
-	 * Imprime un valor de reemplazo si el string pasado es vacio
+	 * @internal Imprime un valor de reemplazo si el string pasado es vacio
 	 *
 	 * @method vacio
 	 * @param string $string Valor a validar si es vacio
 	 * @param string $reemplazo Texto de reemplazo
+	 * @access public
+	 * @since 0.1
+	 * @deprecated n/a
 	 */
 	public static function vacio($string,$reemplazo){
 		if(empty($string)) return $reemplazo;

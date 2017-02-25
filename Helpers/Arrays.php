@@ -6,6 +6,8 @@
  * @package Framework
  * @subpackage Helpers
  * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @category [Helper]
+ * @since 0.1
  */
 
 namespace Jida\Helpers;
@@ -22,6 +24,9 @@ class Arrays {
      * @param array $matriz
      * @param mixed $filtro Arreglo o matriz de valores para realizar el filtro
      * @return array $array Nuevo Arreglo armado
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      * @example
      *
      */
@@ -37,11 +42,14 @@ class Arrays {
         return $array;
     }
     /**
-     * Combina dos arreglos utilizando uno para la
+     *@internal Combina dos arreglos utilizando uno para la
      * estructura y otro para los valores
-     * @var array $ar1 Arreglo con estructura a usar
-     * @var array $ar2 Arreglo con valores a usar para llenar el array 1
+     * @param array $ar1 Arreglo con estructura a usar
+     * @param array $ar2 Arreglo con valores a usar para llenar el array 1
      * @return array $ar1 arreglo inicial con valores insertados
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function combinar($ar1,$ar2){
       foreach ($ar1 as $key => $value) {
@@ -60,6 +68,9 @@ class Arrays {
      * @param array $arr Arreglo a recorrer
      * @param string $busqueda Nombre o valor a buscar
      * @param string $filtro Campo de filtro en estructura del arreglo
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function obtenerHijosArray($arr,$busqueda,$filtro){
         $nuevoArreglo = [];
@@ -68,24 +79,27 @@ class Arrays {
             if(array_key_exists($filtro, $value) and $value[$filtro]==$busqueda)
                 $nuevoArreglo[]=$value;
         }
-		
+
         if(count($nuevoArreglo)>0)
             return $nuevoArreglo;
         else
             return [];
     }
-	
+
     /**
-     * Devuelve un arreglo con los valores extraidos de una matriz
+     * @internal Devuelve un arreglo con los valores extraidos de una matriz
      * @method obtenerKey
-     * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arregloa  buscar
+     * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arreglo a buscar
      * @param array $array Arreglo multidimensional a filtrar
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function obtenerKey($clave,$array,$mantenerKey=FALSE){
         $arrayResult = array();
         if(!is_array($array) and !is_object($array))
         	throw new Exception(" El objeto pasado $array no es un arreglo", 1);
-        
+
         foreach ($array as $key => $fila) {
 
             if(is_object($fila)){
@@ -119,7 +133,7 @@ class Arrays {
                         if(array_key_exists($value, $fila))
                             $datos[$value]=$fila[$value];
                     }
-					
+
                     if(!empty($datos)) $arrayResult[]=$datos;
                 }else
                 if(array_key_exists($clave, $fila)){
@@ -128,31 +142,34 @@ class Arrays {
             }
 
         }//fin foreach
-        
+
         if(!empty($datos)) $arrayResult[]=$datos;
-        
+
         if(count($array)>0)
             return $arrayResult;
         else
             return [];
-		
+
     }
 
     /**
-     * Agrega una columna a todos los valores de una matriz
+     * @internal Agrega una columna a todos los valores de una matriz
      * @method addColumn
      * @param array [,$arr] Arreglo a modificar
      * @param mixed $valores Arreglo o string de valores a insertar
      * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      */
     static function addColumna($matriz,$valores,$usoKeyValores=FALSE){
 
         if(is_array($valores)){
             foreach($matriz as $key =>&$vector){
-                
+
                 if(is_string($vector))
                  $vector = array($vector);
-                
+
                 foreach($valores as $clave =>$valor){
                     if($usoKeyValores==TRUE)
                         $vector[$clave]=$valor;
@@ -171,13 +188,15 @@ class Arrays {
 
         return $matriz;
     }
-	
+
     /**
-     * Convierte un arreglo en un objeto tipo stdClass
+     * @internal Convierte un arreglo en un objeto tipo stdClass
      * @method convertirAObjeto
      * @param array $array Arreglo a convertir
      * @return object $objeto Arreglo convertido en objeto
-     *
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
      * @example ca
      *
      */
