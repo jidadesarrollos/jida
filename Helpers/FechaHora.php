@@ -152,9 +152,9 @@ class FechaHora{
 	 * @internal Función que retorna la hora en formato 24 de dos digitos.
 	 *
 	 * @return string
-   * @access public
-   * @since 0.1
-   *
+     * @access public
+     * @since 0.1
+     *
 	 */
 	static function hora24($hora="") {
 		if(empty($hora)) $hora=date ( 'H' );
@@ -164,13 +164,13 @@ class FechaHora{
 		}
 		return $hora;
 	}
-  /**
+  	/**
 	 * @internal Función que retorna la hora en formato 12.
 	 *
 	 * @return string
-   * @access public
-   * @since 0.1
-   *
+     * @access public
+     * @since 0.1
+     *
 	 */
     static function horaFormato12($hora=""){
 
