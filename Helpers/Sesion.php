@@ -120,8 +120,8 @@ class Sesion {
      * @method obt
      * @access public
      * @param string clave key de la variable de session a obtener
-		 * @since 0.1
-		 *
+	 * @since 0.1
+	 *
      */
 	static function obt($clave,$clave2="") {
 
@@ -134,21 +134,21 @@ class Sesion {
             return false;
         }
     }
-		/**
-     * @internal Genera una nueva variable de sesión
-     * @method get
+	/**
+      Genera una nueva variable de sesión
+
+	 * * @method get
      * @access public
      * @param string clave key de la variable de session a obtener
-		 * @since 0.5
-		 * @deprecated
-		 *
+	 * @since 0.5
+	 * @deprecated
+	 *
      */
+	static public function get($clave,$clave2=''){
 
-		public function get($clave,$clave2=''){
+		return self::obt($clave,$clave2);
 
-			return self::obt($clave,$clave2);
-
-		}
+	}
 
     /**
      * @internal Verifica si el usuario actual tiene sesión iniciada

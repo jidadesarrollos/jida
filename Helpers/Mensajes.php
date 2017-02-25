@@ -1,4 +1,4 @@
-	<?PHP
+<?PHP
 /**
  * Helper para manejo de mensajes dentro de la aplicación
  *
