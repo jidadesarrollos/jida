@@ -23,6 +23,7 @@ class ObjetoMedia extends BD\DataModel{
      * @var $directorio
      */
     var $directorio;
+	private $_data;
     /**
      * Define si un objeto media ha sido cargado de forma propia o si es un recurso externo
      * @var int $interno
@@ -32,8 +33,8 @@ class ObjetoMedia extends BD\DataModel{
     protected $tablaBD="s_objetos_media";
     protected $pk="id_objeto_media";
 
-	function __construct(){
-		parent::__construct();
+	function __construct($id=""){
+		parent::__construct($id);
 		$this->configuracion();
 		
 	}
@@ -45,8 +46,19 @@ class ObjetoMedia extends BD\DataModel{
 			'xs' => IMG_TAM_XS,
 		];
 	}
+	function data($prop=""){
+		if(empty($this->_data)){
+			$this->_data = json_decode($this->meta_data);
+		}
+		if(!empty($prop) and property_exists($this->_data, $prop)){
+			return $this->_data->{$prop};
+		}
+		return $this->_data;
+		
+	}
+	
     function directorioMedia(){
-        return URL_IMGS.$this->directorio.$this->objeto_media;
+        return URL_HTDOCS.$this->directorio.$this->objeto_media;
     }
 
 }

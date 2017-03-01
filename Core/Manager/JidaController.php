@@ -78,10 +78,17 @@ global $JD;
     private $_modulo;
     /**
      * Define si una peticion corresponde a un modulo administrador
-     * @var $_esJadmin;
+     * @var boolean $_esJadmin;
      * @since 0.5
      */
     private $_esJadmin=FALSE;
+	/**
+	 * Define si un modulo jadmin pertenece a la aplicacion o al Framework
+	 * 
+	 * @var boolean $_esApp
+	 * @since 0.5.1
+	 */
+	private $_esApp =FALSE;
 
     /**
      * Arreglo de lenguajes manejados en la aplicacion
@@ -382,13 +389,16 @@ global $JD;
      * @method esModulo
      */
     private function esModulo($jadmin=false){
-
+		
+		$this->_arrayUrl = array_filter($this->_arrayUrl);
+		
         if(!empty($this->_arrayUrl)){
 
             $nombreOriginal = array_shift($this->_arrayUrl);
             $posModulo = $this->validarNombre($nombreOriginal,1);
 
             if($jadmin){
+            	
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
                 if(Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/'.$posModulo)){
@@ -429,6 +439,7 @@ global $JD;
 				$this->_ruta="app";
 				$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
 				$this->_controladorDefault = $this->_modulo;
+				$this->_esApp = TRUE;
 
 	        }else{
 	        	array_unshift($this->_arrayUrl,$posController);
@@ -543,7 +554,7 @@ global $JD;
            if($acceso===TRUE){
                 global $dataVista;
 
-                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin);
+                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin,$this->_esApp);
                 $this->vista->data = $dataVista;
                 $this->ejecucion($this->_controlador);
 

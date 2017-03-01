@@ -124,6 +124,7 @@ function toggleMenu(open){
 
 
 	 });
+	 console.log(dataMenu)
 	 $linkToggle.on('click',function(){
 		setLinkMenuClass($linkToggle);
 		band = (dataMenu.showMenu)?false:true;

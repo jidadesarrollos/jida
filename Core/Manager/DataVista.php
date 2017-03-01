@@ -59,6 +59,7 @@ class DataVista{
 	var $jsAgregado=[];
 	var $cssAgregado=[];
 	var $_esJadmin  = false;
+	var $_esApp = FALSE;
     /**
      * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
      * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
@@ -67,15 +68,16 @@ class DataVista{
     private $_plantilla="";
     private $_path="app";
 
-    function __construct($modulo="",$controlador="",$metodo="",$jadmin=false){
+    function __construct($modulo="",$controlador="",$metodo="",$jadmin=false,$app=FALSE){
 
     	$this->modulo=$modulo;
 		$this->controlador=$controlador;
 		$this->metodo=$metodo;
 		$this->_esJadmin = $jadmin;
-        if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
-        if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
-        if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
+		$this->_esApp = $app;
+        if(array_key_exists('_CSS', $GLOBALS)) $this->css=& $GLOBALS['_CSS'];
+        if(array_key_exists('_JS', $GLOBALS)) $this->js =& $GLOBALS['_JS'];
+        if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=& $GLOBALS['_JS_AJAX'];
         $this->setMetaBasico();
     }
 
@@ -127,8 +129,15 @@ class DataVista{
 		$modulo = $this->modulo;
 
 		if($ruta===TRUE){
-			$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/js/';
+			if($this->_esJadmin and !$this->_esApp){
+				$ruta = '/Framework/Jadmin/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/js/';
+			}else{
+				$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/js/';	
+			}
+			
+			
 		}
+		
 		if(!is_array($js)){ $js = explode(' ',$js);}
 
 		#Helpers\Debug::imprimir($this->js);

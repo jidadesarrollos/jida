@@ -1,4 +1,10 @@
-
+/**
+ * Plugin para carga de archivos
+ * 
+ * jCargaFile
+ * @author julio Rodriguez @jr0driguez
+ * @version 0.1 2017 
+ */
 (function($){
 	
 	var jCargaFile = function(objeto,config,event){
@@ -7,6 +13,7 @@
 		this.$obj = $( this.objeto );
 		this.init();
 		this._FileReader = new FileReader();
+		this._data={};
 		var that = this;
 	};
 	var selector = '[data-jida="cargaFile"]';
@@ -26,6 +33,7 @@
 		 * @property int _archivosSeleccionados default 0 
 		 */
 		_archivosSeleccionados:0,
+		_data:{},
 		
 		_obtConfiguracion:function(){
 			var defaultConfig ={
@@ -39,6 +47,7 @@
 			} ;
 			this._configuracion = $.extend(defaultConfig,this.configuracion);
 		},
+		
 		init:function(){
 			
 			this._obtConfiguracion();
@@ -86,6 +95,9 @@
 					
 					form.append(name,archivo);
 				});
+				for(key in plugin._data){
+					form.append(key,plugin._data[key]);
+				}
 				$.ajax({
 					'url':this._configuracion.url,
 					'type':'post',
