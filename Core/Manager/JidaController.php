@@ -694,7 +694,7 @@ global $JD;
         }catch(Excepcion $e){
 
             $metodo = $this->metodo;
-            $this->vista->data->setVistaAsTemplate('error');
+            $this->vista->data->usarPlantilla('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
             $this->vista->pathLayout('Framework/Layout');
             $this->controladorObject ='Jida\Core\Excepcion';
