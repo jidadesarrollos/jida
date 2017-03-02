@@ -60,7 +60,13 @@ class MenuHTML extends BD\DBContainer{
      * @var array $opciones
      */
     private $opciones;
-
+	/**
+	 * Define una url base
+	 * @var string $_urlBase
+	 * @access private
+	 * 
+	 */
+	private $_urlBase= '';
     /**
      * Funcion constructora de menus
      * @param int $id Clave del menu
@@ -70,6 +76,9 @@ class MenuHTML extends BD\DBContainer{
     function __construct($id="",$tipo=1){
         $this->nombreTabla="s_opciones_menu";
         $this->clavePrimaria="id_opcion";
+		if(defined('URL_BASE'))
+			$this->_urlBase = URL_BASE;
+		
         if($tipo==1){
             $this->menu = new Menu($id);
         }else{
@@ -210,7 +219,7 @@ class MenuHTML extends BD\DBContainer{
                     //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
                     $span =Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
 
-                    $enlace = Selector::crear("a",array('href'=>$opcion['url_opcion']),$icono.$span,3);
+                    $enlace = Selector::crear("a",array('href'=>$this->_urlBase . $opcion['url_opcion']),$icono.$span,3);
 					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);					
                     $listaMenu.=Selector::crear("li",$atributos,$enlace,2,true);
                 }
@@ -302,7 +311,7 @@ class MenuHTML extends BD\DBContainer{
                         $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
                     }
 					
-                    $enlace = Selector::crear("a",array('href'=>$subopcion['url_opcion']),$icono.$span,$ident+3);
+                    $enlace = Selector::crear("a",array('href'=>$this->_urlBase . $subopcion['url_opcion']),$icono.$span,$ident+3);
                     $listaMenu.=Selector::crear("li",$cssli,$enlace,$nivel+2,true);
                 }
             }
