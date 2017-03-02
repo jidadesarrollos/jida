@@ -742,7 +742,7 @@ class JVista{
 					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
 					;
 		}
-		for($i=$primeraPaginaMostrada;$i<=($ultimaPaginaMostrada-1);++$i){
+		for( $i=$primeraPaginaMostrada; $i <= $ultimaPaginaMostrada; ++$i ){
 
 			$link = new Selector('a');
 			$this->paginador->attr('class',$this->configPaginador['classListaPaginador']);
@@ -774,6 +774,7 @@ class JVista{
 					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
 					;
 		}
+
 
 		return $this->_obtTemplate($this->configPaginador['tpl'], ['paginador'=>$this->paginador->render()]);
 		//----------------------------------------------------------
