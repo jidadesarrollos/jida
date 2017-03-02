@@ -260,11 +260,11 @@ class JVista{
 
 		if($this->analizaURL)
 		{
-			$urlActual = Helpers\Sesion::get('URL_ACTUAL_COMPLETA');
+			$urlActual = URL_BASE . Helpers\Sesion::get('URL_ACTUAL_COMPLETA');
 
 		}
 
-		$this->paginaConsulta = JD('URL_COMPLETA');
+		$this->paginaConsulta = URL_BASE . JD('URL_COMPLETA');
 		$query = JD('QueryString');
 		$this->queryString = (empty($query))?[]:$query;
 
