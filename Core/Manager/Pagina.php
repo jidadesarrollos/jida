@@ -529,7 +529,7 @@ class Pagina{
         $cont=0;
         $code= array();
 
-
+		$path = (defined('BASE_URL'))?BASE_URL:'';
 		if(is_array($this->data->js)){
 			$data=[];
             if(!empty($pos)){
@@ -538,7 +538,7 @@ class Pagina{
                     $data = array_merge($data,$this->data->js[ENTORNO_APP][$pos]);
 
                 foreach ($data as $id => $archivo) {
-                    $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+                    $js.=Selector::crear('script',['src'=>$path . $archivo],null,$cont);
                     if($cont==0)$cont=2;
                 }
 
@@ -560,11 +560,11 @@ class Pagina{
 
                                 if(is_string($archivoEntorno))
                                 {
-                                    $js.=Selector::crear('script',['src'=>$archivoEntorno],null,$cont);
+                                    $js.=Selector::crear('script',['src'=>$path . $archivoEntorno],null,$cont);
                                     if($cont==0)$cont=2;
                                 }elseif(is_string($id)){
                                     foreach ($archivoEntorno as $key => $archivoSeccion) {
-                                        $js.=Selector::crear('script',['src'=>$archivoSeccion],null,$cont);
+                                        $js.=Selector::crear('script',['src'=> $path .$archivoSeccion],null,$cont);
                                         if($cont==0)$cont=2;
                                     }
                                 }
@@ -574,7 +574,7 @@ class Pagina{
 
                     }else{
 
-                       $js.=Selector::crear('script',['src'=>$archivo],null,$cont);
+                       $js.=Selector::crear('script',['src'=>$path . $archivo],null,$cont);
                     }
                     if($cont==0)$cont=2;
                 }
@@ -690,6 +690,7 @@ class Pagina{
 	 */
 	function imprimirLibrerias($lang,$modulo=""){
 		$dataInclude=[];
+		$path = (defined('URL_BASE'))?URL_BASE:"";
 		#\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};
@@ -742,18 +743,19 @@ class Pagina{
 		return $libsHTML;
 	}
 	private function __obtHTMLLibreria($lang,$libreria,$cont=2){
+		$path = (defined('URL_BASE'))?URL_BASE:"";
 		switch ($lang) {
 			case 'js':
 				if(is_array($libreria)) Debug::mostrarArray($libreria,0);
-				$html = Selector::crear('script',['src'=>$libreria],null,$cont);
+				$html = Selector::crear('script',['src'=>$path . $libreria],null,$cont);
 				break;
 			case 'link':
-
+				$libreria['src'] = $path . $libreria['src']; 
 				$html = Selector::crear('link',$libreria,null,$cont);
 				break;
 			default:
 				//css
-				$html= Selector::crear('link',['href'=>$libreria,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
+				$html= Selector::crear('link',['href'=>$path . $libreria,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
 				break;
 		}
 		return $html;
@@ -764,7 +766,7 @@ class Pagina{
 	 */
     function printCSS(){
         $css = "";
-
+		$path = (defined('URL_BASE'))?URL_BASE:"";
         $this->checkData();
         $cont=0;
 		if(is_array($this->data->css)){
@@ -777,15 +779,16 @@ class Pagina{
 	                        if(is_array($value))
 	                            $css.=Selector::crear('link',$value,null,$cont);
 	                        else
-	                            $css.=Selector::crear('link',['href'=>$value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
+	                            $css.=Selector::crear('link',['href'=>$path . $value,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
 	                        if($cont==0) $cont=2;
 	                    }
 	                }
 	            }else{
 	                if(is_array($files)){
+	                	if(array_key_exists('href', $files)) $files['href'] = $path . $files['href']; 
 	                    $css.=Selector::crear('link',$files,null,$cont);
 	                }else{
-	                    $css.=Selector::crear('link',['href'=>$files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
+	                    $css.=Selector::crear('link',['href'=>$path . $files,'rel'=>'stylesheet','type'=>'text/css'],null,2);
 	                }
 	                if($cont==0) $cont=2;
 	            }
@@ -1026,10 +1029,12 @@ class Pagina{
 	 *
 	 */
 	 function htdocs($folder,$item,$tema=TRUE){
-		$url = URL_HTDOCS_TEMAS . $this->temaApp . '/htdocs/' . $folder .'/'. $item;
+	 	$path = (defined('URL_BASE'))?URL_BASE:'';
+		$url = $path . URL_HTDOCS_TEMAS . $this->temaApp . '/htdocs/' . $folder .'/'. $item;
 		if($tema)
 			return $url;
-		return URL_HTDOCS . $folder .'/'. $item;
+		
+		return $path . URL_HTDOCS . $folder .'/'. $item;
 
 	 }
 	 /**
@@ -1050,6 +1055,17 @@ class Pagina{
 
 		return $this->traductor->cadena($texto,$ubicacion);
 
+	 }
+	 /**
+	  * Permite incluir objetos media
+	  */
+	 function media($folder,$item,$tema=TRUE){
+	 	return $this->htdocs($folder, $item,$tema);
+	 }
+	 
+	 function link($url){
+	 	$path = (defined('URL_BASE'))?URL_BASE:'';
+	 	return $path . $url;
 	 }
 
 }
