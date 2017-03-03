@@ -58,6 +58,7 @@ jd.ajax = function(params,callback){
 	});
 	
 	if($('#btnCargaFile').length){
+		
 		$('#btnCargaFile').jCargaFile({
 			url: '/jadmin/galeria/imagen-ajax',
 			name:'archivoGaleria',

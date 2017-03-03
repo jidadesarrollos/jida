@@ -392,6 +392,11 @@ class Pagina{
 		   	}
            	include_once $this->layout;
            	$layout = ob_get_clean();
+			if(defined('BASE_PATH')){
+				$layout = $this->validarBase($layout);
+			}else{
+				exit('no');
+			}
            	echo $layout;
         }
         //if (ob_get_length()) ob_end_clean();
@@ -399,6 +404,16 @@ class Pagina{
 
 
     }
+
+	private function validarBase($layout){
+		$doc = new \DOMDocument;
+		$links = $doc->loadHTML($layout);
+		foreach ($doc->getElementsByTagName("a") as $key => $value) {
+			echo $key.' ';
+			Helpers\Debug::imprimir($value);
+		}
+		exit('fin');
+	}
 
 
     private function requiresJs(){

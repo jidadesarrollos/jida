@@ -189,9 +189,10 @@ class Controller {
 	 *
 	 */
 	private $_controladorURL;
+	private $_urlBase;
     function __construct(){
     	global $dataVista;
-
+		$this->_urlBase = (defined('URL_BASE'))?URL_BASE:'';
 		/**
 		 * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
 		 * del controlador con error, por tanto se crea un objeto DataVista vacio
@@ -452,7 +453,7 @@ class Controller {
      */
     protected function urlActual($valor=1){
         $quienLlama = debug_backtrace(null,$valor+1)[$valor]['function'];
-        return $this->urlController().$this->convertirNombreAUrl($quienLlama)."/";
+        return $this->_urlBase . $this->urlController() . $this->convertirNombreAUrl($quienLlama) ."/";
     }
 
     /**
@@ -595,7 +596,7 @@ class Controller {
     protected function obtUrl($metodo="",$data=[]){
 
 // Helpers\Debug::imprimir('obtUrl',$metodo,$data);
-
+		
         if(!empty($metodo)){
 
         	$url = explode(".", $metodo);
@@ -652,7 +653,7 @@ class Controller {
                 
                 $urlCompleta = (empty($params))? $urlController.$this->convertirNombreAUrl($metodo) : $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
 
-                return $urlCompleta;
+                return $this->_urlBase . $urlCompleta;
                 
             }else{
 
