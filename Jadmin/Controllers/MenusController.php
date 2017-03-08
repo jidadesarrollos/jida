@@ -7,7 +7,7 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1 13/01/2014
  */
- 
+
 namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\Helpers as Helpers;
