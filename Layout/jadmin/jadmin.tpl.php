@@ -66,7 +66,7 @@
             	<div class="container-fluid">
 	            	
 	            		<div class="row">
-	            			<div class="col-md-12 col-xs-10">
+	            			<div class="col-md-12 col-xs-12">
 	            				<?=$contenido?>			
 	            			</div>
 	            		</div>
