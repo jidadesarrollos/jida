@@ -735,7 +735,8 @@ class Pagina{
 				$html = Selector::crear('script',['src'=>$path . $libreria],null,$cont);
 				break;
 			case 'link':
-				$libreria['src'] = $path . $libreria['src']; 
+				
+				$libreria['href'] = $path . $libreria['href']; 
 				$html = Selector::crear('link',$libreria,null,$cont);
 				break;
 			default:
