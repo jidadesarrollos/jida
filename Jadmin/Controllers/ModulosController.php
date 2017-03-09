@@ -32,7 +32,7 @@ class ModulosController extends JController{
    */
   private function arregloModulos($ruta,$bool=false,&$arr=[]){
 
-        $dir = \Jida\helpers\Directorios::listarkeyDir($ruta);
+        $dir = self::listarkeyDir($ruta);
 
        foreach ($dir as $key => $val){
 
@@ -58,6 +58,7 @@ class ModulosController extends JController{
     $linea = [];
     $result= [];
     $modulosCreados = self::arregloModulos('Aplicacion\Modulos',true);
+    // helpers\debug::imprimir($modulosCreados,true);
 
     for ($i=0; $i <count($modulosCreados)-1 ; $i++) { 
       $linea[]='1';
@@ -156,9 +157,9 @@ class ModulosController extends JController{
     $tabla = new Render\jvista($arre,['titulos'=>['nombre','direccion']],'Modulos');
 
 
-    $tabla->addMensajeNoRegistros('No hay Encomiendas Registradas', [
+    $tabla->addMensajeNoRegistros('No hay Modulos Registradas', [
                                                             'link'  =>$this->obtUrl(''),
-                                                            'txtLink' =>'Registrar Encomienda'
+                                                            'txtLink' =>'Registrar modulo'
                                                             ]);
     $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('nuevo')]]);
     Helpers\Mensajes::crear('alerta',$mensaje);
@@ -218,7 +219,24 @@ class ModulosController extends JController{
 
     }
 
+  }
 
+
+  private function listarKeyDir($ruta,$bool=false){
+    $listado=[];
+    if(is_dir($ruta)){
+      if($directorio = opendir($ruta)){
+        while (($file = readdir($directorio)) !== false) {
+          if($file!="." and $file!='..'){
+
+            $listado[$file]=$file;
+                        $listado[$ruta.'/'.$file]=0;
+
+          }
+        }
+      }
+    }
+    return $listado;
   }
 
 }

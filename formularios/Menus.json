@@ -1,0 +1,27 @@
+{
+	"nombre" : "Menus",
+	"query":"select id_menu,nombre_menu from s_menus",
+	"clave_primaria":"id_menu",
+	"identificador":"Menus",
+	"estructura":"",
+
+	"campos":[
+		{
+			"name":"nombre_menu",
+			"type":"text",
+			"id":"nombre_menu",
+			"label":"Nombre Menu",
+			"placeholder":"Nombre",
+			"eventos":{
+				"obligatorio":{
+		          "mensaje":"Debe llenar este campo"
+		        }
+			}
+
+		}
+        
+
+	]
+
+
+}
