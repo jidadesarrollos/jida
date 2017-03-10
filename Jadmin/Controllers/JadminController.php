@@ -29,7 +29,10 @@ class JadminController extends JController{
         $this->jctrl = new JidaControl();
     }
     function index(){        
-
+        
+        if(defined('DEFAULT_JADMIN'))
+            $this->redireccionar(DEFAULT_JADMIN);
+        
         //$jctrl= new JidaControl();
         // if($this->validarSesion())
 			// $this->redireccionar($this->obtUrl('forms'));

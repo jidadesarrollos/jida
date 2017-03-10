@@ -45,9 +45,10 @@
             <aside class="aside row-offcanvas-left">
             	
                     <?PHP 
+                    $showMenu = (array_key_exists('showmenu', $_GET)  and $_GET['showmenu']=='true')?'long-menu 1':'short-menu';
                     
                     $menuControl  = new \Jida\RenderHTML\MenuHTML('Principal');
-                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside menu",'id'=>'step1','name'=>'step1');
+                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside menu $showMenu",'id'=>'step1','name'=>'step1');
                     $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
                     $menuControl->configuracion['li']['caret']="li-caret";
                      echo $menuControl->showMenu();
