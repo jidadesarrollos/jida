@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 +function($){
     var contenedor= '[data-liparent]';
     var menu = function(ele){
@@ -26,3 +27,5 @@
 
 
 }(jQuery);
+=======
+>>>>>>> 9347384191e66a48a67c567b27774c36773d00e8
