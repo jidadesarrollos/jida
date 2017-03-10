@@ -1,11 +1,11 @@
 <?PHP
 /**
- * Controlador de Menus
+ * Controlador de modulo de Menus
  *
  * @package Framework
  * @subpackage Jadmin
- * @author  Julio Rodriguez <jirc48@gmail.com>
- * @version 0.1 13/01/2014
+ * @author  kerby Tabares <krtabares@gmail.com>
+ * @version 0.5.1 
  */
 
 namespace Jida\Jadmin\Modulos\menus\Controllers;
@@ -34,77 +34,28 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
     public function index() {
 
 
-    $tabla = new Render\jvista('Jida\Modelos\Menus.obtMenus',['titulos'=>['nombre']],'Menus');
+        $tabla = new Render\jvista('Jida\Modelos\Menus.obtMenus',['titulos'=>['nombre']],'Menus');
 
-    $tabla->accionesFila([
-            ['span'=>'glyphicon glyphicon-folder-open','title'=>'Opciones menu','href'=>$this->obtUrl('',['{clave}'])],
-            ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar menu','href'=>$this->obtUrl('',['{clave}'])],
-            ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar menu','href'=>$this->obtUrl('eliminarMenu',['{clave}']),
-             'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
-        ]);
+        $tabla->accionesFila([
+                ['span'=>'glyphicon glyphicon-folder-open','title'=>'Opciones menu','href'=>$this->obtUrl('listarOpciones',['{clave}'])],
+                ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar menu','href'=>$this->obtUrl('',['{clave}'])],
+                ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar menu','href'=>$this->obtUrl('eliminarMenu',['{clave}']),
+                 'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
+            ]);
 
 
-    $tabla->addMensajeNoRegistros('No hay Menus Registrados', [
-                                                            'link'  =>$this->obtUrl(''),
-                                                            'txtLink' =>'Crear Menu'
-                                                            ]);
-    $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('nuevo')]]);
+        $tabla->addMensajeNoRegistros('No hay Menus Registrados', [
+                                                                'link'  =>$this->obtUrl(''),
+                                                                'txtLink' =>'Crear Menu'
+                                                                ]);
+        $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('nuevo')]]);
 
-    $this->data(['tablaVista'=>$tabla->obtenerVista()]);
+        $this->data(['tablaVista'=>$tabla->obtenerVista()]);
 
 
   }
 
 
-    // function index() {
-    //     $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
-    //     $this -> vista = 'menus';
-
-    //     $vistaMenu = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Menus');
-    //     $vistaMenu->setParametrosVista($GLOBALS['configVista']);
-
-    //     $vistaMenu -> acciones = array('nuevo'=>array('href'=>'/jadmin/menus/procesar-menu/'));
-    //     $vistaMenu -> tipoControl = 2;
-    //     $vistaMenu -> filaOpciones = array('0' => array
-    //                                                 ('a' => array('atributos' =>array(
-    //                                                                 'class'=>'btn',
-    //                                                                 'href'=>'/jadmin/menus/opciones/menu/{clave}/'),
-    //                                                                 'html' =>array('span' =>array('atributos' =>
-    //                                                                                     array('class' => 'glyphicon glyphicon-folder-open',
-				// 																		'title'=>'Ver Opciones del Menu',)
-    //                                                                                 )))),
-    //                                          '1' => array('a' =>array('atributos' =>array(
-    //                                                                             'href'=>'/jadmin/menus/eliminar-menu/menu/{clave}',
-    //                                                                             'class'=> 'btn','title'=>'Eliminar Menu',
-    //                                                                             ),
-    //                                                             'html' => array('span' =>array(
-    //                                                                                     'atributos' =>array(
-    //                                                                                      'class' => 'glyphicon glyphicon-minus-sign',
-
-    //                                                                                     ))))),
-    //                                            '2' => array('a' =>array('atributos' =>array(
-    //                                                                             'href'=>'/jadmin/menus/procesar-menu/menu/{clave}',
-    //                                                                             'class'=> 'btn',
-    //                                                                             ),
-    //                                                             'html' => array('span' =>array(
-    //                                                                                 'atributos' =>array(
-    //                                                                                         'class' => 'glyphicon glyphicon-pencil',
-    //                                                                                         'title'=>'Modificar Menu',
-    //                                                                                          )))))
-    //                                             );
-
-    //     $vistaMenu -> actionForm = "/jadmin/menus/procesarMenu/";
-    //     $this->dv->vistaMenu = $vistaMenu -> obtenerVista();
-
-    // }
-
-
-
-
-    function procesarMenu() {
-
-            $this->data = $this->formMenu();
-    }
 
 
     private function guardarMenu($id='')
@@ -139,6 +90,8 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
 
     }
 
+
+
     function eliminarMenu($id='') {
 
         if ($this->getEntero($id)) {
@@ -161,215 +114,117 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
         }
     }//fin funcion
 
-    function opciones() {
 
-        $this->vista = "opcionesMenu";
-        if ($this->get('menu')) {
-            $menu = new ModelosViejos\Menu($this->get('menu'));
-            $idMenu = $this->get('menu');
-            $this->dv->vistaOpciones = $this -> vistaOpciones($idMenu);
-        } else {
-            throw new Exception("No ha seleccionado menu para ver opciones", 1);
 
+    public function listarOpciones($id='',$padre=0) {
+
+        $menu = new Modelos\Menus($id);
+        $nombre = $menu->obt();
+
+
+        $tabla = new Render\jvista('Jida\Modelos\OpcionesMenu.obtOpciones',['titulos'=>['Url','Nombre','Orden']],'Opciones de menu '.$nombre[0]['nombre_menu']);
+
+        $tabla->clausula('filtro',['id_menu'=>$id,'padre'=>$padre]);
+
+
+        $tabla->accionesFila([
+                ['span'=>'glyphicon glyphicon-plus','title'=>'Agregar Opciones','href'=>$this->obtUrl('agregarOpcion',['{clave}',$id])],
+                ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar opcion','href'=>$this->obtUrl('actualizarOpcion',['{clave}',$id])],
+                ['span'=>'glyphicon glyphicon-eye-open','title'=>'ver','href'=>$this->obtUrl('listarOpciones',[$id,'{clave}'])],
+                ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar opcion','href'=>$this->obtUrl('eliminarOpcion',['{clave}']),
+                 'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
+            ]);
+
+
+        $tabla->addMensajeNoRegistros('No hay Menus Registrados', [
+                                                                'link'  =>$this->obtUrl(''),
+                                                                'txtLink' =>'Crear Menu'
+                                                                ]);
+        $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('agregarOpcion',[$id])]]);
+        $tabla->acciones(['volver ' => ['href'=>$this->obtUrl('index')]]);
+
+        $this->data(['tablaOpciones'=>$tabla->obtenerVista()]);
+
+
+  }
+
+    private function guardarOpcion($id='')
+    {
+        if ($id!='') {
+             $opcion = new modelos\opcionesMenu('OpcionMenu',$id,2);
+              helpers\debug::imprimir($opcion,true);
+
+        }else{
+             $opcion = new modelos\opcionesMenu();
+        }
+       
+        $opcion->consulta($id)->salvar($this->post());     
+
+    }
+
+
+  public function agregarOpcion($id='',$padre=''){
+
+        $formulario= new Render\Formulario('RegistroOpcion');
+    
+      
+
+              $formulario->boton('principal')->attr('value',"Crear Opción");
+
+        if ($this->post('btnRegistroOpcion')) {
+            if ($formulario->validar()) {
+
+                self::guardarOpcion();
+                $this->redireccionar('jadmin\menus\index');
+            }
         }
 
-    }//fin función
+        $this->data(['tituloForm'=>'Registro De Opciones']);
+        $this->dv->form = $formulario -> armarFormulario();
+  }
+
+      function eliminarOpcion($id='') {
+
+        if ($this->getEntero($id)) {
+
+            $cMenu = new Modelos\opcionesMenu($id);
+            
+            if(!empty($cMenu->id_opcion_menu)){
+                $cMenu->eliminar($id);
+                // Render\Vista::msj('menus','suceso', 'Menu eliminado');
+
+            }else{
+                // Render\Vista::msj('menus',"error","No se ha eliminado menu");
+            }
+
+            $this->redireccionar('/jadmin/menus/');
+
+
+        }else {
+            throw new Exception("Debe seleccionar un menu", 1);
+        }
+    }//fin funcion
 
     /**
      * Funcion controladora de gestion de opciones de un menu
      * @method procesarOpciones
      */
-    function procesarOpciones() {
-        if($this->get('menu')){
+    public function actualizarOpcion($id=''){
 
-            $tipoForm=1;
-            $campoUpdate=($this->getEntero($this->get('opcion'))>0)?$this->get('opcion'):"";
+        $formulario= new Render\Formulario('RegistroOpcion',$id);
+        $formulario->boton('principal')->attr('value',"Crear Opción");
 
-            $idMenu=$this->get('menu');
-            $idOpcion="";
-            $menu = new ModelosViejos\Menu($idMenu);
-
-            $this->dv->titulo = "Registro de Opción para menu $menu->nombre_menu";
-
-            $padre=0;
-            if($this->getEntero($this->get('opcion'))){
-                $idOpcion=$this->get('opcion');
-                $tipoForm=2;
-                $this->dv->titulo = "Modificar Opción de menu $menu->nombre_menu";
+        if ($this->post('btnRegistroOpcion')) {
+            if ($formulario->validar()) {
+                Helpers\debug::imprimir($_POST,true);
+                $opcion = new modelos\opcionesMenu('OpcionMenu',$id,2);
+                $opcion->salvar($this->post());     
+                $this->redireccionar('\jadmin\menus\index');
             }
-
-
-            $formulario = new RenderHTML\Formulario('ProcesarOpcionMenu',$tipoForm,$campoUpdate,2);
-            $formulario->externo['padre']="select id_opcion_menu,nombre_opcion from s_opciones_menu where id_menu = $idMenu";
-            $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu]);
-            if(!empty($idOpcion)){
-                $formulario->action.="/opcion/".$idOpcion;
-            }
-
-
-            if($this->getEntero($this->get('padre'))>0){
-
-                $post['padre']=$this->getEntero($this->get('padre'));
-                $opcionPadre = new RenderHTML\OpcionMenu($this->get('padre'));
-                $this->dv->subtitulo = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
-                $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu,'padre'=>$this->get('padre')]);
-            }
-
-            if($this->post('btnProcesarOpcionMenu')){
-                if($formulario->validarFormulario()){
-
-					$this->post('id_menu',$idMenu);
-                    $opcionMenu = new RenderHTML\OpcionMenu($idOpcion);
-
-                    if($opcionMenu->setOpcion($this->post())){
-
-                        if(is_array($this->post('id_perfil'))){
-                            $perfiles = array();
-
-							$idOpcionMenu = ($opcionMenu->getResult()->idResultado()==0)?$opcionMenu->id_opcion_menu:$opcionMenu->getResult()->idResultado();
-					        foreach ($this->post('id_perfil') as $key => $idPerfil) {
-                                $perfiles[] = [ 'id_opcion_menu'=>$idOpcionMenu,
-                                                'id_perfil'=>$idPerfil,
-                                                'id_opcion_menu_perfil'=>'null'
-                                                ];
-                            }
-
-                            $opcionesPerfil = new ModelosViejos\OpcionMenuPerfil();
-                            $opcionesPerfil->eliminarAccesos($opcionMenu->getResult()->idResultado())->salvarTodo($perfiles);
-                        }else{
-                            Helpers\Debug::mostrarArray($this->obtPost('id_perfil'),0);
-                            Helpers\Debug::string("No entramos");
-                        }
-                        RenderHTML\Vista::msj('opciones', 'sucess', $msj,$this->url.'opciones/menu/'.$idMenu.'/padre/'.$post['padre']);
-                    }else{
-                        RenderHTML\Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
-                    }
-
-                }else{
-                    RenderHTML\Formulario::msj('error', "No se ha podido registrar la opci&oacute;n, por favor vuelva a intentarlo");
-                }
-
-            }
-
-
-            $this->dv->formOpcion = $formulario->armarFormulario();
-
-         }else{
-            throw new Exception("No se ha seleccionado menu para agregar opciones", 1);
         }
-
-    }//fin funciones
-
-    function eliminarOpcion(){
-
-        if($this->get('menu') and $this->get('opcion')){
-
-            $idmenu = $this->getEntero($this->get('menu'));
-            $idOpcion = $this->getEntero($this->get('opcion'));
-
-            $Opcion = new RenderHTML\OpcionMenu($idOpcion);
-
-            if($Opcion->eliminar([$idOpcion],'id_opcion_menu')){
-            	RenderHTML\Vista::msj('opciones', 'info', 'La opci&oacute;n <strong> '.$Opcion->nombre_opcion.' </strong> ha sido eliminada','/jadmin/menus/opciones/menu/'.$idmenu);
-            }else{
-            	RenderHTML\Vista::msj('opciones', 'error', 'La acci&acute;n solicitada no es valida',$this->getUrl('opciones',['menu'=>$idmenu]));
-            }
-
-
-        }
-    }//fin funcion
-
-    /**
-     * Crea una vista con las opciones de un menu
-     * @method vistaOpciones
-     * @access public
-     */
-    private function vistaOpciones($idMenu = "") {
-
-        if (!empty($idMenu)) {
-            $this -> id_menu = $idMenu;
-        }else{
-            throw new Exception("Se debe seleccionar un menu", 1);
-        }
-        $query = "select a.id_opcion_menu,a.nombre_opcion as \"Nombre\",a.url_opcion as \"Url\",a.hijo,a.orden,
-                   c.estatus
-                from s_opciones_menu a
-                join s_estatus c on (a.id_estatus=c.id_estatus)
-                where a.id_menu=$this->id_menu";
-        $urlForm = $this->getUrl('procesarOpciones',['menu'=>$idMenu]);
-
-
-        if($this->getEntero($this->get('padre'))){
-
-            $query.=" and padre=".$this->get('padre')."";
-            $omObject= new RenderHTML\OpcionMenu();
-            $opcionesMenu = $omObject->getOpcionesByMenu($idMenu);
-            $arbolObject = new \Jida\Core\Arbol($opcionesMenu);
-
-            $arbolObject->estructurarArbolById('id_opcion_menu');
-            $arbol = $arbolObject->obtenerArbol($this->get('padre'));
-            $dataBC = array();
-            $dataBC['selector']="a";
-            $dataBC[0]['nombreLink']="Categorias";
-            $dataBC[0]['enlace']=$this->url;
-            $i=1;
-            foreach(array_reverse($arbol) as $key =>$value){
-                $dataBC[$i]['nombreLink']=$value['nombre_opcion'];
-                $dataBC[$i]['enlace'] = $this->url."padre/".trim(str_replace(" ", "-", $value['nombre_opcion']))."/";
-                $i++;
-            }
-        }else{
-            $query.=" and padre=0";
-            $dataBC=FALSE;
-        }
-
-
-        $vista = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Opciones');
-        $vista->opcionesBreadCrumb=$dataBC;
-
-        $vista->filaOpciones=array(0=>array('a'=>array(
-                                            'atributos'=>array( 'class'=>'btn',
-                                                                'title'=>'ver subcategorias',
-                                                                'href'=>$this->getUrl('opciones',['menu'=>$idMenu,'padre','{clave}'])
-                                                                ),
-                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-eye-open'))))),
-                                    1=>array('a'=>array(
-                                                            'atributos'=>array( 'class'=>'btn',
-                                                                                'title'=>'Agregar subcategoria',
-                                                                                'href'=>$urlForm."padre/{clave}",
-                                                                                #'data-jvista'=>'modal'
-                                                                                ),
-                                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-plus'))))),
-                                    2=>array('a'=>array(
-                                                            'atributos'=>array( 'class'=>'btn',
-                                                                                'title'=>'Editar',
-                                                                                'href'=>$urlForm."opcion/{clave}",
-                                                                                #'data-jvista'=>'modal'
-                                                                                ),
-                                                            'html'=>array('span'=>array('atributos'=>array('class' =>'glyphicon glyphicon-edit'))))),
-                                    );
-        $urlForm = $this->url."procesar-opciones/menu/".$idMenu."/";
-        $opciones=['menu'=>$idMenu];
-        if($this->getEntero($this->get('padre'))) $opciones['padre']=$this->get('padre');
-            $urlForm = $urlForm."padre/".$this->get('padre');
-        $vista ->acciones=array('Nuevo'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),'class'=>'btn'),
-                                'Modificar'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),
-                                                    'data-jvista'=>'seleccion','class'=>'btn',
-                                                    'data-jkey'=>'opcion'
-                                                    ,),
-                                'Eliminar'=>array('href'=>$this->getUrl('eliminarOpcion',['menu'=>$this->id_menu]),
-                                                    'data-jvista'=>'seleccion','class'=>'btn',
-                                                    'data-jkey'=>'opcion'
-                                                    )
-                                );
-        $vista -> tipoControl = 2;
-        $vista->setParametrosVista($GLOBALS['configVista']);
-        $vista->mensajeError="No hay opciones <a href=\"$urlForm\" class=\"btn\">Registar Opci&oacute;n</a>";
-        $this->dv->vista= $vista -> obtenerVista();
-
-        return $this->dv->vista;
+        $this->data(['tituloForm'=>'Registro De Opciones']);
+        $this->dv->form = $formulario -> armarFormulario();
 
     }
+}
 
-
-} // END
