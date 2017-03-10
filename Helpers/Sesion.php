@@ -12,9 +12,11 @@ namespace Jida\Helpers;
 class Sesion {
 
 	/**
-     * Inicia una nueva sesión.
+     * @internal Inicia una nueva sesión.
      * @method iniciarSession
      * @access public
+		 * @since 0.1
+		 *
      */
 
 	static function iniciar(){
@@ -22,7 +24,11 @@ class Sesion {
         self::set('__idSession', self::getIdSession());
 	}
     /**
-     * Retorna el id de la sessión
+     * @internal Retorna el id de la sessión
+		 * @method getIdSession
+		 * @access public
+		 * @since 0.1
+		 *
      */
     static function getIdSession(){
         return session_id();
@@ -30,13 +36,15 @@ class Sesion {
     /**
      * Elimina una variable de sesón o la session completa
      *
-     * Si es pasado un key se elimina una variable especifica,
+     * @internal Si es pasado un key se elimina una variable especifica,
      * caso contrario se elimina la session completa
      * @var $key clave o arreglo de claves de variable de session que se desea eliminar
      * @method destruir
      * @access public
+		 * @since 0.1
+		 *
      */
-	
+
     static function destruir($key=false){
         if($key){
             if(is_array($key)){
@@ -70,10 +78,12 @@ class Sesion {
 		self::destruir($key);
 	}
     /**
-     * Registra el inicio de una sesion loggeada
+     *@internal  Registra el inicio de una sesion loggeada
      * cambiando el id de la sesion.
-	 * @method SessionLogin
-	 * @access static public
+		 * @method SessionLogin
+		 * @access static public
+		 * @since 0.1
+		 *
      */
     static function sessionLogin(){
         self::destroy('acl');
@@ -83,13 +93,15 @@ class Sesion {
     }
 
     /**
-     * Modifica o crea una variable existente
+     * @internal Modifica o crea una variable existente
      * @method set
      * @access public
-     * @var string $clave key de la variable de sesion
-     * @var string $param2 Valor de la variable a crear o modificar
-     * @var string $param3 Si es pasado, el parametro dos será tomado como una segunda clave de la variable de sessión
+     * @param string $clave key de la variable de sesion
+     * @param string $param2 Valor de la variable a crear o modificar
+     * @param string $param3 Si es pasado, el parametro dos será tomado como una segunda clave de la variable de sessión
      * y este será el valor de la variable.
+		 * @since 0.1
+		 *
      */
     static function set($clave,$param2,$param3="")
         {
@@ -104,12 +116,14 @@ class Sesion {
         }
     }
     /**
-     * Genera una nueva variable de sesión
-     * @method get
+     * @internal Genera una nueva variable de sesión
+     * @method obt
      * @access public
      * @param string clave key de la variable de session a obtener
+	 * @since 0.1
+	 *
      */
-	static function get($clave,$clave2="") {
+	static function obt($clave,$clave2="") {
 
         if(!empty($clave2) and isset ( $_SESSION [$clave][$clave2] )){
             return $_SESSION [$clave][$clave2];
@@ -120,13 +134,29 @@ class Sesion {
             return false;
         }
     }
+	/**
+      Genera una nueva variable de sesión
 
+	 * * @method get
+     * @access public
+     * @param string clave key de la variable de session a obtener
+	 * @since 0.5
+	 * @deprecated
+	 *
+     */
+	static public function get($clave,$clave2=''){
+
+		return self::obt($clave,$clave2);
+
+	}
 
     /**
-     * Verifica si el usuario actual tiene sesión iniciada
+     * @internal Verifica si el usuario actual tiene sesión iniciada
      * en el sistema
      *
      * @return boolean true
+		 * @since 0.1
+		 *
      */
     static function checkLogg(){
 
@@ -139,38 +169,44 @@ class Sesion {
     }
 
     /**
-     * Verifica si el usuario actual pertenece al $perfil
+     * @internal Verifica si el usuario actual pertenece al $perfil
      * requerido o uno superior
      *
      * @param int $perfil Id del perfil requerido
      * @return boolean $acceso
+		 * @since 0.1
+		 *
      */
     static function checkAcceso($perfil){
         return self::checkPerfilAcceso($perfil);
     }
     /**
-     * Verifica que el usuario actual tenga exactamente el mimso perfil
+     * @internal Verifica que el usuario actual tenga exactamente el mimso perfil
      * que el perfil requerido
      * @method checkPerfilAcceso
      * @param string $perfil Clave del perfil a consultar
      * @return boolean TRUE si es conseguida o FALSE si no se consigue
+		 * @since 0.1
+		 *
      */
     static function checkPerfilAcceso($perfil){
-		
+
 		if(is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')){
 			$perfiles = self::get('Usuario')->perfiles;
 			#Debug::imprimir($perfiles,true);
 			if(is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil),$perfiles)){
 				return true;
-			}    
+			}
         }
         return false;
     }
     /**
-     * Verifica si el usuario en sesion es administrador
+     * @internal Verifica si el usuario en sesion es administrador
      *
      * @method checkAdm
      * @return boolean
+		 * @since 0.1
+		 *
      */
     static function checkAdm(){
         $perfiles = self::get('usuario','perfiles');

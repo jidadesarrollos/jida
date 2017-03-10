@@ -535,7 +535,7 @@ DROP TABLE IF EXISTS `vj_acceso_componentes`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_componentes`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_componentes` AS SELECT 
+/*!50001 CREATE VIEW `vj_acceso_componentes` AS SELECT
  1 AS `id_componente_perfil`,
  1 AS `id_perfil`,
  1 AS `clave_perfil`,
@@ -551,7 +551,7 @@ DROP TABLE IF EXISTS `vj_acceso_metodos`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_metodos`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_metodos` AS SELECT 
+/*!50001 CREATE VIEW `vj_acceso_metodos` AS SELECT
  1 AS `id_metodo`,
  1 AS `id_objeto`,
  1 AS `objeto`,
@@ -572,7 +572,7 @@ DROP TABLE IF EXISTS `vj_acceso_objetos`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_objetos`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_objetos` AS SELECT 
+/*!50001 CREATE VIEW `vj_acceso_objetos` AS SELECT
  1 AS `id_objeto_perfil`,
  1 AS `id_perfil`,
  1 AS `clave_perfil`,
@@ -590,7 +590,7 @@ DROP TABLE IF EXISTS `vj_perfiles_usuario`;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuario`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_perfiles_usuario` AS SELECT 
+/*!50001 CREATE VIEW `vj_perfiles_usuario` AS SELECT
  1 AS `id_usuario_perfil`,
  1 AS `id_perfil`,
  1 AS `id_usuario`,
@@ -608,7 +608,7 @@ DROP TABLE IF EXISTS `vj_perfiles_usuarios`;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuarios`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_perfiles_usuarios` AS SELECT 
+/*!50001 CREATE VIEW `vj_perfiles_usuarios` AS SELECT
  1 AS `id_usuario_perfil`,
  1 AS `id_perfil`,
  1 AS `id_usuario`,

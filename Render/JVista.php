@@ -14,7 +14,7 @@ class JVista{
 	var $buscador = FALSE;
     private $_debug=FALSE;
 	private $nroFilas=10;
-	private $paginasMostradas=9;
+	private $paginasMostradas=7;
 	private $totalPaginas;
 	private $titulos=[];
 	private $titulosKey=[];
@@ -22,6 +22,7 @@ class JVista{
 	private $contenedorPaginador;
 	private $accionesFila=FALSE;
 	private $listadoFiltros;
+	private $_parametrosGET=[];
 	/**
 	 * Permite definir los campos de ordenamiento para cada titulo
 	 */
@@ -226,8 +227,9 @@ class JVista{
             $this->paginaActual = $_GET['pagina'];
 		if(!empty($titulo)) $this->titulo=$titulo;
 
-		$this->paginador = new ListaSelector();
 
+		$this->paginador = new ListaSelector();
+		$this->_procesarParametros();
 		$this->validarPaginaConsulta();
 
 		if(count($params)>0){
@@ -258,11 +260,11 @@ class JVista{
 
 		if($this->analizaURL)
 		{
-			$urlActual = Helpers\Sesion::get('URL_ACTUAL_COMPLETA');
+			$urlActual = URL_BASE . Helpers\Sesion::get('URL_ACTUAL_COMPLETA');
 
 		}
 
-		$this->paginaConsulta = JD('URL_COMPLETA');
+		$this->paginaConsulta = URL_BASE . JD('URL_COMPLETA');
 		$query = JD('QueryString');
 		$this->queryString = (empty($query))?[]:$query;
 
@@ -282,7 +284,7 @@ class JVista{
 	}
 	private function realizarConsulta(){
 		$dataConsulta = explode(".",$this->ejecucion);
-        
+
         $this->_imprimir("--realizarConsulta",$dataConsulta,FALSE);
 		if(class_exists($dataConsulta[0])){
 
@@ -322,7 +324,7 @@ class JVista{
 	 *
 	 */
 	private function obtInformacionObjeto($metodo=false){
-        
+
 		$offset=($this->paginaActual<=1)?0:(($this->paginaActual-1)*$this->nroFilas);
 
 		if($metodo){
@@ -379,7 +381,7 @@ class JVista{
 				$this->objeto->filtro([$value=>$_GET[$value]]);
 			}
 		}
-			//Helpers\Debug::imprimir("fin",true);	
+			//Helpers\Debug::imprimir("fin",true);
 		$this->totalRegistros = count($this->objeto->obt());
 
 		$this->registros = $this->objeto->limit($this->nroFilas,$offset)->obt();
@@ -431,8 +433,8 @@ class JVista{
 
 		if($this->usaBD){
 			$this->realizarConsulta();
-            
-		}else{			    
+
+		}else{
 			$this->procesarArrayData($this->data);
 		}
 
@@ -731,12 +733,22 @@ class JVista{
 		$primeraPaginaMostrada=($this->paginaActual>$medio)?$this->paginaActual-$medio:1;
 
 		//----------------------------------------------------------
-		for($i=$primeraPaginaMostrada;$i<=$ultimaPaginaMostrada;++$i){
+		if($primeraPaginaMostrada>1){
+			$item = $this->paginador->addItem("<<")->envolver('a');
+			$item->attr([
+					'class'	=>$this ->configPaginador['classLink']])
+									->contenido
+									->attr(['href'	=>$this->procesarURL(['pagina'=>1])]);
+					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
+					;
+		}
+		for( $i=$primeraPaginaMostrada; $i <= $ultimaPaginaMostrada; ++$i ){
 
 			$link = new Selector('a');
 			$this->paginador->attr('class',$this->configPaginador['classListaPaginador']);
 			$item = $this->paginador->addItem($i)->envolver('a');
 
+			$this->_parametrosGET['pagina'] = $i;
 			if($i == $this->paginaActual){
 				$item->attr([
 					'class'	=>$this ->configPaginador['classPaginaActual']])
@@ -752,6 +764,17 @@ class JVista{
 			}
 
 		}
+
+		if($ultimaPaginaMostrada<$this->totalPaginas){
+			$item = $this->paginador->addItem(">>")->envolver('a');
+			$item->attr([
+					'class'	=>$this ->configPaginador['classLink']])
+									->contenido
+									->attr(['href'	=>$this->procesarURL(['pagina'=>$this->totalPaginas])]);
+					#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
+					;
+		}
+
 
 		return $this->_obtTemplate($this->configPaginador['tpl'], ['paginador'=>$this->paginador->render()]);
 		//----------------------------------------------------------
@@ -1015,24 +1038,9 @@ class JVista{
 	 *
 	 */
 	private function procesarURL($params,$print=false){
-		// if($this->paginaConsulta[strlen($this->paginaConsulta)-1]!='/')
-			// $this->paginaConsulta.="/";
-		if($print){
-		Debug::string("==============================");
-		Debug::string($this->paginaConsulta);
-		Debug::mostrarArray($this->queryString,0);
-		Debug::mostrarArray($params,0);
-		}
-		//Se setea en una variable diferente para que no interfiera con los ajustes de otras variables.
-		$querystring =array_merge($this->queryString,$params);
-		if($print){
-			Debug::mostrarArray($querystring,0);
-			Debug::string($this->paginaConsulta . '?' . http_build_query($querystring),1);
-
-			exit;
-		}
-
-		return $this->paginaConsulta .'?'. http_build_query($querystring);
+		$params = array_merge($this->_parametrosGET,$params);
+		#Helpers\Debug::imprimir($this->_parametrosGET,true);
+		return $this->paginaConsulta .'?'. http_build_query($params);
 	}
 
 	private function checkConfig($config=[]){
@@ -1077,13 +1085,21 @@ class JVista{
 		}
 		return $template;
 	}
-    
+
     protected function _imprimir(){
         $params = func_get_args();
         //array_push($params,$cortar);
         if($this->_debug){
             call_user_func_array(['\Jida\Helpers\Debug','imprimir'], $params);
         }
-        
+
     }
+	private function _procesarParametros(){
+		$params = $_GET;
+		if(array_key_exists('pagina', $params))
+			unset($params['pagina']);
+
+		$this->_parametrosGET = $params;
+
+	}
  }//fin clase

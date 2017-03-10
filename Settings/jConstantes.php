@@ -13,7 +13,7 @@
 if(!defined('MODELO_USUARIO')){
 	define('MODELO_USUARIO','\Jida\Modelos\User');
 }
-
+if(!defined('URL_BASE')) define('URL_BASE',"");
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if(!defined('MANEJADOR_BD'))
 define('MANEJADOR_BD',FALSE);
