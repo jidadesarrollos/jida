@@ -60,7 +60,7 @@ class OpcionesMenu extends BD\DataModel{
 	protected $tablaBD='s_opciones_menu';
 
 	function obtOpciones(){
-        $this->consulta(['id_opcion_menu','url_opcion','nombre_opcion','orden']);
+        $this->consulta(['id_opcion_menu','url_opcion','nombre_opcion','orden','id_estatus']);
         return $this->obt('id_opcion_menu');
     }
 

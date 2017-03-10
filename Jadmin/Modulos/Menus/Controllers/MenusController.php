@@ -122,7 +122,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
         $nombre = $menu->obt();
 
 
-        $tabla = new Render\jvista('Jida\Modelos\OpcionesMenu.obtOpciones',['titulos'=>['Url','Nombre','Orden']],'Opciones de menu '.$nombre[0]['nombre_menu']);
+        $tabla = new Render\jvista('Jida\Modelos\OpcionesMenu.obtOpciones',['titulos'=>['Url','Nombre','Orden','estatus']],'Opciones de menu '.$nombre[0]['nombre_menu']);
 
         $tabla->clausula('filtro',['id_menu'=>$id,'padre'=>$padre]);
 
@@ -136,10 +136,10 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
             ]);
 
 
-        $tabla->addMensajeNoRegistros('No hay Menus Registrados', [
+        $tabla->addMensajeNoRegistros('No hay opciones Registradas', [
                                                                 'link'  =>$this->obtUrl(''),
-                                                                'txtLink' =>'Crear Menu'
-                                                                ]);
+                                                                'txtLink' =>'Crear Opcion'
+                                                                ]); 
         $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('agregarOpcion',[$id])]]);
         $tabla->acciones(['volver ' => ['href'=>$this->obtUrl('index')]]);
 
@@ -182,6 +182,8 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
         $this->data(['tituloForm'=>'Registro De Opciones']);
         $this->dv->form = $formulario -> armarFormulario();
   }
+
+
 
       function eliminarOpcion($id='') {
 
