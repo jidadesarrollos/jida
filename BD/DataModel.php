@@ -880,7 +880,7 @@ class DataModel{
          if(empty($campos) or $campos=='*'){
              $campos =  array_keys($this->propiedades);
          }
-//
+
         if(is_array($campos)){
 
             array_walk($campos,function(&$key,$valor,$tabla){
@@ -1875,5 +1875,20 @@ class DataModel{
 
     }
 
+    /**
+     * Utiliza la clausula COUNT de mysql
+     * @method contar
+     */
+    function contar($campo='*',$distinct=false){
+        
+        if($campo!='*') $campo = $this->tablaQuery.'.'.$campo;
+            
+        if($distinct)   $campo = 'DISTINCT '.$campo;
+        
+        $this->query="SELECT  COUNT($campo) as total_count from $this->tablaQuery ";
+        $this->usoWhere=FALSE;
+                
+        return $this;
+    }
 
 }//fin clase;
