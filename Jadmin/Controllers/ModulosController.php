@@ -156,6 +156,12 @@ class ModulosController extends JController{
 
     $tabla = new Render\jvista($arre,['titulos'=>['nombre','direccion']],'Modulos');
 
+    $tabla->accionesFila([
+        ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar menu','href'=>$this->obtUrl('',[$arre])],
+        ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar menu','href'=>$this->obtUrl('',['{clave}']),
+         'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
+    ]);
+
 
     $tabla->addMensajeNoRegistros('No hay Modulos Registradas', [
                                                             'link'  =>$this->obtUrl(''),
@@ -209,16 +215,61 @@ class ModulosController extends JController{
 
           $directorios = [
                       $Path.'/Controllers',
-                      $Path.'/Modulos',
+                      $Path.'/Modelos',
                       $Path.'/Vistas',
                       $Path.'/Nexos',
                       $Path.'/Elementos'
           ];
 
           Helpers\directorios::crear($directorios);
+          $this->crearArchivosEstandar($name,$directorios);
 
     }
 
+  }
+
+
+  private function crearArchivosEstandar($nombreArchivo,$directorios){
+    
+
+        $nombreArchivo = Helpers\cadenas::upperCamelCase($nombreArchivo);
+
+        $nombreModelo = Helpers\Cadenas::obtenerSingular($nombreArchivo);
+
+        $nombreArchivo .= 'Controller';
+
+        $arch = fopen($directorios[0].'/'.$nombreArchivo.'.php','w+');
+        $content="<?php \n";
+
+        ob_start();
+        include_once '\jadmin\Modulos\Menus\plantillas\controlador.tpl.php';
+        $content .= ob_get_clean();
+        ob_end_flush();
+
+        $content = str_replace("{{{nombreArchivo}}}",$nombreArchivo,$content);
+
+        fwrite($arch, $content);
+
+        fclose($arch);
+
+        $arch = fopen($directorios[1].'/'.$nombreModelo.'.php', 'w+');
+
+        $content="<?php \n";
+
+        ob_start();
+        include_once '\jadmin\Modulos\Menus\plantillas\modelo.tpl.php';
+        $content .= ob_get_clean();
+
+        $content = str_replace("{{{nombreModelo}}}",$nombreModelo,$content);
+
+        fwrite($arch, $content);
+
+        fclose($arch);
+
+        $arch = fopen($directorios[2].'/index.php', 'w+');
+        fclose($arch);
+
+    
   }
 
 
