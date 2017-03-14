@@ -30,25 +30,9 @@ class ModulosController extends JController{
    * @since 0.5
    *
    */
-  private function arregloModulos($ruta,$bool=false,&$arr=[]){
+  private function arregloModulos($ruta){
 
-        $dir = self::listarkeyDir($ruta);
-
-       foreach ($dir as $key => $val){
-
-          if ($bool) {
-
-              
-              $dir = self::arregloModulos($ruta.'/'.$key,false,$arr);
-              $arr[] = $key;
-          }elseif ($key=='Modulos') {
-
-              $dir = self::arregloModulos($ruta.'/Modulos',TRUE,$arr);
-              continue;
-
-          }
-
-        }
+      $arr = self::listarkeyDir($ruta);
 
        return $arr;
   }
@@ -57,7 +41,8 @@ class ModulosController extends JController{
 
     $linea = [];
     $result= [];
-    $modulosCreados = self::arregloModulos('Aplicacion\Modulos',true);
+    $modulosCreados = self::arregloModulos('Aplicacion\Modulos');
+
     // helpers\debug::imprimir($modulosCreados,true);
 
     for ($i=0; $i <count($modulosCreados)-1 ; $i++) { 
@@ -68,6 +53,7 @@ class ModulosController extends JController{
       unset($linea);
       $i++;
     }
+    // helpers\debug::imprimir($result,true);
 
     return $result;
     
@@ -89,7 +75,7 @@ class ModulosController extends JController{
   private function machModulo(){
 
       $declaraciones = $GLOBALS['modulos'];
-      $direcciones = self::arregloModulos('Aplicacion\Modulos',true);
+      $direcciones = self::arregloModulos('Aplicacion\Modulos');
 
       foreach ($declaraciones as $key => $val) {
 
@@ -118,22 +104,24 @@ class ModulosController extends JController{
 
   }//end method machModulo
 
+
+
   private function mensajeModulo()
   {
         $mach = self::machModulo();
         $mensaje = '';
         if (count($mach['direcciones'])>0) {
-          $mensaje = "Los siguientes Modulos existen en el sistema pero no estan declarados en la configuracion : <br>";
+          $mensaje = "<h3>Los siguientes Modulos existen en el sistema pero no estan declarados en la configuracion :</h3> <br>";
           foreach ($mach['direcciones'] as $key => $value) {
-              $mensaje .= $value;
+              $mensaje .=  '<h4>'.$value.'</h4>';
               $mensaje.= "<br>";
           }
           $mensaje.="<br>";
         }
         if (count($mach['declaraciones'])>0) {
-          $mensaje .= "Los siguientes Modulos estan declarados en el sistema pero no existen en el sistema : <br>";
+          $mensaje .= "<h3>Los siguientes Modulos estan declarados en la configuracion pero no existen en el sistema :</h3> <br>";
           foreach ($mach['declaraciones'] as $key => $value) {
-              $mensaje .= $value;
+              $mensaje .= '<h4>'.$value.'</h4>';
               $mensaje.= "<br>";
           }
         }
@@ -149,12 +137,12 @@ class ModulosController extends JController{
 
 
     $mensaje = self::mensajeModulo();
-
+    // Helpers\debug::imprimir($mensaje,true);
     $arre=self::arregloParatabla();
 
     
 
-    $tabla = new Render\jvista($arre,['titulos'=>['nombre','direccion']],'Modulos');
+    $tabla = new Render\jvista($arre,['titulos'=>['Nombre','Direccion']],'Modulos');
 
     $tabla->accionesFila([
         ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar menu','href'=>$this->obtUrl('',[$arre])],
@@ -163,7 +151,7 @@ class ModulosController extends JController{
     ]);
 
 
-    $tabla->addMensajeNoRegistros('No hay Modulos Registradas', [
+    $tabla->addMensajeNoRegistros('No hay Modulos Registrados', [
                                                             'link'  =>$this->obtUrl(''),
                                                             'txtLink' =>'Registrar modulo'
                                                             ]);
@@ -171,7 +159,7 @@ class ModulosController extends JController{
     Helpers\Mensajes::crear('alerta',$mensaje);
 
 
-
+    $this->data(['mensaje'=>$mensaje]);
     $this->data(['tablaVista'=>$tabla->obtenerVista()]);
 
 
@@ -189,10 +177,10 @@ class ModulosController extends JController{
           if ($formulario->validar()) {
 
 
-            $formulario::msj('suceso',"Encomienda creada con exito");
+            $formulario::msj('suceso',"modulo creado con exito");
                         
-            $this->crearModulo($this->post('Nombre_modulo'));
-            // helpers\debug::imprimir($this->post(),true);
+            $this->crearModulo($this->post('Nombre_modulo'),$this->post('tipo'));
+
             $this->redireccionar('index');
 
           }else{
@@ -206,31 +194,45 @@ class ModulosController extends JController{
 
 
 
-  private function crearModulo($name='') {  
+  private function crearModulo($name='',$tipo=0) {  
    
 
     if ($name!='' ) {
 
           $Path = 'Aplicacion/Modulos/'.$name;
+          if ($tipo!=0) {
+                      $directorios = [
+                                        $Path.'/Jadmin',
+                                        $Path.'/Jadmin/Controllers',
+                                        $Path.'/Modelos',
+                                        $Path.'/Jadmin/Vistas',
+                                        $Path.'/Jadmin/Nexos',
+                                        $Path.'/Jadmin/Elementos'
+                                    ];
+                      $extends = '\Jida\Jadmin\Controllers\JController';
+          }else{
+                      $directorios = [
+                                        '',
+                                        $Path.'/Controllers',
+                                        $Path.'/Modelos',
+                                        $Path.'/Vistas',
+                                        $Path.'/Nexos',
+                                        $Path.'/Elementos'
+                                    ];
+                      $extends = '\Jida\Core\Controller';
+          }
 
-          $directorios = [
-                      $Path.'/Controllers',
-                      $Path.'/Modelos',
-                      $Path.'/Vistas',
-                      $Path.'/Nexos',
-                      $Path.'/Elementos'
-          ];
 
           Helpers\directorios::crear($directorios);
-          $this->crearArchivosEstandar($name,$directorios);
+          $this->crearArchivosEstandar($name,$directorios,$extends);
 
     }
 
   }
 
 
-  private function crearArchivosEstandar($nombreArchivo,$directorios){
-    
+  private function crearArchivosEstandar($nombreArchivo,$directorios,$extiende){
+
 
         $nombreArchivo = Helpers\cadenas::upperCamelCase($nombreArchivo);
 
@@ -238,21 +240,22 @@ class ModulosController extends JController{
 
         $nombreArchivo .= 'Controller';
 
-        $arch = fopen($directorios[0].'/'.$nombreArchivo.'.php','w+');
+        $arch = fopen($directorios[1].'/'.$nombreArchivo.'.php','w+');
         $content="<?php \n";
 
         ob_start();
         include_once '\jadmin\Modulos\Menus\plantillas\controlador.tpl.php';
         $content .= ob_get_clean();
-        ob_end_flush();
+
 
         $content = str_replace("{{{nombreArchivo}}}",$nombreArchivo,$content);
+        $content = str_replace("{{{extiende}}}",$extiende,$content);
 
         fwrite($arch, $content);
 
         fclose($arch);
 
-        $arch = fopen($directorios[1].'/'.$nombreModelo.'.php', 'w+');
+        $arch = fopen($directorios[2].'/'.$nombreModelo.'.php', 'w+');
 
         $content="<?php \n";
 
@@ -266,7 +269,7 @@ class ModulosController extends JController{
 
         fclose($arch);
 
-        $arch = fopen($directorios[2].'/index.php', 'w+');
+        $arch = fopen($directorios[3].'/index.php', 'w+');
         fclose($arch);
 
     
@@ -280,8 +283,8 @@ class ModulosController extends JController{
         while (($file = readdir($directorio)) !== false) {
           if($file!="." and $file!='..'){
 
-            $listado[$file]=$file;
-                        $listado[$ruta.'/'.$file]=0;
+            $listado[]=$file;
+            $listado[]=$ruta.'/'.$file;
 
           }
         }

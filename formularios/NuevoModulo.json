@@ -18,6 +18,17 @@
 		        }
 			}
 
+		},
+		{
+			"name":"tipo",
+			"orden": "2",
+			"id":"tipo",
+			"label":"Tipo de Modulo",
+			"type":"radio",
+			"opciones":"0=Aplicacion;1=Jadmin",
+			"eventos":{
+				"obligatorio":{"mensaje":"Debe Seleccionar Un tipo"}
+			}
 		}
         
 

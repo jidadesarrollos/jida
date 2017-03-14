@@ -1,6 +1,6 @@
 
         
- class {{{nombreArchivo}}} extends \Jida\Core\Controller{ 
+ class {{{nombreArchivo}}} extends {{{extiende}}}{ 
 
      public function index(){
          # code...

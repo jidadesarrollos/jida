@@ -1,7 +1,7 @@
 <?PHP
 /**
  * Controlador de modulo de opciones
- *
+ * 
  * @package Framework
  * @subpackage Jadmin
  * @author  kerby Tabares <krtabares@gmail.com>
