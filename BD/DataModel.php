@@ -1295,6 +1295,7 @@ class DataModel{
 	 */
 	function dataPaginacion(){
 		return [
+		    'consulta'        => $this->query,
 			'filasPagina'	=>$this->filasPagina,
 			'registros'		=>$this->_totalRegistros,
 			'paginaActual'	=>$this->_paginaConsultada,
