@@ -9,14 +9,21 @@
 
 namespace Jida\Render;
 use Jida\Helpers as Helpers;
+use Exception;
+
 class FilaSelector extends Selector{
+
 	use \Jida\Core\ObjetoManager;
+
 	var $selector = "TR";
 	private $selectorColumnas="TD";
 	var $columnas;
 	var $dataColumnas;
 	private $totalColumnas;
+    private $_ce='008';
+
 	function __construct($columnas,$selectorColumnas="TD"){
+
 		parent::__construct();
 		#Helpers\Debug::imprimir($columnas);
 		$this->dataColumnas = $columnas;
@@ -28,6 +35,12 @@ class FilaSelector extends Selector{
 
 	private function crearColumnas(){
 
+        if(!is_array($this->dataColumnas)){
+            
+            throw new Exception('La data para la columna debe ser un arreglo',$this->_ce."1");
+        }else{
+            
+        }
 		foreach ($this->dataColumnas as $key => $col) {
 
 			$this->columnas[$key] = new ColumnaSelector($this->selectorColumnas);

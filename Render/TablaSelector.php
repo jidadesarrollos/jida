@@ -4,6 +4,8 @@
  */
 namespace Jida\Render;
 use Jida\Helpers as Helpers;
+use Exception;
+
 class TablaSelector extends Selector{
 	use \Jida\Core\ObjetoManager;
 	private $filas=[];
