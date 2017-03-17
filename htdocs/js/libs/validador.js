@@ -560,7 +560,7 @@
           caracteresEspeciales:{expr:/^([^(*=;\\)])*$/,mensajes:"Caracteres invalidos en el campo"},      
           tiny:{mensaje:"El campo es obligatorio"},
           alfanumerico:{expr:/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\' ]*$/,mensaje:"El campo solo puede contener letras y numeros"},
-          documentacion:{expr:/^([V|E|G|J|P|N]{1}\d{8,10})*$/,mensaje:"El campo debe tener el siguiente formato J-18935170"},
+          documentacion:{expr:/^(([V|E|G|J|P|N]{1})?\d{7,10})*$/,mensaje:"El campo debe tener el siguiente formato J18935170 o 18935170"},
           programa:{expr:/^[\d\/\.A-Za-z_-]*$/,mensaje:"El campo solo puede contener letras, guion y underscore"},
           minuscula:{expr:/[a-z]/,mensaje:"La contraseña debe tener al menos una minuscula"},
           mayuscula:{expr:/[A-Z]/,mensaje:"La contraseña debe tener al menos una mayuscula"},

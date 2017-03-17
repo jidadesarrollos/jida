@@ -78,8 +78,8 @@ class Validador{
                     'fechaHora'             =>[	'expresion' 	=>  '/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
                                                 'mensaje' 		=>	'Formato de Fecha u hora incorrecto.'],
                     'limiteCaracteres'      =>[	'mensaje'		=>	"La cadena no puede superar el total de caracteres permitidos"],
-                    'documentacion'         =>[	'expresion'		=>	"/^([V|E|G|J|P|N]{1}\d{8,10})*$/",
-                    							'mensaje'		=>	"El campo debe tener el siguiente formato J-12345678"]
+                    'documentacion'         =>[	'expresion'		=>	"/^(([V|E|G|J|P|N]{1})?\d{7,10})*$/",
+                    							'mensaje'		=>	"El campo debe tener el siguiente formato J12345678 o 12345678"]
         ];
     /**
      * Arreglo que registra los errores
