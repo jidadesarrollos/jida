@@ -16,23 +16,11 @@
         "files" : ["funciones.php"],
     	"psr-4":{
     		"Jida\\":[
-    			"/","elementos/",
-    			"Core/",
-    			"Core/GeneradorCodigo/",
-    			"ModelFramework/",
-    			"Helpers/",
-    			"Render"
-
+    			"../Framework/"
 
     			],
-			"JComponentes\\":[
-				"Componentes/"
-			],
 			"App\\":[
 				"../Aplicacion/"
-			],
-			"App\\Config\\":[
-				"../Aplicacion/Config/"
 			]
 
     	}

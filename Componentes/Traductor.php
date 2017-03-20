@@ -2,6 +2,7 @@
 /**
 * Clase para manejo de Traducciones del sitio Web
  *
+ * @internal
  * El archivo permite ubicar las cadenas a mostrar en la web, las cuales son buscadas
  * en un archivo [idioma].php, por tanto las cadenas para español deben encontrarse en el archivo
  * "es.php".
@@ -21,8 +22,8 @@
 * @version
 * @category
 */
-namespace JComponentes;
-use \Directorios as Directorios;
+namespace Jida\Componentes;
+use Jida\Helpers\Directorios as Directorios;
 class Traductor{
 
 	private $idiomas=[];
@@ -56,14 +57,13 @@ class Traductor{
 		$file = strtolower($this->idiomaActual).".php";
 		if(file_exists($this->path.$file)){
 			include_once $this->path.$file;
+
 		}else{
 			throw new \Exception("No existe el archivo de traducciones ".$this->idiomaActual ."en ".$this->path.$file, 950);
 
 		}
 
-
 		$this->textos=$traducciones;
-
     	if(array_key_exists('idiomas', $GLOBALS)){
     	$this->idiomas=$GLOBALS['idiomas'];
     	}else{

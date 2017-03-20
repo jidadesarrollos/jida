@@ -1,6 +1,7 @@
 <?php
 
-namespace Jida;
+namespace Jida\Core\GeneradorCodigo;
+use Jida\Helpers as Helpers;
 trait GeneradorCodigo{
 	use GeneradorArchivo;
 
@@ -125,7 +126,7 @@ trait GeneradorCodigo{
 		if(!in_array($ambito, $arrayAmbito)) $ambito="";
 		if(!empty($ambito)) $funcion.=$ambito." ";
 		$funcion =
-			"function ".String::lowerCamelCase($nombre)."(";
+			"function ".Helpers\Cadenas::lowerCamelCase($nombre)."(";
 		if(count($params)>0) $funcion.= implode(",", $params);
 		$funcion.=")".$this->apertura();
 		if(!empty($contenido)){

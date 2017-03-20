@@ -1,4 +1,8 @@
 <?PHP
+/**
+ * Helper para prueba de plataforma
+ * @revision 
+ */
 function respuestaAjax($respuesta,$tipo=2){
         if($tipo==2){
             echo $respuesta;
@@ -61,8 +65,4 @@ function redireccionar($url){
 		
  }
 
-function debug(){
-    
- #   include 'Helpers/debug/testVariables.php';
-
-}
+function debug(){}

@@ -1,0 +1,5 @@
+<?php
+
+?>
+
+<?=$this->data->vista?>

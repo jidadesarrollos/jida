@@ -1,19 +1,42 @@
 <?php
 /**
-* Clase Modelo
+* Clase para SelectorInput
 * @author Julio Rodriguez
 * @package
 * @version
 * @category
 */
-namespace Jida;
-class SelectorInput extends \Selector{
-
+namespace Jida\Render;
+use Jida\BD\BD as BD;
+use Jida\Helpers as Helpers;
+class SelectorInput extends Selector{
+    
+	use \Jida\Core\ObjetoManager;
 	var $name;
 	var $type;
 	var $id;
 	var $label;
 	var $opciones;
+	var $value="";
+	var $placeholder="";
+	/**
+	 * @var mixed $_valorUpdate Registra el valor en modo update para el selector
+	 */
+	private $_valorUpdate;
+	
+	/**
+	 * @var string $labelOpcion Label para cada selector multiple radio o inputs
+	 */
+	var $labelOpcion="";
+	var $multiplesInline=TRUE;
+	private $_ce = '00101';
+	/**
+	 * Selectores que requieren de multiples instancias
+	 * @var array $_controlesMultiples;
+	 */
+	private $_controlesMultiples=['checkbox','radio'];
+	
+	
 	/**
 	 * Define el tipo de Selector de formulario
 	 * @internal El valor por defecto es text
@@ -22,18 +45,63 @@ class SelectorInput extends \Selector{
 
 	 */
 	private $_tipo="text";
-	private $_attr=[];
+	/**
+	 * Opciones del selector
+	 * @internal Posee las opciones a agregar a un control
+	 * de selección multiple
+	 * @var array $_opciones 
+	 */
+	private $_opciones;
 	/**
 	 * Atributos pasados en el constructor
 	 * @var mixed $_attr;
 	 * @access private
 	 */
+	 private $_attr=[];
+	 /**
+	  * Contiene los objetos SelectorInput de cada opcion de un control
+	  * de seleccion múltiple
+	  * @param array $_selectoresOpcion
+	  */
+	 private $_selectoresOpcion=[];
+	 
+	 private $_tplMultiples = 
+	 '<div class="{{:type}} {{:type}}-inline">
+	    {{:input}}
+	    <label for="{{:label}}">
+	        {{:label}}
+	    </label>
+	  </div>
+  ';
+  
+  	private $_tplControlMultiple='
+  		<div class="control-multiple">
+  		{{:selector1}}{{:selector2}}
+  		</div>
+  	';
+  	
+  
+  	/**
+	 * Bandera interna que determina si el constructor debe o no llamar al metodo crearSelector
+	 * @var boolean $_crear
+	 */
+  	private $_crear=TRUE;
 	/**
 	 * Items u opciones para agregar en campos pasados por el usuario
 	 * @var mixed $_items
 	 * @access private
 	 */
-
+	private $_items;
+	/**
+	 * Determina si la clase ha sido extendida o no.
+	 * @var boolean $_claseExtentida
+	 */
+	private $_claseExtendida=FALSE;
+	/**
+	 * Objeto que extiende las funcionalidades
+	 * @property object $_extension;
+	 */
+	private $_extension;
 	/**
 	 * Crea Selectores para un formulario
 	 * @internal Permite crear y definir selectores HTML para formularios
@@ -46,19 +114,47 @@ class SelectorInput extends \Selector{
 	 */
 	function __construct(){
 		$numero = func_num_args();
-		if($numero==1){
-			$this->__constructorObject(func_get_arg(0));
+		if($numero==1 or ($numero==2 and in_array(func_get_arg(1),$this->_controlesMultiples))){
+			if($numero>1)
+				$this->__constructorObject(func_get_arg(0),func_get_arg(1));
+			else 
+				$this->__constructorObject(func_get_arg(0));
 		}else{
 			call_user_func_array([$this,'__constructorParametros'], func_get_args());
 		}
-
-		$this->_crearSelector();
-
-	}
-
-	private function __constructorObject(){
+		$this->_checkClaseExtendida();
+		if($this->_crear)
+			$this->_crearSelector();
 
 	}
+	private function _checkClaseExtendida(){
+		if(class_exists('\App\Config\SelectorInput')){
+			$this->_extension = new \App\Config\SelectorInput();
+			
+		}
+	}
+	private function __constructorObject($params,$type=FALSE){
+		$this->establecerAtributos($params,$this);
+		//Helpers\Debug::imprimir($this);
+		$this->_name = $params->name;
+		$this->_tipo = $params->type;
+		if(!$type and in_array($params->type,['checkbox','radio']))
+		{
+				
+			$this->opciones = $params->opciones;
+			$this->_tipo = $params->type;
+			$opciones = $this->obtOpciones(); 
+			$this->_crearOpcionesSelectorMultiple($opciones);
+			$this->_crear=FALSE;
+			//Helpers\Debug::imprimir("es multiple",$params,$opciones,TRUE);
+		}
+		if(property_exists($params, 'class')){
+			$this->addClass($params->class);
+		}
+			
+
+	}
+	
 	private function __constructorParametros($name,$tipo="text",$attr=[],$items=""){
 
 		$this->_name = $name;
@@ -72,39 +168,232 @@ class SelectorInput extends \Selector{
 			case 'select':
 					$this->_crearSelect();
 				break;
-			case 'radio':
-					$this->_crearRadio();
-			case 'button':
-
+			// case 'identificacion';
+					// $this->_crearIdentificacion();
+				// break;
+			case 'textarea':
+				$this->_crearTextArea();
+				break;
 			default:
-					$this->_crearInput();
+				$this->_crearInput();
 				break;
 		}
 
 	}
 	/**
+	 * Crea los objetos selector para cada opcion de un selector multiple
+	 * @method crearOpcionesSelectorMultiple
+	 */
+	private function _crearOpcionesSelectorMultiple($opciones){
+		
+		for($i=0;$i<count($opciones);++$i){
+			
+			$class = new \stdClass();
+			$class->value=array_shift($opciones[$i]);
+			$class->labelOpcion=array_shift($opciones[$i]);
+			
+			$class->name=($this->type=='checkbox')?$this->name."[]":$this->name;
+			$class->type = $this->type;
+			$class->_tipo = $this->type;
+			$class->_identif = 'objectSelectorInputInterno';
+			$class->id=$this->id."_".($i+1);
+			
+			$selector = new SelectorInput($class,$this->type);
+			if($class->value==$this->_valorUpdate){
+				$selector->attr('checked','checked');
+			}
+			array_push($this->_selectoresOpcion,$selector);
+		}
+	}
+	/**
+	 * Genera los objeto selector para las opciones de un select
+	 * @method crearOpcionesSelect
+	 */
+	private function _crearOpcionesSelect($options){
+		
+		foreach ($options as $key => $data) {
+			$key = array_keys($data);
+			$opcion = new Selector('option',['value'=>$data[$key[0]]]);
+			if($data[$key[0]]==$this->_valorUpdate)
+			{
+				$opcion->attr('selected','selected');
+			}
+			$opcion->innerHTML($data[$key[1]]);
+			//$optionsHTML .= Selector::crear('option',,$data[$key[1]]);
+			array_push($this->_selectoresOpcion,$opcion);
+		}
+	}
+	/**
 	 * Procesa los item a agregar en controles de seleccion
 	 *
 	 */
-	private function procesarOpciones(){
-
+	private function obtOpciones(){
+		    
+		$revisiones = explode(";",$this->opciones);
+	
+		$opciones = [];
+		foreach ($revisiones as $key => $opcion) {
+			if(stripos($opcion, 'select')!==FALSE)
+			{	
+				$opciones= array_merge($opciones,BD::query($opcion));
+					
+			}elseif(stripos($opcion,'externo')!==FALSE){
+				continue;
+			}else{
+				$opciones[] = explode("=",$opcion);
+			}
+		}
+        return $opciones;
+		
 	}
-	function _crearSelect(){
-		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
-		parent::__construct($this->_tipo,$this->_attr);
-	}
-	function _crearInput(){
-
+	private function _crearTextArea(){
 		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
-		parent::__construct('input',$this->_attr);
+		parent::__construct($this->_tipo,$this->_attr);
+		
+		
 	}
 	/**
-	 * Genera un input de texto
-	 * @method text
+	 * Permite editar las opciones de un selector multiple
+	 * 
+	 * @internal
+	 * 
+	 * @method editarOpciones
 	 */
-	function text(){
-
+	function editarOpciones($opciones,$add=FALSE,$valor=""){
+		$this->opciones = $opciones;
+		if(!in_array($this->type, $this->_controlesMultiples) and $this->_tipo!='select')
+			throw new Exception("El selector ".$this->id." no es un control de seleccion", $this->_ce.'08');
+			
+		if(!is_array($opciones)){
+			$this->opciones = $opciones;
+			$opciones  = $this->obtOpciones();
+		}
+		if(!$add) $this->_selectoresOpcion =[];
+		if($this->type=='select'){
+			$this->_crearOpcionesSelect($opciones);
+		}else{
+			$this->_crearOpcionesSelectorMultiple($opciones);
+		}
+		
+		
 	}
+	/**
+	 * Crea un selector Select
+	 * @method _crearSelect
+	 */
+	private function _crearSelect(){
+		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
+		
+		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
+		parent::__construct($this->_tipo,$this->_attr);
+		$options = $this->obtOpciones();
+		$this->_crearOpcionesSelect($options);
+	}
+    
+	function _crearInput(){
+		
+		$this->_attr= array_merge($this->_attr,
+			['type'=>$this->_tipo,'name'=>$this->_name,'value'=>$this->value,
+			'placeholder'=>$this->placeholder]
+		);
+		parent::__construct('input',$this->_attr);
+		
+
+		}
+	/**
+	 * Imprime los selectores multiples incluidos en $_controlesMultiples
+	 * @method renderMultiples
+	 */
+	private function renderMultiples(){
+		$tpl="";
+		foreach ($this->_selectoresOpcion as $id => $selector) {
+			$input = $selector->render(TRUE);
+			
+			$data = [
+			'input' =>$input,
+			'label' => $selector->labelOpcion,
+			'type' =>$selector->type,
+			
+			];
+			$tpl.= $this->_obtTemplate($this->_tplMultiples, $data );
+			
+		}
+		
+		return $tpl;
+	}
+	private function renderSelect(){
+		$options = "";
+		//Helpers\Debug::imprimir($this->value,true);
+		foreach ($this->_selectoresOpcion as $key => $option) {
+			$options.=$option->render();
+		}
+		$this->innerHTML($options);
+		return $this->render(TRUE);
+	}
+	function render($parent=FALSE){
+		
+		if(!$parent and in_array($this->_tipo,$this->_controlesMultiples)){
+			
+			return $this->renderMultiples();
+		}elseif(!$parent and $this->_tipo=='select'){
+			return $this->renderSelect();
+		}else{
+	
+			return parent::render();	
+		}
+	}
+	
+	function _crearIdentificacion(){
+		$select = new CloneSelector($this);
+		Helpers\Debug::imprimir("ak",$select,true);
+		$select->type = 'select';
+		$select = new SelectorInput($select);
+		
+	}
+	/**
+	 * Asigna un valor al selector instanciado
+	 * @method valor
+	 * @param string $valor Valor a mostrar en el input
+	 */
+	function valor($valor){
+		
+		$this->_valorUpdate = $valor;
+		if(in_array($this->_tipo, $this->_controlesMultiples)){
+			//Helpers\Debug::imprimir("aki--",$this->_tipo,$valor,$this->_selectoresOpcion,true);
+			foreach ($this->_selectoresOpcion as $key => $selector) {
+				if($selector->attr('value') == $valor){
+					$selector->attr('checked','checked');
+				}	
+			}
+		}else
+		if($this->type=='select'){
+			foreach ($this->_selectoresOpcion as $key => $selector) {
+				if($selector->attr('value') == $valor){
+					$selector->attr('selected','selected');
+				}	
+			}
+			
+		}elseif($this->type=="textarea"){
+			
+			$this->innerHTML($valor);
+		}else{
+			$this->attr('value',$valor);
+		}
+		
+	}
+	/**
+	 * Renderiza el contenido en plantillas predeterminadas
+	 * @method _obtTemplate
+	 * @param $plantilla;
+	 */
+	private function _obtTemplate($template,$params){
+		foreach ($params as $key => $value) {
+			$template = str_replace("{{:".$key."}}", $value,$template);
+		}
+		return $template;
+	}
+	
+	
 
 
 }

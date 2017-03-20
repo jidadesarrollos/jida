@@ -55,8 +55,9 @@ $( document ).ready(function(){
         var $ul 	= $this.parent();
         var form	= $ul.data('form');
         var urlCall	= $ul.data('url');
+        console.log($ul.data());
         e.preventDefault();
-        console.log("ak");
+
         if(valorSeleccion){
 
 			parametros ={
@@ -76,7 +77,7 @@ $( document ).ready(function(){
 
 
     });
-     if($('[data-selectall]').size()>0){
+     if($('[data-selectall]').length>0){
     	$seleccionador = $('[data-selectall]');
     	$seleccionador.on('click',function(){
 	    	console.log("click");

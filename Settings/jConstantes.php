@@ -2,7 +2,7 @@
 /**
  * Archivo contenedor de constantes de configuración establecidas con valores por defecto.
  *
- * Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
+ * @internal Todas las constantes pueden ser reescritas en la carpeta de configuración del directorio Aplicacion.
  * en los archivos appSetting. initConfig y BDConfig.
  *
  */
@@ -10,11 +10,10 @@
  	$GLOBALS['modulos']=['Jadmin'];
  }
 
-
 if(!defined('MODELO_USUARIO')){
-	define('MODELO_USUARIO','\User');
+	define('MODELO_USUARIO','\Jida\Modelos\User');
 }
-
+if(!defined('URL_BASE')) define('URL_BASE',"");
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if(!defined('MANEJADOR_BD'))
 define('MANEJADOR_BD',FALSE);
@@ -40,7 +39,7 @@ if(!defined('CONTROLADOR_EXCEPCIONES'))
  * si se define la constante será reemplazado el controlador e intentará
  * ejecutarse el definido en la constante.
  */
-   define('CONTROLADOR_EXCEPCIONES','ExcepcionController');
+   define('CONTROLADOR_EXCEPCIONES','\Jida\Core\Excepcion');
 if(!defined('DIR_EXCEPCION_PLANTILLAS'))
 /**
  * Define el directorio en el que se encuentran las plantillas
@@ -48,7 +47,7 @@ if(!defined('DIR_EXCEPCION_PLANTILLAS'))
  * @constant DIR_EXCEPCION_PLANTILLAS
  * @deprecated 2.0
  */
- define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."jidaPlantillas/error/");
+ define('DIR_EXCEPCION_PLANTILLAS',DIR_FRAMEWORK."plantillas/error/");
  if(!defined('DIR_PLANTILLAS_APP'))
  /**
   * Define la ubicacion de las plantillas de una aplicacion
@@ -97,7 +96,7 @@ if(!defined('APP_MANTENIMIENTO')){
     define('APP_MANTENIMIENTO',FALSE);
 }
 if(!defined('TPL_MANTENIMIENTO')){
-    define('TPL_MANTENIMIENTO','Framework/jidaPlantillas/mantenimiento.tpl.php');
+    define('TPL_MANTENIMIENTO','Framework/plantillas/mantenimiento.tpl.php');
 }
 
 if(!defined('PREFIJO_TABLA'))
@@ -122,11 +121,16 @@ if(!defined('FECHA_MODIFICACION')){
 #===============================================================================
 # Constantes DE URLs y Directorios del Framework
 #===============================================================================
+if(!defined('URL_HTDOCS')) 					define('URL_HTDOCS','/htdocs/');
 if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
-if(!defined('LAYOUT_JIDA'))
+
+/**
+ * Define la ubicacion fisica de las carpetas para archivos publicos y del lado cliente.
+ */
+if(!defined('DIR_HTDOCS')) define('DIR_HTDOCS', ROOT .'htdocs/');
 
 
 
@@ -167,9 +171,9 @@ if(!defined('DIR_LAYOUT_JIDA'))
  *
  * Puede ser modificada su ubicación si desea personalizarse el disenio.
  */
-define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/");
+define('DIR_LAYOUT_JIDA',DIR_FRAMEWORK."Layout/jadmin/");
 if(!defined('DIR_LAYOUT_APP'))              define('DIR_LAYOUT_APP',DIR_APP.'Layout/');
-if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."jidaPlantillas/");
+if(!defined('DIR_PLANTILLAS_FRAMEWORK'))    define ('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK ."plantillas/");
 
 if(!defined('ZONA_HORARIA')){
     /**
@@ -179,7 +183,12 @@ if(!defined('ZONA_HORARIA')){
      */
     define('ZONA_HORARIA','America/Caracas');
 }
-
+/**
+ * Define la url publica para acceder a los archivos publicos de un tema
+ * @constant URL_HTDOCS_TEMAS
+ */
+if(!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS','/Aplicacion/Layout/');
+if(!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN','/Framework/htdocs/');
 /**
  * Determina si los caracteres especiales son codificados en código ASCII HTML
  * antes de ser guardados en base de datos

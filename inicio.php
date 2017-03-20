@@ -2,7 +2,8 @@
 /**
  * Archivo de Arranque de la aplicación
  *
- * Ejecuta las configuraciones requeridas para que una
+ * @internal
+ *  Ejecuta las configuraciones requeridas para que una
  * aplicación arranque correctamente.
  *
  *
@@ -19,10 +20,6 @@ $jdOpciones=[];
 
 include_once 'Helpers/FuncionesBasicas.php';
 set_time_limit(180);
-/**
- * Directorio del directorio de aplicación.
- */
-define ('app_dir', ROOT. 'Aplicacion'.DS);
 
 /**
  * Directorio del directorio del framework
@@ -55,7 +52,7 @@ if(function_exists('ini_set')){
 	/**
 	 * Inclusión de directorios de aplicación, framework y libs dentro del path
 	 */
-	ini_set('include_path',app_dir . PS . framework_dir .PS . libs_dir . PS . get_include_path());
+	ini_set('include_path',DIR_APP . PS . DIR_FRAMEWORK .PS . libs_dir . PS . get_include_path());
 }else{
 	echo "<h5>No existe la funci&oacute;n</h5>";
 }
@@ -83,6 +80,7 @@ if(TEST_PLATFORM==TRUE){
 	include_once 'Config/BDConfig.php';
 
  }
+
 if(file_exists(DIR_APP . 'Config/initConfig.php'))
 	include_once 'Config/initConfig.php';
 include_once 'Settings/jConstantes.php';
@@ -116,9 +114,9 @@ if(ENTORNO_APP == 'dev'){
     error_reporting(0);
 }
 
-include_once 'Core/Autoload.class.php';
+#include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente
-Autoload::init();
+#Autoload::init();
 
 if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
 
@@ -127,5 +125,4 @@ if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
 }
 global $elementos;
 $elementos=['areas'=>[],'elementos'=>[]];
-Session::iniciarSession();
-?>
+Jida\Helpers\Sesion::iniciar();

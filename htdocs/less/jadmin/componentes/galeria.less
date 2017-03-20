@@ -1,0 +1,32 @@
+.jida-galeria-media{
+  li{
+    figure{
+      
+      height:130px;
+      overflow:hidden;
+      width:130px;
+      overflow:hidden;
+      border:4px solid transparent;
+      cursor:pointer;
+      
+      &.selected{
+        border-color:@brand-primary;
+      }
+      img{
+        width:140px;
+        object-fit:cover;
+      }
+      
+    }
+  }
+   
+}
+.jida-container.galeria{
+  .objeto-media-detalle{
+    
+    img{
+      max-height:500px;  
+    }
+    
+  }
+}
