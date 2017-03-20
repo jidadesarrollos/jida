@@ -1049,7 +1049,7 @@ class Pagina{
 	 	return $this->htdocs($folder, $item,$tema);
 	 }
 	 
-	 function link($url){
+	 function enlace($url){
 	 	$path = (defined('URL_BASE'))?URL_BASE:'';
 	 	return $path . $url;
 	 }
