@@ -1,0 +1,77 @@
+{
+    "nombre": "Gestión de Formularios",
+    "query": "select id_form,nombre_f,query_f,clave_primaria_f,estructura from s_formularios",
+    "estructura": null,
+    "identificador": "Formularios",
+    "clave_primaria": "id_form",
+    "campos": [
+        {
+            "label": "",
+            "name": "id_form",
+            "eventos": {},
+            "opciones": "",
+            "orden": "0",
+            "placeholder": "",
+            "class": "",
+            "data_atributo": "",
+            "visibilidad": "1",
+            "id": "id_form",
+            "type": "hidden"
+        },
+        {
+            "label": "Nombre Formulario",
+            "name": "nombre_f",
+            "maxlength": "30",
+            "size": "30",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Debes ingresar un nombre que identifique al formulario"
+                }
+            },
+            "orden": "1",
+            "visibilidad": "1",
+            "id": "nombre_f",
+            "type": "text"
+        },
+        {
+            "label": "Query",
+            "name": "query_f",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "El campo es obligatorio"
+                }
+            },
+            "orden": "2",
+            "visibilidad": "1",
+            "id": "query_f",
+            "type": "textarea"
+        },
+        {
+            "label": "Clave Primaria",
+            "name": "clave_primaria_f",
+            "maxlength": "30",
+            "size": "30",
+            "eventos": {},
+            "opciones": "",
+            "orden": "1",
+            "placeholder": "",
+            "class": "",
+            "data_atributo": "",
+            "visibilidad": "1",
+            "id": "clave_primaria_f",
+            "type": "text"
+        },
+        {
+            "label": "Estructura",
+            "name": "estructura",
+            "maxlength": "50",
+            "size": "50",
+            "orden": "4",
+            "placeholder": "Estructura",
+            "title": "Estructura de creacion del formulario",
+            "visibilidad": "1",
+            "id": "estructura",
+            "type": "text"
+        }
+    ]
+}

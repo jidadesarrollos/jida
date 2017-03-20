@@ -208,15 +208,15 @@ class Formulario extends  Selector{
 	/**
 	 *
 	 */
-	function __construct($form="",$idUpdate=""){
+	function __construct($form="",$update=""){
 		if($form){
 			$this->_cargarFormulario($form);
 		}
-		$this->_idUpdate=$idUpdate;
+		$this->_idUpdate=$update;
 		debug_backtrace()[1]['function'];
-		if(!empty($idUpdate)){
-			$this->_obtenerDataUpdate();
-			$this->addDataUpdate();
+        
+		if(!empty($update)){
+			$this->_procesarUpdate();
 		}
 		$this->action = JD('URL');
 		$this->attr('action',$this->action);
@@ -224,6 +224,20 @@ class Formulario extends  Selector{
 		parent::__construct('form');
 
 	}
+    /**
+     * Procesa la informacion para renderizar el formulario en modo update
+     */
+    private function _procesarUpdate($update){
+        
+        if(is_array($update)){
+            
+
+        }else{
+            $this->_obtenerDataUpdate();
+                        
+        }
+        $this->addDataUpdate();
+    }
 	/**
 	 * Remueve la etiqueta FORM del formulario
 	 *

@@ -681,7 +681,7 @@ global $JD;
             $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
 
         }catch(Excepcion $e){
-
+            
             $metodo = $this->metodo;
             $this->vista->data->setVistaAsTemplate('error');
             $this->vista->establecerAtributos(['modulo'=>'jadmin']);
