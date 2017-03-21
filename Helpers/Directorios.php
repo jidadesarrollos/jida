@@ -176,8 +176,7 @@ class Directorios extends \Directory{
             if (is_dir($files)){
                 self::eliminar($files);
             }else{
-
-                if(unlink($files)) return true;
+                unlink($files); 
             }
         }
 

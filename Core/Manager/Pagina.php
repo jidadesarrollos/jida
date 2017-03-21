@@ -735,7 +735,8 @@ class Pagina{
 				$html = Selector::crear('script',['src'=>$path . $libreria],null,$cont);
 				break;
 			case 'link':
-				$libreria['src'] = $path . $libreria['src']; 
+				
+				$libreria['href'] = $path . $libreria['href']; 
 				$html = Selector::crear('link',$libreria,null,$cont);
 				break;
 			default:
@@ -1048,7 +1049,7 @@ class Pagina{
 	 	return $this->htdocs($folder, $item,$tema);
 	 }
 	 
-	 function link($url){
+	 function enlace($url){
 	 	$path = (defined('URL_BASE'))?URL_BASE:'';
 	 	return $path . $url;
 	 }

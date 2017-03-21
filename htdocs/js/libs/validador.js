@@ -151,7 +151,7 @@
             	 if(typeof(validaciones)=='string'){
             	 	validaciones = JSON.parse(validaciones);
             	 }
-                return validaciones
+                return validaciones;
             }else{
                 if(this.config.validaciones[$ele.attr('id')]!='undefined')
                     return this.config.validaciones[$ele.attr('id')];
@@ -286,8 +286,8 @@
                 var validacionesCampo = vj.obtValidacionesCampo($campo);
                 var msj="";
                 var divError = vj.$form.find("."+vj.config.cssError);
-                console.log(typeof validacionesCampo,validacionesCampo,jv.errores)
-                console.log(errorCampo,jValidador.validaciones[errorCampo])
+                console.log(typeof validacionesCampo,validacionesCampo,jv.errores);
+                console.log(errorCampo,jValidador.validaciones[errorCampo]);
                 if(validacionesCampo[errorCampo]!= undefined){
                 
                     msj = (validacionesCampo[errorCampo].mensaje)?validacionesCampo[errorCampo].mensaje:jValidador.validaciones[errorCampo].mensaje;    
@@ -397,7 +397,7 @@
 				}
               	valor = $condicional.val();  
 	            console.log("==============");
-	            console.log($campo)
+	            console.log($campo);
 	            console.log(arr,nombreCampo,valor);
 	            }else{
 	              valor = $condicional.val();
@@ -491,7 +491,7 @@
                 var celularValido = (expresionCel.test(valorCampo))?1:0;
                 var TelefonoValido = (expresionTlf.test(valorCampo))?1:0;
                 var internacionalValido =(expresionInter.test(valorCampo))?1:0;
-                console.log("valido?",celularValido,parametros.tipo)
+                console.log("valido?",celularValido,parametros.tipo);
                 if( 
                 	parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
                     parametros.tipo=='celular' && celularValido==1 ||
@@ -560,7 +560,7 @@
           caracteresEspeciales:{expr:/^([^(*=;\\)])*$/,mensajes:"Caracteres invalidos en el campo"},      
           tiny:{mensaje:"El campo es obligatorio"},
           alfanumerico:{expr:/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\' ]*$/,mensaje:"El campo solo puede contener letras y numeros"},
-          documentacion:{expr:/^([V|E|G|J|P|N]{1}\d{8,10})*$/,mensaje:"El campo debe tener el siguiente formato J-18935170"},
+          documentacion:{expr:/^(([V|E|G|J|P|N]{1})?\d{7,10})*$/,mensaje:"El campo debe tener el siguiente formato J18935170 o 18935170"},
           programa:{expr:/^[\d\/\.A-Za-z_-]*$/,mensaje:"El campo solo puede contener letras, guion y underscore"},
           minuscula:{expr:/[a-z]/,mensaje:"La contraseña debe tener al menos una minuscula"},
           mayuscula:{expr:/[A-Z]/,mensaje:"La contraseña debe tener al menos una mayuscula"},

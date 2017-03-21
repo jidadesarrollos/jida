@@ -5,9 +5,10 @@ var Storage = {
             value = JSON.stringify(value);
         localStorage[key] = value;
     },
+    
     obt :function(key){
         if(localStorage.getItem(key)!== null){
-            return localStorage.getItem(key)
+            return localStorage.getItem(key);
         }
         return false;
     },
@@ -16,14 +17,12 @@ var Storage = {
         if(this.obt(key)){
             return JSON.parse(this.obt(key));
         }
-
     },
 
     borrar:function(key){
         localStorage.removeItem(key);
         return this;
     }
-
 
 };
 var menuConfig ={
@@ -96,6 +95,27 @@ function toggleMenu(open){
  	}
  	Storage.set('menuAdmin',menuConfig);
 }
+
+function  processUrl(key,value){
+	 key = encodeURI(key); value = encodeURI(value);
+
+    var kvp = document.location.search.substr(1).split('&');
+
+    var i=kvp.length; var x; 
+    while(i--){
+        x = kvp[i].split('=');
+
+        if (x[0]==key)
+        {
+            x[1] = value;
+            kvp[i] = x.join('=');
+            break;
+        }
+    }
+    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+    return kvp.join('&');
+
+}
 (function($){
 	console.log('Jida Administrador');
 	/**
@@ -108,7 +128,7 @@ function toggleMenu(open){
 	}else{
 		Storage.set('menuAdmin',menuConfig);
 	}
-
+	
 	var $linkToggle = $('.menu-toggle');
 	if($('#content-wrapper').hasClass('short-menu'));
 		addMenuTooltip();
@@ -124,7 +144,18 @@ function toggleMenu(open){
 
 
 	 });
-	 console.log(dataMenu)
+
+	 console.log(dataMenu);	 
+	 // $('.nav-aside').on('click','a',function(e){
+	 	// var $this = $(this);
+	 	// if(!$this.hasClass('menu-toggle')){
+		 	// e.preventDefault();
+		 	// params = processUrl('showmenu',dataMenu.showMenu);
+		 	// console.log(e.target.href+'?'+params);
+		 	// window.location.href = e.target.href+'?'+params;
+	 	// }
+	 // });
+
 	 $linkToggle.on('click',function(){
 		setLinkMenuClass($linkToggle);
 		band = (dataMenu.showMenu)?false:true;
@@ -136,6 +167,7 @@ function toggleMenu(open){
 	 	selector:'[data-toggle="tooltip"]',
 	 	placement:'right'
 	 });
+	 
 })(jQuery);
 
 
