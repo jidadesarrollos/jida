@@ -12,9 +12,7 @@ namespace Jida\Jadmin\Modulos\menus\Controllers;
 
 use Exception;
 use Jida\Helpers as Helpers;
-use Jida\RenderHTML as RenderHTML;
 use Jida\Render as Render;
-use Jida\Modelos\Viejos as ModelosViejos;
 use Jida\Modelos as Modelos;
 
 
@@ -27,13 +25,13 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
         $this->layout="jadmin.tpl.php";
         $this->url="/jadmin/menus/";
         parent::__construct();
-
     }
 
     public function index() {
 
-
-        $tabla = new Render\jvista('Jida\Modelos\Menus.obtMenus',['titulos'=>['nombre']],'Menus');
+        $tabla = new Render\JVista('Jida\Modelos\Menus.obtMenus',
+    								['titulos'=>['nombre']],'Menus'
+								  );
 
         $tabla->accionesFila([
                 ['span'=>'glyphicon glyphicon-folder-open','title'=>'Opciones menu','href'=>'/jadmin/menus/opciones/{clave}'],
@@ -42,39 +40,42 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
                  'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
             ]);
 
-        $tabla->addMensajeNoRegistros('No hay Menus Registrados', [
-                                                                'link'  =>$this->obtUrl(''),
-                                                                'txtLink' =>'Crear Menu'
-                                                                ]);
-        $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('gestionMenu')]]);
+        $tabla->addMensajeNoRegistros('No hay Menus Registrados',
+        								['link'  =>$this->obtUrl(''),
+                                         'txtLink' =>'Crear Menu']
+									 );
+        $tabla->acciones(['Nuevo' => ['href'=>$this->obtUrl('gestionMenu')]]);
 
         $this->data(['tablaVista'=>$tabla->obtenerVista()]);
 
-
   }
 
-
-    public function gestionMenu($id='')
-    {
-        if ($id != '') {
-            $form = new Render\formulario('Menus',$id);
-            $classMenu = new Modelos\Menus('menus',$id);
-        }else{
-            $form = new Render\formulario('Menus');  
-            $classMenu = new Modelos\Menus('menus',$id); 
-        }
-
+    public function gestionMenu($id=''){
+    	
+    	$form = new Render\Formulario('Menus',$id);
+        $classMenu = new Modelos\Menus($id);
+		
         $form->boton('principal')->attr('value',"Crear menu");
 
         if ($this->post('btnMenus')) {
-            if ($form->validar()) {
-               $classMenu->salvar($this->post()); 
-            }
+            if ($form->validar()){
+				
+            	$this->post('identificador',Helpers\Cadenas::guionCase($this->post('menu')));
+            	
+            	if ($classMenu->salvar($this->post())->ejecutado()):
+               		$tipo = 'suceso';
+					$msj = 'Menu <strong>'.$classMenu->menu.'</strong> creado exitosamente';
+				else:
+					$tipo = 'error';
+					$msj = 'No se pudo crear el menu, por favor, vuelva a intentarlo';
+				endif;
+
+				Render\JVista::msj('menus','suceso', 'Menu <strong>'.$classMenu->menu.'</strong> creado exitosamente',$this->obtUrl('index'));
+			}
         }
 
-        $this->dv->form = $form -> armarFormulario();
+        $this->data(['form' => $form->armarFormulario()]);
     }
-
 
 
     function eliminarMenu($id='') {
@@ -100,4 +101,3 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
     }//fin funcion
 
 }
-

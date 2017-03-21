@@ -14,7 +14,7 @@ use Jida\Helpers as Helpers;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Modelos\Viejos as ModelosViejos;
 use Jida\Modelos as Modelos;
-class MenusController extends JController {
+class MenusOLDController extends JController {
 
     function __construct(){
         $this->layout="jadmin.tpl.php";

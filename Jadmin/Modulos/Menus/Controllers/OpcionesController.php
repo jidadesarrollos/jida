@@ -37,7 +37,10 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
         $nombre = $menu->obt();
 
 
-        $tabla = new Render\jvista('Jida\Modelos\OpcionesMenu.obtOpciones',['titulos'=>['Url','Nombre','Orden','estatus']],'Opciones de menu '.$nombre[0]['nombre_menu']);
+        $tabla = new Render\JVista('Jida\Modelos\OpcionesMenu.obtOpciones',
+					        ['titulos'=>['Url','Nombre','Orden','Estatus']],
+					        'Opciones de Menu '.$nombre[0]['menu']
+						);
 
         $tabla->clausula('filtro',['id_menu'=>$id,'padre'=>$padre]);
 
@@ -51,18 +54,16 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
             ]);
 
 
-        $tabla->addMensajeNoRegistros('No hay opciones Registradas', [
-                                                                'link'  =>$this->obtUrl(''),
-                                                                'txtLink' =>'Crear Opcion'
-                                                                ]); 
-        $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('gestionOpcion',[$id])]]);
-        $tabla->acciones(['volver ' => ['href'=>$this->obtUrl('index',[$id])]]);
+        $tabla->addMensajeNoRegistros('No hay Opciones Registradas',
+        						 		['link'  =>$this->obtUrl('gestionOpcion'),
+					                	 'txtLink' =>'Crear Opcion']
+									 );
+        $tabla->acciones(['Nuevo' => ['href'=>$this->obtUrl('gestionOpcion',[$id])]]);
+        $tabla->acciones(['Volver' => ['href'=>$this->obtUrl('index',[$id])]]);
 
         $this->data(['tablaOpciones'=>$tabla->obtenerVista()]);
 
-
   }
-
 
 
   public function gestionOpcion($id='',$padre=''){

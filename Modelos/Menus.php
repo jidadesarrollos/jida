@@ -19,9 +19,13 @@ class Menus extends BD\DataModel{
 	*/
 	public $id_menu;
 	/**
-	* @var varchar nombre_menu
+	* @var varchar menu
 	*/
-	public $nombre_menu;
+	public $menu;
+	/**
+	* @var varchar identificador
+	*/
+	public $identificador;
 	/**
 	* @var varchar meta_data
 	*/
@@ -30,7 +34,7 @@ class Menus extends BD\DataModel{
 	protected $tablaBD='s_menus';
 
 	function obtMenus(){
-        $this->consulta(['id_menu','nombre_menu']);
+        $this->consulta(['id_menu','menu']);
         return $this->obt('id_menu');
     }
 

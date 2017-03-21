@@ -22,11 +22,15 @@ class Menu extends BD\DataModel {
      * Nombre del menu
      *
      * Descripción breve del menu
-     * @var $nombre_menu
+     * @var $menu
      * @access public
      *
      */
-    var $nombre_menu;
+    var $menu;
+	/**
+	* @var varchar identificador
+	*/
+	var $identificador;
 	/**
 	 * Funcion constructora
 	 */
@@ -41,7 +45,7 @@ class Menu extends BD\DataModel {
 		if(!empty($id) and !is_numeric($id)){
 			parent::__construct();
 
-			$this->obtenerBy($id,'nombre_menu');
+			$this->obtenerBy($id,'menu');
 
 		}else{
 			parent::__construct($id);
@@ -83,18 +87,18 @@ class Menu extends BD\DataModel {
 
 
 	function procesarMenu($post){
-		if(!$this->obtenerMenuByNombre($post['nombre_menu'])){
+		if(!$this->obtenerMenuByNombre($post['menu'])){
 			$guardado  =$this->salvarObjeto(__CLASS__,$post);
             return $guardado;
 		}else{
-			$msj = "Ya existe un menu \"".$post['nombre_menu']."\" registrado";
+			$msj = "Ya existe un menu \"".$post['menu']."\" registrado";
             return $msj;
         }
 	}
 
 
     private function obtenerMenuByNombre($nombre){
-        $query = "select * from s_menus where nombre_menu='$nombre'";
+        $query = "select * from s_menus where menu='$nombre'";
 
         $result = $this->bd->ejecutarQuery($query);
 
