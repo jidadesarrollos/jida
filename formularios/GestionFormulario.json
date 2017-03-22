@@ -1,13 +1,12 @@
 {
     "nombre": "Gestión de Formularios",
-    "query": "select id_form,nombre_f,query_f,clave_primaria_f,estructura from s_formularios",
     "estructura": null,
-    "identificador": "Formularios",
+    "identificador": "GestionFormulario",
     "clave_primaria": "id_form",
     "campos": [
         {
             "label": "",
-            "name": "id_form",
+            "name": "id_formulario",
             "eventos": {},
             "opciones": "",
             "orden": "0",
@@ -15,12 +14,12 @@
             "class": "",
             "data_atributo": "",
             "visibilidad": "1",
-            "id": "id_form",
+            "id": "id_formulario",
             "type": "hidden"
         },
         {
             "label": "Nombre Formulario",
-            "name": "nombre_f",
+            "name": "nombre",
             "maxlength": "30",
             "size": "30",
             "eventos": {
@@ -30,12 +29,12 @@
             },
             "orden": "1",
             "visibilidad": "1",
-            "id": "nombre_f",
+            "id": "nombre",
             "type": "text"
         },
         {
             "label": "Query",
-            "name": "query_f",
+            "name": "query",
             "eventos": {
                 "obligatorio": {
                     "mensaje": "El campo es obligatorio"
@@ -43,22 +42,21 @@
             },
             "orden": "2",
             "visibilidad": "1",
-            "id": "query_f",
+            "id": "query",
             "type": "textarea"
         },
         {
             "label": "Clave Primaria",
-            "name": "clave_primaria_f",
+            "name": "clave_primaria",
             "maxlength": "30",
             "size": "30",
             "eventos": {},
-            "opciones": "",
-            "orden": "1",
+            "opciones": "",    
             "placeholder": "",
             "class": "",
             "data_atributo": "",
             "visibilidad": "1",
-            "id": "clave_primaria_f",
+            "id": "clave_primaria",
             "type": "text"
         },
         {
@@ -66,7 +64,6 @@
             "name": "estructura",
             "maxlength": "50",
             "size": "50",
-            "orden": "4",
             "placeholder": "Estructura",
             "title": "Estructura de creacion del formulario",
             "visibilidad": "1",

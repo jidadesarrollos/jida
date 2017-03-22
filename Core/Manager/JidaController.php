@@ -244,7 +244,6 @@ global $JD;
     private function procesarURL(){
 
         $primerParam =array_shift($this->_arrayUrl);
-
         if($primerParam=='jadmin'){
             $this->_esJadmin=TRUE;
             $this->_procesarJadmin();
@@ -335,6 +334,7 @@ global $JD;
         $band = true;
 
         if(empty($posController)){
+            
             $band = false;
         }else{
             $controller = $this->validarNombre($posController,1).'Controller';
@@ -344,6 +344,7 @@ global $JD;
         }
 
         if($band and (class_exists($controllerAbsoluto) or class_exists($controller))){
+            
 			if(class_exists($controllerAbsoluto))
 			{
 				$this->_controlador = $controllerAbsoluto;
@@ -370,7 +371,7 @@ global $JD;
                // $this->_nombreControlador = $this->_controladorDefault;
            // }
 
-
+       
               $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
               $this->_nombreControlador = $this->_controladorDefault;
         }
@@ -420,9 +421,12 @@ global $JD;
         $checkModulo = FALSE;
 		$path = '\\App\\Jadmin\\Controllers\\';
 		$posController = array_shift($this->_arrayUrl);
+        
+        
 		if(!$this->esControlador($path, $posController)){
-
-			array_unshift($this->_arrayUrl,$posController);
+            if($posController)
+			 array_unshift($this->_arrayUrl,$posController);
+            
 			if($this->esModulo()){
 
 	            //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
