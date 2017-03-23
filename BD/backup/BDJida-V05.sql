@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: lfescuelas
+-- Host: 127.0.0.1    Database: cleanmallorca
 -- ------------------------------------------------------
 -- Server version	5.6.21
 
@@ -333,9 +333,14 @@ DROP TABLE IF EXISTS `s_menus`;
 CREATE TABLE `s_menus` (
   `id_menu` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_menu` varchar(30) NOT NULL,
+  `identificador` varchar(50) DEFAULT NULL,
   `meta_data` varchar(200) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  `id_usuario_creador` int(11) DEFAULT NULL,
+  `id_usuario_modificador` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_menu`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,7 +349,7 @@ CREATE TABLE `s_menus` (
 
 LOCK TABLES `s_menus` WRITE;
 /*!40000 ALTER TABLE `s_menus` DISABLE KEYS */;
-INSERT INTO `s_menus` VALUES (1,'Principal',NULL),(2,'Administrador',NULL),(3,'topCliente',NULL),(4,'esp',NULL),(5,'ing',NULL);
+INSERT INTO `s_menus` VALUES (1,'Principal',NULL,NULL,NULL,NULL,NULL,NULL),(2,'Administrador',NULL,NULL,NULL,NULL,NULL,NULL),(4,'esp',NULL,NULL,NULL,NULL,NULL,NULL),(5,'ing',NULL,NULL,NULL,NULL,NULL,NULL),(8,'Clean Mallorca','clean-mallorca',NULL,'2017-03-21 13:16:25','2017-03-21 13:16:25',3,3);
 /*!40000 ALTER TABLE `s_menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,17 +516,19 @@ CREATE TABLE `s_opciones_menu` (
   `nombre_opcion` varchar(100) NOT NULL,
   `padre` int(11) DEFAULT NULL,
   `hijo` tinyint(1) DEFAULT NULL,
-  `fecha_creacion` datetime DEFAULT NULL,
-  `fecha_modificacion` datetime DEFAULT NULL,
-  `icono` varchar(100) DEFAULT NULL,
   `orden` int(11) DEFAULT NULL,
+  `icono` varchar(100) DEFAULT NULL,
   `id_estatus` int(11) DEFAULT NULL,
   `selector_icono` int(11) DEFAULT NULL,
   `id_metodo` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  `id_usuario_creador` int(11) DEFAULT NULL,
+  `id_usuario_modificador` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_opcion_menu`),
   KEY `id_menu` (`id_menu`),
   CONSTRAINT `s_opciones_menu_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `s_menus` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -530,7 +537,7 @@ CREATE TABLE `s_opciones_menu` (
 
 LOCK TABLES `s_opciones_menu` WRITE;
 /*!40000 ALTER TABLE `s_opciones_menu` DISABLE KEYS */;
-INSERT INTO `s_opciones_menu` VALUES (1,1,'/jadmin/forms/','Formularios',0,1,'2014-02-13 13:01:11','2014-08-08 10:56:35','nc-icon-glyph ui-1_edit-76',101,1,1,NULL),(2,1,'/jadmin/menus/','Menus',0,0,'2014-02-13 13:01:11',NULL,'nc-icon-glyph ui-2_menu-34',100,1,1,NULL),(3,1,NULL,'ACL',0,1,'2014-02-13 13:01:11',NULL,'nc-icon-glyph ui-1_lock',100,1,1,NULL),(4,1,'/jadmin/objetos/','Objetos',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(5,1,'/jadmin/componentes/','Componentes',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(9,1,'/jadmin/perfiles/','Perfiles',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(10,1,'/jadmin/users/cierresesion/','Cerrar Sesión',0,0,NULL,'2014-09-02 22:30:26','nc-icon-glyph ui-1_edit-78',200,1,1,NULL),(11,1,'/jadmin/users/','Usuarios',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(27,1,'/jadmin/forms/jida-forms','Jida',1,0,'2014-08-04 05:31:21','2014-08-08 10:37:52',NULL,NULL,1,1,NULL),(28,1,'/jadmin/forms/filter/aplicacion','Aplicaci&oacute;n',1,0,'2014-08-04 05:54:06','2014-08-04 05:54:06','fa-plus-square-o',2,1,1,NULL),(29,1,'/algo-distinto/','1',1,0,'2014-08-08 10:57:10','2014-08-08 10:57:10',NULL,10,1,1,NULL),(33,1,'/jadmin/olds','Forms Viejos',0,0,NULL,NULL,'nc-icon-glyph business_atm',99,1,1,NULL),(34,4,'/','Sobre MyDDoc',0,0,NULL,NULL,NULL,1,1,NULL,NULL),(35,4,'/services','Servicios',0,0,NULL,NULL,NULL,3,1,NULL,NULL),(36,4,'/page-features','Funcionalidades',0,0,NULL,NULL,NULL,2,1,NULL,NULL),(37,4,'/en','',0,0,NULL,NULL,'',10,1,NULL,NULL),(38,5,'/en','About MyDDoc',0,0,NULL,NULL,NULL,1,1,NULL,NULL),(39,5,'/en/page-features','Services',0,0,NULL,NULL,NULL,3,1,NULL,NULL),(40,5,'/en/services','Functions',0,0,NULL,NULL,NULL,2,1,NULL,NULL),(41,5,'/es','',0,0,NULL,NULL,NULL,10,1,NULL,NULL),(42,4,'/prensa','Prensa',0,0,NULL,NULL,NULL,4,1,NULL,NULL),(43,5,'/en/prensa','Press',0,0,NULL,NULL,NULL,4,1,NULL,NULL);
+INSERT INTO `s_opciones_menu` VALUES (1,1,'/jadmin/forms/','Formularios',0,1,101,'nc-icon-glyph ui-1_edit-76',1,1,NULL,NULL,NULL,NULL,NULL),(2,1,'/jadmin/menus/','Menus',0,0,100,'nc-icon-glyph ui-2_menu-34',1,1,NULL,NULL,NULL,NULL,NULL),(3,1,NULL,'ACL',0,1,100,'nc-icon-glyph ui-1_lock',1,1,NULL,NULL,NULL,NULL,NULL),(4,1,'/jadmin/objetos/','Objetos',3,0,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,'/jadmin/componentes/','Componentes',3,0,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(9,1,'/jadmin/perfiles/','Perfiles',3,0,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(10,1,'/jadmin/users/cierresesion/','Cerrar Sesión',0,0,200,'nc-icon-glyph ui-1_edit-78',1,1,NULL,NULL,NULL,NULL,NULL),(11,1,'/jadmin/users/','Usuarios',3,0,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(27,1,'/jadmin/forms/jida-forms','Jida',1,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL),(28,1,'/jadmin/forms/filter/aplicacion','Aplicaci&oacute;n',1,0,2,'fa-plus-square-o',1,1,NULL,NULL,NULL,NULL,NULL),(29,1,'/algo-distinto/','1',1,0,10,NULL,1,1,NULL,NULL,NULL,NULL,NULL),(33,1,'/jadmin/olds','Forms Viejos',0,0,99,'nc-icon-glyph business_atm',1,1,NULL,NULL,NULL,NULL,NULL),(34,4,'/','Sobre MyDDoc',0,0,1,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(35,4,'/services','Servicios',0,0,3,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(36,4,'/page-features','Funcionalidades',0,0,2,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(37,4,'/en','',0,0,10,'',1,NULL,NULL,NULL,NULL,NULL,NULL),(38,5,'/en','About MyDDoc',0,0,1,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(39,5,'/en/page-features','Services',0,0,3,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(40,5,'/en/services','Functions',0,0,2,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(41,5,'/es','',0,0,10,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(42,4,'/prensa','Prensa',0,0,4,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(43,5,'/en/prensa','Press',0,0,4,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),(44,NULL,NULL,'Inicio',NULL,NULL,1,NULL,1,1,NULL,'2017-03-21 13:43:38','2017-03-21 13:43:38',3,3);
 /*!40000 ALTER TABLE `s_opciones_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -622,7 +629,7 @@ CREATE TABLE `s_usuarios` (
 
 LOCK TABLES `s_usuarios` WRITE;
 /*!40000 ALTER TABLE `s_usuarios` DISABLE KEYS */;
-INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Julio','Rodriguez',NULL,NULL,NULL,NULL),(2,'jeanpierre','3711be79067177199efb2589054a6894','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1',NULL,NULL,NULL,NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Felix','Tovar',NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Dayan','Gonzalez',NULL,NULL,NULL,NULL),(5,'admin','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Admin',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'2017-03-22 15:35:44','1','Julio','Rodriguez',NULL,NULL,NULL,NULL),(2,'jeanpierre','3711be79067177199efb2589054a6894','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1',NULL,NULL,NULL,NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'2017-03-21 13:06:35','1','Felix','Tovar',NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Dayan','Gonzalez',NULL,NULL,NULL,NULL),(5,'admin','e10adc3949ba59abbe56e057f20f883e','0000-00-00 00:00:00','0000-00-00 00:00:00',1,1,'0000-00-00 00:00:00','1','Admin',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -791,4 +798,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-20 11:57:31
+-- Dump completed on 2017-03-23 16:11:49
