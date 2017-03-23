@@ -56,7 +56,7 @@ class DataModel{
      * @var array $unico
      * @example ['nombre',['valor1','valor2'],'valor3'];
      */
-    protected $unico=array();
+    protected $unico=[];
     protected $registroMomentoGuardado=TRUE;
     protected $registroUser=TRUE;
 
@@ -132,7 +132,7 @@ class DataModel{
      * Arreglo con las propiedades de base de datos del objeto
      * @var array $propiedades
      */
-    private $propiedades=array();
+    private $propiedades=[];
 
 	/**
 	 * @var string $consultaRelaciones Registra el string de las consultas para
@@ -144,7 +144,7 @@ class DataModel{
 
     /**
      * Arreglo que registra las propiedades de la clase que son objetos
-     * @var $propiedadesObjetos = array();
+     * @var $propiedadesObjetos = [];
      */
      private $propiedadesObjetos;
 
@@ -180,7 +180,7 @@ class DataModel{
      * Registra los valores iniciales al realizar una instancia de base de datos
      * @var array $valoresIniciales
      */
-    private $valoresIniciales=array();
+    private $valoresIniciales=[];
     /**
      * Nombre de la clase instanciada
      * @var $_clase
@@ -317,8 +317,6 @@ class DataModel{
 					if(array_key_exists('fk', $class))
 						$this->$nombreClass = new $relacion(null,$this->nivelActualORM);					
 					
-					// Debug::imprimir($this->$nombreClass,'$this->$nombreClass',true);
-
 			  }else{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);
 			  }
@@ -326,7 +324,6 @@ class DataModel{
 			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
-                    // Debug::imprimir($class,$nombreClass);
 
 					$this->$nombreClass = new $class(null,$this->nivelActualORM);
 				}
@@ -480,7 +477,6 @@ class DataModel{
                     	->join($relacion,$camposRelacion)
                         ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
                         ->agrupar($camposRelacion);
-                                ;
                 }
 
             }else{
@@ -491,14 +487,11 @@ class DataModel{
 				$nombreRelacion = $data;
 				$objRelacion->consulta()
 							->filtro([$this->pk=>$this->{$this->pk}]);
-				;
             }
 
-
-                $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
+            $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
         }
 
-        // Helpers\Debug::imprimir('$this->consultaRelaciones[$nombreRelacion]',$this->consultaRelaciones);
 		return $this;
 	}
 
@@ -582,7 +575,6 @@ class DataModel{
     	if(count($data)<1){
     		$data = $this->__obtConsultaInstancia($id)->fila();
     	}
-
 
         $this->valoresIniciales = $data;
         $this->establecerAtributos ( $data, $this->_clase );
@@ -736,7 +728,7 @@ class DataModel{
     private function obtenerPropiedadesObjeto() {
         $this->reflector = new ReflectionClass($this->_clase);
         $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
-        $arrayPropiedades = array();
+        $arrayPropiedades = [];
 
         foreach($propiedades as $propiedad ) {
             if (!$propiedad->isStatic()) {
@@ -1126,14 +1118,13 @@ class DataModel{
      * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
      */
     function order($order,$type='asc'){
-
-       if(is_array($order)){
-        $order = implode(",", $order);
-       }
+    		
+    	if(is_array($order))
+    		$order = implode(",", $order);
+			
 	   $campoOrden = strpos($order,'.')?$order:$this->tablaQuery.".".$order;
        $this->order = "Order by ".$campoOrden ." ".$type;
 
-       //Debug::string($this->order." ".$this->_clase);
        return $this;
     }
     function condicion($cond){
@@ -1438,14 +1429,18 @@ class DataModel{
         if(empty($property)) $property=$this->pk;
 
         if(array_key_exists($property, $this->propiedades)){
+        	
             $data = $this->consulta()
                         ->filtro([$property=>$valor])
                         ->fila();
+						
             if($this->bd->totalRegistros>0){
+            	
                 $this->valoresIniciales = $data;
                 $this->establecerAtributos($data,$this->_clase);
 
                 if($this->nivelActualORM<=$this->nivelORM){
+                	
                     $this->identificarObjetosRelacion();
                     $this->obtenerDataRelaciones();
                 }
@@ -1603,7 +1598,7 @@ class DataModel{
         return $campos;
     }
 
-    private function estructuraInsert($data=array(),$insertPK=false){
+    private function estructuraInsert($data=[],$insertPK=false){
 
         if(count($data)<1){
             $data = $this->propiedades;
@@ -1657,6 +1652,11 @@ class DataModel{
     }//fin crearInsert
     private function modificar(){
 
+        $dataUpdate = [];		
+		// if(!is_array($this->valoresIniciales)){ 		
+			// $this->valoresIniciales = [];			
+		// }
+
         $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
 
         if(count($dataUpdate)>0){
@@ -1664,15 +1664,12 @@ class DataModel{
                 $idUser = Helpers\Sesion::get('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
                 if(Helpers\Sesion::checkLogg()){
-
-
                     if(is_object(Helpers\Sesion::get('Usuario'))) $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('Usuario')->id_usuario;
                     elseif(array_key_exists('id_usuario', Helpers\Sesion::get('usuario'))){
                         $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('usuario','id_usuario');
                     }
                 }
-
-            };
+            }
 
             $update = "UPDATE $this->tablaBD SET ";
             $i=0;
@@ -1746,7 +1743,7 @@ class DataModel{
          if(!is_array($this->unico))
             throw new Exception("No se ha creado correctamente el arreglo unico", 212);
          if(count($this->unico)>0){
-             $filtro = array();
+             $filtro = [];
              foreach ($this->unico as $key => $valorUnico) {
                     if(is_array($valorUnico)){
                         $i=0;
@@ -1791,7 +1788,7 @@ class DataModel{
     }
 
     private function _obtenerSingular($palabra){
-        $arrayPalabra=array();
+        $arrayPalabra=[];
         $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
             foreach ($palabra as $key => $word) {

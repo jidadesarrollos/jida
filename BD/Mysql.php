@@ -330,18 +330,19 @@ class Mysql extends ConexionBD{
         return $arr;
     }
     function obtenerArrayAsociativo($result=""){
-
-          if($result){
-            $this->result = $result;
-          }
-          if($this->codificarHTML===TRUE){
-          	$arr = Cadenas::codificarArrayToHTML($this->result->fetch_assoc());
-          }else{
-          	$arr = $this->result->fetch_assoc();
-          }
-
-
-          return $arr;
+			
+		$arr=[];
+		
+		if($result)
+			$this->result = $result;
+		
+		
+		if($this->codificarHTML===TRUE)
+			$arr = Cadenas::codificarArrayToHTML($this->result->fetch_assoc());
+		else
+			$arr = $this->result->fetch_assoc();
+		
+		return $arr;
     }
     /**
      * undocumented function
