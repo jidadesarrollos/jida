@@ -9,11 +9,29 @@
 
 */
 namespace Jida\Modelos;
-class CampoFormulario extends JCampoFormulario{
+use Jida\Core as Core;
+class CampoFormulario{
 
-
-
-	protected $pk='id_campo';
-	protected $tablaBD='s_campos_f';
+    use Core\ObjetoManager;
+    
+    var $label;
+    var $name;
+    var $eventos;
+    var $opciones;
+    var $orden;
+    var $placeholder;
+    var $class;
+    var $data_atributo;
+    var $visibilidad;
+    var $id;
+    var $type;
+    
+    function __construct($campo=""){
+        
+        if(!empty($campo) and is_object($campo)){
+            $this->establecerAtributos($campo,$this);        
+        }
+        
+    }
 
 }//fin clase

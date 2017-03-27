@@ -65,7 +65,7 @@ class Archivo{
     /**
      * Define el directorio de ubicacion del archivo
      */
-    protected $directorio;
+    public static $directorio;
     function __construct($file=""){
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
@@ -351,7 +351,8 @@ class Archivo{
      * @since 0.5.1
      */
     static function existe($file=""){
-        if(empty($file))$file=self::directorio;
+        if(empty($file))$file=self::$directorio;
+        
         if(file_exists($file)){
             return true;
         }else{return false;};

@@ -371,6 +371,7 @@ class Formulario extends  Selector{
 				$btn->data('jida','validador');
 			}
 			$this->_botones['principal'] = $btn;
+            
 		}
 
 	}
@@ -741,16 +742,24 @@ class Formulario extends  Selector{
 	 *
 	 *
 	 */
-	function boton($boton,$label=""){
+	function boton($boton,$label="",$selector="button"){
 		if(array_key_exists($boton, $this->_botones)){
 			
-			if(!empty($label)) $this->_botones[$boton]->innerHTML($label);
+			if(!empty($label)){
+			    $btn = $this->_botones[$boton];
+                if($btn->obtSelector() == 'input'){
+                    $this->_botones[$boton]->attr('value',$label);
+                }else{
+                    $this->_botones[$boton]->innerHTML($label);      
+                }
+			    
+			} 
 			
 			return $this->_botones[$boton];
 
 		}else{
 	
-			$btn = new Selector('button',['type'=>"button","name"=>$boton,"id"=>$boton]);
+			$btn = new Selector($selector,['type'=>"submit","name"=>$boton,"id"=>$boton]);
 			$btn->innerHTML($label);
 			return $this->_botones[$boton] = $btn;
 		}

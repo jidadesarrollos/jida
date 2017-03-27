@@ -19,9 +19,16 @@ class FormulariosController extends JController{
     
     private $_rutaJida;
     public $manejoParams = TRUE;
+    /**
+     * @property object $_formulario Objeto std creado a partir del JSON de un formulario cargado
+     */
+    private $_formulario;
     function __construct(){
+
         parent::__construct();
         $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
+        $this->dv->incluirJS('/Framework/htdocs/js/jadmin/formularios.js',FALSE);
+        
     }
     function index(){
         
@@ -78,93 +85,115 @@ class FormulariosController extends JController{
         return false;
     }
     private function _dataFormulario($formulario){
-            
+        
         $archivoFormulario = $this->_rutaJida . '/' . $formulario;
+        
         if(Helpers\Archivo::existe($archivoFormulario)){
+            
             $contenido =file_get_contents($archivoFormulario);
             $data = json_decode($contenido);
+            
             if(is_object($data)){
                 return [
-                    'id'=> $data->identificador,
-                    'nombre'=> $data->nombre,
-                    'estructura' => property_exists($data, 'estructura')?$data->estructura:'',
-                    'identificador'=> $data->identificador,
-                    'clave_primaria'=> property_exists($data, 'clave_primaria')?$data->clave_primaria:'',
-                    'campos'=>count($data->campos),
-                    'query'=>(property_exists($data, 'query'))?$data->query:""
+                    'id'=> $this->_formulario->identificador,
+                    'nombre'=> $this->_formulario->nombre,
+                    'estructura' => $this->_formulario->estructura,
+                    'identificador' => $this->_formulario->identificador,
+                    'clave_primaria' => $this->_formulario->clave_primaria,
+                    'campos' => count($this->_formulario->campos),
+                    'query' => $this->_formulario->query
                 
                 ];    
             }
         }
     }
     
-    private function _formulario($formulario){
-        $archivoFormulario = $this->_rutaJida . '/' . $formulario;
-        if(Helpers\Archivo::existe($archivoFormulario)){
-                
-            $contenido =file_get_contents($archivoFormulario);
-            $data = json_decode($contenido);
-            return $data;
-            
-        }
+    private function _instanciarFormulario($id){
+        
+        $nombreFormulario = $id .'.json';
+        $ubicacion = $this->_rutaJida . '/' . $nombreFormulario;
+        $formulario = new \Jida\Modelos\Formulario($ubicacion);
+        
+        $this->_formulario = $formulario;
+        
+        
     }
-    
+
     function gestion($id=""){
         
         //$this->dv->usarPlantilla('formulario');
+        $this->_instanciarFormulario($id);
         $nombreFormulario = $id .'.json';
-        $form = $this->_dataFormulario($nombreFormulario);
+        $dataForm = $this->_dataFormulario($nombreFormulario);
         
-        if($form){
+        if($dataForm){
             
-            $form = new Render\Formulario('GestionFormulario',$form);
+            $form = new Render\Formulario('GestionFormulario',$dataForm);
+            $form->boton('principal','Guardar y editar campos');
+            // $form->boton('btnCampos','Guardar y editar campos')
+                // ->attr([
+                    // 'id'    => 'btnCampos',
+                    // 'href'  => $this->obtUrl('gestionCampos')
+                // ]);
+            if(empty($id)){
+                
+                $form->titulo('Crear Nuevo Formulario');    
+            }else{    
+                $form->titulo('Editar <strong>' . $dataForm['nombre']. '</strong>');
+            }
             
-            if($this->post('btnGestionFormulario')){
+            if($this->post('btnGestionFormulario') or $this->post('btnCampos')){
                 if($this->_guardarFormulario($nombreFormulario)){
-                    
-                    Render\Formulario::msj('suceso','Formulario Registrado exitosamente',$this->obtUrl('index'));
+                  
+                  $this->redireccionar($this->obtUrl('gestionCampos',[$id]));
+                }else{
+                    exit("no guarda");
                 }
             }    
             $this->data([
                 'form' =>$form->armarFormulario()
             ]);
         }else{
-            Render\JVista::msj('formularios','alerta','No existe el formulario solicitado',$this->obtUrl('index'));
+            Render\JVista::msj('formularios','warning','No existe el formulario solicitado',$this->obtUrl('index'));
         }
        
     }
+
+    function gestionCampos($id=""){
+        if(!empty($id)){
+                
+            $this->_instanciarFormulario($id);
+            
+            $this->data([
+                'campos' => $this->_formulario->campos,
+                'idFormulario' => $id
+            ]);
+            
+        }else{
+            $this->_404();
+        }
+    }
+
+    /**
+     * Gestiona el guardado del formulario
+     * @param string $nombreFormulario identificador del formulario en UpperCamelCase
+     */
     function _guardarFormulario($nombreFormulario){
         
         $post = $this->post();
-        $form = $this->_formulario($nombreFormulario);
         $bandera=false;
-        
-        foreach ($post as $key => $valor) {
-                
-            if(property_exists($form,$key)){
-                    
-                $bandera = true;
-                $form->{$key} = $valor;
-                $json  = json_encode($form,JSON_PRETTY_PRINT,JSON_UNESCAPED_SLASHES);
-                
-            }
+
+        if($this->_formulario->salvar($post)){
             
+          $msj = Helpers\Mensajes::crear('suceso','Formulario guardado correctamente');
+          Helpers\Sesion::set('__msj',$msj);
+          return true;      
         }
-        if($bandera){
-            if(!Helpers\Directorios::validar(DIR_APP . 'formularios/')){
-             
-                Helpers\Directorios::crear(DIR_APP . 'formularios/');
-            }
-            $this
-                ->crear(DIR_APP . 'formularios/'.$form->identificador.".json")
-                ->escribir($json)
-                ->cerrar();
-        }
+        return false;
+      
     }
     function eliminar(){
         
     }
-    function gestionCampos(){
-        
-    }
+    
 }

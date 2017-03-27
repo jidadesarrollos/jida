@@ -41,7 +41,7 @@ trait ObjetoManager{
         else
             $atributos = get_class_vars($clase);
         
-                
+        
         foreach($atributos as $k => $valor){
         	if(is_object($arr)){
         		if(property_exists($arr, $k))

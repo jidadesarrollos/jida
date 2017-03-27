@@ -79,7 +79,11 @@ class DataVista{
         $this->setMetaBasico();
     }
 
-
+    function incluirJS($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+            
+        return $this->addJs($js,$dir,$contentJS,$footer);
+        
+    }
 
     /**
      * Agrega un javascript para ser renderizado en el layout
