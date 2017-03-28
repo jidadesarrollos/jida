@@ -30,7 +30,7 @@ class Menu extends BD\DataModel {
 	/**
 	* @var varchar identificador
 	*/
-	var $identificador;
+	#var $identificador;
 	/**
 	 * Funcion constructora
 	 */
