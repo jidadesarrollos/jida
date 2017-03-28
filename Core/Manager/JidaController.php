@@ -314,8 +314,8 @@ global $JD;
         {
             $clase = new ReflectionClass($this->_controlador);
             $nombreOriginal = $metodo;
-            $metodo = $this->validarNombre($metodo, 1);
-
+            $metodo = $this->validarNombre($metodo, 2);
+			
             if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
                 $this->_metodo = $metodo;
                 return true;
@@ -323,7 +323,7 @@ global $JD;
                 array_unshift($this->_arrayUrl,$nombreOriginal);
             }
 
-            if($error)  throw new Excepcion("El metodo no es valido", 404);
+            if($error)  throw new Excepcion("El metodo no es valido " . $metodo, 404);
 
             return false;
         }else{
