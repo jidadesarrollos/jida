@@ -39,7 +39,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
         $tabla = new Render\JVista('Jida\Modelos\OpcionesMenu.obtOpciones',
 					        ['titulos'=>['Url','Nombre','Orden','Estatus']],
-					        'Opciones de Menu '.$nombre[0]['menu']
+					        'Opciones de Menu '.$nombre[0]['nombre_menu']
 						);
 
         $tabla->clausula('filtro',['id_menu'=>$id,'padre'=>$padre]);
@@ -58,7 +58,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
         						 		['link'  =>$this->obtUrl('gestionOpcion'),
 					                	 'txtLink' =>'Crear Opcion']
 									 );
-        $tabla->acciones(['Nuevo' => ['href'=>$this->obtUrl('gestionOpcion',[$id])]]);
+        $tabla->acciones(['Nuevo' => ['href'=>$this->obtUrl('gestionOpcion')]]);
         $tabla->acciones(['Volver' => ['href'=>$this->obtUrl('index',[$id])]]);
 
         $this->data(['tablaOpciones'=>$tabla->obtenerVista()]);

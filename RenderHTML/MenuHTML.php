@@ -68,6 +68,7 @@ class MenuHTML extends BD\DBContainer{
 	 * 
 	 */
 	private $_urlBase= '';
+	private $_urlActual='';
     /**
      * Funcion constructora de menus
      * @param int $id Clave del menu
@@ -119,7 +120,10 @@ class MenuHTML extends BD\DBContainer{
      * donde cada posición de los sub-arreglos son las clases a agregar por nivel. si hay mas niveles q los colocados en el arreglo los ultimos
      * niveles tomarán la misma clase que el último pasado
      */
-    function showMenu(){
+    function showMenu($urlActual=""){
+    	if(!empty($urlActual))
+			$this->_urlActual = $urlActual;
+		
         $config = $this->configuracion;
         $this->opciones = $this->menu->obtenerOpcionesMenu();
 
@@ -217,11 +221,14 @@ class MenuHTML extends BD\DBContainer{
                     $listaMenu.=Selector::crear("li",$atributos,$opc.$submenu['html'],2,true);
                 }else{
 
-                    //$span = Selector::crear("span",array(),$opcion['nombre_opcion'],4);
                     $span =Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
-
+					
                     $enlace = Selector::crear("a",array('href'=>$this->_urlBase . $opcion['url_opcion']),$icono.$span,3);
-					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);					
+					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);
+					
+					if($this->_urlBase.$opcion['url_opcion'] == '/'.$this->_urlActual)
+						$atributos['class'] = $this->cssLiSeleccionado;
+		
                     $listaMenu.=Selector::crear("li",$atributos,$enlace,2,true);
                 }
 
