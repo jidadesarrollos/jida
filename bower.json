@@ -1,5 +1,5 @@
 {
-  "name": "Jida Framework",
+  "name": "jidaframework",
   "version": "1.0.4",
   "description": "Framework para desarrollo de aplicaciones web",
   "main": "index.php",
@@ -27,7 +27,8 @@
     "font-awesome": "~4.4.0",
     "jquery": "~2.1.4",
     "bootbox.js": "https://github.com/makeusabrew/bootbox.git#^4.4.0",
-    "awesome-bootstrap-checkbox": "https://github.com/flatlogic/awesome-bootstrap-checkbox.git#^0.3.7"
+    "awesome-bootstrap-checkbox": "https://github.com/flatlogic/awesome-bootstrap-checkbox.git#^0.3.7",
+    "mustache.js": "mustache#~2.3.0"
   },
   "devDependencies": {
     "jquery-ui": "^1.11.4"

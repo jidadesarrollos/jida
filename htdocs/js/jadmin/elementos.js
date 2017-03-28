@@ -1,10 +1,9 @@
-
 (function($){
 	var total = $("body").data('total');
 	console.log("paso");
 
 	if(!$("body").data('total'))
-		$("body").data('total',1)
+		$("body").data('total',1);
 	$('[data-jadmin="elementos"]').on('click',function(){
 		var $this = $( this );
 		var area = $this.data('area');
@@ -27,7 +26,9 @@
 			$('#containerElementos').removeClass().addClass('seccion-elementos');
 		},200);
 	});
+	
 	console.log($('[data-jida="hide"]'));
+	
 	$('[data-jida="hide"]').on('click',function(){
 		var $this  =$( this );
 		var $elemento  = $($this.data('elemento'));
@@ -35,7 +36,7 @@
 
 		$elemento.addClass('animate fadeOut');
 		window.setTimeout(function(){
-			$elemento.removeClass('open animated fadeOut')
+			$elemento.removeClass('open animated fadeOut');
 		},200);
 	});
 

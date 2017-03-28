@@ -7,14 +7,14 @@
  * @author  Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1 13/01/2014
  */
- 
+
 namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\Helpers as Helpers;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Modelos\Viejos as ModelosViejos;
 use Jida\Modelos as Modelos;
-class MenusController extends JController {
+class MenusOLDController extends JController {
 
     function __construct(){
         $this->layout="jadmin.tpl.php";

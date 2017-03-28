@@ -22,6 +22,14 @@ define('MANEJADOR_BD',FALSE);
  */
 if(!defined('TITULO_SISTEMA'))
     define ('TITULO_SISTEMA','Aplicación Jida - Framework');
+
+if(!defined('URL_APP'))
+ /**
+ * @constant URL_APP Dirección url de la aplicación
+ */
+define('URL_APP',"/");
+$urlApp = (URL_APP == '/')?'':URL_APP;
+
 /**
  * Nombre de la aplicacion,
  * @deprecated
@@ -121,24 +129,17 @@ if(!defined('FECHA_MODIFICACION')){
 #===============================================================================
 # Constantes DE URLs y Directorios del Framework
 #===============================================================================
-if(!defined('URL_HTDOCS')) 					define('URL_HTDOCS','/htdocs/');
-if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
-if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
-if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
-if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
+if(!defined('URL_HTDOCS')) 					define('URL_HTDOCS',$urlApp.'/htdocs/');
+if(!defined('URL_IMGS'))                    define('URL_IMGS',$urlApp.'/htdocs/img/');
+if(!defined('URL_JS'))                      define('URL_JS',$urlApp.'/htdocs/js/');
+if(!defined('URL_CSS'))                     define('URL_CSS',$urlApp.'/htdocs/css/');
+if(!defined('URL_BOWER'))					define ('URL_BOWER',$urlApp.'/htdocs/bower_components/');
 
 /**
  * Define la ubicacion fisica de las carpetas para archivos publicos y del lado cliente.
  */
 if(!defined('DIR_HTDOCS')) define('DIR_HTDOCS', ROOT .'htdocs/');
 
-
-
-if(!defined('URL_APP'))
- /**
- * @constant URL_APP Dirección url de la aplicación
- */
-define('URL_APP',"/");
 
 /**
  * @constant MANEJADOR_PARAMS
@@ -187,8 +188,8 @@ if(!defined('ZONA_HORARIA')){
  * Define la url publica para acceder a los archivos publicos de un tema
  * @constant URL_HTDOCS_TEMAS
  */
-if(!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS','/Aplicacion/Layout/');
-if(!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN','/Framework/htdocs/');
+if(!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS', $urlApp.'/Aplicacion/Layout/');
+if(!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN',$urlApp.'/Framework/htdocs/');
 /**
  * Determina si los caracteres especiales son codificados en código ASCII HTML
  * antes de ser guardados en base de datos

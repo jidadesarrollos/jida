@@ -392,6 +392,7 @@ class Pagina{
 		   	}
            	include_once $this->layout;
            	$layout = ob_get_clean();
+			
            	echo $layout;
         }
         //if (ob_get_length()) ob_end_clean();
@@ -399,7 +400,6 @@ class Pagina{
 
 
     }
-
 
     private function requiresJs(){
 
@@ -1049,7 +1049,7 @@ class Pagina{
 	 	return $this->htdocs($folder, $item,$tema);
 	 }
 	 
-	 function link($url){
+	 function enlace($url){
 	 	$path = (defined('URL_BASE'))?URL_BASE:'';
 	 	return $path . $url;
 	 }

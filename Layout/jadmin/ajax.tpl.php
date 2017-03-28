@@ -1,4 +1,4 @@
 <?=$contenido?>
 
 
-<?=$this->printJSAjax();?>
+<?=$this->printJSAjax()?>

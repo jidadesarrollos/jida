@@ -22,7 +22,7 @@
                 this.botonCarga = opciones;
                 console.log(this.botonCarga);
                 this.conf=valores;
-                if($(this.botonCarga).size()<1)
+                if($(this.botonCarga).length<1)
                     throw console.log("No se encuentra definido el boton de envio");
             }else{
             

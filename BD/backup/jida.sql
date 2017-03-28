@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: framework
+-- Host: 127.0.0.1    Database: laurafidalgo
 -- ------------------------------------------------------
--- Server version	5.6.27-log
+-- Server version	5.7.13-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -108,6 +108,35 @@ LOCK TABLES `s_componentes_perfiles` WRITE;
 /*!40000 ALTER TABLE `s_componentes_perfiles` DISABLE KEYS */;
 INSERT INTO `s_componentes_perfiles` VALUES (4,1,2),(11,1,3),(12,2,3),(13,1,1),(14,2,1);
 /*!40000 ALTER TABLE `s_componentes_perfiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `s_elementos`
+--
+
+DROP TABLE IF EXISTS `s_elementos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `s_elementos` (
+  `id_elemento` int(11) NOT NULL,
+  `elemento` varchar(50) DEFAULT NULL,
+  `data` text,
+  `area` varchar(80) DEFAULT NULL,
+  `id_usuario_creador` int(11) DEFAULT NULL,
+  `id_usuario_modificador` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_elemento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `s_elementos`
+--
+
+LOCK TABLES `s_elementos` WRITE;
+/*!40000 ALTER TABLE `s_elementos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `s_elementos` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -342,6 +371,40 @@ INSERT INTO `s_objetos` VALUES (22,2,'Jadmin',NULL),(23,3,'Admin',NULL);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `s_objetos_media`
+--
+
+DROP TABLE IF EXISTS `s_objetos_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `s_objetos_media` (
+  `id_objeto_media` int(11) NOT NULL AUTO_INCREMENT,
+  `objeto_media` varchar(100) NOT NULL,
+  `directorio` varchar(100) DEFAULT NULL,
+  `tipo_media` int(11) DEFAULT NULL COMMENT '1= imagen; 2 = Video',
+  `interno` int(11) DEFAULT NULL,
+  `descripcion` varchar(100) DEFAULT NULL,
+  `leyenda` varchar(150) DEFAULT NULL,
+  `alt` varchar(45) DEFAULT NULL,
+  `meta_data` varchar(500) DEFAULT NULL,
+  `id_usuario_creador` int(11) DEFAULT NULL,
+  `id_usuario_modificador` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_objeto_media`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `s_objetos_media`
+--
+
+LOCK TABLES `s_objetos_media` WRITE;
+/*!40000 ALTER TABLE `s_objetos_media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `s_objetos_media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `s_objetos_perfiles`
 --
 
@@ -402,7 +465,7 @@ CREATE TABLE `s_opciones_menu` (
 
 LOCK TABLES `s_opciones_menu` WRITE;
 /*!40000 ALTER TABLE `s_opciones_menu` DISABLE KEYS */;
-INSERT INTO `s_opciones_menu` VALUES (1,1,'/jadmin/forms/','Formularios',0,1,'2014-02-13 13:01:11','2014-08-08 10:56:35',NULL,NULL,1,1,NULL),(2,1,'/jadmin/menus/','Menus',0,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(3,1,NULL,'ACL',0,1,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(4,1,'/jadmin/objetos/','Objetos',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(5,1,'/jadmin/componentes/','Componentes',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(9,1,'/jadmin/perfiles/','Perfiles',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(10,1,'/jadmin/users/cierresesion/','Cerrar Sesi&oacute;n',0,0,NULL,'2014-09-02 22:30:26',NULL,NULL,1,1,NULL),(11,1,'/jadmin/users/','Usuarios',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(27,1,'/jadmin/forms/jida-forms','Jida',1,0,'2014-08-04 05:31:21','2014-08-08 10:37:52',NULL,NULL,1,1,NULL),(28,1,'/jadmin/forms/filter/aplicacion','Aplicaci&oacute;n',1,0,'2014-08-04 05:54:06','2014-08-04 05:54:06','fa-plus-square-o',2,1,1,NULL),(29,1,'/algo-distinto/','1',1,0,'2014-08-08 10:57:10','2014-08-08 10:57:10',NULL,10,1,1,NULL);
+INSERT INTO `s_opciones_menu` VALUES (1,1,'/jadmin/forms/','Formularios',0,1,'2014-02-13 13:01:11','2014-08-08 10:56:35','fa fa-check',2,1,1,NULL),(2,1,'/jadmin/menus/','Menus',0,0,'2014-02-13 13:01:11',NULL,'fa fa-bars',3,1,1,NULL),(3,1,NULL,'ACL',0,1,'2014-02-13 13:01:11',NULL,'fa fa-dashboard',1,1,1,NULL),(4,1,'/jadmin/objetos/','Objetos',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(5,1,'/jadmin/componentes/','Componentes',3,0,'2014-02-13 13:01:11',NULL,NULL,NULL,1,NULL,NULL),(9,1,'/jadmin/perfiles/','Perfiles',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(10,1,'/jadmin/users/cierresesion/','Cerrar Sesión',0,0,NULL,'2014-09-02 22:30:26','fa fa-power-off',10,1,1,NULL),(11,1,'/jadmin/users/','Usuarios',3,0,NULL,NULL,NULL,NULL,1,NULL,NULL),(27,1,'/jadmin/forms/jida-forms','Jida',1,0,'2014-08-04 05:31:21','2014-08-08 10:37:52',NULL,NULL,1,1,NULL),(28,1,'/jadmin/forms/filter/aplicacion','Aplicaci&oacute;n',1,0,'2014-08-04 05:54:06','2014-08-04 05:54:06','fa-plus-square-o',2,1,1,NULL),(29,1,'/algo-distinto/','1',1,0,'2014-08-08 10:57:10','2014-08-08 10:57:10',NULL,10,1,1,NULL);
 /*!40000 ALTER TABLE `s_opciones_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,7 +485,7 @@ CREATE TABLE `s_opciones_menu_perfiles` (
   KEY `id_perfil` (`id_perfil`),
   CONSTRAINT `s_opciones_menu_perfiles_ibfk_1` FOREIGN KEY (`id_opcion_menu`) REFERENCES `s_opciones_menu` (`id_opcion_menu`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_opciones_menu_perfiles_ibfk_2` FOREIGN KEY (`id_perfil`) REFERENCES `s_perfiles` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -431,7 +494,7 @@ CREATE TABLE `s_opciones_menu_perfiles` (
 
 LOCK TABLES `s_opciones_menu_perfiles` WRITE;
 /*!40000 ALTER TABLE `s_opciones_menu_perfiles` DISABLE KEYS */;
-INSERT INTO `s_opciones_menu_perfiles` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,9,1),(7,10,1),(8,11,1),(9,27,1),(10,28,1),(11,29,1);
+INSERT INTO `s_opciones_menu_perfiles` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,9,1),(7,10,1),(8,11,1),(9,27,1),(10,28,1),(11,29,1),(12,1,1),(13,2,1),(14,10,1),(15,3,1);
 /*!40000 ALTER TABLE `s_opciones_menu_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,7 +557,7 @@ CREATE TABLE `s_usuarios` (
 
 LOCK TABLES `s_usuarios` WRITE;
 /*!40000 ALTER TABLE `s_usuarios` DISABLE KEYS */;
-INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894','2014-02-13 13:01:12',NULL,1,1,'2014-06-06 17:09:55','1',NULL,NULL,NULL,NULL,NULL,NULL),(2,'jeanpierre','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,'jeacontreras2009@gmail.com',NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894','2014-02-13 13:01:12',NULL,1,1,'2017-02-26 09:22:50','1',NULL,NULL,NULL,NULL,NULL,NULL),(2,'jeanpierre','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,'jeacontreras2009@gmail.com',NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -528,100 +591,110 @@ INSERT INTO `s_usuarios_perfiles` VALUES (11,1,1),(12,1,2),(23,2,1),(24,2,2),(25
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `vj_acceso_componentes`
+-- Temporary table structure for view `vj_acceso_componentes`
 --
 
 DROP TABLE IF EXISTS `vj_acceso_componentes`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_componentes`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_componentes` AS SELECT
- 1 AS `id_componente_perfil`,
- 1 AS `id_perfil`,
- 1 AS `clave_perfil`,
- 1 AS `id_componente`,
- 1 AS `componente`*/;
+/*!50001 CREATE TABLE `vj_acceso_componentes` (
+  `id_componente_perfil` tinyint NOT NULL,
+  `id_perfil` tinyint NOT NULL,
+  `clave_perfil` tinyint NOT NULL,
+  `id_componente` tinyint NOT NULL,
+  `componente` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vj_acceso_metodos`
+-- Temporary table structure for view `vj_acceso_metodos`
 --
 
 DROP TABLE IF EXISTS `vj_acceso_metodos`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_metodos`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_metodos` AS SELECT
- 1 AS `id_metodo`,
- 1 AS `id_objeto`,
- 1 AS `objeto`,
- 1 AS `metodo`,
- 1 AS `loggin`,
- 1 AS `id_perfil`,
- 1 AS `clave_perfil`,
- 1 AS `perfil`,
- 1 AS `id_componente`,
- 1 AS `componente`*/;
+/*!50001 CREATE TABLE `vj_acceso_metodos` (
+  `id_metodo` tinyint NOT NULL,
+  `id_objeto` tinyint NOT NULL,
+  `objeto` tinyint NOT NULL,
+  `metodo` tinyint NOT NULL,
+  `loggin` tinyint NOT NULL,
+  `id_perfil` tinyint NOT NULL,
+  `clave_perfil` tinyint NOT NULL,
+  `perfil` tinyint NOT NULL,
+  `id_componente` tinyint NOT NULL,
+  `componente` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vj_acceso_objetos`
+-- Temporary table structure for view `vj_acceso_objetos`
 --
 
 DROP TABLE IF EXISTS `vj_acceso_objetos`;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_objetos`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_acceso_objetos` AS SELECT
- 1 AS `id_objeto_perfil`,
- 1 AS `id_perfil`,
- 1 AS `clave_perfil`,
- 1 AS `nombre_perfil`,
- 1 AS `id_objeto`,
- 1 AS `objeto`,
- 1 AS `id_componente`*/;
+/*!50001 CREATE TABLE `vj_acceso_objetos` (
+  `id_objeto_perfil` tinyint NOT NULL,
+  `id_perfil` tinyint NOT NULL,
+  `clave_perfil` tinyint NOT NULL,
+  `nombre_perfil` tinyint NOT NULL,
+  `id_objeto` tinyint NOT NULL,
+  `objeto` tinyint NOT NULL,
+  `id_componente` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vj_perfiles_usuario`
+-- Temporary table structure for view `vj_perfiles_usuario`
 --
 
 DROP TABLE IF EXISTS `vj_perfiles_usuario`;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuario`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_perfiles_usuario` AS SELECT
- 1 AS `id_usuario_perfil`,
- 1 AS `id_perfil`,
- 1 AS `id_usuario`,
- 1 AS `nombre_usuario`,
- 1 AS `nombres`,
- 1 AS `apellidos`,
- 1 AS `clave_perfil`*/;
+/*!50001 CREATE TABLE `vj_perfiles_usuario` (
+  `id_usuario_perfil` tinyint NOT NULL,
+  `id_perfil` tinyint NOT NULL,
+  `id_usuario` tinyint NOT NULL,
+  `nombre_usuario` tinyint NOT NULL,
+  `nombres` tinyint NOT NULL,
+  `apellidos` tinyint NOT NULL,
+  `clave_perfil` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vj_perfiles_usuarios`
+-- Temporary table structure for view `vj_perfiles_usuarios`
 --
 
 DROP TABLE IF EXISTS `vj_perfiles_usuarios`;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuarios`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vj_perfiles_usuarios` AS SELECT
- 1 AS `id_usuario_perfil`,
- 1 AS `id_perfil`,
- 1 AS `id_usuario`,
- 1 AS `nombre_usuario`,
- 1 AS `nombres`,
- 1 AS `apellidos`,
- 1 AS `clave_perfil`*/;
+/*!50001 CREATE TABLE `vj_perfiles_usuarios` (
+  `id_usuario_perfil` tinyint NOT NULL,
+  `id_perfil` tinyint NOT NULL,
+  `id_usuario` tinyint NOT NULL,
+  `nombre_usuario` tinyint NOT NULL,
+  `nombres` tinyint NOT NULL,
+  `apellidos` tinyint NOT NULL,
+  `clave_perfil` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping routines for database 'laurafidalgo'
+--
 
 --
 -- Final view structure for view `vj_acceso_componentes`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vj_acceso_componentes`*/;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_componentes`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -640,6 +713,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vj_acceso_metodos`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vj_acceso_metodos`*/;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_metodos`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -658,6 +732,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vj_acceso_objetos`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vj_acceso_objetos`*/;
 /*!50001 DROP VIEW IF EXISTS `vj_acceso_objetos`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -676,6 +751,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vj_perfiles_usuario`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vj_perfiles_usuario`*/;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuario`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -694,6 +770,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vj_perfiles_usuarios`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vj_perfiles_usuarios`*/;
 /*!50001 DROP VIEW IF EXISTS `vj_perfiles_usuarios`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -717,4 +794,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-27 12:29:33
+-- Dump completed on 2017-02-26 10:23:59

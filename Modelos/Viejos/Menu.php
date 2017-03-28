@@ -22,11 +22,15 @@ class Menu extends BD\DataModel {
      * Nombre del menu
      *
      * Descripción breve del menu
-     * @var $nombre_menu
+     * @var $menu
      * @access public
      *
      */
     var $nombre_menu;
+	/**
+	* @var varchar identificador
+	*/
+	var $identificador;
 	/**
 	 * Funcion constructora
 	 */

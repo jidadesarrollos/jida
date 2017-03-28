@@ -251,8 +251,9 @@ class Archivo{
 
         if($this->totalArchivosCargados>1 or is_array($this->tmp_name)){
             for($i=0;$i<$this->totalArchivosCargados;++$i){
+            	
                 $nombreArchivo = $this->validarNombreArchivoCargado($i, $nombreAleatorio,$prefijo);
-                $destino =$directorio."/". $nombreArchivo.".".$this->extension[$i];
+                $destino =$directorio."/". $nombreArchivo;//validarNombreAC devuelve el nombre con la ext.
                 $this->archivosCargados[]=[
                     'directorio'=>$directorio,
                     'path'=>$destino,
@@ -261,6 +262,7 @@ class Archivo{
                 ];
 
                 if(!move_uploaded_file($this->tmp_name[$i],$destino)){
+                	
                     if(!is_writable($directorio)){
                         throw new Exception("No tiene permisos en la carpeta $directorio", 900);
                     }else

@@ -151,7 +151,7 @@
             	 if(typeof(validaciones)=='string'){
             	 	validaciones = JSON.parse(validaciones);
             	 }
-                return validaciones
+                return validaciones;
             }else{
                 if(this.config.validaciones[$ele.attr('id')]!='undefined')
                     return this.config.validaciones[$ele.attr('id')];
@@ -286,8 +286,8 @@
                 var validacionesCampo = vj.obtValidacionesCampo($campo);
                 var msj="";
                 var divError = vj.$form.find("."+vj.config.cssError);
-                console.log(typeof validacionesCampo,validacionesCampo,jv.errores)
-                console.log(errorCampo,jValidador.validaciones[errorCampo])
+                console.log(typeof validacionesCampo,validacionesCampo,jv.errores);
+                console.log(errorCampo,jValidador.validaciones[errorCampo]);
                 if(validacionesCampo[errorCampo]!= undefined){
                 
                     msj = (validacionesCampo[errorCampo].mensaje)?validacionesCampo[errorCampo].mensaje:jValidador.validaciones[errorCampo].mensaje;    
@@ -397,7 +397,7 @@
 				}
               	valor = $condicional.val();  
 	            console.log("==============");
-	            console.log($campo)
+	            console.log($campo);
 	            console.log(arr,nombreCampo,valor);
 	            }else{
 	              valor = $condicional.val();
@@ -491,7 +491,7 @@
                 var celularValido = (expresionCel.test(valorCampo))?1:0;
                 var TelefonoValido = (expresionTlf.test(valorCampo))?1:0;
                 var internacionalValido =(expresionInter.test(valorCampo))?1:0;
-                console.log("valido?",celularValido,parametros.tipo)
+                console.log("valido?",celularValido,parametros.tipo);
                 if( 
                 	parametros.tipo && (parametros.tipo=='telefono' && TelefonoValido==1 ||    
                     parametros.tipo=='celular' && celularValido==1 ||
