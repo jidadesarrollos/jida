@@ -1,7 +1,11 @@
 <?php
-$src = $this->obj->directorio.'/'. $this->obj->data('md');
+
+
+$imagen = $this->nexo('Imagen');
+$src = URL_IMGS . $this->obj->directorio ."/". $imagen->data('md',$this->obj);
+#\Jida\Helpers\Debug::imprimir($src,true);
 ?>
-<div class="container jida-container galeria">
+<div class="container-fluid jida-container galeria">
 	<div class="row">
 		<div class="col-md-12">
 			<header class="page-header jida-header">

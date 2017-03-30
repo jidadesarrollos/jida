@@ -25,10 +25,9 @@ class GaleriaController extends JController{
         $this->modelo = new Modelos\ObjetoMedia();
 		$this->dv->addJs([
 		'/Framework/htdocs/js/libs/jArchivos.js'
-		]);
+		],FALSE);
 		$this->dv->addJsModulo('galeria.js');
-		if($this->solicitudAjax())
-			$this->layout('ajax');
+		if($this->solicitudAjax()) $this->layout('ajax');
     }
 	/**
 	 * Testing de carga
@@ -184,7 +183,7 @@ class GaleriaController extends JController{
 	function editarMedia(){
 			
 		if($this->post('btnGestionObjetoMedia')){
-			#Helpers\Debug::imprimir($this->post(),true);
+			
 			if($this->getEntero($this->get('objeto'))){
                 $id=$this->get('objeto');
             }else{
@@ -211,7 +210,7 @@ class GaleriaController extends JController{
                     	'ejecutado' =>true
                     ];
                 }
-				Helpers\Debug::imprimir('hola',true);
+				
 
             }
          

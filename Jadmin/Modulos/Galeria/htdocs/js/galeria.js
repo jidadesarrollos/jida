@@ -10,7 +10,7 @@ var guardarMedia = function(){
 		
 		data[dataS[key].name] = dataS[key].value;
 	} 
-	console.log(data);
+	
 	// var formData = new FormData(document.getElementById('formGestionObjetoMedia'));
 	jd.ajax({
 		data:{
@@ -40,6 +40,7 @@ jd.ajax = function(params,callback){
 	// Formulario de galeria
 	//================================================
 	$('[data-galeria]').on('click',function(){
+		
 		var $this = $( this );
 		jd.ajax({
 			data:{
@@ -52,13 +53,14 @@ jd.ajax = function(params,callback){
 					message:resp,
 					className:'dialog-lg'
 				});
+				$("btnFormGestionMedia").on('click',guardarMedia);
 			}
 		});
 			
 	});
 	
 	if($('#btnCargaFile').length){
-		
+			
 		$('#btnCargaFile').jCargaFile({
 			url: '/jadmin/galeria/imagen-ajax',
 			name:'archivoGaleria',
@@ -79,4 +81,4 @@ jd.ajax = function(params,callback){
 		});
 	}
 	
-})(jQuery);
+})();

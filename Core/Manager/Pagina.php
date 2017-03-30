@@ -996,7 +996,14 @@ class Pagina{
 
 		}else{
 			$modulo = (empty($modulo))?ucwords($this->_modulo):ucwords($modulo);
-			$namespace = '\App\Modulos\\'. $modulo .'\Nexos\\';
+			
+			if($this->_esJadmin){
+				
+				$namespace = '\Jida\Jadmin\Modulos\\' . $modulo . '\Nexos\\';	
+			}else{	
+				$namespace = '\App\Modulos\\'. $modulo .'\Nexos\\';	
+			}
+			
 		}
 		$nexoAbsoluto = $namespace.ucfirst($nexo);
 		if(!class_exists($nexoAbsoluto))

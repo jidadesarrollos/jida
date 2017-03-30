@@ -9,6 +9,8 @@
 	</div>
 	<div class="col-md-12 col-xs-12">
 		<ul class="list-inline jida-galeria-media">
+		<?php if ($this->objetosGaleria): ?>
+		
 			
 			<?php if ($this->objetosGaleria): ?>
 				<?php 
@@ -25,13 +27,13 @@
 				<?php endforeach ?>
 			
 			<?php endif ?>
-			<li>
-				<figure class="selected">
-					<img src="/Framework/htdocs/img/dummy.png" alt="" />
-					<figcaption></figcaption>
-				</figure>
-			</li>
+			
+		</ul>		
+		<?php else: ?>
 		</ul>
+			<h4 id="mensajeNoRegistros">No Hay imagenes cargadas</h4>
+		<?php endif ?>
+		
 	</div>
 		
 	

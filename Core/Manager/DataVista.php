@@ -167,15 +167,31 @@ class DataVista{
 	function addCssModulo($css,$ruta=true){
 		$modulo = $this->modulo;
 		(Helpers\Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework":$modulo="Aplicacion/Modulos/".$modulo;
+		
+		if($ruta===TRUE){
+			if($this->_esJadmin and !$this->_esApp){
+				$ruta = '/Framework/Jadmin/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/css/';
+			}else{
+				$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) .'/htdocs/css/';	
+			}	
+		}
+		if(!is_array($css)){ $js = explode(' ',$css);}
+		
 		if(is_array($css)){
+			
 			foreach ($css as $key => $archivo) {
-
-				if($ruta)$this->css[]="/".$modulo."/htdocs/css/".$css;
-				else $this->css[]=$archivo;
+				
+				if(array_key_exists(strtolower($this->modulo), $this->css))
+				{
+					$this->css[strtolower($this->modulo)][] = $ruta . $archivo;
+				}else{
+					if($this->_esJadmin and array_key_exists('jadmin', $this->css)){
+						$this->css['jadmin'][] = $ruta . $archivo;
+					}
+					$this->css[] = $ruta . $archivo;
+				}
 			}
-		}elseif(is_string($css)){
-			if($ruta)$this->css[]="/".$modulo."/htdocs/css/".$css;
-				else $this->css[]=$css;
+			
 		}
 
 	}

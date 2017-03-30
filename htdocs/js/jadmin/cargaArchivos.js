@@ -6,7 +6,7 @@
 		'url':'/jadmin/galeria/carga-form',
 	
 		'postCarga':function(resp){
-			console.log(resp);
+			
 		}
 	});
 	

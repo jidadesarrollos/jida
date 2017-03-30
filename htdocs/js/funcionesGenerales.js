@@ -88,52 +88,6 @@ function armarTiny(nombreControl){
 function convertirByteAMb(bytes){
     return parseInt(((bytes/1024)/1024).toFixed(2));
 }
-/**
- * Inicializa el objeto AjaxUpload en un botón determinado
- *  
- * @param {Object} $nombreBoton
- * @param {Object} $url
- * @param string $funcionOnComplete Nombre de  la función a ejecutar al finalizar la carga
- */
-function cargarArchivo(config){
-    var defaultConfig=  {
-        btn : 'btnImagen',
-        nombreArchivo:'imagen',
-        callback:false,
-        multiple:true,
-        
-        
-        onsubmit:function(file, ext){
-            
-            if (ext && data.extensiones.test(ext)){
-                button.text('Cargando');
-                this.disable();
-            }else{
-                //En caso de no tener un formato valido
-                //alert(\"no es una imagen\")
-                return false;
-            }
-        },
-        url:false,
-        data:false,
-        extensiones: /^(jpg|png|jpeg|gif|JPG|PNG|JPEG)$/
-        
-    };
-    data = $.extend(defaultConfig,config);
-    
-	var button = $("#"+data.btn), interval;
-	if(!data)
-		data = "";
-	new AjaxUpload(button, {
-				multiple:true,
-				action: data.url, 
-				name: data.nombreArchivo,
-				data:data,
-				onSubmit : data.onsubmit,
-				onComplete:data.callback
-			
-			});
-}
 
 function scroll(){
       $("[data-scroll=true]").on('click',function(e) {

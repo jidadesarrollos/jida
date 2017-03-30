@@ -2411,6 +2411,7 @@ body.login {
   overflow: hidden;
   border: 4px solid transparent;
   cursor: pointer;
+  position: relative;
 }
 .jida-galeria-media li figure.selected {
   border-color: #337ab7;
@@ -2418,6 +2419,22 @@ body.login {
 .jida-galeria-media li figure img {
   width: 140px;
   object-fit: cover;
+}
+.jida-galeria-media li figure figcaption {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+}
+.jida-galeria-media li figure:hover figcaption {
+  background: rgba(0, 0, 0, 0.3);
+}
+.jida-galeria-media li figure.ui-widget-content.ui-selected {
+  border: 6px solid rgba(0, 0, 0, 0.5);
+}
+.jida-galeria-media li figure.ui-widget-content.ui-selected figcaption {
+  background: rgba(0, 0, 0, 0.3);
 }
 .jida-container.galeria .objeto-media-detalle img {
   max-height: 500px;
@@ -2488,4 +2505,16 @@ body.login {
   border-top-color: transparent;
   border-right-color: transparent;
   right: -8px;
+}
+.cargaAjax {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  margin-left: -30px;
+  width: 60px;
+  display: block;
+  z-index: 9999;
+  padding: 8px;
+  color: #fff;
+  background: #337ab7;
 }
