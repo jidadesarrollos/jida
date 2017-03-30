@@ -147,6 +147,8 @@ class GaleriaController extends JController{
 	}
 
 	protected function _obtFormMedia($id){
+			
+		// \Jida\Helpers\Debug::imprimir('_obtFormMedia',$_GET,$id);
 		
 		$form = new Render\Formulario('GestionObjetoMedia',$id);
 		Helpers\Sesion::set('objetoMedia',$id);

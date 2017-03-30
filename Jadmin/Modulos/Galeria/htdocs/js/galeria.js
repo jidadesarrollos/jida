@@ -39,9 +39,12 @@ jd.ajax = function(params,callback){
 	//================================================
 	// Formulario de galeria
 	//================================================
-	$('[data-galeria]').on('click',function(){
+	$('.jida-galeria-media').on('click','[data-galeria]',function(){
 		
 		var $this = $( this );
+		
+		console.log('click data-galeria',$this,$this.data('galeria'));
+		
 		jd.ajax({
 			data:{
 				url:'/jadmin/galeria/gestion-media',
@@ -66,17 +69,22 @@ jd.ajax = function(params,callback){
 			name:'archivoGaleria',
 			multiple:true,
 			onLoad:function(e){
-				
+				console.log('on load carga file ',e);
 				var image = new Image();
 				var ele = e.target;
-				this._data.testing = 'prueba julio';
+				//this._data.testing = 'prueba julio';
 				var $tpl = $('#mediaTemplate').html();
 				var render = Mustache.render($tpl,{
 					src: ele.result,
-					alt:'Imagen Preview'
+					alt:'Imagen Preview',
+					id: '#'
 				});
+				
 				$('.jida-galeria-media').append(render);
 				
+			},
+			'postCarga':function(respuesta){
+   				console.log('postCarga',respuesta.data);
 			}
 		});
 	}

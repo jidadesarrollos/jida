@@ -41,13 +41,13 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="btn-seccion-panel">
-			<button class="btn btn-default" id="btnCargaFile">Cargar</button>
+			<button class="btn btn-default" id="btnCargaFile">Cargar Imagen</button>
 		</div>
 	</div>
 </div>
 <script type="mostache-script" id="mediaTemplate">
 	<li>
-		<figure class="{{class}}">
+		<figure data-galeria="{{id}}" class="{{class}}">
 			<img src="{{src}}" alt="{{alt}}" />
 			<figcaption></figcaption>
 		</figure>
