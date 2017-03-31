@@ -60,7 +60,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
 
         $tabla->addMensajeNoRegistros('No hay opciones Registradas', [
-                                                                'link'  =>$this->obtUrl(''),
+                                                                'link'  =>$this->obtUrl('gestionOpcion',[$padre,$id_menu]),
                                                                 'txtLink' =>'Crear Opcion'
                                                                 ]); 
         $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('gestionOpcion',[$padre,$id_menu])]]);
