@@ -20,14 +20,25 @@ use Jida\Jadmin\Controllers\JController as JController;
 
 class GaleriaController extends JController{
 	
-    function __construct(){
+	var $manejoParams=true;
+	
+    function __construct($js=TRUE){
+        	
         parent::__construct();
         $this->modelo = new Modelos\ObjetoMedia();
-		$this->dv->addJs([
-		'/Framework/htdocs/js/libs/jArchivos.js'
-		],FALSE);
-		$this->dv->addJsModulo('galeria.js');
+		
+		if($js===TRUE){
+			
+			$this->dv->addJs([
+			'/Framework/htdocs/js/libs/jArchivos.js'
+			],FALSE);
+				
+		}
+		
+		$this->dv->addJsModulo(['galeria-jd'=>'galeria.js']);
+		
 		if($this->solicitudAjax()) $this->layout('ajax');
+		
     }
 	/**
 	 * Testing de carga
@@ -45,41 +56,19 @@ class GaleriaController extends JController{
 		
 		Helpers\Debug::imprimir($_POST,$_FILES,true);
 	}
+  
     function index(){
     	$this->vista="galeria";
 		
         $this->dv->seleccionMultiple=TRUE;
         if($this->post('funcion')=='portada') $this->dv->seleccionMultiple=FALSE;
-        //$this->dv->addJs(['adm/galeria.js']);
-        //$this->dv->imagenes= $this->modelo->select()->obt();
+        
 		$this->data([
 		'objetosGaleria'=>$this->modelo->select()->obt()
 		]);
 
     }
 
-    function biblioteca(){
-        $this->dv->addJs('admin/biblioteca.js');
-        $this->dv->seleccionMultiple=FALSE;
-        $this->dv->imagenes= $this->modelo->select()->obt();
-    }
-
-    function elemento(){
-        if($this->solicitudAjax() and $this->getEntero($this->post('id')) and $this->post('html')){
-            $this->formMedia($this->post('id'));
-            $this->dv->srcImagen=$this->post('html');
-            $this->dv->data=$this->post();
-            Helpers\Sesion::set('objetoMedia',$this->post('id'));
-            $this->vista="elemento";
-
-        }else{
-            Debug::mostrarArray($this->post());
-            $this->_404();
-        }
-
-
-    }    
-	
 	function imagenAjax(){
 		
 		$respuesta = ['error'=>TRUE];
@@ -118,8 +107,9 @@ class GaleriaController extends JController{
 		}
 		$this->respuestaJson($respuesta);
 		
-	}
+	}	
 	private function _copiarImagenes($img,$path){
+		
 		$imgs = $img->getArchivosCargados();
 		$dataMedia = [];
 		
@@ -165,9 +155,13 @@ class GaleriaController extends JController{
 		Helpers\Sesion::set('_formMedia',$form);
 		return $form;
 		
-	}
-	function gestionMedia(){
 		
+	}
+	
+	function gestionMedia(){
+			
+		$this->dv->addJsAjax('/Framework/Jadmin/Modulos/Galeria/htdocs/js/formulario.js',FALSE);
+				
 		if($this->solicitudAjax()){
 			
 			$this->layout('ajax');
@@ -184,6 +178,9 @@ class GaleriaController extends JController{
 
 	function editarMedia(){
 			
+		$this->dv->addJsModulo([
+		'formulario-galeria' => 'formulario.js'
+		]);
 		if($this->post('btnGestionObjetoMedia')){
 			
 			if($this->getEntero($this->get('objeto'))){
@@ -220,26 +217,9 @@ class GaleriaController extends JController{
             
         
 		}
+		$this->respuestaJson(['error'=>'404']);
 	}
-    /**
-     * Permite editar una imagen para un post
-     *
-     * Esta funcion es usada en conjunto
-     * @method setImg
-     *
-     */
-    function setImg(){
-        $valoresDefault = ["html"=>"","id"=>"","descripcion"=>"","alt"=>"","img"=>"img-responsive","classCss"=>""];
-        $this->layout="ajax.tpl.php";
-        $this->dv->srcImagen=$this->post('img');
-        $this->dv->align=$this->post('align');
-        $this->dv->class=$this->post('classImg');
-        #Debug::string($this->dv->class);
-        #Debug::mostrarArray($this->post());
-        if(empty($_POST['classCss'])) $_POST['classCss'] ='img-responsive';
-        $this->dv->data = Helpers\Arrays::convertirAObjeto(array_merge($valoresDefault,$_POST));
 
-    }
   
 	
     function eliminarImagenes(){
