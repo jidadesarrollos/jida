@@ -76,21 +76,23 @@ class ModulosController extends JController{
 
       $declaraciones = $GLOBALS['modulos'];
       $direcciones = self::arregloModulos('Aplicacion\Modulos');
-
+      
       foreach ($declaraciones as $key => $val) {
 
-        $mach = false;
         foreach ($direcciones as $key_1 => $val_1) {
-           
-            if ($val == $val_1 || $val=='Jadmin' ) {
+           if ( $val!='Jadmin') {
+             if ($val == $val_1) {
 
-              $mach=true;
               unset($declaraciones[$key]);
               unset($direcciones[$key_1]);
               unset($direcciones[$key_1+1]);
-
               break;
+              
             }
+           }else{
+              unset($declaraciones[$key]);
+
+           }
 
         }//end foreach direcciones
 
@@ -198,23 +200,39 @@ class ModulosController extends JController{
    
 
     if ($name!='' ) {
-
+          $name = Helpers\cadenas::upperCamelCase($name);
           $Path = 'Aplicacion/Modulos/'.$name;
-          if ($tipo!=0) {
+          if ($tipo==1) {
+
                       $directorios = [
                                         $Path.'/Jadmin',
                                         $Path.'/Jadmin/Controllers',
                                         $Path.'/Modelos',
                                         $Path.'/Jadmin/Vistas',
-                                        $Path.'/Jadmin/Nexos',
-                                        $Path.'/Jadmin/Elementos'
                                     ];
                       $extends = '\Jida\Jadmin\Controllers\JController';
+
+          }elseif ($tipo==2) {
+
+                      $directorios = [
+                                        '',
+                                        $Path.'/Controllers',
+                                        $Path.'/Modelos', 
+                                        $Path.'/Vistas',
+                                        $Path.'/Nexos',
+                                        $Path.'/Elementos',
+                                        $Path.'/Jadmin',
+                                        $Path.'/Jadmin/Controllers',
+                                        $Path.'/Jadmin/Vistas',
+                          ];
+                      $extends = '\Jida\Jadmin\Controllers\JController';
+                      $mixto = '\Jida\Core\Controller';
+
           }else{
                       $directorios = [
                                         '',
                                         $Path.'/Controllers',
-                                        $Path.'/Modelos',
+                                        $Path.'/Modelos', 
                                         $Path.'/Vistas',
                                         $Path.'/Nexos',
                                         $Path.'/Elementos'
@@ -224,53 +242,72 @@ class ModulosController extends JController{
 
 
           Helpers\directorios::crear($directorios);
-          $this->crearArchivosEstandar($name,$directorios,$extends);
+
+          if ($tipo!=2) {
+              $this->crearArchivosEstandar($name,$directorios,$extends);
+          }else{
+              $this->crearArchivosEstandar($name,$directorios,$extends,$mixto);
+          }
+          
 
     }
 
   }
 
 
-  private function crearArchivosEstandar($nombreArchivo,$directorios,$extiende){
+  private function crearArchivosEstandar($nombreArchivo,$directorios,$extiende,$mixto=''){
 
-
-        $nombreArchivo = Helpers\cadenas::upperCamelCase($nombreArchivo);
 
         $nombreModelo = Helpers\Cadenas::obtenerSingular($nombreArchivo);
-
         $nombreArchivo .= 'Controller';
 
         $arch = fopen($directorios[1].'/'.$nombreArchivo.'.php','w+');
-        $content="<?php \n";
+              $content="<?php \n";
 
-        ob_start();
-        include_once '\jadmin\Modulos\Menus\plantillas\controlador.tpl.php';
-        $content .= ob_get_clean();
+              ob_start();
+              include_once '\plantillas\controlador.tpl.php';
+              $content2 = $content .= ob_get_clean();
 
 
-        $content = str_replace("{{{nombreArchivo}}}",$nombreArchivo,$content);
-        $content = str_replace("{{{extiende}}}",$extiende,$content);
+              $content = str_replace("{{{nombreArchivo}}}",$nombreArchivo,$content);
+              $content = str_replace("{{{extiende}}}",$extiende,$content);
 
-        fwrite($arch, $content);
+              fwrite($arch, $content);
 
         fclose($arch);
 
         $arch = fopen($directorios[2].'/'.$nombreModelo.'.php', 'w+');
 
-        $content="<?php \n";
+              $content="<?php \n";
 
-        ob_start();
-        include_once '\jadmin\Modulos\Menus\plantillas\modelo.tpl.php';
-        $content .= ob_get_clean();
+              ob_start();
+              include_once '\plantillas\modelo.tpl.php';
+              $content .= ob_get_clean();
 
-        $content = str_replace("{{{nombreModelo}}}",$nombreModelo,$content);
+              $content = str_replace("{{{nombreModelo}}}",$nombreModelo,$content);
 
-        fwrite($arch, $content);
+              fwrite($arch, $content);
 
         fclose($arch);
 
         $arch = fopen($directorios[3].'/index.php', 'w+');
         fclose($arch);
+
+        if ($mixto!='') {
+
+          $arch = fopen($directorios[7].'/'.$nombreArchivo.'.php','w+');
+
+              $content2 = str_replace("{{{nombreArchivo}}}",$nombreArchivo,$content2);
+              $content2 = str_replace("{{{extiende}}}",$mixto,$content2);
+
+              fwrite($arch, $content2);
+
+          fclose($arch);
+
+          $arch = fopen($directorios[8].'/index.php', 'w+');
+          fclose($arch);
+
+        }
 
     
   }
