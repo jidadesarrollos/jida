@@ -63,8 +63,8 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
                                                                 'link'  =>$this->obtUrl('gestionOpcion',[$padre,$id_menu]),
                                                                 'txtLink' =>'Crear Opcion'
                                                                 ]); 
-        $tabla->acciones(['nuevo ' => ['href'=>$this->obtUrl('gestionOpcion',[$padre,$id_menu])]]);
-        $tabla->acciones(['volver ' => ['href'=>$this->obtUrl('index',[$id_menu])]]);
+        $tabla->acciones(['Nuevo ' => ['href'=>$this->obtUrl('gestionOpcion',[$padre,$id_menu])]]);
+        $tabla->acciones(['Volver ' => ['href'=>$this->obtUrl('index',[$id_menu])]]);
 
         $this->data(['tablaOpciones'=>$tabla->obtenerVista()]);
 
@@ -74,39 +74,64 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
 	public function gestionOpcion($padre=0,$id_menu,$id=''){
 
-        $modelosPerfiles = new modelos\opcionMenuPerfil();
+        $modelosPerfiles = new modelos\opcionMenuPerfil();      
 
-        $padre= ($padre == 'n-a')? 0:$padre;
+        if ($padre == 'n-a') {
 
-        if ($id!='') {
-
-            $formulario= new Render\Formulario('RegistroOpcion',$id);
-            $opcion = new modelos\opcionesMenu($id);
+            $padre = 0;
 
         }else{
 
-            $formulario= new Render\Formulario('RegistroOpcion');
-            $opcion = new modelos\opcionesMenu();
+            $ModeloPadre = new modelos\OpcionesMenu($padre);
+            $nombre = $ModeloPadre->consulta('nombre_opcion')->filtro(['id_opcion_menu'=>$padre])->obt();
         }
 
-        $formulario->boton('principal')->attr('value',"Crear Opción");
+        if ($id!='') {
+
+            $btn = 'Guardar';
+            $formulario= new Render\Formulario('RegistroOpcion',$id);
+            $opcion = new modelos\opcionesMenu($id);
+
+            if ($padre!=0) 
+                $titulo='Modificar Sub Item de '.$nombre[0]['nombre_opcion'];
+            else
+                $titulo='Modificar Item de Menu'; 
+
+        }else{
+
+            $btn='Registrar';
+            $formulario= new Render\Formulario('RegistroOpcion');
+            $opcion = new modelos\opcionesMenu();
+
+            if ($padre!=0) 
+                $titulo='Registar Sub item en '.$nombre[0]['nombre_opcion'];
+            else
+                $titulo='Registar Item de Menu'; 
+
+        }
+
+        $this->data(['titulo'=>$titulo]);
+
+        $formulario->boton('principal')->attr('value',$btn);
 
         if ($this->post('btnRegistroOpcion')) {
 
-            // Helpers\debug::imprimir($this->post(),true);
             if ($formulario->validar()) {
                
                 $paraGuardar = $this->post();
                 $paraGuardar['id_menu']=$id_menu;
                 $paraGuardar['padre']=$padre;
-                // Helpers\debug::imprimir($paraGuardar,$id_menu,true);
-                if ($opcion->salvar($paraGuardar)) {   
+                
+                if ($opcion->salvar($paraGuardar)) { 
+
+                        if ($padre!=0) {
+                            $ModeloPadre->salvar(['hijo'=>1]);
+                        }
                         
                         if ($id=='') 
                              $id = $opcion->getResult()->idResultado();
                         
                         $modelosPerfiles->eliminar($id,'id_opcion_menu');
-
                         $id_perfil = $this->post('id_perfil');
                         $matriz = [];
 
