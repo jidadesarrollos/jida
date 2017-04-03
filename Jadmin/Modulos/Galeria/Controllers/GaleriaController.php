@@ -114,22 +114,25 @@ class GaleriaController extends JController{
 		$dataMedia = [];
 		
         foreach ($imgs as $key => $file) {
+        	$nombreImg = str_replace(".".$file['extension'],'',$file['nombre']);
+        	
             $dataMedia[]=[
             'tipo_media'=>1,
-            'objeto_media'=>$file['nombre'].".".$file['extension'],
+            'objeto_media'=>$nombreImg.".".$file['extension'],
             'interno'=>1,
             'directorio'=>$path,
-            'meta_data'=>json_encode([  'img'        	=>$file['nombre'].".".$file['extension'],
-                                        'sm'	  		=>$file['nombre']."-sm.".$file['extension'],
-                                        'min'			=>$file['nombre']."-min.".$file['extension'],
-                                        'md'     		=>$file['nombre']."-md.".$file['extension'],
-                                        'lg'			=>$file['nombre']."-lg.".$file['extension'],
+            
+            'meta_data'=>json_encode([  'img'   =>$nombreImg.".".$file['extension'],
+                                        'sm'	=>$nombreImg."-sm.".$file['extension'],
+                                        'min'	=>$nombreImg."-xs.".$file['extension'],
+                                        'md'    =>$nombreImg."-md.".$file['extension'],
+                                        'lg'	=>$nombreImg."-lg.".$file['extension'],
                                     ])
             ];
 			$img->redimensionar(IMG_TAM_LG,IMG_TAM_LG,$file['path'],$file['path']);
-			$img->redimensionar(IMG_TAM_MD,IMG_TAM_MD,$file['path'],$file['directorio']."/".$file['nombre']."-md.".$file['extension']);
-			$img->redimensionar(IMG_TAM_SM,IMG_TAM_SM,$file['path'],$file['directorio']."/".$file['nombre']."-min.".$file['extension']);
-			$img->redimensionar(IMG_TAM_XS,IMG_TAM_XS,$file['path'],$file['directorio']."/".$file['nombre']."-sm.".$file['extension']);
+			$img->redimensionar(IMG_TAM_MD,IMG_TAM_MD,$file['path'],$file['directorio']."/".$nombreImg."-md.".$file['extension']);
+			$img->redimensionar(IMG_TAM_SM,IMG_TAM_SM,$file['path'],$file['directorio']."/".$nombreImg."-sm.".$file['extension']);
+			$img->redimensionar(IMG_TAM_XS,IMG_TAM_XS,$file['path'],$file['directorio']."/".$nombreImg."-xs.".$file['extension']);
 
             $response['imagenes'][]=['nombre'=>$file['nombre'],"ext"=>$file['extension']];
        }

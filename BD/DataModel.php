@@ -243,6 +243,7 @@ class DataModel{
         if(defined('MANEJADOR_BD') or defined('manejadorBD'))
 			$this->manejadorBD=(defined('MANEJADOR_BD'))?MANEJADOR_BD:manejadorBD;
         $numeroParams = func_num_args();
+		
 		$this->tablaQuery = $this->tablaBD;
         $param = func_get_args(0);
         $this->_clase = get_class($this);
@@ -280,14 +281,14 @@ class DataModel{
         }else{
 
 	        //se obtienen propiedades de relacion de pertenencia
-	        if($id){
 
-	            $this->instanciarObjeto($id);
 
-	        }else{
-	        	$this->instanciarTieneUno()->instanciarTieneMuchos();
-	        }
+        }
+        if($id){
+            $this->instanciarObjeto($id);
 
+        }else{
+        	$this->instanciarTieneUno()->instanciarTieneMuchos();
         }
 
     }
@@ -301,7 +302,7 @@ class DataModel{
 	private function instanciarTieneUno(){
 
 		foreach ($this->tieneUno as $key => $class) {
-
+			
 		    if(!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))){
 
 			  if(is_string($key) and is_array($class)){
@@ -313,9 +314,10 @@ class DataModel{
 					if(array_key_exists('objeto', $class)){
 						$relacion = $class['objeto'];
 					}
-				  
+				  	
 					if(array_key_exists('fk', $class))
-						$this->$nombreClass = new $relacion(null,$this->nivelActualORM);					
+						$this->$nombreClass = new $relacion($this->{$class['fk']},$this->nivelActualORM);					
+					
 					
 			  }else{
 			  	throw new Exception("No se encuentra definida correctamente la relacion para ".$this->_clase, 1);
@@ -325,7 +327,7 @@ class DataModel{
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
 
-					$this->$nombreClass = new $class(null,$this->nivelActualORM);
+					$this->$nombreClass = new $class($this->{$class['fk']},$this->nivelActualORM);
 				}
 		    }
 
@@ -526,6 +528,7 @@ class DataModel{
 
 			}
 		}
+		
 		return $this;
 	//	$this->debug($consultas);
 	}
@@ -577,6 +580,7 @@ class DataModel{
     	}
 
         $this->valoresIniciales = $data;
+		
         $this->establecerAtributos ( $data, $this->_clase );
 
         if($this->nivelActualORM<=$this->nivelORM){

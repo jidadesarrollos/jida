@@ -51,7 +51,10 @@ jd.ajax = function(params,callback){
 				
 			},
 			'postCarga':function(respuesta){
-   				console.log('postCarga',respuesta.data);
+   				if(respuesta.error){
+   					$listaImagenes.before('<div class="alert alert-warning">'+respuesta.msj+'</div>');
+   					$('.jcargafile').remove();
+   				}
 			}
 		});
 	}
