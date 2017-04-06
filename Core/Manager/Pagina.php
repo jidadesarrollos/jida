@@ -22,8 +22,9 @@ class Pagina{
     use \Jida\Core\ObjetoManager;
 	private $_ce='007';
     /**
-     * Información pasada al layout y vista a renderizar
-     * @param mixed $data
+     * Objeto DataVista
+     * @param object $data
+	 * @see \Jida\Core\DataVista
      */
     var $data;
 	/**
@@ -304,7 +305,7 @@ class Pagina{
     function renderizar($nombreVista="",$excepcion=FALSE){
 		$this->procesarVariables();
         if(!empty($nombreVista)) $this->nombreVista = $nombreVista;
-
+		
         $DataTpl = $this->data->obtPlantilla();
         /**
          * Se verifica si desea usarse una plantilla

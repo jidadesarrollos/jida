@@ -8,7 +8,7 @@ class Imagen extends ParentController{
 	private $_img;
 	private $_meta_data;
 	function __construct(){
-		parent::__construct();
+		parent::__construct(FALSE);
 		$this->_meta_data = new \stdClass();
 	}
 	function _instanciar($img){

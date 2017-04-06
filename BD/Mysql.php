@@ -111,11 +111,6 @@ class Mysql extends ConexionBD{
       * por defecto es 1
       * En caso de ser una consulta multiple no se devuelve el total de registros
       *
-      * <ul>
-      * <li> 1: Unica Consulta</li>
-      * <li>2 : Consulta Multiple</li>
-      * </ul>
-      *
       */
     function ejecutarQuery($query="",$tipoQuery=1){
         if(!empty($query)){

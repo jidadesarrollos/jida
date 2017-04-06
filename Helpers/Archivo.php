@@ -88,22 +88,29 @@ class Archivo{
     private function checkCarga($file){
 
         $this->files = $file;
-        if(!isset($file) or is_array($file)){
-
-            $this->name  = $file['name'];
-            $this->type = $file['type'];
-            $this->tmp_name = $file['tmp_name'];
-            $this->error = $file['error'];
-            $this->size = $file['size'];
-			if(!empty($this->name)){
-            	$this->obtenerExtension();
-
-            	$this->totalArchivosCargados = count($file['tmp_name']);
-			 	$this->validarCarga();
-			}
-
-
-        }
+		
+		if($this->files['error']==0 or  is_array($file)){
+			if(!isset($file) or is_array($file)){
+	
+	            $this->name  = $file['name'];
+	            $this->type = $file['type'];
+	            $this->tmp_name = $file['tmp_name'];
+	            $this->error = $file['error'];
+	            $this->size = $file['size'];
+				if(!empty($this->name)){
+	            	$this->obtenerExtension();
+	
+	            	$this->totalArchivosCargados = count($file['tmp_name']);
+				 	$this->validarCarga();
+				}
+	
+	
+	        }
+		}else{
+			#\Jida\Helpers\Debug::imprimir($this->files);
+			return false;
+		}
+	        
     }//fin checkCarga
 
     /**
@@ -161,33 +168,38 @@ class Archivo{
 
         }else{
           $explode = explode("/",$this->type);
-		  switch ($explode[1]){
-	        case 'pdf':
-	            $mime = 'pdf';
-	            break;
-	        case 'msword':
-	            $mime = 'doc';
-	            break;
-	        case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
-	            $mime = 'docx';
-	            break;
-	        case 'vnd.ms-excel':
-	            $mime = 'xls';
-	            break;
-	        case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-	            $mime = 'xlsx';
-	            break;
-	        case 'vnd.ms-powerpoint':
-	            $mime = 'ppt';
-	            break;
-	        case 'vnd.openxmlformats-officedocument.presentationml.presentation':
-	            $mime = 'pptx';
-	            break;
-	        case 'plain':
-	            $mime = 'txt';
-	            break;
-			default: $mime = $explode[1];
-				break;
+		  
+		  if(array_key_exists(1,$explode)){
+		  		
+		  	switch ($explode[1]){
+		        case 'pdf':
+		            $mime = 'pdf';
+		            break;
+		        case 'msword':
+		            $mime = 'doc';
+		            break;
+		        case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
+		            $mime = 'docx';
+		            break;
+		        case 'vnd.ms-excel':
+		            $mime = 'xls';
+		            break;
+		        case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+		            $mime = 'xlsx';
+		            break;
+		        case 'vnd.ms-powerpoint':
+		            $mime = 'ppt';
+		            break;
+		        case 'vnd.openxmlformats-officedocument.presentationml.presentation':
+		            $mime = 'pptx';
+		            break;
+		        case 'plain':
+		            $mime = 'txt';
+		            break;
+				default: $mime = $explode[1];
+					break;
+		  }
+			  
 	    }
 
 		  $this->extension[0] = $mime;

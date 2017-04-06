@@ -193,6 +193,7 @@ class Controller {
     function __construct(){
     	global $dataVista;
 		$this->_urlBase = (defined('URL_BASE'))?URL_BASE:'';
+		
 		/**
 		 * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
 		 * del controlador con error, por tanto se crea un objeto DataVista vacio
@@ -661,7 +662,7 @@ class Controller {
             }
 
         }else{
-            return $this->urlActual(2);
+            return $this->_urlBase  . $this->urlActual(2);
         }
 
     }

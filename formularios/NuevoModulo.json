@@ -25,7 +25,7 @@
 			"id":"tipo",
 			"label":"Tipo de Modulo",
 			"type":"radio",
-			"opciones":"0=Aplicacion;1=Jadmin",
+			"opciones":"0=Aplicacion;1=Jadmin;2=Mixto",
 			"eventos":{
 				"obligatorio":{"mensaje":"Debe Seleccionar Un tipo"}
 			}

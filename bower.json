@@ -28,7 +28,8 @@
     "jquery": "~2.1.4",
     "bootbox.js": "https://github.com/makeusabrew/bootbox.git#^4.4.0",
     "awesome-bootstrap-checkbox": "https://github.com/flatlogic/awesome-bootstrap-checkbox.git#^0.3.7",
-    "mustache.js": "mustache#~2.3.0"
+    "mustache.js": "mustache#~2.3.0",
+    "animate.less": "*"
   },
   "devDependencies": {
     "jquery-ui": "^1.11.4"

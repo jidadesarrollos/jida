@@ -1,34 +1,3 @@
-var guardarMedia = function(){
-//	console.log("en guardar media");
-	var $form = $('#formGestionObjetoMedia');
-	var $btn = $('#btnGestionObjetoMedia');
-	var data = {'btnGestionObjetoMedia':true,'id_objeto_media':$btn.data('id')};
-	console.log($btn.data('id'));
-	var dataS = $form.serializeArray();
-	 
-	for(key in dataS){
-		
-		data[dataS[key].name] = dataS[key].value;
-	} 
-	
-	// var formData = new FormData(document.getElementById('formGestionObjetoMedia'));
-	jd.ajax({
-		data:{
-			url:'/jadmin/galeria/editar-media',
-			data:data,
-			type:'POST',
-			method:'post',
-			dataType:'json',
-		},
-		done:function(resp){
-			//console.log(typeof resp,resp)
-			$('.alert').remove();
-			alert = (resp.ejecutado)?'alert-success':'alert-warning';
-			$form.before('<div class="alert '+alert+'">'+resp.msj+'</div>');
-			
-		}
-	});
-};
 jd.ajax = function(params,callback){
 	$.ajax(params.data).done(params.done);
 };
@@ -43,8 +12,6 @@ jd.ajax = function(params,callback){
 		
 		var $this = $( this );
 		
-		console.log('click data-galeria',$this,$this.data('galeria'));
-		
 		jd.ajax({
 			data:{
 				url:'/jadmin/galeria/gestion-media',
@@ -56,7 +23,7 @@ jd.ajax = function(params,callback){
 					message:resp,
 					className:'dialog-lg'
 				});
-				$("btnFormGestionMedia").on('click',guardarMedia);
+				
 			}
 		});
 			
@@ -69,7 +36,7 @@ jd.ajax = function(params,callback){
 			name:'archivoGaleria',
 			multiple:true,
 			onLoad:function(e){
-				console.log('on load carga file ',e);
+				
 				var image = new Image();
 				var ele = e.target;
 				//this._data.testing = 'prueba julio';
@@ -84,7 +51,10 @@ jd.ajax = function(params,callback){
 				
 			},
 			'postCarga':function(respuesta){
-   				console.log('postCarga',respuesta.data);
+   				if(respuesta.error){
+   					$listaImagenes.before('<div class="alert alert-warning">'+respuesta.msj+'</div>');
+   					$('.jcargafile').remove();
+   				}
 			}
 		});
 	}
