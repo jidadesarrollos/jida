@@ -34,7 +34,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
 								  );
 
         $tabla->accionesFila([
-                ['span'=>'glyphicon glyphicon-folder-open','title'=>'Opciones menu','href'=>'/jadmin/menus/opciones/{clave}/'],
+                ['span'=>'glyphicon glyphicon-folder-open','title'=>'Opciones menu','href'=> URL_BASE . '/jadmin/menus/opciones/{clave}/'],
                 ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar menu','href'=>$this->obtUrl('gestionMenu',['{clave}'])],
                 ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar menu','href'=>$this->obtUrl('eliminarMenu',['{clave}']),
                  'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
