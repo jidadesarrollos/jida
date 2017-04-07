@@ -6208,3 +6208,7 @@ body.login {
   color: #fff;
   background: #337ab7;
 }
+.img-preview img {
+  height: 200px;
+  max-height: 250px;
+}
