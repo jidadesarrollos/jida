@@ -658,14 +658,6 @@ class Controller {
 
                 return $this->_urlBase . $urlCompleta;
                 
-<<<<<<< HEAD
-            }else
-            	throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
-			
-        }else
-            return $this->urlActual(2);
-        
-=======
             }else{
 
                 throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
@@ -674,7 +666,6 @@ class Controller {
         }else{
             return $this->_urlBase  . $this->urlActual(2);
         }
->>>>>>> 7ebc6f1e063f95c5efac1d4d3c6af328c422653d
 
     }
 
