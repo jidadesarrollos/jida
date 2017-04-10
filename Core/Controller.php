@@ -657,7 +657,6 @@ class Controller {
                 $urlCompleta = (empty($params))? $urlController.$this->convertirNombreAUrl($metodo) : $urlController.$this->convertirNombreAUrl($metodo).$slash.$params;
 
                 return $this->_urlBase . $urlCompleta;
-                
 
             }else{
 
@@ -667,8 +666,6 @@ class Controller {
         }else{
             return $this->_urlBase  . $this->urlActual(2);
         }
-
-
     }
 
     /**
