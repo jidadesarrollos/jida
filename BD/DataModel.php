@@ -456,6 +456,7 @@ class DataModel{
         foreach ($this->tieneMuchos as $nombreRelacion => $data) {
 
             if(is_array($data)){
+            	
                 $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
 
                 $objRelacion =new $nombreObj();
@@ -464,25 +465,34 @@ class DataModel{
 
 				$relacion=false;
                 if((array_key_exists('relacion', $data))){
+                	
                     $explode = explode('\\', $data['relacion']);
-                    if($explode > 1){
+					
+                    if(count($explode) > 1){
                         $objJoin = new $data['relacion']();
                         $relacion = $objJoin->tablaBD;
                     }else{
                         $relacion = $data['relacion'];
                     }
                 }
+				
 
                 $camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
+				
+				
 				if($relacion){
-                    $objRelacion
+                
+				    $objRelacion
                     	->join($relacion,$camposRelacion)
                         ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
                         ->agrupar($camposRelacion);
+                }else{
+                	//entra aqui si es una relacion 1 -> N
+                	$objRelacion->filtro([$this->pk=>$this->{$this->pk}]);
                 }
 
             }else{
-
+//logica repetida?
 				$objRelacion = new $data();
 				$relacion = $objRelacion->__get('tablaBD');
 				$camposRelacion = array_keys($objRelacion->obtenerPropiedades());
@@ -490,7 +500,7 @@ class DataModel{
 				$objRelacion->consulta()
 							->filtro([$this->pk=>$this->{$this->pk}]);
             }
-
+			
             $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
         }
 

@@ -159,7 +159,7 @@
 			var plugin = this;
 			var archivos = ele.files;
 			this._archivos = archivos;
-			console.log("_defaultPrecarga");
+			
 			if(archivos){
 				band = 0;
 				
@@ -168,7 +168,6 @@
 					++band;
 					var plugin = this;
 					var reader = new FileReader();
-					console.log(reader);
 					reader.addEventListener('load',this._managerOnLoad.bind(plugin),false);
 					reader.addEventListener('loadend',this._managerLoadEnd.bind(plugin),false);
 					
