@@ -59,6 +59,7 @@ class Paginador extends  ListaSelector{
 		$ultimaPaginaMostrada = $this->paginaActual+$this->paginasMostradas;
 		
 		for ($i=0; $i < $this->paginas; $i++) {
+			
 			$pagina = $i+1; 
 			$this->items[$pagina] = new Selector('li');
 			$link = new Selector('a',['href'=>$this->_url($pagina)]);
@@ -66,8 +67,9 @@ class Paginador extends  ListaSelector{
 			$this->items[$pagina]->innerHTML($link->render());
 			if($pagina==$this->paginaActual)
 				$this->items[$pagina]->addClass($this->classItemActivo);
+			
 		}
-		
+		#Helpers\Debug::imprimir($this->paginas,count($this->items),true);
 		
 		if($this->paginaActual > 1){
 			//Solo se agrega el "volver al principio" si hay más de una página entre la actual 
@@ -88,7 +90,7 @@ class Paginador extends  ListaSelector{
 			$this->items[$this->paginas] = $linkFinal;
 		}
 		
-		#Helpers\Debug::imprimir($this->items,true);
+	#	Helpers\Debug::imprimir($this->items,true);
 	}
 
 	private function _url($pagina){
