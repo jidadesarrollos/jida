@@ -300,7 +300,7 @@ class DataModel{
 	 *
 	 */
 	private function instanciarTieneUno(){
-
+		
 		foreach ($this->tieneUno as $key => $class) {
 			
 		    if(!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))){
@@ -324,10 +324,12 @@ class DataModel{
 			  }
 		    }else{
 			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
+			    	
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
-
-					$this->$nombreClass = new $class($this->{$class['fk']},$this->nivelActualORM);
+					$obj = new $class();
+					//Helpers\Debug::imprimir($obj->pk);
+					$this->$nombreClass = new $class(null,$this->nivelActualORM);
 				}
 		    }
 

@@ -35,13 +35,15 @@ class ListaSelector extends Selector{
 	}
 
 	function render(){
-#		\Jida\Helpers\Debug::imprimir($this->items);
-		for($i=0;$i<count($this->items);++$i){
-		#foreach ($this->items as $key => $item) {
-			if(array_key_exists($i, $this->items))
-				$this->addFinal($this->items[$i]->render());
-			//$this->innerHTML.=$item->render();
+#		\Jida\Helpers\Debug::imprimir($this->items);		foreach ($this->items as $key => $item) {
+			$this->addFinal($item->render());
 		}
+		// for($i=0;$i<count($this->items);++$i){
+		// #foreach ($this->items as $key => $item) {
+			// if(array_key_exists($i, $this->items))
+				// $this->addFinal($this->items[$i]->render());
+			// //$this->innerHTML.=$item->render();
+		// }
 		return parent::render();
 	}
 
