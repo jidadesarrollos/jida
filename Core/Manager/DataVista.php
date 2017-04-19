@@ -31,7 +31,7 @@ class DataVista{
     /**
      * @var array $jsAjax Arreglo que registra los js a incluir en llamadas ajax
      */
-    var $jsAjax;
+    var $jsAjax=[];
     /**
      * Titulo de la Página HTML
      *
