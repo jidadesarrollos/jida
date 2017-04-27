@@ -326,8 +326,8 @@ class DataModel{
 			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
-
-					$this->$nombreClass = new $class($this->{$class['fk']},$this->nivelActualORM);
+					
+					$this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
 				}
 		    }
 
