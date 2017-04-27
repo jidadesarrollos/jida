@@ -30,7 +30,7 @@ class GaleriaController extends JController{
 		if($js===TRUE){
 			
 			$this->dv->addJs([
-			'/Framework/htdocs/js/libs/jArchivos.js'
+			//'/Framework/htdocs/js/dist/jArchivos.js'
 			],FALSE);
 				
 		}
@@ -95,7 +95,10 @@ class GaleriaController extends JController{
 							
 							$respuesta['error']=FALSE;
 							$respuesta['data'] = $data;
-							$this->modelo->salvarTodo($data);
+							if($this->modelo->salvarTodo($data)){
+								$respuesta['ids'] = $this->modelo->getResult()->ids();	
+							}
+							
 							
 						}
 						
@@ -103,7 +106,10 @@ class GaleriaController extends JController{
 				}else $respuesta['msj']='Formatos de Imagen no válidos';
 					
 				
-			}else $respuesta['msj']= 'No se pudo realizar la carga, por favor vuelva a intentarlo';
+			}else{
+				
+				$respuesta['msj']= 'No se pudo realizar la carga, por favor vuelva a intentarlo';
+			} 
 		}
 		$this->respuestaJson($respuesta);
 		

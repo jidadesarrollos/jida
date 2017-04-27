@@ -300,7 +300,7 @@ class DataModel{
 	 *
 	 */
 	private function instanciarTieneUno(){
-
+		
 		foreach ($this->tieneUno as $key => $class) {
 			
 		    if(!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))){
@@ -324,10 +324,17 @@ class DataModel{
 			  }
 		    }else{
 			    if(is_string($class) and class_exists($class) and !property_exists($this, $class)){
+			    	
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
 					
-					$this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
+					// Revisar este funcionamiento					
+					// $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
+
+					$obj = new $class();
+					//Helpers\Debug::imprimir($obj->pk);
+					$this->$nombreClass = new $class(null,$this->nivelActualORM);
+
 				}
 		    }
 
@@ -456,6 +463,7 @@ class DataModel{
         foreach ($this->tieneMuchos as $nombreRelacion => $data) {
 
             if(is_array($data)){
+            	
                 $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
 
                 $objRelacion =new $nombreObj();
@@ -464,25 +472,34 @@ class DataModel{
 
 				$relacion=false;
                 if((array_key_exists('relacion', $data))){
+                	
                     $explode = explode('\\', $data['relacion']);
-                    if($explode > 1){
+					
+                    if(count($explode) > 1){
                         $objJoin = new $data['relacion']();
                         $relacion = $objJoin->tablaBD;
                     }else{
                         $relacion = $data['relacion'];
                     }
                 }
+				
 
                 $camposRelacion = (array_key_exists('campos_relacion', $data))?$data['campos_relacion']:[];
+				
+				
 				if($relacion){
-                    $objRelacion
+                
+				    $objRelacion
                     	->join($relacion,$camposRelacion)
                         ->filtro([$relacion.".".$this->pk=>$this->{$this->pk}])
                         ->agrupar($camposRelacion);
+                }else{
+                	//entra aqui si es una relacion 1 -> N
+                	$objRelacion->filtro([$this->pk=>$this->{$this->pk}]);
                 }
 
             }else{
-
+//logica repetida?
 				$objRelacion = new $data();
 				$relacion = $objRelacion->__get('tablaBD');
 				$camposRelacion = array_keys($objRelacion->obtenerPropiedades());
@@ -490,7 +507,7 @@ class DataModel{
 				$objRelacion->consulta()
 							->filtro([$this->pk=>$this->{$this->pk}]);
             }
-
+			
             $this->consultaRelaciones[$nombreRelacion]= $objRelacion->obtQuery();
         }
 
@@ -1690,7 +1707,7 @@ class DataModel{
 
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $campoValor="'".$valor."'";
+                                $campoValor="'".$this->bd->escaparString($valor)."'";
                             }else {
                                 $campoValor=$valor;
                             }

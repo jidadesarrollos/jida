@@ -89,7 +89,7 @@ class Archivo{
 
         $this->files = $file;
 		
-		if($this->files['error']==0){
+		if($this->files['error']==0 or  is_array($file)){
 			if(!isset($file) or is_array($file)){
 	
 	            $this->name  = $file['name'];
@@ -107,6 +107,7 @@ class Archivo{
 	
 	        }
 		}else{
+			#\Jida\Helpers\Debug::imprimir($this->files);
 			return false;
 		}
 	        

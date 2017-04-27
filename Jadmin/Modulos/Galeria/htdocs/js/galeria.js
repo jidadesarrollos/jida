@@ -36,7 +36,7 @@ jd.ajax = function(params,callback){
 			name:'archivoGaleria',
 			multiple:true,
 			onLoad:function(e){
-				console.log('on load carga file ',e);
+				
 				var image = new Image();
 				var ele = e.target;
 				//this._data.testing = 'prueba julio';

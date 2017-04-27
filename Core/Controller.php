@@ -193,6 +193,7 @@ class Controller {
     function __construct(){
     	global $dataVista;
 		$this->_urlBase = (defined('URL_BASE'))?URL_BASE:'';
+		
 		/**
 		 * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
 		 * del controlador con error, por tanto se crea un objeto DataVista vacio
@@ -609,17 +610,19 @@ class Controller {
 						$urlExplode[$key] = Cadenas::upperCamelCase($value);
 
 					$ctrl = implode("\\", $urlExplode).'Controller';
-				}else{
+				}else
 					$ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]).'Controller', $this->_clase);
-				}
-
+				
                 $urlController = $this->urlController($ctrl);
                 $metodo=$url[1];
-
+				
+				$urlController = (strpos(strtolower($this->urlController($ctrl)), 'jadmin'))?'':'/jadmin';
+                $urlController .= $this->urlController($ctrl);
+				
             }else{
 
                 $urlController = $this->urlController();
-                
+
                 if(strpos(strtolower($this->_clase), 'jadmin')){
                     
                     if(URL_APP != '/'){
@@ -632,15 +635,14 @@ class Controller {
                         
                     }else{
                         $urlController = (strpos(strtolower($this->urlController()), 'jadmin'))?'':'/jadmin';
-                        $urlController .= $this->urlController();   
+                        $urlController .= $this->urlController();
                     }
-                    
                 }
                 
                 $ctrl = $this->_clase;
                 
             }
-            
+
             if(method_exists($ctrl,$metodo)){
                 if($metodo=='index')$metodo="";
                 $params= "";
@@ -651,19 +653,19 @@ class Controller {
 					}
                 }
                 
-                $urlCompleta = (empty($params))? $urlController.$this->convertirNombreAUrl($metodo) : $urlController.$this->convertirNombreAUrl($metodo)."/".$params;
+				$slash = ($metodo=='')?'':'/';
+                $urlCompleta = (empty($params))? $urlController.$this->convertirNombreAUrl($metodo) : $urlController.$this->convertirNombreAUrl($metodo).$slash.$params;
 
                 return $this->_urlBase . $urlCompleta;
-                
+
             }else{
 
                 throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
 
         }else{
-            return $this->urlActual(2);
+            return $this->_urlBase  . $this->urlActual(2);
         }
-
     }
 
     /**

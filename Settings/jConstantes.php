@@ -188,7 +188,7 @@ if(!defined('ZONA_HORARIA')){
  * Define la url publica para acceder a los archivos publicos de un tema
  * @constant URL_HTDOCS_TEMAS
  */
-if(!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS', $urlApp.'/Aplicacion/Layout/');
+if(!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS', $urlApp . '/Aplicacion/Layout/');
 if(!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN',$urlApp.'/Framework/htdocs/');
 /**
  * Determina si los caracteres especiales son codificados en código ASCII HTML
