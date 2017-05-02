@@ -293,8 +293,13 @@ class SelectorInput extends Selector{
 	function _crearInput(){
 		
 		$this->_attr= array_merge($this->_attr,
-			['type'=>$this->_tipo,'name'=>$this->_name,'value'=>$this->value,
-			'placeholder'=>$this->placeholder]
+			[
+				'type'			=> $this->_tipo,
+				'name'			=> $this->_name,
+				'id'			=> $this->id,
+				'value'			=> $this->value,
+				'placeholder'	=> $this->placeholder
+			]
 		);
 		parent::__construct('input',$this->_attr);
 		

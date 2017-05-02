@@ -123,6 +123,11 @@ if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
 	 require_once DIR_FRAMEWORK.'/vendor/autoload.php';
 	#Debug::mostrarArray(get_declared_classes (  ));
 }
+if(file_exists('vendor/autoload.php')){
+	
+	require_once 'vendor/autoload.php';
+}
+
 global $elementos;
 $elementos=['areas'=>[],'elementos'=>[]];
 Jida\Helpers\Sesion::iniciar();
