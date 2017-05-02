@@ -142,7 +142,7 @@ class Formulario extends  Selector{
 	 * Expresion regular para validar estructura
 	 * @var regexp $_exprEstructura
 	 */
-	private $_exprEstructura='/^\d+((\[(\d|,\d|x\d)*\])|x\d|;\d|,\d)*$/';
+	private $_exprEstructura='/^\d+((\[(\d+|,\d+|x\d+)*\])|x\d+|;\d+|,\d+)*$/';
 	/**
 	 * Define la ubicacion del archivo de configuracion del formulario
 	 * @var $_path
@@ -376,7 +376,9 @@ class Formulario extends  Selector{
 	 * @access private
 	 */
 	private function _procesarEstructura(){
+		
 		if(!property_exists($this->_configuracion, 'estructura')){
+			echo "string";
 			$estructura = '1x'.$this->_totalCampos;
 
 		}else{

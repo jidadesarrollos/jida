@@ -297,11 +297,12 @@ class Imagen extends Archivo{
 		$arr=[];
 		$bandera = FALSE;
 
-		if(!$directorio)
+		if(!$directorio):
 			$directorio = $ruta;
-		else
+		else:
 			Directorios::crear($directorio);
-
+		endif;
+		
 		if(preg_match('/\.[jpg|png|jpeg]/', $ruta))
 			$imagenes[] = $ruta;
 		else{
