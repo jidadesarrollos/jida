@@ -95,7 +95,10 @@ class GaleriaController extends JController{
 							
 							$respuesta['error']=FALSE;
 							$respuesta['data'] = $data;
-							$this->modelo->salvarTodo($data);
+							if($this->modelo->salvarTodo($data)){
+								$respuesta['ids'] = $this->modelo->getResult()->ids();	
+							}
+							
 							
 						}
 						

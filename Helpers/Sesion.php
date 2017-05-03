@@ -155,18 +155,32 @@ class Sesion {
      * en el sistema
      *
      * @return boolean true
-		 * @since 0.1
-		 *
+	 * @since 0.1
+	 * @deprecated
+	 * @see activa
+	 *
      */
     static function checkLogg(){
 
-        if(self::get('isLoggin'))
-            return true;
-        else {
-            return false;
-
-        }
+   		return self::activa();
     }
+    /**
+     * @internal Verifica si el usuario actual tiene sesión iniciada
+     * en el sistema
+     *
+     * @return boolean true
+	 * @since 0.1
+	 * @deprecated
+	 * @see activo
+	 *
+     */
+	static function activa(){
+ 	    if(self::get('isLoggin')) 
+ 	    	return true;
+        else  
+        	return false;
+
+	}
 
     /**
      * @internal Verifica si el usuario actual pertenece al $perfil

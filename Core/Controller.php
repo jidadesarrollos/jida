@@ -476,7 +476,7 @@ class Controller {
      */
     protected function urlController($ctrl=""){
 
-		$this->url="/";
+		$this->url=$this->obtURLApp();
         if(empty($ctrl)){
            	$controller =  $this->_nombreController;
         }else{
@@ -492,8 +492,6 @@ class Controller {
             }else
                 throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
         }
-
-
 
 
         if(!empty($controller)){

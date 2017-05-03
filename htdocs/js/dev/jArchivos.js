@@ -37,9 +37,9 @@
 		
 		_obtConfiguracion:function(){
 			var defaultConfig ={
-				'preCarga':this._defaultPrecarga,
+				'preCarga':function(){},
 				'onLoadArchivo':this._defaultOnload,
-				'postCarga':function(){},
+				'postCarga':function(){console.log("carga default");},
 				'multiple':false,
 				'name': "_jcargaArchivo",
 				'btnCarga':false,
@@ -63,7 +63,6 @@
 			this.$obj.after($file);
 			this.$file = $file;
 			this.file = $file.get(0);
-			console.log("init : how many tims?");
 			this._manejarEventos();
 			
 		},
@@ -73,15 +72,12 @@
 		_manejarEventos:function(){
 			
 			var plugin = this;
-			console.log("_manejarEventos: asigno en manejar eventos");
+			
 			this.$obj.on('click',function(e){
 				
-				plugin._configuracion.preCarga.call(plugin,e);
 				this.
 					$file.trigger('click')
 					.on('change',this._managerChange.bind(this));
-				console.log("on click");
-				//this.file.addEventListener('change',this._managerChange.bind(this));
 				
 			}.bind(this));
 		},
@@ -89,24 +85,27 @@
 		 * 
 		 */
 		_managerChange:function(e){
+			
 			var ele = e.target;
 			var plugin = this;
 			this._archivosSeleccionados = ele.files.length;
-			console.log("aki....!");
-			plugin._configuracion.preCarga.call(plugin,e);
-			console.log("a eliminar");
-			this.$file.off();
+			console.log("ak paso");
+			
+			this._defaultPrecarga.call(plugin,e);
+			
+			//this.$file.off();
 		},
 		_managerLoadEnd:function(e){
-			var ele = e.target;
+			var ele = e.currentTarget;
 			var plugin = this;
 			++plugin._archivosCargados;
 			
 			if(this._configuracion.btnCarga){
+				console.log("y aqui?");
 				$(this._configuracion.btnCarga).on('click',this._postData.bind(this));
 			}else
 			if(plugin._archivosCargados == plugin._archivosSeleccionados && this._configuracion.url){
-				
+				console.log("paso por aca?");
 				this._postData();
 				
 			}
@@ -140,10 +139,10 @@
 				'contentType': false,
 				'data':form,
 				'dataType':'json',
-				'success':function(){
+				'success':function(r){
 					plugin.file.value='';
-					
-					plugin._configuracion.postCarga.bind(plugin);
+					console.log("we are here");
+					plugin._configuracion.postCarga(r);
 				},
 				'error':function(e){
 					console.log("error",e);
@@ -159,7 +158,8 @@
 			var plugin = this;
 			var archivos = ele.files;
 			this._archivos = archivos;
-			console.log("_defaultPrecarga");
+			plugin._configuracion.preCarga.call(plugin,event);
+			
 			if(archivos){
 				band = 0;
 				
