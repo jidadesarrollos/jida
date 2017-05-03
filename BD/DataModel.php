@@ -327,9 +327,14 @@ class DataModel{
 			    	
 			        $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
+					
+					// Revisar este funcionamiento					
+					// $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
+
 					$obj = new $class();
 					//Helpers\Debug::imprimir($obj->pk);
 					$this->$nombreClass = new $class(null,$this->nivelActualORM);
+
 				}
 		    }
 
