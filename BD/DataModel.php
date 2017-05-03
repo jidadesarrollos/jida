@@ -1066,7 +1066,7 @@ class DataModel{
                 if($i>0) $this->query.=" and ";
                if(is_array($value)){
                     if(!strpos($key, ".")){
-                        $this->query.="$this->tablaQuery.$key".$value[1].$value[0]." ";
+                        $this->query.="$this->tablaQuery.$key".$value[1].'\''.$value[0]."' ";
 
                    }else
                         $this->query.= $key.$value[1].$value[0]." ";
