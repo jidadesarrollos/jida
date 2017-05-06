@@ -143,6 +143,13 @@ global $JD;
      * @var $moduloSubdominio
      */
     private $moduloSubdominio=FALSE;
+	
+	/**
+	 * Objeto Perseador de Urls
+	 * @var object parser
+	 * @since 0.5
+	 */
+	private $_parser;
     /**
      * Arreglo de modulos existentes
      *
@@ -169,14 +176,19 @@ global $JD;
             }
 
             Helpers\Sesion::destroy('__formValidacion');
-
+			
+			
             $_SERVER = array_merge($_SERVER,getallheaders());
+			
+			            
             if(array_key_exists('modulos', $GLOBALS)){
-                $this->modulosExistentes=$GLOBALS['modulos'];
+            
+			    $this->modulosExistentes=$GLOBALS['modulos'];
             }else{
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
             }
 
+			//$this->_parser = new Parser($this->modulosExistentes);
             $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL'] )?$_SESSION['URL_ACTUAL'] :"";
             JD('URL_ANTERIOR',Helpers\Sesion::get('URL_ACTUAL'));
             Helpers\Sesion::set('URL_ACTUAL',$_GET['url']);
