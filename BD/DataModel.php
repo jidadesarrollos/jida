@@ -525,7 +525,12 @@ class DataModel{
 	private function obtTieneUno(){
 		$dataOrm = ($this->nivelORM>NIVEL_ORM)?[$this->nivelORM=>$this->nivelActualORM]:$this->nivelActualORM;
 		foreach ($this->tieneUno as $key => $relacion) {
-
+            
+            if(is_array($relacion)){
+                
+                $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
+                $rel = new $nombreObj();
+            }else 
 			if(is_string($relacion) and class_exists($relacion)){
 
 				$rel = new $relacion();

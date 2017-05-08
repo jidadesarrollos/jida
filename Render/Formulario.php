@@ -487,8 +487,7 @@ class Formulario extends  Selector{
 			$orden = (property_exists($campo, 'orden'))?$campo->orden:$id;
 			$this->_arrayOrden[$orden] = $campo->id;
 			$this->_campos[$campo->id] = new SelectorInput($campo);
-			#if($this->_campos[$campo->id]=='radio')
-			#Helpers\Debug::imprimir($this->_campos[$campo->id]);
+			
 			if($this->labels and $campo->type!='hidden'){
 				$label = new Selector('label',['for'=>$campo->id]);
 				$label->innerHTML((property_exists($campo, 'label')?$campo->label:$campo->name));

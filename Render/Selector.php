@@ -10,6 +10,7 @@
 
 namespace Jida\Render;
 use Exception as Excepcion;
+use Jida\Helpers as Helpers;
 class Selector{
 
  /**
@@ -416,8 +417,10 @@ class Selector{
 
     function data($data,$valor=""){
         if(!empty($valor)){
+        	
             $this->data[$data]=$valor;
         }else{
+        	Helpers\Debug::imprimir($data);
         	if(is_array($data)){
         		$this->data = array_merge($this->data,$data);
 				return $this;

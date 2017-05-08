@@ -134,10 +134,19 @@ class SelectorInput extends Selector{
 		}
 	}
 	private function __constructorObject($params,$type=FALSE){
+			
+		if(property_exists($params, 'data')){
+			
+			if(is_object($params->data)) $params->data =  get_object_vars($params->data);
+			elseif(is_string($params->data)) $params->data = [];
+			
+		}
 		$this->establecerAtributos($params,$this);
 		//Helpers\Debug::imprimir($this);
 		$this->_name = $params->name;
 		$this->_tipo = $params->type;
+		
+
 		if(!$type and in_array($params->type,['checkbox','radio']))
 		{
 				
@@ -284,7 +293,7 @@ class SelectorInput extends Selector{
 	private function _crearSelect(){
 		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
 		
-		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
+		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name,'id'=>$this->id]);
 		parent::__construct($this->_tipo,$this->_attr);
 		$options = $this->obtOpciones();
 		$this->_crearOpcionesSelect($options);
