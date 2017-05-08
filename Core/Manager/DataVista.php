@@ -103,7 +103,7 @@ class DataVista {
 	 * @param boolean footer True Define si el js se imprimirá arriba o abajo
 	 */
 	function addJs($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
-		#Helpers\DEbug::imprimir($this->js);
+
 		if ($dir === TRUE)
 			$dir = URL_JS;
 		if (!is_array($js))
@@ -125,7 +125,7 @@ class DataVista {
 			array_push($this -> jsAgregado, $dir . $archivo);
 		}
 
-		#Helpers\DEbug::imprimir($this->js,true);
+		// Helpers\DEbug::imprimir($this->js,true);
 		return $this;
 	}
 
@@ -149,13 +149,10 @@ class DataVista {
 			} else {
 				$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/js/';
 			}
-
 		}
 
-		if (!is_array($js)) { $js = explode(' ', $js);
-		}
+		if (!is_array($js)) $js = explode(' ', $js);
 
-		#Helpers\Debug::imprimir($this->js);
 		if (is_array($js)) {
 			foreach ($js as $key => $archivo) {
 				if (array_key_exists(strtolower($this -> modulo), $this -> js)) {
@@ -169,8 +166,8 @@ class DataVista {
 				}
 			}
 		}
-		#Helpers\Debug::imprimir($this->js,$js,true);
-
+		
+		// Helpers\Debug::imprimir($this->js,$js,true);
 	}
 
 	/**
