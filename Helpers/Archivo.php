@@ -65,7 +65,7 @@ class Archivo{
     /**
      * Define el directorio de ubicacion del archivo
      */
-    protected $directorio;
+    public static $directorio;
     function __construct($file=""){
         if(!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
@@ -354,9 +354,19 @@ class Archivo{
      *
      * Hace uso de la funcion file_exists para ello
      * @method validarExistencia
+     * @deprecated 0.5
+     * 
      */
     function validarExistencia($file=""){
-        if(empty($file))$file=$this->directorio;
+        
+    }
+    /**
+     *  Verifica la existencia de un archivo
+     * @since 0.5.1
+     */
+    static function existe($file=""){
+        if(empty($file))$file=self::$directorio;
+        
         if(file_exists($file)){
             return true;
         }else{return false;};
@@ -432,16 +442,6 @@ class Archivo{
 
     		return false;
     	}
-    }
-    /**
-     * Retorna el valor de existencia de un Archivo
-     * @method existe;
-     * @access public
-     * @since 0.1
-     *  
-     */
-    function existe(){
-        return $this->existencia;
     }
 
     static function obtPeso($img,$unidad = 'mb'){

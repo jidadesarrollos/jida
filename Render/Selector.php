@@ -534,6 +534,14 @@ class Selector{
 
 		 return $this;
 	}
+    /**
+     * Retorna el tipo de selector
+     * @since 0.5
+     */
+    function obtSelector(){
+        return $this->selector;
+        
+    }
 
 }
 

@@ -55,6 +55,7 @@ class DataVista {
 	var $modulo;
 	var $controlador;
 	var $idioma;
+<<<<<<< HEAD
 	var $jsAgregado = [];
 	var $cssAgregado = [];
 	var $_esJadmin = false;
@@ -121,6 +122,61 @@ class DataVista {
 					$this -> js['jadmin'][$key] = $dir . $archivo;
 				} else
 					$this -> js[$key] = $dir . $archivo;
+=======
+	var $jsAgregado=[];
+	var $cssAgregado=[];
+	var $_esJadmin  = false;
+    /**
+     * Define una ruta absoluta para el template de la vista a usar, si no se encuentra
+     * definida sera usada como vista la vista correspondiente al metodo por defecto o la definida
+     * en la propiedad "vista del" controlador
+     */
+    private $_plantilla="";
+    private $_path="app";
+
+    function __construct($modulo="",$controlador="",$metodo="",$jadmin=false){
+
+    	$this->modulo=$modulo;
+		$this->controlador=$controlador;
+		$this->metodo=$metodo;
+		$this->_esJadmin = $jadmin;
+        if(array_key_exists('_CSS', $GLOBALS)) $this->css=$GLOBALS['_CSS'];
+        if(array_key_exists('_JS', $GLOBALS)) $this->js=$GLOBALS['_JS'];
+        if(array_key_exists('_JS_AJAX', $GLOBALS)) $this->jsAjax=$GLOBALS['_JS_AJAX'];
+        $this->setMetaBasico();
+    }
+
+    function incluirJS($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+            
+        return $this->addJs($js,$dir,$contentJS,$footer);
+        
+    }
+
+    /**
+     * Agrega un javascript para ser renderizado en el layout
+     * @method addjs
+     * @param mixed $js Arreglo o string con ubicación del js
+     * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación
+     * @param boolean footer True Define si el js se imprimirá arriba o abajo
+     */
+    function addJs($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+		#Helpers\DEbug::imprimir($this->js);
+        if ($dir===TRUE) $dir=URL_JS;
+		if(!is_array($js)) $js = explode(",",$js );
+        foreach ($js as $key => $archivo) {
+            if(!empty($ambito)){
+            	if($this->_esJadmin){
+            		$this->js[$ambito]['jadmin'][$key] = $dir.$archivo;
+            	}else{
+            		$this->js[$ambito][$key] = $dir.$archivo;
+            	}
+
+            }else{
+            	if($this->_esJadmin){
+            		$this->js['jadmin'][$key] = $dir.$archivo;
+				}else
+                	$this->js[$key]=$dir.$archivo;
+>>>>>>> e6259f477fd68d091fe25c2e6c7b7b959aaf9b78
 			}
 			array_push($this -> jsAgregado, $dir . $archivo);
 		}
