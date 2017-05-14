@@ -24,6 +24,7 @@ class FormulariosController extends JController{
      */
     private $_formulario;
     function __construct(){
+        
 
         parent::__construct();
         $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
@@ -34,7 +35,7 @@ class FormulariosController extends JController{
         
         $this->vista = 'vista';
         $jidaForms = Helpers\Directorios::listar($this->_rutaJida);
-        // Helpers\Debug::imprimir($jidaForms,true);
+         
         $formsInvalidos = $data = $params = [];
          
         foreach ($jidaForms as $key => $archivo) {
@@ -89,28 +90,29 @@ class FormulariosController extends JController{
         $archivoFormulario = $this->_rutaJida . '/' . $formulario;
         
         if(Helpers\Archivo::existe($archivoFormulario)){
-            
-            $contenido =file_get_contents($archivoFormulario);
-            $data = json_decode($contenido);
-            
-            if(is_object($data)){
-                return [
-                    'id'=> $this->_formulario->identificador,
-                    'nombre'=> $this->_formulario->nombre,
-                    'estructura' => $this->_formulario->estructura,
-                    'identificador' => $this->_formulario->identificador,
-                    'clave_primaria' => $this->_formulario->clave_primaria,
-                    'campos' => count($this->_formulario->campos),
-                    'query' => $this->_formulario->query
                 
-                ];    
-            }
+            $this->_instanciarFormulario($formulario);
+            
+//                Helpers\Debug::imprimir($data,true);
+            return [
+                'id'=> $this->_formulario->identificador,
+                'nombre'=> $this->_formulario->nombre,
+                'estructura' => $this->_formulario->estructura,
+                'identificador' => $this->_formulario->identificador,
+                'clave_primaria' => $this->_formulario->clave_primaria,
+                'campos' => count($this->_formulario->campos),
+                'query' => $this->_formulario->query
+            
+            ];    
+        
         }
     }
     
     private function _instanciarFormulario($id){
         
-        $nombreFormulario = $id .'.json';
+        $nombreFormulario = $id;
+        if(strpos($id, '.json')===FALSE) $nombreFormulario = $id .'.json';
+        
         $ubicacion = $this->_rutaJida . '/' . $nombreFormulario;
         $formulario = new \Jida\Modelos\Formulario($ubicacion);
         
@@ -120,46 +122,45 @@ class FormulariosController extends JController{
     }
 
     function gestion($id=""){
-        
-        //$this->dv->usarPlantilla('formulario');
-        $this->_instanciarFormulario($id);
-        $nombreFormulario = $id .'.json';
-        $dataForm = $this->_dataFormulario($nombreFormulario);
-        
-        if($dataForm){
-            
-            $form = new Render\Formulario('GestionFormulario',$dataForm);
-            $form->boton('principal','Guardar y editar campos');
-            // $form->boton('btnCampos','Guardar y editar campos')
-                // ->attr([
-                    // 'id'    => 'btnCampos',
-                    // 'href'  => $this->obtUrl('gestionCampos')
-                // ]);
-            if(empty($id)){
                 
-                $form->titulo('Crear Nuevo Formulario');    
-            }else{    
-                $form->titulo('Editar <strong>' . $dataForm['nombre']. '</strong>');
-            }
+        $this->_instanciarFormulario($id);
+        $dataForm = [];
+        $nombreFormulario = "";
+        if(!empty($id)){
             
-            if($this->post('btnGestionFormulario') or $this->post('btnCampos')){
-                if($this->_guardarFormulario($nombreFormulario)){
-                  
-                  $this->redireccionar($this->obtUrl('gestionCampos',[$id]));
-                }else{
-                    exit("no guarda");
-                }
-            }    
-            $this->data([
-                'form' =>$form->armarFormulario()
-            ]);
+            $nombreFormulario = $id .'.json';
+            $dataForm = $this->_dataFormulario($nombreFormulario);
+            
+            $titulo = 'Editar <strong>' . $dataForm['nombre']. '</strong>';
+                
         }else{
-            Render\JVista::msj('formularios','warning','No existe el formulario solicitado',$this->obtUrl('index'));
-        }
+            
+            $titulo = 'Crear Nuevo Formulario';
+                        
+        }   
+        
+        $form = new Render\Formulario('GestionFormulario',$dataForm);
+        $form->boton('principal','Guardar y editar campos');
+        $form->titulo($titulo);     
+            
+        if($this->post('btnGestionFormulario') or $this->post('btnCampos')){
+            if($this->_guardarFormulario($nombreFormulario)){
+              
+              $this->redireccionar($this->obtUrl('gestionCampos',[$this->_formulario->identificador]));
+            }else{
+                exit("no guarda");
+            }
+        }    
+        
+    
+        $this->data([
+            'form' =>$form->armarFormulario()
+        ]);
        
     }
 
     function gestionCampos($id=""){
+        
         if(!empty($id)){
                 
             $this->_instanciarFormulario($id);
@@ -182,7 +183,7 @@ class FormulariosController extends JController{
         
         $post = $this->post();
         $bandera=false;
-
+        #Helpers\Debug::imprimir($post,true);
         if($this->_formulario->salvar($post)){
             
           $msj = Helpers\Mensajes::crear('suceso','Formulario guardado correctamente');
