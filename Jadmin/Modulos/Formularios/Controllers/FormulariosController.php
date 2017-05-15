@@ -8,34 +8,28 @@
 */
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
-use Jida\Jadmin\Controllers\JController as JController;
 use Jida\Helpers as Helpers;
 use Jida\Render as Render;
-use Jida\Core\GeneradorCodigo;
 
-class FormulariosController extends JController{
-    
-	use GeneradorCodigo\GeneradorArchivo;
+class FormulariosController extends FController{
     
     private $_rutaJida;
     public $manejoParams = TRUE;
-    /**
-     * @property object $_formulario Objeto std creado a partir del JSON de un formulario cargado
-     */
-    private $_formulario;
+    
     function __construct(){
         
 
         parent::__construct();
         $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
-        $this->dv->incluirJS('/Framework/htdocs/js/jadmin/formularios.js',FALSE);
+        
+        //$this->dv->incluirJS('/Framework/htdocs/js/jadmin/formularios.js',FALSE);
         
     }
     function index(){
         
         $this->vista = 'vista';
         $jidaForms = Helpers\Directorios::listar($this->_rutaJida);
-         
+        Helpers\Sesion::destruir('JFormulario');
         $formsInvalidos = $data = $params = [];
          
         foreach ($jidaForms as $key => $archivo) {
@@ -85,44 +79,9 @@ class FormulariosController extends JController{
         }
         return false;
     }
-    private function _dataFormulario($formulario){
-        
-        $archivoFormulario = $this->_rutaJida . '/' . $formulario;
-        
-        if(Helpers\Archivo::existe($archivoFormulario)){
-                
-            $this->_instanciarFormulario($formulario);
-            
-//                Helpers\Debug::imprimir($data,true);
-            return [
-                'id'=> $this->_formulario->identificador,
-                'nombre'=> $this->_formulario->nombre,
-                'estructura' => $this->_formulario->estructura,
-                'identificador' => $this->_formulario->identificador,
-                'clave_primaria' => $this->_formulario->clave_primaria,
-                'campos' => count($this->_formulario->campos),
-                'query' => $this->_formulario->query
-            
-            ];    
-        
-        }
-    }
-    
-    private function _instanciarFormulario($id){
-        
-        $nombreFormulario = $id;
-        if(strpos($id, '.json')===FALSE) $nombreFormulario = $id .'.json';
-        
-        $ubicacion = $this->_rutaJida . '/' . $nombreFormulario;
-        $formulario = new \Jida\Modelos\Formulario($ubicacion);
-        
-        $this->_formulario = $formulario;
-        
-        
-    }
 
     function gestion($id=""){
-                
+                 Helpers\Debug::imprimir("aki",$id,func_get_args(), true);
         $this->_instanciarFormulario($id);
         $dataForm = [];
         $nombreFormulario = "";
@@ -159,21 +118,7 @@ class FormulariosController extends JController{
        
     }
 
-    function gestionCampos($id=""){
-        
-        if(!empty($id)){
-                
-            $this->_instanciarFormulario($id);
-            
-            $this->data([
-                'campos' => $this->_formulario->campos,
-                'idFormulario' => $id
-            ]);
-            
-        }else{
-            $this->_404();
-        }
-    }
+
 
     /**
      * Gestiona el guardado del formulario
@@ -196,5 +141,6 @@ class FormulariosController extends JController{
     function eliminar(){
         
     }
+
     
 }

@@ -32,15 +32,23 @@
             "id": "nombre",
             "type": "text"
         },
-        {
-            "label": "Query",
-            "name": "query",
+         {
+            "label": "Campos",
+            "name": "campos",
             "eventos": {
                 "obligatorio": {
                     "mensaje": "El campo es obligatorio"
                 }
             },
             "orden": "2",
+            "visibilidad": "1",
+            "id": "campos",
+            "type": "textarea"
+        },
+        {
+            "label": "Query",
+            "name": "query",
+            "orden": "3",
             "visibilidad": "1",
             "id": "query",
             "type": "textarea"

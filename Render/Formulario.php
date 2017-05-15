@@ -480,9 +480,9 @@ class Formulario extends  Selector{
 			for($je=0;$je<$repeticiones;$je++)
 				$this->_estructura = array_merge($this->_estructura,explode(",",$distribucion));
 		endfor;
-
-		if(count($this->_estructura)>$this->_totalCampos){
-			throw new Excepcion("La estructura tiene mayor cantidad de campos que el formulario ".$this->_configuracion->nombre, $this->_ce.'5');
+        $camposEstructura = count($this->_estructura);
+		if($camposEstructura>$this->_totalCampos){
+			throw new Excepcion("La estructura tiene mayor cantidad de campos que el formulario. Campos estructura :  " .$camposEstructura .". Campos Form: ".$this->_totalCampos. ". Form: ".$this->_configuracion->nombre, $this->_ce.'5');
 		}
 
 
@@ -501,16 +501,17 @@ class Formulario extends  Selector{
 	 * @use self::labels
 	 */
 	private function _instanciarCamposConfiguracion(){
-
-		$this->_totalCampos = count($this->_configuracion->campos);
+        
+		$this->_totalCampos = count((array)$this->_configuracion->campos);
 		if($this->_totalCampos<1){
 			throw new Excepcion("El formulario ".$this->_formulario." no tiene campos registrados", $this->_ce."1");
 		}
-		
+		$eee=0;
 		foreach ($this->_configuracion->campos as $id => $campo) {
-		
-        	if(!property_exists($campo,'type'))
-				$campo->type="text";
+            
+            if(!is_object($campo)) continue;
+        
+        	if(!property_exists($campo,'type')) $campo->type="text";
 
 			$orden = (property_exists($campo, 'orden'))?$campo->orden:$id;
 			$this->_arrayOrden[$orden] = $campo->id;
@@ -613,7 +614,7 @@ class Formulario extends  Selector{
 			$this->addFinal(Helpers\Sesion::get('__msjForm'));
 			Helpers\Sesion::destroy('__msjForm');
 		}
-
+        #Helpers\Debug::imprimir($this->_estructura,$this->_arrayOrden);
 		foreach($this->_arrayOrden as $id => $position){
 			
 			$content="";
@@ -791,7 +792,6 @@ class Formulario extends  Selector{
 				$result = $validador->validarCampo($data[$dataCampo['name']]);
 				if($result['validacion']!==TRUE){
 					
-				// Helpers\Debug::imprimir($dataCampo);
 					$this->_errores[$dataCampo['name']] = $result['validacion'];
 					
 					$this->msj('error',$result['validacion']);
@@ -800,7 +800,6 @@ class Formulario extends  Selector{
 					$valorCampo = $result['campo'];
 				}
 
-#				Helpers\Debug::imprimir("validando",$dataCampo,$result);
 			}
 			if(!is_array($data[$dataCampo['name']])){
 				if($this->setHtmlEntities)

@@ -28,6 +28,7 @@ class JsonManager{
     protected $_clase;
     function __construct($json=""){
         $clase = __CLASS__;
+        
         if(!empty($json)){
             $this->_obtenerJSON($json);
         }
@@ -39,7 +40,7 @@ class JsonManager{
         $json = (empty($json))?$this->_json:$json;
         
         if(Helpers\Archivo::existe($json)){
-            
+           
             $contenido = file_get_contents($json);
             $data = json_decode($contenido);
         
@@ -47,13 +48,15 @@ class JsonManager{
                 
                 $this->_objetoJson = $data;
                 $this->establecerAtributos($this->_objetoJson,$this);
-         
+       
             }else{
                 throw new Exception("El valor pasado no es un objeto json", $this->_ce . '1');
                 
             }
             
             
+        }else{
+            throw new Exception("El archivo pedido no existe o no se encuentra en la ubicación correcta ". $json, $this->_ce . '1');
         }
         
     }
