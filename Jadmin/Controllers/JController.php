@@ -48,8 +48,7 @@ class JController extends Core\Controller{
 	protected function validarSesion(){
 
 		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or
-			Helpers\Sesion::checkPerfilAcceso('Administrador') or 
-			Helpers\Sesion::checkPerfilAcceso('Sede'))
+			Helpers\Sesion::checkPerfilAcceso('Administrador'))
 				return true;
 		else
 			$this->formularioInicioSesion();
