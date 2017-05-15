@@ -46,17 +46,14 @@ class JController extends Core\Controller{
     }
 
 	protected function validarSesion(){
-	//	Helpers\Debug::imprimir();
+
 		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or
-			Helpers\Sesion::checkPerfilAcceso('Administrador')){
-				#echo "ak aja";exit;
+			Helpers\Sesion::checkPerfilAcceso('Administrador') or 
+			Helpers\Sesion::checkPerfilAcceso('Sede'))
 				return true;
-
-		}else{
-
+		else
 			$this->formularioInicioSesion();
-		}
-		#exit;
+				
 //		Helpers\Debug::imprimir('Final',true);
 	}
 
