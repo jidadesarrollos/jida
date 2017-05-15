@@ -134,10 +134,18 @@ class SelectorInput extends Selector{
 		}
 	}
 	private function __constructorObject($params,$type=FALSE){
+			
+		if(property_exists($params, 'data')){
+			
+			if(is_object($params->data)) $params->data =  get_object_vars($params->data);
+			elseif(is_string($params->data)) $params->data = [];
+			
+		}
+
 		$this->establecerAtributos($params,$this);
-		//Helpers\Debug::imprimir($this);
 		$this->_name = $params->name;
 		$this->_tipo = $params->type;
+
 		if(!$type and in_array($params->type,['checkbox','radio']))
 		{
 				
@@ -146,12 +154,11 @@ class SelectorInput extends Selector{
 			$opciones = $this->obtOpciones(); 
 			$this->_crearOpcionesSelectorMultiple($opciones);
 			$this->_crear=FALSE;
-			//Helpers\Debug::imprimir("es multiple",$params,$opciones,TRUE);
+			
 		}
 		if(property_exists($params, 'class')){
-			$this->addClass($params->class);
-		}
-			
+        	$this->addClass($params->class);
+		}			
 
 	}
 	
@@ -159,7 +166,6 @@ class SelectorInput extends Selector{
 
 		$this->_name = $name;
 		$this->_tipo = $tipo;
-
 		$this->_attr = is_array($attr)?$attr:[];
 	}
 	private function _crearSelector(){
@@ -284,7 +290,7 @@ class SelectorInput extends Selector{
 	private function _crearSelect(){
 		//$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
 		
-		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name]);
+		$this->_attr= array_merge($this->_attr,['type'=>$this->_tipo,'name'=>$this->_name,'id'=>$this->id]);
 		parent::__construct($this->_tipo,$this->_attr);
 		$options = $this->obtOpciones();
 		$this->_crearOpcionesSelect($options);
@@ -327,18 +333,19 @@ class SelectorInput extends Selector{
 		return $tpl;
 	}
 	private function renderSelect(){
+		    
 		$options = "";
-		//Helpers\Debug::imprimir($this->value,true);
-		foreach ($this->_selectoresOpcion as $key => $option) {
-			$options.=$option->render();
-		}
+		foreach ($this->_selectoresOpcion as $key => $option) 
+		
+        	$options.=$option->render();
+		
 		$this->innerHTML($options);
 		return $this->render(TRUE);
+        
 	}
 	function render($parent=FALSE){
-		
+	    
 		if(!$parent and in_array($this->_tipo,$this->_controlesMultiples)){
-			
 			return $this->renderMultiples();
 		}elseif(!$parent and $this->_tipo=='select'){
 			return $this->renderSelect();
@@ -347,10 +354,9 @@ class SelectorInput extends Selector{
 			return parent::render();	
 		}
 	}
-	
 	function _crearIdentificacion(){
 		$select = new CloneSelector($this);
-		Helpers\Debug::imprimir("ak",$select,true);
+		
 		$select->type = 'select';
 		$select = new SelectorInput($select);
 		
@@ -363,11 +369,14 @@ class SelectorInput extends Selector{
 	function valor($valor){
 		
 		$this->_valorUpdate = $valor;
+        
 		if(in_array($this->_tipo, $this->_controlesMultiples)){
-			//Helpers\Debug::imprimir("aki--",$this->_tipo,$valor,$this->_selectoresOpcion,true);
+			
 			foreach ($this->_selectoresOpcion as $key => $selector) {
-				if($selector->attr('value') == $valor){
-					$selector->attr('checked','checked');
+		
+        		if($selector->attr('value') == $valor){
+		
+        			$selector->attr('checked','checked');
 				}	
 			}
 		}else
@@ -379,7 +388,6 @@ class SelectorInput extends Selector{
 			}
 			
 		}elseif($this->type=="textarea"){
-			
 			$this->innerHTML($valor);
 		}else{
 			$this->attr('value',$valor);

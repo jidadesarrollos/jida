@@ -15,9 +15,9 @@
 </style>
 <h1>Procesar Formularios</h1>
 <div class="row">
-	<div class="col-lg-12 col-ms-12 col-xs-12">
-		<p class="bg-success">Total Campos del formulario <strong class="label label-primary"><?= $this->data->totalCampos ?></strong></p>
-		
-	</div>
+    <div class="col-lg-12 col-ms-12 col-xs-12">
+        <p class="bg-success">Total Campos del formulario <strong class="label label-primary"><?= $this->data->totalCampos ?></strong></p>
+        
+    </div>
 </div>
 <?= $this->data->formulario?>

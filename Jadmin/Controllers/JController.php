@@ -33,7 +33,7 @@ class JController extends Core\Controller{
 		$this->dv->traductor = $this->tr;
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         $this->layout('jadmin');
-
+        if($this->solicitudAjax()) $this->layout = 'ajax.tpl.php';
 		$this->dv->addCss('jida.css');
 		$this->definirJSGlobals();
 

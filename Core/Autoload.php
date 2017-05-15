@@ -9,6 +9,8 @@
  * @version 0.1 - 27/12/2013
  * @package Framework
  * @subpackage core 
+ * @deprecated 0.5
+ * @since 0.1
  * 
  */
  

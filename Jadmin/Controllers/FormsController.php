@@ -43,7 +43,7 @@ class FormsController extends JController{
      * @method jidaForms
      *
      */
-    function jidaForms(){
+    function jidaForms(){   
 
         $conForms = "select id_form,nombre_f as \"Nombre Formulario\",clave_primaria_f as \"Clave Primaria\",
                     nombre_identificador as \"Identificador\" from s_jida_formularios";
@@ -136,7 +136,6 @@ class FormsController extends JController{
 	 * @access public
 	 */
     function gestionFormulario($ambito=1){
-
 
         $tipoForm = 1;
         $id_form=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$_GET['id']:"";

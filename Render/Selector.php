@@ -10,6 +10,7 @@
 
 namespace Jida\Render;
 use Exception as Excepcion;
+use Jida\Helpers as Helpers;
 class Selector{
 
  /**
@@ -67,7 +68,7 @@ class Selector{
      * Permite agregar propiedades adicionales al selector
      */
     private $propiedades=array();
-
+    private $_ce = '100120';
     protected $noCierre=[
     'hr',
     'br',
@@ -374,10 +375,11 @@ class Selector{
                		#echo "if()";
                		$atribs.=$attr."='".$value."'";
                }else{
-
-               		if(!is_string($attr) or !is_string($value))
-						throw new Excepcion("Debe ser un string el valor pasado", 1);
-
+        
+               		if(is_array($attr) or is_array($value) or is_object($attr) or is_object($value)){
+               		    Helpers\Debug::imprimir($this->attr,$attr,$value,true);
+						throw new Excepcion("Debe ser un string el valor pasado", $this->_ce. "001");
+                    }
                		$atribs.=$attr."=\"".$value."\"";
                }
 
@@ -416,8 +418,10 @@ class Selector{
 
     function data($data,$valor=""){
         if(!empty($valor)){
+        	
             $this->data[$data]=$valor;
         }else{
+        	Helpers\Debug::imprimir($data);
         	if(is_array($data)){
         		$this->data = array_merge($this->data,$data);
 				return $this;
@@ -531,6 +535,14 @@ class Selector{
 
 		 return $this;
 	}
+    /**
+     * Retorna el tipo de selector
+     * @since 0.5
+     */
+    function obtSelector(){
+        return $this->selector;
+        
+    }
 
 }
 

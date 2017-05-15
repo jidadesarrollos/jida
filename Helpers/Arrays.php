@@ -12,6 +12,7 @@
 
 namespace Jida\Helpers;
 use stdClass;
+
 class Arrays {
 
 
@@ -207,6 +208,18 @@ class Arrays {
             else $objeto->$key=$value;
         }
         return $objeto;
+    }
+    static function ordenarMatriz($matriz, $campo, $inverso = FALSE){
+        
+        $pivote = [];
+        foreach ($matriz as $key => $fila) {
+            
+            $pivote[$fila[$campo]] = $fila;
+            
+        }
+        
+        Debug::imprimir($pivote,true);
+        
     }
 
 }
