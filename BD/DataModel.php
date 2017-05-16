@@ -1712,7 +1712,7 @@ class DataModel{
 
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $campoValor="'".$this->bd->escaparString($valor)."'";
+                                $campoValor="'".$valor."'";
                             }else {
                                 $campoValor=$valor;
                             }

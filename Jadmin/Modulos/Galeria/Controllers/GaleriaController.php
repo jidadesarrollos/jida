@@ -54,7 +54,7 @@ class GaleriaController extends JController{
 	
 	function cargaForm(){
 		
-		Helpers\Debug::imprimir($_POST,$_FILES,true);
+		// Helpers\Debug::imprimir($_POST,$_FILES,true);
 	}
   
     function index(){
