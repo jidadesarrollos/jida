@@ -441,7 +441,6 @@ class Selector{
 	 *
 	 *
 	 */
-	 
     function attr($attr,$valor=""){
         if(!empty($valor)){
 
