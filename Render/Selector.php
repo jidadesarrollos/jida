@@ -377,7 +377,7 @@ class Selector{
                }else{
         
                		if(is_array($attr) or is_array($value) or is_object($attr) or is_object($value)){
-               		    Helpers\Debug::imprimir($this->attr,$attr,$value,true);
+               		    
 						throw new Excepcion("Debe ser un string el valor pasado", $this->_ce. "001");
                     }
                		$atribs.=$attr."=\"".$value."\"";
@@ -421,7 +421,7 @@ class Selector{
         	
             $this->data[$data]=$valor;
         }else{
-        	Helpers\Debug::imprimir($data);
+        	
         	if(is_array($data)){
         		$this->data = array_merge($this->data,$data);
 				return $this;
@@ -441,6 +441,7 @@ class Selector{
 	 *
 	 *
 	 */
+	 
     function attr($attr,$valor=""){
         if(!empty($valor)){
 
