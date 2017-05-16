@@ -33,7 +33,7 @@ class JController extends Core\Controller{
 		$this->dv->traductor = $this->tr;
 		$this->urlHtdocs=$this->obtURLApp()."htdocs/bower_components/";
         $this->layout('jadmin');
-
+        if($this->solicitudAjax()) $this->layout = 'ajax.tpl.php';
 		$this->dv->addCss('jida.css');
 		$this->definirJSGlobals();
 
@@ -46,17 +46,13 @@ class JController extends Core\Controller{
     }
 
 	protected function validarSesion(){
-	//	Helpers\Debug::imprimir();
+
 		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or
-			Helpers\Sesion::checkPerfilAcceso('Administrador')){
-				#echo "ak aja";exit;
+			Helpers\Sesion::checkPerfilAcceso('Administrador'))
 				return true;
-
-		}else{
-
+		else
 			$this->formularioInicioSesion();
-		}
-		#exit;
+				
 //		Helpers\Debug::imprimir('Final',true);
 	}
 

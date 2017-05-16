@@ -332,7 +332,7 @@ class Pagina{
         if((!empty($this->layout) and $this->layout!==FALSE) or $excepcion===TRUE)
             $this->renderizarLayout($excepcion);
         else
-            throw new Excepcion("No se encuentra definida la plantilla", 120);
+            throw new Excepcion("No se encuentra definido el layout", $this->_ce. '10');
 
     }//final funcion
 
@@ -350,9 +350,9 @@ class Pagina{
 
 				$this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
 				$_plantilla = $this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()).".php";
-
-				if(!file_exists($this->urlPlantilla.Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()).".php")){
-					throw new Exception("La plantilla solicitada no existe", $this->_ce.'10');
+                              
+				if(!file_exists($_plantilla)){
+					throw new Excepcion("La plantilla solicitada no existe : ".$_plantilla, $this->_ce.'10');
 
 				}
 			}

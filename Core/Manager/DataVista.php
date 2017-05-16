@@ -55,6 +55,7 @@ class DataVista {
 	var $modulo;
 	var $controlador;
 	var $idioma;
+
 	var $jsAgregado = [];
 	var $cssAgregado = [];
 	var $_esJadmin = false;
@@ -103,31 +104,38 @@ class DataVista {
 	 * @param boolean footer True Define si el js se imprimirá arriba o abajo
 	 */
 	function addJs($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
-		#Helpers\DEbug::imprimir($this->js);
-		if ($dir === TRUE)
-			$dir = URL_JS;
-		if (!is_array($js))
-			$js = explode(",", $js);
-		foreach ($js as $key => $archivo) {
-			if (!empty($ambito)) {
-				if ($this -> _esJadmin) {
-					$this -> js[$ambito]['jadmin'][$key] = $dir . $archivo;
-				} else {
-					$this -> js[$ambito][$key] = $dir . $archivo;
-				}
 
-			} else {
-				if ($this -> _esJadmin) {
-					$this -> js['jadmin'][$key] = $dir . $archivo;
-				} else
-					$this -> js[$key] = $dir . $archivo;
-			}
-			array_push($this -> jsAgregado, $dir . $archivo);
-		}
+        if ($dir === TRUE)
+            $dir = URL_JS;
+        if (!is_array($js))
+            $js = explode(",", $js);
+        foreach ($js as $key => $archivo) {
+            if (!empty($ambito)) {
+                if ($this -> _esJadmin) {
+                    $this -> js[$ambito]['jadmin'][$key] = $dir . $archivo;
+                } else {
+                    $this -> js[$ambito][$key] = $dir . $archivo;
+                }
 
-		#Helpers\DEbug::imprimir($this->js,true);
-		return $this;
-	}
+            } else {
+                if ($this -> _esJadmin) {
+                    $this -> js['jadmin'][$key] = $dir . $archivo;
+                } else
+                    $this -> js[$key] = $dir . $archivo;
+            }
+            array_push($this -> jsAgregado, $dir . $archivo);
+        }
+
+        // Helpers\DEbug::imprimir($this->js,true);
+        return $this;
+    }
+
+    function incluirJS($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+            
+        return $this->addJs($js,$dir,$contentJS,$footer);
+        
+    }
+
 
 	/**
 	 * Permite agregar archivos JS pertenecientes a un modulo especifico
@@ -149,13 +157,10 @@ class DataVista {
 			} else {
 				$ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/js/';
 			}
-
 		}
 
-		if (!is_array($js)) { $js = explode(' ', $js);
-		}
+		if (!is_array($js)) $js = explode(' ', $js);
 
-		#Helpers\Debug::imprimir($this->js);
 		if (is_array($js)) {
 			foreach ($js as $key => $archivo) {
 				if (array_key_exists(strtolower($this -> modulo), $this -> js)) {
@@ -169,8 +174,8 @@ class DataVista {
 				}
 			}
 		}
-		#Helpers\Debug::imprimir($this->js,$js,true);
-
+		
+		// Helpers\Debug::imprimir($this->js,$js,true);
 	}
 
 	/**
@@ -354,7 +359,7 @@ class DataVista {
 	function editarMeta($array) {
 		$this -> establecerAtributos($array, __CLASS__);
 	}
-
+	
 	private function setMetaBasico() {
 		$html = "";
 		if (empty($this -> meta_descripcion)) {
