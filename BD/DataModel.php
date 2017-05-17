@@ -851,6 +851,7 @@ class DataModel{
      * @return object $this Objeto instanciado
      */
     function in($filtro,$clave="",$condicion="and"){
+    	
         $this->where($condicion);
         if(is_array($filtro)){
             if(empty($clave)) $clave = $this->tablaQuery.$this->pk;
