@@ -1578,6 +1578,7 @@ class DataModel{
      * @param array $data Data a insertar
      */
     private function insertar($data=""){
+    	
         if(!$this->verificarUnicos()->esUnico()){
 
 
@@ -1776,6 +1777,7 @@ class DataModel{
                     if(is_array($valorUnico)){
                         $i=0;
                         $v="( ";
+						Helpers\Debug::imprimir($valorUnico);
                         foreach ($valorUnico as $key => $valor) {
                             if($i>0)$v.=" and ";
                             if(!empty($valor)){
@@ -1788,8 +1790,11 @@ class DataModel{
                         $filtro[]="$valorUnico='".$this->propiedades[$valorUnico]."'";
                     }
              }
+			 
              $this->query = "select $this->pk from $this->tablaBD WHERE ".implode("or ",$filtro);
+			 
              $this->bd->ejecutarQuery($this->query);
+             
              if($this->bd->totalRegistros>0){
                 $this->resultBD->setValores($this)->setUnico(TRUE);
              }else{

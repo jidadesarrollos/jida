@@ -133,7 +133,7 @@ class Mysql extends ConexionBD{
         if(!empty($query)){
             $this->query=$query;
         }
-        if($this->_conexion===FALSE) $this->establecerConexion();
+        $this->establecerConexion();
 
         
 		
