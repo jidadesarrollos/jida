@@ -314,7 +314,7 @@ class DataModel{
 					if(array_key_exists('objeto', $class)){
 						$relacion = $class['objeto'];
 					}
-				  	
+				  	#Helpers\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
 					if(array_key_exists('fk', $class))
 						$this->$nombreClass = new $relacion($this->{$class['fk']},$this->nivelActualORM);					
 					
