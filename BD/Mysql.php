@@ -75,23 +75,31 @@ class Mysql extends ConexionBD{
      * @var $mysqli
      */
     private $mysqli;
-
-
+	/**
+	 * Define si una conexión está establecida
+	 * @var boolean $_conexion 
+	 */
+	private $_conexion=FALSE;
     private $totalCampos;
     /**
      * Establece la conexión a base de datos
      */
-    function establecerConexion(){
+	function establecerConexion(){
+		
+		
+	        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
+			
+	        if($this->mysqli->connect_error){
+				$this->_conexion = FALSE;	
+	            throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
+	
+	        }else{
+	        	$this->_conexion = TRUE;
+	            
+	        }			
+		
+		return $this->_conexion;
 
-        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
-
-        if($this->mysqli->connect_error){
-
-            throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
-
-        }else{
-            return true;
-        }
 
     }// final funcion establecerConexión
     /**
@@ -103,6 +111,15 @@ class Mysql extends ConexionBD{
     function consulta($query,$tipoQuery=1){
     	return $this->ejecutarQuery($query,$tipoQuery);
     }
+	/**
+	 * Implementa real_Scape_string
+	 * 
+	 */
+	function escaparTexto($texto){
+		
+        $this->establecerConexion();
+		return $this->mysqli->real_escape_string($texto);
+	}
      /**
       * Ejecuta una consulta a base de datos
       *
@@ -116,11 +133,13 @@ class Mysql extends ConexionBD{
         if(!empty($query)){
             $this->query=$query;
         }
-        $this->establecerConexion();
+        if($this->_conexion===FALSE) $this->establecerConexion();
 
-        $this->mysqli->query("SET NAMES 'utf8'");
+        
+		
         if($this->codificarHTML===TRUE)
             $this->query=$this->query;
+		
         if($tipoQuery==2){
             $this->result  = $this->mysqli->multi_query($this->query);
         }else{
@@ -135,13 +154,15 @@ class Mysql extends ConexionBD{
         $this->idResult = $this->mysqli->insert_id;
         if(isset($this->result->num_rows))
             $this->totalRegistros = $this->result->num_rows;
-
+		
+		#git$this->cerrarConexion();
         return $this->result;
 
     }
     /**
      * Escapa los caracteres especiales de un string
      * @method escaparString
+	 * @deprecated 0.4
      */
     function escaparString($string=""){
         if(!$this->mysqli)

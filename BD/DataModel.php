@@ -735,7 +735,7 @@ class DataModel{
                 break;
             case 'MySQL' :
                 #include_once 'Mysql.class.php';
-                $this->bd = new Mysql($this->configuracionBD);
+                $this->bd = new Mysql($this->configuracionBD,$this->_clase);
                 break;
             default:
                 throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);
@@ -1383,6 +1383,7 @@ class DataModel{
             return $this->insertar();
 
         }else{
+
             return $this->modificar();
         }
 
@@ -1643,7 +1644,7 @@ class DataModel{
                         break;
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $valores[]="'".$this->bd->escaparString($valor)."'";
+                                $valores[]="'".$this->bd->escaparTexto($valor)."'";
                         }else {
                             $valores[]=$valor;
                         }
@@ -1677,11 +1678,11 @@ class DataModel{
 
     }//fin crearInsert
     private function modificar(){
-
+		
         $dataUpdate = [];		
-		// if(!is_array($this->valoresIniciales)){ 		
-			// $this->valoresIniciales = [];			
-		// }
+		if(!is_array($this->valoresIniciales)){ 		
+			$this->valoresIniciales = [];			
+		}
 
         $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
 
@@ -1699,6 +1700,7 @@ class DataModel{
 
             $update = "UPDATE $this->tablaBD SET ";
             $i=0;
+
             foreach ($dataUpdate as $campo => $valor) {
                 if($i>0) $update.=",";
                 switch ($valor) {
@@ -1712,9 +1714,9 @@ class DataModel{
 
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $campoValor="'".$valor."'";
+                                $campoValor="'".$this->bd->escaparTexto($valor)."'";
                             }else {
-                                $campoValor=$valor;
+                                $campoValor=$this->bd->escaparTexto($valor);
                             }
 
                         break;
