@@ -22,28 +22,28 @@ trait UsuarioManager{
      * @access protected
      * @param $url del controlador de usuarios que invoca el metodo
      */
-     protected function vistaUser($url=null,$perfiles=false){
+     protected function vistaUser($url=null,$perfiles=false,$titulos=false,$acciones=false){
 
         if(empty($url)) $url = $this->url;
-
-        $jvista = new Render\JVista('\Jida\Modelos\User.obtUsers',
-                                    ['titulos' =>['Usuario','Fecha Creaci&oacute;n','Activo','Ultima Sesi&oacute;n','Estatus']],
-                                     'Usuarios');
+		
+		if(!$titulos)	$titulos = ['Usuario','Fecha Creaci&oacute;n','Activo','Ultima Sesi&oacute;n','Estatus'];
+		
+        $jvista = new Render\JVista('\Jida\Modelos\User.obtUsers',['titulos' =>$titulos],'Usuarios');
 
         if($perfiles){
-            $jvista->clausula('join','s_usuarios_perfiles','',['clave'=>'id_usuario','clave_relacion'=>'id_usuario']);
             if(is_array($perfiles))
                 $jvista->clausula('in', $perfiles, 's_usuarios_perfiles.id_perfil');
             else
                 $jvista->clausula('filtro', ['s_usuarios_perfiles.id_perfil' => $perfiles]);
         }
-
-        $jvista->accionesFila([
-            ['span'=>'glyphicon glyphicon-user','title'=>'Asignar perfiles de acceso','href'=>$this->obtUrl('asociarPerfiles',['{clave}']),'data-jvista'=>'modal'],
-            ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar usuario','href'=>$this->obtUrl('setUsuario',['{clave}'])],
-            ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar Usuario','href'=>$this->obtUrl('eliminarUsuario',['{clave}']),
-             'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el usuario seleccionado?']
-        ]);
+		
+		if(!$acciones)
+	        $jvista->accionesFila([
+	            ['span'=>'glyphicon glyphicon-user','title'=>'Asignar perfiles de acceso','href'=>$this->obtUrl('asociarPerfiles',['{clave}']),'data-jvista'=>'modal'],
+	            ['span'=>'glyphicon glyphicon-edit','title'=>'Modificar usuario','href'=>$this->obtUrl('setUsuario',['{clave}'])],
+	            ['span'=>'glyphicon glyphicon-trash','title'=>'Eliminar Usuario','href'=>$this->obtUrl('eliminarUsuario',['{clave}']),
+	             'data-jvista'=>'confirm','data-msj'=>'<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el usuario seleccionado?']
+	        ]);
 
         $jvista->acciones(['Registrar ' => ['href'=>$this->obtUrl('setUsuario')]]);
 
