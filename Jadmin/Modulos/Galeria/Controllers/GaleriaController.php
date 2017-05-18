@@ -94,6 +94,7 @@ class GaleriaController extends JController{
 						if($data){
 							
 							$respuesta['error']=FALSE;
+							$respuesta['path'] = URL_IMGS . 'media/' .$anio .'/' . $mes;
 							$respuesta['data'] = $data;
 							if($this->modelo->salvarTodo($data)){
 								$respuesta['ids'] = $this->modelo->getResult()->ids();	

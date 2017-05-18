@@ -329,8 +329,9 @@ class User extends BD\DataModel{
 
     function obtUsers(){
         $this->consulta(['id_usuario','nombre_usuario','fecha_creacion','activo','ultima_session']);
+        $this->join('s_usuarios_perfiles','',['clave'=>'id_usuario','clave_relacion'=>'id_usuario']);
         $this->join('s_estatus','estatus',['clave'=>'id_estatus','clave_relacion'=>'id_estatus']);
-
+		
         return $this->obt('id_usuario');
     }
 }

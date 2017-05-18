@@ -145,18 +145,10 @@ function  processUrl(key,value){
 
 	 });
 
-	 console.log(dataMenu);	 
-	 // $('.nav-aside').on('click','a',function(e){
-	 	// var $this = $(this);
-	 	// if(!$this.hasClass('menu-toggle')){
-		 	// e.preventDefault();
-		 	// params = processUrl('showmenu',dataMenu.showMenu);
-		 	// console.log(e.target.href+'?'+params);
-		 	// window.location.href = e.target.href+'?'+params;
-	 	// }
-	 // });
 
-	 $linkToggle.on('click',function(){
+	 $linkToggle.on('click',function(e){
+	 	e.preventDefault();
+	 	console.log("ak?");
 		setLinkMenuClass($linkToggle);
 		band = (dataMenu.showMenu)?false:true;
 		toggleMenu(band);
