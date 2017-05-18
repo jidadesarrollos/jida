@@ -28,7 +28,7 @@ class SelectorInput extends Selector{
 	 * @var string $labelOpcion Label para cada selector multiple radio o inputs
 	 */
 	var $labelOpcion="";
-	var $multiplesInline=TRUE;
+	var $inline=TRUE;
 	private $_ce = '00101';
 	/**
 	 * Selectores que requieren de multiples instancias
@@ -63,17 +63,24 @@ class SelectorInput extends Selector{
 	  * de seleccion múltiple
 	  * @param array $_selectoresOpcion
 	  */
-	 private $_selectoresOpcion=[];
-	 
-	 private $_tplMultiples = 
-	 '<div class="{{:type}} {{:type}}-inline">
+	private $_selectoresOpcion=[];
+ 	
+	public $classMultiples='col-md-3';
+	private $_tplMultiples = 
+	 '<div class="{{:type}} {{:class}}">
 	    {{:input}}
 	    <label for="{{:label}}">
 	        {{:label}}
 	    </label>
-	  </div>
-  ';
-  
+	  </div>';
+	 
+  	private $_tplMultiplesInline =
+  	'<div class="{{:type}} {{:type}}-inline">
+	    {{:input}}
+	    <label for="{{:label}}">
+	        {{:label}}
+	    </label>
+	  </div>'; 
   	private $_tplControlMultiple='
   		<div class="control-multiple">
   		{{:selector1}}{{:selector2}}
@@ -326,7 +333,13 @@ class SelectorInput extends Selector{
 			'type' =>$selector->type,
 			
 			];
-			$tpl.= $this->_obtTemplate($this->_tplMultiples, $data );
+			if($this->inline){
+				$tpl.= $this->_obtTemplate($this->_tplMultiplesInline, $data );
+			}else{
+				$data['class']= $this->classMultiples;
+				$tpl.= $this->_obtTemplate($this->_tplMultiples, $data );	
+			}
+			
 			
 		}
 		
