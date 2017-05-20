@@ -134,9 +134,8 @@ class Mysql extends ConexionBD{
             $this->query=$query;
         }
         $this->establecerConexion();
-
         
-		
+		$this->mysqli->query("SET NAMES 'utf8'");
         if($this->codificarHTML===TRUE)
             $this->query=$this->query;
 		
