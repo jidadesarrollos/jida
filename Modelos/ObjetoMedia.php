@@ -29,6 +29,7 @@ class ObjetoMedia extends BD\DataModel{
      * @var int $interno
      */
     var $interno;
+	var $idioma;
 	private $tamanios=[];
     protected $tablaBD="s_objetos_media";
     protected $pk="id_objeto_media";

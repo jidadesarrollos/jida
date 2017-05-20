@@ -26,26 +26,25 @@ class Menu extends BD\DataModel {
      * @access public
      *
      */
-    var $nombre_menu;
+    var $menu;
 	/**
 	* @var varchar identificador
 	*/
-	#var $identificador;
-	/**
-	 * Funcion constructora
-	 */
-
+	var $identificador;
+	var $idioma;
 	private $tablaOpcionesAcceso = 's_opciones_menu_perfiles';
     private $tablaOpciones = 's_opciones_menu';
     private $perfilesAcceso=[];
 	protected $pk = "id_menu";
 	protected $tablaBD = "s_menus";
-
+	/**
+	 * Funcion constructora
+	 */
 	function __construct($id=""){
 		if(!empty($id) and !is_numeric($id)){
 			parent::__construct();
 
-			$this->obtenerBy($id,'nombre_menu');
+			$this->obtenerBy($id,'menu');
 
 		}else{
 			parent::__construct($id);
@@ -143,7 +142,7 @@ class Menu extends BD\DataModel {
          $perfilesUser = "'".implode("','", $this->getPerfilesAcceso())."'";
          if(!empty($this->id_menu)){
          	$query  = "
-	                    select distinct a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,padre,hijo,id_estatus,icono,orden,
+	                    select distinct a.id_opcion_menu,id_menu,url_opcion,opcion_menu,padre,hijo,id_estatus,icono,orden,
 	                    selector_icono, id_metodo
 	                    from
 	                    $this->tablaOpciones a
@@ -152,7 +151,7 @@ class Menu extends BD\DataModel {
 	                    where id_menu = $this->id_menu
 	                    and c.clave_perfil in($perfilesUser)
 	                    and  (id_estatus=1 or id_estatus=null)
-	                    order by padre,orden,nombre_opcion";
+	                    order by padre,orden,opcion_menu";
 
 	         $data = $this->bd->obtenerDataCompleta($query);
 	         return $data;

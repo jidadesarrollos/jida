@@ -27,6 +27,7 @@ class Componente extends BD\DataModel{
 	* @var varchar descripcion
 	*/
 	public $descripcion;
+	public $identificador;
 	protected $pk='id_componente';
 	protected $tablaBD='s_componentes';
 

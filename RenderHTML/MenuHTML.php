@@ -211,20 +211,20 @@ class MenuHTML extends BD\DBContainer{
 						
                         $opc = Selector::crear(
                         $this->tagAdicionalLIpadre['selector'],$atributoslink,$icono.
-                        Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']
+                        Selector::crear('span',['class'=>'inner-text'],$opcion['opcion_menu']
 						)
                         ,3,true);
                     }else{
-                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
+                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$opcion['opcion_menu']);
                     }
-					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);
+					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['opcion_menu'])]);
                     $listaMenu.=Selector::crear("li",$atributos,$opc.$submenu['html'],2,true);
                 }else{
 
-                    $span =Selector::crear('span',['class'=>'inner-text'],$opcion['nombre_opcion']);
+                    $span =Selector::crear('span',['class'=>'inner-text'],$opcion['opcion_menu']);
 					
                     $enlace = Selector::crear("a",array('href'=>$this->_urlBase . $opcion['url_opcion']),$icono.$span,3);
-					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['nombre_opcion'])]);
+					$atributos= array_merge($atributos,['id'=>'item-'.Helpers\Cadenas::guionCase($opcion['opcion_menu'])]);
 					
 					if($this->_urlBase.$opcion['url_opcion'] == '/'.$this->_urlActual)
 						$atributos['class'] = $this->cssLiSeleccionado;
@@ -303,9 +303,9 @@ class MenuHTML extends BD\DBContainer{
                         $cssli['class']=$cssli['class']." ".$this->configuracion['li'][$nivel]['padre'];
                     }
                     if(is_array($this->tagAdicionalLIpadre)){
-                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['nombre_opcion'],$ident+3);
+                        $opc = Selector::crear($this->tagAdicionalLIpadre['selector'],$this->tagAdicionalLIpadre['atributos'],$icono.$subopcion['opcion_menu'],$ident+3);
                     }else{
-                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$subopcion['nombre_opcion']);
+                        $opc = $icono.Selector::crear('span',['class'=>'inner-text'],$subopcion['opcion_menu']);
                     }
                     $ulOpen=$submenus['open'];
                     $listaMenu .= Selector::crear("li",$cssli,$opc.$submenus['html'],$nivel+1);
@@ -313,7 +313,7 @@ class MenuHTML extends BD\DBContainer{
                     /**
                      * Entra aqui si es un link o enlace del menu
                      */
-                    $span = Selector::crear('span',['class'=>'inner-text'],$subopcion['nombre_opcion']);
+                    $span = Selector::crear('span',['class'=>'inner-text'],$subopcion['opcion_menu']);
                     if($subopcion['url_opcion']==$_SERVER['REQUEST_URI']){
                         $ulOpen=TRUE;
                         $cssli['class'] = $cssli['class']." ".$this->cssLiSeleccionado;
