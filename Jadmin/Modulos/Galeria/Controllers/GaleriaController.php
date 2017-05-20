@@ -30,7 +30,7 @@ class GaleriaController extends JController{
 		if($js===TRUE){
 			
 			$this->dv->addJs([
-			//'/Framework/htdocs/js/dist/jArchivos.js'
+			'/Framework/htdocs/js/dev/jCargaFile.js'
 			],FALSE);
 				
 		}
