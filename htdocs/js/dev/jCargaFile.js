@@ -148,7 +148,7 @@
 					console.log("error",e);
 				}
 			});
-			form.reset();
+			
 		},
 
 		
