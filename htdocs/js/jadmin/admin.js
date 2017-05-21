@@ -151,11 +151,10 @@ function processUrl(key, value) {
 
 	});
 
-	console.log(dataMenu);
-
 	$linkToggle.on('click', function(e) {
 		
 		e.preventDefault();
+
 		setLinkMenuClass($linkToggle);
 		band = (dataMenu.showMenu) ? false : true;
 		toggleMenu(band);

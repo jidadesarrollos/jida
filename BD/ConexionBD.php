@@ -69,11 +69,13 @@ class ConexionBD {
     protected $puerto;
 
 	private $_conexion;
+	protected $_clase;
     /**
 
      * @throws Exception Error de Conexion a la Base de Datos
      */
-    public function __construct($conexion="default") {
+    public function __construct($conexion="default",$clase="") {
+    	$this->_clase = $clase;
 		if(class_exists('\App\Config\BD')){
 			$this->_conexion = $conexion;
 

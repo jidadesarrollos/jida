@@ -72,9 +72,11 @@
 		_manejarEventos:function(){
 			
 			var plugin = this;
+			console.log("paso en manejarEventos");
 			
 			this.$obj.on('click',function(e){
-				
+				this.$file.off();
+				console.log("aca ?");
 				this.
 					$file.trigger('click')
 					.on('change',this._managerChange.bind(this));
@@ -89,8 +91,6 @@
 			var ele = e.target;
 			var plugin = this;
 			this._archivosSeleccionados = ele.files.length;
-			console.log("ak paso");
-			
 			this._defaultPrecarga.call(plugin,e);
 			
 			//this.$file.off();
@@ -101,11 +101,11 @@
 			++plugin._archivosCargados;
 			
 			if(this._configuracion.btnCarga){
-				console.log("y aqui?");
+				console.log("en la 103");
 				$(this._configuracion.btnCarga).on('click',this._postData.bind(this));
 			}else
 			if(plugin._archivosCargados == plugin._archivosSeleccionados && this._configuracion.url){
-				console.log("paso por aca?");
+				console.log("en la 107");
 				this._postData();
 				
 			}
@@ -141,7 +141,7 @@
 				'dataType':'json',
 				'success':function(r){
 					plugin.file.value='';
-					console.log("we are here");
+					console.log("we are here 1");
 					plugin._configuracion.postCarga(r);
 				},
 				'error':function(e){
@@ -161,20 +161,19 @@
 			plugin._configuracion.preCarga.call(plugin,event);
 			
 			if(archivos){
-				band = 0;
 				
+				band = 0;	
 				[].forEach.call(archivos,function(archivo){
+				
 					archivo.id_app = band;
 					++band;
-					var plugin = this;
-					var reader = new FileReader();
-					console.log(reader);
+					var reader = new FileReader();		
 					reader.addEventListener('load',this._managerOnLoad.bind(plugin),false);
 					reader.addEventListener('loadend',this._managerLoadEnd.bind(plugin),false);
-					
 					reader.readAsDataURL(archivo);
 					
 				}.bind(plugin));
+				
 			}
 					 
 		},

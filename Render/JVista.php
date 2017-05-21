@@ -340,18 +340,19 @@ class JVista{
 		}
         $this->_imprimir($this->paginaActual,$_GET,TRUE);
         if(count($this->clausulas)>0){
-        	//Helpers\Debug::imprimir('ima here',$this->clausulas);
-            foreach ($this->clausulas as $clausula => $parametros) {
-                //foreach ($arrParams as $clausula => $param) {
-/*
+        	// Helpers\Debug::imprimir('ima here',$this->clausulas);
+            foreach ($this->clausulas as $key => $parametros) {
+            	foreach ($parametros as $clausula => $param) {
+
                     if(is_array($param)){
-                    	Helpers\Debug::imprimir("array",$param);
+                    	// Helpers\Debug::imprimir("array",$param);
                         call_user_func_array([$this->objeto,$clausula], $param);
-                    }else{*/
-              //      	Helpers\Debug::imprimir("no array",$clausula,$parametros);
-                        $this->objeto->{$clausula}($parametros);
-	//				}
-                //}
+                    }else{
+              			// Helpers\Debug::imprimir("no array--",$key,$param,$clausula,$parametros);
+                        // $this->objeto->{$clausula}($parametros);
+						$this->objeto->{$key}($parametros);
+					}
+                }
             }
         }
 
@@ -1010,6 +1011,7 @@ class JVista{
      */
     function clausula($nombreClausula,$valores){
         $argumentos = func_num_args();
+        
         if($argumentos==2)
             $this->clausulas[$nombreClausula]=$valores;
         elseif($argumentos>2){
@@ -1019,10 +1021,10 @@ class JVista{
             	if($key!=0)
 					$params[$nombreClausula][]=$value;
             }
-
-            $this->clausulas[$nombreClausula]=$params;
+			// $this->clausulas=$params;
+			$this->clausulas[$nombreClausula]=$params;
         }
-
+		// Helpers\Debug::imprimir('$this->clausulas',$this->clausulas,true);
     }
 
 

@@ -596,7 +596,7 @@ class Formulario extends  Selector{
 	 * creada
 	 * @method armarFormulario
 	 * @param array $titulos
-	 * 
+	 * @deprecated usar metodo render.
 	 * @example $titulos = [0=>['limite'=>10,'titulo'=>'Titulo del fieldset']]
 	 */
 	function armarFormulario(){

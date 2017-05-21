@@ -449,7 +449,7 @@ class Formulario extends BD\DBContainer {
             $query = "select * from $this->tablaCampos where id_form=".$this->formularios[''.$clave.'']->id_form." order by orden asc";
         }elseIf($this->totalForms>1){
 
-            $claves = Arrays::obtenerKey('id_form', array_reverse($this->formularios));
+            $claves = Helpers\Arrays::obtenerKey('id_form', array_reverse($this->formularios));
 
             $query = sprintf("select * from %s where id_form in (%s) order by orden asc ",$this->tablaCampos,implode(',', $claves));
         }else{

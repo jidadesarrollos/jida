@@ -30,7 +30,7 @@ class GaleriaController extends JController{
 		if($js===TRUE){
 			
 			$this->dv->addJs([
-			//'/Framework/htdocs/js/dist/jArchivos.js'
+			'/Framework/htdocs/js/dev/jCargaFile.js'
 			],FALSE);
 				
 		}
@@ -54,7 +54,7 @@ class GaleriaController extends JController{
 	
 	function cargaForm(){
 		
-		Helpers\Debug::imprimir($_POST,$_FILES,true);
+		// Helpers\Debug::imprimir($_POST,$_FILES,true);
 	}
   
     function index(){
@@ -94,6 +94,7 @@ class GaleriaController extends JController{
 						if($data){
 							
 							$respuesta['error']=FALSE;
+							$respuesta['path'] = URL_IMGS . 'media/' .$anio .'/' . $mes;
 							$respuesta['data'] = $data;
 							if($this->modelo->salvarTodo($data)){
 								$respuesta['ids'] = $this->modelo->getResult()->ids();	

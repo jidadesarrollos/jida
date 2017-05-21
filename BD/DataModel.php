@@ -314,7 +314,7 @@ class DataModel{
 					if(array_key_exists('objeto', $class)){
 						$relacion = $class['objeto'];
 					}
-				  	
+				  	#Helpers\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
 					if(array_key_exists('fk', $class))
 						$this->$nombreClass = new $relacion($this->{$class['fk']},$this->nivelActualORM);					
 					
@@ -735,7 +735,7 @@ class DataModel{
                 break;
             case 'MySQL' :
                 #include_once 'Mysql.class.php';
-                $this->bd = new Mysql($this->configuracionBD);
+                $this->bd = new Mysql($this->configuracionBD,$this->_clase);
                 break;
             default:
                 throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);
@@ -851,6 +851,7 @@ class DataModel{
      * @return object $this Objeto instanciado
      */
     function in($filtro,$clave="",$condicion="and"){
+    	
         $this->where($condicion);
         if(is_array($filtro)){
             if(empty($clave)) $clave = $this->tablaQuery.$this->pk;
@@ -1383,6 +1384,7 @@ class DataModel{
             return $this->insertar();
 
         }else{
+
             return $this->modificar();
         }
 
@@ -1577,6 +1579,7 @@ class DataModel{
      * @param array $data Data a insertar
      */
     private function insertar($data=""){
+    	
         if(!$this->verificarUnicos()->esUnico()){
 
 
@@ -1643,7 +1646,7 @@ class DataModel{
                         break;
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $valores[]="'".$this->bd->escaparString($valor)."'";
+                                $valores[]="'".$this->bd->escaparTexto($valor)."'";
                         }else {
                             $valores[]=$valor;
                         }
@@ -1677,11 +1680,11 @@ class DataModel{
 
     }//fin crearInsert
     private function modificar(){
-
+		
         $dataUpdate = [];		
-		// if(!is_array($this->valoresIniciales)){ 		
-			// $this->valoresIniciales = [];			
-		// }
+		if(!is_array($this->valoresIniciales)){ 		
+			$this->valoresIniciales = [];			
+		}
 
         $dataUpdate = array_diff_assoc($this->propiedades,$this->valoresIniciales);
 
@@ -1699,6 +1702,7 @@ class DataModel{
 
             $update = "UPDATE $this->tablaBD SET ";
             $i=0;
+
             foreach ($dataUpdate as $campo => $valor) {
                 if($i>0) $update.=",";
                 switch ($valor) {
@@ -1712,9 +1716,9 @@ class DataModel{
 
                     default:
                         if(!in_array($valor, $this->bd->getValoresReservados())){
-                                $campoValor="'".$this->bd->escaparString($valor)."'";
+                                $campoValor="'".$this->bd->escaparTexto($valor)."'";
                             }else {
-                                $campoValor=$valor;
+                                $campoValor=$this->bd->escaparTexto($valor);
                             }
 
                         break;
@@ -1774,6 +1778,7 @@ class DataModel{
                     if(is_array($valorUnico)){
                         $i=0;
                         $v="( ";
+						Helpers\Debug::imprimir($valorUnico);
                         foreach ($valorUnico as $key => $valor) {
                             if($i>0)$v.=" and ";
                             if(!empty($valor)){
@@ -1786,8 +1791,11 @@ class DataModel{
                         $filtro[]="$valorUnico='".$this->propiedades[$valorUnico]."'";
                     }
              }
+			 
              $this->query = "select $this->pk from $this->tablaBD WHERE ".implode("or ",$filtro);
+			 
              $this->bd->ejecutarQuery($this->query);
+             
              if($this->bd->totalRegistros>0){
                 $this->resultBD->setValores($this)->setUnico(TRUE);
              }else{

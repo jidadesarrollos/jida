@@ -74,7 +74,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
 	public function gestionOpcion($padre=0,$id_menu,$id=''){
 
-        $modelosPerfiles = new modelos\opcionMenuPerfil();      
+        $modelosPerfiles = new Modelos\OpcionMenuPerfil();      
 
         if ($padre == 'n-a') {
 
@@ -82,7 +82,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
         }else{
 
-            $ModeloPadre = new modelos\OpcionesMenu($padre);
+            $ModeloPadre = new Modelos\OpcionesMenu($padre);
             $nombre = $ModeloPadre->consulta('nombre_opcion')->filtro(['id_opcion_menu'=>$padre])->obt();
         }
 
@@ -90,7 +90,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
             $btn = 'Guardar';
             $formulario= new Render\Formulario('RegistroOpcion',$id);
-            $opcion = new modelos\opcionesMenu($id);
+            $opcion = new Modelos\OpcionesMenu($id);
 
             if ($padre!=0) 
                 $titulo='Modificar Sub Item de '.$nombre[0]['nombre_opcion'];
@@ -101,7 +101,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
             $btn='Registrar';
             $formulario= new Render\Formulario('RegistroOpcion');
-            $opcion = new modelos\opcionesMenu();
+            $opcion = new Modelos\OpcionesMenu();
 
             if ($padre!=0) 
                 $titulo='Registar Sub item en '.$nombre[0]['nombre_opcion'];
@@ -142,7 +142,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
                         $this->redireccionar('/jadmin/menus/opciones/'.$id_menu.'/'.$padre);
                         
-                    }else Helpers\debug::imprimir('error al guardar');
+                    }else Helpers\Debug::imprimir('error al guardar');
 
                 // $this->redireccionar('\jadmin\menus\index');
             }
@@ -160,11 +160,11 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController {
 
             $padre= ($padre == 'n-a')? 0:$padre;
 
-            $cMenu = new Modelos\opcionesMenu($id);
+            $cMenu = new Modelos\OpcionesMenu($id);
             
             if(!empty($cMenu->id_opcion_menu)){
                 $cMenu->eliminar($id);
-                $modelosPerfiles = new modelos\opcionMenuPerfil();
+                $modelosPerfiles = new Modelos\OpcionMenuPerfil();
                 $modelosPerfiles->eliminar($id,'id_opcion_menu');
                 // Render\Vista::msj('menus','suceso', 'Menu eliminado');
 
