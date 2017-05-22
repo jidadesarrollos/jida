@@ -24,15 +24,19 @@ var Storage = {
 		return this;
 	}
 };
+
 var menuConfig = {
 	showMenu : true
 };
+
 function setLinkMenuClass($linkToggle) {
+	
 	if ($linkToggle.hasClass('fa-arrow-right')) {
 		$linkToggle.find('span.fa').removeClass('fa-arrow-right').addClass('fa-arrow-left');
 	} else {
 		$linkToggle.find('span.fa').removeClass('fa-arrow-left').addClass('fa-arrow-right');
 	}
+	
 }
 
 function addMenuTooltip() {
@@ -53,6 +57,7 @@ function addMenuTooltip() {
 }
 
 function removeMenuTooltip() {
+	
 	$('.menu li a').each(function(k, item) {
 		var $item = $(item);
 		var $text = $item.find('.inner-text');
@@ -60,20 +65,24 @@ function removeMenuTooltip() {
 
 	});
 	$('.tooltip').remove();
+	
 }
 
 function toggleMenu(open) {
-	if (!open)
-		open = false;
+	
+	if (!open) open = false;
+	
 	var $content = $('#content-wrapper');
 	var menuConfig = Storage.obtJson('menuAdmin');
 
 	if (!open) {
+		
 		if (!$content.hasClass('short-menu')) {
 			$content.addClass('short-menu');
 			menuConfig.showMenu = false;
 			addMenuTooltip();
 		}
+		
 	} else {
 		$('.li-parent').removeClass('selected').find('ul').removeClass('show');
 		if ($content.hasClass('short-menu')) {
@@ -136,23 +145,35 @@ function processUrl(key, value) {
 	}
 
 	var $linkToggle = $('.menu-toggle');
-	if ($('#content-wrapper').hasClass('short-menu'))
-		;
-	addMenuTooltip();
+	var $menu = $('.nav-aside');
+	
+	if ($('#content-wrapper').hasClass('short-menu')) addMenuTooltip();
 
 	$('.li-parent').on('click', function(e) {
 
 		var $this = $(this);
-		if ($this.find('ul').length > 1) {
-
-			setLinkMenuClass($linkToggle);
-			toggleMenu(true);
+		var $submenu = $this.find('ul');
+		if ($submenu.length >= 1) {
+			console.log("entro acá?");
+			$('.li-parent').removeClass('selected');
+			
+			if($submenu.hasClass('show')){
+				
+				$menu.find('ul').removeClass('show');	
+				
+			}else{
+				$menu.find('ul').removeClass('show');
+				$submenu.addClass('show');
+			}
+			
+			//setLinkMenuClass($linkToggle);
+			//toggleMenu(true);
 		}
 
 	});
 
 	$linkToggle.on('click', function(e) {
-		
+
 		e.preventDefault();
 
 		setLinkMenuClass($linkToggle);
