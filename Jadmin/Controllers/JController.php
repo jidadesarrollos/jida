@@ -20,6 +20,10 @@ class JController extends Core\Controller{
 	var $idioma = 'es';
 
 	var $manejoParams=FALSE;
+    var $perfilesAdmin= [
+        'JidaAdministrador',
+        'Administrador'
+    ];
     function __construct(){
 
     	parent::__construct();
@@ -46,9 +50,8 @@ class JController extends Core\Controller{
     }
 
 	protected function validarSesion(){
-
-		if(	Helpers\Sesion::checkPerfilAcceso('JidaAdministrador') or
-			Helpers\Sesion::checkPerfilAcceso('Administrador'))
+        
+		if(Helpers\Sesion::es($this->perfilesAdmin))
 				return true;
 		else
 			$this->formularioInicioSesion();

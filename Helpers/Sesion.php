@@ -214,6 +214,24 @@ class Sesion {
         }
         return false;
     }
+    static function es($perfil){
+        if(is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')){
+            $perfiles = self::get('Usuario')->perfiles;
+            if(!is_array($perfil)) $perfil = explode(" ", $perfil);
+            
+            $encontrados = array_intersect($perfil, $perfiles);
+            if($encontrados){
+                return true;
+            }else{
+                exit("no");
+            }
+            
+            
+            
+            
+        }
+        return false;
+    }
     /**
      * @internal Verifica si el usuario en sesion es administrador
      *
