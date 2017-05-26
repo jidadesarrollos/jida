@@ -31,7 +31,7 @@ class Menu extends BD\DataModel {
 	* @var varchar identificador
 	*/
 	var $identificador;
-	var $idioma;
+	var $id_idioma;
 	private $tablaOpcionesAcceso = 's_opciones_menu_perfiles';
     private $tablaOpciones = 's_opciones_menu';
     private $perfilesAcceso=[];

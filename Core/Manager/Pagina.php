@@ -729,7 +729,9 @@ class Pagina{
 		return $libsHTML;
 	}
 	private function __obtHTMLLibreria($lang,$libreria,$cont=2){
-		$path = (defined('URL_BASE'))?URL_BASE:"";
+			
+		$path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,'http')===FALSE))?URL_BASE:"";
+		
 		switch ($lang) {
 			case 'js':
 				if(is_array($libreria)) Debug::mostrarArray($libreria,0);
