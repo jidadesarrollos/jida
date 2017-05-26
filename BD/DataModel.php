@@ -249,9 +249,10 @@ class DataModel{
         $this->_clase = get_class($this);
 		$this->usoBD=$this->manejadorBD;
 		$this->namespace = $this->obtNamespace($this->_clase);
-		if($this->usoBD!==FALSE)
+		if($this->usoBD!==FALSE){
+		
         	$this->initBD();
-		else{
+		}else{
 			$this->usoBD=FALSE;
 		}
 

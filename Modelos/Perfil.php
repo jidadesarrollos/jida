@@ -30,6 +30,8 @@ class Perfil extends BD\DataModel{
 	* @var varchar clave_perfil 
 	*/
 	public $clave_perfil;
+	public $identificador;
+	public $idioma;
 	protected $pk='id_perfil';
 	protected $tablaBD='s_perfiles';
 

@@ -32,6 +32,7 @@ class Metodo extends BD\DataModel{
 	* @var int loggin 
 	*/
 	public $loggin;
+	public $identificador;
 	protected $pk='id_metodo';
 	protected $tablaBD='s_metodos';
 
