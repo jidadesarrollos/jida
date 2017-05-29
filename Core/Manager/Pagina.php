@@ -675,8 +675,9 @@ class Pagina{
 	 * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
 	 */
 	function imprimirLibrerias($lang,$modulo=""){
+			
 		$dataInclude=[];
-		$path = (defined('URL_BASE'))?URL_BASE:"";
+		
 		#\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
 		if(!property_exists($this->data, $lang)) return false;
 		$data = $this->data->{$lang};

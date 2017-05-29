@@ -20,7 +20,7 @@
         <?=$this->imprimirLibrerias('css','jadmin')?>
     </head>
 
-    <body>
+    <body data-url="<?=URL_BASE?>">
 
      <div  class="jida-container">
          <div class="container-fluid">

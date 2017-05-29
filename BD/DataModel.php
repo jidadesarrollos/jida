@@ -855,7 +855,7 @@ class DataModel{
     	
         $this->where($condicion);
         if(is_array($filtro)){
-            if(empty($clave)) $clave = $this->tablaQuery.$this->pk;
+            if(empty($clave)) $clave = $this->tablaQuery . "." . $this->pk;
             else{
                 if(!strpos($clave, ".")){ $clave = $this->tablaQuery.".".$clave;}
             }

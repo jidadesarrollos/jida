@@ -105,25 +105,30 @@ class DataVista {
 	 */
 	function addJs($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
 
-        if ($dir === TRUE)
+        if ($dir === TRUE){
+        	
+        	$dir = URL_JS;
+        }
             $dir = URL_JS;
         if (!is_array($js))
             $js = explode(",", $js);
         foreach ($js as $key => $archivo) {
+        	$finalDir = (is_string($archivo) and strpos($archivo,'http')===FALSE)?$dir:"";
             if (!empty($ambito)) {
                 if ($this -> _esJadmin) {
-                    $this -> js[$ambito]['jadmin'][$key] = $dir . $archivo;
+                    $this -> js[$ambito]['jadmin'][$key] = $finalDir . $archivo;
                 } else {
-                    $this -> js[$ambito][$key] = $dir . $archivo;
+                    $this -> js[$ambito][$key] = $finalDir . $archivo;
                 }
 
             } else {
                 if ($this -> _esJadmin) {
-                    $this -> js['jadmin'][$key] = $dir . $archivo;
+                    $this -> js['jadmin'][$key] = $finalDir . $archivo;
                 } else
-                    $this -> js[$key] = $dir . $archivo;
+                    $this -> js[$key] = $finalDir . $archivo;
             }
-            array_push($this -> jsAgregado, $dir . $archivo);
+			
+            array_push($this -> jsAgregado, $finalDir . $archivo);
         }
 
         // Helpers\DEbug::imprimir($this->js,true);
