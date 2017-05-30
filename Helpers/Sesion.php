@@ -223,10 +223,7 @@ class Sesion {
             if($encontrados){
                 return true;
             }
-            // else{
-                // exit("no");
-            // }
-            
+
         }
         return false;
     }
