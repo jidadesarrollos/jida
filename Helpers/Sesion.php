@@ -222,13 +222,7 @@ class Sesion {
             $encontrados = array_intersect($perfil, $perfiles);
             if($encontrados){
                 return true;
-            }else{
-                exit("no");
             }
-            
-            
-            
-            
         }
         return false;
     }
