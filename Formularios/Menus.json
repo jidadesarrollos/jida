@@ -1,27 +1,26 @@
 {
-	"nombre" : "Menus",
-	"query":"select id_menu,menu from s_menus",
-	"clave_primaria":"id_menu",
-	"identificador":"Menus",
-	"estructura":"",
+    "nombre": "Menus",
+    "query": "select id_menu, nombre_menu from s_menus",
+    "clave_primaria": "id_menu",
+    "identificador": "Menus",
+    "estructura": "",
+    "campos": [
+        {
+            "name": "nombre_menu",
+            "type": "text",
+            "id": "nombre_menu",
+            "label": "Nombre Menu",
+            "placeholder": "Nombre",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Debe indicar el nombre del menu"
+                }
+            }
 
-	"campos":[
-		{
-			"name":"menu",
-			"type":"text",
-			"id":"menu",
-			"label":"Nombre Menu",
-			"placeholder":"Nombre",
-			"eventos":{
-				"obligatorio":{
-		          "mensaje":"Debe indicar el nombre del menu"
-		        }
-			}
+        }
 
-		}
-        
 
-	]
+    ]
 
 
 }
