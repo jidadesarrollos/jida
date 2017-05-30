@@ -223,6 +223,7 @@ class Sesion {
             if($encontrados){
                 return true;
             }
+
         }
         return false;
     }
