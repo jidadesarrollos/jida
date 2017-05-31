@@ -227,7 +227,7 @@ class Cadenas {
     /**
      * @internal Modifica un string en formato guionCase a la frase original
      *
-     * @method guionCaseToString
+     * @method guionCaseToStringcd <div class=""></div>
      * @param string $guionCase
      * @return string $str
 		 * @access public
