@@ -1088,7 +1088,7 @@ class Pagina {
             $url .= $this->controlador;
         if (!empty($this->metodo) and strtolower($this->metodo) != 'index')
             $url .= $this->metodo;
-		Helpers\Debug::imprimir($url);
+//		Helpers\Debug::imprimir($url);
         $url = explode("/", URL_BASE . '/' . Helpers\Cadenas::guionCase($idioma,true) . '/' . Helpers\Cadenas::guionCase($url,true));
 
         return implode("/", array_filter($url));
