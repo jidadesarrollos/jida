@@ -1088,13 +1088,12 @@ class Pagina {
             $url .= $this->controlador;
         if (!empty($this->metodo) and strtolower($this->metodo) != 'index')
             $url .= $this->metodo;
+
 		$base = URL_BASE;
-		
-		$base =(empty($base))? "/" : "/". URL_BASE . '/';	
-		
-        $url = explode("/",  Helpers\Cadenas::guionCase($idioma,true) . '/' . Helpers\Cadenas::guionCase($url,true));
-		
+		$base =(empty($base))? "/" : "/". URL_BASE . '/';
+        $url = explode("/",  Helpers\Cadenas::guionCase($idioma,true) . '/' . Helpers\Cadenas::guionCase($url,true));		
         return $base .implode("/", array_filter($url));
+
     }
 
 }
