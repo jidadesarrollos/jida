@@ -46,8 +46,7 @@ class GaleriaController extends JController{
 	function form(){
 		
 		$this->dv->addJs(
-		['/Framework/htdocs/js/libs/jArchivos.js',
-		'/Framework/htdocs/js/jadmin/cargaArchivos.js'
+		['/Framework/htdocs/js/jadmin/cargaArchivos.js'
 		],false);
 		
 	}
