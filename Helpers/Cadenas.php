@@ -214,7 +214,11 @@ class Cadenas {
 		 *
 
      */
-    public static function guionCase($string){
+    public static function guionCase($string,$camel=FALSE){
+    	if($camel){
+    		$data = preg_split('/(?=[A-Z])/', $string);
+			$string = implode(' ', $data);
+    	}
         $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/','', $string);
 		$string = self::removerAcentos($string);
 
@@ -223,7 +227,7 @@ class Cadenas {
     /**
      * @internal Modifica un string en formato guionCase a la frase original
      *
-     * @method guionCaseToString
+     * @method guionCaseToStringcd <div class=""></div>
      * @param string $guionCase
      * @return string $str
 		 * @access public
@@ -365,5 +369,7 @@ class Cadenas {
 		if(empty($string)) return $reemplazo;
 		return $string;
 	}
+	
+	
 
 } // END

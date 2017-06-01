@@ -73,6 +73,8 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
 				Render\JVista::msj('menus','suceso', 'Menu <strong>'.$classMenu->nombre_menu.'</strong> creado exitosamente',$this->obtUrl('index'));
 			}
         }
+        
+        $this->dv->usarPlantilla('form');
 
         $this->data(['form' => $form->armarFormulario()]);
     }
