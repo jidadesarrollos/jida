@@ -72,11 +72,9 @@
 		_manejarEventos:function(){
 			
 			var plugin = this;
-			console.log("paso en manejarEventos");
-			
+
 			this.$obj.on('click',function(e){
 				this.$file.off();
-				console.log("aca ?");
 				this.
 					$file.trigger('click')
 					.on('change',this._managerChange.bind(this));
@@ -99,13 +97,16 @@
 			var ele = e.currentTarget;
 			var plugin = this;
 			++plugin._archivosCargados;
-			
+			console.log("load end", this._configuracion.btnCarga);
+			console.log(plugin._archivosCargados +" == "+plugin._archivosSeleccionados);
+			console.log('configuracion url :', this._configuracion.url);
 			if(this._configuracion.btnCarga){
-				console.log("en la 103");
+				
 				$(this._configuracion.btnCarga).on('click',this._postData.bind(this));
+				
 			}else
-			if(plugin._archivosCargados == plugin._archivosSeleccionados && this._configuracion.url){
-				console.log("en la 107");
+			if((plugin._archivosCargados == plugin._archivosSeleccionados) && this._configuracion.url){
+				console.log("aki papi");
 				this._postData();
 				
 			}
@@ -119,7 +120,7 @@
 			plugin._configuracion.onLoad.call(plugin,e);
 		},
 		_postData : function(){
-				
+			console.log("post data");
 			var form = new FormData();
 			var plugin = this;
 			var name = (plugin._archivosCargados>1)?plugin._configuracion.name+"[]":plugin._configuracion.name;
@@ -141,7 +142,7 @@
 				'dataType':'json',
 				'success':function(r){
 					plugin.file.value='';
-					console.log("we are here 1");
+					plugin._archivosCargados = 0;
 					plugin._configuracion.postCarga(r);
 				},
 				'error':function(e){
@@ -212,7 +213,6 @@
     };
 	$.fn.jCargaFile = jPlugin;
 	$(selector).each(function(i,elem){
-		console.log(i,elem);
 		new jCargaFile( elem );
 	});
 	
