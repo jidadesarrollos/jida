@@ -364,7 +364,7 @@ class Formulario extends  Selector{
 			$btn ->attr([
 				'id'=>$id,
 				'name'=>$id,'type'=>'submit',
-				
+				'value'=> 'Guardar'
 				])->addClass($this->css('botonEnvio'));
 			
 			if($this->jidaValidador){
