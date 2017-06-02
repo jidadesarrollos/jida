@@ -12,6 +12,8 @@
   global $JD;
 use Jida\Debug as Debug;
  class JidaController {
+
+   
     /**
      * Define el nombre del Controlador requerido
      * @var string $controlador
@@ -716,4 +718,3 @@ use Jida\Debug as Debug;
 
     }
  } // END
-

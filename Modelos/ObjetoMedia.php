@@ -16,7 +16,7 @@ class ObjetoMedia extends BD\DataModel{
     var $leyenda;
     var $alt;
     var $meta_data;
-	var $idioma;
+	var $id_idioma;
     /**
      * Ubicación parcial de la imagen, distribución de carpetas dentro del directorio Publico,
      * la url del directorio absoluto debe ser omitida pues se usarán las constantes correspondientes.
