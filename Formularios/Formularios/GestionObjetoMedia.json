@@ -1,0 +1,41 @@
+{
+    "nombre": "Gestion Objeto Media",
+    "query": "select descripcion, leyenda, alt from s_objetos_media",
+    "estructura": "1x3",
+    "identificador": "GestionObjetoMedia",
+    "clave_primaria": "id_objeto_media",
+    "campos": [
+        {
+            "label": "Descripci&oacute;n",
+            "name": "descripcion",
+            "maxlength": "100",
+            "placeholder": "Descripcion",
+            "visibilidad": "1",
+            "id": "descripcion",
+            "type": "textarea"
+        },
+        {
+            "label": "Leyenda",
+            "name": "leyenda",
+            "maxlength": "150",
+            "placeholder": "Leyenda",
+            "visibilidad": "1",
+            "id": "leyenda",
+            "type": "text"
+        },
+        {
+            "label": "Alt",
+            "name": "alt",
+            "maxlength": "45",
+            "eventos": {
+                "obligatorio": {
+                    "mensaje": "Este campo es obligatorio"
+                }
+            },
+            "placeholder": "Texto alternativo",
+            "visibilidad": "1",
+            "id": "alt",
+            "type": "text"
+        }
+    ]
+}

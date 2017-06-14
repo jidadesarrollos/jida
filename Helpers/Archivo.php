@@ -89,7 +89,7 @@ class Archivo{
 
         $this->files = $file;
 		
-		if($this->files['error']==0 or  is_array($file)){
+		if($this->files['error'] == 0 &&  is_array($file)){
 			if(!isset($file) or is_array($file)){
 	
 	            $this->name  = $file['name'];
@@ -97,15 +97,15 @@ class Archivo{
 	            $this->tmp_name = $file['tmp_name'];
 	            $this->error = $file['error'];
 	            $this->size = $file['size'];
+								
 				if(!empty($this->name)){
 	            	$this->obtenerExtension();
 	
 	            	$this->totalArchivosCargados = count($file['tmp_name']);
 				 	$this->validarCarga();
-				}
-	
-	
+				}	
 	        }
+			
 		}else{
 			#\Jida\Helpers\Debug::imprimir($this->files);
 			return false;
@@ -152,7 +152,7 @@ class Archivo{
      *
      */
 	   private function obtenerExtension(){
-
+			
         if(is_array($this->type)){
             $i=0;
 

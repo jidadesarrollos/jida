@@ -171,8 +171,10 @@ global $JD;
             /**
              * validacion lenguajes existentes
              */
+             
             if(array_key_exists('idiomas', $GLOBALS)){
                 $this->idiomas=$GLOBALS['idiomas'];
+				
             }
 
             Helpers\Sesion::destroy('__formValidacion');
