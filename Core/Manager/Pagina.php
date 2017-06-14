@@ -738,7 +738,7 @@ class Pagina {
         return $html;
     }
 
-<<<<<<< HEAD
+
 	/**
 	 * Imprime el css correspondiente a un modulo especifico
 	 * @method printCssModulo
@@ -835,18 +835,13 @@ class Pagina {
 		}
 		return $html;
 	}
-	/**
-	 * Imprime las librerias css
-	 *
-	 */
-    function printCSS(){
-=======
+
     /**
      * Imprime las librerias css
      *
      */
     function printCSS() {
->>>>>>> a0bea5e84b3f732bfd7d69e54fd4892bdcb1614b
+
         $css = "";
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         $this->checkData();
