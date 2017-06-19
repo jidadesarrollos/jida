@@ -27,8 +27,8 @@ class MetodosController	 extends JController{
     function metodosObjeto($url=""){
         $url = (empty($url))?$this->url:$url;
         
-        if($this->getEntero($this->get('obj'))){
-            $objeto = new Objeto($this->getEntero($this->get('obj')));            
+        if($this->entero($this->get('obj'))){
+            $objeto = new Objeto($this->entero($this->get('obj')));
             $this->tituloPagina="Objeto $objeto->objeto - Metodos";
             $nombreClase = $objeto->objeto."Controller";
             $clase = new ReflectionClass($nombreClase);
@@ -51,7 +51,7 @@ class MetodosController	 extends JController{
 	
     
     function addDescripcion(){
-        if($this->getEntero($this->get('metodo'))){
+        if($this->entero($this->get('metodo'))){
                 
             if(isset($_POST['s-ajax'])){
                 $this->layout='ajax.tpl.php';
@@ -118,11 +118,11 @@ class MetodosController	 extends JController{
      *
      */
     function asignarAcceso(){
-        if($this->getEntero($this->get('metodo'))){            
+        if($this->entero($this->get('metodo'))){
             $this->vista="accesoPerfiles";
             
             $form = new Formulario('PerfilesAMetodos',2,$this->get('metodo'),2);
-            $metodo = new Metodo($this->getEntero($this->get('metodo')));
+            $metodo = new Metodo($this->entero($this->get('metodo')));
             
             $form->action=$this->url."asignar-acceso/metodo/".$this->get('metodo');
             $form->valueSubmit="Asignar Perfiles a Metodo";

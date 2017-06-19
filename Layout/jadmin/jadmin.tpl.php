@@ -21,7 +21,7 @@
         <!--libs--> 
     </head>
 
-    <body class="fixed">
+    <body class="fixed" data-url="<?=URL_BASE?>">
         
      <div  class="jida-container">
      	<nav class="navbar navbar-default navbar-fixed-top navbar-top">

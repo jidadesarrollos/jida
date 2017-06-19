@@ -53,7 +53,7 @@ class PerfilesController extends JController{
 	function setPerfiles(){
 
 	    $pk="";$tipoForm=1;
-        if($this->getEntero($this->get('perfil'))){
+        if($this->entero($this->get('perfil'))){
 
             $pk=$this->get('perfil');$tipoForm=2;
         }
@@ -98,7 +98,7 @@ class PerfilesController extends JController{
             }else{
                 $noNumerico = false;
                 foreach ($total as $key => $value) {
-                    if($this->getEntero($value)==0){
+                    if($this->entero($value)==0){
                         $noNumerico=TRUE;
                     }
 

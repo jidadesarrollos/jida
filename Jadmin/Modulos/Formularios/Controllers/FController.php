@@ -18,12 +18,14 @@ class Fcontroller extends JController{
     use GeneradorCodigo\GeneradorArchivo;
     /**
      * @property object $_formulario Objeto std creado a partir del JSON de un formulario cargado
+     * @see \Jida\Modelos\Formularios
      */
     protected $_formulario;
         
     protected function _dataFormulario($formulario){
         
         $this->_instanciarFormulario($formulario);
+		
         return [
             'id'=> $this->_formulario->identificador,
             'nombre'=> $this->_formulario->nombre,
@@ -38,10 +40,12 @@ class Fcontroller extends JController{
     }
     
     protected function _instanciarFormulario($id){
-       
+
+        Helpers\Sesion::destruir('JFormulario');
         if(is_object(Helpers\Sesion::obt('JFormulario'))){
                 
             $clase = Helpers\Sesion::obt('JFormulario');
+			
             if($clase->identificador == $id){
                 $this->_formulario = $clase;
                 return $this->_formulario;
@@ -49,7 +53,7 @@ class Fcontroller extends JController{
             
         }
         
-        $formulario = new \Jida\Modelos\Formulario($id,'jida',false);
+        $formulario = new \Jida\Modelos\Formulario($id);
         $this->_formulario = $formulario;
         return $this->_formulario;
         

@@ -1,6 +1,7 @@
 (function($) {
 	'use strict';
 
+    const URL_BASE = $('body').data('url');
 	var $container = $('#jidaGestionCampos');
 
 	var $listaCampos = $container.find('#listaCamposFormulario');
@@ -32,7 +33,7 @@
 		var parametros = {'campos':listadoOrdenado,'formulario':$container.data('formulario')};
 		
 		$.ajax({
-			url : "/jadmin/formularios/campos/ordenar/",
+			url : URL_BASE + "jadmin/formularios/campos/ordenar/",
 			method : 'post',
 			dataType : 'json',
 			data : parametros
@@ -81,6 +82,9 @@
 		var form = $container.data('formulario');
 		var urlCall = $ul.data('url');
 
+		if(URL_BASE){
+			urlCall = URL_BASE + urlCall;
+		}
 		e.preventDefault();
 
 		if (valorSeleccion) {

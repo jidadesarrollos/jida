@@ -98,12 +98,13 @@ class DataVista {
 
 	/**
 	 * Agrega un javascript para ser renderizado en el layout
-	 * @method addjs
+	 * @method incluirJS
 	 * @param mixed $js Arreglo o string con ubicación del js
 	 * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación
 	 * @param boolean footer True Define si el js se imprimirá arriba o abajo
+     *
 	 */
-	function addJs($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
+	function incluirJS($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
 
         if ($dir === TRUE){
         	
@@ -135,7 +136,15 @@ class DataVista {
         return $this;
     }
 
-    function incluirJS($js,$dir=TRUE,$contentJS="",$footer=TRUE){
+    /**
+     * @param $js
+     * @param bool $dir
+     * @param string $contentJS
+     * @param bool $footer
+     * @return mixed
+       @deprecated 0.6
+     */
+    function addJs($js,$dir=TRUE,$contentJS="",$footer=TRUE){
             
         return $this->addJs($js,$dir,$contentJS,$footer);
         
@@ -296,7 +305,8 @@ class DataVista {
 			$key = array_search($archivo, $arrayCss);
 			unset($arrayCss[$key]);
 			return true;
-		}
+		}
+
 		return false;
 	}
 

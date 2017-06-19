@@ -14,7 +14,7 @@ use Jida\Componentes\Traductor 	as Traductor;
 use Jida\Helpers 				as Helpers;
 use Jida\RenderHTML\Formulario 	as Formulario;
 use Jida\Render 				as Render; 
-class JController extends Core\Controller{
+class   JController extends Core\Controller{
 
 	protected $urlHtdocs;
 	var $idioma = 'es';

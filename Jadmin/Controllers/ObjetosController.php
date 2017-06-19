@@ -150,7 +150,7 @@ class ObjetosController extends JController{
 	  $this->tituloPagina="jida-Registro Componentes";
       $this->dv->vista="";
       if(!empty($item)){
-      	$idComponente = $this->getEntero($this->get('comp'));
+      	$idComponente = $this->entero($this->get('comp'));
 	    $comp = new Modelos\Componente($idComponente);
 
         $this->validarObjetos($comp);
@@ -211,7 +211,7 @@ class ObjetosController extends JController{
      * @method addDescripcion
      */
     function addDescripcion(){
-        if($this->getEntero($this->get('obj'))){
+        if($this->entero($this->get('obj'))){
 
             if(isset($_POST['s-ajax'])){
                 $this->layout='ajax.tpl.php';
@@ -313,10 +313,10 @@ class ObjetosController extends JController{
      */
     function asignarAcceso(){
 
-        if($this->getEntero($this->get('obj'))>0){
+        if($this->entero($this->get('obj'))>0){
             $this->vista="accesoPerfiles";
             $form = new Formulario('PerfilesAObjetos',2,$this->get('obj'),2);
-            $obj = new Objeto($this->getEntero($this->get('obj')));
+            $obj = new Objeto($this->entero($this->get('obj')));
 
             $form->action = $this->getUrl('asignarAcceso',['obj'=>$this->get('obj')]);
             $form->valueBotonForm="Asignar Perfiles a Objeto";

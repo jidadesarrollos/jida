@@ -2,7 +2,7 @@
 	"nombre":"Registro de Opcion",
 	"identificador":"RegistroOpcion",
 	"estructura": "2x5",
-	"query":"select a.id_opcion_menu,id_menu,url_opcion,nombre_opcion,icono,orden, selector_icono,id_estatus, padre, id_perfil from s_opciones_menu a left join s_opciones_menu_perfiles b on (a.id_opcion_menu=b.id_opcion_menu)",
+	"query":"select a.id_opcion_menu,id_menu,url_opcion,opcion_menu,icono,orden, selector_icono,id_estatus, padre, id_perfil from s_opciones_menu a left join s_opciones_menu_perfiles b on (a.id_opcion_menu=b.id_opcion_menu)",
 	"clave_primaria":"a.id_opcion_menu",
 	"campos":[
 		{
@@ -51,7 +51,7 @@
 			"type":"select",
 			"id":"padre",
 			"label":"Padre",
-			"opciones":"=principal;select id_opcion_menu, nombre_opcion from s_opciones_menu"
+			"opciones":"=principal;select id_opcion_menu, opcion_menu from s_opciones_menu"
 		},
 		{
 			"name":"url_opcion",
@@ -70,9 +70,9 @@
 			"id":"id_menu"
 		},
 		{
-			"name":"nombre_opcion",
+			"name":"opcion_menu",
 			"orden": "7",
-			"id":"nombre_opcion",
+			"id":"opcion_menu",
 			"label":"Nombre de Opcion",
 			"type":"text",
 			"eventos":{

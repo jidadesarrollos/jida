@@ -82,7 +82,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
 
     function eliminarMenu($id='') {
 
-        if ($this->getEntero($id)) {
+        if ($this->entero($id)) {
 
 			$cMenu = new Modelos\Menus($id);
             

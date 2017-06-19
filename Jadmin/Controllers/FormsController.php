@@ -138,13 +138,13 @@ class FormsController extends JController{
     function gestionFormulario($ambito=1){
 
         $tipoForm = 1;
-        $id_form=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$_GET['id']:"";
+        $id_form=(isset($_GET['id']) and $this->entero($_GET['id']))?$_GET['id']:"";
 		$this->dv->title="Registro de Formulario";
 		$this->dv->totalCampos =0;
 
         $jctrol =  new Modelos\JidaControl($id_form,$ambito);
 
-        if($this->getEntero($this->get('id'))){
+        if($this->entero($this->get('id'))){
 
         	$this->tituloPagina="Modificación de formulario";
     		$this->dv->totalCampos = $jctrol->obtenerTotalCamposFormulario($_GET['id']);
@@ -156,9 +156,9 @@ class FormsController extends JController{
 
 		$formulario = new RenderHTML\Formulario('Formularios',$tipoForm,$id_form,$ambito);
         if($ambito==2){
-            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->getUrl('gestionJidaForm',['id'=>$id_form]):$this->getUrl('gestionJidaForm');
+            $formulario->action=(isset($_GET['id']) and $this->entero($_GET['id']))?$this->getUrl('gestionJidaForm',['id'=>$id_form]):$this->getUrl('gestionJidaForm');
         }else{
-            $formulario->action=(isset($_GET['id']) and $this->getEntero($_GET['id']))?$this->getUrl('gestionFormulario',['id'=>$id_form]):$this->getUrl('gestionFormulario');
+            $formulario->action=(isset($_GET['id']) and $this->entero($_GET['id']))?$this->getUrl('gestionFormulario',['id'=>$id_form]):$this->getUrl('gestionFormulario');
         }
 
 		if(isset($_POST['btnFormularios'])){
@@ -226,7 +226,7 @@ class FormsController extends JController{
         $ids = $_GET['id'];
         $arrayIds = explode(",",$ids);
         foreach($arrayIds as $key=>$id){
-            $arrayIds[$key] = $this->getEntero($id);
+            $arrayIds[$key] = $this->entero($id);
         }
         if($this->jctrl->eliminarFormulario($arrayIds)){
          Helpers\Sesion::set('__msjVista', Helpers\Mensajes::mensajeSuceso("Se han eliminados los formularios"));
@@ -289,7 +289,7 @@ class FormsController extends JController{
             }
           $this->dv->formCampo=$formCampo->armarFormularioEstructura();
         }
-		if($this->getEntero($this->get('formulario'))){
+		if($this->entero($this->get('formulario'))){
 			$jctrl->id_form=$this->get('formulario');
 		}else{
 			$this->redireccionar($this->url);

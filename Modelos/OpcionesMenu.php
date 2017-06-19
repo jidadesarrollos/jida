@@ -27,9 +27,9 @@ class OpcionesMenu extends BD\DataModel{
 	*/
 	public $url_opcion;
 	/**
-	* @var varchar nombre_opcion
+	* @var varchar opcion
 	*/
-	public $nombre_opcion;
+	public $opcion_menu;
 	/**
 	* @var varchar padre
 	*/
@@ -60,7 +60,7 @@ class OpcionesMenu extends BD\DataModel{
 	protected $tablaBD='s_opciones_menu';
 
 	function obtOpciones(){
-        $this->consulta(['id_opcion_menu','url_opcion','nombre_opcion','orden','id_estatus']);
+        $this->consulta(['id_opcion_menu','url_opcion','opcion_menu','orden','id_estatus']);
         return $this->obt('id_opcion_menu');
     }
 

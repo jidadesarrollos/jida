@@ -192,14 +192,14 @@ class GaleriaController extends JController{
 		]);
 		if($this->post('btnGestionObjetoMedia')){
 			
-			if($this->getEntero($this->get('objeto'))){
+			if($this->entero($this->get('objeto'))){
                 $id=$this->get('objeto');
             }else{
                 $id=Helpers\Sesion::get('objetoMedia');
             }
 			
-			if(Helpers\Sesion::get('_formMedia') instanceof Render\Formulario){
-				$form = Helpers\Sesion::get('_formMedia');
+			if(Helpers\Sesion::obt('_formMedia') instanceof Render\Formulario){
+				$form = Helpers\Sesion::obt('_formMedia');
 			}else{
 				$form = $this->_obtFormMedia($id);
 			}

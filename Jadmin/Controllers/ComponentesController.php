@@ -59,7 +59,7 @@ class ComponentesController extends JController{
          $form->valueSubmit = "Guardar Componente";
 
          if($this->post('btnComponente')){
-             $this->getEntero($this->post('id_componente'));
+             $this->entero($this->post('id_componente'));
 
 			 if($this->validarComponente($this->post('componente'))){
                  $comp = new Modelos\Componente($idComponente);

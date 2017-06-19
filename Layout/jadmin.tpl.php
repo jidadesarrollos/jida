@@ -22,7 +22,7 @@
         <!--libs-->
     </head>
 
-    <body>
+    <body data-url="<?=URL_BASE?>">
 
      <div  class="jida-container">
      	<nav class="navbar navbar-default navbar-fixed-top">

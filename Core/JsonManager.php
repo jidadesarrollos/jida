@@ -26,6 +26,13 @@ class JsonManager{
     
     private $_ce='0031';
     protected $_clase;
+
+    /**
+     * JsonManager constructor.
+     *
+     *
+     * @param string $json Objeto JSON a Parsear
+     */
     function __construct($json=""){
         $clase = __CLASS__;
         

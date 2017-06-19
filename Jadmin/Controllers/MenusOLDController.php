@@ -133,7 +133,7 @@ class MenusOLDController extends JController {
 
     function eliminarMenu() {
 
-        if ($this->getEntero($this->get('menu'))>0) {
+        if ($this->entero($this->get('menu'))>0) {
             $seleccion = $this->get('menu');
 
 			$cMenu = new Menu($seleccion);
@@ -179,7 +179,7 @@ class MenusOLDController extends JController {
         if($this->get('menu')){
 
             $tipoForm=1;
-            $campoUpdate=($this->getEntero($this->get('opcion'))>0)?$this->get('opcion'):"";
+            $campoUpdate=($this->entero($this->get('opcion'))>0)?$this->get('opcion'):"";
 
             $idMenu=$this->get('menu');
             $idOpcion="";
@@ -188,7 +188,7 @@ class MenusOLDController extends JController {
             $this->dv->titulo = "Registro de Opción para menu $menu->nombre_menu";
 
             $padre=0;
-            if($this->getEntero($this->get('opcion'))){
+            if($this->entero($this->get('opcion'))){
                 $idOpcion=$this->get('opcion');
                 $tipoForm=2;
                 $this->dv->titulo = "Modificar Opción de menu $menu->nombre_menu";
@@ -203,9 +203,9 @@ class MenusOLDController extends JController {
             }
 
 
-            if($this->getEntero($this->get('padre'))>0){
+            if($this->entero($this->get('padre'))>0){
 
-                $post['padre']=$this->getEntero($this->get('padre'));
+                $post['padre']=$this->entero($this->get('padre'));
                 $opcionPadre = new RenderHTML\OpcionMenu($this->get('padre'));
                 $this->dv->subtitulo = "Subopci&oacute;n de $opcionPadre->nombre_opcion";
                 $formulario->action=$this->getUrl('procesarOpciones',['menu'=>$menu->id_menu,'padre'=>$this->get('padre')]);
@@ -260,8 +260,8 @@ class MenusOLDController extends JController {
 
         if($this->get('menu') and $this->get('opcion')){
 
-            $idmenu = $this->getEntero($this->get('menu'));
-            $idOpcion = $this->getEntero($this->get('opcion'));
+            $idmenu = $this->entero($this->get('menu'));
+            $idOpcion = $this->entero($this->get('opcion'));
 
             $Opcion = new RenderHTML\OpcionMenu($idOpcion);
 
@@ -295,7 +295,7 @@ class MenusOLDController extends JController {
         $urlForm = $this->getUrl('procesarOpciones',['menu'=>$idMenu]);
 
 
-        if($this->getEntero($this->get('padre'))){
+        if($this->entero($this->get('padre'))){
 
             $query.=" and padre=".$this->get('padre')."";
             $omObject= new RenderHTML\OpcionMenu();
@@ -346,7 +346,7 @@ class MenusOLDController extends JController {
                                     );
         $urlForm = $this->url."procesar-opciones/menu/".$idMenu."/";
         $opciones=['menu'=>$idMenu];
-        if($this->getEntero($this->get('padre'))) $opciones['padre']=$this->get('padre');
+        if($this->entero($this->get('padre'))) $opciones['padre']=$this->get('padre');
             $urlForm = $urlForm."padre/".$this->get('padre');
         $vista ->acciones=array('Nuevo'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),'class'=>'btn'),
                                 'Modificar'=>array('href'=>$this->getUrl('procesarOpciones',$opciones),
