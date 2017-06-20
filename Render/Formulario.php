@@ -662,7 +662,7 @@ class Formulario extends Selector
             $this->addFinal(Helpers\Sesion::get('__msjForm'));
             Helpers\Sesion::destruir('__msjForm');
         }
-        
+
         foreach ($this->_arrayOrden as $id => $position) {
 
             $content = "";
