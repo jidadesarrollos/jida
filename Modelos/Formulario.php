@@ -72,7 +72,7 @@ class Formulario extends JsonManager
             $this->identificador = $argumentos[0];
         }
         if ($cantidad == 2) {
-
+            $this->_ambito = $argumentos[1];
             $this->_modulo = $argumentos[1];
 
         } elseif ($cantidad == 3) {
@@ -137,7 +137,7 @@ class Formulario extends JsonManager
         if ($ambito == 'app') {
 
             $ubicacion = DIR_APP;
-            if (!empty($modulo)) {
+            if (!empty($modulo) and !in_array($modulo,["app","jida"])) {
 
                 $ubicacion .= DS . 'Modulos' . DS . Helpers\Cadenas::upperCamelCase($modulo);
                 if (!Helpers\Directorios::validar($ubicacion)) {

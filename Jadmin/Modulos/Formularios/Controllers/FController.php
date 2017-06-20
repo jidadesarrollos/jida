@@ -22,10 +22,11 @@ class Fcontroller extends JController{
      */
     protected $_formulario;
         
-    protected function _dataFormulario($formulario){
-        
-        $this->_instanciarFormulario($formulario);
-		
+    protected function _dataFormulario($formulario,$ambito="app"){
+
+        $this->_instanciarFormulario($formulario,$ambito);
+
+
         return [
             'id'=> $this->_formulario->identificador,
             'nombre'=> $this->_formulario->nombre,
@@ -39,7 +40,7 @@ class Fcontroller extends JController{
         
     }
     
-    protected function _instanciarFormulario($id){
+    protected function _instanciarFormulario($id, $ambito = 'jida'){
 
         Helpers\Sesion::destruir('JFormulario');
         if(is_object(Helpers\Sesion::obt('JFormulario'))){
@@ -52,8 +53,9 @@ class Fcontroller extends JController{
             }
             
         }
-        
-        $formulario = new \Jida\Modelos\Formulario($id);
+
+
+        $formulario = new \Jida\Modelos\Formulario($id, $ambito);
         $this->_formulario = $formulario;
         return $this->_formulario;
         

@@ -21,7 +21,6 @@ class FormulariosController extends FController
     function __construct()
     {
 
-
         parent::__construct();
         $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
 
@@ -67,7 +66,7 @@ class FormulariosController extends FController
 
         ]);
         $this->data([
-            'vista' => $jvista->obtenerVista()
+            'vista' => $jvista->render()
         ]);
     }
 
@@ -77,7 +76,7 @@ class FormulariosController extends FController
     private function _dataVistaFormulario($formulario)
     {
 
-        $data = $this->_dataFormulario($formulario);
+        $data = $this->_dataFormulario($formulario, 'jida');
         if ($data) {
             if (array_key_exists('query', $data)) {
 

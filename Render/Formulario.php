@@ -88,7 +88,7 @@ class Formulario extends Selector
      *
      * @var $_ce ;
      */
-    private $_ce = "00100";
+    private $_ce = "100100";
     /**
      * Registra el orden de los campos
      * @internal esta funcion deberia ser provisional para que luego sea
@@ -119,7 +119,7 @@ class Formulario extends Selector
 	</section>';
 
     private $_plantillaTitulo =
-    '<section class="row">
+        '<section class="row">
 		<div class="col-md-12 {{:cssColumnaBotones}}">
 			<header class="{{:cssContenedorBotones}}">
 				<{{:selector}}>{{:titulo}}</{{:selector}}>
@@ -545,7 +545,12 @@ class Formulario extends Selector
 
             if (!property_exists($campo, 'type')) $campo->type = "text";
 
-            $orden = (property_exists($campo, 'orden')) ? $campo->orden : $id;
+            if (property_exists($campo, 'orden') and $campo->orden) {
+                $orden = $campo->orden;
+            } else {
+                $orden = $id;
+            }
+
             $this->_arrayOrden[$orden] = $campo->id;
 
             $this->_campos[$campo->id] = new SelectorInput($campo);
@@ -564,6 +569,7 @@ class Formulario extends Selector
             $this->_campos[$campo->id]->configuracion = $campo;
 
         }//fin foreach
+
         ksort($this->_arrayOrden);
 
 
@@ -593,7 +599,7 @@ class Formulario extends Selector
     {
         foreach ($this->_campos as $key => $campo) {
 
-            if($campo->type!='button'){
+            if ($campo->type != 'button') {
                 $this->_campos[$key]->addClass($this->css('input'));
             }
 
@@ -656,7 +662,7 @@ class Formulario extends Selector
             $this->addFinal(Helpers\Sesion::get('__msjForm'));
             Helpers\Sesion::destruir('__msjForm');
         }
-        #Helpers\Debug::imprimir($this->_estructura,$this->_arrayOrden);
+        
         foreach ($this->_arrayOrden as $id => $position) {
 
             $content = "";
@@ -668,7 +674,7 @@ class Formulario extends Selector
             $columna = $this->_estructura[$i];
             $columnas += $columna;
 
-            if($campo->type!='button'){
+            if ($campo->type != 'button') {
                 $campo->addClass($this->css('input'));
             }
 
