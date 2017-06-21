@@ -314,18 +314,23 @@ class Imagen extends Archivo{
 
 			$origen = ($bandera)?$ruta.'/'.$img:$img;
 			$ext = substr($img,strrpos($img,".")+1);
-
+			
+			// Imagenes redimensionadas
 			$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext);
 			$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext);
 			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext);
 			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext);
+			
+			// Imagen original
+			rename($ruta, $directorio.$nombre.$key.'.'.$ext);
 		}
 
 		if($return){
-			$arrImagen = ['img'=> $nombre.$key.'-lg.'.$ext,
-						  'md' => $nombre.$key.'-md.'.$ext,
-						  'sm' => $nombre.$key.'-sm.'.$ext,
-						  'xs' => $nombre.$key.'-xs.'.$ext];
+			$arrImagen = ['img'	=> $nombre.$key.'.'.$ext,
+						  'lg' 	=> $nombre.$key.'-lg.'.$ext,
+						  'md' 	=> $nombre.$key.'-md.'.$ext,
+						  'sm' 	=> $nombre.$key.'-sm.'.$ext,
+						  'xs' 	=> $nombre.$key.'-xs.'.$ext];
 
 		    return json_encode($arrImagen);
 		}
