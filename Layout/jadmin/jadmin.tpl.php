@@ -24,20 +24,7 @@
     <body class="fixed" data-url="<?=URL_BASE?>">
         
      <div  class="jida-container">
-     	<nav class="navbar navbar-default navbar-fixed-top navbar-top">
-			  <div class="container-fluid">
-			    <div class="navbar-header">
-			    	<a href="#" class="navbar-brand">
-			    		<?php if (defined('LOGO_APP')): ?>
-							<img src="<?=LOGO_APP?>" alt="<?=NOMBRE_APP?>"  class="logo-admin top-nav"/>
-						<?php else: ?>
-								<?=NOMBRE_APP?>	
-						<?php endif ?>
-			    		
-			    	</a>
-			    </div>
-			  </div>
-		</nav>
+     	<?php include_once 'elementos/navbar.tpl.php'?>
 		<div id="content-wrapper" class="short-menu">
    
             <aside class="aside row-offcanvas-left">

@@ -91,7 +91,9 @@ class Sesion {
         session_regenerate_id();
         self::set('__idSession', self::getIdSession());
     }
-
+    static function set($clave,$param2,$param3=""){
+        return self::editar($clave,$param2,$param3);
+    }
     /**
      * @internal Modifica o crea una variable existente
      * @method set
@@ -103,7 +105,7 @@ class Sesion {
 		 * @since 0.1
 		 *
      */
-    static function set($clave,$param2,$param3="")
+    static function editar($clave,$param2,$param3="")
         {
 
         if(!empty($param3)){

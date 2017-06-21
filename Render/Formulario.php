@@ -438,7 +438,7 @@ class Formulario extends Selector
     {
 
         if (!property_exists($this->_configuracion, 'estructura')) {
-            echo "string";
+
             $estructura = '1x' . $this->_totalCampos;
 
         } else {
