@@ -35,7 +35,7 @@ if(URL_BASE == ''){
                                 Cambiar de Clave
                             </a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="<?= $url ?>jadmin/cierresesion">
+                        <li><a href="<?= $url ?>jadmin/users/cierresesion">
                                 Cerrar Sesi&oacute;n
                             </a>
                         </li>
