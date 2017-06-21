@@ -1,3 +1,11 @@
+<?php
+if(URL_BASE == ''){
+    $url = '/'   ;
+}else{
+    $url = URL_BASE;
+}
+
+?>
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -23,11 +31,11 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="<?= URL_BASE ?>jadmin/users/cambio-clave">
+                        <li><a href="<?= $url ?>jadmin/users/cambio-clave">
                                 Cambiar de Clave
                             </a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="<?= URL_BASE ?>jadmin/cierresesion">
+                        <li><a href="<?= $url ?>jadmin/cierresesion">
                                 Cerrar Sesi&oacute;n
                             </a>
                         </li>
