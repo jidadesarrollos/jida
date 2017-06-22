@@ -64,13 +64,13 @@ class MenusController extends \Jida\Jadmin\Controllers\JController {
 
             	if ($classMenu->salvar($this->post())->ejecutado()):
                		$tipo = 'suceso';
-					$msj = 'Menu <strong>'.$classMenu->nombre_menu.'</strong> creado exitosamente';
+					$msj = 'Menu <strong>'.$classMenu->menu.'</strong> creado exitosamente';
 				else:
 					$tipo = 'error';
 					$msj = 'No se pudo crear el menu, por favor, vuelva a intentarlo';
 				endif;
 
-				Render\JVista::msj('menus','suceso', 'Menu <strong>'.$classMenu->nombre_menu.'</strong> creado exitosamente',$this->obtUrl('index'));
+				Render\JVista::msj('menus','suceso', 'Menu <strong>'.$classMenu->menu.'</strong> creado exitosamente',$this->obtUrl('index'));
 			}
         }
         
