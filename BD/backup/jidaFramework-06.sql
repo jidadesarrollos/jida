@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: marbella
+-- Host: localhost    Database: framework_ver_0.6
 -- ------------------------------------------------------
--- Server version	5.6.21
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -69,7 +69,7 @@ CREATE TABLE `s_clasificaciones` (
   `total_post` int(11) DEFAULT NULL,
   `nivel` int(11) DEFAULT NULL,
   `id_estatus` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
@@ -80,7 +80,8 @@ CREATE TABLE `s_clasificaciones` (
   KEY `fk_s_idiomas_s_clasificacion_post_idx` (`id_idioma`),
   KEY `fk_s_clasificacion_post_texto_original_idx` (`texto_original`),
   CONSTRAINT `fk_s_estatus` FOREIGN KEY (`id_estatus`) REFERENCES `s_estatus` (`id_estatus`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_s_idiomas_s_clasificacion_post` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_s_idiomas_s_clasificaciones` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `texto_original_s_clasificaciones` FOREIGN KEY (`texto_original`) REFERENCES `s_clasificaciones` (`id_clasificacion`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -142,7 +143,7 @@ CREATE TABLE `s_componentes` (
   `descripcion` varchar(100) DEFAULT NULL,
   `identificador` varchar(100) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modifcador` int(11) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
@@ -150,8 +151,8 @@ CREATE TABLE `s_componentes` (
   PRIMARY KEY (`id_componente`),
   KEY `fk_s_idiomas_s_componentes_idx` (`id_idioma`),
   KEY `fk_texto_original_s_componentes_idx` (`texto_original`),
-  CONSTRAINT `fk_s_idiomas_s_componentes` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_texto_original_s_componentes` FOREIGN KEY (`texto_original`) REFERENCES `s_componentes` (`id_componente`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_texto_original_s_componentes` FOREIGN KEY (`texto_original`) REFERENCES `s_componentes` (`id_componente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fks_idiomas_s_componentes` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -185,7 +186,7 @@ CREATE TABLE `s_componentes_perfiles` (
   KEY `id_componente` (`id_componente`),
   CONSTRAINT `s_componentes_perfiles_ibfk_1` FOREIGN KEY (`id_perfil`) REFERENCES `s_perfiles` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_componentes_perfiles_ibfk_2` FOREIGN KEY (`id_componente`) REFERENCES `s_componentes` (`id_componente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +212,7 @@ CREATE TABLE `s_elementos` (
   `data` text,
   `area` varchar(80) DEFAULT NULL,
   `identificador` varchar(100) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
@@ -245,7 +246,7 @@ CREATE TABLE `s_estatus` (
   `id_estatus` int(11) NOT NULL AUTO_INCREMENT,
   `estatus` varchar(40) DEFAULT NULL,
   `identificador` varchar(80) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
@@ -281,7 +282,7 @@ CREATE TABLE `s_estatus_posts` (
   `estatus_post` varchar(80) DEFAULT NULL,
   `identificador` varchar(80) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
@@ -291,7 +292,7 @@ CREATE TABLE `s_estatus_posts` (
   KEY `fk_texto_original_idx` (`texto_original`),
   KEY `sk_s_idiomas_s_estatus_post_idx` (`id_idioma`),
   CONSTRAINT `fk_s_estatus_posts_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_estatus_posts` (`id_estatus_post`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sk_s_idiomas_s_estatus_post` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_s_idiomas_s_estatus_posts` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -312,7 +313,7 @@ DROP TABLE IF EXISTS `s_idiomas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `s_idiomas` (
-  `id_idioma` int(11) NOT NULL AUTO_INCREMENT,
+  `id_idioma` varchar(5) NOT NULL,
   `idioma` varchar(20) DEFAULT NULL,
   `por_defecto` tinyint(4) DEFAULT NULL,
   `identificador` varchar(30) DEFAULT NULL,
@@ -321,7 +322,7 @@ CREATE TABLE `s_idiomas` (
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   PRIMARY KEY (`id_idioma`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +331,7 @@ CREATE TABLE `s_idiomas` (
 
 LOCK TABLES `s_idiomas` WRITE;
 /*!40000 ALTER TABLE `s_idiomas` DISABLE KEYS */;
-INSERT INTO `s_idiomas` VALUES (1,'Español',1,'español',NULL,NULL,NULL,NULL),(2,'Ingles',NULL,'ingles',NULL,NULL,NULL,NULL),(3,'Portugues',NULL,'portugues',NULL,NULL,NULL,NULL),(4,'Italiano',NULL,'italiano',NULL,NULL,NULL,NULL),(5,'Frances',NULL,'frances',NULL,NULL,NULL,NULL);
+INSERT INTO `s_idiomas` VALUES ('esp','Español',1,'español',NULL,NULL,NULL,NULL),('fra','Frances',NULL,'frances',NULL,NULL,NULL,NULL),('ing','Ingles',NULL,'ingles',NULL,NULL,NULL,NULL),('ita','Italiano',NULL,'italiano',NULL,NULL,NULL,NULL),('por','Portugues',NULL,'portugues',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_idiomas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,15 +348,15 @@ CREATE TABLE `s_menus` (
   `meta_data` varchar(200) DEFAULT NULL,
   `identificador` varchar(60) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
-  `id_usuario_modifcador` int(11) DEFAULT NULL,
+  `id_usuario_modificador` int(11) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   PRIMARY KEY (`id_menu`),
   KEY `fk_s_idiomas_s_menus_idx` (`id_idioma`),
   KEY `fk_s_menus_texto_original_idx` (`texto_original`),
-  CONSTRAINT `fk_s_idiomas_s_menus` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_s_idiomas__s_menus` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_s_menus_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_menus` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -384,19 +385,13 @@ CREATE TABLE `s_metodos` (
   `descripcion` varchar(250) DEFAULT NULL,
   `identificador` varchar(160) DEFAULT NULL,
   `loggin` int(11) DEFAULT '0',
-  `id_idioma` int(11) DEFAULT NULL,
-  `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   PRIMARY KEY (`id_metodo`),
   KEY `id_objeto` (`id_objeto`),
-  KEY `fk_s_idiomas_s_metodos_idx` (`id_idioma`),
-  KEY `sk_s_metodos_texto_original_idx` (`texto_original`),
-  CONSTRAINT `fk_s_idiomas_s_metodos` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `s_metodos_ibfk_1` FOREIGN KEY (`id_objeto`) REFERENCES `s_objetos` (`id_objeto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sk_s_metodos_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_metodos` (`id_metodo`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `s_metodos_ibfk_1` FOREIGN KEY (`id_objeto`) REFERENCES `s_objetos` (`id_objeto`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -406,7 +401,7 @@ CREATE TABLE `s_metodos` (
 
 LOCK TABLES `s_metodos` WRITE;
 /*!40000 ALTER TABLE `s_metodos` DISABLE KEYS */;
-INSERT INTO `s_metodos` VALUES (38,22,'index',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL),(39,23,'index',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_metodos` VALUES (38,22,'index',NULL,NULL,0,NULL,NULL,NULL,NULL),(39,23,'index',NULL,NULL,0,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_metodos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -455,19 +450,13 @@ CREATE TABLE `s_objetos` (
   `objeto` varchar(100) DEFAULT NULL,
   `descripcion` varchar(100) DEFAULT NULL,
   `identificador` varchar(120) DEFAULT NULL,
-  `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   PRIMARY KEY (`id_objeto`),
   KEY `id_componente` (`id_componente`),
-  KEY `fk_s_idiomas_s_objetos_idx` (`id_idioma`),
-  KEY `fk_s_objetos_texto_original_idx` (`texto_original`),
-  CONSTRAINT `fk_s_idiomas_s_objetos` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_s_objetos_s_componentes` FOREIGN KEY (`id_componente`) REFERENCES `s_componentes` (`id_componente`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_s_objetos_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_objetos` (`id_objeto`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_s_objetos_s_componentes` FOREIGN KEY (`id_componente`) REFERENCES `s_componentes` (`id_componente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -477,7 +466,7 @@ CREATE TABLE `s_objetos` (
 
 LOCK TABLES `s_objetos` WRITE;
 /*!40000 ALTER TABLE `s_objetos` DISABLE KEYS */;
-INSERT INTO `s_objetos` VALUES (22,2,'Jadmin',NULL,'jadmin',NULL,NULL,NULL,NULL,NULL,NULL),(23,3,'Admin',NULL,'admin',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_objetos` VALUES (22,2,'Jadmin',NULL,'jadmin',NULL,NULL,NULL,NULL),(23,3,'Admin',NULL,'admin',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_objetos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,7 +487,7 @@ CREATE TABLE `s_objetos_media` (
   `leyenda` varchar(150) DEFAULT NULL,
   `alt` varchar(45) DEFAULT NULL,
   `meta_data` varchar(500) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
@@ -509,7 +498,7 @@ CREATE TABLE `s_objetos_media` (
   KEY `fk_s_objetos_media_texto_original_idx` (`texto_original`),
   CONSTRAINT `fk_s_idiomas_s_objetos_media` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_s_objetos_media_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_objetos_media` (`id_objeto_media`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -518,7 +507,6 @@ CREATE TABLE `s_objetos_media` (
 
 LOCK TABLES `s_objetos_media` WRITE;
 /*!40000 ALTER TABLE `s_objetos_media` DISABLE KEYS */;
-INSERT INTO `s_objetos_media` VALUES (1,'c8ee254a8fe7b483e3e41c9399a614bc260098.jpeg','/cargas/2017/01/',0,1,NULL,NULL,NULL,'{\"img\":\"c8ee254a8fe7b483e3e41c9399a614bc260098.jpeg\",\"sm\":\"c8ee254a8fe7b483e3e41c9399a614bc260098-sm.jpeg\",\"min\":\"c8ee254a8fe7b483e3e41c9399a614bc260098-min.jpeg\",\"md\":\"c8ee254a8fe7b483e3e41c9399a614bc260098-md.jpeg\",\"lg\":\"c8ee254a8fe7b483e3e41c9399a614bc260098-lg.jpeg\"}',NULL,NULL,3,3,'2017-01-12 17:40:42','2017-01-12 17:40:42'),(2,'b52d4f0dbade433a5bc5c9227202a6fa330575.jpeg','/cargas/2017/01/',0,1,NULL,NULL,NULL,'{\"img\":\"b52d4f0dbade433a5bc5c9227202a6fa330575.jpeg\",\"sm\":\"b52d4f0dbade433a5bc5c9227202a6fa330575-sm.jpeg\",\"min\":\"b52d4f0dbade433a5bc5c9227202a6fa330575-min.jpeg\",\"md\":\"b52d4f0dbade433a5bc5c9227202a6fa330575-md.jpeg\",\"lg\":\"b52d4f0dbade433a5bc5c9227202a6fa330575-lg.jpeg\"}',NULL,NULL,3,3,'2017-01-12 17:59:39','2017-01-12 17:59:39');
 /*!40000 ALTER TABLE `s_objetos_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -575,7 +563,7 @@ CREATE TABLE `s_opciones_menu` (
   `selector_icono` int(11) DEFAULT NULL,
   `id_metodo` int(11) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
@@ -591,7 +579,7 @@ CREATE TABLE `s_opciones_menu` (
   CONSTRAINT `fk_s_metodos_s_opciones_menu` FOREIGN KEY (`id_metodo`) REFERENCES `s_metodos` (`id_metodo`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_s_opciones_menu_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_opciones_menu` (`id_opcion_menu`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_opciones_menu_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `s_menus` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -600,7 +588,7 @@ CREATE TABLE `s_opciones_menu` (
 
 LOCK TABLES `s_opciones_menu` WRITE;
 /*!40000 ALTER TABLE `s_opciones_menu` DISABLE KEYS */;
-INSERT INTO `s_opciones_menu` VALUES (3,'ACL',NULL,NULL,0,1,'fa fa-dashboard',1,1,1,1,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(4,'Objetos','/jadmin/objetos/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(5,'Componentes','/jadmin/componentes/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(9,'Perfiles','/jadmin/perfiles/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Cerrar Sesión','/jadmin/users/cierresesion/',NULL,0,0,'fa fa-power-off',100,1,1,1,NULL,NULL,NULL,NULL,'2014-09-02 22:30:26',NULL,3),(11,'Usuarios','/jadmin/users/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Jida','/jadmin/forms/jida-forms',NULL,1,0,NULL,NULL,1,1,1,NULL,NULL,NULL,'2014-08-04 05:31:21','2014-08-08 10:37:52',NULL,NULL),(28,'Aplicaci&oacute;n','/jadmin/forms/filter/aplicacion',NULL,1,0,'fa-plus-square-o',2,1,1,1,NULL,NULL,NULL,'2014-08-04 05:54:06','2014-08-04 05:54:06',NULL,NULL),(29,'1','/algo-distinto/',NULL,1,0,NULL,10,1,1,1,NULL,NULL,NULL,'2014-08-08 10:57:10','2014-08-08 10:57:10',NULL,NULL),(30,'Formularios','/jadmin/formularios',NULL,0,NULL,'fa fa-edit',10,1,1,1,NULL,NULL,NULL,'2017-06-18 12:33:57','2017-06-18 12:33:57',1,1),(33,'Menues','/jadmin/menus',NULL,0,NULL,'fa fa-bars',20,1,1,1,NULL,NULL,NULL,'2017-06-18 16:34:33','2017-06-18 16:34:33',1,1),(34,'Líneas','/jadmin/lineas',NULL,0,NULL,'fa fa-briefcase',2,1,1,1,NULL,NULL,NULL,'2017-06-18 16:35:57','2017-06-18 16:35:57',1,3),(36,'Dashboard','/jadmin/dashboard',NULL,0,NULL,'fa fa-dashboard',1,1,1,1,NULL,NULL,NULL,'2017-06-20 19:56:31','2017-06-20 19:56:31',3,3);
+INSERT INTO `s_opciones_menu` VALUES (1,'Formularios','/jadmin/forms/',NULL,0,1,'fa fa-check',2,1,1,1,NULL,NULL,NULL,'2014-02-13 13:01:11','2014-08-08 10:56:35',NULL,NULL),(2,'Menus','/jadmin/menus/',NULL,0,0,'fa fa-bars',3,1,1,1,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(3,'ACL',NULL,NULL,0,1,'fa fa-dashboard',1,1,1,1,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(4,'Objetos','/jadmin/objetos/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(5,'Componentes','/jadmin/componentes/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,'2014-02-13 13:01:11',NULL,NULL,NULL),(9,'Perfiles','/jadmin/perfiles/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Cerrar Sesión','/jadmin/users/cierresesion/',NULL,0,0,'fa fa-power-off',10,1,1,1,NULL,NULL,NULL,NULL,'2014-09-02 22:30:26',NULL,NULL),(11,'Usuarios','/jadmin/users/',NULL,3,0,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Jida','/jadmin/forms/jida-forms',NULL,1,0,NULL,NULL,1,1,1,NULL,NULL,NULL,'2014-08-04 05:31:21','2014-08-08 10:37:52',NULL,NULL),(28,'Aplicaci&oacute;n','/jadmin/forms/filter/aplicacion',NULL,1,0,'fa-plus-square-o',2,1,1,1,NULL,NULL,NULL,'2014-08-04 05:54:06','2014-08-04 05:54:06',NULL,NULL),(29,'1','/algo-distinto/',NULL,1,0,NULL,10,1,1,1,NULL,NULL,NULL,'2014-08-08 10:57:10','2014-08-08 10:57:10',NULL,NULL);
 /*!40000 ALTER TABLE `s_opciones_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -624,7 +612,7 @@ CREATE TABLE `s_opciones_menu_perfiles` (
   KEY `id_perfil` (`id_perfil`),
   CONSTRAINT `s_opciones_menu_perfiles_ibfk_1` FOREIGN KEY (`id_opcion_menu`) REFERENCES `s_opciones_menu` (`id_opcion_menu`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_opciones_menu_perfiles_ibfk_2` FOREIGN KEY (`id_perfil`) REFERENCES `s_perfiles` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -633,7 +621,7 @@ CREATE TABLE `s_opciones_menu_perfiles` (
 
 LOCK TABLES `s_opciones_menu_perfiles` WRITE;
 /*!40000 ALTER TABLE `s_opciones_menu_perfiles` DISABLE KEYS */;
-INSERT INTO `s_opciones_menu_perfiles` VALUES (3,3,1,NULL,NULL,NULL,NULL),(4,4,1,NULL,NULL,NULL,NULL),(5,5,1,NULL,NULL,NULL,NULL),(6,9,1,NULL,NULL,NULL,NULL),(8,11,1,NULL,NULL,NULL,NULL),(9,27,1,NULL,NULL,NULL,NULL),(10,28,1,NULL,NULL,NULL,NULL),(11,29,1,NULL,NULL,NULL,NULL),(15,3,1,NULL,NULL,NULL,NULL),(16,30,1,NULL,NULL,NULL,NULL),(32,36,1,NULL,NULL,NULL,NULL),(33,36,2,NULL,NULL,NULL,NULL),(34,34,1,NULL,NULL,NULL,NULL),(35,34,2,NULL,NULL,NULL,NULL),(36,33,1,NULL,NULL,NULL,NULL),(37,10,1,NULL,NULL,NULL,NULL),(38,10,2,NULL,NULL,NULL,NULL);
+INSERT INTO `s_opciones_menu_perfiles` VALUES (1,1,1,NULL,NULL,NULL,NULL),(2,2,1,NULL,NULL,NULL,NULL),(3,3,1,NULL,NULL,NULL,NULL),(4,4,1,NULL,NULL,NULL,NULL),(5,5,1,NULL,NULL,NULL,NULL),(6,9,1,NULL,NULL,NULL,NULL),(7,10,1,NULL,NULL,NULL,NULL),(8,11,1,NULL,NULL,NULL,NULL),(9,27,1,NULL,NULL,NULL,NULL),(10,28,1,NULL,NULL,NULL,NULL),(11,29,1,NULL,NULL,NULL,NULL),(12,1,1,NULL,NULL,NULL,NULL),(13,2,1,NULL,NULL,NULL,NULL),(14,10,1,NULL,NULL,NULL,NULL),(15,3,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_opciones_menu_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -650,7 +638,7 @@ CREATE TABLE `s_perfiles` (
   `fecha_creado` datetime DEFAULT NULL,
   `clave_perfil` varchar(100) NOT NULL,
   `identificador` varchar(60) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `texto_original` int(11) DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
@@ -661,7 +649,7 @@ CREATE TABLE `s_perfiles` (
   KEY `fk_s_perfiles_texto_original_idx` (`texto_original`),
   CONSTRAINT `fk_s_idiomas_s_perfiles` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_s_perfiles_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_perfiles` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -670,7 +658,7 @@ CREATE TABLE `s_perfiles` (
 
 LOCK TABLES `s_perfiles` WRITE;
 /*!40000 ALTER TABLE `s_perfiles` DISABLE KEYS */;
-INSERT INTO `s_perfiles` VALUES (1,'Jida Administrador','2014-02-13 13:01:11','JidaAdministrador','jidaadministrador',NULL,NULL,NULL,NULL,NULL,NULL),(2,'Administrador','2014-02-13 13:01:11','Administrador','administrador',NULL,NULL,NULL,NULL,NULL,NULL),(3,'Usuario Publico','2014-02-13 13:01:11','UsuarioPublico','usuariopublico',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_perfiles` VALUES (1,'Jida Administrador','2014-02-13 13:01:11','JidaAdministrador',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'Administrador','2014-02-13 13:01:11','Administrador',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Usuario Publico','2014-02-13 13:01:11','UsuarioPublico',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -699,7 +687,7 @@ CREATE TABLE `s_posts` (
   `tipo` varchar(25) DEFAULT NULL,
   `data` text,
   `texto_original` int(11) DEFAULT NULL,
-  `id_idioma` int(11) DEFAULT NULL,
+  `id_idioma` varchar(5) DEFAULT NULL,
   `fecha_creacion` datetime DEFAULT NULL,
   `fecha_modificacion` datetime DEFAULT NULL,
   `id_usuario_creador` int(11) DEFAULT NULL,
@@ -710,9 +698,9 @@ CREATE TABLE `s_posts` (
   KEY `id_idioma_idx` (`id_idioma`),
   KEY `fk_texto_original_idx` (`texto_original`),
   KEY `s_post_s_objetos_media_idx` (`id_media_principal`),
+  CONSTRAINT `fk_s_idiomas_s_posts` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `s_posts` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_estatus_post` FOREIGN KEY (`id_estatus_post`) REFERENCES `s_estatus_posts` (`id_estatus_post`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `id_idioma` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_seccion` FOREIGN KEY (`id_seccion`) REFERENCES `s_clasificaciones` (`id_clasificacion`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_post_s_objetos_media` FOREIGN KEY (`id_media_principal`) REFERENCES `s_objetos_media` (`id_objeto_media`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -756,7 +744,7 @@ CREATE TABLE `s_usuarios` (
   PRIMARY KEY (`id_usuario`),
   KEY `fk_s_usuarios_s_estatus_idx` (`id_estatus`),
   CONSTRAINT `fk_s_usuarios_s_estatus` FOREIGN KEY (`id_estatus`) REFERENCES `s_estatus` (`id_estatus`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -765,7 +753,7 @@ CREATE TABLE `s_usuarios` (
 
 LOCK TABLES `s_usuarios` WRITE;
 /*!40000 ALTER TABLE `s_usuarios` DISABLE KEYS */;
-INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894',NULL,1,1,'2017-06-18 10:33:25','1',NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-13 13:01:12',NULL,NULL,NULL),(2,'jeanpierre','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,NULL,'1',NULL,NULL,'jeacontreras2009@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,'2017-06-20 20:26:13','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,'2017-06-20 20:27:06','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `s_usuarios` VALUES (1,'jadmin','3711be79067177199efb2589054a6894',NULL,1,1,'2017-02-26 09:22:50','1',NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-13 13:01:12',NULL,NULL,NULL),(2,'jeanpierre','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,NULL,'1',NULL,NULL,'jeacontreras2009@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'felix','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'dayan','e10adc3949ba59abbe56e057f20f883e',NULL,1,1,NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -789,7 +777,7 @@ CREATE TABLE `s_usuarios_perfiles` (
   KEY `id_perfil` (`id_perfil`),
   CONSTRAINT `s_usuarios_perfiles_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `s_usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `s_usuarios_perfiles_ibfk_2` FOREIGN KEY (`id_perfil`) REFERENCES `s_perfiles` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -798,7 +786,7 @@ CREATE TABLE `s_usuarios_perfiles` (
 
 LOCK TABLES `s_usuarios_perfiles` WRITE;
 /*!40000 ALTER TABLE `s_usuarios_perfiles` DISABLE KEYS */;
-INSERT INTO `s_usuarios_perfiles` VALUES (1,1,1,NULL,NULL,NULL,NULL),(2,1,2,NULL,NULL,NULL,NULL),(3,2,1,NULL,NULL,NULL,NULL),(4,2,2,NULL,NULL,NULL,NULL),(5,3,1,NULL,NULL,NULL,NULL),(6,3,2,NULL,NULL,NULL,NULL),(7,4,1,NULL,NULL,NULL,NULL),(8,4,2,NULL,NULL,NULL,NULL),(9,5,2,NULL,NULL,NULL,NULL);
+INSERT INTO `s_usuarios_perfiles` VALUES (1,1,1,NULL,NULL,NULL,NULL),(2,1,2,NULL,NULL,NULL,NULL),(3,2,1,NULL,NULL,NULL,NULL),(4,2,2,NULL,NULL,NULL,NULL),(5,3,1,NULL,NULL,NULL,NULL),(6,3,2,NULL,NULL,NULL,NULL),(7,4,1,NULL,NULL,NULL,NULL),(8,4,2,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `s_usuarios_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -811,4 +799,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-22 12:15:23
+-- Dump completed on 2017-06-22 18:02:58
