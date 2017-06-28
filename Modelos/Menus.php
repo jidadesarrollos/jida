@@ -19,7 +19,7 @@ class Menus extends BD\DataModel{
 	*/
 	public $id_menu;
 	/**
-	* @var varchar nombre_menu
+	* @var varchar menu
 	*/
 	public $menu;
 	/**

@@ -331,13 +331,13 @@ class Formulario extends Selector
     private function _cargarFormulario($form)
     {
 
-        if (Helpers\Directorios::validar(DIR_APP . 'formularios/' . $form . '.json')) {
+        if (Helpers\Directorios::validar(DIR_APP . 'Formularios/' . $form . '.json')) {
 
-            $this->_path = DIR_APP . 'formularios/' . $form . '.json';
+            $this->_path = DIR_APP . 'Formularios/' . $form . '.json';
 
-        } elseif (Helpers\Directorios::validar(DIR_FRAMEWORK . 'formularios/' . $form . '.json')) {
+        } elseif (Helpers\Directorios::validar(DIR_FRAMEWORK . 'Formularios/' . $form . '.json')) {
 
-            $this->_path = DIR_FRAMEWORK . 'formularios/' . $form . '.json';
+            $this->_path = DIR_FRAMEWORK . 'Formularios/' . $form . '.json';
         } else {
 
             throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $form, $this->_ce . '2');
