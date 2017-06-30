@@ -82,7 +82,7 @@ class ConexionBD {
 			$this->_establecerConfiguracion();
 
 		}else{
-			throw new Excepcion("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
+			throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
 
 		}
     }

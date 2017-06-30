@@ -241,6 +241,9 @@ class DataModel
      */
     function __construct($id = false)
     {
+    	
+		// if(!class_exists('\App\Config\BD'))
+			// throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
 
         if (defined('MANEJADOR_BD') or defined('manejadorBD'))
             $this->manejadorBD = (defined('MANEJADOR_BD')) ? MANEJADOR_BD : manejadorBD;
@@ -1878,7 +1881,6 @@ class DataModel
                 if (is_array($valorUnico)) {
                     $i = 0;
                     $v = "( ";
-                    Helpers\Debug::imprimir($valorUnico);
                     foreach ($valorUnico as $key => $valor) {
                         if ($i > 0) $v .= " and ";
                         if (!empty($valor)) {
