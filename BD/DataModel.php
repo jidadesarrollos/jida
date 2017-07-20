@@ -1133,20 +1133,26 @@ class DataModel
 
             foreach ($arrayFiltro as $key => $value) {
                 if ($i > 0) $this->query .= " and ";
+				
                 if (is_array($value)) {
+                	
                     if (!strpos($key, ".")) {
-                        $this->query .= "$this->tablaQuery.$key" . $value[1] . '\'' . $value[0] . "' ";
+                    	
+						if(empty($value[0]) || $value[0] == '')
+                    		$this->query .= $key . $value[1] . " ";
+						else
+                        	$this->query .= "$this->tablaQuery.$key" . $value[1] . '\'' . $value[0] . "' ";
 
-                    } else
-                        $this->query .= $key . $value[1] . $value[0] . " ";
+                    } else {
+						$this->query .= $key . $value[1] . $value[0] . " ";
+					}
                 } else {
-                    if (!strpos($key, ".")) {
-
+                    	
+                    if (!strpos($key, "."))
                         $this->query .= "$this->tablaQuery.$key='$value'";
-                    } else
+                    else
                         $this->query .= "$key='$value'";
                 }
-
 
                 ++$i;
             }

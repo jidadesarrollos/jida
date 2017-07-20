@@ -17,6 +17,7 @@ class JVista
     var $buscador = FALSE;
     private $_debug = FALSE;
     private $nroFilas = 10;
+	private $_ce = "10001";
     private $paginasMostradas = 7;
     private $totalPaginas;
     private $titulos = [];
@@ -58,9 +59,10 @@ class JVista
     private $titulo;
     /**
      * Funcion pasada por el usuario a ejecutar sobre la data obtenida
-     * @var function $funcionData
+     * @var function $_funcionData
      */
-    private $funcionData;
+    private $_funcionData;
+	private $_parametrosFuncionData;
     /**
      * @var array $clausulas Arreglo de clausulas agregadas a la consulta a base de datos implementada por el objeto
      */
@@ -324,7 +326,7 @@ class JVista
         $this->totalRegistros = count($data);
         $this->registros = $data;
         $this->titulosKey = $this->titulos;
-        $this->_funcionData();
+        $this->_ejecutarFuncionData();
         $this->tabla->inicializarTabla($this->registros);
 
     }
@@ -339,7 +341,6 @@ class JVista
      */
     private function obtInformacionObjeto($metodo = false)
     {
-
         $offset = ($this->paginaActual <= 1) ? 0 : (($this->paginaActual - 1) * $this->nroFilas);
 
         if ($metodo) {
@@ -355,16 +356,11 @@ class JVista
         }
         $this->_imprimir($this->paginaActual, $_GET, TRUE);
         if (count($this->clausulas) > 0) {
-            // Helpers\Debug::imprimir('ima here',$this->clausulas);
             foreach ($this->clausulas as $key => $parametros) {
                 foreach ($parametros as $clausula => $param) {
-
                     if (is_array($param)) {
-                        // Helpers\Debug::imprimir("array",$param);
                         call_user_func_array([$this->objeto, $clausula], $param);
                     } else {
-                        // Helpers\Debug::imprimir("no array--",$key,$param,$clausula,$parametros);
-                        // $this->objeto->{$clausula}($parametros);
                         $this->objeto->{$key}($parametros);
                     }
                 }
@@ -376,8 +372,8 @@ class JVista
             $filtros = [];
             foreach ($this->buscador as $key => $filtro) {
                 $filtros[$filtro] = $_GET['busqueda'];
-
             }
+			
             $this->objeto->like($filtros, 'or');
 
         }
@@ -393,31 +389,30 @@ class JVista
         $keysFiltro = array_keys($this->filtros);
         foreach ($keysFiltro as $key => $value) {
             if (array_key_exists($value, $_GET)) {
-
                 $this->objeto->filtro([$value => $_GET[$value]]);
             }
         }
-        //Helpers\Debug::imprimir("fin",true);
+        
         $this->totalRegistros = count($this->objeto->obt());
-
+        
         $this->registros = $this->objeto->limit($this->nroFilas, $offset)->obt();
+		
         /**
          * Se llama a la funcion pasada por el usuario
          */
-        $this->_funcionData();
+        $this->_ejecutarFuncionData();
         $this->obtenerNombreCampos();
 
         $this->tabla->inicializarTabla($this->registros);
     }
 
-    private function _funcionData()
+    private function _ejecutarFuncionData()
     {
-
-        if (!empty($this->funcionData)) {
-            $funcionData = $this->funcionData;
-            $this->registros = $funcionData($this->registros, $this);
+        if (!empty($this->_funcionData)) {
+            $_funcionData = $this->_funcionData;
+			array_unshift($this->_parametrosFuncionData,$this->registros);
+            $this->registros = call_user_func_array($this->_funcionData, $this->_parametrosFuncionData);
         }
-
     }
 
     /**
@@ -442,10 +437,7 @@ class JVista
     private function obtConsultaPaginada()
     {
         $offset = ($this->paginaActual <= 1) ? 0 : (($this->paginaActual - 1) * $this->filasPorPagina);
-        Helpers\Debug::imprimir($this->paginaActual);
         $this->query = $this->bd->addLimit($this->filasPorPagina, $offset, $this->queryReal);
-
-
     }
 
     /**
@@ -466,15 +458,20 @@ class JVista
      * @param function $function Funcion a ejecutar sobre la data obtenida de base de datos
      *
      */
-    function render($function = "")
+    function render($function = "", $parametrosFuncion = [])
     {
         if (!empty($function)) {
-            $this->funcionData = $function;
+            $this->_funcionData = $function;
+			
+			if(!is_array($parametrosFuncion)) {
+				throw new Excepcion("Los parametros para la funcion del render deben ser pasados en un arreglo", $this->_ce . "0020");
+			}
+			
+			$this->_parametrosFuncionData = $parametrosFuncion;
         }
 
         if ($this->usaBD) {
             $this->realizarConsulta();
-
         } else {
             $this->procesarArrayData($this->data);
         }
@@ -502,8 +499,8 @@ class JVista
             if (count($this->acciones) > 0) {
                 $vista .= $this->procesarAcciones();
             }
+			
             $vista .= $this->crearPaginador();
-
 
             $seccionVista->innerHTML($vista);
 
@@ -523,7 +520,6 @@ class JVista
             if (is_array($msj) and array_key_exists('id', $msj) and $msj['id'] == $this->idVista) {
                 Helpers\Sesion::destroy('__msjVista');
                 return Selector::crear('div.col-md-12', null, $msj['msj']);
-
             }
         }
         return "";
@@ -543,8 +539,6 @@ class JVista
             $titulo->innerHTML($this->titulo);
             $seccionTitulo->innerHTML($titulo->render());
             return $seccionTitulo->render();
-
-
         }
     }
 
@@ -554,7 +548,6 @@ class JVista
         if ($this->controlFila) {
 
             $this->tabla->funcionColumna(0, function (Selector $selector, $control = 1) {
-
 
                 $types = [1 => 'radio', '2' => 'checkbox', 3 => "hidden"];
 
@@ -580,7 +573,6 @@ class JVista
                         $selector->attr('style', 'display:none');
                         $selector->innerHTML($input->render());
                     }
-
 
                 }
 
@@ -631,8 +623,6 @@ class JVista
                 if (is_array($acciones)) {
                     $keys = array_keys($fila->columnas);
 
-                    #Debug::string($keys[0]);
-
                     $colIni = $fila->columnas[$keys[0]];
 
                     foreach ($acciones as $key => $accion) {
@@ -668,7 +658,6 @@ class JVista
 
                 }
             }, $this->accionesFila);
-            #Debug::string("a");
         }
     }
 
@@ -687,9 +676,11 @@ class JVista
         }
         if ($this->controlFila == 3)
             array_unshift($this->titulos, "");
+		
         $this->tabla->crearTHead($this->titulos);
         $columnasTitulos = $this->tabla->tHead()->Fila->columnas();
         $totalLinks = count($columnasTitulos);
+		
         if ($tieneOpciones) {
 
             $this->tabla->tHead()->Fila
@@ -700,15 +691,14 @@ class JVista
             $this->tabla->tHead()->Fila->columna(0)->attr('style', 'display:none');
         }
 
-
         if ($this->ordenamientos) {
-
 
             if ($tieneOpciones) $columnasTitulos--;
 
             if ($tieneOpciones) $totalLinks--;
             $camposOrden = $this->obtParametrosOrden();
-            for ($i = 0; $i < $totalLinks; $i++) {
+           
+		    for ($i = 0; $i < $totalLinks; $i++) {
                 if ($i == 0 and $this->controlFila == 3) continue;
 
                 $columnasTitulos[$i]->ejecutarFuncion(
@@ -732,8 +722,6 @@ class JVista
             }
         }//fin ordenamientos
 
-
-#exit;
     }
 
     private function obtParametrosOrden()
@@ -748,7 +736,7 @@ class JVista
                 $params[$key] = $value;
             }
         }
-        #Helpers\Debug::imprimir($params,$this->titulosKey,$this->camposOrder,true);
+        
         return $params;
     }
 
@@ -764,7 +752,6 @@ class JVista
             return $this->contenedorAcciones->innerHTML($inner)->render();
         }
         return $inner;
-
 
     }
 

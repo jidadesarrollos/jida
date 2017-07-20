@@ -1099,8 +1099,4 @@ class Pagina {
 
     }
 
-	function link($url){
-		$path = (defined('URL_BASE')) ? URL_BASE : '';
-	 	return $path . $url;
-	}
 }
