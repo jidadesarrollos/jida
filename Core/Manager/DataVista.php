@@ -112,12 +112,7 @@ class DataVista
     function incluirJS($js, $dir = TRUE, $contentJS = "", $footer = TRUE)
     {
 
-        if ($dir === TRUE) {
-
-            $dir = URL_JS;
-        } else {
-            $dir = $dir;
-        }
+        if ($dir === TRUE) $dir = URL_JS;
 
         if (!is_array($js))
             $js = explode(",", $js);
@@ -140,7 +135,6 @@ class DataVista
             array_push($this->jsAgregado, $finalDir . $archivo);
         }
 
-        // Helpers\DEbug::imprimir($this->js,true);
         return $this;
     }
 
