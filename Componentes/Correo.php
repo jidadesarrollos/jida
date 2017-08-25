@@ -28,7 +28,7 @@ class Correo
         'FromName' => '',
         'Host' => '',
         'Port' => '',
-        'SMTPSecure' => 'ssl',//    Verificar el tipo de protocolo para envio tls o ssl
+        'SMTPSecure' => 'tls',//    Verificar el tipo de protocolo para envio tls o ssl
         'SMTPAuth' => true
 //        'SMTPDebug'	=>4
     ];
