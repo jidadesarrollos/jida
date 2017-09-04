@@ -147,7 +147,7 @@ jd.validador.prototype={
                 if(bandera==0){
                     var idCampo = "#"+campo;
                     vj.divMsjError = idCampo;
-                    if($( idCampo ).size()>0){
+                    if($( idCampo ).length>0){
                         //Se creará la validación solo si el campo existe.
                         respuesta = vj.validarCampo(idCampo,arrayValidaciones);
                         if(respuesta.val==false){

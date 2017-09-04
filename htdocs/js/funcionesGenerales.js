@@ -25,7 +25,7 @@ function validarRadio(nombreRadio){
     var nombreRadio=(nombreRadio);
     
     var control = "input[name="+nombreRadio+"]";
-    control = ($(control).size()>0)?control:"input[name=\""+nombreRadio+"[]\"]";
+    control = ($(control).length>0)?control:"input[name=\""+nombreRadio+"[]\"]";
     var type = $(control).prop('type');
     var cont=0;
     var dataSeleccionada = new Array;

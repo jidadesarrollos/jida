@@ -46,7 +46,7 @@ if(!jd) var jd = Object();
       */
      seleccionarAllRows:function(){
 		var selector = '[data-jvista=seleccionarTodas]';
-		var opcSeleccionar = $( selector ).size();
+		var opcSeleccionar = $( selector ).length;
 
 
          if(opcSeleccionar>0){
@@ -73,7 +73,7 @@ if(!jd) var jd = Object();
 
 
            $("input:checkbox").on('click',function(){
-               var size = $( 'input:checkbox:checked' ).size();
+               var size = $( 'input:checkbox:checked' ).length;
                var btnNoDisponibles = $("[data-multiple=false]");
 
                if(size>1){
@@ -163,7 +163,7 @@ if(!jd) var jd = Object();
      	 var selector = '[data-jvista="seleccion"]';
      	 $ctrl = $(selector);
 
-         if($ctrl.size()>0){
+         if($ctrl.length>0){
              console.log("yeah man",$vista);
 
              $vista.on('click',selector,function(e){
@@ -304,7 +304,7 @@ if(!jd) var jd = Object();
     };
     menu.prototype.checksubnivel=function(){
         var ele = $( this );
-        if(ele.children('ul').size()>0){
+        if(ele.children('ul').length>0){
             if(ele.children('ul').hasClass('show')){
                 $("ul.show").removeClass('show');
                 ele.removeClass('selected');
@@ -336,7 +336,7 @@ if(!jd) var jd = Object();
 
  $( document ).ready(function(){
 
-    if( $("[data-dependiente]").size()>0){
+    if( $("[data-dependiente]").length>0){
         $("[data-dependiente]").each(function(valor,campo){
 
             $campo = $( campo );
@@ -367,7 +367,7 @@ if(!jd) var jd = Object();
         ele = $( this ).parent();
         padreUl = ele.parents('ul');
         hijosUL = ele.children('ul:first');
-        if(hijosUL.size()>0){
+        if(hijosUL.length>0){
             hijosUL.toggleClass('show');
             if(hijosUL.hasClass('show')){
                 ele.addClass('selected');

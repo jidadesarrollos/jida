@@ -26,7 +26,7 @@ class DataVista{
      * @var array $jsAjax Arreglo que registra los js a incluir en llamadas ajax
      */
     var $jsAjax;
-    /**
+    /**js
      * Titulo de la Página HTML
      * 
      * Representa la etiqueta TITLE en el HEAD
@@ -222,7 +222,8 @@ class DataVista{
            $key = array_search($archivo,$arrayCss);
            unset($arrayCss[$key]);
            return true;
-       }
+       }
+
        return false;
     }
     
