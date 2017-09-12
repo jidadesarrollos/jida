@@ -24,7 +24,6 @@ set_time_limit(180);
 /**
  * Directorio del directorio del framework
  */
-
 define('framework_dir', ROOT . 'Framework' . DS);
 define('DIR_FRAMEWORK', ROOT . 'Framework' . DS);
 define('DIR_APP', ROOT . 'Aplicacion' . DS);
@@ -49,20 +48,30 @@ define('dev', 'dev');
 define('prod', 'prod');
 
 if (function_exists('ini_set')) {
-	/**
-	 * Inclusión de directorios de aplicación, framework y libs dentro del path
-	 */
-	ini_set('include_path', DIR_APP . PS . DIR_FRAMEWORK . PS . libs_dir . PS . get_include_path());
+    /**
+     * Inclusión de directorios de aplicación, framework y libs dentro del path
+     */
+    ini_set('include_path', DIR_APP . PS . DIR_FRAMEWORK . PS . libs_dir . PS . get_include_path());
 } else {
-	echo "<h5>No existe la funci&oacute;n</h5>";
+    echo "<h5>No existe la funci&oacute;n</h5>";
 }
 
+if (file_exists(DIR_FRAMEWORK . '/vendor/autoload.php')) {
+    require_once DIR_FRAMEWORK . '/vendor/autoload.php';
+    #$a = App\Config\Mail;
+}
+
+if (file_exists('vendor/autoload.php')) {
+    require_once 'vendor/autoload.php';
+}
+
+
 if (!defined('TEST_PLATFORM')) {
-	define('TEST_PLATFORM', false);
+    define('TEST_PLATFORM', false);
 }
 if (TEST_PLATFORM == TRUE) {
 
-	TestPlataforma();
+    TestPlataforma();
 }
 
 #=======================================================================
@@ -77,22 +86,24 @@ if (TEST_PLATFORM == TRUE) {
  */
 if (file_exists(DIR_APP . 'Config/BDConfig.php')) {
 
-	include_once 'Config/BDConfig.php';
+    include_once 'Config/BDConfig.php';
 
 }
 
 if (file_exists(DIR_APP . 'Config/initConfig.php'))
-	include_once 'Config/initConfig.php';
+    include_once 'Config/initConfig.php';
 
 include_once 'Settings/jConstantes.php';
 include_once 'Settings/jidaConfiguracion.php';
 
-if (file_exists(DIR_APP) and file_exists(DIR_APP . 'Config/appConfig.php'))
-	include_once 'Config/appConfig.php';
+if (file_exists(DIR_APP) and file_exists(DIR_APP . 'Config/appConfig.php')) {
+    include_once 'Config/appConfig.php';
+}
+
 if (array_key_exists('include', $GLOBALS)) {
-	foreach ($GLOBALS['include'] as $key => $archivo) {
-		include_once $archivo;
-	}
+    foreach ($GLOBALS['include'] as $key => $archivo) {
+        include_once $archivo;
+    }
 }
 #=======================================================================
 #=======================================================================
@@ -102,39 +113,25 @@ if (array_key_exists('include', $GLOBALS)) {
  *
  */
 if (ENTORNO_APP == 'dev') {
-	/* True */
-	ini_set("display_errors", 1);
-	ini_set("track_errors", 1);
-	ini_set("html_errors", 1);
-	error_reporting(E_ALL);
+    /* True */
+    ini_set("display_errors", 1);
+    ini_set("track_errors", 1);
+    ini_set("html_errors", 1);
+    error_reporting(E_ALL);
 } else {
-	/* False */
-	ini_set("display_errors", 0);
-	ini_set("track_errors", 0);
-	ini_set("html_errors", 0);
-	error_reporting(0);
-}
-
-#include_once 'Core/Autoload.class.php';
-#Carga de clases automaticamente
-#Autoload::init();
-
-if (file_exists(DIR_FRAMEWORK . '/vendor/autoload.php')) {
-
-	require_once DIR_FRAMEWORK . '/vendor/autoload.php';
-	#Debug::mostrarArray(get_declared_classes (  ));
-}
-if (file_exists('vendor/autoload.php')) {
-
-	require_once 'vendor/autoload.php';
+    /* False */
+    ini_set("display_errors", 0);
+    ini_set("track_errors", 0);
+    ini_set("html_errors", 0);
+    error_reporting(0);
 }
 
 global $elementos;
 $elementos = ['areas' => [], 'elementos' => []];
 
-if (class_exists('\Jida\Helpers\Sesion'))
-	Jida\Helpers\Sesion::iniciar();
-else {
-	include_once 'plantillas/error/errorConfig.php';
-	exit();
+if (class_exists('\Jida\Helpers\Sesion')) {
+    Jida\Helpers\Sesion::iniciar();
+} else {
+    include_once 'plantillas/error/errorConfig.php';
+    exit();
 }

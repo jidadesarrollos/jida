@@ -19,7 +19,8 @@ use Jida\Core\Manager\JExcepcion as JExcepcion;
 use Jida\Helpers\Directorios as Directorios;
 use Exception as Excepcion;
 
-class Pagina {
+class Pagina
+{
 
     use \Jida\Core\ObjetoManager;
 
@@ -45,10 +46,10 @@ class Pagina {
 
     /**
      * Define el tema utilizado en la aplicación
-     * @var url temaApp
+     * @var $_tema
      * @since 1.4
      */
-    var $temaApp;
+    var $_tema;
     var $idioma;
 
     /**
@@ -125,16 +126,33 @@ class Pagina {
 
     /**
      * Define si la vista pertenece a un controlador de un modulo del Jadmin
-     * @var $_esJadmin;
+     * @var $_esJadmin ;
      */
     private $_esJadmin = false;
+    private $_conf;
 
-    function __construct($controlador, $metodo = "", $modulo = "", $ruta = "app", $jadmin = false) {
+
+    function __construct($controlador, $metodo = "", $modulo = "", $ruta = "app", $jadmin = false)
+    {
 
         $this->validarDefiniciones($controlador, $metodo, $modulo);
         $this->validarEstructuraApp();
         $this->_esJadmin = $jadmin;
         $this->_ruta = $ruta;
+
+        if (is_object($GLOBALS['Configuracion'])) {
+
+            $this->_conf = $GLOBALS['Configuracion'];
+            if (!property_exists($this->_conf, 'tema')) {
+                throw new Exception('No se ha definido el tema para la aplicacion', '100' . $this->_ce);
+            }
+
+            $this->_tema = $this->_conf->tema;
+        } else {
+            echo "aki no";
+            Exit;
+        }
+
     }
 
     /**
@@ -142,18 +160,14 @@ class Pagina {
      * @method validarEstructuraApp
      * @since 1.4
      */
-    function validarEstructuraApp() {
+    function validarEstructuraApp()
+    {
         //la data cargada aquí, deberá poder ser obtenida de base de datos o un archivo.
         $data = [];
-        if (array_key_exists('configuracion', $GLOBALS))
-            $data = $GLOBALS['configuracion'];
-        if (array_key_exists('tema', $data)) {
-            $this->temaApp = $data['tema'];
-            JD('TEMA_APP', $this->temaApp);
+        if (defined('LAYOUT_DEFAULT')) {
+            $this->layoutDefault = LAYOUT_DEFAULT;
         }
 
-        if (defined('LAYOUT_DEFAULT'))
-            $this->layoutDefault = LAYOUT_DEFAULT;
     }
 
     /**
@@ -165,7 +179,8 @@ class Pagina {
      * @var string $metodo Nombre del metodo a ejecutar
      * @var string $modulo Módulo en el cual se encuentra el controlador buscado.
      */
-    function validarDefiniciones($controlador, $metodo = "", $modulo = "") {
+    function validarDefiniciones($controlador, $metodo = "", $modulo = "")
+    {
 
 
         if (!empty($controlador))
@@ -189,7 +204,6 @@ class Pagina {
         }
 
 
-
         $this->url = (Helpers\Sesion::get('URL_ACTUAL')[0] != "/") ? "/" . Helpers\Sesion::get('URL_ACTUAL') : Helpers\Sesion::get('URL_ACTUAL');
     }
 
@@ -200,7 +214,8 @@ class Pagina {
      * <ul> <li>1 Aplicación</li> <li>2Jida </li> <li>3 Excepciones</li></ul>
      * @method definirDirectorios
      */
-    function definirDirectorios() {
+    function definirDirectorios()
+    {
         /* Verificación de ruta de plantillas */
 
 
@@ -208,31 +223,34 @@ class Pagina {
 
             $this->urlPlantilla = DIR_PLANTILLAS_APP;
             $this->directorioLayout = DIR_LAYOUT_APP;
-            if (!empty($this->temaApp)) {
-                if (!Directorios::validar(DIR_LAYOUT_APP . $this->temaApp))
+            if (!empty($this->_tema)) {
+
+                if (!Directorios::validar(DIR_LAYOUT_APP . $this->_tema)) {
                     throw new Excepcion("No se consigue el tema definido", 1);
+                }
 
-
-                $this->directorioLayout.=$this->temaApp . "/";
-                //echo $this->directorioLayout.$this->obtNombreTpl($this->layout);Exit;
-                if (empty($this->layout) or ! Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->layout))) {
+                $this->directorioLayout .= $this->_tema . "/";
+                if (empty($this->layout) or !Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->layout))) {
 
                     if (Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->controlador))) {
                         $this->layout = $this->obtNombreTpl($this->controlador);
                     } else
-                    if (!empty($this->modulo) and Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->modulo))) {
+                        if (!empty($this->modulo) and Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->modulo))) {
 
-                        $this->layout = $this->obtNombreTpl($this->modulo);
-                    } elseif (Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->temaApp))) {
-                        $this->layout = $this->obtNombreTpl($this->temaApp);
-                    } else {
+                            $this->layout = $this->obtNombreTpl($this->modulo);
+                        } elseif (Directorios::validar($this->directorioLayout . $this->obtNombreTpl($this->_tema))) {
+                            $this->layout = $this->obtNombreTpl($this->_tema);
+                        } else {
 
-                        $this->layout = $this->obtNombreTpl($this->layoutDefault);
-                    }
+                            $this->layout = $this->obtNombreTpl($this->layoutDefault);
+                        }
                 }
+            } else {
+
             }
         } else {
-
+            echo "aki";
+            exit;
             if (array_key_exists('configuracion', $GLOBALS) and array_key_exists('temaJadmin', $GLOBALS['configuracion'])) {
                 echo "el tema es " . $GLOBALS['configuracion']['temaJadmin'];
             } else {
@@ -249,7 +267,8 @@ class Pagina {
      * @param string tpl
      * @return string tpl recibe "nombreplantilla" y retorna "nombreplantilla.tpl.php";
      */
-    private function obtNombreTpl($tpl) {
+    private function obtNombreTpl($tpl)
+    {
         if (strpos($tpl, '.tpl.php') === false)
             return Helpers\Cadenas::lowerCamelCase($tpl . '.tpl.php');
 
@@ -263,9 +282,10 @@ class Pagina {
      * @method procesarLayout
      * @since 1.4
      */
-    private function procesarLayout() {
+    private function procesarLayout()
+    {
         if (strpos($this->layout, '.tpl.php') === FALSE) {
-            $this->layout.='.tpl.php';
+            $this->layout .= '.tpl.php';
         }
     }
 
@@ -273,24 +293,25 @@ class Pagina {
      * Define el directorio donde debe ser buscada la vista
      * @method obtenerDirectorioVista
      */
-    private function obtenerDirectorioVista() {
+    private function obtenerDirectorioVista()
+    {
 
         if ($this->_ruta == 'framework') {
             $this->directorioVista = DIR_FRAMEWORK . "Jadmin/";
 
             if (!empty($this->modulo)) {
-                $this->directorioVista.='Modulos/' . $this->modulo . "/Vistas/";
+                $this->directorioVista .= 'Modulos/' . $this->modulo . "/Vistas/";
             } else {
-                $this->directorioVista.='Vistas/';
+                $this->directorioVista .= 'Vistas/';
             }
         } else {
             $this->directorioVista = DIR_APP;
             $vistaFolder = ($this->_esJadmin) ? "/Jadmin/Vistas/" : '/Vistas/';
 
             if (!empty($this->modulo)) {
-                $this->directorioVista.= 'Modulos/' . $this->modulo . $vistaFolder;
+                $this->directorioVista .= 'Modulos/' . $this->modulo . $vistaFolder;
             } else {
-                $this->directorioVista.=$vistaFolder;
+                $this->directorioVista .= $vistaFolder;
             }
         }
         $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $this->controlador));
@@ -307,7 +328,8 @@ class Pagina {
      * se busca un archivo con el mismo nombre del metodo del controlador requerido.
      *
      */
-    function renderizar($nombreVista = "", $excepcion = FALSE) {
+    function renderizar($nombreVista = "", $excepcion = FALSE)
+    {
         $this->procesarVariables();
         if (!empty($nombreVista))
             $this->nombreVista = $nombreVista;
@@ -333,7 +355,7 @@ class Pagina {
             throw new Excepcion("No se consigue el archivo $rutaVista", 1);
 
         $this->template = $rutaVista;
-        #Debug::mostrarArray($rutaVista);
+
         if ((!empty($this->layout) and $this->layout !== FALSE) or $excepcion === TRUE)
             $this->renderizarLayout($excepcion);
         else
@@ -346,7 +368,8 @@ class Pagina {
      * Incluye una plantilla
      * @inconclusa
      */
-    private function procesarVistaAbsoluta() {
+    private function procesarVistaAbsoluta()
+    {
         if ($this->data->getPath() == "jida") {
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
         } else {
@@ -370,48 +393,47 @@ class Pagina {
      * @method renderizarLayout
      * @access private
      */
-    private function renderizarLayout($excepcion = FALSE) {
-        // echo include_once $this->template;
-        // Helpers\Debug::imprimir($this->layout,$this->template,true);
-        /* Permitimos almacenamiento en bufer */
-        // if(ob_get_contents())
-        // ob_clean();
+    private function renderizarLayout($excepcion = FALSE)
+    {
+
         ob_start();
 
         $this->layout = $this->directorioLayout . $this->layout;
 
-        if (empty($this->layout) and ! $excepcion) {
+        if (empty($this->layout) and !$excepcion) {
 
             throw new Excepcion("No se encuentra definido el layout para $this->template, controlador $this->controlador", 110);
         } else
-        if (!file_exists($this->layout) and ! $excepcion) {
+            if (!file_exists($this->layout) and !$excepcion) {
 
-            throw new Excepcion('No existe el layout ' . $this->layout, 1);
+                throw new Excepcion('No existe el layout ' . $this->layout, 1);
 
-            //Debug::string('No existe el layout '.$this->layout,true);
-        } else {
-            $contenido = "";
-            if (isset($this->template)) {
-                include_once $this->template;
-                $contenido = ob_get_clean();
+                //Debug::string('No existe el layout '.$this->layout,true);
+            } else {
+                $contenido = "";
+                if (isset($this->template)) {
+                    include_once $this->template;
+                    $contenido = ob_get_clean();
+                }
+                include_once $this->layout;
+                $layout = ob_get_clean();
+
+                echo $layout;
             }
-            include_once $this->layout;
-            $layout = ob_get_clean();
-
-            echo $layout;
-        }
         //if (ob_get_length()) ob_end_clean();
     }
 
-    private function requiresJs() {
-        
+    private function requiresJs()
+    {
+
     }
 
     /**
      * Procesa la excepción generada
      * @method procesarExcepcion
      */
-    function procesarExcepcion(JExcepcion $e, $ctrlExcepcion) {
+    function procesarExcepcion(JExcepcion $e, $ctrlExcepcion)
+    {
         $this->layout = LAYOUT_DEFAULT;
 
         if (class_exists($ctrlExcepcion)) {
@@ -449,7 +471,8 @@ class Pagina {
         $this->renderizar($tpl, TRUE);
     }
 
-    function establecerAtributos($arr) {
+    function establecerAtributos($arr)
+    {
         $clase = __CLASS__;
 
         $metodos = get_class_vars($clase);
@@ -460,17 +483,18 @@ class Pagina {
         }
     }
 
-    private function imprimirArrayJs($keyArrayPadre, $archivos, $pos, &$cont, $tipo = "script") {
+    private function imprimirArrayJs($keyArrayPadre, $archivos, $pos, &$cont, $tipo = "script")
+    {
 
         $js = "";
 
-        if (is_array($archivos) and ( $keyArrayPadre == ENTORNO_APP or $keyArrayPadre == $pos)) {
+        if (is_array($archivos) and ($keyArrayPadre == ENTORNO_APP or $keyArrayPadre == $pos)) {
 
             $inclusiones = Arrays::obtenerKey($pos, $archivos);
 
             foreach ($inclusiones as $key => $value) {
-                if (!is_string($key) and ! empty($post)) {
-                    $js.=Selector::crear('script', ['src' => $value], null, $cont);
+                if (!is_string($key) and !empty($post)) {
+                    $js .= Selector::crear('script', ['src' => $value], null, $cont);
                 } else {
                     $this->imprimirArrayJs($key, $value, $pos, $cont);
                 }
@@ -478,12 +502,12 @@ class Pagina {
         } else {
             switch ($keyArrayPadre) {
                 case 'codigo':
-                    $js.=$this->imprimirCodigoJs($archivos, $cont);
+                    $js .= $this->imprimirCodigoJs($archivos, $cont);
                     break;
 
                 default:
                     if ($keyArrayPadre == $pos)
-                        $js.=Selector::crear('script', ['src' => $value], null, $cont);
+                        $js .= Selector::crear('script', ['src' => $value], null, $cont);
                     break;
             }
         }
@@ -500,7 +524,8 @@ class Pagina {
      * @param string $pos Head o footer
      *
      */
-    function printJS($pos = '') {
+    function printJS($pos = '')
+    {
         $js = "";
         $this->checkData();
         $cont = 0;
@@ -516,11 +541,11 @@ class Pagina {
                     $data = array_merge($data, $this->data->js[ENTORNO_APP][$pos]);
 
                 foreach ($data as $id => $archivo) {
-                    $js.=Selector::crear('script', ['src' => $path . $archivo], null, $cont);
+                    $js .= Selector::crear('script', ['src' => $path . $archivo], null, $cont);
                     if ($cont == 0)
                         $cont = 2;
                 }
-            }else {
+            } else {
                 if (array_key_exists('footer', $this->data->js)) {
                     $this->data->js = array_merge($this->data->js, $this->data->js['footer']);
                     unset($this->data->js['footer']);
@@ -537,21 +562,21 @@ class Pagina {
                                 #Debug::mostrarArray($archivoEntorno,0);
 
                                 if (is_string($archivoEntorno)) {
-                                    $js.=Selector::crear('script', ['src' => $path . $archivoEntorno], null, $cont);
+                                    $js .= Selector::crear('script', ['src' => $path . $archivoEntorno], null, $cont);
                                     if ($cont == 0)
                                         $cont = 2;
-                                }elseif (is_string($id)) {
+                                } elseif (is_string($id)) {
                                     foreach ($archivoEntorno as $key => $archivoSeccion) {
-                                        $js.=Selector::crear('script', ['src' => $path . $archivoSeccion], null, $cont);
+                                        $js .= Selector::crear('script', ['src' => $path . $archivoSeccion], null, $cont);
                                         if ($cont == 0)
                                             $cont = 2;
                                     }
                                 }
                             }
                         }
-                    }else {
+                    } else {
 
-                        $js.=Selector::crear('script', ['src' => $path . $archivo], null, $cont);
+                        $js .= Selector::crear('script', ['src' => $path . $archivo], null, $cont);
                     }
                     if ($cont == 0)
                         $cont = 2;
@@ -588,11 +613,12 @@ class Pagina {
         return $js;
     }
 
-    private function imprimirCodigoJs($codigo, $cont) {
+    private function imprimirCodigoJs($codigo, $cont)
+    {
         $js = "";
 
         if (is_array($codigo)) {
-            
+
         } else {
             $js = Selector::crear('script', null, $codigo, $cont);
         }
@@ -604,7 +630,8 @@ class Pagina {
      *
      * @method printJSAjax
      */
-    function printJSAjax() {
+    function printJSAjax()
+    {
         $js = "";
         $this->checkData();
         $cont = 0;
@@ -620,13 +647,13 @@ class Pagina {
                 if (is_string($key)) {
                     if ($key == ENTORNO_APP) {
                         foreach ($archivo as $key => $value) {
-                            $js.=Selector::crear('script', ['src' => $value], null, $cont);
+                            $js .= Selector::crear('script', ['src' => $value], null, $cont);
                             if ($cont == 0)
                                 $cont = 2;
                         }
                     }
                 } else
-                    $js.=Selector::crear('script', ['src' => $archivo], null, $cont);
+                    $js .= Selector::crear('script', ['src' => $archivo], null, $cont);
                 if ($cont == 0)
                     $cont = 2;
             }
@@ -636,9 +663,9 @@ class Pagina {
             foreach ($code as $key => $value) {
                 if (array_key_exists('archivo', $value)) {
                     $contenido = file_get_contents($this->obtenerRutaVista() . $value['archivo'] . ".js");
-                    $js.=Selector::crear('script', null, $contenido, $cont);
+                    $js .= Selector::crear('script', null, $contenido, $cont);
                 } else {
-                    $js.=Selector::crear('script', null, $value['codigo'], $cont);
+                    $js .= Selector::crear('script', null, $value['codigo'], $cont);
                 }
             }
         }
@@ -652,8 +679,9 @@ class Pagina {
      * @since 1.4
      *
      */
-    function printCssModulo($modulo) {
-        
+    function printCssModulo($modulo)
+    {
+
     }
 
     /**
@@ -665,7 +693,8 @@ class Pagina {
      * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      */
-    function imprimirLibrerias($lang, $modulo = "") {
+    function imprimirLibrerias($lang, $modulo = "")
+    {
         $dataInclude = [];
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         #\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
@@ -707,9 +736,9 @@ class Pagina {
             if (is_array($libreria) and $lang == 'css') {
                 //se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
                 //a partir del arreglo $libreria
-                $libsHTML.=$this->__obtHTMLLibreria('link', $libreria, $cont);
+                $libsHTML .= $this->__obtHTMLLibreria('link', $libreria, $cont);
             } elseif (!is_array($libreria))
-                $libsHTML.=$this->__obtHTMLLibreria($lang, $libreria, $cont);
+                $libsHTML .= $this->__obtHTMLLibreria($lang, $libreria, $cont);
 
             if ($cont == 0)
                 $cont = 2;
@@ -718,33 +747,35 @@ class Pagina {
     }
 
 
-	private function __obtHTMLLibreria($lang,$libreria,$cont=2){
-			
-		$path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,'http')===FALSE))?URL_BASE:"";
-		
-		switch ($lang) {
-			case 'js':
-				if(is_array($libreria)) Debug::mostrarArray($libreria,0);
-				$html = Selector::crear('script',['src'=>$path . $libreria],null,$cont);
-				break;
-			case 'link':
-				
-				$libreria['href'] = $path . $libreria['href']; 
-				$html = Selector::crear('link',$libreria,null,$cont);
-				break;
-			default:
-				//css
-				$html= Selector::crear('link',['href'=>$path . $libreria,'rel'=>'stylesheet', 'type'=>'text/css'],null,2);
-				break;
-		}
-		return $html;
-	}
+    private function __obtHTMLLibreria($lang, $libreria, $cont = 2)
+    {
+
+        $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria, 'http') === FALSE)) ? URL_BASE : "";
+
+        switch ($lang) {
+            case 'js':
+                if (is_array($libreria)) Debug::mostrarArray($libreria, 0);
+                $html = Selector::crear('script', ['src' => $path . $libreria], null, $cont);
+                break;
+            case 'link':
+
+                $libreria['href'] = $path . $libreria['href'];
+                $html = Selector::crear('link', $libreria, null, $cont);
+                break;
+            default:
+                //css
+                $html = Selector::crear('link', ['href' => $path . $libreria, 'rel' => 'stylesheet', 'type' => 'text/css'], null, 2);
+                break;
+        }
+        return $html;
+    }
 
     /**
      * Imprime las librerias css
      *
      */
-    function printCSS() {
+    function printCSS()
+    {
 
         $css = "";
         $path = (defined('URL_BASE')) ? URL_BASE : "";
@@ -758,40 +789,42 @@ class Pagina {
                     if ($key == ENTORNO_APP) {
                         foreach ($files as $key => $value) {
                             if (is_array($value))
-                                $css.=Selector::crear('link', $value, null, $cont);
+                                $css .= Selector::crear('link', $value, null, $cont);
                             else
-                                $css.=Selector::crear('link', ['href' => $path . $value, 'rel' => 'stylesheet', 'type' => 'text/css'], null, 2);
+                                $css .= Selector::crear('link', ['href' => $path . $value, 'rel' => 'stylesheet', 'type' => 'text/css'], null, 2);
                             if ($cont == 0)
                                 $cont = 2;
                         }
                     }
-                }else {
+                } else {
                     if (is_array($files)) {
                         if (array_key_exists('href', $files))
                             $files['href'] = $path . $files['href'];
-                        $css.=Selector::crear('link', $files, null, $cont);
-                    }else {
-                        $css.=Selector::crear('link', ['href' => $path . $files, 'rel' => 'stylesheet', 'type' => 'text/css'], null, 2);
+                        $css .= Selector::crear('link', $files, null, $cont);
+                    } else {
+                        $css .= Selector::crear('link', ['href' => $path . $files, 'rel' => 'stylesheet', 'type' => 'text/css'], null, 2);
                     }
                     if ($cont == 0)
                         $cont = 2;
                 }
             }
-        }else {
-            
+        } else {
+
         }
 
         return $css;
     }
 
-    private function checkData() {
+    private function checkData()
+    {
         if (!$this->data instanceof DataVista) {
             $this->data = new DataVista();
             Debug::string("No se ha instanciado correctamente el objeto Data en el controlador $this->controlador", true);
         }
     }
 
-    private function printHTML($html) {
+    private function printHTML($html)
+    {
         return htmlspecialchars_decode($html);
     }
 
@@ -804,7 +837,8 @@ class Pagina {
      * @method printHeadTags
      *
      */
-    function printHeadTags() {
+    function printHeadTags()
+    {
         $meta = "";
         $itemprop = "";
         $initTab = 0;
@@ -814,34 +848,34 @@ class Pagina {
 
             foreach ($this->data->meta as $key => $dataMeta) {
 
-                $metaAdicional.=Selector::crear('meta', $dataMeta, null, 2);
+                $metaAdicional .= Selector::crear('meta', $dataMeta, null, 2);
             }
             //$itemprop.=$metaAdicional;
-            $meta.=$metaAdicional;
+            $meta .= $metaAdicional;
         }
         if ($this->data->google_verification != FALSE) {
-            $meta.=Selector::crear('meta', ["name" => "google-site-verification", "content" => $this->data->google_verification]);
+            $meta .= Selector::crear('meta', ["name" => "google-site-verification", "content" => $this->data->google_verification]);
         }
         if ($this->data->responsive) {
 
-            $meta.=Selector::crear('meta', ["name" => "viewport", 'content' => "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);
+            $meta .= Selector::crear('meta', ["name" => "viewport", 'content' => "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);
         }
         if (!empty($this->data->title)) {
-            $meta.=Selector::crear('TITLE', null, $this->data->title, 0);
+            $meta .= Selector::crear('TITLE', null, $this->data->title, 0);
             $initTab = 2;
-            $meta.=Selector::crear('meta', ['name' => 'title', 'content' => $this->data->title], null, $initTab);
+            $meta .= Selector::crear('meta', ['name' => 'title', 'content' => $this->data->title], null, $initTab);
         }
         if (!empty($this->data->meta_descripcion)) {
-            $meta.=Selector::crear('meta', ['name' => 'description', 'content' => $this->data->meta_descripcion], null, $initTab);
-            $itemprop.=Selector::crear('meta', ['itemprop' => 'description', 'content' => $this->data->meta_descripcion], null, 2);
+            $meta .= Selector::crear('meta', ['name' => 'description', 'content' => $this->data->meta_descripcion], null, $initTab);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'description', 'content' => $this->data->meta_descripcion], null, 2);
         }
         if (!empty($this->data->meta_autor)) {
-            $meta.=Selector::crear('meta', ['name' => 'author', 'content' => $this->data->meta_autor], null, 2);
-            $itemprop.=Selector::crear('meta', ['itemprop' => 'author', 'content' => $this->data->meta_autor], null, 2);
+            $meta .= Selector::crear('meta', ['name' => 'author', 'content' => $this->data->meta_autor], null, 2);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'author', 'content' => $this->data->meta_autor], null, 2);
         }
         if (!empty($this->data->meta_image)) {
-            $meta.=Selector::crear('meta', ['name' => 'image', 'content' => $this->data->meta_image], null, 2);
-            $itemprop.=Selector::crear('meta', ['itemprop' => 'image', 'content' => $this->data->meta_image], null, 2);
+            $meta .= Selector::crear('meta', ['name' => 'image', 'content' => $this->data->meta_image], null, 2);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'image', 'content' => $this->data->meta_image], null, 2);
         }
 
         if (count($this->data->meta) > 0) {
@@ -849,16 +883,16 @@ class Pagina {
 
             foreach ($this->data->meta as $key => $dataMeta) {
 
-                $metaAdicional.=Selector::crear('meta', $dataMeta, null, 2);
+                $metaAdicional .= Selector::crear('meta', $dataMeta, null, 2);
             }
             //$itemprop.=$metaAdicional;
         }
         if (!$this->data->robots) {
-            $itemprop.=Selector::crear('meta', ['name' => 'robots', 'content' => 'noindex'], null, 2);
+            $itemprop .= Selector::crear('meta', ['name' => 'robots', 'content' => 'noindex'], null, 2);
         }
         //URL CANNONICA
         if (!empty($this->data->url_canonical)) {
-            $itemprop.=Selector::crear('link', ['rel' => 'canonical', 'href' => $this->data->url_canonical], null, 2);
+            $itemprop .= Selector::crear('link', ['rel' => 'canonical', 'href' => $this->data->url_canonical], null, 2);
         }
 
         return $meta . $itemprop . "\n";
@@ -872,10 +906,11 @@ class Pagina {
      * @version beta
      *
      */
-    function renderURL($url, $lang = "") {
+    function renderURL($url, $lang = "")
+    {
 
         if (defined('USO_IDIOMAS') and USO_IDIOMAS) {
-            if (empty($lang) and ! empty($this->idioma))
+            if (empty($lang) and !empty($this->idioma))
                 $lang = $this->idioma;
         }
         if (!empty($lang))
@@ -892,7 +927,8 @@ class Pagina {
      * @return path $path
      * @deprecated No se encuentra en uso
      */
-    function pathLayout($path = "") {
+    function pathLayout($path = "")
+    {
         if (!empty($path))
             $this->urlPlantilla = $path;
         return $this->urlPlantilla;
@@ -909,7 +945,8 @@ class Pagina {
      * @param string $segmento Nombre del segmento, sin la extensión. (Debe ser pasado como primer parametro)
      * @param array $variables Matriz de variables a pasar al segmento
      */
-    function segmento($segmento, $params = []) {
+    function segmento($segmento, $params = [])
+    {
 
         if (!is_array($params))
             $params = array($params);
@@ -928,7 +965,8 @@ class Pagina {
         return false;
     }
 
-    private function obtenerContenidos($archivo) {
+    private function obtenerContenidos($archivo)
+    {
 
         ob_start();
         include_once $archivo;
@@ -944,7 +982,8 @@ class Pagina {
      * @param mixed $files Nombre de Archivo o arreglo de archivos a incluir
      *
      */
-    function incluir($archivo) {
+    function incluir($archivo)
+    {
         if (is_array($archivo)) {
             foreach ($archivo as $key => $ar) {
                 include_once $ar . '.php';
@@ -954,14 +993,20 @@ class Pagina {
         }
     }
 
+
     /**
      * Función para incluir templates
      * @param mixed $archivo Nombre del archivo a incluir
      *
      */
-    function incluirLayout($archivo) {
-        $tema = $GLOBALS['configuracion']['tema'];
-        $directorio = 'Aplicacion/Layout/' . $tema . '/';
+    function incluirLayout($archivo)
+    {
+
+        if (!$this->_tema) {
+            $this->_tema = $GLOBALS['configuracion']['tema'];
+        }
+
+        $directorio = 'Aplicacion/Layout/' . $this->_tema . '/';
         $extension = '.php';
 
         if (is_array($archivo)) {
@@ -971,7 +1016,7 @@ class Pagina {
                 else
                     throw new Exception('No existe la plantilla' . $ar . $extension, 100);
             }
-        }elseif (is_string($archivo)) {
+        } elseif (is_string($archivo)) {
             if (file_exists($directorio . $archivo . $extension))
                 include_once $directorio . $archivo . $extension;
             else
@@ -986,7 +1031,8 @@ class Pagina {
      * en ejecucion al objeto.
      * @method procesarVariables
      */
-    function procesarVariables() {
+    function procesarVariables()
+    {
         $propiedades = get_object_vars($this->data);
         foreach ($propiedades as $k => $value) {
             //Helpers\Debug::imprimir("procesamos la propiedad ".$k);
@@ -998,11 +1044,12 @@ class Pagina {
      * Permite acceder a un nexo
      *
      */
-    function nexo($nexo, $modulo = "") {
+    function nexo($nexo, $modulo = "")
+    {
 
         $partes = explode(".", $nexo);
         if (count($partes) > 1) {
-            
+
         } else {
             $modulo = (empty($modulo)) ? ucwords($this->_modulo) : ucwords($modulo);
 
@@ -1030,9 +1077,10 @@ class Pagina {
      * de un tema o en el contenido general.
      *
      */
-    function htdocs($folder, $item, $tema = TRUE) {
+    function htdocs($folder, $item, $tema = TRUE)
+    {
         $path = (defined('URL_BASE')) ? URL_BASE : '';
-        $url = $path . URL_HTDOCS_TEMAS . $this->temaApp . '/htdocs/' . $folder . '/' . $item;
+        $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
         if ($tema)
             return $url;
 
@@ -1051,7 +1099,8 @@ class Pagina {
      * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
      *
      */
-    function cadena($texto, $ubicacion, $seccion = "") {
+    function cadena($texto, $ubicacion, $seccion = "")
+    {
         if (!property_exists($this, 'traductor'))
             throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente", $this->_ce . '10');
 
@@ -1061,11 +1110,13 @@ class Pagina {
     /**
      * Permite incluir objetos media
      */
-    function media($folder, $item, $tema = TRUE) {
+    function media($folder, $item, $tema = TRUE)
+    {
         return $this->htdocs($folder, $item, $tema);
     }
 
-    function enlace($url = "") {
+    function enlace($url = "")
+    {
         $path = (defined('URL_BASE')) ? URL_BASE : '';
         if (!empty($this->idioma))
             $enlace = $path . '/' . $this->idioma . '/' . $url;
@@ -1076,13 +1127,14 @@ class Pagina {
 
     /**
      * Retorna la url actual para el idioma pasado
-     * 
+     *
      * Metodo provisional para manejo de urls desde las vistas
      * @method cambiarUrl
      * @param {string} idioma
      * @since 0.5
      */
-    function cambiarUrl($idioma) {
+    function cambiarUrl($idioma)
+    {
 
         $url = "/";
         if (!empty($this->modulo))
@@ -1092,10 +1144,10 @@ class Pagina {
         if (!empty($this->metodo) and strtolower($this->metodo) != 'index')
             $url .= $this->metodo;
 
-		$base = URL_BASE;
-		$base =(empty($base))? "/" : "/". URL_BASE . '/';
-        $url = explode("/",  Helpers\Cadenas::guionCase($idioma,true) . '/' . Helpers\Cadenas::guionCase($url,true));		
-        return $base .implode("/", array_filter($url));
+        $base = URL_BASE;
+        $base = (empty($base)) ? "/" : "/" . URL_BASE . '/';
+        $url = explode("/", Helpers\Cadenas::guionCase($idioma, true) . '/' . Helpers\Cadenas::guionCase($url, true));
+        return $base . implode("/", array_filter($url));
 
     }
 

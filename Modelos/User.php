@@ -252,7 +252,7 @@ class User extends BD\DataModel{
      *
      *
      * @method validarCodigoActivacion
-     * @param md5 $codigo
+     * @param string $codigo
      * @return boolean TRUE si el usuario es activado, FALSE sino coincide
       */
     function validarCodigoActivacion($codigo){
