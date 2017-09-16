@@ -148,9 +148,6 @@ class Pagina
             }
 
             $this->_tema = $this->_conf->tema;
-        } else {
-            echo "aki no";
-            Exit;
         }
 
     }
@@ -249,8 +246,7 @@ class Pagina
 
             }
         } else {
-            echo "aki";
-            exit;
+
             if (array_key_exists('configuracion', $GLOBALS) and array_key_exists('temaJadmin', $GLOBALS['configuracion'])) {
                 echo "el tema es " . $GLOBALS['configuracion']['temaJadmin'];
             } else {

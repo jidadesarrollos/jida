@@ -1,16 +1,17 @@
 <?PHP
- /**
-  * Controlador global del framework
-  *
-  * @package Framework
-  * @author  Julio Rodriguez <jirc48@gmail.com>
-  * @date 4/11/2016
-  * @since 0.5
-  *
-  */
+/**
+ * Controlador global del framework
+ *
+ * @package Framework
+ * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @date 4/11/2016
+ * @since 0.5
+ *
+ */
 
 //_-----------------------------------------
 namespace Jida\Core\Manager;
+
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
 use Jida\Core\Manager\ACL as ACL;
@@ -20,10 +21,13 @@ use Exception as Excepcion;
 use Jida\Core\Manager\JExcepcion as JExcepcion;
 use App as App;
 use Jida as Jida;
+
 //_-----------------------------------------
 global $JD;
- class JidaController {
-    private $_ce="001";
+
+class JidaController
+{
+    private $_ce = "001";
     /**
      * Define el nombre del Controlador requerido
      * @var string $controlador
@@ -33,7 +37,7 @@ global $JD;
 
     /**
      * Define la ruta donde deben buscarse los archivos
-     * @var $_ruta;
+     * @var $_ruta ;
      * @default 'app';
      * @since 0.5
      */
@@ -42,7 +46,7 @@ global $JD;
     private $_controladorDefault = 'Index';
     /**
      * Define el namespace usado
-     * @var string $_namespace;
+     * @var string $_namespace ;
      */
     private $_namespace;
     /**
@@ -78,30 +82,30 @@ global $JD;
     private $_modulo;
     /**
      * Define si una peticion corresponde a un modulo administrador
-     * @var boolean $_esJadmin;
+     * @var boolean $_esJadmin ;
      * @since 0.5
      */
-    private $_esJadmin=FALSE;
-	/**
-	 * Define si un modulo jadmin pertenece a la aplicacion o al Framework
-	 * 
-	 * @var boolean $_esApp
-	 * @since 0.5.1
-	 */
-	private $_esApp =FALSE;
+    private $_esJadmin = FALSE;
+    /**
+     * Define si un modulo jadmin pertenece a la aplicacion o al Framework
+     *
+     * @var boolean $_esApp
+     * @since 0.5.1
+     */
+    private $_esApp = FALSE;
 
     /**
      * Arreglo de lenguajes manejados en la aplicacion
      * @var array $lenguajes
      */
-    private $idiomas=[];
+    private $idiomas = [];
     /**
      * Registra la estructura de los valores get pasados por URL para versiones del framework anteriores a 1.4
      *
      * @var array $arrayGetCompatibilidad
      * @ignored
      */
-    private $arrayGetCompatibilidad=[];
+    private $arrayGetCompatibilidad = [];
     private $idiomaActual;
     /**
      * Objeto controlador instanciado
@@ -121,7 +125,7 @@ global $JD;
      * @access private
      *
      */
-    private $args=array();
+    private $args = array();
     /**
      * Instancia de objeto vista
      * @var object Pagina
@@ -133,7 +137,7 @@ global $JD;
      * Define el modulo a usar en caso de que exista
      * @var strng $modulo
      */
-    private $modulo="";
+    private $modulo = "";
     /**
      * Nombre del subdominio en uso si existe;
      */
@@ -142,14 +146,14 @@ global $JD;
      * Define si se accede a un modulo a partir de un subdominio
      * @var $moduloSubdominio
      */
-    private $moduloSubdominio=FALSE;
-	
-	/**
-	 * Objeto Perseador de Urls
-	 * @var object parser
-	 * @since 0.5
-	 */
-	private $_parser;
+    private $moduloSubdominio = FALSE;
+
+    /**
+     * Objeto Perseador de Urls
+     * @var object parser
+     * @since 0.5
+     */
+    private $_parser;
     /**
      * Arreglo de modulos existentes
      *
@@ -157,13 +161,15 @@ global $JD;
      * existir en el archivo de configuracion del framework
      * @var array $modulosExistentes
      */
-     private $modulosExistentes=[];
-    function __construct(){
-        try{
+    private $modulosExistentes = [];
+
+    function __construct()
+    {
+        try {
             /**
              * Registro de tiempo inicial de ejecución
              */
-            Helpers\Sesion::set('__TIEjecucion',microtime(true) );
+            Helpers\Sesion::set('__TIEjecucion', microtime(true));
             /**
              * Seteo de zona horaria
              */
@@ -171,45 +177,45 @@ global $JD;
             /**
              * validacion lenguajes existentes
              */
-             
-            if(array_key_exists('idiomas', $GLOBALS)){
-                $this->idiomas=$GLOBALS['idiomas'];
-				
+
+            if (array_key_exists('idiomas', $GLOBALS)) {
+                $this->idiomas = $GLOBALS['idiomas'];
+
             }
 
             Helpers\Sesion::destroy('__formValidacion');
-			
-			
-            $_SERVER = array_merge($_SERVER,getallheaders());
-			
-			            
-            if(array_key_exists('modulos', $GLOBALS)){
-            
-			    $this->modulosExistentes=$GLOBALS['modulos'];
-            }else{
+
+
+            $_SERVER = array_merge($_SERVER, getallheaders());
+
+
+            if (array_key_exists('modulos', $GLOBALS)) {
+
+                $this->modulosExistentes = $GLOBALS['modulos'];
+            } else {
                 throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
             }
 
-			//$this->_parser = new Parser($this->modulosExistentes);
-            $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL'] )?$_SESSION['URL_ACTUAL'] :"";
-            JD('URL_ANTERIOR',Helpers\Sesion::get('URL_ACTUAL'));
-            Helpers\Sesion::set('URL_ACTUAL',$_GET['url']);
+            //$this->_parser = new Parser($this->modulosExistentes);
+            $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL']) ? $_SESSION['URL_ACTUAL'] : "";
+            JD('URL_ANTERIOR', Helpers\Sesion::get('URL_ACTUAL'));
+            Helpers\Sesion::set('URL_ACTUAL', $_GET['url']);
 
-            JD('URL_COMPLETA',"/".$_GET['url']);
-			JD('URL',"/".$_GET['url']."/");
+            JD('URL_COMPLETA', "/" . $_GET['url']);
+            JD('URL', "/" . $_GET['url'] . "/");
             /*Manejo de url*/
-            if(isset($_GET['url'])){
+            if (isset($_GET['url'])) {
 
                 $_GET['url'] = utf8_encode($_GET['url']);
-                $url = filter_input(INPUT_GET, 'url',FILTER_SANITIZE_URL);
-                $url = explode('/', str_replace(array('.php','.html','.htm'), '', $url));
+                $url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_URL);
+                $url = explode('/', str_replace(array('.php', '.html', '.htm'), '', $url));
 
-                $this->_arrayUrl = array_filter($url,function($var){
-            		return ($var !== NULL && $var !== FALSE && $var !== '');
+                $this->_arrayUrl = array_filter($url, function ($var) {
+                    return ($var !== NULL && $var !== FALSE && $var !== '');
                 });
 
-                if(array_key_exists($this->_arrayUrl[0], $this->idiomas)){
-                    $this->idiomaActual=$this->_arrayUrl[0];
+                if (array_key_exists($this->_arrayUrl[0], $this->idiomas)) {
+                    $this->idiomaActual = $this->_arrayUrl[0];
 
                     array_shift($this->_arrayUrl);
 
@@ -217,14 +223,14 @@ global $JD;
             }
 
             unset($_GET['url']);
-            if(count($_GET)>0)   $this->args=$_GET;
+            if (count($_GET) > 0) $this->args = $_GET;
             $this->appRoot = str_replace(['index.php'], "", $_SERVER['PHP_SELF']);
             $GLOBALS['__URL_APP'] = $this->appRoot;
             //$ini = substr($this->appRoot, 1);
             $ini = $this->appRoot;
-            Helpers\Sesion::set('URL_ACTUAL', $ini.Helpers\Sesion::get('URL_ACTUAL'));
+            Helpers\Sesion::set('URL_ACTUAL', $ini . Helpers\Sesion::get('URL_ACTUAL'));
             //Helpers\Debug::imprimir($ini,true);
-            JD('URL',Helpers\Sesion::get('URL_ACTUAL'));
+            JD('URL', Helpers\Sesion::get('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -234,16 +240,17 @@ global $JD;
             $this->procesarURL();
 
 #            Helpers\Debug::imprimir("Controller: ".$this->_nombreControlador,"metodo:".$this->_metodo,"modulo : ".$this->_modulo,$this->_ruta,true);
-            $this->vista = new Pagina($this->_nombreControlador,$this->_metodo,$this->_modulo,$this->_ruta,$this->_esJadmin);
-            $this->vista->idioma=$this->idiomaActual;
+            $this->vista = new Pagina($this->_nombreControlador, $this->_metodo, $this->_modulo, $this->_ruta, $this->_esJadmin);
+            $this->vista->idioma = $this->idiomaActual;
             $this->generarVariables();
             $this->validacion();
-        }catch(Excepcion $e){
+        } catch (Excepcion $e) {
 
             $this->jidaExcepcion($e);
         }
 
     }//fin constructor
+
     /**
      * Gestiona variables para acceso global en la aplicacion
      *
@@ -251,42 +258,47 @@ global $JD;
      * @since 1.4
      */
 
-    private function generarVariables(){
-        JD('Controlador',$this->_nombreControlador);
-        JD('Vista',$this->vista);
-        JD('Metodo',$this->_metodo);
-        JD('Modulo',$this->_modulo);
+    private function generarVariables()
+    {
+        JD('Controlador', $this->_nombreControlador);
+        JD('Vista', $this->vista);
+        JD('Metodo', $this->_metodo);
+        JD('Modulo', $this->_modulo);
     }
+
     /**
      * Procesa el contenido de la url
      * @internal Valida los modulos, controladores y metodos a consultar
      * @method procesarURL
      */
-    private function procesarURL(){
+    private function procesarURL()
+    {
 
-        $primerParam =array_shift($this->_arrayUrl);
-        if($primerParam=='jadmin'){
-            $this->_esJadmin=TRUE;
+        $primerParam = array_shift($this->_arrayUrl);
+
+        if ($primerParam == 'jadmin') {
+            $this->_esJadmin = TRUE;
+
             $this->_procesarJadmin();
-        }else{
+        } else {
 
-			array_unshift($this->_arrayUrl,$primerParam);
+            array_unshift($this->_arrayUrl, $primerParam);
             $namespace = 'App\\';
-            if($this->esModulo()){
+            if ($this->esModulo()) {
 
-                $namespace.="Modulos\\".$this->_modulo."\\Controllers\\";
+                $namespace .= "Modulos\\" . $this->_modulo . "\\Controllers\\";
                 //Se verifica controlador
                 $posController = array_shift($this->_arrayUrl);
                 //El controlador por defecto tiene el nombre del modulo
                 $this->_controladorDefault = $this->_modulo;
-            }else{
+            } else {
 
-                $namespace.="Controllers\\";
+                $namespace .= "Controllers\\";
                 $posController = array_shift($this->_arrayUrl);
             }
-            if(!$this->esControlador($namespace, $posController)){
+            if (!$this->esControlador($namespace, $posController)) {
 
-                array_unshift($this->_arrayUrl,$posController);
+                array_unshift($this->_arrayUrl, $posController);
             }
 
             $this->procesarMetodo();
@@ -295,141 +307,148 @@ global $JD;
         $this->procesarArgumentos();
 
     }
+
     /**
      * Procesa el metodo a ejecutar
      * @method procesarMetodo
      */
-    private function procesarMetodo(){
+    private function procesarMetodo()
+    {
         $band = false;
-        if($this->_arrayUrl){
+        if ($this->_arrayUrl) {
 
             $posMetodo = array_shift($this->_arrayUrl);
 
-            if(!$this->esMetodoValido($posMetodo)){
+            if (!$this->esMetodoValido($posMetodo)) {
                 $metodo = $this->_metodoDefault;
-            }else $band = true;
+            } else $band = true;
 
-        }else $metodo = $this->_metodoDefault;
+        } else $metodo = $this->_metodoDefault;
 
 
         // buscara el metodo por defecto y arrojara un error sino lo consigue.
-        if(!$band) $this->esMetodoValido($metodo,true);
+        if (!$band) $this->esMetodoValido($metodo, true);
 
     }
+
     /**
      * Verifica que el metodo exista
      * @method validarMetodo
      * @param string $metodo Nombre del metodo a validar
      * @return boolean
      */
-    private function esMetodoValido($metodo,$error=false){
-        if(class_exists($this->_controlador))
-        {
+    private function esMetodoValido($metodo, $error = false)
+    {
+        if (class_exists($this->_controlador)) {
             $clase = new ReflectionClass($this->_controlador);
             $nombreOriginal = $metodo;
             $metodo = $this->validarNombre($metodo, 2);
-			
-            if(method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()){
+
+            if (method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()) {
                 $this->_metodo = $metodo;
                 return true;
-            }else{
-                array_unshift($this->_arrayUrl,$nombreOriginal);
+            } else {
+                array_unshift($this->_arrayUrl, $nombreOriginal);
             }
 
-            if($error)  throw new Excepcion("El metodo no es valido " . $metodo, 404);
+            if ($error) throw new Excepcion("El metodo no es valido " . $metodo, 404);
 
             return false;
-        }else{
-            throw new Excepcion("No existe el controlador soicitado para el metodo : ".$this->_controlador, $this->_ce.'4');
+        } else {
+            throw new Excepcion("No existe el controlador soicitado " . $this->_controlador . " para el metodo : " . $metodo, $this->_ce . '4');
 
         }
 
     }
+
     /**
      * Verifica si el parametro pasado es un controlador
      * @method esControlador
      * @param string $namespace Namespace sobre el cual se validara la existencia del controlador
      * @param string $controller Nombre del posible controlador pedido
      */
-    private function esControlador($namespace,$posController){
+    private function esControlador($namespace, $posController)
+    {
         $band = true;
 
-        if(empty($posController)){
-            
+        if (empty($posController)) {
+
             $band = false;
-        }else{
-            $controller = $this->validarNombre($posController,1).'Controller';
-            $controllerAbsoluto = $namespace.$controller;
-			$controller = $namespace.$this->validarNombre($posController,1);
+        } else {
+            $controller = $this->validarNombre($posController, 1) . 'Controller';
+            $controllerAbsoluto = $namespace . $controller;
+            $controller = $namespace . $this->validarNombre($posController, 1);
 
         }
 
-        if($band and (class_exists($controllerAbsoluto) or class_exists($controller))){
-            
-			if(class_exists($controllerAbsoluto))
-			{
-				$this->_controlador = $controllerAbsoluto;
-			}else{
-				$this->_controlador = $controller;
-			}
+        if ($band and (class_exists($controllerAbsoluto) or class_exists($controller))) {
+
+            if (class_exists($controllerAbsoluto)) {
+                $this->_controlador = $controllerAbsoluto;
+            } else {
+                $this->_controlador = $controller;
+            }
 
             $this->_nombreControlador = $posController;
             $this->_namespace = $namespace;
 
             return true;
-        }else{
+        } else {
+
             /**
              * Logica para verificacion de Carpeta Pluguins dentro de Modulos
              * Verificar funcionamiento y usabilidad
              */
-           // if($band and class_exists($controllerAbsolutoPlugin)){
-                // $this->_controlador = $controllerAbsolutoPlugin;
-                // $this->_nombreControlador = $posController;
-                // $this->_namespace = $namespacePlugin;
-                // return true;
-           // }else{
-               // $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
-               // $this->_nombreControlador = $this->_controladorDefault;
-           // }
+            // if($band and class_exists($controllerAbsolutoPlugin)){
+            // $this->_controlador = $controllerAbsolutoPlugin;
+            // $this->_nombreControlador = $posController;
+            // $this->_namespace = $namespacePlugin;
+            // return true;
+            // }else{
+            // $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
+            // $this->_nombreControlador = $this->_controladorDefault;
+            // }
 
-       
-              $this->_controlador = $namespace.$this->validarNombre($this->_controladorDefault,1).'Controller';
-              $this->_nombreControlador = $this->_controladorDefault;
+
+            $this->_controlador = $namespace . $this->validarNombre($this->_controladorDefault, 1) . 'Controller';
+            $this->_nombreControlador = $this->_controladorDefault;
         }
 
         return false;
     }
+
     /**
      * Verifica si el parametro apsado es un modulo cargado
      * @method esModulo
      */
-    private function esModulo($jadmin=false){
-		
-		$this->_arrayUrl = array_filter($this->_arrayUrl);
-		
-        if(!empty($this->_arrayUrl)){
+    private function esModulo($jadmin = false)
+    {
+
+        $this->_arrayUrl = array_filter($this->_arrayUrl);
+
+        if (!empty($this->_arrayUrl)) {
 
             $nombreOriginal = array_shift($this->_arrayUrl);
-            $posModulo = $this->validarNombre($nombreOriginal,1);
+            $posModulo = $this->validarNombre($nombreOriginal, 1);
 
-            if($jadmin){
-            	
+            if ($jadmin) {
+
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
-                if(Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/'.$posModulo)){
+                if (Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/' . $posModulo)) {
 
                     $this->_controladorDefault = $posModulo;
-                    $this->_namespace = $namespace .'\\'. $posModulo . '\\Controllers\\';
+                    $this->_namespace = $namespace . '\\' . $posModulo . '\\Controllers\\';
                     $this->_modulo = $posModulo;
                     return true;
                 }
 
-            }elseif(in_array($posModulo,$this->modulosExistentes)){
+            } elseif (in_array($posModulo, $this->modulosExistentes)) {
                 $this->_modulo = $posModulo;
                 return true;
             }
 
-            array_unshift($this->_arrayUrl,$posModulo);
+            array_unshift($this->_arrayUrl, $posModulo);
         }
 
         return false;
@@ -440,109 +459,122 @@ global $JD;
      * @param procesarJadmin
      * @since 0.5;
      */
-    private function _procesarJadmin(){
+    private function _procesarJadmin()
+    {
 
         $checkModulo = FALSE;
-		$path = '\\App\\Jadmin\\Controllers\\';
-		$posController = array_shift($this->_arrayUrl);
-        
-        
-		if(!$this->esControlador($path, $posController)){
-            if($posController)
-			 array_unshift($this->_arrayUrl,$posController);
-            
-			if($this->esModulo()){
+        $path = '\\App\\Jadmin\\Controllers\\';
+        $posController = array_shift($this->_arrayUrl);
 
-	            //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
-				$this->_ruta="app";
-				$this->_namespace = 'App\\Modulos\\'.$this->_modulo.'\\Jadmin\\Controllers\\';
-				$this->_controladorDefault = $this->_modulo;
-				$this->_esApp = TRUE;
+        if (!$this->esControlador($path, $posController)) {
+            if ($posController) {
+                array_unshift($this->_arrayUrl, $posController);
+            }
 
-	        }else{
-	        	array_unshift($this->_arrayUrl,$posController);
-        		$posController = array_shift($this->_arrayUrl);
-        		$this->_namespace='Jida\\Jadmin\\';
-        		//validacion modulo interno jadmin
-	            $this->_ruta='framework';
-	            if($this->esModulo(true)){
 
-	                //Accede aqui si se busca un modulo del Framework
-	                $namespace = $this->_namespace;
+            if ($this->esModulo()) {
 
-	            }else{
+                //Accede aqui se se busca un segmento jadmin dentro de un modulo de la app.
 
-	                //controlador por defecto jadmin;
-	                $this->_controladorDefault = 'Jadmin';
-	                $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
-	            }
-        	}
-			$posController = array_shift($this->_arrayUrl);
+                $this->_ruta = "app";
+                $this->_namespace = 'App\\Modulos\\' . $this->_modulo . '\\Jadmin\\Controllers\\';
+                $this->_controladorDefault = $this->_modulo;
+                $this->_esApp = TRUE;
 
-			if(!$this->esControlador($this->_namespace, $posController))
-            	array_unshift($this->_arrayUrl,$posController);
-		}else{
-			// exit("intenta entrar a la app");
-		}
+
+            } else {
+
+                array_unshift($this->_arrayUrl, $posController);
+                $posController = array_shift($this->_arrayUrl);
+                $this->_namespace = 'Jida\\Jadmin\\';
+                //validacion modulo interno jadmin
+                $this->_ruta = 'framework';
+                if ($this->esModulo(true)) {
+                    //Accede aqui si se busca un modulo del Framework
+                    $namespace = $this->_namespace;
+
+                } else {
+                    //controlador por defecto jadmin;
+                    $this->_controladorDefault = 'Jadmin';
+                    $this->_namespace = 'Jida\\Jadmin\\Controllers\\';
+                }
+            }
+
+            $posController = array_shift($this->_arrayUrl);
+
+            if (!$this->esControlador($this->_namespace, $posController)) {
+
+                array_unshift($this->_arrayUrl, $posController);
+            }else {
+
+            }
+
+        }
+
         $this->procesarMetodo();
 
 
     }
+
     /**
      * CREA arreglo de parametros get
      * @method procesarAgumentos
      * @access private
      *
      */
-    private function procesarArgumentos($tipo=1){
-			#Helpers\Debug::imprimir($this->args,$this->_arrayUrl);
-            
-            if(!empty($this->_arrayUrl))
-            {
-                $this->args = array_merge($this->_arrayUrl,$this->args);
-            }
-            
-            $band = 0;
-            $clave = TRUE;
-			
-			// $this->args = $this->_arrayUrl;
-			#Helpers\Debug::imprimir("before filter",$this->args);
-            
-            $this->args = array_filter($this->args,function($value){
-                return !empty($value) or $value==0;
-            });
-            #Helpers\Debug::imprimir("after filter",$this->args);
-            $totalClaves = count($this->args);
-            $gets=array();
-            if($totalClaves>=2){
+    private function procesarArgumentos($tipo = 1)
+    {
+        #Helpers\Debug::imprimir($this->args,$this->_arrayUrl);
 
-                for($i = 0; $i<=$totalClaves;$i++){
+        if (!empty($this->_arrayUrl)) {
+            $this->args = array_merge($this->_arrayUrl, $this->args);
+        }
 
-                    if($clave===TRUE){
-                        if(isset($this->args[$i]) and isset($this->args[$i+1]))
-                            $gets[$this->args[$i]]=$this->args[$i+1];
-                    }
-                    $i++;
+        $band = 0;
+        $clave = TRUE;
+
+        // $this->args = $this->_arrayUrl;
+        #Helpers\Debug::imprimir("before filter",$this->args);
+
+        $this->args = array_filter($this->args, function ($value) {
+            return !empty($value) or $value == 0;
+        });
+        #Helpers\Debug::imprimir("after filter",$this->args);
+        $totalClaves = count($this->args);
+        $gets = array();
+        if ($totalClaves >= 2) {
+
+            for ($i = 0; $i <= $totalClaves; $i++) {
+
+                if ($clave === TRUE) {
+                    if (isset($this->args[$i]) and isset($this->args[$i + 1]))
+                        $gets[$this->args[$i]] = $this->args[$i + 1];
                 }
-
-            }if($tipo>1){
-
-                $GLOBALS['getsIndex']= "otro";
+                $i++;
             }
-            $this->arrayGetCompatibilidad = array_merge($this->args,$gets);
 
-            $totalClaves = count($this->args);
+        }
+        if ($tipo > 1) {
 
-            $gets=array();
+            $GLOBALS['getsIndex'] = "otro";
+        }
+        $this->arrayGetCompatibilidad = array_merge($this->args, $gets);
 
-            // $_GET = array_merge($this->args,$gets);
-            $_GET = $this->args;
-            $_REQUEST = array_merge($_POST,$_GET);
+        $totalClaves = count($this->args);
+
+        $gets = array();
+
+        // $_GET = array_merge($this->args,$gets);
+        $_GET = $this->args;
+        $_REQUEST = array_merge($_POST, $_GET);
 // Helpers\Debug::imprimir($_GET,$this->_arrayUrl,$this->arrayGetCompatibilidad,$this->args,true);
     }
-    function get(){
+
+    function get()
+    {
         Debug::mostrarArray($this);
     }
+
     /**
      * Ejecuta la solicitud realizada
      *
@@ -557,33 +589,35 @@ global $JD;
      * @return void
      *
      */
-    function validacion(){
-        try{
+    function validacion()
+    {
+        try {
 
-            if(BD_REQUERIDA===TRUE){
+            if (BD_REQUERIDA === TRUE) {
 
                 $acl = new ACL();
-                $acceso = $acl->validarAcceso($this->_controlador,$this->validarNombre($this->metodo, 2),strtolower($this->modulo));
+                $acceso = $acl->validarAcceso($this->_controlador, $this->validarNombre($this->metodo, 2), strtolower($this->modulo));
 
-            }else{
-            	//echo "aka";
-            } $acceso=TRUE;
+            } else {
+                //echo "aka";
+            }
+            $acceso = TRUE;
 
-           if($acceso===TRUE){
+            if ($acceso === TRUE) {
                 global $dataVista;
 
-                $dataVista= new DataVista($this->_modulo,$this->_nombreControlador,$this->_metodo,$this->_esJadmin,$this->_esApp);
+                $dataVista = new DataVista($this->_modulo, $this->_nombreControlador, $this->_metodo, $this->_esJadmin, $this->_esApp);
                 $this->vista->data = $dataVista;
                 $this->ejecucion($this->_controlador);
 
-           }else{
-            throw new Excepcion("No tiene permisos", 403);
-           }
+            } else {
+                throw new Excepcion("No tiene permisos", 403);
+            }
 
-            if(isset($controlador))
+            if (isset($controlador))
                 $this->ejecucion($controlador);
 
-         }catch(Excepcion $e){
+        } catch (Excepcion $e) {
 
             $this->procesarExcepcion($e);
         }
@@ -600,18 +634,21 @@ global $JD;
      * @param object $controlador <br>Objeto Controlador a instanciar
      * @access private
      */
-    private function ejecucion($controlador){
+    private function ejecucion($controlador)
+    {
 
         $controlador = $this->ejecutarController($controlador);
         $this->mostrarContenido($controlador->vista);
 
     }//fin funcion ejecucion
+
     /**
      * Verifica las propiedades de los directorios Layout
      * @method checkDirectoriosView
      */
-    private function checkDirectoriosView(){
-        if(is_object($this->controladorObject)):
+    private function checkDirectoriosView()
+    {
+        if (is_object($this->controladorObject)):
 
             $this->vista->layout = $this->controladorObject->layout;
 
@@ -620,106 +657,112 @@ global $JD;
         endif;
 
     }
+
     /**
      * Realiza la ejecución del Controlador a instanciar
      * @method ejecutarController
      */
-    private function ejecutarController($controlador,$params=[],$checkDirs=true){
+    private function ejecutarController($controlador, $params = [], $checkDirs = true)
+    {
 
         $args = $this->args;
         #Helpers\Debug::imprimir("jida",$params);
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
-        $retorno= array();
+        $retorno = array();
 
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
-        $this->vista->data->idioma=$this->idiomaActual;
+        $this->vista->data->idioma = $this->idiomaActual;
 
-        $GLOBALS['dv']=$this->vista->data;
+        $GLOBALS['dv'] = $this->vista->data;
 
         $this->controladorObject = new $controlador();
-        $this->controladorObject->modulo=$this->modulo;
-        $controlador=& $this->controladorObject;
-		$controlador->idioma = $this->idiomaActual;
+        $this->controladorObject->modulo = $this->modulo;
+        $controlador =& $this->controladorObject;
+        $controlador->idioma = $this->idiomaActual;
 
-        if(method_exists($controlador, $metodo)){
+        if (method_exists($controlador, $metodo)) {
             //Validacion de ejecucion de un metodo previo al solicitado por url
-            if(!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)){
+            if (!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)) {
 
-                call_user_func_array([$controlador,$controlador->preEjecucion], $args);
+                call_user_func_array([$controlador, $controlador->preEjecucion], $args);
             }
 
-            if($metodo==$controlador->preEjecucion or $metodo==$controlador->postEjecucion){
+            if ($metodo == $controlador->preEjecucion or $metodo == $controlador->postEjecucion) {
                 throw new Excepcion("aaa", 404);
             }
             // Ejecucion del metodo solicitado
-            if($controlador->manejoParams){
-                call_user_func_array([$controlador,$metodo], $args);
-            }else{
+            if ($controlador->manejoParams) {
+                call_user_func_array([$controlador, $metodo], $args);
+            } else {
 
-                $_GET       = $this->arrayGetCompatibilidad;
-                $_REQUEST   = array_merge($_POST,$_GET);
+                $_GET = $this->arrayGetCompatibilidad;
+                $_REQUEST = array_merge($_POST, $_GET);
                 $controlador->validarVarGlobales(true);
                 $controlador->$metodo(null);
             }
             //Validacion ejecucion post metodo
-            if(!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)){
-                call_user_func_array([$controlador,$controlador->postEjecucion], $args);
+            if (!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)) {
+                call_user_func_array([$controlador, $controlador->postEjecucion], $args);
             }
-        }else{
+        } else {
             throw new Excepcion("No existe el metodo $metodo del controlador $nombreControlador", 404);
 
         }
-        if($checkDirs){
+        if ($checkDirs) {
             $this->checkDirectoriosView();
         }
         return $controlador;
     }
+
     private function jidaExcepcion(Excepcion $excepcion)
     {
-        Helpers\Debug::imprimir($excepcion,true);
+        Helpers\Debug::imprimir($excepcion, true);
     }
+
     /**
      * Procesa una excepción capturarda
      *
      * @method procesarExcepcion
      */
-    private function procesarExcepcion(Excepcion $excepcion){
-        try{
+    private function procesarExcepcion(Excepcion $excepcion)
+    {
+        try {
             //if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
             global $dataVista;
             // Helpers\Debug::imprimir($excepcion);
-            if(strpos($this->_controlador, 'Controller')===false)
-                $ctrlError = $this->_controlador."Controller";
+            if (strpos($this->_controlador, 'Controller') === false)
+                $ctrlError = $this->_controlador . "Controller";
             else
                 $ctrlError = $this->_controlador;
 
-            if($ctrlError!=CONTROLADOR_EXCEPCIONES)
-                if(class_exists($ctrlError))
+            if ($ctrlError != CONTROLADOR_EXCEPCIONES)
+                if (class_exists($ctrlError))
                     $this->controladorObject = new $ctrlError;
                 else
-                    $this->controladorObject=NULL;
+                    $this->controladorObject = NULL;
 
-            if(!defined('CONTROLADOR_EXCEPCIONES')){
-                $this->controlador='\Jida\Core\Excepcion';
-            }else {
-                $this->controlador=CONTROLADOR_EXCEPCIONES;
+            if (!defined('CONTROLADOR_EXCEPCIONES')) {
+                $this->controlador = '\Jida\Core\Excepcion';
+            } else {
+                $this->controlador = CONTROLADOR_EXCEPCIONES;
             }
 
             $this->vista->data = $dataVista;
-            $this->vista->procesarExcepcion(new JExcepcion($excepcion,$ctrlError),$this->controlador);
+            $this->vista->procesarExcepcion(new JExcepcion($excepcion, $ctrlError), $this->controlador);
 
-        }catch(Excepcion $e){
-            
+        } catch (Excepcion $e) {
+
             $metodo = $this->metodo;
             $dataVista->usarPlantilla('error');
-            $this->vista->establecerAtributos(['modulo'=>'jadmin']);
+            $this->vista->establecerAtributos(['modulo' => 'jadmin']);
             $this->vista->pathLayout('Framework/Layout');
-            $this->controladorObject ='Jida\Core\Excepcion';
+            $this->controladorObject = 'Jida\Core\Excepcion';
             Helpers\Debug::imprimir($e);
             //$this->mostrarContenido($ctrlExcepcion->vista);
         }
     }
+
     /**
      * Muestra contenido de la vista y controlador requeridos
      *
@@ -733,17 +776,19 @@ global $JD;
      * @access private
      *
      */
-    private function mostrarContenido($vista=""){
+    private function mostrarContenido($vista = "")
+    {
         global $dataVista;
         $this->vista->data = $dataVista;
-		$this->vista->_namespace = $this->_namespace;
-		$this->vista->_controller = $this->_controlador;
+        $this->vista->_namespace = $this->_namespace;
+        $this->vista->_controller = $this->_controlador;
 
-		$this->vista->_modulo = ($this->_modulo);
+        $this->vista->_modulo = ($this->_modulo);
 
         $this->vista->renderizar($vista);
 
     }
+
     /**
      * Ajusta el nombre de los Controladores y Metodos
      *
@@ -755,15 +800,16 @@ global $JD;
      * @param int $tipoCamelCase 1 Upper 2 Lower
      * @return string $nombre Cadena Formateada resultante
      */
-    private function validarNombre($str,$tipoCamelCase){
-        if(!empty($str)){
-            if($tipoCamelCase==1){
-                $nombre = str_replace(" ","",Helpers\Cadenas::upperCamelCase(str_replace("-", " ",$str)));
-            }else{
-                $nombre = str_replace(" ","",Helpers\Cadenas::lowerCamelCase(str_replace("-", " ",$str)));
+    private function validarNombre($str, $tipoCamelCase)
+    {
+        if (!empty($str)) {
+            if ($tipoCamelCase == 1) {
+                $nombre = str_replace(" ", "", Helpers\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
+            } else {
+                $nombre = str_replace(" ", "", Helpers\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
             }
             return $nombre;
         }
 
     }
- } // END
+} // END
