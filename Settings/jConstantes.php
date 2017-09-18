@@ -126,6 +126,7 @@ if(!defined('URL_IMGS'))                    define('URL_IMGS','/htdocs/img/');
 if(!defined('URL_JS'))                      define('URL_JS','/htdocs/js/');
 if(!defined('URL_CSS'))                     define('URL_CSS','/htdocs/css/');
 if(!defined('URL_BOWER'))					define ('URL_BOWER','/htdocs/bower_components/');
+if(!defined('URL_HTDOCS_JADMIN'))					define ('URL_HTDOCS_JADMIN','/Framework/htdocs/');
 if(!defined('LAYOUT_JIDA'))
 
 

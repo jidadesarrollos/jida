@@ -68,6 +68,10 @@ if(TEST_PLATFORM==TRUE){
 	TestPlataforma();
 }
 
+if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
+    require_once DIR_FRAMEWORK.'/vendor/autoload.php';
+    #Debug::mostrarArray(get_declared_classes (  ));
+}
 #=======================================================================
 #=======================================================================
 #=======================================================================
@@ -120,12 +124,6 @@ include_once 'Core/Autoload.class.php';
 #Carga de clases automaticamente
 Autoload::init();
 
-if(file_exists(DIR_FRAMEWORK.'/vendor/autoload.php')){
-
-	 require_once DIR_FRAMEWORK.'/vendor/autoload.php';
-	#Debug::mostrarArray(get_declared_classes (  ));
-}
 global $elementos;
 $elementos=['areas'=>[],'elementos'=>[]];
 Session::iniciarSession();
-?>
