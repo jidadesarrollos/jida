@@ -30,12 +30,6 @@ class JController extends Controller{
 		$this->dv->addCssModulo('jida.css');
 		$this->definirJSGlobals();
 
-		// $this->dv->addJsModulo([
-				// 'min/jd.plugs.js',
-		// ]);
-
-
-
 		$this->dv->addJS([
 			$this->obtURLApp()."htdocs/js/jida/jadmin.js",
 		],false);
