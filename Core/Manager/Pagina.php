@@ -140,9 +140,12 @@ class Pagina
         $this->_esJadmin = $jadmin;
         $this->_ruta = $ruta;
 
-        if (is_object($GLOBALS['Configuracion'])) {
-
-            $this->_conf = $GLOBALS['Configuracion'];
+		$configuracion = (is_array($GLOBALS['Configuracion']))? Helpers\Arrays::convertirAObjeto($GLOBALS['Configuracion']) : $GLOBALS['Configuracion'];
+        
+        if (is_object($configuracion)) {
+			
+            $this->_conf = $configuracion;
+            
             if (!property_exists($this->_conf, 'tema')) {
                 throw new Exception('No se ha definido el tema para la aplicacion', '100' . $this->_ce);
             }
@@ -312,7 +315,6 @@ class Pagina
         }
         $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $this->controlador));
         $this->directorioVista .= $controller . "/";
-        // Helpers\Debug::imprimir($this->_ruta,$this->directorioVista,true);
         return $this->directorioVista;
     }
 
@@ -693,7 +695,6 @@ class Pagina
     {
         $dataInclude = [];
         $path = (defined('URL_BASE')) ? URL_BASE : "";
-        #\Jida\Helpers\Debug::imprimir("ak",$this->data->js,true);
         if (!property_exists($this->data, $lang))
             return false;
         $data = $this->data->{$lang};
@@ -1031,7 +1032,6 @@ class Pagina
     {
         $propiedades = get_object_vars($this->data);
         foreach ($propiedades as $k => $value) {
-            //Helpers\Debug::imprimir("procesamos la propiedad ".$k);
             $this->$k = $this->data->$k;
         }
     }
