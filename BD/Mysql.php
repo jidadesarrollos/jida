@@ -88,7 +88,7 @@ class Mysql extends ConexionBD{
 		
 		
 	        $this->mysqli = new mysqli($this->servidor,$this->usuario,$this->clave,$this->bd);
-			
+
 	        if($this->mysqli->connect_error){
 				$this->_conexion = FALSE;	
 	            throw new Exception("No se establecido la conexi&oacute;n a base de datos ".$this->mysqli->connect_error, 1);
@@ -313,7 +313,7 @@ class Mysql extends ConexionBD{
             }
 
 		//Desaparece el objeto mysql al cerrarla
-        #$this->cerrarConexion();
+        $this->cerrarConexion();
 
         }else{
             throw new Exception("El query $this->query , no retorna resultado", 1);
