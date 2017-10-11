@@ -27,6 +27,8 @@ class Curl extends Controller{
      */
     var $curl;
     
+	
+	var $respuesta="";
     /**
      * Funcion constructora para una llamada via curl
      * @param $url
@@ -65,20 +67,33 @@ class Curl extends Controller{
      * Realiza una petición get
      * @method get 
      */
-    function get($url="",$follow=false){
-        $this->init();  
-        curl_setopt($this->curl, CURLOPT_URL, $url);  
+    function get($params=array(),$url="",$follow=false){
+    	
+        $this->init();
+		if(!empty($url)) $this->url = $url;
+		if(count($params)>0) $this->url= $this->url."?".$this->setParams($params);
+		
+		if(!is_null($url) or count($params>0)){
+            curl_setopt($this->curl, CURLOPT_URL, $this->url);
+        }
+        curl_setopt($this->curl, CURLOPT_URL, $this->url);  
         curl_setopt($this->curl, CURLOPT_POST,false);  
         curl_setopt($this->curl, CURLOPT_HEADER, $follow);  
         curl_setopt($this->curl, CURLOPT_REFERER, '');  
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, $follow);  
         $result=curl_exec ($this->curl);  
-        if($result === false){  
+        if($result === false){
+        	echo $this->url;  
             echo curl_error($this->curl);  
         }  
-        $this->cerrarCurl();  
-        return $result; 
+        $this->cerrarCurl();
+				
+		$this->respuesta = $result;
+	  	
+        return $this; 
     }
+	
+	
     /**
      * Ejecuta una llamada curl via POST
      * @method llamadaPost
@@ -93,7 +108,8 @@ class Curl extends Controller{
         foreach ($params as $name=>$value) {  
             $elements[] = "{$name}=".urlencode($value);  
         }  
-        $elements = join("&",$elements);  
+        $elements = join("&",$elements);
+		  
         if(!is_null($url)){
             curl_setopt($this->curl, CURLOPT_URL, $url);    
         }          
@@ -102,11 +118,32 @@ class Curl extends Controller{
         curl_setopt($this->curl, CURLOPT_HEADER, $header OR $follow);  
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $elements);  
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, $follow);  
-        $result=curl_exec ($this->curl);  
-        $this->cerrarCurl();  
+        $result=curl_exec ($this->curl);
+        $this->respuesta=$result;
+        $this->cerrarCurl();
+		        
+		return $this;
         
-        return $result;
+		
     }//fin funcón post
+    /**
+	 * Retorna la respuesta obtenida tal y como se recibe
+	 */
+    function respuesta(){
+    	return $this->respuesta;
+    }
+	/**
+	 * Retorna la respuesta de la llamada cURL convertida en un objeto
+	 * 
+	 */
+	function arreglo(){
+		
+		return json_decode($this->respuesta,true, 512, JSON_BIGINT_AS_STRING);
+	}
+	function objeto(){
+		
+		return json_decode($this->respuesta);
+	}
     
     /**
      * Realiza la llamada Curl
@@ -127,6 +164,15 @@ class Curl extends Controller{
     private function cerrarCurl(){
         curl_close($this->curl);
     }
-    
+    private function setUrl($url,$params=array()){
+    	$this->url = $url;
+		if(count($params>0)){
+			
+		}
+    }
+	private function setParams($array){
+		$params = http_build_query($array);
+		return $params;
+	}
 }   
 ?>

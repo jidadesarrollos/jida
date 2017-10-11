@@ -113,7 +113,7 @@ class DataVista{
 	 */
 	function addJsModulo($js,$ruta=true){
 		$modulo = $GLOBALS['_MODULO_ACTUAL'];
-		(Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="aplicacion/modulos/".strtolower($modulo);
+		(Cadenas::guionCase($modulo)=='jadmin')?$modulo="Framework/":$modulo="Aplicacion/Modulos/".ucwords($modulo);
 		
 		if(is_array($js)){
 			foreach ($js as $key => $archivo) {
