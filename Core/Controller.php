@@ -218,7 +218,7 @@ class Controller
 
 
         $this->url = $this->urlController();
-        if (Helpers\Sesion::get('Usuario') instanceof User)
+        if (Helpers\Sesion::obt('Usuario') instanceof User)
             $this->usuario = Helpers\Sesion::get('Usuario');
         else {
             $clase = MODELO_USUARIO;
@@ -245,6 +245,14 @@ class Controller
             }
         }
 
+    }
+
+    /**
+     * Retorna el objeto de configuración de la aplicación
+     * @return {object} \App\Config\Configuracion
+     */
+    protected function _conf() {
+        return $GLOBALS['JIDA_CONF'];
     }
 
     /**

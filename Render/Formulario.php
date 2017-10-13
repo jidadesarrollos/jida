@@ -523,6 +523,32 @@ class Formulario extends Selector
     }
 
     /**
+     * Genera la instancia de un SelectorInput
+     *
+     * @since 0.6
+     *
+     */
+    private function _instanciarCampo($_campo)
+    {
+        $selectorInput = new SelectorInput($_campo);
+        if ($this->labels and $_campo->type != 'hidden') {
+
+            $label = new Selector('label', ['for' => $_campo->id]);
+            $label->innerHTML((property_exists($selectorInput, 'label') ? $_campo->label : $_campo->name));
+            $selectorInput->label = $label;
+
+        }
+
+        if (property_exists($_campo, 'eventos') and !empty($_campo->eventos)) {
+            $selectorInput->data('validacion', json_encode((array)$_campo->eventos));
+        }
+
+        $selectorInput->configuracion = $selectorInput;
+
+        return $selectorInput;
+    }
+
+    /**
      * Instancia los campos configurados del formulairo
      *
      * @internal gestiona los campos del formulario realizando una instancia
@@ -553,20 +579,7 @@ class Formulario extends Selector
 
             $this->_arrayOrden[$orden] = $campo->id;
 
-            $this->_campos[$campo->id] = new SelectorInput($campo);
-
-            if ($this->labels and $campo->type != 'hidden') {
-
-                $label = new Selector('label', ['for' => $campo->id]);
-                $label->innerHTML((property_exists($campo, 'label') ? $campo->label : $campo->name));
-                $this->_campos[$campo->id]->label = $label;
-            }
-
-            if (property_exists($campo, 'eventos') and !empty($campo->eventos)) {
-
-                $this->_campos[$campo->id]->data('validacion', json_encode((array)$campo->eventos));
-            }
-            $this->_campos[$campo->id]->configuracion = $campo;
+            $this->_campos[$campo->id] = $this->_instanciarCampo($campo);
 
         }//fin foreach
 

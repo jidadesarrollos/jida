@@ -47,16 +47,14 @@ class Formulario extends JsonManager
     private $_ce = '10041';
     private $_campos = [];
 
-    function __construct($form = "")
+    function __construct($form = "", $modulo = null)
     {
 
         $this->_procesarArgumentos(func_get_args());
-        if (!empty($form)) {
 
-            parent::__construct($this->_obtUbicacionFormulario());
-            if ($this->campos) {
-                $this->_procesarCampos();
-            }
+
+        if (!empty($form)) {
+            $this->_instanciar($form, $modulo);
 
         } else {
             $this->ubicacion();
@@ -64,6 +62,21 @@ class Formulario extends JsonManager
 
     }
 
+    private function _instanciar($form, $modulo)
+    {
+        $json = $this->path($modulo) . DS . $form;
+
+        parent::__construct($json);
+
+        if ($this->campos) {
+            $this->_procesarCampos();
+        }
+    }
+
+    /**
+     * @param $argumentos
+     * @deprecated
+     */
     private function _procesarArgumentos($argumentos)
     {
 
@@ -137,7 +150,7 @@ class Formulario extends JsonManager
         if ($ambito == 'app') {
 
             $ubicacion = DIR_APP;
-            if (!empty($modulo) and !in_array($modulo,["app","jida"])) {
+            if (!empty($modulo) and !in_array($modulo, ["app", "jida"])) {
 
                 $ubicacion .= DS . 'Modulos' . DS . Helpers\Cadenas::upperCamelCase($modulo);
                 if (!Helpers\Directorios::validar($ubicacion)) {
@@ -212,11 +225,12 @@ class Formulario extends JsonManager
 
         foreach ($campos as $key => $nombre) {
 
-            $nombreID = trim(str_replace(" ", "_", $nombre));
+            $nombreID = str_replace(" ", "_", trim($nombre));
 
-            if (array_key_exists($nombreID, $this->campos))
+            if (array_key_exists($nombreID, $this->campos)) {
                 $array[$nombreID] = $this->campos[$nombreID];
-            else {
+            } else {
+
                 $campo = new CampoFormulario();
                 $campo->id = $nombreID;
                 $campo->name = $nombreID;
@@ -234,17 +248,34 @@ class Formulario extends JsonManager
 
     /**
      * Genera un json con la data del formulario
+     * @method _generarJson
+     * @return strnig json_encode
+     *
      */
     private function _generarJson()
     {
         $json = [];
         foreach ($this->_modelo as $key => $campo) {
-
             $json[$campo] = $this->{$campo};
         }
 
-
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
+    }
+
+    static function path($modulo)
+    {
+        if (strtolower($modulo) === 'jida') {
+            return DIR_FRAMEWORK . 'Formularios';
+        } elseif (empty($modulo) or $modulo == 'principal') {
+            return DIR_APP . 'Formularios';
+        }
+
+        if ($modulo) {
+            $ubicacion = DIR_APP . 'Modulos' . DS . Helpers\Cadenas::upperCamelCase($modulo) . DS . 'Formularios';
+        }
+
+        return $ubicacion;
+
     }
 
     /**
@@ -253,29 +284,30 @@ class Formulario extends JsonManager
      */
     function salvar($data = [])
     {
-
+        #Helpers\Debug::imprimir($data, true);
         if (!empty($data)) {
-            foreach ($data as $key => $valor) {
 
+            foreach ($data as $key => $valor) {
                 if ($key != 'campos' and property_exists($this, $key)) {
                     $this->{$key} = $valor;
                 }
-
             }
-            if (empty($this->identificador)) $this->_crearIdentificador();
 
+            if (empty($this->identificador)) {
+                $this->_crearIdentificador();
+            }
             $this->_validarCampos($data['campos']);
+
         }
 
-
         $json = $this->_generarJson();
+        if (empty($this->identificador)) {
+            $this->_crearIdentificador();
+        }
 
-        if (empty($this->identificador)) $this->_crearIdentificador();
+        $directorio = $this->path($data['modulo']);
 
-
-        $directorio = $this->_ubicacion;
-
-        if (Helpers\Directorios::validar($directorio)) {
+        if (!Helpers\Directorios::validar($directorio)) {
             Helpers\Directorios::crear($directorio);
         }
 

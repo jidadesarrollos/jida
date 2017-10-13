@@ -11,6 +11,7 @@ namespace Jida\Render;
 
 use Jida\BD\BD as BD;
 use Jida\Helpers as Helpers;
+use Exception as Excepcion;
 
 class SelectorInput extends Selector
 {
@@ -164,7 +165,7 @@ class SelectorInput extends Selector
         $this->establecerAtributos($params, $this);
         $this->_name = $params->name;
         $this->_tipo = $params->type;
-        if(property_exists($params, 'html')) $this->_html = $params->html;
+        if (property_exists($params, 'html')) $this->_html = $params->html;
 
         if (!$type and in_array($params->type, ['checkbox', 'radio'])) {
 
@@ -248,12 +249,22 @@ class SelectorInput extends Selector
     {
 
         foreach ($options as $key => $data) {
-            $key = array_keys($data);
-            $opcion = new Selector('option', ['value' => $data[$key[0]]]);
-            if ($data[$key[0]] == $this->_valorUpdate) {
-                $opcion->attr('selected', 'selected');
+
+            if (is_array($data)) {
+
+                $key = array_keys($data);
+                $opcion = new Selector('option', ['value' => $data[$key[0]]]);
+                if ($data[$key[0]] == $this->_valorUpdate) {
+                    $opcion->attr('selected', 'selected');
+                }
+                $opcion->innerHTML($data[$key[1]]);
+
+            } else {
+                $opcion = new Selector('option', ['value' => $key]);
+                $opcion->innerHTML($data);
             }
-            $opcion->innerHTML($data[$key[1]]);
+
+
             //$optionsHTML .= Selector::crear('option',,$data[$key[1]]);
             array_push($this->_selectoresOpcion, $opcion);
         }
@@ -283,6 +294,27 @@ class SelectorInput extends Selector
 
     }
 
+    /**
+     * Agrega opciones a un selector de seleccion
+     *
+     * @since 0.6
+     * @method addOpciones
+     * @example $selectorImput->addOpciones([1=>'Valor 1', 2=>'Valor 2']);
+     */
+    function addOpciones($opciones, $add = FALSE)
+    {
+        if (!is_array($opciones)) {
+            throw new Excepcion('Las opciones no se han pasado correctamente', $this->_ce . '000008');
+        }
+        if ($this->type == 'select') {
+            $this->_crearOpcionesSelect($opciones);
+        } else {
+            $this->_crearOpcionesSelectorMultiple($opciones);
+        }
+
+
+    }
+
     private function _crearTextArea()
     {
         $this->_attr = array_merge($this->_attr, ['type' => $this->_tipo, 'name' => $this->_name]);
@@ -301,14 +333,17 @@ class SelectorInput extends Selector
     function editarOpciones($opciones, $add = FALSE, $valor = "")
     {
         $this->opciones = $opciones;
-        if (!in_array($this->type, $this->_controlesMultiples) and $this->_tipo != 'select')
+        if (!in_array($this->type, $this->_controlesMultiples) and $this->_tipo != 'select') {
             throw new Exception("El selector " . $this->id . " no es un control de seleccion", $this->_ce . '08');
+        }
 
         if (!is_array($opciones)) {
             $this->opciones = $opciones;
             $opciones = $this->obtOpciones();
         }
-        if (!$add) $this->_selectoresOpcion = [];
+        if (!$add) {
+            $this->_selectoresOpcion = [];
+        }
         if ($this->type == 'select') {
             $this->_crearOpcionesSelect($opciones);
         } else {

@@ -27,7 +27,7 @@
           "mensaje": "Debes ingresar un nombre que identifique al formulario"
         }
       },
-      "orden": "1",
+      "orden": "1.1",
       "visibilidad": "1",
       "id": "nombre",
       "type": "text"
