@@ -311,7 +311,7 @@ class Controller
      */
     protected function obtEntero($valor)
     {
-        return $this->entero();
+        return $this->entero($valor);
     }
 
     /**

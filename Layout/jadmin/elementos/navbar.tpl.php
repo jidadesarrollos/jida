@@ -5,6 +5,7 @@ if(URL_BASE == ''){
     $url = URL_BASE;
 }
 
+$usuario = is_object($this->usuario) ? $this->usuario->nombres : '';
 ?>
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
@@ -27,7 +28,7 @@ if(URL_BASE == ''){
                        role="button"
                        aria-haspopup="true"
                        aria-expanded="false">
-                        <?=$this->usuario?>
+                        <?=$usuario?>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
