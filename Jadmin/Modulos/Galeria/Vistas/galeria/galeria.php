@@ -45,6 +45,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="mostache-script" id="mediaTemplate">
 	<li>
 		<figure data-galeria="{{id}}" class="{{class}}">

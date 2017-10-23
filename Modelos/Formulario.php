@@ -19,8 +19,7 @@ use Jida\Helpers as Helpers;
 use Jida\Core\GeneradorCodigo;
 use Exception as Excepcion;
 
-class Formulario extends JsonManager
-{
+class Formulario extends JsonManager {
 
     use GeneradorCodigo\GeneradorArchivo;
 
@@ -47,11 +46,9 @@ class Formulario extends JsonManager
     private $_ce = '10041';
     private $_campos = [];
 
-    function __construct($form = "", $modulo = null)
-    {
+    function __construct($form = "", $modulo = null) {
 
         $this->_procesarArgumentos(func_get_args());
-
 
         if (!empty($form)) {
             $this->_instanciar($form, $modulo);
@@ -62,8 +59,7 @@ class Formulario extends JsonManager
 
     }
 
-    private function _instanciar($form, $modulo)
-    {
+    private function _instanciar($form, $modulo) {
         $json = $this->path($modulo) . DS . $form;
 
         parent::__construct($json);
@@ -77,8 +73,7 @@ class Formulario extends JsonManager
      * @param $argumentos
      * @deprecated
      */
-    private function _procesarArgumentos($argumentos)
-    {
+    private function _procesarArgumentos($argumentos) {
 
         $cantidad = count($argumentos);
         if ($argumentos[0]) {
@@ -105,8 +100,7 @@ class Formulario extends JsonManager
      * @param array $argumentos Arreglo de parametros pasados al constructor
      * @return string
      */
-    private function _obtUbicacionFormulario()
-    {
+    private function _obtUbicacionFormulario() {
 
         $ubicacion = $this->ubicacion();
 
@@ -124,8 +118,7 @@ class Formulario extends JsonManager
      * @method _nombreJson
      * @param {string} $nombre Nombre del archivo
      */
-    private function _nombreJSON($nombre)
-    {
+    private function _nombreJSON($nombre) {
         if (strpos($nombre, '.json') === FALSE) {
             return $nombre . '.json';
         }
@@ -140,8 +133,7 @@ class Formulario extends JsonManager
      * @param string $ambito o jida.
      * @param string $modulo [opcional] Permite definir el modulo del formulario
      */
-    function ubicacion($ambito = "", $modulo = "")
-    {
+    function ubicacion($ambito = "", $modulo = "") {
 
         $ubicacion = "";
         if (empty($ambito)) $ambito = $this->_ambito;
@@ -172,8 +164,7 @@ class Formulario extends JsonManager
 
     }
 
-    private function _procesarCampos()
-    {
+    private function _procesarCampos() {
 
         $camposOrdenados = [];
 
@@ -199,8 +190,7 @@ class Formulario extends JsonManager
      * @return string $identificador Nombre del formulario en UpperCamelCase
      *
      */
-    private function _crearIdentificador($nombre = "")
-    {
+    private function _crearIdentificador($nombre = "") {
 
         if (empty($nombre)) $nombre = $this->nombre;
 
@@ -217,8 +207,7 @@ class Formulario extends JsonManager
      * @method _validarCampos
      * @param {mixed}  $campos String o Arreglo de campos
      */
-    private function _validarCampos($campos)
-    {
+    private function _validarCampos($campos) {
 
         $campos = (is_array($campos)) ? $campos : explode(',', $campos);
         $array = [];
@@ -252,8 +241,7 @@ class Formulario extends JsonManager
      * @return strnig json_encode
      *
      */
-    private function _generarJson()
-    {
+    private function _generarJson() {
         $json = [];
         foreach ($this->_modelo as $key => $campo) {
             $json[$campo] = $this->{$campo};
@@ -262,8 +250,7 @@ class Formulario extends JsonManager
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
     }
 
-    static function path($modulo)
-    {
+    static function path($modulo) {
         if (strtolower($modulo) === 'jida') {
             return DIR_FRAMEWORK . 'Formularios';
         } elseif (empty($modulo) or $modulo == 'principal') {
@@ -282,8 +269,7 @@ class Formulario extends JsonManager
      * Guarda el contenido del objeto
      * @method salvar
      */
-    function salvar($data = [])
-    {
+    function salvar($data = []) {
         #Helpers\Debug::imprimir($data, true);
         if (!empty($data)) {
 
@@ -326,14 +312,12 @@ class Formulario extends JsonManager
      * jida es declarado los formularios se guardaran en la carpeta
      * formularios dentro del framework y no de la aplicacion
      */
-    function _ambito($ambito = 'app')
-    {
+    function _ambito($ambito = 'app') {
         $this->_ambito = $ambito;
     }
 
 
-    function orden($campos)
-    {
+    function orden($campos) {
 
         $totalCampos = count($this->campos);
         for ($i = 0; $i < $totalCampos; ++$i) {
@@ -350,8 +334,7 @@ class Formulario extends JsonManager
 
     }
 
-    function dataCampo($campo)
-    {
+    function dataCampo($campo) {
 
         if (array_key_exists($campo, $this->_campos)) {
             if (is_object($this->_campos[$campo]['eventos'])) {

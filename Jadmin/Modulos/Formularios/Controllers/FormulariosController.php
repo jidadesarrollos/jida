@@ -24,11 +24,6 @@ class FormulariosController extends FController {
 
     }
 
-
-    private function _listar() {
-
-    }
-
     function index($modulo = "") {
 
         $this->vista = 'vista';
@@ -130,6 +125,22 @@ class FormulariosController extends FController {
         return false;
     }
 
+    private function _dataGestion($nombreFormulario, $modulo) {
+
+        $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
+        $dataForm = $this->_dataFormulario($nombreFormulario, $modulo);
+        Helpers\Debug::imprimir($form, true);
+
+        $campos = [];
+        foreach ($form->campos as $id => $campo) {
+            $campos[] = $campo->name;
+        }
+        $dataForm['campos'] = implode(", ",$campos);
+
+        return $dataForm;
+
+    }
+
     function gestion($id = "", $modulo = "") {
 
         $dataForm = [];
@@ -139,12 +150,13 @@ class FormulariosController extends FController {
 
             $nombreFormulario = $id . '.json';
 
-            $dataForm = $this->_dataFormulario($nombreFormulario, $modulo);
+            $dataForm = $this->_dataGestion($nombreFormulario, $modulo);
             $titulo = 'Editar <strong>' . $dataForm['nombre'] . '</strong>';
 
         } else {
             $titulo = 'Crear Nuevo Formulario';
         }
+
 
         $form = new Render\Formulario('GestionFormulario', $dataForm);
         $form->boton('principal', 'Guardar y editar campos');
