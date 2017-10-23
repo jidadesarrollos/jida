@@ -19,8 +19,7 @@ use Jida\Core\Manager\JExcepcion as JExcepcion;
 use Jida\Helpers\Directorios as Directorios;
 use Exception as Excepcion;
 
-class Pagina
-{
+class Pagina {
 
     use \Jida\Core\ObjetoManager;
 
@@ -132,20 +131,19 @@ class Pagina
     private $_conf;
 
 
-    function __construct($controlador, $metodo = "", $modulo = "", $ruta = "app", $jadmin = false)
-    {
+    function __construct($controlador, $metodo = "", $modulo = "", $ruta = "app", $jadmin = false) {
 
         $this->validarDefiniciones($controlador, $metodo, $modulo);
         $this->validarEstructuraApp();
         $this->_esJadmin = $jadmin;
         $this->_ruta = $ruta;
 
-		$configuracion = (is_array($GLOBALS['Configuracion']))? Helpers\Arrays::convertirAObjeto($GLOBALS['Configuracion']) : $GLOBALS['Configuracion'];
-        
+        $configuracion = (is_array($GLOBALS['Configuracion'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['Configuracion']) : $GLOBALS['Configuracion'];
+
         if (is_object($configuracion)) {
-			
+
             $this->_conf = $configuracion;
-            
+
             if (!property_exists($this->_conf, 'tema')) {
                 throw new Exception('No se ha definido el tema para la aplicacion', '100' . $this->_ce);
             }
@@ -160,8 +158,7 @@ class Pagina
      * @method validarEstructuraApp
      * @since 1.4
      */
-    function validarEstructuraApp()
-    {
+    function validarEstructuraApp() {
         //la data cargada aquí, deberá poder ser obtenida de base de datos o un archivo.
         $data = [];
         if (defined('LAYOUT_DEFAULT')) {
@@ -179,8 +176,7 @@ class Pagina
      * @var string $metodo Nombre del metodo a ejecutar
      * @var string $modulo Módulo en el cual se encuentra el controlador buscado.
      */
-    function validarDefiniciones($controlador, $metodo = "", $modulo = "")
-    {
+    function validarDefiniciones($controlador, $metodo = "", $modulo = "") {
 
 
         if (!empty($controlador))
@@ -214,8 +210,7 @@ class Pagina
      * <ul> <li>1 Aplicación</li> <li>2Jida </li> <li>3 Excepciones</li></ul>
      * @method definirDirectorios
      */
-    function definirDirectorios()
-    {
+    function definirDirectorios() {
         /* Verificación de ruta de plantillas */
 
 
@@ -266,8 +261,7 @@ class Pagina
      * @param string tpl
      * @return string tpl recibe "nombreplantilla" y retorna "nombreplantilla.tpl.php";
      */
-    private function obtNombreTpl($tpl)
-    {
+    private function obtNombreTpl($tpl) {
         if (strpos($tpl, '.tpl.php') === false)
             return Helpers\Cadenas::lowerCamelCase($tpl . '.tpl.php');
 
@@ -281,8 +275,7 @@ class Pagina
      * @method procesarLayout
      * @since 1.4
      */
-    private function procesarLayout()
-    {
+    private function procesarLayout() {
         if (strpos($this->layout, '.tpl.php') === FALSE) {
             $this->layout .= '.tpl.php';
         }
@@ -292,8 +285,8 @@ class Pagina
      * Define el directorio donde debe ser buscada la vista
      * @method obtenerDirectorioVista
      */
-    private function obtenerDirectorioVista()
-    {
+    private function obtenerDirectorioVista() {
+
 
         if ($this->_ruta == 'framework') {
             $this->directorioVista = DIR_FRAMEWORK . "Jadmin/";
@@ -313,7 +306,10 @@ class Pagina
                 $this->directorioVista .= $vistaFolder;
             }
         }
-        $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $this->controlador));
+        $controlador = Helpers\Cadenas::lowerCamelCase(Helpers\Cadenas::guionCaseToString($this->controlador));
+
+        $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $controlador));
+
         $this->directorioVista .= $controller . "/";
         return $this->directorioVista;
     }
@@ -326,8 +322,7 @@ class Pagina
      * se busca un archivo con el mismo nombre del metodo del controlador requerido.
      *
      */
-    function renderizar($nombreVista = "", $excepcion = FALSE)
-    {
+    function renderizar($nombreVista = "", $excepcion = FALSE) {
         $this->procesarVariables();
         if (!empty($nombreVista))
             $this->nombreVista = $nombreVista;
@@ -366,8 +361,7 @@ class Pagina
      * Incluye una plantilla
      * @inconclusa
      */
-    private function procesarVistaAbsoluta()
-    {
+    private function procesarVistaAbsoluta() {
         if ($this->data->getPath() == "jida") {
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
         } else {
@@ -391,8 +385,7 @@ class Pagina
      * @method renderizarLayout
      * @access private
      */
-    private function renderizarLayout($excepcion = FALSE)
-    {
+    private function renderizarLayout($excepcion = FALSE) {
 
         ob_start();
 
@@ -421,8 +414,7 @@ class Pagina
         //if (ob_get_length()) ob_end_clean();
     }
 
-    private function requiresJs()
-    {
+    private function requiresJs() {
 
     }
 
@@ -430,8 +422,7 @@ class Pagina
      * Procesa la excepción generada
      * @method procesarExcepcion
      */
-    function procesarExcepcion(JExcepcion $e, $ctrlExcepcion)
-    {
+    function procesarExcepcion(JExcepcion $e, $ctrlExcepcion) {
         $this->layout = LAYOUT_DEFAULT;
 
         if (class_exists($ctrlExcepcion)) {
@@ -469,8 +460,7 @@ class Pagina
         $this->renderizar($tpl, TRUE);
     }
 
-    function establecerAtributos($arr)
-    {
+    function establecerAtributos($arr) {
         $clase = __CLASS__;
 
         $metodos = get_class_vars($clase);
@@ -481,8 +471,7 @@ class Pagina
         }
     }
 
-    private function imprimirArrayJs($keyArrayPadre, $archivos, $pos, &$cont, $tipo = "script")
-    {
+    private function imprimirArrayJs($keyArrayPadre, $archivos, $pos, &$cont, $tipo = "script") {
 
         $js = "";
 
@@ -522,8 +511,7 @@ class Pagina
      * @param string $pos Head o footer
      *
      */
-    function printJS($pos = '')
-    {
+    function printJS($pos = '') {
         $js = "";
         $this->checkData();
         $cont = 0;
@@ -611,8 +599,7 @@ class Pagina
         return $js;
     }
 
-    private function imprimirCodigoJs($codigo, $cont)
-    {
+    private function imprimirCodigoJs($codigo, $cont) {
         $js = "";
 
         if (is_array($codigo)) {
@@ -628,8 +615,7 @@ class Pagina
      *
      * @method printJSAjax
      */
-    function printJSAjax()
-    {
+    function printJSAjax() {
         $js = "";
         $this->checkData();
         $cont = 0;
@@ -677,8 +663,7 @@ class Pagina
      * @since 1.4
      *
      */
-    function printCssModulo($modulo)
-    {
+    function printCssModulo($modulo) {
 
     }
 
@@ -691,8 +676,7 @@ class Pagina
      * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      */
-    function imprimirLibrerias($lang, $modulo = "")
-    {
+    function imprimirLibrerias($lang, $modulo = "") {
         $dataInclude = [];
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         if (!property_exists($this->data, $lang))
@@ -744,8 +728,7 @@ class Pagina
     }
 
 
-    private function __obtHTMLLibreria($lang, $libreria, $cont = 2)
-    {
+    private function __obtHTMLLibreria($lang, $libreria, $cont = 2) {
 
         $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria, 'http') === FALSE)) ? URL_BASE : "";
 
@@ -771,8 +754,7 @@ class Pagina
      * Imprime las librerias css
      *
      */
-    function printCSS()
-    {
+    function printCSS() {
 
         $css = "";
         $path = (defined('URL_BASE')) ? URL_BASE : "";
@@ -812,16 +794,14 @@ class Pagina
         return $css;
     }
 
-    private function checkData()
-    {
+    private function checkData() {
         if (!$this->data instanceof DataVista) {
             $this->data = new DataVista();
             Debug::string("No se ha instanciado correctamente el objeto Data en el controlador $this->controlador", true);
         }
     }
 
-    private function printHTML($html)
-    {
+    private function printHTML($html) {
         return htmlspecialchars_decode($html);
     }
 
@@ -834,8 +814,7 @@ class Pagina
      * @method printHeadTags
      *
      */
-    function printHeadTags()
-    {
+    function printHeadTags() {
         $meta = "";
         $itemprop = "";
         $initTab = 0;
@@ -903,8 +882,7 @@ class Pagina
      * @version beta
      *
      */
-    function renderURL($url, $lang = "")
-    {
+    function renderURL($url, $lang = "") {
 
         if (defined('USO_IDIOMAS') and USO_IDIOMAS) {
             if (empty($lang) and !empty($this->idioma))
@@ -924,8 +902,7 @@ class Pagina
      * @return path $path
      * @deprecated No se encuentra en uso
      */
-    function pathLayout($path = "")
-    {
+    function pathLayout($path = "") {
         if (!empty($path))
             $this->urlPlantilla = $path;
         return $this->urlPlantilla;
@@ -942,8 +919,7 @@ class Pagina
      * @param string $segmento Nombre del segmento, sin la extensión. (Debe ser pasado como primer parametro)
      * @param array $variables Matriz de variables a pasar al segmento
      */
-    function segmento($segmento, $params = [])
-    {
+    function segmento($segmento, $params = []) {
 
         if (!is_array($params))
             $params = array($params);
@@ -962,8 +938,7 @@ class Pagina
         return false;
     }
 
-    private function obtenerContenidos($archivo)
-    {
+    private function obtenerContenidos($archivo) {
 
         ob_start();
         include_once $archivo;
@@ -979,8 +954,7 @@ class Pagina
      * @param mixed $files Nombre de Archivo o arreglo de archivos a incluir
      *
      */
-    function incluir($archivo)
-    {
+    function incluir($archivo) {
         if (is_array($archivo)) {
             foreach ($archivo as $key => $ar) {
                 include_once $ar . '.php';
@@ -996,8 +970,7 @@ class Pagina
      * @param mixed $archivo Nombre del archivo a incluir
      *
      */
-    function incluirLayout($archivo)
-    {
+    function incluirLayout($archivo) {
 
         if (!$this->_tema) {
             $this->_tema = $GLOBALS['configuracion']['tema'];
@@ -1028,8 +1001,7 @@ class Pagina
      * en ejecucion al objeto.
      * @method procesarVariables
      */
-    function procesarVariables()
-    {
+    function procesarVariables() {
         $propiedades = get_object_vars($this->data);
         foreach ($propiedades as $k => $value) {
             $this->$k = $this->data->$k;
@@ -1040,8 +1012,7 @@ class Pagina
      * Permite acceder a un nexo
      *
      */
-    function nexo($nexo, $modulo = "")
-    {
+    function nexo($nexo, $modulo = "") {
 
         $partes = explode(".", $nexo);
         if (count($partes) > 1) {
@@ -1073,8 +1044,7 @@ class Pagina
      * de un tema o en el contenido general.
      *
      */
-    function htdocs($folder, $item, $tema = TRUE)
-    {
+    function htdocs($folder, $item, $tema = TRUE) {
         $path = (defined('URL_BASE')) ? URL_BASE : '';
         $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
         if ($tema)
@@ -1095,8 +1065,7 @@ class Pagina
      * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
      *
      */
-    function cadena($texto, $ubicacion, $seccion = "")
-    {
+    function cadena($texto, $ubicacion, $seccion = "") {
         if (!property_exists($this, 'traductor'))
             throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente", $this->_ce . '10');
 
@@ -1106,13 +1075,11 @@ class Pagina
     /**
      * Permite incluir objetos media
      */
-    function media($folder, $item, $tema = TRUE)
-    {
+    function media($folder, $item, $tema = TRUE) {
         return $this->htdocs($folder, $item, $tema);
     }
 
-    function enlace($url = "")
-    {
+    function enlace($url = "") {
         $path = (defined('URL_BASE')) ? URL_BASE : '';
         if (!empty($this->idioma))
             $enlace = $path . '/' . $this->idioma . '/' . $url;
@@ -1129,8 +1096,7 @@ class Pagina
      * @param {string} idioma
      * @since 0.5
      */
-    function cambiarUrl($idioma)
-    {
+    function cambiarUrl($idioma) {
 
         $url = "/";
         if (!empty($this->modulo))
