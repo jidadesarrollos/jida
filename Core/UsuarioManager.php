@@ -141,7 +141,7 @@ trait UsuarioManager{
             }
 
         }
-
+        
         $retorno['form']         = $form;
         $retorno['formPerfiles'] = $formPerfiles;
 
