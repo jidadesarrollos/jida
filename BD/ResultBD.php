@@ -11,7 +11,7 @@
  */
 
 namespace Jida\BD;
-class ResultBD{
+class ResultBD {
     /**
      * @var object $bd Objeto Instanciado manejador de base de datos
      */
@@ -25,66 +25,77 @@ class ResultBD{
     protected $query;
     protected $idResultado;
     protected $unico;
-    private $ejecutado=FALSE;
+    private $ejecutado = FALSE;
 
-    function __construct(DataModel $DataModel){
+    function __construct(DataModel $DataModel) {
         $this->setValores($DataModel);
 
     }
 
-    function setValores(DataModel $DataModel){
+    function setValores(DataModel $DataModel) {
         $this->dataModel = $DataModel;
         $this->bdObject = $this->dataModel->__get('bd');
-        $this->idResultado= $this->bdObject->__get('idResult');
+        $this->idResultado = $this->bdObject->__get('idResult');
 
         $this->result = $this->dataModel->bd->result;
-        if(!empty($this->idResultado) or $this->result) $this->ejecutado=TRUE;
+        if (!empty($this->idResultado) or $this->result)
+            $this->ejecutado = TRUE;
+
         return $this;
     }
-    function getData(){
+
+    function getData() {
         return $this->result;
     }
+
     /**
      * Valida si se ejecuto la consulta a base de datos
      * @method ejecutado
      */
-    function ejecutado(){
+    function ejecutado() {
         return $this->ejecutado;
     }
+
     /**
      * Retorna el id obtenido de la última transacción en base de datos
      * @method idResult
      * @return int Resultado
      * @see $this::idResultado
      */
-    function idResultado(){
+    function idResultado() {
         return $this->idResultado;
     }
-    function setUnico($unico){
-        $this->unico=$unico;
+
+    function setUnico($unico) {
+        $this->unico = $unico;
     }
-    function esUnico(){
+
+    function esUnico() {
         return $this->unico;
     }
-    function totalRegistros(){
+
+    function totalRegistros() {
         return $this->bdObject->totalRegistros();
     }
-    function query(){
+
+    function query() {
         return $this->dataModel->bd->query;
     }
-    function __set($property,$valor){
-        if(property_exists($this, $property))
-            $this->$property=$valor;
+
+    function __set($property, $valor) {
+        if (property_exists($this, $property))
+            $this->$property = $valor;
     }
-	/**
-	 * Retorna el listado de ids insertados en un salvar multiple
-	 * @method ids
-	 * @return array $idsInsertados
-	 * @since 1.4
-	 */
-	function ids(){
-		return $this->dataModel->obtIdsResultados();
-	}
+
+    /**
+     * Retorna el listado de ids insertados en un salvar multiple
+     * @method ids
+     * @return array $idsInsertados
+     * @since 1.4
+     */
+    function ids() {
+        return $this->dataModel->obtIdsResultados();
+    }
 
 }
 
