@@ -13,11 +13,13 @@
  */
 
 namespace Jida\BD;
+
 use \Exception as Excepcion;
 use Jida\Helpers as Helpers;
+
 class ConexionBD {
-	use \Jida\Core\ObjetoManager;
-	private $_ce="003";
+    use \Jida\Core\ObjetoManager;
+    private $_ce = "003";
     protected $bd;
     /**
      *
@@ -48,11 +50,11 @@ class ConexionBD {
      * @var unknown
      */
     protected $manejadorBD;
-	/**
-	 * Nombre del manejador de base de datos
-	 * @param $manejador
-	 */
-	protected $manejador;
+    /**
+     * Nombre del manejador de base de datos
+     * @param $manejador
+     */
+    protected $manejador;
 
     /**
      *
@@ -68,49 +70,50 @@ class ConexionBD {
      */
     protected $puerto;
 
-	private $_conexion;
-	protected $_clase;
-    /**
+    private $_conexion;
+    protected $_clase;
 
+    /**
      * @throws Exception Error de Conexion a la Base de Datos
      */
-    public function __construct($conexion="default",$clase="") {
-    	$this->_clase = $clase;
-		if(class_exists('\App\Config\BD')){
-			$this->_conexion = $conexion;
+    public function __construct($conexion = "default", $clase = "") {
+        $this->_clase = $clase;
+        if (class_exists('\App\Config\BD')) {
+            $this->_conexion = $conexion;
 
-			$this->_establecerConfiguracion();
+            $this->_establecerConfiguracion();
 
-		}else{
-			throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
+        } else {
+            throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce . "1");
 
-		}
+        }
     }
-	/**
-	 * Define una nueva configuracion para la base de datos
-	 *
-	 * @internal
-	 * @method cambiarBD
-	 * @param string $conexion Nombre de la conexion a crear debe ser una propiedad
-	 * del objeto \App\Config\BD
-	 * @see \App\Config\BD
-	 *
-	 *
-	 */
-	function cambiarBD($conexion){
-		$this->_conexion = $conexion;
-		$this->_establecerConfiguracion();
-	}
-	/**
-	 * Establece los atributos de la conexion a partir de la propiedad del objeto BD
-	 * @method _establecerConfiguracion
-	 */
-	private function _establecerConfiguracion(){
-		$configuracion = new \App\Config\BD();
-		 $this->manejador = $configuracion->manejador;
-		if(property_exists($configuracion, $this->_conexion))
-		{
-			$this->establecerAtributos($configuracion->{$this->_conexion},$this);
-		}
-	}
+
+    /**
+     * Define una nueva configuracion para la base de datos
+     *
+     * @internal
+     * @method cambiarBD
+     * @param string $conexion Nombre de la conexion a crear debe ser una propiedad
+     * del objeto \App\Config\BD
+     * @see \App\Config\BD
+     *
+     *
+     */
+    function cambiarBD($conexion) {
+        $this->_conexion = $conexion;
+        $this->_establecerConfiguracion();
+    }
+
+    /**
+     * Establece los atributos de la conexion a partir de la propiedad del objeto BD
+     * @method _establecerConfiguracion
+     */
+    private function _establecerConfiguracion() {
+        $configuracion = new \App\Config\BD();
+        $this->manejador = $configuracion->manejador;
+        if (property_exists($configuracion, $this->_conexion)) {
+            $this->establecerAtributos($configuracion->{$this->_conexion}, $this);
+        }
+    }
 }

@@ -30,13 +30,12 @@ class Formulario extends JsonManager {
     var $estructura;
     var $campos = [];
 
-    private $_modelo = [
-        'nombre',
-        'query',
-        'identificador',
-        'estructura',
-        'clave_primaria',
-        'campos'
+    private $_modelo = ['nombre',
+                        'query',
+                        'identificador',
+                        'estructura',
+                        'clave_primaria',
+                        'campos'
     ];
 
     private $_ambito = 'app';
@@ -46,7 +45,7 @@ class Formulario extends JsonManager {
     private $_ce = '10041';
     private $_campos = [];
 
-    function __construct($form = "", $modulo = null) {
+    function __construct($form = "", $modulo = NULL) {
 
         $this->_procesarArgumentos(func_get_args());
 
@@ -122,6 +121,7 @@ class Formulario extends JsonManager {
         if (strpos($nombre, '.json') === FALSE) {
             return $nombre . '.json';
         }
+
         return $nombre;
 
     }
@@ -136,13 +136,17 @@ class Formulario extends JsonManager {
     function ubicacion($ambito = "", $modulo = "") {
 
         $ubicacion = "";
-        if (empty($ambito)) $ambito = $this->_ambito;
-        if (empty($modulo)) $modulo = $this->_modulo;
+        if (empty($ambito))
+            $ambito = $this->_ambito;
+        if (empty($modulo))
+            $modulo = $this->_modulo;
 
         if ($ambito == 'app') {
 
             $ubicacion = DIR_APP;
-            if (!empty($modulo) and !in_array($modulo, ["app", "jida"])) {
+            if (!empty($modulo) and !in_array($modulo, ["app",
+                                                        "jida"
+                ])) {
 
                 $ubicacion .= DS . 'Modulos' . DS . Helpers\Cadenas::upperCamelCase($modulo);
                 if (!Helpers\Directorios::validar($ubicacion)) {
@@ -171,8 +175,8 @@ class Formulario extends JsonManager {
         foreach ($this->campos as $key => $campo) {
 
             $campoClase = new CampoFormulario($campo);
-            $camposOrdenados[$campoClase->orden] = $campoClase;
-            $this->_campos[$campoClase->name] = (array)$campoClase;
+            $camposOrdenados[ $campoClase->orden ] = $campoClase;
+            $this->_campos[ $campoClase->name ] = (array)$campoClase;
         }
         asort($camposOrdenados);
 
@@ -192,10 +196,12 @@ class Formulario extends JsonManager {
      */
     private function _crearIdentificador($nombre = "") {
 
-        if (empty($nombre)) $nombre = $this->nombre;
+        if (empty($nombre))
+            $nombre = $this->nombre;
 
         $identificador = Helpers\Cadenas::upperCamelCase($nombre);
         $this->identificador = $identificador;
+
         return $identificador;
 
     }
@@ -217,20 +223,21 @@ class Formulario extends JsonManager {
             $nombreID = str_replace(" ", "_", trim($nombre));
 
             if (array_key_exists($nombreID, $this->campos)) {
-                $array[$nombreID] = $this->campos[$nombreID];
+                $array[ $nombreID ] = $this->campos[ $nombreID ];
             } else {
 
                 $campo = new CampoFormulario();
                 $campo->id = $nombreID;
                 $campo->name = $nombreID;
                 $campo->label = $nombre;
-                $array[$nombreID] = $campo;
+                $array[ $nombreID ] = $campo;
 
             }
 
 
         }
         $this->campos = $array;
+
         return $array;
 
     }
@@ -244,7 +251,7 @@ class Formulario extends JsonManager {
     private function _generarJson() {
         $json = [];
         foreach ($this->_modelo as $key => $campo) {
-            $json[$campo] = $this->{$campo};
+            $json[ $campo ] = $this->{$campo};
         }
 
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
@@ -297,12 +304,9 @@ class Formulario extends JsonManager {
             Helpers\Directorios::crear($directorio);
         }
 
-        $this
-            ->crear($directorio . DS . $this->identificador . ".json")
-            ->escribir($json)
-            ->cerrar();
+        $this->crear($directorio . DS . $this->identificador . ".json")->escribir($json)->cerrar();
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -322,10 +326,10 @@ class Formulario extends JsonManager {
         $totalCampos = count($this->campos);
         for ($i = 0; $i < $totalCampos; ++$i) {
 
-            $campo =& $this->campos[$i];
+            $campo =& $this->campos[ $i ];
 
             if (is_object($campo) and array_key_exists($campo->id, $campos)) {
-                $campo->orden = $campos[$campo->id];
+                $campo->orden = $campos[ $campo->id ];
             }
         }
 
@@ -337,12 +341,14 @@ class Formulario extends JsonManager {
     function dataCampo($campo) {
 
         if (array_key_exists($campo, $this->_campos)) {
-            if (is_object($this->_campos[$campo]['eventos'])) {
-                $this->_campos[$campo]['eventos'] = "";
+            if (is_object($this->_campos[ $campo ]['eventos'])) {
+                $this->_campos[ $campo ]['eventos'] = "";
             }
-            return $this->_campos[$campo];
+
+            return $this->_campos[ $campo ];
         }
-        return false;
+
+        return FALSE;
 
     }
 
