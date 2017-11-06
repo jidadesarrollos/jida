@@ -58,12 +58,12 @@ class InstagramManager {
     function buscarID($user, $token) {
 
         $url = $this->urlApi . 'users/search?q=' . $user . '&access_token=' . $token;
-        $curl = new \Curl($this->urlApi);
+        $curl = new Curl($this->urlApi);
         $data = $curl->get([], $url)->arreglo();
 
-        // Debug::imprimir('buscarID',$url,$data,true);
+         //\Jida\Helpers\Debug::imprimir('buscarID',$url,$data,true);
 
-        return $data;
+        return $data['data'];
     }
 
     function solicitarAccessToken($token) {
@@ -119,7 +119,7 @@ class InstagramManager {
             // Debug::imprimir('Error 400');
         }
 
-        // Debug::imprimir('$url',$url,'$data',$data,true);
+         //\Jida\Helpers\Debug::imprimir('$url',$url,'$data',$data,true);
 
         return $data['data'];
     }

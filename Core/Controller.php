@@ -233,6 +233,7 @@ class Controller
             $this->layout = "ajax.tpl.php";
         }
 
+
         $this->getModelo();
         $this->dv->usuario = Helpers\Sesion::get('Usuario');
         if (count($this->helpers) > 0) {

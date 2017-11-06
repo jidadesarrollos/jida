@@ -45,8 +45,6 @@ class InstagramController extends JController {
         } else {
             if ($this->post('btnPermisosInstagram')) {
 
-                // Debug::imprimir('POST permisosInstagram',$this->post());
-
                 $ig = new InstagramManager();
                 $infoIG = $ig->solicitarAccessToken($this->post('codigo'));
 
