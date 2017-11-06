@@ -341,7 +341,7 @@ $(document).ready(function () {
         var $vista = $(this);
         var id = $vista.attr('id');
         var tipoControl = $vista.data('tipocontrol');
-        jdVista = new jd.vista(id, tipoControl);
+        var jdVista = new jd.vista(id, tipoControl);
         jdVista.armarVista();
     });
 });
