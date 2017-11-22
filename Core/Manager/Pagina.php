@@ -23,7 +23,7 @@ class Pagina {
 
     use \Jida\Core\ObjetoManager;
 
-    private $_ce = '007';
+    private $_ce = '7000';
 
     /**
      * Objeto DataVista
@@ -306,11 +306,11 @@ class Pagina {
                 $this->directorioVista .= $vistaFolder;
             }
         }
+
         $controlador = Helpers\Cadenas::lowerCamelCase(Helpers\Cadenas::guionCaseToString($this->controlador));
-
         $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $controlador));
-
         $this->directorioVista .= $controller . "/";
+
         return $this->directorioVista;
     }
 
@@ -323,9 +323,11 @@ class Pagina {
      *
      */
     function renderizar($nombreVista = "", $excepcion = FALSE) {
+
         $this->procesarVariables();
-        if (!empty($nombreVista))
+        if (!empty($nombreVista)) {
             $this->nombreVista = $nombreVista;
+        }
 
         $DataTpl = $this->data->obtPlantilla();
         /**
@@ -334,25 +336,30 @@ class Pagina {
         if (!empty($DataTpl)) {
             $rutaVista = $this->procesarVistaAbsoluta();
         } else {
+
             // Se accede a un archivo vista
             $rutaVista = $this->obtenerDirectorioVista();
-
             //Arma la estructura para una vista cualquiera
-            if ($excepcion)
+
+            if ($excepcion) {
                 $rutaVista = $this->rutaExcepciones . $nombreVista . '.php';
-            else
+            } else {
                 $rutaVista = $rutaVista . Helpers\Cadenas::lowerCamelCase($this->nombreVista) . ".php";
+            }
         }
 
-        if (!is_readable($rutaVista))
-            throw new Excepcion("No se consigue el archivo $rutaVista", 1);
+        if (!is_readable($rutaVista)) {
+            throw new Excepcion("No se consigue el archivo $rutaVista", $this->_ce . 1);
+        }
+
 
         $this->template = $rutaVista;
 
-        if ((!empty($this->layout) and $this->layout !== FALSE) or $excepcion === TRUE)
+        if ((!empty($this->layout) and $this->layout !== FALSE) or $excepcion === TRUE){
             $this->renderizarLayout($excepcion);
-        else
+        }else{
             throw new Excepcion("No se encuentra definido el layout", $this->_ce . '10');
+        }
     }
 
 //final funcion

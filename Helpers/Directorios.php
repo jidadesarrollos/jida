@@ -69,7 +69,7 @@ class Directorios extends \Directory{
 		if(is_dir($ruta)){
 			if($directorio = opendir($ruta)){
 				while (($file = readdir($directorio)) !== false) {
-					if($file!="." and $file!='..' and $file!='TP_LINK Consumo'){
+					if($file!="." and $file!='..'){
 						$listado[]=$file;
 					}
 				}

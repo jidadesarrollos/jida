@@ -18,10 +18,16 @@ class Fcontroller extends JController {
 
     use GeneradorCodigo\GeneradorArchivo;
     /**
-     * @property object $_formulario Objeto std creado a partir del JSON de un formulario cargado
+     * @property object Formulario Objeto std creado a partir del JSON de un formulario cargado
      * @see \Jida\Modelos\Formulario
      */
     protected $_formulario;
+    protected $_ce = '110000';
+
+    function __construct() {
+        parent::__construct();
+        $this->dv->addJsModulo('formularios.js', 'formularios');
+    }
 
     /**
      * Retorna la data principal de un formulario consultado
@@ -35,14 +41,14 @@ class Fcontroller extends JController {
         $this->_instanciarFormulario($formulario, $modulo);
 
         return [
-            'id' => $this->_formulario->identificador,
-            'nombre' => $this->_formulario->nombre,
-            'estructura' => $this->_formulario->estructura,
-            'identificador' => $this->_formulario->identificador,
+            'id'             => $this->_formulario->identificador,
+            'nombre'         => $this->_formulario->nombre,
+            'estructura'     => $this->_formulario->estructura,
+            'identificador'  => $this->_formulario->identificador,
             'clave_primaria' => $this->_formulario->clave_primaria,
-            'campos' => count($this->_formulario->campos),
-            'query' => $this->_formulario->query,
-            'modulo' => $modulo
+            'campos'         => count($this->_formulario->campos),
+            'query'          => $this->_formulario->query,
+            'modulo'         => $modulo
 
         ];
 
@@ -70,21 +76,9 @@ class Fcontroller extends JController {
 
         $formulario = new \Jida\Modelos\Formulario($id, $modulo);
         $this->_formulario = $formulario;
+
         return $this->_formulario;
 
     }
 
-
-    function __construct() {
-        parent::__construct();
-        $this->dv->addJsModulo('formularios.js', 'formularios');
-    }
-
-    function configuracion() {
-        $url = '/jadmin/formularios/campos/configuracion/:formulario/:campo';
-        if ($this->solicitudAjax() and $this->post('campo')) {
-
-
-        }
-    }
 }

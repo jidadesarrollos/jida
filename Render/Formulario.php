@@ -17,8 +17,7 @@ use \Exception as Excepcion;
 use Jida\Helpers as Helpers;
 use Jida\BD\BD as BD;
 
-class Formulario extends Selector
-{
+class Formulario extends Selector {
 
     private $layout;
     var $name;
@@ -139,13 +138,13 @@ class Formulario extends Selector
      */
     private $_columnasTotal = 12;
     private $_css = [
-        'input' => 'form-control',
-        'titulo' => 'titulo-form',
-        'columnaBotones' => 'col-md-12 text-right',
+        'input'             => 'form-control',
+        'titulo'            => 'titulo-form',
+        'columnaBotones'    => 'col-md-12 text-right',
         'contenedorBotones' => 'btn-group',
-        'botonEnvio' => 'btn btn-primary',
-        'botones' => 'btn btn-default',
-        'seccionTitulo' => 'page-header',
+        'botonEnvio'        => 'btn btn-primary',
+        'botones'           => 'btn btn-default',
+        'seccionTitulo'     => 'page-header',
 
     ];
 
@@ -223,8 +222,8 @@ class Formulario extends Selector
     /**
      *
      */
-    function __construct($form = "", $update = "")
-    {
+    function __construct($form = "", $update = "") {
+
         if ($form) {
             $this->_cargarFormulario($form);
         }
@@ -244,8 +243,7 @@ class Formulario extends Selector
     /**
      * Procesa la informacion para renderizar el formulario en modo update
      */
-    private function _procesarUpdate($update)
-    {
+    private function _procesarUpdate($update) {
 
         if (is_array($update)) {
 
@@ -266,8 +264,8 @@ class Formulario extends Selector
      * @param string $class Clase CSS que se desee agregar al div
      * @return void
      */
-    function removerTagForm($class = "form-alone")
-    {
+    function removerTagForm($class = "form-alone") {
+
         $this->selector = 'DIV';
         $this->attr = [];
         $this->addClass($class);
@@ -278,8 +276,7 @@ class Formulario extends Selector
      * @method addDataUpdate
      * @revision
      */
-    function addDataUpdate($data = "")
-    {
+    function addDataUpdate($data = "") {
 
         if (empty($data)) $data = $this->_dataUpdate;
         foreach ($data as $campo => $valor) {
@@ -304,8 +301,7 @@ class Formulario extends Selector
 
     }
 
-    private function _obtenerDataUpdate()
-    {
+    private function _obtenerDataUpdate() {
 
         $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idUpdate . "'";
         $data = BD::query($query);
@@ -328,8 +324,7 @@ class Formulario extends Selector
      * @method _cargarFormulario
      * @param string $form Nombre del Formulario
      */
-    private function _cargarFormulario($form)
-    {
+    private function _cargarFormulario($form) {
 
         if (Helpers\Directorios::validar(DIR_APP . 'Formularios/' . $form . '.json')) {
 
@@ -352,8 +347,8 @@ class Formulario extends Selector
 
     }
 
-    private function validarJson()
-    {
+    private function validarJson() {
+
         $contenido = file_get_contents($this->_path);
         $this->_configuracion = json_decode($contenido);
         $array = json_decode($contenido, TRUE);
@@ -361,20 +356,21 @@ class Formulario extends Selector
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new Excepcion("El formulario  " . $this->_path . " no esta estructurado correctamente", $this->_ce . "0");
         }
+
         return $this;
     }
 
-    private function _configuaricionInicial()
-    {
+    private function _configuaricionInicial() {
+
         $this->_id = $this->_configuracion->identificador;
 
         $this->attr([
-            'id' => 'form' . $this->_id,
-            'method' => 'POST',
-            'name' => 'form' . $this->_id,
-            'role' => 'form',
-            'class' => $this->css('form'),
-            'target' => $this->target,
+            'id'      => 'form' . $this->_id,
+            'method'  => 'POST',
+            'name'    => 'form' . $this->_id,
+            'role'    => 'form',
+            'class'   => $this->css('form'),
+            'target'  => $this->target,
             'enctype' => $this->enctype
         ]);
 
@@ -384,16 +380,16 @@ class Formulario extends Selector
     /**
      * Genera el boton de envio si es requerido
      */
-    private function _botonEnvio()
-    {
+    private function _botonEnvio() {
+
         if ($this->botonEnvio) {
             $id = 'btn' . $this->_id;
 
             $btn = new Selector('input');
 
             $btn->attr([
-                'id' => $id,
-                'name' => $id, 'type' => 'submit',
+                'id'    => $id,
+                'name'  => $id, 'type' => 'submit',
                 'value' => 'Guardar'
             ])->addClass($this->css('botonEnvio'));
 
@@ -415,16 +411,18 @@ class Formulario extends Selector
      * si es usado como getter retornara la clase del elemento si es conseguido, caso contrario
      * retornara un string vacio
      */
-    function css($elemento, $css = "")
-    {
+    function css($elemento, $css = "") {
+
         if (!empty($css)) {
             $this->_css[$elemento] = $css;
+
             return $this;
 
         } else {
             if (array_key_exists($elemento, $this->_css))
                 return $this->_css[$elemento];
         }
+
         return "";
     }
 
@@ -434,8 +432,7 @@ class Formulario extends Selector
      * @method _procesarEstructura
      * @access private
      */
-    private function _procesarEstructura()
-    {
+    private function _procesarEstructura() {
 
         if (!property_exists($this->_configuracion, 'estructura')) {
 
@@ -528,8 +525,8 @@ class Formulario extends Selector
      * @since 0.6
      *
      */
-    private function _instanciarCampo($_campo)
-    {
+    private function _instanciarCampo($_campo) {
+
         $selectorInput = new SelectorInput($_campo);
         if ($this->labels and $_campo->type != 'hidden') {
 
@@ -557,14 +554,14 @@ class Formulario extends Selector
      * @see \Jida\Render\SelectorInput
      * @use self::labels
      */
-    private function _instanciarCamposConfiguracion()
-    {
+    private function _instanciarCamposConfiguracion() {
 
         $this->_totalCampos = count((array)$this->_configuracion->campos);
         if ($this->_totalCampos < 1) {
             throw new Excepcion("El formulario " . $this->_formulario . " no tiene campos registrados", $this->_ce . "1");
         }
         $eee = 0;
+
         foreach ($this->_configuracion->campos as $id => $campo) {
 
             if (!is_object($campo)) continue;
@@ -576,14 +573,18 @@ class Formulario extends Selector
             } else {
                 $orden = $id;
             }
+            if (!array_key_exists($orden, $this->_arrayOrden)) {
+                $this->_arrayOrden[$orden] = $campo->id;
+            } else {
+                $this->_arrayOrden[] = $campo->id;
+            }
 
-            $this->_arrayOrden[$orden] = $campo->id;
 
             $this->_campos[$campo->id] = $this->_instanciarCampo($campo);
 
         }//fin foreach
 
-        ksort($this->_arrayOrden);
+        $this->_arrayOrden;
 
 
     }
@@ -596,8 +597,8 @@ class Formulario extends Selector
      * @param string $class Clase del Titulo
      * @return object $this
      */
-    function titulo($titulo, $selector = "h2", $class = "page-header")
-    {
+    function titulo($titulo, $selector = "h2", $class = "page-header") {
+
         if (empty($class)) $class = $this->css('titulo');
 
         $this->_titulo = new Selector($selector, ['class' => $class]);
@@ -608,8 +609,8 @@ class Formulario extends Selector
      * Retorna los campos del formularo en un arreglo
      * @method enArreglo
      */
-    function enArreglo()
-    {
+    function enArreglo() {
+
         foreach ($this->_campos as $key => $campo) {
 
             if ($campo->type != 'button') {
@@ -625,8 +626,8 @@ class Formulario extends Selector
      * Agrega Fielsets y legends a la estructua del formulario
      *
      */
-    function fieldsets($fieldsets)
-    {
+    function fieldsets($fieldsets) {
+
         if (is_array($fieldsets) and count($fieldsets) > 0) {
             foreach ($fieldsets as $key => $value) {
                 $id = "";
@@ -645,7 +646,7 @@ class Formulario extends Selector
                 $this->_fieldsets[$id] = $fieldset;
 
             }
-            #Helpers\Debug::imprimir(array_keys($this->_fieldsets),true);
+
         }
 
     }
@@ -659,8 +660,8 @@ class Formulario extends Selector
      * @param array $titulos
      * @example $titulos = [0=>['limite'=>10,'titulo'=>'Titulo del fieldset']]
      */
-    function render()
-    {
+    function render() {
+
         $i = 0;
         $actualFieldset = FALSE;
         $columnas = 0;
@@ -672,7 +673,7 @@ class Formulario extends Selector
 
         if (Helpers\Sesion::obt('__msjForm')) {
 
-            $this->addFinal(Helpers\Sesion::get('__msjForm'));
+            $this->addFinal(Helpers\Sesion::obt('__msjForm'));
             Helpers\Sesion::destruir('__msjForm');
         }
 
@@ -752,8 +753,7 @@ class Formulario extends Selector
      * @method imprimirBotones
      * @param boolean $plantilla true;
      */
-    function imprimirBotones($plantilla = TRUE)
-    {
+    function imprimirBotones($plantilla = TRUE) {
 
         $botones = "";
         foreach (array_reverse($this->_botones) as $id => $boton) {
@@ -765,9 +765,9 @@ class Formulario extends Selector
         }
 
         return $this->_obtTemplate($this->_plantillaBotones, [
-            'botones' => $botones,
+            'botones'              => $botones,
             'cssContenedorBotones' => $this->css('contenedorBotones'),
-            'cssColumnaBotones' => $this->css('columnaBotones')
+            'cssColumnaBotones'    => $this->css('columnaBotones')
         ]);
     }
 
@@ -776,12 +776,12 @@ class Formulario extends Selector
      * @method _obtTemplate
      * @param $plantilla ;
      */
-    private function _obtTemplate($template, $params)
-    {
+    private function _obtTemplate($template, $params) {
 
         foreach ($params as $key => $value) {
             $template = str_replace("{{:" . $key . "}}", $value, $template);
         }
+
         return $template;
     }
 
@@ -792,16 +792,16 @@ class Formulario extends Selector
      * el de armarFormulario, por tanto no se aconseja su uso.
      * @deprecated 1.4
      */
-    function armarFormularioEstructura()
-    {
+    function armarFormularioEstructura() {
+
         $this->armarFormulario();
     }
 
     /*
      * @deprecated usar metodo render
      */
-    function armarFormulario()
-    {
+    function armarFormulario() {
+
         return $this->render();
 
     }
@@ -818,8 +818,7 @@ class Formulario extends Selector
      *
      *
      */
-    function boton($boton, $label = "", $selector = "button")
-    {
+    function boton($boton, $label = "", $selector = "button") {
 
         if (array_key_exists($boton, $this->_botones)) {
 
@@ -839,7 +838,9 @@ class Formulario extends Selector
 
             $btn = new Selector($selector, ['type' => "submit", "name" => $boton, "id" => $boton]);
             $btn->innerHTML($label);
-            return $this->_botones[$boton] = $btn;
+            $this->_botones[$boton] = $btn;
+
+            return $this->_botones[$boton];
         }
     }
 
@@ -851,8 +852,8 @@ class Formulario extends Selector
      * @method validar
      * @param  array $data Arreglo de data a validar, generalmente corresponde a la data post.
      */
-    function validar(&$data = "")
-    {
+    function validar(&$data = "") {
+
         if (empty($data)) {
             $data =& $_POST;
         }
@@ -911,8 +912,8 @@ class Formulario extends Selector
      * @param string $msj Contenido del mensaje
      * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
-    static function msj($type, $msj, $redirect = false)
-    {
+    static function msj($type, $msj, $redirect = false) {
+
         $msj = Helpers\Mensajes::crear($type, $msj, true);
         Helpers\Sesion::set('__msjForm', $msj);
         if ($redirect) {
@@ -926,8 +927,8 @@ class Formulario extends Selector
      * @param string $id Identificador del campo
      * @return object SelectorInput
      */
-    function campo($id)
-    {
+    function campo($id) {
+
         if (array_key_exists($id, $this->_campos))
             return $this->_campos[$id];
         else {
@@ -936,8 +937,8 @@ class Formulario extends Selector
         }
     }
 
-    function obtConsultaUpdate()
-    {
+    function obtConsultaUpdate() {
+
         return $this->_consultaUpdate;
     }
 

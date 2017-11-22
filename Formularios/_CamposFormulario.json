@@ -5,8 +5,7 @@
     "estructura": "2;1;3;1;2;1x2;1x4",
     "clave_primaria": "id_campo",
     "campos": {
-        "id_campo": {
-            "id": "id_campo",
+        "0": {
             "label": "",
             "name": "id_campo",
             "eventos": {},
@@ -14,12 +13,12 @@
             "orden": "1",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "id_campo",
             "type": "hidden"
         },
-        "id_form": {
-            "id": "id_form",
+        "1": {
             "label": "",
             "name": "id_form",
             "eventos": {},
@@ -27,12 +26,12 @@
             "orden": "2",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "id_form",
             "type": "hidden"
         },
-        "class": {
-            "id": "class",
+        "4": {
             "label": "Clase",
             "name": "class",
             "eventos": null,
@@ -40,12 +39,12 @@
             "orden": "3",
             "placeholder": null,
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "class",
             "type": "text"
         },
-        "control": {
-            "id": "control",
+        "5": {
             "label": "Control",
             "name": "control",
             "eventos": null,
@@ -53,12 +52,12 @@
             "orden": "3",
             "placeholder": null,
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "control",
             "type": "select"
         },
-        "data_atributo": {
-            "id": "data_atributo",
+        "6": {
             "label": "Data",
             "name": "data_atributo",
             "eventos": {},
@@ -66,12 +65,14 @@
             "orden": "4",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": {
+                "jidacontrol": "Ingrese un PlaceHolder"
+            },
             "visibilidad": "1",
+            "id": "data_atributo",
             "type": "textarea"
         },
-        "eventos": {
-            "id": "eventos",
+        "7": {
             "label": "Eventos",
             "name": "eventos",
             "eventos": {},
@@ -79,12 +80,12 @@
             "orden": "5",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "eventos",
             "type": "textarea"
         },
-        "label": {
-            "id": "label",
+        "3": {
             "label": "Label",
             "name": "label",
             "eventos": null,
@@ -92,12 +93,12 @@
             "orden": "6",
             "placeholder": null,
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "label",
             "type": "text"
         },
-        "maxlength": {
-            "id": "maxlength",
+        "8": {
             "label": "Maxlength",
             "name": "maxlength",
             "eventos": {},
@@ -105,12 +106,12 @@
             "orden": "7",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "maxlength",
             "type": "text"
         },
-        "name": {
-            "id": "name",
+        "2": {
             "label": "Name",
             "name": "name",
             "eventos": {
@@ -122,12 +123,12 @@
             "orden": "8",
             "placeholder": null,
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "name",
             "type": "text"
         },
-        "opciones": {
-            "id": "opciones",
+        "9": {
             "label": "Opciones",
             "name": "opciones",
             "eventos": {},
@@ -135,12 +136,12 @@
             "orden": "9",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "opciones",
             "type": "textarea"
         },
-        "orden": {
-            "id": "orden",
+        "10": {
             "label": "Orden",
             "name": "orden",
             "eventos": {},
@@ -148,12 +149,12 @@
             "orden": "10",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "orden",
             "type": "text"
         },
-        "placeholder": {
-            "id": "placeholder",
+        "11": {
             "label": "Placeholder",
             "name": "placeholder",
             "eventos": null,
@@ -161,12 +162,12 @@
             "orden": "11",
             "placeholder": "hola mundo",
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "placeholder",
             "type": "text"
         },
-        "size": {
-            "id": "size",
+        "12": {
             "label": "Size",
             "name": "size",
             "eventos": {},
@@ -174,12 +175,12 @@
             "orden": "12",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "size",
             "type": "text"
         },
-        "title": {
-            "id": "title",
+        "13": {
             "label": "Title",
             "name": "title",
             "eventos": {},
@@ -187,12 +188,12 @@
             "orden": "13",
             "placeholder": "",
             "class": "",
-            "data": null,
+            "data_atributo": "",
             "visibilidad": "1",
+            "id": "title",
             "type": "text"
         },
-        "visibilidad": {
-            "id": "visibilidad",
+        "14": {
             "label": "Visibilidad",
             "name": "visibilidad",
             "eventos": null,
@@ -200,8 +201,9 @@
             "orden": "14",
             "placeholder": null,
             "class": null,
-            "data": null,
+            "data_atributo": null,
             "visibilidad": "1",
+            "id": "visibilidad",
             "type": "select"
         }
     }
