@@ -376,9 +376,9 @@ class Formulario extends JsonManager {
 
         $data = FALSE;
 
-       if(array_key_exists($campo, $this->_campos)) {
-           $data = $this->_campos[$campo];
-       }
+        if(array_key_exists($campo, $this->_campos)) {
+            $data = $this->_campos[$campo];
+        }
         if (!$data['type']) {
             $data['type'] = 2;
         }

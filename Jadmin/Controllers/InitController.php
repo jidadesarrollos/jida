@@ -41,7 +41,7 @@ class InitController extends JController{
             $this->urlHtdocs."jquery/dist/jquery.js",
             $this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
             $this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
-            $this->obtURLApp()."htdocs/js/jida/jadmin.js",
+            $this->obtURLApp()."htdocs/js/jida/tinymce.js",
 
         ],false);
        
@@ -130,7 +130,7 @@ class InitController extends JController{
             $this->urlHtdocs."jquery/dist/jquery.js",
             $this->urlHtdocs.'bootstrap/dist/js/bootstrap.min.js',
             $this->obtURLApp()."htdocs/js/jida/min/jd.plugs.js",
-            $this->obtURLApp()."htdocs/js/jida/jadmin.js",
+            $this->obtURLApp()."htdocs/js/jida/tinymce.js",
 
         ];
 

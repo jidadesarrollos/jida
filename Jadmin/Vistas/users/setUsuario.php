@@ -1,7 +1,9 @@
 <?php
 $data =& $this->data;
 ?>
-<h1 id="tituloForm"><?=$data->tituloForm?></h1><form action="<?=$data->action?>" method="POST" enctype="application/x-www-form-urlencoded">
+
+<h1 id="tituloForm"><?=$data->tituloForm?></h1>
+<form action="<?=$data->action?>" method="POST" enctype="application/x-www-form-urlencoded">
     
   <div class="row">
     <div class="col-lg-6 col-md-6 col-md-12 col-xs-12">

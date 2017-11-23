@@ -157,6 +157,7 @@ trait UsuarioManager {
      * @param mixed $user Objeto instanciado de usuario o en su defecto el id del usuario
      */
     protected function registrarPerfilesDeUsuario($form, $user, $perfiles) {
+
         if (!is_object($user))
             $user = new Modelos\User($user);
 
@@ -291,6 +292,7 @@ trait UsuarioManager {
 
         if ($data) {
             $this->crearSesionUsuario();
+
             return true;
         } else
             return false;
@@ -303,6 +305,7 @@ trait UsuarioManager {
      * @param string $url url para redireccionar al cerrar la sesion de usuario
      */
     protected function _cierresesion($url = "") {
+
         if (Helpers\Sesion::destruir()) {
 
             if (Helpers\Sesion::get('Usuario') instanceof MODELO_USUARIO)
@@ -322,6 +325,7 @@ trait UsuarioManager {
      * @see Formulario
      */
     protected function formularioLogin($called = FALSE) {
+
         if ($called) {
             if (Helpers\Sesion::get('FormLoggin') and Helpers\Sesion::get('FormLoggin') instanceof Formulario) {
                 $form = Helpers\Sesion::get('FormLoggin');
@@ -345,6 +349,7 @@ trait UsuarioManager {
      * @see Formulario
      */
     protected function formCambioContrasenia($idUser = '') {
+
         $form = new Render\Formulario('CambioClave', $idUser);
 
         return $form;
@@ -356,6 +361,7 @@ trait UsuarioManager {
      * @param int $length Tamaño de la cadena, por defecto 30
      */
     protected function generarContrasenia($length = 30) {
+
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $string = substr(str_shuffle($chars), 0, $length);
 

@@ -61,6 +61,7 @@ class ValidadorJida extends \Jida\Core\Validador{
 			}
 			$validaciones = $validacionesArray;
 		}
+		$validaciones = is_array($validaciones) ? $validaciones : [];
         $this -> validaciones = array_merge($this -> validacionesDefault,$validaciones);
     }//fin funcion
 
