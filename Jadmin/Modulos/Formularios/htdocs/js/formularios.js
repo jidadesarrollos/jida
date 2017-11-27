@@ -91,6 +91,7 @@
         var form = $container.data('formulario');
         var url = $ul.data('url');
         var form;
+
         /*
         if (URL_BASE) {
             url = URL_BASE + url;
@@ -113,19 +114,21 @@
 
                 form = true;
                 e.preventDefault();
-                console.log("guardando?", $btn);
+
                 $btn.attr('value', 'Guardando...');
 
                 function procesarGuardado(respuesta) {
-                    //console.log(respuesta);
-                    $form.append(respuesta);
+                    console.log(respuesta);
+                    $btn.attr('value', 'Guardar');
+                    console.log($form, $formulario, respuesta.msj);
+                    $formulario.before(respuesta.mensaje);
                 }
 
-                console.log($formulario, $formulario.attr('action'))
                 $.ajax({
                     'url': $formulario.attr('action'),
                     'method': 'post',
-                    'dataType': serializar($formulario.elements),
+                    'data': $formulario.serialize(),
+                    'dataType': 'json'
 
                 }).done(procesarGuardado);
 

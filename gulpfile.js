@@ -19,3 +19,16 @@ gulp.task('js',function(){
 		.pipe(notify("compilados archivos js"));
 
 });
+
+
+gulp.task('js-dev',function(){
+
+	gulp.src(['htdocs/js/libs/*.js',
+			  'htdocs/js/funcionesGenerales.js'])
+		.pipe(concatJS('jd.plugs.dev.js'))
+		.pipe(gulp.dest('htdocs/js/dist'))
+		.pipe(notify("compilados archivos js"));
+
+});
+
+

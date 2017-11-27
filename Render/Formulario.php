@@ -250,7 +250,9 @@ class Formulario extends Selector {
             $this->_dataUpdate = $update;
             $this->_dataUpdateMultiple = $update;
 
-        } else  $this->_obtenerDataUpdate();
+        } else{
+            $this->_obtenerDataUpdate();
+        }
 
         $this->addDataUpdate();
     }
@@ -278,20 +280,22 @@ class Formulario extends Selector {
      */
     function addDataUpdate($data = "") {
 
-        if (empty($data)) $data = $this->_dataUpdate;
-        foreach ($data as $campo => $valor) {
+        if (empty($data)){
+            $data = $this->_dataUpdate;
+        }
 
+        foreach ($data as $campo => $valor) {
             if (array_key_exists($campo, $this->_campos)) {
                 //esta logica debe mejorarse
                 if ($this->_campos[$campo]->type == 'checkbox') {
 
                     foreach ($this->_dataUpdateMultiple as $key => $dataUpdate) {
-
-                        if (!array_key_exists($campo, $dataUpdate))
+                        if (!array_key_exists($campo, $dataUpdate)){
                             break;
-
+                        }
                         $this->_campos[$campo]->valor($dataUpdate[$campo]);
                     }
+
                 } else {
                     $this->_campos[$campo]->valor($valor);
                 }
@@ -482,17 +486,18 @@ class Formulario extends Selector {
                 }
 
             } else {
+
                 if (strpos($estructura[$i], "x") !== FALSE) {
+
                     $partes = explode("x", $estructura[$i]);
                     $columnas = array_shift($partes);
                     $repeticiones = array_shift($partes);
-                    $partes = array_filter($partes);
 
                 } else {
                     $columnas = $estructura[$i];
                     $repeticiones = 1;
-
                 }
+
                 $columnasGrid = $this->_columnasTotal / $columnas;
                 $pivote = 0;
                 $distribucion = [];
@@ -560,18 +565,19 @@ class Formulario extends Selector {
         if ($this->_totalCampos < 1) {
             throw new Excepcion("El formulario " . $this->_formulario . " no tiene campos registrados", $this->_ce . "1");
         }
-        $eee = 0;
 
         foreach ($this->_configuracion->campos as $id => $campo) {
 
-            if (!is_object($campo)) continue;
+            if (!is_object($campo)) {
+                continue;
+            }
 
             if (!property_exists($campo, 'type')) $campo->type = "text";
 
-            if (property_exists($campo, 'orden') and $campo->orden) {
+            if (property_exists($campo, 'orden')) {
                 $orden = $campo->orden;
             } else {
-                $orden = $id;
+                $orden = 0;
             }
             if (!array_key_exists($orden, $this->_arrayOrden)) {
                 $this->_arrayOrden[$orden] = $campo->id;
@@ -583,9 +589,8 @@ class Formulario extends Selector {
             $this->_campos[$campo->id] = $this->_instanciarCampo($campo);
 
         }//fin foreach
-
+        ksort($this->_arrayOrden);
         $this->_arrayOrden;
-
 
     }
 
@@ -672,7 +677,6 @@ class Formulario extends Selector {
             $contenedor->addInicio($this->_titulo->render());
 
         if (Helpers\Sesion::obt('__msjForm')) {
-
             $this->addFinal(Helpers\Sesion::obt('__msjForm'));
             Helpers\Sesion::destruir('__msjForm');
         }
@@ -692,9 +696,11 @@ class Formulario extends Selector {
                 $campo->addClass($this->css('input'));
             }
 
+            if($campo->name == 'control') {
+#                Helpers\Debug::imprimir("Aki", $campo);
+            }
 
             $content .= $campo->render();
-            $configuracion = $campo->configuracion;
             $html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
 
             if (is_object($campo->label))

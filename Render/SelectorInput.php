@@ -13,8 +13,7 @@ use Jida\BD\BD as BD;
 use Jida\Helpers as Helpers;
 use Exception as Excepcion;
 
-class SelectorInput extends Selector
-{
+class SelectorInput extends Selector {
 
     use \Jida\Core\ObjetoManager;
     var $name;
@@ -127,8 +126,8 @@ class SelectorInput extends Selector
      * @example new SelectorInput($name,$tipo="text",$attr=[],$items="")
      * @example new SelectorInput(Std Class);
      */
-    function __construct()
-    {
+    function __construct() {
+
         $numero = func_num_args();
         if ($numero == 1 or ($numero == 2 and in_array(func_get_arg(1), $this->_controlesMultiples))) {
             if ($numero > 1)
@@ -144,16 +143,15 @@ class SelectorInput extends Selector
 
     }
 
-    private function _checkClaseExtendida()
-    {
+    private function _checkClaseExtendida() {
+
         if (class_exists('\App\Config\SelectorInput')) {
             $this->_extension = new \App\Config\SelectorInput();
 
         }
     }
 
-    private function __constructorObject($params, $type = FALSE)
-    {
+    private function __constructorObject($params, $type = FALSE) {
 
         if (property_exists($params, 'data')) {
 
@@ -182,16 +180,14 @@ class SelectorInput extends Selector
 
     }
 
-    private function __constructorParametros($name, $tipo = "text", $attr = [], $items = "")
-    {
+    private function __constructorParametros($name, $tipo = "text", $attr = [], $items = "") {
 
         $this->_name = $name;
         $this->_tipo = $tipo;
         $this->_attr = is_array($attr) ? $attr : [];
     }
 
-    private function _crearSelector()
-    {
+    private function _crearSelector() {
 
         switch ($this->_tipo) {
             case 'select':
@@ -218,8 +214,7 @@ class SelectorInput extends Selector
      * Crea los objetos selector para cada opcion de un selector multiple
      * @method crearOpcionesSelectorMultiple
      */
-    private function _crearOpcionesSelectorMultiple($opciones)
-    {
+    private function _crearOpcionesSelectorMultiple($opciones) {
 
         for ($i = 0; $i < count($opciones); ++$i) {
 
@@ -245,28 +240,31 @@ class SelectorInput extends Selector
      * Genera los objeto selector para las opciones de un select
      * @method crearOpcionesSelect
      */
-    private function _crearOpcionesSelect($options)
-    {
+    private function _crearOpcionesSelect($options) {
 
         foreach ($options as $key => $data) {
-
+            if ($this->name == 'control') {
+                #Helpers\Debug::imprimir($key, $data);
+            }
             if (is_array($data)) {
 
                 $key = array_keys($data);
+                if ($this->name == 'control') {
+                    #Helpers\Debug::imprimir($key, $data);
+                }
                 $opcion = new Selector('option', ['value' => $data[$key[0]]]);
                 if ($data[$key[0]] == $this->_valorUpdate) {
                     $opcion->attr('selected', 'selected');
                 }
+                $this->_selectoresOpcion[$data[0]] = $opcion;
                 $opcion->innerHTML($data[$key[1]]);
 
             } else {
                 $opcion = new Selector('option', ['value' => $key]);
                 $opcion->innerHTML($data);
+                $this->_selectoresOpcion[$key] = $opcion;
             }
 
-
-            //$optionsHTML .= Selector::crear('option',,$data[$key[1]]);
-            array_push($this->_selectoresOpcion, $opcion);
         }
     }
 
@@ -274,14 +272,13 @@ class SelectorInput extends Selector
      * Procesa los item a agregar en controles de seleccion
      *
      */
-    private function obtOpciones()
-    {
+    private function obtOpciones() {
 
         $revisiones = explode(";", $this->opciones);
 
         $opciones = [];
         foreach ($revisiones as $key => $opcion) {
-            if (stripos($opcion, 'select') !== FALSE) {
+            if (stripos($opcion, 'select ') !== FALSE) {
                 $opciones = array_merge($opciones, BD::query($opcion));
 
             } elseif (stripos($opcion, 'externo') !== FALSE) {
@@ -290,6 +287,7 @@ class SelectorInput extends Selector
                 $opciones[] = explode("=", $opcion);
             }
         }
+
         return $opciones;
 
     }
@@ -301,8 +299,8 @@ class SelectorInput extends Selector
      * @method addOpciones
      * @example $selectorImput->addOpciones([1=>'Valor 1', 2=>'Valor 2']);
      */
-    function addOpciones($opciones, $add = FALSE)
-    {
+    function addOpciones($opciones, $add = FALSE) {
+
         if (!is_array($opciones)) {
             throw new Excepcion('Las opciones no se han pasado correctamente', $this->_ce . '000008');
         }
@@ -312,11 +310,30 @@ class SelectorInput extends Selector
             $this->_crearOpcionesSelectorMultiple($opciones);
         }
 
+        return $this;
 
     }
 
-    private function _crearTextArea()
-    {
+    /**
+     * Permite acceder a la opcion de un selector
+     *
+     */
+    function opcion($opcion, $valor = "") {
+
+        $key = strtolower($opcion);
+        if (array_key_exists(strtolower($key), $this->_selectoresOpcion)) {
+            if ($valor) {
+                $this->_selectoresOpcion[$key]->attr('value', $valor);
+            }
+
+            return $this->_selectoresOpcion[$key];
+        }
+
+        return false;
+    }
+
+    private function _crearTextArea() {
+
         $this->_attr = array_merge($this->_attr, ['type' => $this->_tipo, 'name' => $this->_name]);
         parent::__construct($this->_tipo, $this->_attr);
 
@@ -329,9 +346,10 @@ class SelectorInput extends Selector
      * @internal
      *
      * @method editarOpciones
+     * @deprecated 0.6
      */
-    function editarOpciones($opciones, $add = FALSE, $valor = "")
-    {
+    function editarOpciones($opciones, $add = FALSE, $valor = "") {
+
         $this->opciones = $opciones;
         if (!in_array($this->type, $this->_controlesMultiples) and $this->_tipo != 'select') {
             throw new Exception("El selector " . $this->id . " no es un control de seleccion", $this->_ce . '08');
@@ -357,8 +375,8 @@ class SelectorInput extends Selector
      * Crea un selector Select
      * @method _crearSelect
      */
-    private function _crearSelect()
-    {
+    private function _crearSelect() {
+
         //$this->_attr= array_merge($this->_attr,['name'=>$this->_name]);
 
         $this->_attr = array_merge($this->_attr, ['type' => $this->_tipo, 'name' => $this->_name, 'id' => $this->id]);
@@ -367,13 +385,13 @@ class SelectorInput extends Selector
         $this->_crearOpcionesSelect($options);
     }
 
-    function _crearBoton()
-    {
+    function _crearBoton() {
+
         $this->_attr = array_merge($this->_attr,
             [
                 'type' => $this->_tipo,
                 'name' => $this->_name,
-                'id' => $this->id,
+                'id'   => $this->id,
 
             ]
         );
@@ -383,15 +401,14 @@ class SelectorInput extends Selector
         $this->innerHTML($this->_html);
     }
 
-    function _crearInput()
-    {
+    function _crearInput() {
 
         $this->_attr = array_merge($this->_attr,
             [
-                'type' => $this->_tipo,
-                'name' => $this->_name,
-                'id' => $this->id,
-                'value' => $this->value,
+                'type'        => $this->_tipo,
+                'name'        => $this->_name,
+                'id'          => $this->id,
+                'value'       => $this->value,
                 'placeholder' => $this->placeholder
             ]
         );
@@ -404,8 +421,8 @@ class SelectorInput extends Selector
      * Imprime los selectores multiples incluidos en $_controlesMultiples
      * @method renderMultiples
      */
-    private function renderMultiples()
-    {
+    private function renderMultiples() {
+
         $tpl = "";
         foreach ($this->_selectoresOpcion as $id => $selector) {
             $input = $selector->render(TRUE);
@@ -413,7 +430,7 @@ class SelectorInput extends Selector
             $data = [
                 'input' => $input,
                 'label' => $selector->labelOpcion,
-                'type' => $selector->type,
+                'type'  => $selector->type,
 
             ];
             if ($this->inline) {
@@ -429,21 +446,28 @@ class SelectorInput extends Selector
         return $tpl;
     }
 
-    private function renderSelect()
-    {
+    /**
+     * @internal Renderiza un control de tipo select
+     * @return mixed|string
+     */
+    private function renderSelect() {
 
         $options = "";
-        foreach ($this->_selectoresOpcion as $key => $option)
-
+        foreach ($this->_selectoresOpcion as $key => $option) {
             $options .= $option->render();
-
+        }
         $this->innerHTML($options);
+
         return $this->render(TRUE);
 
     }
 
-    function render($parent = FALSE)
-    {
+    /**
+     *
+     * @param bool $parent
+     * @return mixed|string
+     */
+    function render($parent = FALSE) {
 
         if (!$parent and in_array($this->_tipo, $this->_controlesMultiples)) {
             return $this->renderMultiples();
@@ -455,8 +479,8 @@ class SelectorInput extends Selector
         }
     }
 
-    function _crearIdentificacion()
-    {
+    function _crearIdentificacion() {
+
         $select = new CloneSelector($this);
 
         $select->type = 'select';
@@ -469,20 +493,18 @@ class SelectorInput extends Selector
      * @method valor
      * @param string $valor Valor a mostrar en el input
      */
-    function valor($valor)
-    {
+    function valor($valor) {
 
         $this->_valorUpdate = $valor;
 
         if (in_array($this->_tipo, $this->_controlesMultiples)) {
 
             foreach ($this->_selectoresOpcion as $key => $selector) {
-
                 if ($selector->attr('value') == $valor) {
-
                     $selector->attr('checked', 'checked');
                 }
             }
+
         } else
             if ($this->type == 'select') {
                 foreach ($this->_selectoresOpcion as $key => $selector) {
@@ -504,11 +526,12 @@ class SelectorInput extends Selector
      * @method _obtTemplate
      * @param $plantilla ;
      */
-    private function _obtTemplate($template, $params)
-    {
+    private function _obtTemplate($template, $params) {
+
         foreach ($params as $key => $value) {
             $template = str_replace("{{:" . $key . "}}", $value, $template);
         }
+
         return $template;
     }
 

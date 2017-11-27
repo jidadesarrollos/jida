@@ -62,7 +62,7 @@
 }
 .fa-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 .fa-pull-left {
@@ -177,7 +177,7 @@
   font-size: 2em;
 }
 .fa-inverse {
-  color: #ffffff;
+  color: #fff;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
@@ -2042,7 +2042,7 @@
   height: 17px;
   left: 0;
   margin-left: -20px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 3px;
   background-color: #fff;
   -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
@@ -2210,7 +2210,7 @@
   height: 17px;
   left: 0;
   margin-left: -20px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 50%;
   background-color: #fff;
   -webkit-transition: border 0.15s ease-in-out;
@@ -5953,7 +5953,7 @@ body.fixed .main-panel .container-fluid {
   padding: 15px;
   margin: 15px;
   border-radius: 2px;
-  box-shadow: 0 5px 5px -5px #333333;
+  box-shadow: 0 5px 5px -5px #333;
 }
 .navbar-top .navbar-brand img {
   height: 20px;
@@ -5965,7 +5965,7 @@ body.fixed .main-panel .container-fluid {
   padding-top: 30px;
   width: 240px;
   background: #0c1d2c;
-  box-shadow: 5px 0 5px -5px #333333;
+  box-shadow: 5px 0 5px -5px #333;
   height: 100%;
   font-family: 'Helvetica';
 }
@@ -5992,7 +5992,7 @@ body.fixed .main-panel .container-fluid {
 .aside .menu > li > a:hover > .fa,
 .aside .menu > li > a:hover > .glyphicon,
 .aside .menu > li > a:hover > .ion {
-  color: #ffffff;
+  color: #fff;
 }
 .aside .menu > li > a > .fa,
 .aside .menu > li > a > .glyphicon,

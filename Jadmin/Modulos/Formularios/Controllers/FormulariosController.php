@@ -43,11 +43,8 @@ class FormulariosController extends FController {
         }
 
         $formsInvalidos = $data = $params = [];
-
         $formularios = [];
-
         foreach ($forms as $modulos => $data) {
-
 
             foreach ($data['formularios'] as $index => $formulario) {
                 if (!is_dir($this->_rutaJida . DS . $formulario)) {
@@ -61,6 +58,7 @@ class FormulariosController extends FController {
                     unset($data[$index]);
                 }
             }
+
         }
 
         $params = [
@@ -70,8 +68,8 @@ class FormulariosController extends FController {
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
             ['span' => 'fa fa-edit', 'title' => "Editar", 'href' => $this->obtUrl('gestion', ['{clave}', '{modulo}'])],
-            ['span' => 'fa fa-plus-square-o', 'title' => 'Editar Campos', 'href' => $this->obtUrl('campos.gestion', ['{clave}'])],
-            ['span'        => 'fa fa-trash', 'title' => "Eliminar Formulario", 'href' => $this->obtUrl('eliminar', ['{clave}',]),
+            ['span' => 'fa fa-plus-square-o', 'title' => 'Editar Campos', 'href' => $this->obtUrl('campos.gestion', ['{clave}', '{modulo}'])],
+            ['span'        => 'fa fa-trash', 'title' => "Eliminar Formulario", 'href' => $this->obtUrl('eliminar', ['{clave}']),
              'data-jvista' => 'confirm', 'data-msj' => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'],
 
         ]);
@@ -174,6 +172,7 @@ class FormulariosController extends FController {
         }
         $dataForm['campos'] = implode(", ", $campos);
 
+
         return $dataForm;
 
     }
@@ -195,7 +194,10 @@ class FormulariosController extends FController {
 
 
         $form = new Render\Formulario('GestionFormulario', $dataForm);
-        $form->boton('btnGuardar', 'Guardar y editar campos')->attr('value', 'Guardar');
+        $form
+            ->boton('btnGuardar', 'Guardar y editar campos')
+            ->attr('value', 'Guardar')
+        ->data('jida', 'validador');
         $form->boton('principal', 'Guardar')->attr('value', 'Guardar');
 
         $form->titulo($titulo);
@@ -206,7 +208,7 @@ class FormulariosController extends FController {
                     ['principal' => 'Principal'],
                     $this->_conf()->modulos
                 )
-            );
+            )->opcion($modulo)->attr('selected', 'true');
 
         if ($this->post('btnGuardar') or $this->post('btnGestionFormulario')) {
 
@@ -216,6 +218,8 @@ class FormulariosController extends FController {
                     $this->redireccionar($this->obtUrl('index'));
                 } else {
 
+                    $modulo = (!empty($this->post('modulo'))) ? $this->post('modulo') : $modulo;
+                    Helpers\Debug::imprimir("ready", $this->_formulario->identificador);
                     $this->redireccionar($this->obtUrl(
                         'Campos.gestion',
                         [$this->_formulario->identificador, $modulo]
@@ -232,7 +236,6 @@ class FormulariosController extends FController {
         ]);
 
     }
-
 
     /**
      * Gestiona el guardado del formulario

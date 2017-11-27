@@ -27,6 +27,7 @@ class CampoFormulario {
     var $visibilidad;
     var $id;
     var $type;
+    var $size;
 
     private $types = [
         1 => 'hidden',

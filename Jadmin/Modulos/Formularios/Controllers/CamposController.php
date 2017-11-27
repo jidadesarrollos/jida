@@ -22,6 +22,7 @@ class CamposController extends Fcontroller {
         if (!empty($id)) {
 
             Helpers\Sesion::destruir('JFormulario');
+
             $nombreFormulario = $id . '.json';
             $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
 
@@ -71,9 +72,23 @@ class CamposController extends Fcontroller {
 
     }
 
-    function guardar($formulario, $modelo, $idCampo) {
+    function guardar($formulario, $modulo, $idCampo) {
 
-        Helpers\Debug::imprimir($this->post(), true);
+        $formulario = $formulario . '.json';
+        if ($this->_instanciarFormulario($formulario, $modulo)) {
+
+            $this->_formulario->dataCampo($idCampo, $this->post());
+            $this->_formulario->modulo($modulo);
+            if ($this->_formulario->salvar()) {
+                $msj = Helpers\Mensajes::crear('suceso', 'Campo guardado correctamente.');
+                $this->respuestaJson(['ejecutado' => true, 'mensaje' => $msj]);
+            }
+
+        } else {
+            $msj = Helpers\Mensajes::crear('suceso', 'No se pudo guardar el campo.');
+            $this->respuestaJson(['ejecutado' => false, 'mensaje' => $msj]);
+        }
+
     }
 
     function ordenar($formulario, $modulo) {
