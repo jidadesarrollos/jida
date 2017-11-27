@@ -346,26 +346,21 @@ class Selector {
 
         $html = "";
 
-        if (!$this->selectorCierre()) {
 
+        if (!$this->selectorCierre()) {
             if (!empty($this->selector)) {
                 $html = "<" . $this->selector . " " . $this->renderAttr() . " />\n";
             }
-
         } else {
-
             if (!empty($this->selector)) {
-
                 if ($this->selector == 'textarea') {
                     $html = "\n<" . $this->selector . "" . $this->renderAttr() . ">";
-                    if(!is_string($this->selector)) {
-                        Helpers\Debug::imprimir($this->selector, true);
-                    }
                     $html .= trim($this->renderContenido()) . "</" . $this->selector . ">";
                 } else {
                     $html = "\n<" . $this->selector . "" . $this->renderAttr() . ">\n\t";
                     $html .= $this->renderContenido() . "\n</" . $this->selector . ">";
                 }
+
 
             }
 
@@ -378,10 +373,11 @@ class Selector {
 
         if ($this->contenido instanceOf Selector) {
             $this->contenido->innerHTML($this->innerHTML);
+
             return $this->contenido->render();
         } else {
 
-            return (is_string($this->innerHTML))? $this->innerHTML(): "";
+            return $this->innerHTML;
         }
 
     }
@@ -511,22 +507,14 @@ class Selector {
      */
     function innerHTML($innerHTML = "") {
 
-        if (empty($innerHTML)) return $this->innerHTML;
-
-        else {
+        if (empty($innerHTML)) {
+            return $this->innerHTML;
+        } else {
             $this->innerHTML = $innerHTML;
 
             return $this;
         }
-    }
 
-    /**
-     * Agrega un nodo Selector al contenido inner del selector instanciado
-     * @method addNodo
-     * @param string $selector Objeto Selector a crear
-     */
-    function addNodo(Selector $selector) {
-        //$this->innerHTML($selector->innerHTML());
     }
 
     /**
@@ -551,6 +539,7 @@ class Selector {
         $this->innerHTML($this->innerHTML() . "\n" . $html);
 
         return $this;
+
     }
 
     /**
@@ -565,8 +554,6 @@ class Selector {
         $envoltorio = new Selector($selector);
         $envoltorio->attr($attr);
         $this->contenido = $envoltorio;
-
-        //$this->innerHTML($envoltorio->innerHTML($this->innerHTML));
 
         return $this;
     }

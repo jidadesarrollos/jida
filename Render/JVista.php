@@ -22,9 +22,7 @@ class JVista {
     private $titulos = [];
     private $titulosKey = [];
     private $contenedorAcciones;
-    private $contenedorPaginador;
     private $accionesFila = FALSE;
-    private $listadoFiltros;
     private $_parametrosGET = [];
     /**
      * Permite definir los campos de ordenamiento para cada titulo
@@ -157,14 +155,12 @@ class JVista {
         ]
     ];
 
-    private $noRegistros = "";
     private $configArticleVista = ['data-jida' => 'vista', 'class' => 'jvista'];
     private $configSeccionForm = [
         'col' => [
             'class' => 'col-md-6 col-md-offset-6 np-r col-xs-12 seccion-busqueda',
         ]
     ];
-    private $configSeccionFiltros = [];
 
 
     #=====================================================================
@@ -399,8 +395,8 @@ class JVista {
          */
         $this->_ejecutarFuncionData();
         $this->obtenerNombreCampos();
-
         $this->tabla->inicializarTabla($this->registros);
+
     }
 
     private function _ejecutarFuncionData() {
@@ -410,6 +406,7 @@ class JVista {
             array_unshift($this->_parametrosFuncionData, $this->registros);
             $this->registros = call_user_func_array($this->_funcionData, $this->_parametrosFuncionData);
         }
+
     }
 
     /**
@@ -480,7 +477,6 @@ class JVista {
         $vista .= $this->renderFiltros();
         $vista .= $this->procesarFormBusqueda();
 
-
         if ($this->totalRegistros) {
 
             $this->tabla->attr(array_merge($this->configTabla, $this->tabla->attr));
@@ -488,7 +484,6 @@ class JVista {
             if (count($this->titulos) > 0) {
                 $this->crearTitulos();
             }
-
 
             $this->procesarAccionesFila();
             $this->procesarControlFila();
@@ -781,15 +776,15 @@ class JVista {
         $ultimaPaginaMostrada = (($this->paginaActual + $medio) < $this->totalPaginas) ? $this->paginaActual + $medio : $this->totalPaginas;
         $primeraPaginaMostrada = ($this->paginaActual > $medio) ? $this->paginaActual - $medio : 1;
 
-        //----------------------------------------------------------
         if ($primeraPaginaMostrada > 1) {
+
             $item = $this->paginador->addItem("<<")->envolver('a');
             $item->attr([
                 'class' => $this->configPaginador['classLink']])
-                ->contenido
-                ->attr(['href' => $this->procesarURL(['pagina' => 1])]);#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
-            ;
+                ->attr(['href' => $this->procesarURL(['pagina' => 1])]);
+
         }
+
         for ($i = $primeraPaginaMostrada; $i <= $ultimaPaginaMostrada; ++$i) {
 
             $link = new Selector('a');
@@ -800,8 +795,7 @@ class JVista {
             if ($i == $this->paginaActual) {
                 $item->attr([
                     'class' => $this->configPaginador['classPaginaActual']])
-                    ->contenido
-                    ->attr(['href' => $this->procesarURL(['pagina' => $i])]);
+                    ->contenido->attr(['href' => $this->procesarURL(['pagina' => $i])]);
             } else {
                 $item->attr([
                     'class' => $this->configPaginador['classLink']])
@@ -813,12 +807,13 @@ class JVista {
         }
 
         if ($ultimaPaginaMostrada < $this->totalPaginas) {
+
             $item = $this->paginador->addItem(">>")->envolver('a');
             $item->attr([
                 'class' => $this->configPaginador['classLink']])
                 ->contenido
-                ->attr(['href' => $this->procesarURL(['pagina' => $this->totalPaginas])]);#->data(['paginador'=>$i,'page'=>$this->paginaConsulta])
-            ;
+                ->attr(['href' => $this->procesarURL(['pagina' => $this->totalPaginas])]);
+
         }
 
 
@@ -1055,8 +1050,6 @@ class JVista {
         ];
         $msj = Selector::crear('div.' . $dataDefault['cssContenedor'], [], $msj);
         $dataDefault = array_merge($dataDefault, $cssDiv);
-        //Helpers\Debug::imprimir($dataDefault,true);
-        //foreach ($cssDiv as $key => $value){
 
         if ($dataDefault['link']) {
             $this->htmlPersonalizado = TRUE;
@@ -1064,10 +1057,9 @@ class JVista {
                 array_merge(['href' => $dataDefault['link']], $dataDefault['attrLink']),
                 $dataDefault['txtLink']);
         }
-        //}
 
         $this->mensajeNoRegistros = $msj;
-        #Helpers\Debug::imprimir($msj,true);
+
     }
 
     /**
