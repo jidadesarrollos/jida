@@ -20,7 +20,6 @@ define('MANEJADOR_BD', 'MySQL');
 /**
  * Constantes para Redes Sociales
  */
-define('URL_APP_PUBLICA', '');
 define('URL_GOOGLE', '');
 define('URL_YOUTUBE', '');
 define('URL_TWITTER', '');
