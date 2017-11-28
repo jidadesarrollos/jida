@@ -64,7 +64,7 @@ trait GeneradorArchivo{
         return $this;
     }
     function cerrar(){
-        fclose($this->archivo);
+        return fclose($this->archivo);
     }
 
     function saltodeLinea($total=1){

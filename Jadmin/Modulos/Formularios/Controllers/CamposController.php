@@ -13,43 +13,30 @@ use Jida\Helpers as Helpers;
 use Jida\Render as Render;
 
 
-class CamposController extends Fcontroller
-{
+class CamposController extends Fcontroller {
 
     public $manejoParams = TRUE;
 
-    function configuracion()
-    {
-        $url = '/jadmin/formularios/campos/configuracion/:formulario/:campo';
-
-        $error = false;
-
-        if ($this->_instanciarFormulario($this->post('form'))) {
-
-            if (!empty($this->_formulario->identificador)) {
-                #Helpers\Debug::imprimir($this->_formulario->dataCampo($this->post('idCampo')),true);
-                $form = new Render\Formulario('CamposFormulario', $this->_formulario->dataCampo($this->post('idCampo')));
-                $this->data(['form' => $form->render()]);
-
-            } else $error = TRUE;
-
-        }
-
-        if ($error) $this->_404();
-
-    }
-
-    function gestion($id)
-    {
+    function gestion($id, $modulo = 'app') {
 
         if (!empty($id)) {
 
             Helpers\Sesion::destruir('JFormulario');
-            $this->_instanciarFormulario($id);
+
+            $nombreFormulario = $id . '.json';
+            $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
+
             $this->data([
-                'campos' => $this->_formulario->campos,
-                'idFormulario' => $id
+                'campos'           => $form->campos,
+                'moduloFormulario' => $modulo,
+                'idFormulario'     => $id,
+                'url'              => implode('/',
+                    ['/jadmin/formularios/campos/configuracion',
+                        $id,
+                        $modulo
+                    ])
             ]);
+
 
         } else {
             $this->_404();
@@ -57,26 +44,72 @@ class CamposController extends Fcontroller
 
     }
 
-    function ordenar()
-    {
 
-        if ($this->solicitudAjax() and $this->post('formulario')) {
+    function configuracion($idFormulario, $modulo, $idCampo) {
 
-            $this->_instanciarFormulario($this->post('formulario'));
+        $error = false;
+        $formulario = $idFormulario . '.json';
+
+        if ($this->_instanciarFormulario($formulario, $modulo)) {
+
+            if (!empty($this->_formulario->identificador)) {
+
+                $data = $this->_formulario->dataCampo($idCampo);
+                $form = new Render\Formulario('CamposFormulario', $data);
+                $form->attr('action', $this->obtUrl('guardar', [
+                    $idFormulario, $modulo, $idCampo
+                ]));
+
+                $this->data(['form' => $form->render()]);
+
+            } else {
+                $error = TRUE;
+            }
+
+        }
+
+        if ($error) $this->_404();
+
+    }
+
+    function guardar($formulario, $modulo, $idCampo) {
+
+        $formulario = $formulario . '.json';
+        if ($this->_instanciarFormulario($formulario, $modulo)) {
+
+            $this->_formulario->dataCampo($idCampo, $this->post());
+            $this->_formulario->modulo($modulo);
+            if ($this->_formulario->salvar()) {
+                $msj = Helpers\Mensajes::crear('suceso', 'Campo guardado correctamente.');
+                $this->respuestaJson(['ejecutado' => true, 'mensaje' => $msj]);
+            }
+
+        } else {
+            $msj = Helpers\Mensajes::crear('suceso', 'No se pudo guardar el campo.');
+            $this->respuestaJson(['ejecutado' => false, 'mensaje' => $msj]);
+        }
+
+    }
+
+    function ordenar($formulario, $modulo) {
+
+        if ($this->solicitudAjax() and $formulario) {
+
+            $this->_instanciarFormulario($formulario . ".json", $modulo);
+            $this->_formulario->modulo($modulo);
             $this->_formulario->orden($this->post('campos'));
 
             if ($this->_formulario->salvar()) {
 
                 $this->respuestaJson([
                     'ejecutado' => TRUE,
-                    'msj' => "Se ha guardado el orden del formulario"
+                    'msj'       => "Se ha guardado el orden del formulario"
                 ]);
 
             } else {
-                exit("no");
                 $this->respuestaJson([
                     'ejecutado' => FALSE,
-                    'msj' => "No se ha podido guardar el formulario"
+                    'msj'       => "No se ha podido guardar el formulario"
                 ]);
             }
 

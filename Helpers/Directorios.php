@@ -65,20 +65,20 @@ class Directorios extends \Directory {
      *
      */
 
-    static function listar($ruta) {
-        $listado = [];
-        if (is_dir($ruta)) {
-            if ($directorio = opendir($ruta)) {
-                while (($file = readdir($directorio)) !== FALSE) {
-                    if ($file != "." and $file != '..' and $file != 'TP_LINK Consumo') {
-                        $listado[] = $file;
-                    }
-                }
-            }
-        }
 
-        return $listado;
-    }
+	static function listar($ruta){
+		$listado=[];
+		if(is_dir($ruta)){
+			if($directorio = opendir($ruta)){
+				while (($file = readdir($directorio)) !== false) {
+					if($file!="." and $file!='..'){
+						$listado[]=$file;
+					}
+				}
+			}
+		}
+		return $listado;
+	}
 
     /**
      * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
