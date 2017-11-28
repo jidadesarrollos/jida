@@ -1,48 +1,48 @@
 <?php
 /**
-* Helper para Imagenes
-* @author Julio Rodriguez
-* @package
-* @version
-* @category
-*/
+ * Helper para Imagenes
+ * @author Julio Rodriguez
+ * @package
+ * @version
+ * @category
+ */
 
 namespace Jida\Helpers;
-class Imagen extends Archivo{
 
+class Imagen extends Archivo {
 
-	private $mimes = [
-		'image/gif' 					=> 'gif',
-		'image/jpeg' 					=> 'jpeg',
-		'image/png' 					=> 'png',
-		'image/psd' 					=> 'psd',
-		'image/bmp' 					=> 'bmp',
-		'image/tiff' 					=> 'tiff',
-		'image/tiff' 					=> 'tiff',
-		'image/jp2' 					=> 'jp2',
-		'image/iff' 					=> 'iff',
-		'image/xbm' 					=> 'xbm',
-		'image/vnd.wap.wbmp' 			=> 'bmp',
-		'image/vnd.microsoft.icon' 		=> 'ico',
-		'application/x-shockwave-flash' => 'swf'
-	];
+    private $mimes = [
+        'image/gif'                     => 'gif',
+        'image/jpeg'                    => 'jpeg',
+        'image/png'                     => 'png',
+        'image/psd'                     => 'psd',
+        'image/bmp'                     => 'bmp',
+        'image/tiff'                    => 'tiff',
+        'image/tiff'                    => 'tiff',
+        'image/jp2'                     => 'jp2',
+        'image/iff'                     => 'iff',
+        'image/xbm'                     => 'xbm',
+        'image/vnd.wap.wbmp'            => 'bmp',
+        'image/vnd.microsoft.icon'      => 'ico',
+        'application/x-shockwave-flash' => 'swf'
+    ];
 
-	 private $mimesAceptados=[
-	 	'image/gif' => 'gif',
-      	'image/jpeg'=> 'jpeg',
-      	'image/png'	=> 'png'
-	 ];
+    private $mimesAceptados = [
+        'image/gif'  => 'gif',
+        'image/jpeg' => 'jpeg',
+        'image/png'  => 'png'
+    ];
 
-     /**
-      * Información de getimagesize
-      */
-     private $ancho;
-     private $alto;
-     private $tipo;
-     private $atributos;
-     private $peso;
+    /**
+     * Información de getimagesize
+     */
+    private $ancho;
+    private $alto;
+    private $tipo;
+    private $atributos;
+    private $peso;
 
-     /**
+    /**
      * Permite redimensionar una imagen sin quitar la calidad de la misma
      * @internal Los ultimos dos parametros son opcionales, si no son pasados la imagen redimensionada
      * reemplazará la imagen actual.
@@ -52,16 +52,16 @@ class Imagen extends Archivo{
      * @param string $rutaImg Ubicacion de imagen a Redimensionar
      * @param string $nombreImg Nombre de la imagen a redimensionar
      * @param string $rutaNuevaImg Ubicacion donde se guardará la nueva imagen
-		 * @access public
-		 * @since 0.1
-		 *
+     * @access public
+     * @since 0.1
+     *
      */
-    function redimensionar($anchoEsperado,$altoEsperado,$rutaImg="",$rutaNuevaImg=""){
-        if(empty($rutaImg)) $rutaImg = $this->directorio;
-        if(empty($nombreImg) or is_null($nombreImg)){
+    function redimensionar($anchoEsperado, $altoEsperado, $rutaImg = "", $rutaNuevaImg = "") {
+        if (empty($rutaImg)) $rutaImg = $this->directorio;
+        if (empty($nombreImg) or is_null($nombreImg)) {
             $directorioImagen = $rutaImg;
-        }else{
-            $directorioImagen = $rutaImg.$nombreImg;
+        } else {
+            $directorioImagen = $rutaImg . $nombreImg;
         }
         $infoImagen = getimagesize($directorioImagen);
 
@@ -69,40 +69,40 @@ class Imagen extends Archivo{
         $altoActual = $infoImagen[1];
         $tipoImagen = $infoImagen['mime'];
         $rutaAguardar = $rutaImg;
-        if(!empty($rutaNuevaImg)){
+        if (!empty($rutaNuevaImg)) {
             $rutaAguardar = $rutaNuevaImg;
 
         }
 
         #Calcular proporciones
-        $proporcionActual = $anchoActual/$altoActual;
-        $proporcionRedimension = $anchoEsperado/$altoEsperado;
+        $proporcionActual = $anchoActual / $altoActual;
+        $proporcionRedimension = $anchoEsperado / $altoEsperado;
 
-        if($proporcionActual>$proporcionRedimension){
-            $anchoRedimension=$anchoEsperado;
-            $altoRedimension = $anchoEsperado/$proporcionActual;
-        }else
-        if($proporcionActual<$proporcionRedimension){
-            $anchoRedimension = $anchoEsperado*$proporcionActual;
-            $altoRedimension = $altoEsperado;
+        if ($proporcionActual > $proporcionRedimension) {
+            $anchoRedimension = $anchoEsperado;
+            $altoRedimension = $anchoEsperado / $proporcionActual;
+        } else
+            if ($proporcionActual < $proporcionRedimension) {
+                $anchoRedimension = $anchoEsperado * $proporcionActual;
+                $altoRedimension = $altoEsperado;
 
-        }else{
-            $anchoRedimension=$anchoEsperado;
-            $altoRedimension=$altoEsperado;
-        }
+            } else {
+                $anchoRedimension = $anchoEsperado;
+                $altoRedimension = $altoEsperado;
+            }
 
-        $imagen = $this->crearLienzo($tipoImagen,$rutaImg);
+        $imagen = $this->crearLienzo($tipoImagen, $rutaImg);
         $lienzo = imagecreatetruecolor($anchoRedimension, $altoRedimension);
-        imagecolortransparent($lienzo,imagecolorallocate($lienzo, 0,0,0));
-        imagealphablending($lienzo,false);
+        imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
+        imagealphablending($lienzo, false);
         imagesavealpha($lienzo, true);
         imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
-        if($this->exportarImagen($tipoImagen,$lienzo,$rutaAguardar)){
+        if ($this->exportarImagen($tipoImagen, $lienzo, $rutaAguardar)) {
             return true;
         }
 
-
     }
+
     /**
      * Exporta una imagen especificada a una url dada
      * @method exportarImagen
@@ -110,31 +110,66 @@ class Imagen extends Archivo{
      * @param image $lienzo imagen a exportar
      * @param string $url Ubicación en la que será alojada la imágen
      * @param string $nombreImagen [opcional] Nombre de la imagen, sino es pasado se asume que el nombre viene incluido en la variable $url
-		 * @access public
-		 * @since 0.1
-		 *
+     * @access public
+     * @since 0.1
+     * @deprecated 0.6
      */
-    function exportarImagen($tipoImagen,$lienzo,$url,$nombreImagen=""){
-        if(!empty($nombreImagen)){
-            $url=$url.$nombreImagen;
+    function exportarImagen($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+        if (!empty($nombreImagen)) {
+            $url = $url . $nombreImagen;
         }
 
-         switch ( $tipoImagen ){
-          case "image/jpg":
-          case "image/jpeg":
+        switch ($tipoImagen) {
+            case "image/jpg":
+            case "image/jpeg":
 
-            $imagen = imagejpeg($lienzo, $url,90);
-            break;
-          case "image/png":
-            $imagen = imagepng($lienzo, $url,2);
-            break;
-          case "image/gif":
-            $imagen = imagegif($lienzo, $url,90);
-            break;
+                $imagen = imagejpeg($lienzo, $url, 90);
+                break;
+            case "image/png":
+                $imagen = imagepng($lienzo, $url, 2);
+                break;
+            case "image/gif":
+                $imagen = imagegif($lienzo, $url, 90);
+                break;
         }
-         return true;
+
+        return true;
     }
 
+    /**
+     * Exporta una imagen especificada a una url dada
+     * @method exportar
+     * @param string $tipoImagen TIPO MIME de la imagen
+     * @param image $lienzo imagen a exportar
+     * @param string $url Ubicación en la que será alojada la imágen
+     * @param string $nombreImagen [opcional] Nombre de la imagen, sino es pasado se asume que el nombre viene incluido en la variable $url
+     * @access public
+     * @since 0.6
+     *
+     */
+    function exportar($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+
+        if (!empty($nombreImagen)) {
+            $url = $url . $nombreImagen;
+        }
+
+        switch ($tipoImagen) {
+            case "image/jpg":
+            case "image/jpeg":
+
+                $imagen = imagejpeg($lienzo, $url, 90);
+                break;
+            case "image/png":
+                $imagen = imagepng($lienzo, $url, 2);
+                break;
+            case "image/gif":
+                $imagen = imagegif($lienzo, $url, 90);
+                break;
+        }
+
+        return true;
+
+    }
 
     /**
      * Crea una nueva imagen a partir de un fichero o de una URL
@@ -142,29 +177,30 @@ class Imagen extends Archivo{
      * @method crearLienzoImagen
      * @param unknown $tipoImagen
      * @param string $url
-		 * @access public
-		 * @since 0.1
-		 *
+     * @access public
+     * @since 0.1
+     *
      */
-    private function crearLienzo($tipoImagen,$url){
-       switch ( $tipoImagen ){
-          case "image/jpg":
-          case "image/jpeg":
-            $imagen = imagecreatefromjpeg( $url );
-            break;
-          case "image/png":
-            $imagen = imagecreatefrompng( $url );
-            break;
-          case "image/gif":
-            $imagen = imagecreatefromgif( $url );
-            break;
+    private function crearLienzo($tipoImagen, $url) {
+        switch ($tipoImagen) {
+            case "image/jpg":
+            case "image/jpeg":
+                $imagen = imagecreatefromjpeg($url);
+                break;
+            case "image/png":
+                $imagen = imagecreatefrompng($url);
+                break;
+            case "image/gif":
+                $imagen = imagecreatefromgif($url);
+                break;
         }
-       return $imagen;
+
+        return $imagen;
     }
 
     /**
      * Crea una imagen recortada a partir de una imagen dada
-	 *
+     *
      * @param int $alto Pixeles de altura de la imagen a crear
      * @param int $ancho Pixeles de largo de la imagen a crear
      * @param int $x inicio de recorte de eje x de la imagen
@@ -173,169 +209,175 @@ class Imagen extends Archivo{
      * @param int $h alto de la nueva imagen
      * @param string $rutaImagen Ruta de la imagen a recortar
      * @param string $rutaNueva Ruta donde se guardará la nueva imagen
-		 * @access public
-		 * @since 0.1
-		 *
+     * @access public
+     * @since 0.1
+     *
      *
      */
-    function recortar($alto,$ancho,$x,$y,$w,$h,$rutaImagen="",$nuevaRuta=""){
+    function recortar($alto, $ancho, $x, $y, $w, $h, $rutaImagen = "", $nuevaRuta = "") {
         //Debug::string("$alto,$ancho,$x,$y,$w,$h");
-        if(empty($rutaImagen))$rutaImagen=$this->directorio;
+        if (empty($rutaImagen)) $rutaImagen = $this->directorio;
         else $this->directorio = $rutaImagen;
-        if(!$this->validarExistencia())
+        if (!$this->validarExistencia())
             throw new Exception("No existe la imagen requerida para recorte $rutaImagen", 2500);
-        if(empty($nuevaRuta))$nuevaRuta=$rutaImagen;
+        if (empty($nuevaRuta)) $nuevaRuta = $rutaImagen;
 
         $infoImagen = getimagesize($rutaImagen);
         $lienzo = $this->crearLienzo($infoImagen['mime'], $rutaImagen);
-        $nuevaImg = imagecreatetruecolor($ancho,$alto);
+        $nuevaImg = imagecreatetruecolor($ancho, $alto);
         //imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
         //bool imagecopyresampled (
         //resource $dst_image , resource $src_image , int $dst_x ,
         // int $dst_y , int $src_x , int $src_y , int $dst_w ,
         //int $dst_h , int $src_w , int $src_h )
-        imagecopyresampled($nuevaImg,$lienzo,0,0,$x,$y,$ancho,$alto,$w,$h);
+        imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
 
-        if($this->exportarImagen($infoImagen['mime'], $nuevaImg, $nuevaRuta)){
+        if ($this->exportarImagen($infoImagen['mime'], $nuevaImg, $nuevaRuta)) {
             return true;
         }
     }
-	/**
-	 *
-	 */
-	function recorte(){
-		//$imgDe
-	}
 
     /**
      * Verifica que el archivo cargado sea una imagen
+     * @deprecated 0.6
      */
-    function validarCargaImagen(){
-    	if(function_exists('exif_imagetype'))
-    		return $this->useExifImagetype();
-    	else
-    		return $this->validarImagenFileInfo();
+    function validarCargaImagen() {
+        if (function_exists('exif_imagetype'))
+            return $this->useExifImagetype();
+        else
+            return $this->validarImagenFileInfo();
     }
 
-	private function validarImagenFileInfo(){
+    /**
+     * Verifica que el archivo cargado sea una imagen
+     * @since 0.6
+     */
+    function validarCarga() {
+        if (function_exists('exif_imagetype'))
+            return $this->useExifImagetype();
+        else
+            return $this->validarImagenFileInfo();
+    }
 
-        if($this->totalArchivosCargados>1){
-
-        }else{
-          $r = getimagesize( $image );
-          return $r[2];
-        }
-	}
-	/**
-	 * Verifica si una imagen es valida haciendo uso de la funcion exif_imagetype
-	 *
-	 * @internal Esta es la función de validacion por defecto, siempre y cuando las librerias
-	 * necesarias se encuentren activas en el php.ini
-	 * @method useExifImagetype
-	 * @access private
-	 * @since 0.1
-	 *
-	 *
-	 */
-	private function useExifImagetype(){
-		$arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
-        if($this->totalArchivosCargados>1){
+    /**
+     * Verifica si una imagen es valida haciendo uso de la funcion exif_imagetype
+     *
+     * @internal Esta es la función de validacion por defecto, siempre y cuando las librerias
+     * necesarias se encuentren activas en el php.ini
+     * @method useExifImagetype
+     * @access private
+     * @since 0.1
+     *
+     *
+     */
+    private function useExifImagetype() {
+        $arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+        if ($this->totalArchivosCargados > 1) {
             $total = $this->getTotalArchivosCargados();
             $band = true;
-            for($i=0;$i<$total;++$i){
-            	if(in_array(exif_imagetype($this->files['tmp_name'][$i]),$arrayMimes))
-                    $band=true;
+            for ($i = 0; $i < $total; ++$i) {
+                if (in_array(exif_imagetype($this->files['tmp_name'][$i]), $arrayMimes))
+                    $band = true;
                 else
-                    $band=false;
+                    $band = false;
             }
+
             return $band;
-        }else{
+        } else {
 
-			if(count($this->files)>0){
+            if (count($this->files) > 0) {
 
-				$tmpName = is_array($this->files['tmp_name'])?$this->files['tmp_name'][0]:$this->files['tmp_name'];
+                $tmpName = is_array($this->files['tmp_name']) ? $this->files['tmp_name'][0] : $this->files['tmp_name'];
 
-          		if(!empty($tmpName)){
-          			$valor = exif_imagetype($tmpName);
-					if(in_array($valor, $arrayMimes)) return true;
-				}
-          	}
-			return false;
+                if (!empty($tmpName)) {
+                    $valor = exif_imagetype($tmpName);
+                    if (in_array($valor, $arrayMimes)) return true;
+                }
+            }
+
+            return false;
         }
-	}
-	/**
-	 * Edita los tipos de mymes aceptados para la carga de imagenes
-	 */
-	function setMimesAceptados($arr){
-		$this->mimesAceptados=$arr;
-	}
+    }
 
-	function redimension(){}
+    /**
+     * Edita los tipos de mymes aceptados para la carga de imagenes
+     */
+    function setMimesAceptados($arr) {
+        $this->mimesAceptados = $arr;
+    }
 
-    static function obtDimensiones($img){
-        $size = list($ancho,$alto,$mime,$attr)=getimagesize($img);
-        return ['ancho'=>$ancho,'alto'=>$alto,'mime'=>$mime,'attr'=>$attr];
+    /**
+     * Obtiene las dimensiones de una imagen
+     * @method obtDimensiones
+     * @param $img Ruta de la imagen
+     * @return array
+     *
+     */
+    static function obtDimensiones($img) {
+
+        list($ancho, $alto, $mime, $attr) = getimagesize($img);
+
+        return ['ancho' => $ancho, 'alto' => $alto, 'mime' => $mime, 'attr' => $attr];
 
     }
 
-
-	/**
+    /**
      * Crea imagenes recortadas en los distintos formatos a partir de una imagen dada
-	 *
-	 * @internal Utiliza por defectos los formatos 1024, 720, 350 y 140. Le asocia un identificador
-	 * al final del nombre lg, md, sm, xs para cada formato.
-	 *
-   * @param string $ruta Ruta origen de la imagen que se desea redirecciona
-   * @param string $nombre Prefijo para las imagenes generadas
- 	 * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
-	 * @access public
-	 * @since 0.1
-	 *
+     *
+     * @internal Utiliza por defectos los formatos 1024, 720, 350 y 140. Le asocia un identificador
+     * al final del nombre lg, md, sm, xs para cada formato.
+     *
+     * @param string $ruta Ruta origen de la imagen que se desea redirecciona
+     * @param string $nombre Prefijo para las imagenes generadas
+     * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
+     * @access public
+     * @since 0.1
+     *
      */
-	function resize($ruta,$nombre='img',$directorio=false,$return=false){
+    function resize($ruta, $nombre = 'img', $directorio = false, $return = false) {
 
-		$arr=[];
-		$bandera = FALSE;
+        $arr = [];
+        $bandera = FALSE;
 
-		if(!$directorio):
-			$directorio = $ruta;
-		else:
-			Directorios::crear($directorio);
-		endif;
-		
-		if(preg_match('/\.[jpg|png|jpeg]/', $ruta))
-			$imagenes[] = $ruta;
-		else{
-			$imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
-			$bandera = TRUE;
-		}
+        if (!$directorio):
+            $directorio = $ruta;
+        else:
+            Directorios::crear($directorio);
+        endif;
 
-		foreach ($imagenes as $key => $img){
+        if (preg_match('/\.[jpg|png|jpeg]/', $ruta))
+            $imagenes[] = $ruta;
+        else {
+            $imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
+            $bandera = TRUE;
+        }
 
-			$origen = ($bandera)?$ruta.'/'.$img:$img;
-			$ext = substr($img,strrpos($img,".")+1);
-			
-			// Imagenes redimensionadas
-			$this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio.'/'.$nombre.$key.'-lg.'.$ext);
-			$this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio.'/'.$nombre.$key.'-md.'.$ext);
-			$this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio.'/'.$nombre.$key.'-sm.'.$ext);
-			$this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio.'/'.$nombre.$key.'-xs.'.$ext);
-			
-			// Imagen original
-			rename($ruta, $directorio.$nombre.$key.'.'.$ext);
-		}
+        foreach ($imagenes as $key => $img) {
 
-		if($return){
-			$arrImagen = ['img'	=> $nombre.$key.'.'.$ext,
-						  'lg' 	=> $nombre.$key.'-lg.'.$ext,
-						  'md' 	=> $nombre.$key.'-md.'.$ext,
-						  'sm' 	=> $nombre.$key.'-sm.'.$ext,
-						  'xs' 	=> $nombre.$key.'-xs.'.$ext];
+            $origen = ($bandera) ? $ruta . '/' . $img : $img;
+            $ext = substr($img, strrpos($img, ".") + 1);
 
-		    return json_encode($arrImagen);
-		}
+            // Imagenes redimensionadas
+            $this->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $origen, $directorio . '/' . $nombre . $key . '-lg.' . $ext);
+            $this->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $origen, $directorio . '/' . $nombre . $key . '-md.' . $ext);
+            $this->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $origen, $directorio . '/' . $nombre . $key . '-sm.' . $ext);
+            $this->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $origen, $directorio . '/' . $nombre . $key . '-xs.' . $ext);
 
-	}
+            // Imagen original
+            rename($ruta, $directorio . $nombre . $key . '.' . $ext);
+        }
+
+        if ($return) {
+            $arrImagen = ['img' => $nombre . $key . '.' . $ext,
+                          'lg'  => $nombre . $key . '-lg.' . $ext,
+                          'md'  => $nombre . $key . '-md.' . $ext,
+                          'sm'  => $nombre . $key . '-sm.' . $ext,
+                          'xs'  => $nombre . $key . '-xs.' . $ext];
+
+            return json_encode($arrImagen);
+        }
+
+    }
 
     /**
      * Crea una imagen recortada con las dimensiones pasadas por parametro
@@ -348,31 +390,31 @@ class Imagen extends Archivo{
      * @param string $dimAlto Ancho de redimension de la imagen
      * @param string $directorio Ruta destino de las imagenes generadas, si no se especifica, las imagenes se generan en la carpeta de origen
      * @return string nombre de la imagen redimensionada
-		 * @access public
-		 * @since 0.1
-		 *
+     * @access public
+     * @since 0.1
+     *
      */
 
-    function resizeImagen($ruta,$nombre='img',$dimAlto,$dimAncho,$directorio=false){
+    function resizeImagen($ruta, $nombre = 'img', $dimAlto, $dimAncho, $directorio = false) {
 
-        if(!$directorio)
+        if (!$directorio)
             $directorio = $ruta;
         else
             Directorios::crear($directorio);
 
         $corte = explode('.', $ruta);
-        $extensiones = ['jpg'=>'jpg','png'=>'png','jpeg'=>'jpeg'];
-        $ext='';
-        foreach ($extensiones as $key => $formato){
-            $aux=array_search($formato,$corte);
-            if($aux){
-                $ext=$key;
+        $extensiones = ['jpg' => 'jpg', 'png' => 'png', 'jpeg' => 'jpeg'];
+        $ext = '';
+        foreach ($extensiones as $key => $formato) {
+            $aux = array_search($formato, $corte);
+            if ($aux) {
+                $ext = $key;
             }
         }
 
-        $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio.'/'.$nombre.'.'.$ext);
+        $this->redimensionar($dimAlto, $dimAncho, $ruta, $directorio . '/' . $nombre . '.' . $ext);
 
-        return $nombre.'.'.$ext;
+        return $nombre . '.' . $ext;
     }
 
 }

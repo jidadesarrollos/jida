@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /**
  * Helper para Numeros
  *
@@ -9,65 +9,72 @@
  */
 
 namespace Jida\Helpers;
-class Numeros{
 
-  /**
-   * @property string $moneda refleja nombre de moneda
-   */
-	static $moneda = 'Bs.';
-  /**
-   * @property string $separadorMiles
-   */
-	static $separadorMiles = ".";
-  /**
-   * @property string separadorDecimales
-   */
-	static $separadorDecimales = ",";
+class Numeros {
 
-	static $monedaAntes = FALSE;
     /**
-	 * Devuelve un número en formato de moneda
-	 * @method moneda
-	 * @param mixed $valor Numero a formatear
-	 * @param int $decimales
-	 * @return string $numero Numero resultante
-   * @access public
-   * @since 0.1
-   * @deprecated n/a
-	 */
-	public static function moneda($valor,$decimales=2,$moneda=FALSE){
+     * @property string $moneda refleja nombre de moneda
+     */
+    static $moneda = 'Bs.';
+    /**
+     * @property string $separadorMiles
+     */
+    static $separadorMiles = ".";
+    /**
+     * @property string separadorDecimales
+     */
+    static $separadorDecimales = ",";
 
+    static $monedaAntes = FALSE;
 
-		$numero = number_format($valor,$decimales,self::$separadorDecimales,self::$separadorMiles);
-		if($moneda){
-			if(self::$monedaAntes) return self::$moneda." ".$numero;
-			return $numero." ".self::$moneda;
-		}
-		return $numero;
-	}
-  /**
-   * @internal valida si un nomero es entero de lo contrario retorma false
-   * @method validarInt
-   * @return int
-   * @access public
-   * @since 0.1
-   * @deprecated n/a
-   */
-	public static function validarInt($valor){
-		return filter_var($valor,FILTER_VALIDATE_INT);
-	}
-	/**
-	 * @deprecated 0.5
-	 */
-    public static function _moneda($numero,$decimales=2,$type="bolivar"){
+    /**
+     * Devuelve un número en formato de moneda
+     * @method moneda
+     * @param mixed $valor Numero a formatear
+     * @param int $decimales
+     * @return string $numero Numero resultante
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
+     */
+    public static function moneda($valor, $decimales = 2, $moneda = FALSE) {
+
+        $numero = number_format($valor, $decimales, self::$separadorDecimales, self::$separadorMiles);
+        if ($moneda) {
+            if (self::$monedaAntes) return self::$moneda . " " . $numero;
+
+            return $numero . " " . self::$moneda;
+        }
+
+        return $numero;
+    }
+
+    /**
+     * @internal valida si un nomero es entero de lo contrario retorma false
+     * @method validarInt
+     * @return int
+     * @access public
+     * @since 0.1
+     * @deprecated n/a
+     */
+    public static function validarInt($valor) {
+        return filter_var($valor, FILTER_VALIDATE_INT);
+    }
+
+    /**
+     * @deprecated 0.5
+     */
+    public static function _moneda($numero, $decimales = 2, $type = "bolivar") {
         switch ($type) {
             case 'dolar':
-                $numero =($numero=="")?"":number_format($numero,$decimales,".",",");
+                $numero = ($numero == "") ? "" : number_format($numero, $decimales, ".", ",");
+
                 return $numero;
                 break;
 
             default:
-                $numero =($numero=="")?"":number_format($numero,$decimales,",",".");
+                $numero = ($numero == "") ? "" : number_format($numero, $decimales, ",", ".");
+
                 return $numero;
                 break;
         }
@@ -81,9 +88,10 @@ class Numeros{
      * @since 0.1
      * @deprecated n/a
      */
-    public static function floatBD($valor){
-        $valor = str_replace(".","",$valor);
-        $valor = str_replace(",",".",$valor);
+    public static function floatBD($valor) {
+        $valor = str_replace(".", "", $valor);
+        $valor = str_replace(",", ".", $valor);
+
         return $valor;
     }
 

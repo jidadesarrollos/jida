@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /**
  * Controlador de Session de la aplicación
  *
@@ -10,8 +10,8 @@
  */
 
 namespace Jida\Helpers;
-class Sesion
-{
+
+class Sesion {
 
     /**
      * @internal Inicia una nueva sesión.
@@ -21,8 +21,7 @@ class Sesion
      *
      */
 
-    static function iniciar()
-    {
+    static function iniciar() {
         session_start();
         self::set('__idSession', self::getIdSession());
     }
@@ -34,8 +33,7 @@ class Sesion
      * @since 0.1
      *
      */
-    static function getIdSession()
-    {
+    static function getIdSession() {
         return session_id();
     }
 
@@ -51,8 +49,7 @@ class Sesion
      *
      */
 
-    static function destruir($key = false)
-    {
+    static function destruir($key = false) {
         if ($key) {
             if (is_array($key)) {
                 foreach ($key as $clave) {
@@ -72,6 +69,7 @@ class Sesion
             session_unset();
 
         }
+
         return true;
     }
 
@@ -82,8 +80,7 @@ class Sesion
      * @deprecated
      * @see self::destruir
      */
-    static function destroy($key = false)
-    {
+    static function destroy($key = false) {
         self::destruir($key);
     }
 
@@ -95,16 +92,14 @@ class Sesion
      * @since 0.1
      *
      */
-    static function sessionLogin()
-    {
+    static function sessionLogin() {
         self::destroy('acl');
         self::set('isLoggin', TRUE);
         session_regenerate_id();
         self::set('__idSession', self::getIdSession());
     }
 
-    static function set($clave, $param2, $param3 = "")
-    {
+    static function set($clave, $param2, $param3 = "") {
         return self::editar($clave, $param2, $param3);
     }
 
@@ -119,8 +114,7 @@ class Sesion
      * @since 0.1
      *
      */
-    static function editar($clave, $param2, $param3 = "")
-    {
+    static function editar($clave, $param2, $param3 = "") {
 
         if (!empty($param3)) {
 
@@ -140,8 +134,7 @@ class Sesion
      * @since 0.1
      *
      */
-    static function obt($clave, $clave2 = "")
-    {
+    static function obt($clave, $clave2 = "") {
 
         if (!empty($clave2) and isset ($_SESSION [$clave][$clave2])) {
             return $_SESSION [$clave][$clave2];
@@ -162,8 +155,7 @@ class Sesion
      * @deprecated
      *
      */
-    static public function get($clave, $clave2 = '')
-    {
+    static public function get($clave, $clave2 = '') {
 
         return self::obt($clave, $clave2);
 
@@ -179,8 +171,7 @@ class Sesion
      * @see activa
      *
      */
-    static function checkLogg()
-    {
+    static function checkLogg() {
 
         return self::activa();
     }
@@ -195,8 +186,7 @@ class Sesion
      * @see activo
      *
      */
-    static function activa()
-    {
+    static function activa() {
         if (self::get('isLoggin'))
             return true;
         else
@@ -213,8 +203,7 @@ class Sesion
      * @since 0.1
      *
      */
-    static function checkAcceso($perfil)
-    {
+    static function checkAcceso($perfil) {
         return self::checkPerfilAcceso($perfil);
     }
 
@@ -227,8 +216,7 @@ class Sesion
      * @since 0.1
      *
      */
-    static function checkPerfilAcceso($perfil)
-    {
+    static function checkPerfilAcceso($perfil) {
 
         if (is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')) {
             $perfiles = self::get('Usuario')->perfiles;
@@ -237,11 +225,11 @@ class Sesion
                 return true;
             }
         }
+
         return false;
     }
 
-    static function es($perfil)
-    {
+    static function es($perfil) {
         if (is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')) {
             $perfiles = self::get('Usuario')->perfiles;
             if (!is_array($perfil)) $perfil = explode(" ", $perfil);
@@ -252,6 +240,7 @@ class Sesion
             }
 
         }
+
         return false;
     }
 
@@ -263,11 +252,11 @@ class Sesion
      * @since 0.1
      *
      */
-    static function checkAdm()
-    {
+    static function checkAdm() {
         $perfiles = self::get('usuario', 'perfiles');
         if (in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
             return true;
+
         return false;
     }
 } // END
