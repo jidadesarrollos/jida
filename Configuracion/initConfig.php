@@ -8,7 +8,7 @@
 
 define('ENTORNO_APP', 'dev');
 
-define('NOMBRE_APP', 'desysca');
+define('NOMBRE_APP', '');
 define('URL_APP_PUBLICA', '/');
 
 /**
@@ -27,8 +27,6 @@ define('URL_TWITTER', '');
 define('URL_FACEBOOK', '');
 define('URL_INSTAGRAM', '');
 
-define('URL_IMAGENES', '');
-
 define('CUENTA_TWITTER', '');
 define('CUENTA_INSTAGRAM', '');
 
@@ -38,5 +36,3 @@ define('IMG_TAM_LG', '1600');
 define('IMG_TAM_MD', '720');
 define('IMG_TAM_SM', '350');
 define('IMG_TAM_XS', '140');
-
-$GLOBALS['modulos'] = ['jadmin' => 'Jadmin'];
