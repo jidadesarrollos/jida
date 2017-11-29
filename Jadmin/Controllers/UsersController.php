@@ -7,8 +7,7 @@ use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use Jida\Core\UsuarioManager as UsuarioManager;
 
-class UsersController extends JController
-{
+class UsersController extends JController {
 
     use UsuarioManager;
 
@@ -18,8 +17,7 @@ class UsersController extends JController
 
     var $manejoParams = TRUE;
 
-    function __construct()
-    {
+    function __construct() {
 
         parent::__construct();
 
@@ -31,8 +29,7 @@ class UsersController extends JController
         $this->url = '/jadmin/users/';
     }
 
-    function cambioClave()
-    {
+    function cambioClave() {
 
         $this->dv->usarPlantilla('form');
         $form = new Render\Formulario('CambioClave');
@@ -49,15 +46,20 @@ class UsersController extends JController
                 if ($this->post('nueva_clave') == $this->post('confirmacion_clave')) {
 
                     $user->clave_usuario = md5($this->post('nueva_clave'));
-                    #Helpers\Debug::imprimir("clave", $user->clave_usuario, true);
+
                     if ($user->salvar()) {
+
                         $msj = Helpers\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
                         Helpers\Sesion::editar('__msj', $msj);
                         Helpers\Sesion::editar('Usuario', $user);
+
                         if (defined('DEFAULT_JADMIN')) {
-                            $this->redireccionar( DEFAULT_JADMIN);
+                            $this->redireccionar(DEFAULT_JADMIN);
                         } else {
-                            $this->redireccionar(URL_BASE . 'jadmin/dashboard');
+                            $msj = Helpers\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
+                            Helpers\Sesion::editar('__msj', $msj);
+
+                            $this->redireccionar($this->obtUrl('jadmin.index'));
                         }
 
                     }
@@ -77,8 +79,7 @@ class UsersController extends JController
         ]);
     }
 
-    function index()
-    {
+    function index() {
 
         $vista = $this->vistaUser();
         $this->vista = "vistaUsuarios";
@@ -86,23 +87,19 @@ class UsersController extends JController
 
     }
 
-    function setUsuario($idUser = '')
-    {
+    function setUsuario($idUser = '') {
         $this->_setUsuario($idUser);
     }
 
-    function asociarPerfiles($idUser = '')
-    {
+    function asociarPerfiles($idUser = '') {
         $this->_asociarPerfiles($idUser);
     }
 
-    function cierresesion($url = '')
-    {
+    function cierresesion($url = '') {
         $this->_cierresesion($url);
     }
 
-    function eliminarUsuario($idUser = '')
-    {
+    function eliminarUsuario($idUser = '') {
 
         if ($this->_eliminarUsuario($idUser)) {
             $tipo = 'suceso';
@@ -112,6 +109,6 @@ class UsersController extends JController
             $msj = 'El usuario no ha podido ser eliminado, por favor intente de nuevo';
         }
 
-        Render\JVista::msj('usuarios', 'suceso', 'Usuario eliminado exitosamente', $this->obtUrl('index'));
+        Render\JVista::msj('usuarios', $tipo, $msj, $this->obtUrl('index'));
     }
 }

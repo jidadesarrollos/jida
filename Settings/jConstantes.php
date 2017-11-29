@@ -33,6 +33,7 @@ $urlApp = (URL_APP == '/') ? '' : URL_APP;
 
 /**
  * Nombre de la aplicacion,
+ *
  * @deprecated
  * @see TITULO_SISTEMA
  * */
@@ -53,13 +54,15 @@ if (!defined('DIR_EXCEPCION_PLANTILLAS'))
     /**
      * Define el directorio en el que se encuentran las plantillas
      * de exepciones
-     * @constant DIR_EXCEPCION_PLANTILLAS
+     *
+     * @constant   DIR_EXCEPCION_PLANTILLAS
      * @deprecated 2.0
      */
     define('DIR_EXCEPCION_PLANTILLAS', DIR_FRAMEWORK . "plantillas/error/");
 if (!defined('DIR_PLANTILLAS_APP'))
     /**
      * Define la ubicacion de las plantillas de una aplicacion
+     *
      * @default Aplicacion/plantillas
      */
     define('DIR_PLANTILLAS_APP', DIR_APP . 'plantillas/');
@@ -67,6 +70,7 @@ if (!defined('METODO_EXCEPCION'))
     /**
      * Nombre del metodo a ejecutar en el CONTROLADOR_EXCEPCIONES
      * al conseguir una excepción.
+     *
      * @constant METODO_EXCEPCION
      *
      */
@@ -181,12 +185,14 @@ if (!defined('ZONA_HORARIA')) {
     /**
      * Define la zona horaria con la cual se trabajarán todas las funciones
      * de fecha. basado en la estructura de php
+     *
      * @link http://php.net/manual/es/timezones.america.php
      */
     define('ZONA_HORARIA', 'America/Caracas');
 }
 /**
  * Define la url publica para acceder a los archivos publicos de un tema
+ *
  * @constant URL_HTDOCS_TEMAS
  */
 if (!defined('URL_HTDOCS_TEMAS')) define('URL_HTDOCS_TEMAS', $urlApp . '/Aplicacion/Layout/');
@@ -197,7 +203,7 @@ if (!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN', $urlApp . '/Frame
  */
 if (!defined('CODIFICAR_HTML_BD')) define('CODIFICAR_HTML_BD', FALSE);
 
-if (!defined('BD_REQUERIDA')) define('BD_REQUERIDA', true);
+if (!defined('BD_REQUERIDA')) define('BD_REQUERIDA', TRUE);
 /**
  * Determina
  */

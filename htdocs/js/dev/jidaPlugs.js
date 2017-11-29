@@ -344,6 +344,26 @@ $(document).ready(function () {
         var jdVista = new jd.vista(id, tipoControl);
         jdVista.armarVista();
     });
+
+
+    $('[data-modal=true]').on('click', function (e) {
+
+        e.preventDefault();
+        var $this = $(this);
+        var url = $this.attr('href');
+        // var msj = $this.data('msj');
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: url,
+        }).done(function (data) {
+            console.log('data');
+            bootbox.dialog({'message': data});
+        });
+    });
+    
+
 });
 
 function activarPaginador() {

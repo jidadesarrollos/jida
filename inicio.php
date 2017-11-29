@@ -7,8 +7,8 @@
  * aplicación arranque correctamente.
  *
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
- * @package Framework
+ * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @package  Framework
  * @category bootstrap
  */
 
@@ -67,7 +67,7 @@ if (file_exists('vendor/autoload.php')) {
 
 
 if (!defined('TEST_PLATFORM')) {
-    define('TEST_PLATFORM', false);
+    define('TEST_PLATFORM', FALSE);
 }
 if (TEST_PLATFORM == TRUE) {
 
@@ -127,7 +127,9 @@ if (ENTORNO_APP == 'dev') {
 }
 
 global $elementos;
-$elementos = ['areas' => [], 'elementos' => []];
+$elementos = ['areas'     => [],
+              'elementos' => []
+];
 
 if (class_exists('\Jida\Helpers\Sesion')) {
     Jida\Helpers\Sesion::iniciar();

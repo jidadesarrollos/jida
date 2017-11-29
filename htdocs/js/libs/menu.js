@@ -1,16 +1,18 @@
-(function($){
-    var contenedor= '[data-liparent]';
-    var menu = function(ele){
-        $(contenedor).on('click',this.checksubnivel);
+(function ($) {
+    'use strict';
+
+    var contenedor = '[data-liparent]';
+    var menu = function (ele) {
+        $(contenedor).on('click', this.checksubnivel);
     };
-    menu.prototype.checksubnivel=function(){
-        var ele = $( this );
-        
-        if(ele.children('ul').length>0){
-            if(ele.children('ul').hasClass('show')){
+    menu.prototype.checksubnivel = function () {
+        var ele = $(this);
+
+        if (ele.children('ul').length > 0) {
+            if (ele.children('ul').hasClass('show')) {
                 $("ul.show").removeClass('show');
                 ele.removeClass('selected');
-            }else{
+            } else {
 
                 $("ul.show").removeClass('show');
                 $("li").removeClass('selected');

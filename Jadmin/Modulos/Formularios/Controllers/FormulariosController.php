@@ -1,7 +1,8 @@
 <?php
 /**
  * Clase Controladora
- * @author Julio Rodriguez
+ *
+ * @author   Julio Rodriguez
  * @package
  * @version
  * @category Controller
@@ -55,31 +56,55 @@ class FormulariosController extends FController {
                         $formsInvalidos[] = $formulario;
                     }
                 } else {
-                    unset($data[$index]);
+                    unset($data[ $index ]);
                 }
             }
 
         }
 
         $params = [
-            'titulos' => ['nombre', 'estructura', 'ID', 'Clave Primaria', 'Total Campos', 'Modulo']
+            'titulos' => ['nombre',
+                          'estructura',
+                          'ID',
+                          'Clave Primaria',
+                          'Total Campos',
+                          'Modulo'
+            ]
         ];
+
+
+        //Helpers\Debug::imprimir($formularios,true);
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
-            ['span' => 'fa fa-edit', 'title' => "Editar", 'href' => $this->obtUrl('gestion', ['{clave}', '{modulo}'])],
-            ['span' => 'fa fa-plus-square-o', 'title' => 'Editar Campos', 'href' => $this->obtUrl('campos.gestion', ['{clave}', '{modulo}'])],
-            ['span'        => 'fa fa-trash', 'title' => "Eliminar Formulario", 'href' => $this->obtUrl('eliminar', ['{clave}']),
-             'data-jvista' => 'confirm', 'data-msj' => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'],
+                                  ['span'  => 'fa fa-edit',
+                                   'title' => "Editar",
+                                   'href'  => $this->obtUrl('gestion', ['{clave}',
+                                                                        '{modulo}'
+                                   ])
+                                  ],
+                                  ['span'  => 'fa fa-plus-square-o',
+                                   'title' => 'Editar Campos',
+                                   'href'  => $this->obtUrl('campos.gestion',
+                                                            ['{clave}',
+                                                             '{modulo}'
+                                                            ])
+                                  ],
+                                  ['span'        => 'fa fa-trash',
+                                   'title'       => "Eliminar Formulario",
+                                   'href'        => $this->obtUrl('eliminar', ['{clave}']),
+                                   'data-jvista' => 'confirm',
+                                   'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'
+                                  ],
 
-        ]);
+                              ]);
         $jvista->acciones([
-            'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
+                              'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
 
-        ]);
+                          ]);
         $this->data([
-            'vista' => $jvista->render()
-        ]);
+                        'vista' => $jvista->render()
+                    ]);
 
     }
 
@@ -117,14 +142,14 @@ class FormulariosController extends FController {
         if ($modulo and array_key_exists($modulo, $modulos)) {
             $archivos = $this->_procesarModulo($modulo);
             if ($archivos) {
-                $coleccion[$modulo] = $archivos;
+                $coleccion[ $modulo ] = $archivos;
             }
 
         } else {
             foreach ($modulos as $modulo) {
                 $archivos = $this->_procesarModulo($modulo);
                 if ($archivos) {
-                    $coleccion[$modulo] = $archivos;
+                    $coleccion[ $modulo ] = $archivos;
                 }
 
             }
@@ -150,7 +175,7 @@ class FormulariosController extends FController {
             }
         }
 
-        return false;
+        return FALSE;
 
     }
 
@@ -197,7 +222,7 @@ class FormulariosController extends FController {
         $form
             ->boton('btnGuardar', 'Guardar y editar campos')
             ->attr('value', 'Guardar')
-        ->data('jida', 'validador');
+            ->data('jida', 'validador');
         $form->boton('principal', 'Guardar')->attr('value', 'Guardar');
 
         $form->titulo($titulo);
@@ -222,7 +247,9 @@ class FormulariosController extends FController {
                     Helpers\Debug::imprimir("ready", $this->_formulario->identificador);
                     $this->redireccionar($this->obtUrl(
                         'Campos.gestion',
-                        [$this->_formulario->identificador, $modulo]
+                        [$this->_formulario->identificador,
+                         $modulo
+                        ]
                     ));
                 }
 
@@ -232,13 +259,14 @@ class FormulariosController extends FController {
         }
 
         $this->data([
-            'form' => $form->render()
-        ]);
+                        'form' => $form->render()
+                    ]);
 
     }
 
     /**
      * Gestiona el guardado del formulario
+     *
      * @param string $nombreFormulario identificador del formulario en UpperCamelCase
      */
     function _guardarFormulario($nombreFormulario, $modulo) {
@@ -251,13 +279,13 @@ class FormulariosController extends FController {
             $msj = Helpers\Mensajes::crear('suceso', 'Formulario guardado correctamente');
             Helpers\Sesion::set('__msj', $msj);
 
-            return true;
+            return TRUE;
 
         } else {
-            Helpers\Debug::imprimir("No se pudo guardar el formulario", true);
+            Helpers\Debug::imprimir("No se pudo guardar el formulario", TRUE);
         }
 
-        return false;
+        return FALSE;
 
     }
 
