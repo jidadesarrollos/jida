@@ -229,10 +229,15 @@ class JVista {
             $this->usaBD = FALSE;
             $this->tabla = new TablaSelector($ejecucion);
             $this->data = $ejecucion;
+
+//			$this->_definirKeys($ejecucion);
+
         } else {
             $this->ejecucion = $ejecucion;
             $dataConsulta = explode(".", $ejecucion);
             $this->tabla = new TablaSelector();
+
+//			$this->_definirKeys($ejecucion);
         }
 
         if (isset($_GET['pagina']))
@@ -259,9 +264,6 @@ class JVista {
         $this->establecerValoresDefault();
         $this->checkConfig();
         #$this->checkGlobals();
-
-        $this->_definirKeys();
-
     }
 
 
@@ -668,12 +670,16 @@ class JVista {
 
                                     array_walk($href, function (&$valor, $clave, $columnas) {
 
-                                        Helpers\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
+//                                        Helpers\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
+//                                        if(count($this->keys) > 0) {
+//											$expReg = '{[' . implode('|', $this->keys) . ']}';
+//										}else{
+//											$expReg = '{[(.*){1}]}';
+//										}
 
-                                        $expReg = '{[' . implode('|', $this->keys) . ']}';
 
-                                        if (preg_match('/' . $expReg . '/', $valor)) {
-                                            //if (preg_match('/{(.*)}{1}/', $valor)) {
+//                                        if (preg_match('/' . $expReg . '/', $valor)) {
+                                            if (preg_match('/{(.*)}{1}/', $valor)) {
 
                                             $valor = str_replace(['{',
                                                                   '}'
@@ -683,10 +689,10 @@ class JVista {
                                                 $valor = $columnas[ $valor ]->innerHTML();
                                             }
 
-                                            Helpers\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
+//                                            Helpers\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
                                         }
 
-                                        Helpers\Debug::imprimir('FUERA', $valor);
+//                                        Helpers\Debug::imprimir('FUERA', $valor);
 
                                     }, $fila->columnas);
 
@@ -705,7 +711,7 @@ class JVista {
                         }
                     }
 
-                    Helpers\Debug::imprimir('$contenido-------', $contenido, TRUE);
+//                    Helpers\Debug::imprimir('$contenido-------', $contenido,true);
 
                     return $contenido;
 
@@ -1284,10 +1290,10 @@ class JVista {
     /**
      * Arma en un array las keys por las que se construye la tabla
      */
-    private function _definirKeys() {
+    private function _definirKeys($data) {
 
-        if (is_array($this->data) && count($this->data) > 0) {
-            foreach ($this->data[0] as $key => $campo):
+        if (is_array($data) && count($data) > 0) {
+            foreach ($data[0] as $key => $campo):
                 $this->keys[] = $key;
             endforeach;
         }
