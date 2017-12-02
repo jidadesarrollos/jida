@@ -123,4 +123,87 @@ class InstagramManager {
 
         return $data['data'];
     }
+
+    /**
+     * Obtiene la lista de seguidores del usuario
+     *
+     * @method obtSeguidores
+     * @param string $accessToken Token de API Instagram
+     * @param int|string $userID ID de usuario Instagram
+     * @return mixed
+     */
+    public function obtSeguidores($accessToken, $userID) {
+
+        $url = $this->urlApi . 'users/' . $userID . '/followed-by?access_token=' . $accessToken;
+
+        $curl = new Curl($this->urlApi);
+
+        $data = $curl->get([], $url)->arreglo();
+
+        return $data;
+
+    }
+
+    /**
+     * Obtiene la lista de seguidos por un usuario
+     *
+     * @method obtSeguidores
+     * @param string $accessToken Token de API Instagram
+     * @param int|string $userID ID de usuario Instagram
+     * @return mixed
+     */
+    public function obtSeguidos($accessToken, $userID) {
+
+        $url = $this->urlApi . 'users/' . $userID . '/follows?access_token=' . $accessToken;
+
+        $curl = new Curl($this->urlApi);
+
+        $data = $curl->get([], $url)->arreglo();
+
+        return $data;
+
+    }
+
+    /**
+     * Obtiene los likes de un post
+     *
+     * @method obtLikes
+     * @param string $accessToken Token de API Instagram
+     * @param int|string $postID ID de post de Instagram
+     *
+     * @return mixed
+     */
+    public function obtLikes($accessToken, $postID) {
+
+        $url = $this->urlApi . 'media/' . $postID . '/likes?access_token=' . $accessToken;
+
+        $curl = new Curl($this->urlApi);
+
+        $data = $curl->get([], $url)->arreglo();
+
+        return $data;
+
+    }
+
+    /**
+     * Obtiene los comentarios de un post
+     *
+     * @method obtComentarios
+     * @param string $accessToken Token de API Instagram
+     * @param int|string $postID ID de post de Instagram
+     *
+     * @return mixed
+     */
+    public function obtComentarios($accessToken, $postID) {
+
+        $url = $this->urlApi . 'media/' . $postID . '/comments?access_token=' . $accessToken;
+
+        $curl = new Curl($this->urlApi);
+
+        $data = $curl->get([], $url)->arreglo();
+
+        return $data;
+
+    }
+
 }
