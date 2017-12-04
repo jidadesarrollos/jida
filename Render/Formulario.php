@@ -5,7 +5,7 @@
  * @internal Renderiza formularios configurados en html visible para el usuario,
  * permite la validación de los mismos y la definición de su estructura.
  *
- * @author Julio Rodriguez
+ * @author   Julio Rodriguez
  * @package
  * @version
  * @category
@@ -14,8 +14,10 @@
 namespace Jida\Render;
 
 use \Exception as Excepcion;
+use Jida\Core\Rutas;
 use Jida\Helpers as Helpers;
 use Jida\BD\BD as BD;
+use Jida\Render\Inputs\Input as SelectorInput;
 
 class Formulario extends Selector {
 
@@ -29,34 +31,40 @@ class Formulario extends Selector {
 
     /**
      * Determina si los valores del formulario deben ser validados o cambiados a entidades HTML
+     *
      * @var $setHtmlEntities
      * @revision
      */
     public $setHtmlEntities = TRUE;
     /**
      * Define si la etiqueta form debe ser integrada
+     *
      * @var boolean $tagForm
      * @default true
      */
     var $tagForm = TRUE;
     /**
      * Define si se agrega un boton submit al formulario
+     *
      * @var boolean $botonEnvio
      * @default true
      */
     var $botonEnvio = TRUE;
     /**
      * Define si se agregan las propiedades para uso del validador js
+     *
      * @var boolean $jidaValidador
      */
     var $jidaValidador = TRUE;
     /**
      * Registra el query realizado para obtener la data en modo update
+     *
      * @var string $_consultaUpdate
      */
     private $_consultaUpdate = "";
     /**
      * Label a usar en el boton de envio por defecto
+     *
      * @var string $_labelBotonEnvio
      */
     var $_labelBotonEnvio = "Guardar";
@@ -73,11 +81,12 @@ class Formulario extends Selector {
      * @internal Si esta definido en TRUE el formulario busca el valor name en el
      * json y lo agrega
      * @var label
-     * @access public
+     * @access   public
      */
     var $labels = TRUE;
     /**
      * Agrega un titulo al formulario
+     *
      * @var Selector $_titulo
      * @see Selector
      */
@@ -90,6 +99,7 @@ class Formulario extends Selector {
     private $_ce = "100100";
     /**
      * Registra el orden de los campos
+     *
      * @internal esta funcion deberia ser provisional para que luego sea
      * reemplazada por una lógica de ordenamiento sobre el arreglo de campos
      * @var array $_arrayOrden
@@ -97,6 +107,7 @@ class Formulario extends Selector {
     private $_arrayOrden = [];
     /**
      * Estructura html que se implementa por cada item del formulario
+     *
      * @var $_plantillaItem
      * @access private
      */
@@ -132,8 +143,8 @@ class Formulario extends Selector {
      *
      * @internal
      *
-     * La clase Formulario trabaja con un sistema de columnas, por defecto el de bootstrap, el cual se divide en 12 columnas, sin embargo
-     * estos valores pueden ser modificados por medio de esta variable
+     * La clase Formulario trabaja con un sistema de columnas, por defecto el de bootstrap, el cual se divide en 12
+     * columnas, sin embargo estos valores pueden ser modificados por medio de esta variable
      * @var int $_columnasTotal
      */
     private $_columnasTotal = 12;
@@ -153,17 +164,20 @@ class Formulario extends Selector {
     private $html;
     /**
      * Expresion regular para validar estructura
+     *
      * @var regexp $_exprEstructura
      */
     private $_exprEstructura = '/^\d+((\[(\d+|,\d+|x\d+)*\])|x\d+|;\d+|,\d+)*$/';
     /**
      * Define la ubicacion del archivo de configuracion del formulario
+     *
      * @var $_path
      * @access private
      */
     private $_path;
     /**
      * Arreglo de campos del formulario
+     *
      * @var array $_campos
      */
     private $_campos;
@@ -177,6 +191,7 @@ class Formulario extends Selector {
     private $_estructura = [];
     /**
      * Numero total de campos en el Formulario
+     *
      * @var $_totalCampos ;
      */
     private $_totalCampos;
@@ -184,6 +199,7 @@ class Formulario extends Selector {
     private $_filaPivote;
     /**
      * Arreglo con botones del formulario
+     *
      * @var array $_botones
      */
     var $_botones;
@@ -192,29 +208,34 @@ class Formulario extends Selector {
      *
      * @internal Si su valor es vacio el formulario se armara en modo
      * insert, caso contrario modo update
+     *
      * @param mixed $_idUpdate ;
      *
      */
     private $_idUpdate;
     /**
      * Data obtenida para mostrar en modo update
+     *
      * @var array $_dataUpdate ;
      */
     private $_dataUpdate = [];
     /**
      * Guarda el total de registros traidos en la consulta a base de datos
      * para manejarlo en campos de selección multiple
+     *
      * @var array $_dataUpdateMultiple
      */
-    private $_dataUpdateMultiple;
+    private $_dataUpdateMultiple = [];
     /**
      * Registra los campos leidos desde el json como arreglos
+     *
      * @internal Esto esta usado por compatibilidad con el objeto ValidadorJida Luego será suprimido.
      * @deprecated
      */
     private $_camposArray;
     /**
      * Registra los errores obtenidos en el formulario luego de la validación
+     *
      * @var array $_errores ;
      */
     private $_errores = [];
@@ -224,10 +245,13 @@ class Formulario extends Selector {
      */
     function __construct($form = "", $update = "") {
 
+        $this->_conf = $GLOBALS['JIDA_CONF'];
+
         if ($form) {
             $this->_cargarFormulario($form);
         }
         $this->_idUpdate = $update;
+
         debug_backtrace()[1]['function'];
 
         if (!empty($update)) {
@@ -250,7 +274,7 @@ class Formulario extends Selector {
             $this->_dataUpdate = $update;
             $this->_dataUpdateMultiple = $update;
 
-        } else{
+        } else {
             $this->_obtenerDataUpdate();
         }
 
@@ -263,7 +287,9 @@ class Formulario extends Selector {
      * Esta funcion puede llamarse cuando se deseen integrar multiples formularios
      * en una misma pantalla
      * @method removerTagForm
+     *
      * @param string $class Clase CSS que se desee agregar al div
+     *
      * @return void
      */
     function removerTagForm($class = "form-alone") {
@@ -276,11 +302,12 @@ class Formulario extends Selector {
     /**
      * Agrega los valores a modificar con el formulario
      * @method addDataUpdate
+     *
      * @revision
      */
     function addDataUpdate($data = "") {
 
-        if (empty($data)){
+        if (empty($data)) {
             $data = $this->_dataUpdate;
         }
 
@@ -290,10 +317,12 @@ class Formulario extends Selector {
                 if ($this->_campos[$campo]->type == 'checkbox') {
 
                     foreach ($this->_dataUpdateMultiple as $key => $dataUpdate) {
-                        if (!array_key_exists($campo, $dataUpdate)){
+
+                        if (is_array($dataUpdate) and !array_key_exists($campo, $dataUpdate)) {
                             break;
                         }
-                        $this->_campos[$campo]->valor($dataUpdate[$campo]);
+
+                        $this->_campos[$campo]->valor($dataUpdate);
                     }
 
                 } else {
@@ -307,47 +336,51 @@ class Formulario extends Selector {
 
     private function _obtenerDataUpdate() {
 
-        $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idUpdate . "'";
-        $data = BD::query($query);
-        $this->_consultaUpdate = $query;
+        if (!is_object($this->_idUpdate)) {
 
-        if (count($data) > 0) {
+            $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idUpdate . "'";
+            $data = BD::query($query);
+            $this->_consultaUpdate = $query;
 
-            $this->_dataUpdate = $data[0];
-            $this->_dataUpdateMultiple = $data;
+            if (count($data) > 0) {
+                $this->_dataUpdate = $data[0];
+                $this->_dataUpdateMultiple = $data;
+            }
+
         }
+
     }
 
     /**
      * Carga el Formulario a mostrar
      *
-     * @internal Verifica si existe un archivo json para el formulario pedido, carga la informacion del mismo y la procesa.
+     * @internal Verifica si existe un archivo json para el formulario pedido, carga la informacion del mismo y la
+     *           procesa.
      *
-     * Los formularios deben encontrarse en la carpeta formularios de Aplicacion o Framework, caso contrario arrojara excepcion.
+     * Los formularios deben encontrarse en la carpeta formularios de Aplicacion o Framework, caso contrario arrojara
+     * excepcion.
      *
      * @method _cargarFormulario
      * @param string $form Nombre del Formulario
      */
     private function _cargarFormulario($form) {
 
-        if (Helpers\Directorios::validar(DIR_APP . 'Formularios/' . $form . '.json')) {
-
-            $this->_path = DIR_APP . 'Formularios/' . $form . '.json';
-
-        } elseif (Helpers\Directorios::validar(DIR_FRAMEWORK . 'Formularios/' . $form . '.json')) {
-
-            $this->_path = DIR_FRAMEWORK . 'Formularios/' . $form . '.json';
-        } else {
-
-            throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $form, $this->_ce . '2');
+        if (!strrpos($form, ".json")) {
+            $form = $form . ".json";
         }
+
+        $path = Rutas::obtener($form, 'formulario')->absoluta();
+        if (!Helpers\Directorios::validar($path)) {
+            throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $path, $this->_ce . '2');
+        }
+        $this->_path = $path;
 
         $this
             ->validarJson()
             ->_instanciarCamposConfiguracion();
+
         $this->_configuaricionInicial();
         $this->_procesarEstructura();
-
 
     }
 
@@ -355,6 +388,7 @@ class Formulario extends Selector {
 
         $contenido = file_get_contents($this->_path);
         $this->_configuracion = json_decode($contenido);
+
         $array = json_decode($contenido, TRUE);
         $this->_camposArray = $array['campos'];
         if (json_last_error() != JSON_ERROR_NONE) {
@@ -409,8 +443,10 @@ class Formulario extends Selector {
     /**
      * Get y Set para css de los componentes del formulario
      * @method css
+     *
      * @param string $elemento Elemento al que acceder
-     * @param string $css [opcional] Si es pasado, sera asignado como clase css a $elemento
+     * @param string $css      [opcional] Si es pasado, sera asignado como clase css a $elemento
+     *
      * @return mixed Si el metodo es usado como setter retornara el mismo objeto form,
      * si es usado como getter retornara la clase del elemento si es conseguido, caso contrario
      * retornara un string vacio
@@ -525,6 +561,39 @@ class Formulario extends Selector {
     }
 
     /**
+     * Define el objeto SelectorInput a retornar
+     * @method _obtSelector
+     *
+     * @since 0.6
+     *
+     */
+    private function _obtSelector($_campo) {
+
+
+        switch ($_campo->type) {
+            case 'select':
+                $selector = new Inputs\Select($_campo);
+                break;
+            case 'checkbox':
+            case 'radio':
+                $selector = new Inputs\InputSeleccion($_campo);
+                break;
+            default:
+                $namespace = '\App\Config\Formularios\\';
+                $claseUpper = $namespace . Helpers\Cadenas::upperCamelCase($_campo->type);
+                if (class_exists($claseUpper)) {
+                    $selector = new $claseUpper($_campo);
+                } else {
+                    $selector = new SelectorInput($_campo);
+                }
+                break;
+        }
+
+        return $selector;
+
+    }
+
+    /**
      * Genera la instancia de un SelectorInput
      *
      * @since 0.6
@@ -532,7 +601,9 @@ class Formulario extends Selector {
      */
     private function _instanciarCampo($_campo) {
 
-        $selectorInput = new SelectorInput($_campo);
+
+        $selectorInput = $this->_obtSelector($_campo);
+
         if ($this->labels and $_campo->type != 'hidden') {
 
             $label = new Selector('label', ['for' => $_campo->id]);
@@ -556,8 +627,8 @@ class Formulario extends Selector {
      * @internal gestiona los campos del formulario realizando una instancia
      * del objeto SelectorInput sobre cada campo para su posterior renderizacion
      * @method _instanciarCamposConfiguracion
-     * @see \Jida\Render\SelectorInput
-     * @use self::labels
+     * @see      \Jida\Render\SelectorInput
+     * @use      self::labels
      */
     private function _instanciarCamposConfiguracion() {
 
@@ -590,6 +661,7 @@ class Formulario extends Selector {
 
         }//fin foreach
         ksort($this->_arrayOrden);
+
         $this->_arrayOrden;
 
     }
@@ -597,9 +669,11 @@ class Formulario extends Selector {
     /**
      * Permite agregar un titulo al formulario
      * @method titulo
-     * @param mixed $titulo Contenido del titulo.
+     *
+     * @param mixed  $titulo   Contenido del titulo.
      * @param string $selector Selector del titulo. por defecto es un h2
-     * @param string $class Clase del Titulo
+     * @param string $class    Clase del Titulo
+     *
      * @return object $this
      */
     function titulo($titulo, $selector = "h2", $class = "page-header") {
@@ -662,8 +736,10 @@ class Formulario extends Selector {
      * @internal Genera el HTML de un formulario creado en el Framework, con toda la personalizacion
      * creada
      * @method armarFormulario
+     *
      * @param array $titulos
-     * @example $titulos = [0=>['limite'=>10,'titulo'=>'Titulo del fieldset']]
+     *
+     * @example  $titulos = [0=>['limite'=>10,'titulo'=>'Titulo del fieldset']]
      */
     function render() {
 
@@ -696,21 +772,19 @@ class Formulario extends Selector {
                 $campo->addClass($this->css('input'));
             }
 
-            if($campo->name == 'control') {
-#                Helpers\Debug::imprimir("Aki", $campo);
-            }
 
             $content .= $campo->render();
             $html = str_replace("{{:cols}}", $columna, $this->_plantillaItem);
 
-            if (is_object($campo->label))
+            if (is_object($campo->label)) {
                 $content = $campo->label->render() . $content;
-
+            }
 
             $html = str_replace("{{:contenido}}", $content, $html);
             $filaPivote->addFinal($html);
             if ($fields and array_key_exists($i, $this->_fieldsets)) {
                 if ($actualFieldset) {
+
                     if ($this->tagForm)
                         $this->addFinal($actualFieldset->render());
                     else {
@@ -724,8 +798,10 @@ class Formulario extends Selector {
             if ($columnas >= 12) {
                 $columnas = 0;
                 if ($fields) {
-                    if ($actualFieldset)
+                    if ($actualFieldset) {
                         $actualFieldset->addFinal($filaPivote->render());
+                    }
+
 
                 } else {
                     if ($this->tagForm)
@@ -738,14 +814,18 @@ class Formulario extends Selector {
             }
             ++$i;
         }
+
         if ($actualFieldset) {
             $this->addFinal($actualFieldset->render());
         }
+
         if ($this->tagForm) {
 
-            if ($this->botonEnvio)
+            if ($this->botonEnvio) {
                 $this->addFinal($this->imprimirBotones());
+            }
             $contenedor->addFinal(parent::render());
+
         }
 
 
@@ -757,6 +837,7 @@ class Formulario extends Selector {
     /**
      * Renderiza el HTML de los botones agregados al formulario
      * @method imprimirBotones
+     *
      * @param boolean $plantilla true;
      */
     function imprimirBotones($plantilla = TRUE) {
@@ -780,6 +861,7 @@ class Formulario extends Selector {
     /**
      * Renderiza el contenido en plantillas predeterminadas
      * @method _obtTemplate
+     *
      * @param $plantilla ;
      */
     private function _obtTemplate($template, $params) {
@@ -793,7 +875,8 @@ class Formulario extends Selector {
 
     /**
      * Realiza lo mismo que la funcion armarFormulario
-     * @internal Se mantiene la funcion para poder realizar la transicion de formularios
+     *
+     * @internal   Se mantiene la funcion para poder realizar la transicion de formularios
      * usados con la clase Formulario, sin embargo el funcionamiento es el mismo ahora que
      * el de armarFormulario, por tanto no se aconseja su uso.
      * @deprecated 1.4
@@ -816,10 +899,12 @@ class Formulario extends Selector {
      * Permite configurar botones para el formulario
      *
      * @internal Permite acceder a la clase Selector del boton pedido para configurarlo
+     *
      * @param string $boton identificador del Boton.
      * @param string $label [opcional] Si es pasado sera agregado como label del boton
+     *
      * @return object $selector Objeto Selector
-     * @see Selector
+     * @see      Selector
      * @method boton
      *
      *
@@ -914,9 +999,10 @@ class Formulario extends Selector {
      *
      * Define valores para las variables de sesion __msjVista e __idVista
      * @method msjVista
-     * @param string $type Tipo de mensaje, puede ser: success,error,alert,info
-     * @param string $msj Contenido del mensaje
-     * @param mixed $redirect Por defecto es false, si se desea redireccionar se pasa la url
+     *
+     * @param string $type     Tipo de mensaje, puede ser: success,error,alert,info
+     * @param string $msj      Contenido del mensaje
+     * @param mixed  $redirect Por defecto es false, si se desea redireccionar se pasa la url
      */
     static function msj($type, $msj, $redirect = false) {
 
@@ -930,14 +1016,17 @@ class Formulario extends Selector {
     /**
      * Permite acceder al objeto selector de un campo
      * @method campo
+     *
      * @param string $id Identificador del campo
+     *
      * @return object SelectorInput
      */
     function campo($id) {
 
-        if (array_key_exists($id, $this->_campos))
+        if (array_key_exists($id, $this->_campos)) {
+
             return $this->_campos[$id];
-        else {
+        } else {
             throw new Excepcion("No existe el campo solicitado", $this->_ce . '2');
 
         }

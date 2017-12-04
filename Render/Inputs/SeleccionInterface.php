@@ -5,6 +5,7 @@ interface SeleccionInterface {
 
     function __construct($selector = "", array $attr = []);
 
-    function addOpciones($opciones);
+    function agregarOpciones($opciones);
+
 
 }

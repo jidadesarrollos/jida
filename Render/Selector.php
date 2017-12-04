@@ -17,6 +17,7 @@ class Selector {
 
     /**
      * Define el selector a crear
+     *
      * @var $selector
      * @access public
      */
@@ -27,6 +28,7 @@ class Selector {
 
     /**
      * Atributos data para el selector
+     *
      * @var array $data
      */
     var $data = [];
@@ -35,18 +37,21 @@ class Selector {
 
     /**
      * Arreglo para agregar atributos adicionales al selector
+     *
      * @var array $attr
      */
-    var $attr = array();
+    var $attr = [];
     /**
      * Contenido del selector, que puede incluir el innerHTML
      * y otros selectores
+     *
      * @var mixed $contenido
      */
     var $contenido = "";
     /**
      * Define si es el selector contenedor del InnerHTML
      * o no
+     *
      * @var boolean $padreInner
      * @unuse
      */
@@ -58,6 +63,7 @@ class Selector {
     private $nodos = [];
     /**
      * Contiene el HTML que se genera al crear el selector
+     *
      * @var string $selectorCreado ;
      *
      */
@@ -90,7 +96,9 @@ class Selector {
     /**
      * Genera el HTML del selector instanciado
      * @method getSelector
+     *
      * @access public
+     *
      * @param int $tabs Numero de tabulaciones ha imprimir
      */
     function getSelector($tabs = 0) {
@@ -122,6 +130,7 @@ class Selector {
      * Verifica si existen elementos datas que deban ser agregados al selector
      * y los agrega
      * @method getElementosData
+     *
      * @access private;
      */
     private function getElementosData() {
@@ -142,6 +151,7 @@ class Selector {
      * Verifica si existen elementos datas que deban ser agregados al selector
      * y los agrega
      * @method getElementosData
+     *
      * @access private;
      * @deprecta
      */
@@ -157,9 +167,10 @@ class Selector {
     /**
      * Genera un selector HTML
      * @method crear
-     * @param string $selector Nombre Etiqueta HTML a crear
-     * @param array $atributos Arreglo de atributos para el selector
-     * @param string $content Contenido del selector
+     *
+     * @param string $selector  Nombre Etiqueta HTML a crear
+     * @param array  $atributos Arreglo de atributos para el selector
+     * @param string $content   Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "", $tabs = 0) {
 
@@ -210,7 +221,9 @@ class Selector {
 
     /**
      * Crea una lista OL con estilo bootstrap de breadcrumb
+     *
      * @param array $data
+     *
      * @return string $html Código HTML generado
      */
     public static function crearBreadCrumb($data, $config = []) {
@@ -236,8 +249,10 @@ class Selector {
 
     /**
      * Genera el codigo HTML de una Lista ul
-     * @param $css Estilo css desado para selector ul
+     *
+     * @param $css  Estilo css desado para selector ul
      * @param array Arreglo de contenido de la lista, debe contener al menos una clave "content"
+     *
      * @example array('content'=>array(uno,dos,tres,cuatro))
      * @example array('selectorInterno'=>'img','content'=>array(...))
      */
@@ -283,7 +298,7 @@ class Selector {
      *
      * @param string $value
      *          Va a ser el valor mostrado en el "value" del boton
-     * @param array $valores
+     * @param array  $valores
      *          arreglo de atributos personalizados.
      *
      */
@@ -474,8 +489,10 @@ class Selector {
      *
      * Permite obtener o asignar valor a un selector.
      * @method attr
-     * @param mixed $attr Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es un arreglo será tomado para asignar un conjunto de atributos
-     * @param $valor [opcional] Valor a asignar al string $attr
+     *
+     * @param mixed $attr  Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es
+     *                     un arreglo será tomado para asignar un conjunto de atributos
+     * @param       $valor [opcional] Valor a asignar al string $attr
      *
      *
      */
@@ -520,6 +537,7 @@ class Selector {
     /**
      * Agrega contenido al principio del innerHTML
      * @method addInicio
+     *
      * @param string html a insertar
      */
     function addInicio($html) {
@@ -547,6 +565,7 @@ class Selector {
      *
      * El nuevo selector creado se convertirá en el innerHTML.
      * @method envolver
+     *
      * @param $selector
      */
     function envolver($selector, $attr = []) {
@@ -582,6 +601,7 @@ class Selector {
 
     /**
      * Retorna el tipo de selector
+     *
      * @since 0.5
      */
     function obtSelector() {

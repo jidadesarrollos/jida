@@ -46,7 +46,7 @@
       "visibilidad": "1",
       "id": "modulo",
       "type": "select",
-      "opciones": "=Seleccione;externo"
+      "opciones": "=Seleccione"
     },
     {
       "label": "Campos",

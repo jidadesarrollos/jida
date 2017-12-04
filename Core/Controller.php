@@ -78,7 +78,7 @@ class Controller
      * @var string $postEjecucion
      */
     var $postEjecucion = "";
-    protected $helpers = array();
+    protected $helpers = [];
     /**
      * Define el Modelo a usar en el controlador;
      *
@@ -113,18 +113,18 @@ class Controller
      * @deprecated
      * @see Pagina::data
      */
-    var $data = array();
+    var $data = [];
     /**
      * Archivos Javascript Requeridos
      * @var array $requireJS
      */
-    var $requireJS = array();
+    var $requireJS = [];
     /**
      * Archivos CSS Requeridos en la vista
      * @var array $requireCSS
      * @access public
      */
-    var $requireCSS = array();
+    var $requireCSS = [];
     /**
      *
      * Define la URL principal de acceso para el controlador (En caso de ser usada)
@@ -186,12 +186,7 @@ class Controller
      * @var $manejoParams
      */
     var $manejoParams = MANEJADOR_PARAMS;
-    /**
-     * Registra el nombre del controlador para la url
-     * @var string $_controladorURL
-     *
-     */
-    private $_controladorURL;
+
     private $_urlBase;
 
     function __construct()
@@ -235,7 +230,7 @@ class Controller
 
 
         $this->getModelo();
-        $this->dv->usuario = Helpers\Sesion::get('Usuario');
+        $this->dv->usuario = Helpers\Sesion::obt('Usuario');
         if (count($this->helpers) > 0) {
             for ($i = 0; $i < count($this->helpers); ++$i) {
                 $object = $this->helpers[$i];
@@ -582,7 +577,7 @@ class Controller
      * @param string $controlador Nombre del controlador [aun no funcional]
      * @return string $url
      */
-    protected function getUrl($metodo = "", $data = array())
+    protected function getUrl($metodo = "", $data = [])
     {
         if (!empty($metodo)) {
 
@@ -747,7 +742,7 @@ class Controller
                 }
             } else {
                 $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                $arrayModel = array();
+                $arrayModel = [];
                 foreach ($words as $key => $word) {
                     if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {
                         $arrayModel[] = substr($word, 0, strlen($word) - 2);

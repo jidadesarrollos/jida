@@ -1,7 +1,8 @@
 <?php
 /**
  * Clase Controladora
- * @author Julio Rodriguez
+ *
+ * @author   Julio Rodriguez
  * @package
  * @version
  * @category Controller
@@ -197,18 +198,23 @@ class FormulariosController extends FController {
         $form
             ->boton('btnGuardar', 'Guardar y editar campos')
             ->attr('value', 'Guardar')
-        ->data('jida', 'validador');
+            ->data('jida', 'validador');
         $form->boton('principal', 'Guardar')->attr('value', 'Guardar');
 
         $form->titulo($titulo);
 
+
         $form->campo('modulo')
-            ->addOpciones(
+            ->agregarOpciones(
                 array_merge(
                     ['principal' => 'Principal'],
                     $this->_conf()->modulos
-                )
-            )->opcion($modulo)->attr('selected', 'true');
+                ), true
+            );
+        if ($modulo) {
+            $form->opcion($modulo)->attr('selected', 'selected');
+        }
+
 
         if ($this->post('btnGuardar') or $this->post('btnGestionFormulario')) {
 
@@ -219,7 +225,7 @@ class FormulariosController extends FController {
                 } else {
 
                     $modulo = (!empty($this->post('modulo'))) ? $this->post('modulo') : $modulo;
-                    Helpers\Debug::imprimir("ready", $this->_formulario->identificador);
+
                     $this->redireccionar($this->obtUrl(
                         'Campos.gestion',
                         [$this->_formulario->identificador, $modulo]
@@ -239,7 +245,9 @@ class FormulariosController extends FController {
 
     /**
      * Gestiona el guardado del formulario
+     *
      * @param string $nombreFormulario identificador del formulario en UpperCamelCase
+     * @param string $modulo           Modulo al cual pertenece el formulario a guardar
      */
     function _guardarFormulario($nombreFormulario, $modulo) {
 

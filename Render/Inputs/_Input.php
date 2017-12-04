@@ -16,7 +16,7 @@ use Exception as Excepcion;
 use Jida\Render\CloneSelector as CloneSelector;
 use Jida\Render\Selector as Selector;
 
-class Input extends InputBase {
+class _Input extends InputBase {
 
     /**
      * @var mixed $_valorUpdate Registra el valor en modo update para el selector
@@ -40,22 +40,8 @@ class Input extends InputBase {
      */
     private $_html = "";
     /**
-     * Define el tipo de Selector de formulario
      *
-     * @internal El valor por defecto es text
-     * @var string $_tipo
-     * @access   private
-     */
-    private $_tipo = "text";
-
-    /**
-     * Atributos pasados en el constructor
-     *
-     * @var mixed $_attr ;
-     * @access private
-     */
-    private $_attr = [];
-    /**
+     * /**
      * Contiene los objetos SelectorInput de cada opcion de un control
      * de seleccion múltiple
      *
@@ -69,10 +55,7 @@ class Input extends InputBase {
      * @var boolean $_crear
      */
     private $_crear = TRUE;
-    /**
-     * @var object $_selector Objeto Selector a renderizar. usada cuando los selectores son de seleccion
-     */
-    private $_selector;
+
 
     /**
      * Crea Selectores para un formulario
@@ -97,7 +80,6 @@ class Input extends InputBase {
 
 
         if ($params->type == 'select') {
-            Helpers\Debug::imprimir($params);
             $this->_selector = new Select($params);
         } else {
             $this->_selector = new InputSeleccion($params->type, $params);
@@ -126,7 +108,7 @@ class Input extends InputBase {
         }
         if ($params->type == 'select' or in_array($params->type, ['checkbox', 'radio'])) {
             $this->_procesarInputSeleccion($params);
-        }else {
+        } else {
             $this->_crearSelector();
         }
 
@@ -177,7 +159,6 @@ class Input extends InputBase {
 
         $this->_attr = array_merge($this->_attr, ['type' => $this->_tipo, 'name' => $this->_name]);
         parent::__construct($this->_tipo, $this->_attr);
-
 
     }
 

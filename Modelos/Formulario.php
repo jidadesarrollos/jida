@@ -7,9 +7,9 @@
  * en versiones anteriores a la version 0.5
  *
  *
- * @package Aplicacion
+ * @package  Aplicacion
  * @category Modelo
- * @version 0.4
+ * @version  0.4
  */
 
 namespace Jida\Modelos;
@@ -22,7 +22,7 @@ use Exception as Excepcion;
 class Formulario extends JsonManager {
 
     use GeneradorCodigo\GeneradorArchivo;
-
+    use \Jida\Core\ObjetoManager;
     var $nombre;
     var $query;
     var $clave_primaria;
@@ -60,6 +60,7 @@ class Formulario extends JsonManager {
 
     /**
      * Permite setear el modulo del formulario
+     *
      * @param $modulo
      */
     function modulo($modulo) {
@@ -71,6 +72,7 @@ class Formulario extends JsonManager {
 
 
     private function _instanciar($form, $modulo) {
+
 
         $json = $this->path($modulo) . DS . $form;
         $this->_ubicacion = $this->path($modulo);
@@ -84,6 +86,7 @@ class Formulario extends JsonManager {
 
     /**
      * Retorna los campos del formulario
+     *
      * @return array
      */
     function campos() {
@@ -140,8 +143,8 @@ class Formulario extends JsonManager {
             if (!$campoClase->orden) {
 
                 array_push($camposOrdenados, (object)(array)$campoClase);
-                $arrayCampo = (array)$campoClase;
-                $this->_campos[$arrayCampo['name']] = $arrayCampo;
+                $arrayCampo = $campoClase;
+                $this->_campos[$arrayCampo->name] = $arrayCampo;
 
             } else {
 
@@ -150,7 +153,7 @@ class Formulario extends JsonManager {
                 } else {
                     $camposOrdenados[$campoClase->orden] = $campoClase;
                 }
-                $this->_campos[$campoClase->name] = (array)$campoClase;
+                $this->_campos[$campoClase->name] = $campoClase;
 
             }
 
@@ -168,7 +171,9 @@ class Formulario extends JsonManager {
      *
      * Usa el nombre del formulario para generar el identificador
      * @method _crearIdentificador
+     *
      * @param string $nombre Nombre del formulario
+     *
      * @return string $identificador Nombre del formulario en UpperCamelCase
      *
      */
@@ -188,6 +193,7 @@ class Formulario extends JsonManager {
      *
      * Verifica si los campos pasados en la data existen en el formulario y sino los agrega.
      * @method _validarCampos
+     *
      * @param {mixed}  $campos String o Arreglo de campos
      */
     private function _validarCampos($campos = null) {
@@ -224,6 +230,7 @@ class Formulario extends JsonManager {
     /**
      * Genera un json con la data del formulario
      * @method _generarJson
+     *
      * @return strnig json_encode
      *
      */
@@ -238,24 +245,20 @@ class Formulario extends JsonManager {
 
         $campos = [];
         foreach ($this->_campos as $nombre => $data) {
-            $data = (array)$data;
-            $campos[$nombre] = [
-                'id'          => $data['id'],
-                'label'       => $data['label'],
-                'name'        => $data['name'],
-                'eventos'     => $data['eventos'],
-                'opciones'    => $data['opciones'],
-                'orden'       => $data['orden'],
-                'placeholder' => $data['placeholder'],
-                'class'       => $data['class'],
-                'data'        => $data['data'],
-                'visibilidad' => $data['visibilidad'],
-                'type'        => $data['type'],
-                'size'        => $data['size'],
-            ];
+
+            $propiedades = $data->obtenerPropiedades();
+
+
+            foreach ($propiedades as $propiedad => $valor) {
+
+                $campos[$nombre][$propiedad] = $valor;
+
+            }
 
         }
         $json['campos'] = $campos;
+
+        #Helpers\Debug::imprimir($json, true);
 
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
     }
@@ -298,7 +301,7 @@ class Formulario extends JsonManager {
         $this
             ->crear($nombre)
             ->escribir($json);
-        Helpers\Debug::imprimir($this->identificador);
+
         return $this->cerrar();
     }
 
@@ -317,31 +320,13 @@ class Formulario extends JsonManager {
 
     function orden($campos) {
 
-        $totalCampos = count($this->campos);
-
         foreach ($campos as $nombre => $posicion) {
 
             if (array_key_exists($nombre, $this->_campos)) {
-                Helpers\Debug::imprimir("Seteo posicion $posicion a $nombre \n");
                 $this->_campos[$nombre]['orden'] = $posicion;
             }
+
         }
-
-
-        /*
-
-                for ($i = 1; $i <= $totalCampos; ++$i) {
-
-                    $campo =& $this->campos[$i];
-
-                    if (is_object($campo) and array_key_exists($campo->id, $campos)) {
-                        Helpers\Debug::imprimir("Seteo posicion " . $campos[$campo->id] . " a " . $campo->id . "\n");
-                        $campo->orden = $campos[$campo->id];
-                    } else {
-                        Helpers\Debug::imprimir("no existe", $campo, "ak");
-                    }
-                }
-        */
 
         return $this;
 
@@ -351,6 +336,7 @@ class Formulario extends JsonManager {
      * Retorna los valores del campo solicitado.
      *
      * @param $campo
+     *
      * @return bool|mixed
      */
     function dataCampo($campo, $data = null) {
@@ -359,17 +345,23 @@ class Formulario extends JsonManager {
         if (array_key_exists($campo, $this->_campos)) {
             $selector = $this->_campos[$campo];
             if ($data and is_array($data)) {
-                $this->_campos[$campo] = array_merge($this->_campos[$campo], $data);
-                $selector = $this->_campos[$campo];
+
+                $clase = $this->_campos[$campo];
+                foreach ($data as $propiedad => $valor) {
+                    if (property_exists($clase, $propiedad)) {
+                        $clase->{$propiedad} = $valor;
+                    }
+                }
+                $selector = $this->_campos[$campo] = $clase;
+
             }
 
+            if ($selector and !$selector->type) {
+                $selector->type = 'text';
+            }
+            $selector->control = $selector->type;
         }
 
-        if (!$selector['type']) {
-            $selector['type'] = 'text';
-        }
-
-        $selector['control'] = $selector['type'];
 
         return $selector;
 
