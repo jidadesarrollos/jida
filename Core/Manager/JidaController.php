@@ -4,8 +4,8 @@
  *
  * @package Framework
  * @author  Julio Rodriguez <jirc48@gmail.com>
- * @date 4/11/2016
- * @since 0.5
+ * @date    4/11/2016
+ * @since   0.5
  *
  */
 
@@ -29,6 +29,7 @@ class JidaController {
     private $_ce = "001";
     /**
      * Define el nombre del Controlador requerido
+     *
      * @var string $controlador
      * @access private
      */
@@ -36,51 +37,59 @@ class JidaController {
 
     /**
      * Define la ruta donde deben buscarse los archivos
+     *
      * @var $_ruta ;
      * @default 'app';
-     * @since 0.5
+     * @since   0.5
      */
     private $_ruta = 'app';
     private $_metodoDefault = 'index';
     private $_controladorDefault = 'Index';
     /**
      * Define el namespace usado
+     *
      * @var string $_namespace ;
      */
     private $_namespace;
     /**
      * Arreglo de componentes de la url
+     *
      * @var $_arrayUrl
      */
     private $_arrayUrl;
     /**
      * Controlador solicitado
+     *
      * @var $_metodo
      * @access private
-     * @since 0.5
+     * @since  0.5
      */
     private $_metodo;
     /**
      * Controlador solicitado
+     *
      * @var string $_controlador
      * @access private
-     * @since 0.5
+     * @since  0.5
      */
     private $_controlador;
     /**
      * Nombre del controlador sin namespace
+     *
      * @var string $_nombreControlador
      */
     private $_nombreControlador;
     /**
      * Controlador solicitado
+     *
      * @var $_modulo
      * @access private
-     * @since 0.5
+     * @since  0.5
      */
     private $_modulo;
     /**
      * Define si una peticion corresponde a un modulo administrador
+     *
      * @var boolean $_esJadmin ;
      * @since 0.5
      */
@@ -95,6 +104,7 @@ class JidaController {
 
     /**
      * Arreglo de lenguajes manejados en la aplicacion
+     *
      * @var array $lenguajes
      */
     private $idiomas = [];
@@ -108,25 +118,29 @@ class JidaController {
     private $idiomaActual;
     /**
      * Objeto controlador instanciado
+     *
      * @var object $controladorObject
      * @access private
      */
     private $controladorObject;
     /**
      * Metodo a ejecutar del controlador solicitado
+     *
      * @var string $metodo
      * @access private
      */
     private $metodo;
     /**
      * Argumentos pasados al metodo
+     *
      * @var string $args
      * @access private
      *
      */
-    private $args = array();
+    private $args = [];
     /**
      * Instancia de objeto vista
+     *
      * @var object Pagina
      */
     private $vista;
@@ -134,6 +148,7 @@ class JidaController {
     private $tipoControlador;
     /**
      * Define el modulo a usar en caso de que exista
+     *
      * @var strng $modulo
      */
     private $modulo = "";
@@ -143,12 +158,14 @@ class JidaController {
     private $subdominio;
     /**
      * Define si se accede a un modulo a partir de un subdominio
+     *
      * @var $moduloSubdominio
      */
     private $moduloSubdominio = FALSE;
 
     /**
      * Objeto Perseador de Urls
+     *
      * @var object parser
      * @since 0.5
      */
@@ -158,16 +175,26 @@ class JidaController {
      *
      * El arreglo se obtiene por medio de la funcion obtenerModulos, la cual debe
      * existir en el archivo de configuracion del framework
+     *
      * @var array $modulosExistentes
      */
     private $modulosExistentes = [];
+
+    /**
+     * @var $_conf
+     */
+    private $_conf;
+
+    /**
+     * JidaController constructor.
+     */
 
     function __construct() {
         try {
             /**
              * Registro de tiempo inicial de ejecución
              */
-            Helpers\Sesion::set('__TIEjecucion', microtime(true));
+            Helpers\Sesion::set('__TIEjecucion', microtime(TRUE));
             /**
              * Seteo de zona horaria
              */
@@ -176,27 +203,24 @@ class JidaController {
              * validacion lenguajes existentes
              */
 
-            if (array_key_exists('idiomas', $GLOBALS)) {
-                $this->idiomas = $GLOBALS['idiomas'];
-
-            }
-
-            Helpers\Sesion::destroy('__formValidacion');
-
-
+            Helpers\Sesion::destruir('__formValidacion');
             $_SERVER = array_merge($_SERVER, getallheaders());
 
+            $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
 
-            if (array_key_exists('modulos', $GLOBALS)) {
+            if (is_object($configuracion)) {
 
-                $this->modulosExistentes = $GLOBALS['modulos'];
-            } else {
-                throw new Exception("No se encuentra definida la variable global modulos, verifique el archivo de configuracion", 1);
+                $this->_conf = $configuracion;
+
+                $this->idiomas = $this->_conf->idiomas;
+                $this->modulosExistentes = $this->_conf->modulos;
             }
 
+
             //$this->_parser = new Parser($this->modulosExistentes);
+
             $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL']) ? $_SESSION['URL_ACTUAL'] : "";
-            JD('URL_ANTERIOR', Helpers\Sesion::get('URL_ACTUAL'));
+            JD('URL_ANTERIOR', Helpers\Sesion::obt('URL_ACTUAL'));
             Helpers\Sesion::set('URL_ACTUAL', $_GET['url']);
 
             JD('URL_COMPLETA', "/" . $_GET['url']);
@@ -206,7 +230,10 @@ class JidaController {
 
                 $_GET['url'] = utf8_encode($_GET['url']);
                 $url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_URL);
-                $url = explode('/', str_replace(array('.php', '.html', '.htm'), '', $url));
+                $url = explode('/', str_replace(['.php',
+                                                 '.html',
+                                                 '.htm'
+                                                ], '', $url));
 
                 $this->_arrayUrl = array_filter($url, function ($var) {
                     return ($var !== NULL && $var !== FALSE && $var !== '');
@@ -216,7 +243,6 @@ class JidaController {
                     $this->idiomaActual = $this->_arrayUrl[0];
 
                     array_shift($this->_arrayUrl);
-
                 }
             }
 
@@ -226,9 +252,9 @@ class JidaController {
             $GLOBALS['__URL_APP'] = $this->appRoot;
             //$ini = substr($this->appRoot, 1);
             $ini = $this->appRoot;
-            Helpers\Sesion::set('URL_ACTUAL', $ini . Helpers\Sesion::get('URL_ACTUAL'));
+            Helpers\Sesion::set('URL_ACTUAL', $ini . Helpers\Sesion::obt('URL_ACTUAL'));
             //Helpers\Debug::imprimir($ini,true);
-            JD('URL', Helpers\Sesion::get('URL_ACTUAL'));
+            JD('URL', Helpers\Sesion::obt('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -252,6 +278,7 @@ class JidaController {
      * Gestiona variables para acceso global en la aplicacion
      *
      * Esta funcion debe ser revisada
+     *
      * @since 1.4
      */
 
@@ -264,6 +291,7 @@ class JidaController {
 
     /**
      * Procesa el contenido de la url
+     *
      * @internal Valida los modulos, controladores y metodos a consultar
      * @method procesarURL
      */
@@ -308,30 +336,32 @@ class JidaController {
      * @method procesarMetodo
      */
     private function procesarMetodo() {
-        $band = false;
+        $band = FALSE;
         if ($this->_arrayUrl) {
 
             $posMetodo = array_shift($this->_arrayUrl);
 
             if (!$this->esMetodoValido($posMetodo)) {
                 $metodo = $this->_metodoDefault;
-            } else $band = true;
+            } else $band = TRUE;
 
         } else $metodo = $this->_metodoDefault;
 
 
         // buscara el metodo por defecto y arrojara un error sino lo consigue.
-        if (!$band) $this->esMetodoValido($metodo, true);
+        if (!$band) $this->esMetodoValido($metodo, TRUE);
 
     }
 
     /**
      * Verifica que el metodo exista
      * @method validarMetodo
+     *
      * @param string $metodo Nombre del metodo a validar
+     *
      * @return boolean
      */
-    private function esMetodoValido($metodo, $error = false) {
+    private function esMetodoValido($metodo, $error = FALSE) {
         if (class_exists($this->_controlador)) {
             $clase = new ReflectionClass($this->_controlador);
             $nombreOriginal = $metodo;
@@ -339,53 +369,51 @@ class JidaController {
 
             if (method_exists($this->_controlador, $metodo) and $clase->getMethod($metodo)->isPublic()) {
                 $this->_metodo = $metodo;
-                return true;
+
+                return TRUE;
             } else {
                 array_unshift($this->_arrayUrl, $nombreOriginal);
             }
 
             if ($error) throw new Excepcion("El metodo no es valido " . $metodo, 404);
 
-            return false;
+            return FALSE;
         } else {
             throw new Excepcion("No existe el controlador soicitado " . $this->_controlador . " para el metodo : " . $metodo, $this->_ce . '4');
-
         }
-
     }
 
     /**
      * Verifica si el parametro pasado es un controlador
      * @method esControlador
-     * @param string $namespace Namespace sobre el cual se validara la existencia del controlador
+     *
+     * @param string $namespace  Namespace sobre el cual se validara la existencia del controlador
      * @param string $controller Nombre del posible controlador pedido
      */
     private function esControlador($namespace, $posController) {
-        $band = true;
+        $band = TRUE;
 
         if (empty($posController)) {
-            $band = false;
+            $band = FALSE;
         } else {
             $nombreValido = $this->validarNombre($posController, 1);
             $nombre = $namespace . $nombreValido;
             $nombreSufijo = $nombre . 'Controller';
-
         }
 
         if ($band and (class_exists($nombre) or class_exists($nombreSufijo))) {
 
             if (class_exists($nombreSufijo) or class_exists($nombre)) {
                 $controlador = (class_exists($nombre)) ? $nombre : $nombreSufijo;
-
-
             } else {
                 $controlador = $nombreSufijo;
             }
+
             $this->_nombreControlador = $nombreValido;
             $this->_namespace = $namespace;
             $this->_controlador = $controlador;
 
-            return true;
+            return TRUE;
 
         } else {
             $nombreValido = $this->validarNombre($this->_controladorDefault, 1);
@@ -393,17 +421,16 @@ class JidaController {
             $nombre = (class_exists($nombre)) ? $nombre : $nombre . 'Controller';
             $this->_controlador = $nombre;
             $this->_nombreControlador = $this->_controladorDefault;
-
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
      * Verifica si el parametro apsado es un modulo cargado
      * @method esModulo
      */
-    private function esModulo($jadmin = false) {
+    private function esModulo($jadmin = FALSE) {
 
         $this->_arrayUrl = array_filter($this->_arrayUrl);
 
@@ -421,23 +448,27 @@ class JidaController {
                     $this->_controladorDefault = $posModulo;
                     $this->_namespace = $namespace . '\\' . $posModulo . '\\Controllers\\';
                     $this->_modulo = $posModulo;
-                    return true;
+
+                    return TRUE;
                 }
 
             } elseif (in_array($posModulo, $this->modulosExistentes)) {
                 $this->_modulo = $posModulo;
-                return true;
+
+                return TRUE;
             }
 
             array_unshift($this->_arrayUrl, $posModulo);
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
      * Procesa las urls dirigidas al administrador de la aplicacion
+     *
      * @param procesarJadmin
+     *
      * @since 0.5;
      */
     private function _procesarJadmin() {
@@ -447,10 +478,10 @@ class JidaController {
         $posController = array_shift($this->_arrayUrl);
 
         if (!$this->esControlador($path, $posController)) {
+
             if ($posController) {
                 array_unshift($this->_arrayUrl, $posController);
             }
-
 
             if ($this->esModulo()) {
 
@@ -461,7 +492,6 @@ class JidaController {
                 $this->_controladorDefault = $this->_modulo;
                 $this->_esApp = TRUE;
 
-
             } else {
 
                 array_unshift($this->_arrayUrl, $posController);
@@ -469,10 +499,10 @@ class JidaController {
                 $this->_namespace = 'Jida\\Jadmin\\';
                 //validacion modulo interno jadmin
                 $this->_ruta = 'framework';
-                if ($this->esModulo(true)) {
+
+                if ($this->esModulo(TRUE)) {
                     //Accede aqui si se busca un modulo del Framework
                     $namespace = $this->_namespace;
-
                 } else {
                     //controlador por defecto jadmin;
                     $this->_controladorDefault = 'Jadmin';
@@ -490,13 +520,12 @@ class JidaController {
         }
 
         $this->procesarMetodo();
-
-
     }
 
     /**
      * CREA arreglo de parametros get
      * @method procesarAgumentos
+     *
      * @access private
      *
      */
@@ -515,15 +544,15 @@ class JidaController {
         });
 
         $totalClaves = count($this->args);
-        $gets = array();
+        $gets = [];
 
         if ($totalClaves >= 2) {
 
             for ($i = 0; $i <= $totalClaves; $i++) {
 
                 if ($clave === TRUE) {
-                    if (isset($this->args[$i]) and isset($this->args[$i + 1])) {
-                        $gets[$this->args[$i]] = $this->args[$i + 1];
+                    if (isset($this->args[ $i ]) and isset($this->args[ $i + 1 ])) {
+                        $gets[ $this->args[ $i ] ] = $this->args[ $i + 1 ];
                     }
                 }
                 $i++;
@@ -593,6 +622,7 @@ class JidaController {
      *
      * @method ejecucion
      * @param object $controlador <br>Objeto Controlador a instanciar
+     *
      * @access private
      */
     private function ejecucion($controlador) {
@@ -619,12 +649,12 @@ class JidaController {
      * Realiza la ejecución del Controlador a instanciar
      * @method ejecutarController
      */
-    private function ejecutarController($controlador, $params = [], $checkDirs = true) {
+    private function ejecutarController($controlador, $params = [], $checkDirs = TRUE) {
 
         $args = $this->args;
         #Helpers\Debug::imprimir("jida",$params);
         $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
-        $retorno = array();
+        $retorno = [];
 
         #se instancia el controlador solicitado
         $nombreControlador = $controlador;
@@ -641,7 +671,9 @@ class JidaController {
             //Validacion de ejecucion de un metodo previo al solicitado por url
             if (!empty($controlador->preEjecucion) and method_exists($controlador, $controlador->preEjecucion)) {
 
-                call_user_func_array([$controlador, $controlador->preEjecucion], $args);
+                call_user_func_array([$controlador,
+                                      $controlador->preEjecucion
+                                     ], $args);
             }
 
             if ($metodo == $controlador->preEjecucion or $metodo == $controlador->postEjecucion) {
@@ -649,17 +681,21 @@ class JidaController {
             }
             // Ejecucion del metodo solicitado
             if ($controlador->manejoParams) {
-                call_user_func_array([$controlador, $metodo], $args);
+                call_user_func_array([$controlador,
+                                      $metodo
+                                     ], $args);
             } else {
 
                 $_GET = $this->arrayGetCompatibilidad;
                 $_REQUEST = array_merge($_POST, $_GET);
-                $controlador->validarVarGlobales(true);
-                $controlador->$metodo(null);
+                $controlador->validarVarGlobales(TRUE);
+                $controlador->$metodo(NULL);
             }
             //Validacion ejecucion post metodo
             if (!empty($controlador->postEjecucion) and method_exists($controlador, $controlador->postEjecucion)) {
-                call_user_func_array([$controlador, $controlador->postEjecucion], $args);
+                call_user_func_array([$controlador,
+                                      $controlador->postEjecucion
+                                     ], $args);
             }
         } else {
             throw new Excepcion("No existe el metodo $metodo del controlador $nombreControlador", 404);
@@ -668,11 +704,12 @@ class JidaController {
         if ($checkDirs) {
             $this->checkDirectoriosView();
         }
+
         return $controlador;
     }
 
     private function jidaExcepcion(Excepcion $excepcion) {
-        Helpers\Debug::imprimir($excepcion, true);
+        Helpers\Debug::imprimir($excepcion, TRUE);
     }
 
     /**
@@ -685,7 +722,7 @@ class JidaController {
             //if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
             global $dataVista;
             // Helpers\Debug::imprimir($excepcion);
-            if (strpos($this->_controlador, 'Controller') === false)
+            if (strpos($this->_controlador, 'Controller') === FALSE)
                 $ctrlError = $this->_controlador . "Controller";
             else
                 $ctrlError = $this->_controlador;
@@ -725,9 +762,11 @@ class JidaController {
      * la vista correspondiente, pasa el array retorno como arreglo
      * con parametros para uso en la vista
      * @method mostrarContenido
-     * @param array $retorno
-     * @param string $vista [opcional] Nombre de la vista requerida, si no se pasa el valor se busca un archivo con el nombre
-     * del metodo
+     *
+     * @param array  $retorno
+     * @param string $vista [opcional] Nombre de la vista requerida, si no se pasa el valor se busca un archivo con el
+     *                      nombre del metodo
+     *
      * @access private
      *
      */
@@ -750,8 +789,9 @@ class JidaController {
      * de clases controladoras y metodos validas
      *
      * @method validarNombre
-     * @param string $str Cadena a formatear
-     * @param int $tipoCamelCase 1 Upper 2 Lower
+     * @param string $str           Cadena a formatear
+     * @param int    $tipoCamelCase 1 Upper 2 Lower
+     *
      * @return string $nombre Cadena Formateada resultante
      */
     private function validarNombre($str, $tipoCamelCase) {
@@ -762,6 +802,7 @@ class JidaController {
             } else {
                 $nombre = str_replace(" ", "", Helpers\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
             }
+
             return $nombre;
         }
 
