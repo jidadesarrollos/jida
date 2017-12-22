@@ -1,6 +1,6 @@
 # JIDA FRAMEWORK
 
-Framework para aplicaciones web, con sintaxis simple, atual y elegante.
+Framework para aplicaciones web, con sintaxis simple, actual y elegante.
 
 **Versión Actual: 0.6**
 
