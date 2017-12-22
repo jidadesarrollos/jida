@@ -2,6 +2,7 @@
 
 Framework para aplicaciones web, con sintaxis simple, atual y elegante.
 
+**Versión Actual: 0.6**
 
 ## Instalación
 
