@@ -68,7 +68,7 @@ class   JController extends Core\Controller {
 
     protected function formularioInicioSesion() {
 
-        $form = new Render\Formulario('Login');
+        $form = new Render\Formulario('jida/Login');
         $form->boton('principal')
             ->attr([
                 'value' => 'Iniciar Sesi&oacute;n',
@@ -95,15 +95,8 @@ class   JController extends Core\Controller {
         $this->layout('jadminIntro');
         $this->dv->usarPlantilla('login');
         $this->tituloPagina = NOMBRE_APP;
-        #$form->
-        // $form->setParametrosFormulario([
-        // 'action'		=> JD('URL'),
-        // 'nombreSubmit'	=> 'btnJadminLogin',
-        // 'valueBotonForm'=> 'Iniciar Sesi&oacute;n'
-// 
-        // ]);
-        //echo $form->armarFormulario();
         $this->data('formLoggin', $form->armarFormulario());
+
     }
 
     /**

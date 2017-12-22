@@ -28,6 +28,7 @@ class CampoFormulario {
     var $id;
     var $type;
     var $size;
+    var $title;
 
     private $types = [
         1 => 'hidden',
@@ -46,7 +47,10 @@ class CampoFormulario {
         if (!empty($campo) and is_object($campo)) {
             $this->establecerAtributos($campo, $this);
         }
+        $a = new \stdClass();
+        $a->test = 'algo';
 
+            return $a;
     }
 
     /**
@@ -62,6 +66,25 @@ class CampoFormulario {
         }
 
         return false;
+
+    }
+
+    /**
+     * Retorna las propiedades publicas del campo en un arreglo
+     * @return array
+     */
+    function obtenerPropiedades() {
+
+        $reflector = new \ReflectionClass($this);
+        $propiedades = $reflector->getPRoperties(\ReflectionProperty::IS_PUBLIC);
+        $salida = [];
+        foreach ($propiedades as $propiedad) {
+            if(!$propiedad->isStatic()) {
+                $salida[$propiedad->getName()] = $propiedad->getValue($this);
+            }
+        }
+
+        return $salida;
 
     }
 

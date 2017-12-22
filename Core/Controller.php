@@ -199,6 +199,7 @@ class Controller {
      * @var $manejoParams
      */
     var $manejoParams = MANEJADOR_PARAMS;
+<<<<<<< HEAD
     /**
      * Registra el nombre del controlador para la url
      *
@@ -206,6 +207,9 @@ class Controller {
      *
      */
     private $_controladorURL;
+=======
+
+>>>>>>> 0.6-formularios
     private $_urlBase;
 
     function __construct() {
@@ -248,7 +252,7 @@ class Controller {
 
 
         $this->getModelo();
-        $this->dv->usuario = Helpers\Sesion::get('Usuario');
+        $this->dv->usuario = Helpers\Sesion::obt('Usuario');
         if (count($this->helpers) > 0) {
             for ($i = 0; $i < count($this->helpers); ++$i) {
                 $object = $this->helpers[ $i ];
@@ -600,7 +604,12 @@ class Controller {
      *
      * @return string $url
      */
+<<<<<<< HEAD
     protected function getUrl($metodo = "", $data = []) {
+=======
+    protected function getUrl($metodo = "", $data = [])
+    {
+>>>>>>> 0.6-formularios
         if (!empty($metodo)) {
 
             $url = explode(".", $metodo);
@@ -767,7 +776,11 @@ class Controller {
 
                 }
             } else {
+<<<<<<< HEAD
                 $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+=======
+                $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+>>>>>>> 0.6-formularios
                 $arrayModel = [];
                 foreach ($words as $key => $word) {
                     if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {

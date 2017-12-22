@@ -54,8 +54,9 @@ class CamposController extends Fcontroller {
 
             if (!empty($this->_formulario->identificador)) {
 
-                $data = $this->_formulario->dataCampo($idCampo);
-                $form = new Render\Formulario('CamposFormulario', $data);
+                $data = $this->_formulario->dataCampo($idCampo)->obtenerPropiedades();
+
+                $form = new Render\Formulario('jida/CamposFormulario', $data);
                 $form->attr('action', $this->obtUrl('guardar', [
                     $idFormulario, $modulo, $idCampo
                 ]));
