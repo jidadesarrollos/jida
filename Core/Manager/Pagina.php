@@ -138,7 +138,7 @@ class Pagina {
         $this->_esJadmin = $jadmin;
         $this->_ruta = $ruta;
 
-        $configuracion = (is_array($GLOBALS['Configuracion'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['Configuracion']) : $GLOBALS['Configuracion'];
+        $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
 
         if (is_object($configuracion)) {
 
