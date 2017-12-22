@@ -211,10 +211,10 @@ class Formulario extends Selector {
      * @internal Si su valor es vacio el formulario se armara en modo
      * insert, caso contrario modo update
      *
-     * @param mixed $_idUpdate ;
+     * @param mixed $_idEdicion ;
      *
      */
-    private $_idUpdate;
+    private $_idEdicion;
     /**
      * Data obtenida para mostrar en modo update
      *
@@ -245,14 +245,14 @@ class Formulario extends Selector {
     /**
      *
      */
-    function __construct($form = "", $update = "") {
+    function __construct($form = "", $dataEdicion = "") {
 
         $this->_conf = $GLOBALS['JIDA_CONF'];
 
         if ($form) {
-            $this->_cargarFormulario($form, $update);
+            $this->_cargarFormulario($form, $dataEdicion);
         }
-        $this->_idUpdate = $update;
+        $this->_idEdicion = $dataEdicion;
 
         debug_backtrace()[1]['function'];
 
@@ -267,16 +267,17 @@ class Formulario extends Selector {
     /**
      * Procesa la informacion para renderizar el formulario en modo update
      *
-     * @param mixed $update Arreglo de datos en modo update o consulta a ejecutar en base de datos
+     * @param mixed $dataEdicion Arreglo de datos en modo update o consulta a ejecutar en base de datos
      */
-    private function _procesarUpdate($update) {
+    private function _procesarUpdate($dataEdicion) {
 
-        if (is_array($update)) {
+        if (is_array($dataEdicion)) {
 
-            $this->_dataUpdate = $update;
-            $this->_dataUpdateMultiple = $update;
+            $this->_dataUpdate = $dataEdicion;
+            $this->_dataUpdateMultiple = $dataEdicion;
 
         } else {
+            $this->_idEdicion = $dataEdicion;
             $this->_obtenerDataUpdate();
         }
 
@@ -302,9 +303,9 @@ class Formulario extends Selector {
 
     private function _obtenerDataUpdate() {
 
-        if (!is_object($this->_idUpdate)) {
+        if (!is_object($this->_idEdicion)) {
 
-            $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idUpdate . "'";
+            $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idEdicion . "'";
             $data = BD::query($query);
             $this->_consultaUpdate = $query;
 
@@ -329,7 +330,7 @@ class Formulario extends Selector {
      * @method _cargarFormulario
      * @param string $form Nombre del Formulario
      */
-    private function _cargarFormulario($form, $update) {
+    private function _cargarFormulario($form, $dataEdicion) {
 
         if (!strrpos($form, ".json")) {
             $form = $form . ".json";
@@ -344,8 +345,8 @@ class Formulario extends Selector {
         $this
             ->validarJson();
 
-        if (!empty($update)) {
-            $this->_procesarUpdate($update);
+        if (!empty($dataEdicion)) {
+            $this->_procesarUpdate($dataEdicion);
         }
 
         $this->_instanciarCamposConfiguracion();
@@ -976,7 +977,7 @@ class Formulario extends Selector {
         if ($this->_errores) {
             Helpers\Sesion::set('__erroresForm', $this->_errores);
             Helpers\Sesion::set('_dataPostForm', $datos);
-            Helpers\Sesion::set('__dataPostForm', 'id_form', $this->_idUpdate);
+            Helpers\Sesion::set('__dataPostForm', 'id_form', $this->_idEdicion);
 
             return false;
         } else {
