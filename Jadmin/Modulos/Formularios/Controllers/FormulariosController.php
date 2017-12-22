@@ -194,7 +194,7 @@ class FormulariosController extends FController {
         }
 
 
-        $form = new Render\Formulario('GestionFormulario', $dataForm);
+        $form = new Render\Formulario('jida/GestionFormulario', $dataForm);
         $form
             ->boton('btnGuardar', 'Guardar y editar campos')
             ->attr('value', 'Guardar')

@@ -13,7 +13,7 @@ namespace Jida\Render\Inputs;
 use Jida\BD\BD as BD;
 use Jida\Helpers as Helpers;
 use Exception as Excepcion;
-use Jida\REnder\Selector as Selector;
+use Jida\Render\Selector as Selector;
 
 class Select extends InputBase implements SeleccionInterface {
 
@@ -21,18 +21,23 @@ class Select extends InputBase implements SeleccionInterface {
 
     function __construct($data = "", array $attr = []) {
 
-        $attr = [
+        $atributos = [
             'name' => $data->name,
             'id'   => $data->id,
         ];
+        $attr = array_merge($atributos, $attr);
         $this->establecerAtributos($data, $this);
+
+        if (array_key_exists('padre', $attr)) {
+            $this->_padre = $attr['padre'];
+            unset($attr['padre']);
+        }
         parent::__construct($data->type, $attr);
 
         if (property_exists($data, 'opciones')) {
             $this->_obtOpciones($data->opciones);
             $this->_procesarArregloOpciones();
         }
-
 
     }
 
@@ -77,11 +82,12 @@ class Select extends InputBase implements SeleccionInterface {
     private function _procesarArregloOpciones() {
 
         $opciones = $this->_opciones;
+
         foreach ($opciones as $key => $data) {
 
             $opcion = new Selector('option', ['value' => $key]);
             $opcion->innerHTML($data);
-            if (!empty($key) and $key == $this->_valor) {
+            if (!empty($key) and ($key == $this->_valor or $key == $this->value)) {
                 $opcion->attr('selected', 'selected');
             }
             $this->_selectoresOpcion[$key] = $opcion;
@@ -91,12 +97,14 @@ class Select extends InputBase implements SeleccionInterface {
 
     function valor($valor) {
 
-        $this->_valorUpdate = $valor;
-        $busqueda = array_search($valor, $this->_opciones);
+        $this->value = $valor;
+        $busqueda = array_key_exists($valor, $this->_opciones);
+
         if ($busqueda) {
-            $this->selector[$busqueda]->attr('selected', 'selected');
+            $this->_selectoresOpcion[$valor]->attr('selected', 'selected');
         }
 
     }
+
 
 }

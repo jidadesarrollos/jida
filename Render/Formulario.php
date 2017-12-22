@@ -136,8 +136,10 @@ class Formulario extends Selector {
 			</header>
 		</div>
 	</section>';
-
-
+    /**
+     * @var $_configuracion Configuracion del formulario
+     */
+    private $_configuracion;
     /**
      * Define el numero de columnas a manejar en el grid
      *
@@ -248,15 +250,13 @@ class Formulario extends Selector {
         $this->_conf = $GLOBALS['JIDA_CONF'];
 
         if ($form) {
-            $this->_cargarFormulario($form);
+            $this->_cargarFormulario($form, $update);
         }
         $this->_idUpdate = $update;
 
         debug_backtrace()[1]['function'];
 
-        if (!empty($update)) {
-            $this->_procesarUpdate($update);
-        }
+
         $this->action = JD('URL');
         $this->attr('action', $this->action);
 
@@ -266,6 +266,8 @@ class Formulario extends Selector {
 
     /**
      * Procesa la informacion para renderizar el formulario en modo update
+     *
+     * @param mixed $update Arreglo de datos en modo update o consulta a ejecutar en base de datos
      */
     private function _procesarUpdate($update) {
 
@@ -278,7 +280,6 @@ class Formulario extends Selector {
             $this->_obtenerDataUpdate();
         }
 
-        $this->addDataUpdate();
     }
 
     /**
@@ -297,41 +298,6 @@ class Formulario extends Selector {
         $this->selector = 'DIV';
         $this->attr = [];
         $this->addClass($class);
-    }
-
-    /**
-     * Agrega los valores a modificar con el formulario
-     * @method addDataUpdate
-     *
-     * @revision
-     */
-    function addDataUpdate($data = "") {
-
-        if (empty($data)) {
-            $data = $this->_dataUpdate;
-        }
-
-        foreach ($data as $campo => $valor) {
-            if (array_key_exists($campo, $this->_campos)) {
-                //esta logica debe mejorarse
-                if ($this->_campos[$campo]->type == 'checkbox') {
-
-                    foreach ($this->_dataUpdateMultiple as $key => $dataUpdate) {
-
-                        if (is_array($dataUpdate) and !array_key_exists($campo, $dataUpdate)) {
-                            break;
-                        }
-
-                        $this->_campos[$campo]->valor($dataUpdate);
-                    }
-
-                } else {
-                    $this->_campos[$campo]->valor($valor);
-                }
-
-            }
-        }
-
     }
 
     private function _obtenerDataUpdate() {
@@ -363,7 +329,7 @@ class Formulario extends Selector {
      * @method _cargarFormulario
      * @param string $form Nombre del Formulario
      */
-    private function _cargarFormulario($form) {
+    private function _cargarFormulario($form, $update) {
 
         if (!strrpos($form, ".json")) {
             $form = $form . ".json";
@@ -376,9 +342,13 @@ class Formulario extends Selector {
         $this->_path = $path;
 
         $this
-            ->validarJson()
-            ->_instanciarCamposConfiguracion();
+            ->validarJson();
 
+        if (!empty($update)) {
+            $this->_procesarUpdate($update);
+        }
+
+        $this->_instanciarCamposConfiguracion();
         $this->_configuaricionInicial();
         $this->_procesarEstructura();
 
@@ -390,7 +360,7 @@ class Formulario extends Selector {
         $this->_configuracion = json_decode($contenido);
 
         $array = json_decode($contenido, TRUE);
-        $this->_camposArray = $array['campos'];
+
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new Excepcion("El formulario  " . $this->_path . " no esta estructurado correctamente", $this->_ce . "0");
         }
@@ -459,8 +429,10 @@ class Formulario extends Selector {
             return $this;
 
         } else {
-            if (array_key_exists($elemento, $this->_css))
+            if (array_key_exists($elemento, $this->_css)) {
                 return $this->_css[$elemento];
+            }
+
         }
 
         return "";
@@ -475,27 +447,24 @@ class Formulario extends Selector {
     private function _procesarEstructura() {
 
         if (!property_exists($this->_configuracion, 'estructura')) {
-
             $estructura = '1x' . $this->_totalCampos;
-
         } else {
+
             $estructura = $this->_configuracion->estructura;
-
-
-            if (empty($estructura))
+            if (empty($estructura)) {
                 $estructura = '1x' . $this->_totalCampos;
+            }
+
         }
+
         if (!preg_match($this->_exprEstructura, $estructura))
             throw new Excepcion("La estructura pasada no es válida", $this->_ce . '3');
 
-
         $estructura = explode(";", $estructura);
         for ($i = 0; $i <= count($estructura) - 1; ++$i):
-            $original = $estructura[$i];
-            $columnas = 0;
-            $partes = [];
-            //entra acá si existe definicion de estructura
+
             if (strpos($estructura[$i], "[")) {
+
                 $partes = explode("[", $estructura[$i]);
                 $columnas = array_shift($partes);
                 $partes = explode("]", implode($partes));
@@ -508,16 +477,23 @@ class Formulario extends Selector {
                 }
 
                 if (strpos($distribucion, "x")) {
+
                     $partesEstructura = explode(",", $distribucion);
                     $estructuraFinal = [];
+
                     foreach ($partesEstructura as $key => $columna) {
+
                         $segmentos = explode("x", $columna);
 
                         if (count($segmentos) > 1) {
-                            for ($ji = 0; $ji < $segmentos[1]; $ji++)
+                            for ($ji = 0; $ji < $segmentos[1]; $ji++) {
                                 array_push($estructuraFinal, $segmentos[0]);
-                        } else    array_push($estructuraFinal, $segmentos[0]);
+                            }
+                        } else {
+                            array_push($estructuraFinal, $segmentos[0]);
+                        }
                     }
+
                     $distribucion = implode(",", $estructuraFinal);
                 }
 
@@ -537,26 +513,33 @@ class Formulario extends Selector {
                 $columnasGrid = $this->_columnasTotal / $columnas;
                 $pivote = 0;
                 $distribucion = [];
+
                 while ($pivote < $this->_columnasTotal) {
+
                     array_push($distribucion, $columnasGrid);
                     $pivote += $columnasGrid;
+
                 }
+
                 $distribucion = implode(",", $distribucion);
 
-
             }
+
             if (count(explode(",", $distribucion)) < $columnas) {
                 throw new Excepcion("La estructura no esta armada correctamente. La distribución es menor a la cantidad de columnas" . $distribucion, $this->_ce . '1');
-
             }
-            for ($je = 0; $je < $repeticiones; $je++)
+
+            for ($je = 0; $je < $repeticiones; $je++) {
                 $this->_estructura = array_merge($this->_estructura, explode(",", $distribucion));
+            }
+
         endfor;
+
         $camposEstructura = count($this->_estructura);
+
         if ($camposEstructura > $this->_totalCampos) {
             throw new Excepcion("La estructura tiene mayor cantidad de campos que el formulario. Campos estructura :  " . $camposEstructura . ". Campos Form: " . $this->_totalCampos . ". Form: " . $this->_configuracion->nombre, $this->_ce . '5');
         }
-
 
     }
 
@@ -569,22 +552,25 @@ class Formulario extends Selector {
      */
     private function _obtSelector($_campo) {
 
+        if (array_key_exists($_campo->name, $this->_dataUpdate)) {
+            $_campo->value = $this->_dataUpdate[$_campo->name];
+        }
 
         switch ($_campo->type) {
             case 'select':
-                $selector = new Inputs\Select($_campo);
+                $selector = new Inputs\Select($_campo, ['padre' => $this]);
                 break;
             case 'checkbox':
             case 'radio':
-                $selector = new Inputs\InputSeleccion($_campo);
+                $selector = new Inputs\InputSeleccion($_campo, ['padre' => $this]);
                 break;
             default:
                 $namespace = '\App\Config\Formularios\\';
                 $claseUpper = $namespace . Helpers\Cadenas::upperCamelCase($_campo->type);
                 if (class_exists($claseUpper)) {
-                    $selector = new $claseUpper($_campo);
+                    $selector = new $claseUpper($_campo, ['padre' => $this]);
                 } else {
-                    $selector = new SelectorInput($_campo);
+                    $selector = new SelectorInput($_campo, ['padre' => $this]);
                 }
                 break;
         }
@@ -601,7 +587,6 @@ class Formulario extends Selector {
      */
     private function _instanciarCampo($_campo) {
 
-
         $selectorInput = $this->_obtSelector($_campo);
 
         if ($this->labels and $_campo->type != 'hidden') {
@@ -610,6 +595,10 @@ class Formulario extends Selector {
             $label->innerHTML((property_exists($selectorInput, 'label') ? $_campo->label : $_campo->name));
             $selectorInput->label = $label;
 
+        }
+
+        if (array_key_exists($selectorInput->name, $this->_dataUpdate)) {
+            $selectorInput->valor($this->_dataUpdate[$selectorInput->name]);
         }
 
         if (property_exists($_campo, 'eventos') and !empty($_campo->eventos)) {
@@ -643,7 +632,9 @@ class Formulario extends Selector {
                 continue;
             }
 
-            if (!property_exists($campo, 'type')) $campo->type = "text";
+            if (!property_exists($campo, 'type')) {
+                $campo->type = "text";
+            }
 
             if (property_exists($campo, 'orden')) {
                 $orden = $campo->orden;

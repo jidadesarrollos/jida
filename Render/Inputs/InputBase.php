@@ -44,6 +44,12 @@ abstract class InputBase extends Selector {
     protected $_attr = [];
 
     /**
+     * Objeto padre que instancia al selector
+     *
+     * @var object $_padre ;
+     */
+    protected $_padre;
+    /**
      * Retorna la estructura a renderizar
      *
      * @param string $estructura Nombre de la estructura

@@ -157,11 +157,10 @@ class Formulario extends JsonManager {
 
             }
 
-
         }
+
         asort($camposOrdenados);
         $this->_camposOrdenados = $camposOrdenados;
-
 
     }
 

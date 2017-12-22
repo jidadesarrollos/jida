@@ -1,7 +1,8 @@
 <?php
 /**
  * Clase Controladora
- * @author Julio Rodriguez
+ *
+ * @author   Julio Rodriguez
  * @package
  * @version
  * @category Controller
@@ -16,8 +17,7 @@ use Jida\Helpers as Helpers;
 use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Render as Render;
 
-class   JController extends Core\Controller
-{
+class   JController extends Core\Controller {
 
     protected $urlHtdocs;
     var $idioma = 'es';
@@ -28,8 +28,7 @@ class   JController extends Core\Controller
         'Administrador'
     ];
 
-    function __construct()
-    {
+    function __construct() {
 
         parent::__construct();
         $this->__url = JD('URL_COMPLETA');
@@ -54,27 +53,25 @@ class   JController extends Core\Controller
         $this->validarSesion();
     }
 
-    protected function validarSesion()
-    {
+    protected function validarSesion() {
 
-        if (Helpers\Sesion::es($this->perfilesAdmin))
+        if (Helpers\Sesion::es($this->perfilesAdmin)) {
             return true;
-        else
+        } else {
             $this->formularioInicioSesion();
+        }
 
-//		Helpers\Debug::imprimir('Final',true);
     }
 
-    protected function formularioInicioSesion()
-    {
+    protected function formularioInicioSesion() {
 
         //$form = new Formulario('Login',null,null,2);
-        $form = new Render\Formulario('Login');
+        $form = new Render\Formulario('jida/Login');
         $form->boton('principal')
             ->attr([
                 'value' => 'Iniciar Sesi&oacute;n',
-                'id' => 'btnJadminLogin',
-                'name' => 'btnJadminLogin'
+                'id'    => 'btnJadminLogin',
+                'name'  => 'btnJadminLogin'
             ]);
         if ($this->post('btnJadminLogin')) {
 
@@ -85,6 +82,7 @@ class   JController extends Core\Controller
                 // Helpers\Debug::imprimir($user->perfiles,true);
                 Helpers\Sesion::set('Usuario', $user);
                 Helpers\Sesion::set('__msjInicioSesion', Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
+
                 return true;
             } else {
 
@@ -113,8 +111,8 @@ class   JController extends Core\Controller
      * @method definirJSGlobals
      *
      */
-    private function definirJSGlobals()
-    {
+    private function definirJSGlobals() {
+
         if (strtolower($this->_modulo) == 'jadmin') {
             if (!array_key_exists('jadmin', $GLOBALS['_JS'])) {
 

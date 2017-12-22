@@ -22,9 +22,14 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
     var $type;
     var $inline;
 
+
     function __construct($data = "", array $attr = []) {
 
         $this->establecerAtributos($data, $this);
+        if (array_key_exists('padre', $attr)) {
+            $this->_padre = $attr['padre'];
+
+        }
         if (!$data->opciones) {
             throw new \Exception("Debe agregar las opciones al campo de seleccion creado.", $this->_ce . '0000009');
         }
@@ -55,7 +60,7 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
     function render() {
 
         $salida = "";
-        #Helpers\Debug::imprimir($this->_selectoresOpcion, true);
+
         foreach ($this->_selectoresOpcion as $key => $selector) {
 
             $data = [
