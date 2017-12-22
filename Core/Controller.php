@@ -199,7 +199,7 @@ class Controller {
      * @var $manejoParams
      */
     var $manejoParams = MANEJADOR_PARAMS;
-<<<<<<< HEAD
+
     /**
      * Registra el nombre del controlador para la url
      *
@@ -207,12 +207,11 @@ class Controller {
      *
      */
     private $_controladorURL;
-=======
 
->>>>>>> 0.6-formularios
     private $_urlBase;
 
     function __construct() {
+
         global $dataVista;
         $this->_urlBase = (defined('URL_BASE')) ? URL_BASE : '';
 
@@ -255,7 +254,7 @@ class Controller {
         $this->dv->usuario = Helpers\Sesion::obt('Usuario');
         if (count($this->helpers) > 0) {
             for ($i = 0; $i < count($this->helpers); ++$i) {
-                $object = $this->helpers[ $i ];
+                $object = $this->helpers[$i];
 
                 if (is_object($object)) {
                     $this->$$object = new $object();
@@ -271,6 +270,7 @@ class Controller {
      * @return {object} \App\Config\Configuracion
      */
     protected function _conf() {
+
         return $GLOBALS['JIDA_CONF'];
     }
 
@@ -281,12 +281,14 @@ class Controller {
      * @method validarVarGlobales
      */
     function validarVarGlobales($bug = FALSE) {
+
         $this->post =& $_POST;
         $this->get =& $_GET;
         $this->request =& $_REQUEST;;
     }
 
     private function instanciarHelpers() {
+
         if (count($this->helpers) > 0) {
             foreach ($this->helpers as $key => $propiedad) {
                 $helper = '\\Jida\\Helpers\\' . $propiedad;
@@ -296,6 +298,7 @@ class Controller {
     }
 
     private function instanciarModelos() {
+
         if (count($this->modelos) > 0) {
             foreach ($this->modelos as $key => $propiedad) {
                 if (class_exists($propiedad))
@@ -309,6 +312,7 @@ class Controller {
      * @deprecated 0.4
      */
     protected function getString($valor) {
+
         return $this->obtString($valor);
     }
 
@@ -336,6 +340,7 @@ class Controller {
      * @deprecated 0.6
      */
     protected function obtEntero($valor) {
+
         return $this->entero($valor);
     }
 
@@ -348,6 +353,7 @@ class Controller {
      * @since 1.5
      */
     protected function entero($valor) {
+
         if (!empty($valor)) {
             $valor = filter_var($valor, FILTER_VALIDATE_INT);
 
@@ -367,6 +373,7 @@ class Controller {
      * @since 0.1
      */
     protected function decimal($valor) {
+
         if (!empty($valor) and is_float($valor)) {
             return $valor;
         }
@@ -383,6 +390,7 @@ class Controller {
      * @method process
      */
     protected function process() {
+
         if (isset($_GET['form'])) {
             $nombreForm = Cadenas::upperCamelCase($_GET['form']);
             $tipoForm = 1;
@@ -425,14 +433,15 @@ class Controller {
      * @method setUrl
      */
     protected function _setUrl($url) {
+
         $this->url = $url;
     }
 
     protected function obtPost($param) {
 
-        if (isset($this->post[ $param ])) {
+        if (isset($this->post[$param])) {
 
-            return $this->post[ $param ];
+            return $this->post[$param];
         } else {
             return FALSE;
         }
@@ -446,9 +455,10 @@ class Controller {
      *
      */
     protected function get($param = "") {
+
         if (!empty($param)) {
-            if (isset($this->get[ $param ]))
-                return $this->get[ $param ];
+            if (isset($this->get[$param]))
+                return $this->get[$param];
             else
                 return FALSE;
         } else return $_GET;
@@ -471,12 +481,12 @@ class Controller {
             return $_POST;
         } elseif ($nuevoValor !== "") {
 
-            $this->post[ $param ] = $nuevoValor;
+            $this->post[$param] = $nuevoValor;
 
             return $this;
         } else
-            if (isset($this->post[ $param ]) or array_key_exists($param, $_POST)) {
-                return $this->post[ $param ];
+            if (isset($this->post[$param]) or array_key_exists($param, $_POST)) {
+                return $this->post[$param];
             }
 
         return FALSE;
@@ -495,9 +505,9 @@ class Controller {
         if (empty($param)) {
             return $_REQUEST;
         } elseif ($nuevoValor != "") {
-            $this->request[ $param ] = $nuevoValor;
-        } elseif (isset($this->request[ $param ]) or array_key_exists($param, $this->request)) {
-            return $this->request[ $param ];
+            $this->request[$param] = $nuevoValor;
+        } elseif (isset($this->request[$param]) or array_key_exists($param, $this->request)) {
+            return $this->request[$param];
         }
 
         return FALSE;
@@ -510,7 +520,8 @@ class Controller {
      * @method urlActual
      */
     protected function urlActual($valor = 1) {
-        $quienLlama = debug_backtrace(NULL, $valor + 1)[ $valor ]['function'];
+
+        $quienLlama = debug_backtrace(NULL, $valor + 1)[$valor]['function'];
 
         return $this->_urlBase . $this->urlController() . $this->convertirNombreAUrl($quienLlama) . "/";
     }
@@ -526,6 +537,7 @@ class Controller {
      * @return string $url
      */
     static function convertirNombreAUrl($nombre) {
+
         $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $nombre, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         return strtolower(implode("-", $coincidencias));
@@ -589,6 +601,7 @@ class Controller {
     }
 
     protected function urlModulo() {
+
         if (!empty($this->_modulo)) return $this->obtURLApp() . strtolower($this->_modulo) . "/";
         else return FALSE;
 
@@ -604,12 +617,10 @@ class Controller {
      *
      * @return string $url
      */
-<<<<<<< HEAD
-    protected function getUrl($metodo = "", $data = []) {
-=======
+
     protected function getUrl($metodo = "", $data = [])
     {
->>>>>>> 0.6-formularios
+
         if (!empty($metodo)) {
 
             $url = explode(".", $metodo);
@@ -776,11 +787,9 @@ class Controller {
 
                 }
             } else {
-<<<<<<< HEAD
-                $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-=======
+
                 $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
->>>>>>> 0.6-formularios
+
                 $arrayModel = [];
                 foreach ($words as $key => $word) {
                     if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {
@@ -932,9 +941,16 @@ class Controller {
         // $this->establecerAtributos($data);
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $this->dv->{$key} = $value;
+                $this->dv-> {
+
+$key
+}
+
+ =
+$value;
             }
-        } else $this->dv->{$data} = $valor;
+        } else $this->dv->{
+    $data} = $valor;
     }
 
 
