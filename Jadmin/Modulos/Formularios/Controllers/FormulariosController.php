@@ -56,7 +56,7 @@ class FormulariosController extends FController {
                         $formsInvalidos[] = $formulario;
                     }
                 } else {
-                    unset($data[ $index ]);
+                    unset($data[$index]);
                 }
             }
 
@@ -64,11 +64,11 @@ class FormulariosController extends FController {
 
         $params = [
             'titulos' => ['nombre',
-                          'estructura',
-                          'ID',
-                          'Clave Primaria',
-                          'Total Campos',
-                          'Modulo'
+                'estructura',
+                'ID',
+                'Clave Primaria',
+                'Total Campos',
+                'Modulo'
             ]
         ];
 
@@ -77,34 +77,34 @@ class FormulariosController extends FController {
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
-                                  ['span'  => 'fa fa-edit',
-                                   'title' => "Editar",
-                                   'href'  => $this->obtUrl('gestion', ['{clave}',
-                                                                        '{modulo}'
-                                   ])
-                                  ],
-                                  ['span'  => 'fa fa-plus-square-o',
-                                   'title' => 'Editar Campos',
-                                   'href'  => $this->obtUrl('campos.gestion',
-                                                            ['{clave}',
-                                                             '{modulo}'
-                                                            ])
-                                  ],
-                                  ['span'        => 'fa fa-trash',
-                                   'title'       => "Eliminar Formulario",
-                                   'href'        => $this->obtUrl('eliminar', ['{clave}']),
-                                   'data-jvista' => 'confirm',
-                                   'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'
-                                  ],
+            ['span'  => 'fa fa-edit',
+             'title' => "Editar",
+             'href'  => $this->obtUrl('gestion', ['{clave}',
+                 '{modulo}'
+             ])
+            ],
+            ['span'  => 'fa fa-plus-square-o',
+             'title' => 'Editar Campos',
+             'href'  => $this->obtUrl('campos.gestion',
+                 ['{clave}',
+                     '{modulo}'
+                 ])
+            ],
+            ['span'        => 'fa fa-trash',
+             'title'       => "Eliminar Formulario",
+             'href'        => $this->obtUrl('eliminar', ['{clave}']),
+             'data-jvista' => 'confirm',
+             'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'
+            ],
 
-                              ]);
+        ]);
         $jvista->acciones([
-                              'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
+            'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
 
-                          ]);
+        ]);
         $this->data([
-                        'vista' => $jvista->render()
-                    ]);
+            'vista' => $jvista->render()
+        ]);
 
     }
 
@@ -142,14 +142,14 @@ class FormulariosController extends FController {
         if ($modulo and array_key_exists($modulo, $modulos)) {
             $archivos = $this->_procesarModulo($modulo);
             if ($archivos) {
-                $coleccion[ $modulo ] = $archivos;
+                $coleccion[$modulo] = $archivos;
             }
 
         } else {
             foreach ($modulos as $modulo) {
                 $archivos = $this->_procesarModulo($modulo);
                 if ($archivos) {
-                    $coleccion[ $modulo ] = $archivos;
+                    $coleccion[$modulo] = $archivos;
                 }
 
             }
@@ -236,7 +236,12 @@ class FormulariosController extends FController {
                 ), true
             );
         if ($modulo) {
-            $form->opcion($modulo)->attr('selected', 'selected');
+
+            $selector = $form->campo('modulo')->opcion(strtolower($modulo));
+            if ($selector) {
+                $selector->attr('selected', 'selected');
+            }
+
         }
 
 
@@ -253,7 +258,7 @@ class FormulariosController extends FController {
                     $this->redireccionar($this->obtUrl(
                         'Campos.gestion',
                         [$this->_formulario->identificador,
-                         $modulo
+                            $modulo
                         ]
                     ));
                 }
@@ -264,8 +269,8 @@ class FormulariosController extends FController {
         }
 
         $this->data([
-                        'form' => $form->render()
-                    ]);
+            'form' => $form->render()
+        ]);
 
     }
 

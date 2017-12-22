@@ -65,6 +65,7 @@ class Select extends InputBase implements SeleccionInterface {
     function opcion($opcion) {
 
         $salida = FALSE;
+
         if (array_key_exists($opcion, $this->_opciones)) {
             $salida = $this->_selectoresOpcion[$opcion];
         } else if (in_array($opcion, $this->_opciones)) {

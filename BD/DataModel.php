@@ -2,12 +2,12 @@
 /**
  * Clase Padre de modelos
  *
- * @internal Encargada de todo el manejo y logica para el ORM del Framework
- * @author Julio Rodriguez
- * @package Framework
+ * @internal   Encargada de todo el manejo y logica para el ORM del Framework
+ * @author     Julio Rodriguez
+ * @package    Framework
  * @subpackage BD
- * @version 01
- * @category Model
+ * @version    01
+ * @category   Model
  */
 
 namespace Jida\BD;
@@ -41,6 +41,7 @@ class DataModel {
      *
      * Si se define un prefijo "r" el objeto "object" intentara buscar
      * los registros en la tabla "r_object"
+     *
      * @var $prefijoBD
      */
     protected $prefijoBD = PREFIJO_TABLA;
@@ -55,6 +56,7 @@ class DataModel {
 
     /**
      * Permite registrar validaciones para registros unicos
+     *
      * @var array $unico
      * @example ['nombre',['valor1','valor2'],'valor3'];
      */
@@ -64,8 +66,9 @@ class DataModel {
 
     /**
      * Arreglo que define las relaciones uno a uno del objeto
+     *
      * @var $tieneUno
-     * @access protected
+     * @access  protected
      * @example [
      *
      * 'objetoRelacion',
@@ -80,6 +83,7 @@ class DataModel {
 
     /**
      * Arreglo que define las relaciones uno a muchos de un objeto
+     *
      * @var array $tieneMuchos
      */
     protected $tieneMuchos = [];
@@ -93,6 +97,7 @@ class DataModel {
     protected $pertenece = [];
     /**
      * Registra la relacion inversa Uno a Muchos
+     *
      * @property $pertenece
      * @access protected
      *
@@ -102,6 +107,7 @@ class DataModel {
 
     /**
      * Consulta de base de datos construida
+     *
      * @var $query
      */
     private $query;
@@ -111,6 +117,7 @@ class DataModel {
     private $nivelActualORM = 0;
     /**
      * Nombre de la Clave primaria de base de datos
+     *
      * @var string $pk
      */
     protected $pk;
@@ -118,20 +125,23 @@ class DataModel {
     private $tablaQuery;
     /**
      * Objeto de conexión a Base de datos
+     *
      * @var object $bd
      */
     protected $bd;
     /**
      * Define la configuración a usar para la conexión a base de datos
+     *
      * @internal Este valor debe corresponder a una propiedad declarada
      * en el objeto \App\Config\BD
      *
      * @var string $configuracionBD
-     * @access protected
+     * @access   protected
      */
     protected $configuracionBD = "default";
     /**
      * Arreglo con las propiedades de base de datos del objeto
+     *
      * @var array $propiedades
      */
     private $propiedades = [];
@@ -146,12 +156,14 @@ class DataModel {
 
     /**
      * Arreglo que registra las propiedades de la clase que son objetos
+     *
      * @var $propiedadesObjetos = [];
      */
     private $propiedadesObjetos;
 
     /**
      * Permite identificar si la consulta contiene una clausula where;
+     *
      * @var $usoWhere
      */
     private $usoWhere = FALSE;
@@ -170,21 +182,25 @@ class DataModel {
     private $order = "";
     /**
      * Registra el numero de inserciones en el metodo salvarTodo
+     *
      * @var int $totalInserciones
      */
     private $totalInserciones;
     /**
      * Arreglo de ids resultantes de una insercion múltiple
+     *
      * @var $idsResultantes
      */
     private $idsResultantes = [];
     /**
      * Registra los valores iniciales al realizar una instancia de base de datos
+     *
      * @var array $valoresIniciales
      */
     private $valoresIniciales = [];
     /**
      * Nombre de la clase instanciada
+     *
      * @var $_clase
      * @access private
      *
@@ -192,12 +208,14 @@ class DataModel {
     private $_clase;
     /**
      * Instancia de objeto para retorno de data de Base de Datos
+     *
      * @param object $resultBD
      */
     protected $resultBD;
 
     /**
      * Objeto ReflectionClass instanciado con el objeto
+     *
      * @var object Reflection
      */
     private $reflector;
@@ -214,11 +232,13 @@ class DataModel {
     private $_paginaConsultada = 1;
     /**
      * Numero de paginas resultante de una consulta paginada
+     *
      * @var int $_paginas
      */
     private $_paginas;
     /**
      * Nro de registros a mostrar por página
+     *
      * @var int $filasPagina
      * @since 0.5
      */
@@ -228,6 +248,7 @@ class DataModel {
      *
      * Si la consulta se pide paginada, el valor de esta propiedad conrrespondera
      * al total de los registros
+     *
      * @var int $totalRegistros
      * @since 0.5
      */
@@ -276,7 +297,7 @@ class DataModel {
                 if (is_array(func_get_arg(1))) {
                     $this->debug(func_get_arg(1), 1);
                     //$this->nivelORM = array_keys(func_get_arg(1))[0];
-                    $this->nivelActualORM = func_get_arg(1)[ array_keys(func_get_arg(1))[0] ] + 1;
+                    $this->nivelActualORM = func_get_arg(1)[array_keys(func_get_arg(1))[0]] + 1;
                 } else {
                     $this->nivelActualORM = func_get_arg(1) + 1;
                 }
@@ -383,7 +404,7 @@ class DataModel {
         foreach ($this->perteneceAUno as $key => $relacion) {
 
             $rel = new $key();
-            $this->consultaRelaciones[ $key ] = $rel->consulta()->filtro([$relacion['pk'] => $this->{$relacion['pk']}])->obtQuery();
+            $this->consultaRelaciones[$key] = $rel->consulta()->filtro([$relacion['pk'] => $this->{$relacion['pk']}])->obtQuery();
 
         }
 
@@ -410,7 +431,7 @@ class DataModel {
                 if ($info['totalRegistros'] > 0) {
 
                     foreach ($info['result'] as $key => $value) {
-                        $this->{$claseSola}[ $key ] = $value;
+                        $this->{$claseSola}[$key] = $value;
 
                     }
                 }
@@ -497,7 +518,7 @@ class DataModel {
                 $objRelacion->consulta()->filtro([$this->pk => $this->{$this->pk}]);
             }
 
-            $this->consultaRelaciones[ $nombreRelacion ] = $objRelacion->obtQuery();
+            $this->consultaRelaciones[$nombreRelacion] = $objRelacion->obtQuery();
         }
 
         return $this;
@@ -512,6 +533,7 @@ class DataModel {
      * @method
      */
     private function obtTieneUno() {
+
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
         foreach ($this->tieneUno as $key => $relacion) {
 
@@ -523,7 +545,7 @@ class DataModel {
             if (is_string($relacion) and class_exists($relacion)) {
 
                 $rel = new $relacion();
-                $this->consultaRelaciones[ $relacion ] = $rel->consulta()->filtro([$this->pk => $this->{$this->pk}])->obtQuery();
+                $this->consultaRelaciones[$relacion] = $rel->consulta()->filtro([$this->pk => $this->{$this->pk}])->obtQuery();
 
 
             } elseif (is_string($key) and class_exists($key)) {
@@ -531,7 +553,7 @@ class DataModel {
 
                 if (array_key_exists('fk', $relacion)) {
 
-                    $this->consultaRelaciones[ $key ] = $rel->consulta()->filtro([$rel->pk => $this->{$relacion['fk']}])->obtQuery();
+                    $this->consultaRelaciones[$key] = $rel->consulta()->filtro([$rel->pk => $this->{$relacion['fk']}])->obtQuery();
 
                 }
 
@@ -545,9 +567,11 @@ class DataModel {
     /**
      * Genera las consultas para las relaciones MaN
      * @method obtPertenece
+     *
      * @since 0.5
      */
     private function obtPertenece() {
+
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
 
         foreach ($this->pertenece as $nombreRelacion => $data) {
@@ -563,7 +587,7 @@ class DataModel {
                     $objRelacion->join($relacion, $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}]);
                 }
 
-                $this->consultaRelaciones[ $nombreRelacion ] = $objRelacion->obtQuery();
+                $this->consultaRelaciones[$nombreRelacion] = $objRelacion->obtQuery();
             }
         }
 
@@ -583,6 +607,7 @@ class DataModel {
     /**
      * Inicializa un objeto a partir de Base de Datos
      * @method inicializarObjeto
+     *
      * @param int $id Identificador unico del registro;
      */
     private function instanciarObjeto($id, $data = []) {
@@ -605,6 +630,7 @@ class DataModel {
     }//fin función inicializarObjeto
 
     function __obtConsultaInstancia($id) {
+
         return $this->consulta()->filtro([$this->pk => $id]);
     }
 
@@ -645,13 +671,14 @@ class DataModel {
     }
 
     private function identificarObjetosRelacion() {
+
         foreach ($this->propiedades as $prop => $value) {
             if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
 
                 $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
                 if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto, $this->tieneUno))
-                    $this->tieneUno[ $objeto ] = ['obj' => $objeto,
-                                                  'pk' => $prop
+                    $this->tieneUno[$objeto] = ['obj' => $objeto,
+                                                'pk'  => $prop
                     ];
             }
         }
@@ -684,7 +711,7 @@ class DataModel {
                         } else {
                             $this->$objeto = new $objeto(NULL, 2);
                         }
-                        $this->pertenece[ $objeto ] = $this->$objeto;
+                        $this->pertenece[$objeto] = $this->$objeto;
 
                     }
                     //$this->propiedadesObjetos[$prop]=new $objeto();
@@ -696,9 +723,11 @@ class DataModel {
     /**
      * Permite acceder a propiedades privadas o protegidas del objeto instanciado
      * @method __get()
+     *
      * @param string $propiedad Nombre de la propiedad a obtener
      */
     function __get($propiedad) {
+
         if (property_exists($this, $propiedad)) {
 
             return $this->$propiedad;
@@ -708,6 +737,7 @@ class DataModel {
     }
 
     function __establecerAtributos($arr) {
+
         $this->establecerAtributos($arr, $this->_clase);
 
         return $this;
@@ -750,13 +780,14 @@ class DataModel {
      * @return array $arrayPropiedades Arreglo con propiedades publicas
      */
     private function obtenerPropiedadesObjeto() {
+
         $this->reflector = new ReflectionClass($this->_clase);
         $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
         $arrayPropiedades = [];
 
         foreach ($propiedades as $propiedad) {
             if (!$propiedad->isStatic()) {
-                $arrayPropiedades[ $propiedad->getName() ] = $propiedad->getValue($this);
+                $arrayPropiedades[$propiedad->getName()] = $propiedad->getValue($this);
             }
         }
         $this->propiedades = $arrayPropiedades;
@@ -768,7 +799,8 @@ class DataModel {
     /**
      * Agrega la union de campos al query
      * @method join
-     * @param string $clase tabla o modelo con el que se desea unir
+     *
+     * @param string $clase  tabla o modelo con el que se desea unir
      * @param mixed  $campos Campo o Campos a solicitar de la tabla join
      */
     function join($clase, $campos = "", $data = [], $tipoJoin = "") {
@@ -815,7 +847,7 @@ class DataModel {
                 for ($i = 0; $i < count($campos); ++$i) {
                     if ($i > 0)
                         $camposJoin .= ", ";
-                    $camposJoin .= $tablaJoin . "." . $campos[ $i ];
+                    $camposJoin .= $tablaJoin . "." . $campos[$i];
                 }
             } else {
                 $camposJoin = $campos;
@@ -841,8 +873,9 @@ class DataModel {
     /**
      * Emula el in de base de datos
      * @method in
+     *
      * @var        $filtro Arreglo de campos a filtrar
-     * @var string $clave [opcional] Campo para realizar clausula, si se omite
+     * @var string $clave  [opcional] Campo para realizar clausula, si se omite
      * será tomada la clave primaria
      * @return object $this Objeto instanciado
      */
@@ -866,11 +899,13 @@ class DataModel {
     }
 
     function consultaSola() {
+
         if (empty($campos)) {
             $campos = array_keys($this->propiedades);
         }
         if (is_array($campos)) {
             array_walk($campos, function (&$key, $valor, $tabla) {
+
                 $key = $tabla . "." . $key;
             }, $this->tablaQuery);
 
@@ -888,13 +923,15 @@ class DataModel {
     /**
      * Funcion para obtener datos de una tabla
      * @method consulta
+     *
      * @param array $campos Nombre de los campos a obtener
      * @param mixed $pagina [Opcional] Si es pasado algun valor, la
-     * consulta será paginada segun los valores de las propiedasdes
-     * $filasPagina
+     *                      consulta será paginada segun los valores de las propiedasdes
+     *                      $filasPagina
      *
      */
     function consulta($campos = "", $nroPaginacion = FALSE) {
+
         $banderaJoin = FALSE;
         $join = "";
 
@@ -905,6 +942,7 @@ class DataModel {
         if (is_array($campos)) {
 
             array_walk($campos, function (&$key, $valor, $tabla) {
+
                 $key = $tabla . "." . $key;
             }, $this->tablaQuery);
 
@@ -924,6 +962,7 @@ class DataModel {
     }
 
     function query($campos = [], $tabla) {
+
         if (count($campos) < 1)
             $campos = ["*"];
         $this->query = "SELECT ";
@@ -939,9 +978,11 @@ class DataModel {
      * Obtiene el nombre de la clave primaria de la tabla de base de datos
      *
      * El nombre es construido en base al estandard
+     *
      * @var obtenerpk
      */
     private function obtenerpk() {
+
         $clase = $this->_clase;
         if (!empty($clase)) {
             $pk = ($this->pk != "") ? $this->pk : "id_" . $clase;
@@ -954,9 +995,11 @@ class DataModel {
      * Realiza llamado a los objetos de relacion existentes
      * @method __call
      * @method
+     *
      * @deprecated
      */
     function __call($rel, $campos) {
+
         //chequear esto.
         if ($rel == 'initBD') {
             $this->initBD($campos[0]);
@@ -990,7 +1033,7 @@ class DataModel {
                 $obj = new $class(NULL, 1);
                 if (method_exists($obj, 'consulta')) {
                     if (!in_array($class, $this->tieneUno)) {
-                        $pkRelacion = $this->tieneUno[ $class ]['fk'];
+                        $pkRelacion = $this->tieneUno[$class]['fk'];
                     } else {
                         $pkRelacion = $obj->__get('pk');
                     }
@@ -1019,9 +1062,10 @@ class DataModel {
      *
      * @method agregar
      * @param string $relacion Nombre de la relacion. ejemplo Usuario -> Perfil
-     * @param array  $datos Datos a guardar
+     * @param array  $datos    Datos a guardar
      */
     function agregar($relacion, $datos) {
+
         if (in_array($relacion, $this->tieneMuchos)) {
             $fk = $this->pk;
             $rel = new $relacion();
@@ -1042,9 +1086,11 @@ class DataModel {
      *
      * @method obtener
      * @param string Nombre de la relacion
+     *
      * @return array $datos Datos de la consulta
      */
     function obtener($relacion) {
+
         if (class_exists($relacion)) {
             $rel = new $relacion();
             $pk = $this->pk;
@@ -1062,6 +1108,7 @@ class DataModel {
      * @method where
      */
     private function where($condicion = " and") {
+
         if (!$this->usoWhere) {
             $this->query .= " where ";
             $this->usoWhere = TRUE;
@@ -1073,13 +1120,16 @@ class DataModel {
     /**
      * Permite realizar un filtro de la consulta a realizar
      * @method filtro
+     *
      * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
-     * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
+     * @param array $arrayOr     [opcional] Permite definir una condicion or de multiples valores
+     *
      * @return object $this Objeto DataModel instanciado
      *
      *
      */
     function filtro($arrayFiltro = [], $arrayOr = []) {
+
         $this->where();
         if (is_array($arrayFiltro)) {
             $i = 0;
@@ -1133,7 +1183,9 @@ class DataModel {
     /**
      * Realiza la agrupación de la consulta
      * @method agrupar
+     *
      * @param mixed $agrupacion Campo o conjunto de campos por los que se desea agrupar
+     *
      * @return object $this Objeto instanciado
      */
     function agrupar($agrupacion) {
@@ -1148,9 +1200,11 @@ class DataModel {
     /**
      * Alias de metodo Consulta
      * @method select
+     *
      * @see self::consulta
      */
     function select($campos = "") {
+
         $this->consulta($campos);
 
         return $this;
@@ -1162,7 +1216,7 @@ class DataModel {
      *
      * @method order
      * @param mixed  $order nombre de campo o arreglo de campos por los que se desea ordenar
-     * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
+     * @param string $type  Tipo de ordenado "asc" o "desc" por default es asc
      */
     function order($order, $type = 'asc') {
 
@@ -1176,6 +1230,7 @@ class DataModel {
     }
 
     function condicion($cond) {
+
         $this->condicion = $cond;
 
         return $this;
@@ -1184,11 +1239,13 @@ class DataModel {
     /**
      * Permite hacer una consulta like
      * @method like
+     *
      * @param array  $filtro
      * @param string $condicion or u and
-     * @param int    $tipo 1=intermedio,2=inicio,3=final
+     * @param int    $tipo      1=intermedio,2=inicio,3=final
      */
     function like($arrayFiltro, $condicion = "or", $tipo = 1) {
+
         $this->where($this->condicion);
 
         if (is_array($arrayFiltro)) {
@@ -1253,9 +1310,11 @@ class DataModel {
      * Funcion que recibe el campo y la expresion regular para consultar.
      * $arrayFiltro contiene el campo a consultar y la expresion regular a utilizar
      * @method regExp
+     *
      * @param array $arrayFiltro
      */
     function regExp($arrayFiltro) {
+
         $this->where();
 
         foreach ($arrayFiltro as $campo => $valor)
@@ -1268,6 +1327,7 @@ class DataModel {
      * Retorna una matriz como resultado de una consulta realizada
      *
      * @param string $key [opcional] campo de la consulta a usar como clave en la matriz resultante
+     *
      * @return array $data Matriz resultante
      * @see BDObject::obtenerDataCompleta
      *
@@ -1301,6 +1361,7 @@ class DataModel {
     /**
      * Convierte una consulta en una consulta paginada
      * @method _paginarConsulta
+     *
      * @since 0.5
      */
     private function _paginarConsulta($key) {
@@ -1334,19 +1395,22 @@ class DataModel {
      * Retorna la data resultante de una consulta paginada
      * Retorna un arreglo con los siguientes keys : filasPagina, registros, pagina, paginas
      * @method dataPaginacion
+     *
      * @return array
      * @since 0.5
      */
     function dataPaginacion() {
-        return ['consulta' => $this->query,
-                'filasPagina' => $this->filasPagina,
-                'registros' => $this->_totalRegistros,
+
+        return ['consulta'     => $this->query,
+                'filasPagina'  => $this->filasPagina,
+                'registros'    => $this->_totalRegistros,
                 'paginaActual' => $this->_paginaConsultada,
-                'paginas' => $this->_paginas
+                'paginas'      => $this->_paginas
         ];
     }
 
     function addConsulta() {
+
         $this->query .= ";";
         $this->consultaMultiple = TRUE;
         $this->consulta();
@@ -1358,11 +1422,13 @@ class DataModel {
      * Retorna el resultado de multiples consultas
      *
      * Funcional para trabajar con Mysql. Retorna el resultado de multiples consultas solicitadas
+     *
      * @see Mysql::mysqli_multi_query
      * @method obtMultiple
      *
      */
     function obtMultiple($keys) {
+
         $this->consultaMultiple = FALSE;
 
         return $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery($this->query, 2), $keys);
@@ -1372,10 +1438,13 @@ class DataModel {
     /**
      * Retorna todos los registros de Base de datos
      * @method obtenerTodo
+     *
      * @param string $key valor a usar de key en la matriz devuelta
+     *
      * @return array $data
      */
     function obtenerTodo($key = "", $order = "") {
+
         if (empty($order))
             $order = $this->pk;
 
@@ -1387,6 +1456,7 @@ class DataModel {
      * @method fila
      */
     function fila() {
+
         if (!empty($this->order))
             $this->query .= " " . $this->order;
 
@@ -1413,7 +1483,7 @@ class DataModel {
         }
         $this->obtenerPropiedadesObjeto();
 
-        if (empty($this->propiedades[ $this->pk ])) {
+        if (empty($this->propiedades[$this->pk])) {
 
             return $this->insertar();
 
@@ -1430,12 +1500,15 @@ class DataModel {
      *
      * Si no se pasa ningun elemento se eliminará el objeto instanciado.
      * @method eliminar
-     * @param        array [$arrayDatos ] Arreglo de valores a ser eliminados
+     *
+     * @param        array  [$arrayDatos ] Arreglo de valores a ser eliminados
      * @param string $campo Campo o propiedad por medio de la cual se eliminaran los objetos, si no es pasado sera usada
-     * la clave primaria.
+     *                      la clave primaria.
+     *
      * @return boolean
      */
     function eliminar($arrayDatos = "", $campo = "", $cond = "and") {
+
         $totalParams = func_num_args();
         if (empty($campo))
             $campo = $this->pk;
@@ -1484,7 +1557,8 @@ class DataModel {
     /**
      * Permite instanciar el objeto por medio de una propiedad;
      * @method getBy
-     * @param mixed  $valor Patrón de busqueda
+     *
+     * @param mixed  $valor     Patrón de busqueda
      * @param string $propiedad de busqueda
      */
     function obtenerBy($valor, $property = "") {
@@ -1523,10 +1597,12 @@ class DataModel {
     /**
      * Retorna un arreglo con las propiedades publicas del objeto
      * @method objectAsArray Alias obtenerPropiedades
+     *
      * @deprecated
      * @return array
      */
     function objectAsArray() {
+
         $this->obtenerPropiedadesObjeto();
 
         return $this->propiedades;
@@ -1535,15 +1611,17 @@ class DataModel {
     /**
      * Retorna un arreglo con las propiedades publicas del objeto
      * @method obtenerPropiedades
+     *
      * @return array Arreglo con propiedades publicas del objeto
      */
     function obtenerPropiedades($relaciones = FALSE) {
+
         $this->obtenerPropiedadesObjeto();
         $propiedadesRelaciones = [];
         if ($relaciones !== FALSE) {
             foreach ($this->perteneceAUno as $key => $valores) {
                 if (property_exists($this, $key)) {
-                    $propiedadesRelaciones[ $key ] = $this->{$key}->obtenerPropiedades();
+                    $propiedadesRelaciones[$key] = $this->{$key}->obtenerPropiedades();
                 }
 
             }
@@ -1555,12 +1633,15 @@ class DataModel {
     /**
      * Inserta multiples registros en Base de Datos
      * @method crearTodo
-     * @param array $data Data a insertar
+     *
+     * @param array $data   Data a insertar
      * @param       boolean [$insertPK] bandera para indicarle al metodo si incluye la clave primaria en el query
+     *
      * @return object ResultBD
      * @see ResultBD
      */
     function salvarTodo($data, $insertPK = FALSE) {
+
         if (is_array($data)) {
 
             $insert = "INSERT INTO " . $this->tablaBD . " ";
@@ -1598,6 +1679,7 @@ class DataModel {
      * @return array $idsInsertados
      */
     private function armarIdsInsertados() {
+
         $lastId = $this->bd->idResult;
         $this->idsResultantes = [];
         for ($i = 0; $i < $this->totalInserciones; ++$i) {
@@ -1608,12 +1690,14 @@ class DataModel {
     }
 
     function obtIdsResultados() {
+
         return $this->idsResultantes;
     }
 
     /**
      * Crea un nuevo registro unico
      * @method insertar
+     *
      * @param array $data Data a insertar
      */
     private function insertar($data = "") {
@@ -1647,11 +1731,12 @@ class DataModel {
      * @return array $campos
      */
     private function obtenerCamposQuery($campos = "", $unsetPK = TRUE) {
+
         if (empty($campos) or !is_array($campos))
             $campos = $this->propiedades;
 
         if ($unsetPK)
-            unset($campos[ $this->pk ]);
+            unset($campos[$this->pk]);
 
         $campos = array_keys($campos);
         if ($this->registroMomentoGuardado) {
@@ -1790,7 +1875,8 @@ class DataModel {
 
     /**
      * Limita la consulta a base de datos
-     * @param int $limit campo sobre el que empieza la consulta
+     *
+     * @param int $limit  campo sobre el que empieza la consulta
      * @param int $offset limite de registros a traer
      */
     function limit($limit = 100, $offset = 0) {
@@ -1808,6 +1894,7 @@ class DataModel {
      * Valida las restricciones unicas creadas por medio del array unico antes
      * de realizar una inserción.
      * @method verificarUnicos
+     *
      * @see self::unicos
      */
     private function verificarUnicos($datos = "") {
@@ -1824,13 +1911,13 @@ class DataModel {
                         if ($i > 0)
                             $v .= " and ";
                         if (!empty($valor)) {
-                            $v .= "$valor='" . $this->propiedades[ $valor ] . "'";
+                            $v .= "$valor='" . $this->propiedades[$valor] . "'";
                             ++$i;
                         }
                     }
                     $filtro[] = $v . " ) ";
                 } else {
-                    $filtro[] = "$valorUnico='" . $this->propiedades[ $valorUnico ] . "'";
+                    $filtro[] = "$valorUnico='" . $this->propiedades[$valorUnico] . "'";
                 }
             }
 
@@ -1855,11 +1942,12 @@ class DataModel {
      * @method obtenerPlural
      */
     private function obtenerPlural($palabra) {
+
         $vocales = ['a',
-                    'e',
-                    'i',
-                    'o',
-                    'u'
+            'e',
+            'i',
+            'o',
+            'u'
         ];
         $ultima = substr($palabra, -1);
         if (in_array($ultima, $vocales)) {
@@ -1871,6 +1959,7 @@ class DataModel {
     }
 
     private function _obtenerSingular($palabra) {
+
         $arrayPalabra = [];
         $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
@@ -1894,10 +1983,12 @@ class DataModel {
      * @return object ResultBD();
      */
     function getResult() {
+
         return $this->resultBD;
     }
 
     function envolverFiltro() {
+
         $consulta = explode('where', $this->query);
         if (count($consulta > 0))
             $this->query = $consulta[0] . ' where (' . $consulta[1] . ')';
@@ -1914,6 +2005,7 @@ class DataModel {
      * @method totalRegistros
      */
     function totalRegistros($filtro = FALSE) {
+
         $this->query = "Select count(*) as total from " . $this->tablaBD . " ";
         if ($filtro)
             return $this; else
@@ -1921,6 +2013,7 @@ class DataModel {
     }
 
     private function debug($data, $string = TRUE, $condicion = FALSE) {
+
         if ($this->debug) {
             ($string === TRUE) ? Debug::string($data, $condicion) : Debug::mostrarArray($data, $condicion);
         }
@@ -1931,9 +2024,11 @@ class DataModel {
     /**
      * Genera una consulta paginada
      * @method paginar
+     *
      * @since 0.5
      */
     function paginar($pagina) {
+
         $this->_establecerPaginacion($pagina);
 
         return $this;
@@ -1942,9 +2037,11 @@ class DataModel {
     /**
      * Activa la configuracion para una consulta paginada
      * @method pagina
+     *
      * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
      */
     private function _establecerPaginacion($nroPagina = 1) {
+
         $this->_paginaConsultada = $nroPagina;
         $this->_paginar = TRUE;
 
@@ -1952,17 +2049,20 @@ class DataModel {
     }
 
     function imprimir($propiedad = "query", $exit = 1) {
+
         Debug::string($this->{$propiedad}, $exit);
     }
 
     /**
      * Utiliza la clausula between de mysql
      * @method entre
+     *
      * @param string $campo Nombre del campo a usar
-     * @param mixed  $ini Valor inicial
-     * @param mixed  $fin Valor final
+     * @param mixed  $ini   Valor inicial
+     * @param mixed  $fin   Valor final
      */
     function entre($campo, $ini, $fin) {
+
         $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
 
     }
