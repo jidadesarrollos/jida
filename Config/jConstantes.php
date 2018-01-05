@@ -203,10 +203,28 @@ if (!defined('URL_HTDOCS_JADMIN')) define('URL_HTDOCS_JADMIN', $urlApp . '/Frame
  */
 if (!defined('CODIFICAR_HTML_BD')) define('CODIFICAR_HTML_BD', FALSE);
 
-if (!defined('BD_REQUERIDA')) define('BD_REQUERIDA', TRUE);
+if (!defined('BD_REQUERIDA')) define('BD_REQUERIDA', FALSE);
 /**
  * Determina
  */
 if (!defined('PATH_APP')) define('PATH_APP', '/');
 
 $GLOBALS['idiomas'] = ['es' => 'Espa&ntilde;ol'];
+
+if(!defined('URL_APP_PUBLICA')) define('URL_APP_PUBLICA','');
+if(!defined('URL_FB')) define('URL_FB','');
+if(!defined('URL_TWITTER')) define('URL_TWITTER','');
+if(!defined('URL_IMAGENES')) define('URL_IMAGENES','');
+if(!defined('URL_MEDIA_CORREOS')) define('URL_MEDIA_CORREOS','');
+if(!defined('URL_GOOGLE')) define('URL_GOOGLE','');
+if(!defined('URL_INSTAGRAM')) define('URL_INSTAGRAM','');
+if(!defined('CUENTA_TWITTER')) define('CUENTA_TWITTER','');
+if(!defined('CUENTA_INSTAGRAM')) define('CUENTA_INSTAGRAM','');
+/**
+ * IMAGENES
+ */
+
+if(!defined('IMG_TAM_LG')) define('IMG_TAM_LG', '1200');
+if(!defined('IMG_TAM_MD')) define('IMG_TAM_MD', '800');
+if(!defined('IMG_TAM_SM')) define('IMG_TAM_SM', '400');
+if(!defined('IMG_TAM_XS')) define('IMG_TAM_XS', '140');

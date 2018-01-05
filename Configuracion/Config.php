@@ -38,7 +38,7 @@ class Config {
      * @var $idiomas
      * @access protected
      */
-    var $idiomas = [];
+    var $idiomas = ['es'];
 
 
     /**

@@ -198,13 +198,9 @@ class JidaController {
             /**
              * Seteo de zona horaria
              */
-            date_default_timezone_set(ZONA_HORARIA);
-            /**
-             * validacion lenguajes existentes
-             */
 
-            Helpers\Sesion::destruir('__formValidacion');
-            $_SERVER = array_merge($_SERVER, getallheaders());
+
+
 
             $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
 
