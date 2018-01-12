@@ -9,13 +9,14 @@
  *
  * Hace uso de la API de PHP Mysqli
  *
- * @author Julio Rodriguez <jirc48@hotmail.com>
- * @version 1.4 03/04/2014
- * @package framework
+ * @author   Julio Rodriguez <jirc48@hotmail.com>
+ * @version  1.4 03/04/2014
+ * @package  framework
  *
  * @category Base de Datos
  *
  */
+
 #require_once 'ConexionBD.class.php';
 #require_once 'BaseDeDatos.interface.php';
 
@@ -27,12 +28,14 @@ use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
 
 class Mysql extends ConexionBD {
+
     var $enTransaccion = FALSE;
     var $valoresReservados = ['current_timestamp',
     ];
     private $transaccionIniciada = FALSE;
     /**
      * Contabiliza total de errores en ejecucion de una transaccion
+     *
      * @var Error
      *
      */
@@ -42,6 +45,7 @@ class Mysql extends ConexionBD {
      * Indica si se debe codificar los valores del query para cambiar los acentos y caracteres
      * especiales al momento de ejecutar la consulta, el valor por defecto es TRUE, sin embargo
      * el DBContainer lo coloca en FALSE para hacer las inserciones
+     *
      * @var boolean $codificarHTML
      * @access public;
      *
@@ -57,6 +61,7 @@ class Mysql extends ConexionBD {
     var $query;
     /**
      * Arreglo que contiene el resultado del query ejecutado
+     *
      * @var $dataResult
      */
     var $dataResult;
@@ -66,6 +71,7 @@ class Mysql extends ConexionBD {
     var $idResult;
     /**
      * Resultado retornado de una sentencia a base de datos
+     *
      * @var string $result
      */
     public $result;
@@ -73,11 +79,13 @@ class Mysql extends ConexionBD {
 
     /**
      * Instacia de la extensión mysql de PHP
+     *
      * @var $mysqli
      */
     private $mysqli;
     /**
      * Define si una conexión está establecida
+     *
      * @var boolean $_conexion
      */
     private $_conexion = FALSE;
@@ -107,11 +115,13 @@ class Mysql extends ConexionBD {
 
     /**
      * Realiza una conexion a base de datos
+     *
      * @internal Es un atajo a la funcion ejecutarQuery
      * @method consulta
-     * @see ejecutarQuery
+     * @see      ejecutarQuery
      */
     function consulta($query, $tipoQuery = 1) {
+
         return $this->ejecutarQuery($query, $tipoQuery);
     }
 
@@ -129,13 +139,14 @@ class Mysql extends ConexionBD {
     /**
      * Ejecuta una consulta a base de datos
      *
-     * @param $query Consulta SQL a ejecutar
+     * @param $query     Consulta SQL a ejecutar
      * @param $tipoQuery Indica si es un query unico o una consulta multiple,
-     * por defecto es 1
-     * En caso de ser una consulta multiple no se devuelve el total de registros
+     *                   por defecto es 1
+     *                   En caso de ser una consulta multiple no se devuelve el total de registros
      *
      */
     function ejecutarQuery($query = "", $tipoQuery = 1) {
+
         if (!empty($query)) {
             $this->query = $query;
         }
@@ -160,7 +171,8 @@ class Mysql extends ConexionBD {
         if (isset($this->result->num_rows))
             $this->totalRegistros = $this->result->num_rows;
 
-        #git$this->cerrarConexion();
+        #$this->cerrarConexion();
+
         return $this->result;
 
     }
@@ -168,9 +180,11 @@ class Mysql extends ConexionBD {
     /**
      * Escapa los caracteres especiales de un string
      * @method escaparString
+     *
      * @deprecated 0.4
      */
     function escaparString($string = "") {
+
         if (!$this->mysqli)
             $this->establecerConexion();
 
@@ -181,20 +195,22 @@ class Mysql extends ConexionBD {
 
     /**
      * Ejecuta una inserción en Base de datos
+     *
      * @param string $nombreTabla
      * @param array  $camposTabla
      * @param array  $valoresCampos
+     *
      * @return array $result
      * @deprecated Solo debe ser usado si se trabaja con clase DBContainer
      *
-     * @see self::insertar
+     * @see        self::insertar
      *
      */
     function insert($nombreTabla, $camposTabla, $valoresCampos, $id, $unico) {
 
         $insert = sprintf("insert into %s (%s) VALUES (%s)", $nombreTabla, implode(', ', $camposTabla), implode(', ', $valoresCampos));
 
-        $result = ["query" => $insert,
+        $result = ["query"       => $insert,
                    'idResultado' => ""
         ];
 
@@ -251,6 +267,7 @@ class Mysql extends ConexionBD {
      * @method insertar
      */
     function insertar($insert) {
+
         $this->query = $insert;
         $this->ejecutarQuery($this->query);
         $this->idResult = $this->mysqli->insert_id;
@@ -264,7 +281,10 @@ class Mysql extends ConexionBD {
      */
     function cerrarConexion() {
 
-        $this->mysqli->close();
+        if ($this->mysqli) {
+            $this->mysqli->close();
+        }
+
     }
 
     function addLimit($limit, $offset, $query = "") {
@@ -277,10 +297,12 @@ class Mysql extends ConexionBD {
     }
 
     function limit($limit, $offset) {
+
         return "limit $offset,$limit";
     }
 
     function obtenerTotalCampos() {
+
         return $this->totalCampos;
 
     }
@@ -290,12 +312,14 @@ class Mysql extends ConexionBD {
      *
      * @method obtenerDataCompleta
      * @param string $query Consulta a base de datos
-     * @param string $key campo que se desee usar como key de la matriz a devolver, si es omitido los
-     * keys serán autonumericos
+     * @param string $key   campo que se desee usar como key de la matriz a devolver, si es omitido los
+     *                      keys serán autonumericos
+     *
      * @return array $dataCompleta
      *
      */
     function obtenerDataCompleta($query = "", $key = "") {
+
         if (is_string($query)) {
             $this->query = ($query == "") ? $this->query : $query;
             $this->ejecutarQuery($this->query);
@@ -311,9 +335,9 @@ class Mysql extends ConexionBD {
                 if (!empty($key)) {
 
                     if ($this->codificarHTML === TRUE) {
-                        $dataCompleta[ $data[ $key ] ] = $data;
+                        $dataCompleta[$data[$key]] = $data;
                     } else {
-                        $dataCompleta[ $data[ $key ] ] = Cadenas::codificarArrayToHTML($data);
+                        $dataCompleta[$data[$key]] = Cadenas::codificarArrayToHTML($data);
                     }
 
                 } else {
@@ -344,6 +368,7 @@ class Mysql extends ConexionBD {
      *
      */
     function obtenerArray($result = "") {
+
         if ($result != "") {
             $this->result = $result;
         }
@@ -429,10 +454,12 @@ class Mysql extends ConexionBD {
      * @author
      */
     function fetchRow() {
+
         return $this->result->fetch_row();
     }
 
     function totalField() {
+
         return $this->totalCampos;
     }
 
@@ -440,9 +467,11 @@ class Mysql extends ConexionBD {
      * Alias FetchField POO
      *
      * Obtiene toda la data de las columnas
+     *
      * @return array
      */
     function obtenerDatosColumnas($result = "") {
+
         if (!empty($result)) {
             $this->result = $result;
         }
@@ -455,14 +484,16 @@ class Mysql extends ConexionBD {
      * un alias, devuelve el alias.
      *
      * @param $result Objeto Result de la consulta
-     * @param $i Indice del campo a consultar
+     * @param $i      Indice del campo a consultar
+     *
      * @return string $name Nombre del campo
      */
     function obtenerNombreCampo($result, $i) {
+
         $datosColms = $this->obtenerDatosColumnas($result);
-        if (empty($datosColms[ $i ]->name))
-            $nombre = $datosColms[ $i ]->orgname; else
-            $nombre = $datosColms[ $i ]->name;
+        if (empty($datosColms[$i]->name))
+            $nombre = $datosColms[$i]->orgname; else
+            $nombre = $datosColms[$i]->name;
 
         return $nombre;
 
@@ -479,7 +510,7 @@ class Mysql extends ConexionBD {
         $tablasBDResult = $this->ejecutarQuery("SHOW TABLES");
         $tablasBD = [];
         while ($tablas = $this->obtenerArray()) {
-            $tablasBD[ $tablas[0] ] = $tablas[0];
+            $tablasBD[$tablas[0]] = $tablas[0];
         }
 
         return $tablasBD;
@@ -489,6 +520,7 @@ class Mysql extends ConexionBD {
 
     /**
      * Verifica si hay mas resultados de una consulta
+     *
      * @see mysqli::more_results
      */
     function checkProximoResultado() {
@@ -501,6 +533,7 @@ class Mysql extends ConexionBD {
      * @method obtenerDataMultiQuery
      */
     function obtenerDataMultiQuery($result = "", $keys = []) {
+
         if (empty($result))
             $result = $this->result;
         $arrayResult = [];
@@ -511,12 +544,12 @@ class Mysql extends ConexionBD {
                 $e = 0;
                 $key = $i;
                 if (array_key_exists($i, $keys))
-                    $key = $keys[ $i ];
+                    $key = $keys[$i];
 
-                $arrayResult[ $key ]['totalRegistros'] = $result->num_rows;
-                $arrayResult[ $key ]['result'] = [];
+                $arrayResult[$key]['totalRegistros'] = $result->num_rows;
+                $arrayResult[$key]['result'] = [];
                 while ($data = $this->obtenerArrayAsociativo($result)) {
-                    $arrayResult[ $key ]['result'][ $e ] = $data;
+                    $arrayResult[$key]['result'][$e] = $data;
                     $e++;
                 }
                 $result->free();
@@ -529,6 +562,7 @@ class Mysql extends ConexionBD {
     }
 
     function __get($propiedad) {
+
         if (property_exists($this, $propiedad)) {
             return $this->$propiedad;
         } else {
@@ -537,6 +571,7 @@ class Mysql extends ConexionBD {
     }
 
     function getValoresReservados() {
+
         return $this->valoresReservados;
     }
 
@@ -547,6 +582,7 @@ class Mysql extends ConexionBD {
      *
      */
     function obtTablasBD($includeS = FALSE) {
+
         $q = "select table_name,table_type, table_collation, create_time
                 from information_schema.tables  where table_schema='" . $this->bd . "'
                 and table_type!='VIEW'";
@@ -561,9 +597,11 @@ class Mysql extends ConexionBD {
     /**
      * Retorna las columnas de una tabla
      * @method obtColumnasTabla
+     *
      * @param array $tabla
      */
     function obtColumnasTabla($tabla) {
+
         $q = "select table_schema,table_name,column_name,data_type,column_type,column_key from
         information_schema.columns where table_schema='" . $this->bd . "' ";
         if (is_array($tabla))

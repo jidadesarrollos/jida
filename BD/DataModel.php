@@ -315,6 +315,8 @@ class DataModel {
         } else {
             $this->instanciarTieneUno()->instanciarTieneMuchos();
         }
+        $this->bd->cerrarConexion();
+
 
     }
 
