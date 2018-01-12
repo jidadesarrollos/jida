@@ -1,7 +1,8 @@
 <?php
 /**
-* Clase para manejo de Traducciones del sitio Web
+ * Clase para manejo de Traducciones del sitio Web
  *
+ * @internal
  * El archivo permite ubicar las cadenas a mostrar en la web, las cuales son buscadas
  * en un archivo [idioma].php, por tanto las cadenas para español deben encontrarse en el archivo
  * "es.php".
@@ -16,181 +17,196 @@
  *  > Los identificadores de cadena pueden tener la estructura que se desee, pero deberán llamarse
  *    de la misma forma.
  * Los
-* @author Julio Rodriguez
-* @package
-* @version
-* @category
-*/
-namespace JComponentes;
-use \Directorios as Directorios;
-class Traductor{
+ * @author Julio Rodriguez
+ * @package
+ * @version
+ * @category
+ */
 
-	private $idiomas=[];
-	private $idiomaActual;
-	private $ubicacion;
-	private $textos;
-	private $path="Aplicacion/traducciones/";
-	private $textosSeccion=[];
-	/**
-	 * Define el nombre del archivo para la seccion de textos
-	 * @see
-	 * @var string $dir
-	 */
-	private $dir;
+namespace Jida\Componentes;
+
+use Jida\Helpers\Directorios as Directorios;
+
+class Traductor {
+
+    private $idiomas = [];
+    private $idiomaActual;
+    private $ubicacion;
+    private $textos;
+    private $path = "Aplicacion/traducciones/";
+    private $textosSeccion = [];
+    /**
+     * Define el nombre del archivo para la seccion de textos
+     * @see
+     * @var string $dir
+     */
+    private $dir;
+
     /**
      * Funcion constructora
      * @method __construct
      */
-    function __construct($idiomaActual,$data = []){
-    	if(array_key_exists('path', $data)){
-    		$this->path= $data['path'];
+    function __construct($idiomaActual, $data = []) {
+        if (array_key_exists('path', $data)) {
+            $this->path = $data['path'];
 
-    	}
-		if(array_key_exists('ubicacion', $data)){
-			$this->ubicacion=$ubicacion;
-		}
+        }
+        if (array_key_exists('ubicacion', $data)) {
+            $this->ubicacion = $ubicacion;
+        }
 
-    	$this->idiomaActual=$idiomaActual;
+        $this->idiomaActual = $idiomaActual;
 
-		$traducciones=[];
-		$file = strtolower($this->idiomaActual).".php";
-		if(file_exists($this->path.$file)){
-			include_once $this->path.$file;
-		}else{
-			throw new \Exception("No existe el archivo de traducciones ".$this->idiomaActual ."en ".$this->path.$file, 950);
+        $traducciones = [];
+        $file = strtolower($this->idiomaActual) . ".php";
+        if (file_exists($this->path . $file)) {
+            include_once $this->path . $file;
 
-		}
+        } else {
+            throw new \Exception("No existe el archivo de traducciones " . $this->idiomaActual . " en " . $this->path . $file, 950);
 
+        }
 
-		$this->textos=$traducciones;
-
-    	if(array_key_exists('idiomas', $GLOBALS)){
-    	$this->idiomas=$GLOBALS['idiomas'];
-    	}else{
-    		throw new \Exception("No se han configurado idiomas para manejar traducciones", 1);
-    	}
-		if(!array_key_exists($this->idiomaActual, $this->idiomas))
-        	throw new \Exception('El idioma '.$this->idiomaActual.' no ha sido cargado', 1);
+        $this->textos = $traducciones;
+        if (array_key_exists('idiomas', $GLOBALS)) {
+            $this->idiomas = $GLOBALS['idiomas'];
+        } else {
+            throw new \Exception("No se han configurado idiomas para manejar traducciones", 1);
+        }
+        if (!array_key_exists($this->idiomaActual, $this->idiomas))
+            throw new \Exception('El idioma ' . $this->idiomaActual . ' no ha sido cargado', 1);
 
     }
 
-    function path($path=""){
-    	if(!empty($path) and Directorios::validar($path)){
-    		$this->path = $path;
-    	}else{
-    		return $this_>path;
-    	}
+    function path($path = "") {
+        if (!empty($path) and Directorios::validar($path)) {
+            $this->path = $path;
+        } else {
+            return $this_ > path;
+        }
     }
 
-	function seleccionarIdioma($idioma){
-		include_once strtolower($idioma).".php";
-		$this->textos=$traducciones;
-	}
-	/**
-	 * Traduce una cadena recibida
-	 * @param string $cadena Cadena string a buscar
-	 * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
-	 */
-	function cadena($cadena,$ubicacion=""){
+    function seleccionarIdioma($idioma) {
+        include_once strtolower($idioma) . ".php";
+        $this->textos = $traducciones;
+    }
+
+    /**
+     * Traduce una cadena recibida
+     * @param string $cadena Cadena string a buscar
+     * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
+     */
+    function cadena($cadena, $ubicacion = "") {
 
 
-		if(empty($ubicacion)) $ubicacion=$this->ubicacion;
+        if (empty($ubicacion))
+            $ubicacion = $this->ubicacion;
 
-		#Debug::mostrarArray($this->textos);
-		if(!empty($ubicacion)){
-			if(array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion]))
-				return $this->textos[$ubicacion][$cadena];
-		}else{
+        #Debug::mostrarArray($this->textos);
+        if (!empty($ubicacion)) {
+            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[ $ubicacion ]))
+                return $this->textos[ $ubicacion ][ $cadena ];
+        } else {
 
-			if(array_key_exists($cadena, $this->textos)) return $this->textos[$cadena];
-		}
+            if (array_key_exists($cadena, $this->textos))
+                return $this->textos[ $cadena ];
+        }
 
-		return 'Indefinido';
+        return 'Indefinido';
 
-	}
-	/**
-	 * Busca la cadena de una seccion especificada
-	 *
-	 * La cadena es buscada en un archivo con el nombre de la seccion que debe tener por ubicacion
-	 * una carpeta con el nombre del idioma. por ejemplo "es/index" y adentro debe haber un arreglo
-	 * llamado $traduccion
-	 * @method seccion
-	 * @param string $seccion
-	 * @param string $cadena
-	 * @param string $ubicaicon
-	 *
-	 */
-	function seccion($cadena,$seccion="",$ubicacion=""){
+    }
 
-		$this->validarSeccion($seccion);
+    /**
+     * Busca la cadena de una seccion especificada
+     *
+     * La cadena es buscada en un archivo con el nombre de la seccion que debe tener por ubicacion
+     * una carpeta con el nombre del idioma. por ejemplo "es/index" y adentro debe haber un arreglo
+     * llamado $traduccion
+     * @method seccion
+     * @param string $seccion
+     * @param string $cadena
+     * @param string $ubicaicon
+     *
+     */
+    function seccion($cadena, $seccion = "", $ubicacion = "") {
+
+        $this->validarSeccion($seccion);
+
+        if (empty($ubicacion))
+            $ubicacion = $this->ubicacion;
 
 
+        if (!empty($ubicacion)) {
+            if (array_key_exists($ubicacion, $this->textosSeccion) and array_key_exists($cadena, $this->textosSeccion[ $ubicacion ]))
+                return $this->textosSeccion[ $ubicacion ][ $cadena ];
+        } else {
 
-		if(empty($ubicacion)) $ubicacion=$this->ubicacion;
+            if (array_key_exists($cadena, $this->textosSeccion))
+                return $this->textosSeccion[ $cadena ];
+        }
 
+        return 'Indefinido';
+    }
 
-		if(!empty($ubicacion)){
-			if(array_key_exists($ubicacion, $this->textosSeccion) and array_key_exists($cadena, $this->textosSeccion[$ubicacion]))
-				return $this->textosSeccion[$ubicacion][$cadena];
-		}else{
+    private function validarSeccion($seccion) {
+        if (!empty($seccion) and $seccion != $this->dir) {
 
-			if(array_key_exists($cadena, $this->textosSeccion)) return $this->textosSeccion[$cadena];
-		}
+            if (!file_exists($this->path . $this->idiomaActual . '/' . $seccion . ".php"))
+                throw new Exception("No existe el archivo " . $seccion, 1);
 
-		return 'Indefinido';
-	}
+            $this->dir = $seccion;
+            include_once $this->path . $this->idiomaActual . DS . $seccion . ".php";
+            if (isset($traducciones) and is_array($traducciones)) {
+                $this->textosSeccion = $traducciones;
+            } else throw new Exception("No esta definido el arreglo de traducciones para la seccion " . $seccion, 1);
+        }
+    }
 
-	private function validarSeccion($seccion){
-		if(!empty($seccion) and $seccion!=$this->dir){
+    /**
+     * Permite identificar la ubicacion de los textos a utilizar
+     * dentro de la matríz de traducciones
+     *
+     * @method addUbicacion
+     * @param string $ubicacion
+     */
+    function addUbicacion($ubicacion) {
+        $this->ubicacion = $ubicacion;
 
-			if(!file_exists($this->path.$this->idiomaActual. '/' . $seccion .".php"))
-				throw new Exception("No existe el archivo ".$seccion, 1);
+        return $this;
+    }
 
-			$this->dir=$seccion;
-			include_once $this->path.$this->idiomaActual. DS . $seccion.".php";
-			if(isset($traducciones) and is_array($traducciones)){
-				$this->textosSeccion = $traducciones;
-			}else throw new Exception("No esta definido el arreglo de traducciones para la seccion ".$seccion, 1);
-		}
-	}
-	/**
-	 * Permite identificar la ubicacion de los textos a utilizar
-	 * dentro de la matríz de traducciones
-	 *
-	 * @method addUbicacion
-	 * @param string $ubicacion
-	 */
-	function addUbicacion($ubicacion){
-		$this->ubicacion=$ubicacion;
-		return $this;
-	}
-	/**
-	 * Renderiza una URL conforme al idioma actual
-	 * @method renderURL
-	 */
-	function renderURL($url){
-		return "/".$this->idiomaActual.$url;
-	}
-	/**
-	 * Permite agregar una seccion de traducciones
-	 * @method addSeccion
-	 * @param string $seccion
-	 */
-	function addSeccion($seccion){
-		$this->validarSeccion($seccion);
-	}
-	function obtTraduccionesArray(){
-		return $this->textos;
-	}
-	/**
-	 * Valida si una traduccion existe
-	 */
-	function validar($traduccion,$ubicacion=""){
-		if(!empty($ubicacion) and array_key_exists($ubicacion,$this->textos)){
-			if(array_key_exists($traduccion, $this->textos[$ubicacion])) return true;
-		}elseif(array_key_exists($traduccion, $this->textos)){
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Renderiza una URL conforme al idioma actual
+     * @method renderURL
+     */
+    function renderURL($url) {
+        return "/" . $this->idiomaActual . $url;
+    }
+
+    /**
+     * Permite agregar una seccion de traducciones
+     * @method addSeccion
+     * @param string $seccion
+     */
+    function addSeccion($seccion) {
+        $this->validarSeccion($seccion);
+    }
+
+    function obtTraduccionesArray() {
+        return $this->textos;
+    }
+
+    /**
+     * Valida si una traduccion existe
+     */
+    function validar($traduccion, $ubicacion = "") {
+        if (!empty($ubicacion) and array_key_exists($ubicacion, $this->textos)) {
+            if (array_key_exists($traduccion, $this->textos[ $ubicacion ]))
+                return TRUE;
+        } elseif (array_key_exists($traduccion, $this->textos)) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
 }

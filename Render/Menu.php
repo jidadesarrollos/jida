@@ -2,7 +2,6 @@
 /**
  * Objeto Renderizador de Menus
  *
- *
  * @author Julio Rodriguez
  * @package JidaFramework
  * @version 1.0
@@ -10,7 +9,8 @@
  * @see Selector
  * @category Render
 */
-namespace Jida;
+
+namespace Jida\Render;
 class Menu extends Selector{
     /**
      * Funcion constructora

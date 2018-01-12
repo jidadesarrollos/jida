@@ -1,25 +1,9 @@
-<?PHP 
-$data =& $this->data;
-
-?>
-
-<?PHP if(isset($data->formLoggin)){?>
-
-<div class="col-md-6 col-md-offset-3 top-60">
-    <div class="panel panel-default panel-login">
-        <section class="panel-heading" role="title">
-            <h1>
-                JIDA Framework
-                <small>Desarrollo de aplicaciones </small>
-            </h1>
-        </section>
-        <section class="panel-body">
-            
-            <?=$data->formLoggin?>
-        </section>
-    </div>    
+<div class="col-md-6 col-sm-12 col-xs-12">
+    <?= \Jida\Helpers\Mensajes::imprimirMensaje(); ?>
 </div>
-<?PHP
 
-}
-?>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <h3>
+        Panel Administrativo - <strong><?= NOMBRE_APP ?></strong>
+    </h3>
+</div>

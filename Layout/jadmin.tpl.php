@@ -22,7 +22,7 @@
         <!--libs-->
     </head>
 
-    <body>
+    <body data-url="<?=URL_BASE?>">
 
      <div  class="jida-container">
      	<nav class="navbar navbar-default navbar-fixed-top">
@@ -40,8 +40,9 @@
             <div class="row">
 	            <aside class="col-md-2 aside">
 	                    <?PHP
-
-	                    $menuControl  = new MenuHTML('Principal');
+                        $showMenu = (isset($_GET['showmenu']))?'long-menu':'short-menu';
+                        \Jida\Helpers\Debug::imprimir($showMenu);
+	                    $menuControl  = new \Jida\RenderHTML\MenuHTML('Principal');
 	                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
 	                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
 	                    $menuControl->configuracion['li']['caret']="li-caret";

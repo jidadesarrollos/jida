@@ -1,0 +1,165 @@
+
+.aside{
+	z-index:100;	
+	margin-bottom:10px;
+	padding:0;
+	padding-top:30px;
+	width:@left-side-width;
+	background:@bg-aside;
+	box-shadow: 5px 0 5px -5px #333;	
+	height:100%;
+	font-family:@fuente-primaria;
+	.menu{
+		list-style:none;
+		margin:0;
+		padding:0;
+		font-weigth:bolder;
+		font-size:12px;
+		 > li {
+            margin: 0;
+            padding: 0;
+            > a {
+                padding: 12px 5px 12px 15px;
+                display: block;
+                color:@color-link-menu;
+                
+                
+                &:hover{
+                	color:@color-link-menu-hover;
+                	background:@bg-li-hover;
+                	
+                	> .fa, > .glyphicon, > .ion{
+                		color:@color-menu-icon-hover;
+                	}	
+                }
+                > .fa, > .glyphicon, > .ion {
+                    width: 20px;
+                    color:@color-menu-icon;
+                }
+                //------------------------------
+                &:focus{
+                	background:@bg-li-hover;
+                	color:@color-link-menu-hover;
+                }
+            }
+         &.li-caret:after{
+	         font-family:'FontAwesome';
+	         content: "\f107";
+	         color:@color-menu-caret;
+	         float:right;
+	         position:absolute;
+	         right:20px;
+	         top:15px;
+	         &:hover{
+	           color:@color-menu-caret-hover;
+	         }
+	         
+       	}
+      }
+        
+        
+    ul{
+    	// Submenu
+  	  list-style: none;
+      padding:0;
+      margin-bottom:-5px;
+      background:@bg-ul-hijo;
+      -webkit-box-shadow: inset 3px 2px 14px -3px @bg-aside;
+			-moz-box-shadow: inset 3px 2px 14px -3px @bg-aside;
+			box-shadow: inset 3px 2px 14px -3px @bg-aside;
+      .transicion(.5s);
+      display:none;
+      margin-left:-15px!important;
+      //ITEM HIJO
+      li{
+      	a{
+      		color:@color-li-hijo;
+	        &:hover,&:focus{
+	          color:@color-li-hijo-hover;
+	          background:@bg-li-hijo-hover;
+	        }
+      	}
+	        
+        padding: 10px 0 10px 35px;
+        .transicion(.1s);    
+     	}
+    }
+	}
+	
+	
+}
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ *  Gives us the push menu effect
+ */
+@media screen and (max-width: @screen-md) {
+
+    .relative {
+        position: relative;
+    }
+
+    .row-offcanvas-right
+    .sidebar-offcanvas {
+        right: -@left-side-width;
+    }
+
+    .row-offcanvas-left
+    .sidebar-offcanvas {
+        left: -@left-side-width;
+    }
+
+    .row-offcanvas-right.active {
+        right: @left-side-width;
+    }
+
+    .row-offcanvas-left.active {
+        left: @left-side-width;
+    }
+
+    .sidebar-offcanvas {
+        left: 0;
+    }
+
+    body.fixed {
+        .sidebar-offcanvas {
+            margin-top: 50px;
+            left: -@left-side-width;
+        }
+        .row-offcanvas-left.active {
+            .navbar {
+                left: @left-side-width!important;
+                right: 0;
+
+            }
+            .sidebar-offcanvas {
+                left: 0px;
+            }
+
+        }
+    }
+}
+.short-menu{
+	.aside,.main-panel{
+		.transicion(.2s);
+	}
+	.aside{
+			
+			width:@left-side-short-width!important;
+			li{
+				a{
+					
+					.fa,.glyphicon{
+						font-size:20px!important;
+						margin:auto;
+					}
+					.inner-text{
+						display:none;
+					}
+				}
+			}		
+	}
+	
+}
+

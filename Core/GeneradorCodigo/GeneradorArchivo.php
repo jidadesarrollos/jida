@@ -6,7 +6,8 @@
 * @version
 * @category
 */
-namespace Jida;
+
+namespace Jida\Core\GeneradorCodigo;
 trait GeneradorArchivo{
 
     /**
@@ -27,13 +28,8 @@ trait GeneradorArchivo{
      * @var string $contenido;
      */
     protected $contenido;
-    /**
-     * Funcion constructora
-     * @method __construct
-     */
-    function __construct(){
 
-    }
+
     /**
      * Crea un archivo
      * @method public crear
@@ -68,7 +64,7 @@ trait GeneradorArchivo{
         return $this;
     }
     function cerrar(){
-        fclose($this->archivo);
+        return fclose($this->archivo);
     }
 
     function saltodeLinea($total=1){
