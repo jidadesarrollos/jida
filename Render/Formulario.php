@@ -15,6 +15,7 @@ namespace Jida\Render;
 
 use \Exception as Excepcion;
 use Jida\Core\Rutas;
+use Jida\Core\Validador;
 use Jida\Helpers as Helpers;
 use Jida\BD\BD as BD;
 use Jida\Render\Inputs\Input as SelectorInput;
@@ -229,18 +230,17 @@ class Formulario extends Selector {
      */
     private $_dataUpdateMultiple = [];
     /**
-     * Registra los campos leidos desde el json como arreglos
-     *
-     * @internal Esto esta usado por compatibilidad con el objeto ValidadorJida Luego será suprimido.
-     * @deprecated
-     */
-    private $_camposArray;
-    /**
      * Registra los errores obtenidos en el formulario luego de la validación
      *
      * @var array $_errores ;
      */
     private $_errores = [];
+
+    private $_validaciones = [];
+    /**
+     * @var array Arreglo q que contiene los objetos de cada campo leido del json
+     */
+    private $_dataCampos = [];
 
     /**
      *
@@ -359,8 +359,6 @@ class Formulario extends Selector {
 
         $contenido = file_get_contents($this->_path);
         $this->_configuracion = json_decode($contenido);
-
-        $array = json_decode($contenido, TRUE);
 
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new Excepcion("El formulario  " . $this->_path . " no esta estructurado correctamente", $this->_ce . "0");
@@ -631,6 +629,11 @@ class Formulario extends Selector {
 
             if (!is_object($campo)) {
                 continue;
+            }
+
+            if (property_exists($campo, 'eventos')) {
+                $this->_validaciones[$campo->name] = $campo->eventos;
+                $this->_dataCampos[$campo->name] = (array)$campo;
             }
 
             if (!property_exists($campo, 'type')) {
@@ -940,37 +943,23 @@ class Formulario extends Selector {
         if (empty($data)) {
             $data =& $_POST;
         }
-        foreach ($this->_camposArray as $key => $dataCampo) {
-            // Se agrega el valor en una variable aparte ya que el mismo
-            //puede ser seteado por el validadorJida. se asigna asi para disminuir
-            //lineas de codigo
-            $valorCampo =& $data[$dataCampo['name']];
-            if (array_key_exists('eventos', $dataCampo)) {
-                if (!is_array($data[$dataCampo['name']]))
-                    $data[$dataCampo['name']] = trim($data[$dataCampo['name']]);
 
-                $validador = new ValidadorJida($dataCampo, $dataCampo['eventos']);
-                $result = $validador->validarCampo($data[$dataCampo['name']]);
-                if ($result['validacion'] !== TRUE) {
+        foreach ($this->_validaciones as $campo => $validaciones) {
 
-                    $this->_errores[$dataCampo['name']] = $result['validacion'];
+            $valorCampo = $data[$campo];
 
-                    $this->msj('error', $result['validacion']);
+            $validador = new ValidadorJida($this->_dataCampos[$campo], $validaciones);
+            $resultado = $validador->validarCampo($data[$campo]);
 
-                } else {
-                    $valorCampo = $result['campo'];
-                }
-
-            }
-            if (!is_array($data[$dataCampo['name']])) {
-                if ($this->setHtmlEntities) {
-                    $datos[$dataCampo['name']] = htmlspecialchars($valorCampo);
-                } else {
-                    $datos[$dataCampo['name']] = $valorCampo;
-                }
+            if ($resultado['validacion'] !== true) {
+                $this->_errores[$campo] = $resultado['validacion'];
+                $this->msj('error', $resultado['validacion']);
             } else {
-                $datos[$dataCampo['name']] = $valorCampo;
+                $valorCampo = $resultado['campo'];
             }
+
+            $datos[$campo] = (!is_array($data[$campo])) ? htmlspecialchars($valorCampo) : $valorCampo;
+
 
         }
 
@@ -980,9 +969,10 @@ class Formulario extends Selector {
             Helpers\Sesion::set('__dataPostForm', 'id_form', $this->_idEdicion);
 
             return false;
-        } else {
-            return true;
+
         }
+
+        return true;
 
     }
 
