@@ -276,6 +276,7 @@ class DataModel {
         if ($this->usoBD !== FALSE) {
 
             $this->initBD();
+            $this->bd->mantener = true;
         } else {
             $this->usoBD = FALSE;
         }
@@ -315,7 +316,10 @@ class DataModel {
         } else {
             $this->instanciarTieneUno()->instanciarTieneMuchos();
         }
-        $this->bd->cerrarConexion();
+		if ($this->usoBD !== FALSE) {
+
+		}
+		#$this->bd->cerrarConexion();
 
 
     }
