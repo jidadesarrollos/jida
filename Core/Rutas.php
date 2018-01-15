@@ -47,8 +47,8 @@ class Rutas {
             if ($jida) {
                 $form = array_shift($this->_solicitud);
 
-                #$this->_rutaAbsoluta = DIR_FRAMEWORK . DS . 'Formularios' . DS . $form;
-                $this->_rutaAbsoluta = '/Framework' . DS . 'Formularios' . DS . $form;
+                $this->_rutaAbsoluta = DIR_FRAMEWORK . DS . 'Formularios' . DS . $form;
+                #$this->_rutaAbsoluta = '/Framework' . DS . 'Formularios' . DS . $form;
                 #Helpers\Debug::imprimir($this->_rutaAbsoluta, $this->_rutaModulo, "NO", true);
             } else if ($this->_validarModulo($modulo)) {
                 $form = array_shift($this->_solicitud);
@@ -59,8 +59,8 @@ class Rutas {
 
         } else {
             $form = array_shift($this->_solicitud);
-            #$this->_rutaAbsoluta = DIR_APP . 'Formularios' . DS . $form;
-            $this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $form;
+            $this->_rutaAbsoluta = DIR_APP . 'Formularios' . DS . $form;
+            #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $form;
         }
     }
 
