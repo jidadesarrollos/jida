@@ -319,7 +319,8 @@ class DataModel {
 		if ($this->usoBD !== FALSE) {
 
 		}
-		#$this->bd->cerrarConexion();
+		$this->bd->mantener = false;
+		$this->bd->cerrarConexion();
 
 
     }
@@ -423,9 +424,11 @@ class DataModel {
      */
     private function instanciarRelaciones() {
 
-
+		$this->bd->mantener=true;
+		
         $data = $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery(implode(";", $this->consultaRelaciones), 2), array_keys($this->consultaRelaciones));
-
+		$this->bd->mantener=false;
+		$this->bd->cerrarConexion();
         foreach ($data as $relacion => $info) {
 
             $claseSola = $this->obtClaseNombre($relacion);

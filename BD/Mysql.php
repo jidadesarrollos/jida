@@ -103,6 +103,8 @@ class Mysql extends ConexionBD {
 		}
 
 		$this->mysqli = new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd);
+		#$sesion = Helpers\Sesion::obt('iddb');
+		#Helpers\Sesion::editar("iddb", $sesion + 1);
 
 		if ($this->mysqli->connect_error) {
 			$this->_conexion = false;
@@ -172,10 +174,14 @@ class Mysql extends ConexionBD {
 		}
 		$this->totalCampos = $this->mysqli->field_count;
 		$this->idResult = $this->mysqli->insert_id;
+
 		if (isset($this->result->num_rows))
 			$this->totalRegistros = $this->result->num_rows;
 
-		$this->cerrarConexion();
+		if (!$this->mantener) {
+			$this->cerrarConexion();
+		}
+
 
 		return $this->result;
 
@@ -274,7 +280,7 @@ class Mysql extends ConexionBD {
 
 		$this->query = $insert;
 		$this->ejecutarQuery($this->query);
-		$this->idResult = $this->mysqli->insert_id;
+
 
 		return $this->result;
 	}
@@ -286,10 +292,12 @@ class Mysql extends ConexionBD {
 	function cerrarConexion() {
 
 		if ($this->_conexion and $this->mysqli->ping()) {
+			$sesion = Helpers\Sesion::obt('iddb');
+#			Helpers\Sesion::editar("iddb", $sesion - 1);
+#			Helpers\Debug::imprimir("cerramos ", $sesion - 1);
 			$this->mysqli->close();
 			$this->_conexion = false;
 		}
-
 
 	}
 
