@@ -17,110 +17,111 @@ use Jida\Helpers as Helpers;
 use Exception;
 
 class User extends BD\DataModel {
-	/**
-	 * @var int $id_usuario Identificador del usuario
-	 * @access public
-	 */
-	var $id_usuario;
 
-	/**
-	 * @var string $nombre_usuario Nombre del usuario
-	 * @access public
-	 */
-	var $nombre_usuario;
-	/**
-	 * @var string $clave_usuario Clave de acceso del usuario
-	 * @access public
-	 */
-	var $clave_usuario;
-	var $nombres;
-	var $apellidos;
-	var $correo;
-	var $sexo;
-	/**
-	 * @var boolean activo Indica si el usuario se encuentra conectado
-	 */
-	var $activo;
-	/**
-	 * @var $id_estatus Estatus del usuario
-	 * @access public
-	 */
-	var $id_estatus;
-	/**
-	 * @var $ultima_sesion Fecha ultimo inicio de sesión
-	 * @access public
-	 */
-	var $ultima_session;
-	/**
-	 * Codigo encriptado usado para comprobar registro de usuario.
-	 *
-	 * @var $validacion
-	 * @access public
-	 */
-	var $validacion;
-	/**
-	 * Codigo creado para recuperación de clave
-	 *
-	 * @var $codigo_recuperacion
-	 * @access public
-	 */
-	var $codigo_recuperacion;
-	/**
-	 * Url de la imagen del perfil
-	 *
-	 * @var url $img_perfil
-	 */
-	var $img_perfil;
-	/**
-	 * Perfiles asociados al usuario
-	 *
-	 * @var $perfiles
-	 * @access private
-	 */
-	protected $perfiles = [];
+    /**
+     * @var int $id_usuario Identificador del usuario
+     * @access public
+     */
+    var $id_usuario;
 
-	protected $tablaBD = "s_usuarios";
-	protected $pk = "id_usuario";
-	protected $unico = ['nombre_usuario'];
-	protected $registroUser = false;
+    /**
+     * @var string $nombre_usuario Nombre del usuario
+     * @access public
+     */
+    var $nombre_usuario;
+    /**
+     * @var string $clave_usuario Clave de acceso del usuario
+     * @access public
+     */
+    var $clave_usuario;
+    var $nombres;
+    var $apellidos;
+    var $correo;
+    var $sexo;
+    /**
+     * @var boolean activo Indica si el usuario se encuentra conectado
+     */
+    var $activo;
+    /**
+     * @var $id_estatus Estatus del usuario
+     * @access public
+     */
+    var $id_estatus;
+    /**
+     * @var $ultima_sesion Fecha ultimo inicio de sesión
+     * @access public
+     */
+    var $ultima_session;
+    /**
+     * Codigo encriptado usado para comprobar registro de usuario.
+     *
+     * @var $validacion
+     * @access public
+     */
+    var $validacion;
+    /**
+     * Codigo creado para recuperación de clave
+     *
+     * @var $codigo_recuperacion
+     * @access public
+     */
+    var $codigo_recuperacion;
+    /**
+     * Url de la imagen del perfil
+     *
+     * @var url $img_perfil
+     */
+    var $img_perfil;
+    /**
+     * Perfiles asociados al usuario
+     *
+     * @var $perfiles
+     * @access private
+     */
+    protected $perfiles = [];
 
-	/**
-	 * Verifica que los datos para iniciar session sean validos
-	 *
-	 *
-	 * @param mixed   Nombre del Usuario
-	 * @param mixed   clave  Clave del usuario sin convertir a md5
-	 * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
-	 *
-	 * @return mixed array si la sesion es iniciada, false caso contrario
-	 */
-	function validarLogin($usuario, $clave, $validacion = true, $callback = NULL) {
-		$clave = md5($clave);
+    protected $tablaBD = "s_usuarios";
+    protected $pk = "id_usuario";
+    protected $unico = ['nombre_usuario'];
+    protected $registroUser = false;
 
-		$result = $this->consulta()->filtro(
-			['clave_usuario'  => $clave,
-			 'nombre_usuario' => $usuario,
-			 'validacion'     => 1
-			])->fila();
-		if (count($result) > 0) {
+    /**
+     * Verifica que los datos para iniciar session sean validos
+     *
+     *
+     * @param mixed   Nombre del Usuario
+     * @param mixed   clave  Clave del usuario sin convertir a md5
+     * @param boolean [opcional] validacion Determina si se debe validar el campo validacion en bd
+     *
+     * @return mixed array si la sesion es iniciada, false caso contrario
+     */
+    function validarLogin($usuario, $clave, $validacion = true, $callback = NULL) {
+        $clave = md5($clave);
 
-			$this->establecerAtributos($result);
+        $result = $this->consulta()->filtro(
+            ['clave_usuario'  => $clave,
+             'nombre_usuario' => $usuario,
+             'validacion'     => 1
+            ])->fila();
+        if (count($result) > 0) {
 
-			$this->__obtConsultaInstancia($this->id_usuario);
-			$this->obtenerDataRelaciones();
-			$this->registrarSesion();
-			$this->activo = 1;
-			$this->salvar();
-			$this->obtenerPerfiles();
+            $this->establecerAtributos($result);
 
-			return $result;
-		} else
-			return false;
+            $this->__obtConsultaInstancia($this->id_usuario);
+            $this->obtenerDataRelaciones();
+            $this->registrarSesion();
+            $this->activo = 1;
+            $this->salvar();
+            $this->obtenerPerfiles();
 
-	}
+            return $result;
+        } else
+            return false;
 
-	private function stringConsulta() {
-		return "select
+    }
+
+    private function stringConsulta() {
+        return "select
 			a.id_usuario_perfil AS id_usuario_perfil,
 			a.id_perfil AS id_perfil,
 			a.id_usuario AS id_usuario,
@@ -133,244 +134,242 @@ class User extends BD\DataModel {
 			join s_perfiles b ON (a.id_perfil = b.id_perfil)
 			join s_usuarios c on (a.id_usuario = c.id_usuario)";
 
-	}
+    }
 
-	/**
-	 * Obtiene los perfiles asociados a un usuario de base de datos
-	 * @method obtenerPerfiles
-	 *
-	 * @access private
-	 */
-	private function obtenerPerfiles($idUser = "") {
-		if ($idUser != "")
-			$this->id_usuario = $idUser;
+    /**
+     * Obtiene los perfiles asociados a un usuario de base de datos
+     * @method obtenerPerfiles
+     *
+     * @access private
+     */
+    private function obtenerPerfiles($idUser = "") {
+        if ($idUser != "")
+            $this->id_usuario = $idUser;
 
+        if (count($this->perfiles) < 1) {
+            $query = $this->stringConsulta() . " where a.id_usuario=$this->id_usuario";
+            $data = $this->bd->ejecutarQuery($query);
 
-		if (count($this->perfiles) < 1) {
-			$query = $this->stringConsulta() . " where a.id_usuario=$this->id_usuario";
-			$data = $this->bd->ejecutarQuery($query);
+            if (count($data) > 1)
+                throw new Exception("No se han obtenido los perfiles del usuario", 1);
 
-			if (count($data) > 1)
-				throw new Exception("No se han obtenido los perfiles del usuario", 1);
+            while ($perfil = $this->bd->obtenerArrayAsociativo($data))
+                $this->perfiles[$perfil['clave_perfil']] = $perfil['clave_perfil'];
 
-			while ($perfil = $this->bd->obtenerArrayAsociativo($data))
-				$this->perfiles[ $perfil['clave_perfil'] ] = $perfil['clave_perfil'];
+        } else
+            $this->perfiles[] = 'UsuarioPublico';
 
-		} else
-			$this->perfiles[] = 'UsuarioPublico';
+    }
 
-	}
+    /**
+     * Retorna los perfiles asociados al usuario inicializado
+     * @method getPerfiles
+     *
+     * @access public
+     */
+    function getPerfiles() {
+        $this->obtenerPerfiles();
 
-	/**
-	 * Retorna los perfiles asociados al usuario inicializado
-	 * @method getPerfiles
-	 *
-	 * @access public
-	 */
-	function getPerfiles() {
-		$this->obtenerPerfiles();
+        return $this->perfiles;
+    }
 
-		return $this->perfiles;
-	}
+    /**
+     * Registra la sesion del usuario
+     *
+     * @internal Registra la fecha actual como ultima sesion del usuario y cambia el
+     * estatus activo a 1
+     * @method registrarSesion
+     * @return boolean
+     */
+    function registrarSesion() {
+        if (!empty($this->id_usuario)) {
+            $this->salvar(['ultima_session' => 'current_timestamp',
+                           'activo'         => 1
+            ]);
+            Helpers\Sesion::sessionLogin();
+        } else return false;
 
-	/**
-	 * Registra la sesion del usuario
-	 *
-	 * @internal Registra la fecha actual como ultima sesion del usuario y cambia el
-	 * estatus activo a 1
-	 * @method registrarSesion
-	 * @return boolean
-	 */
-	function registrarSesion() {
-		if (!empty($this->id_usuario)) {
-			$this->salvar(['ultima_session' => 'current_timestamp',
-						   'activo'         => 1
-			]);
-			Helpers\Sesion::sessionLogin();
-		} else return false;
+    }
 
-	}
+    /**
+     * Registra los perfiles asociados a un usuario
+     * @method asociarPerfiles
+     *
+     * @param array $perfiles
+     */
+    function asociarPerfiles($perfiles) {
 
-	/**
-	 * Registra los perfiles asociados a un usuario
-	 * @method asociarPerfiles
-	 *
-	 * @param array $perfiles
-	 */
-	function asociarPerfiles($perfiles) {
+        $insert = "insert into s_usuarios_perfiles (id_usuario_perfil, id_usuario, id_perfil) values ";
+        $i = 0;
+        foreach ($perfiles as $key => $idPerfil) {
 
-		$insert = "insert into s_usuarios_perfiles values ";
-		$i = 0;
-		foreach ($perfiles as $key => $idPerfil) {
+            if ($i > 0)
+                $insert .= ",";
 
-			if ($i > 0)
-				$insert .= ",";
+            $insert .= "(null,$this->id_usuario,$idPerfil)";
+            $i++;
+        }
 
-			$insert .= "(null,$this->id_usuario,$idPerfil)";
-			$i++;
-		}
+        $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
 
-		$delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
+        $this->bd->ejecutarQuery($delete . $insert, 2);
 
-		$this->bd->ejecutarQuery($delete . $insert, 2);
+        return ['ejecutado' => 1];
+    }
 
-		return ['ejecutado' => 1];
-	}
+    /**
+     * Cambia la clave de un usuario
+     * @method cambiarClave
+     *
+     * @param $clave      Clave actual insertada por el usuario, usada para validar
+     * @param $nuevaClave Nueva clave a crear.
+     */
+    function cambiarClave($clave, $nuevaClave) {
+        $clave = md5($clave);
+        //Helpers\Debug::imprimir("$clave===$this->clave_usuario",true);
+        if ($clave === $this->clave_usuario) {
+            $this->clave_usuario = md5($nuevaClave);
+            $this->salvar();
 
-	/**
-	 * Cambia la clave de un usuario
-	 * @method cambiarClave
-	 *
-	 * @param $clave      Clave actual insertada por el usuario, usada para validar
-	 * @param $nuevaClave Nueva clave a crear.
-	 */
-	function cambiarClave($clave, $nuevaClave) {
-		$clave = md5($clave);
-		//Helpers\Debug::imprimir("$clave===$this->clave_usuario",true);
-		if ($clave === $this->clave_usuario) {
-			$this->clave_usuario = md5($nuevaClave);
-			$this->salvar();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Registra un nuevo usuario y asigna los perfiles asociados
+     * @method registrarUsuario
+     *
+     * @param array $datos Arreglo con información del usuario (clave, nombre de usuario)
+     * @param array $perfiles Perfiles que se asocian al usuario a registrar
+     */
+    function registrarUsuario($datos, $perfiles = "", $validacion = true) {
+        if (empty($perfiles))
+            throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
 
-	/**
-	 * Registra un nuevo usuario y asigna los perfiles asociados
-	 * @method registrarUsuario
-	 *
-	 * @param array $datos    Arreglo con información del usuario (clave, nombre de usuario)
-	 * @param array $perfiles Perfiles que se asocian al usuario a registrar
-	 */
-	function registrarUsuario($datos, $perfiles = "", $validacion = true) {
-		if (empty($perfiles))
-			throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", 1);
+        $this->establecerAtributos($datos);
 
-		$this->establecerAtributos($datos);
+        if ($validacion === true) {
+            $codigo = hash("sha256", Helpers\FechaHora::timestampUnix() . Helpers\FechaHora::datetime());
+            $this->validacion = $codigo;
+            $this->activo = 0;
+        }
 
-		if ($validacion === true) {
-			$codigo = hash("sha256", Helpers\FechaHora::timestampUnix() . Helpers\FechaHora::datetime());
-			$this->validacion = $codigo;
-			$this->activo = 0;
-		}
+        $this->id_estatus = (empty($this->id_estatus)) ? 1 : $this->id_estatus;
 
-		$this->id_estatus = (empty($this->id_estatus)) ? 1 : $this->id_estatus;
+        if ($this->salvar()->ejecutado() == 1) {
+            $this->id_usuario = $this->resultBD->idResultado();
 
-		if ($this->salvar()->ejecutado() == 1) {
-			$this->id_usuario = $this->resultBD->idResultado();
+            $this->asociarPerfiles($perfiles);
+        }
 
-			$this->asociarPerfiles($perfiles);
-		}
+        return ['idResultado' => $this->resultBD->idResultado(),
+                'ejecutado'   => $this->resultBD->ejecutado(),
+                'unico'       => $this->resultBD->esUnico(),
+                'validacion'  => $this->validacion
+        ];
+    }
 
-		return ['idResultado' => $this->resultBD->idResultado(),
-				'ejecutado'   => $this->resultBD->ejecutado(),
-				'unico'       => $this->resultBD->esUnico(),
-				'validacion'  => $this->validacion
-		];
-	}
+    /**
+     * Verifica el codigo de activacion creado en el registro de un usuario
+     *
+     * @internal Si el codigo de activacion coincide con el de un usuario registrado, el
+     * valor es cambiado a 1 quedando el usuario activo
+     *
+     *
+     * @method validarCodigoActivacion
+     * @param string $codigo
+     *
+     * @return boolean TRUE si el usuario es activado, FALSE sino coincide
+     */
+    function validarCodigoActivacion($codigo) {
 
-	/**
-	 * Verifica el codigo de activacion creado en el registro de un usuario
-	 *
-	 * @internal Si el codigo de activacion coincide con el de un usuario registrado, el
-	 * valor es cambiado a 1 quedando el usuario activo
-	 *
-	 *
-	 * @method validarCodigoActivacion
-	 * @param string $codigo
-	 *
-	 * @return boolean TRUE si el usuario es activado, FALSE sino coincide
-	 */
-	function validarCodigoActivacion($codigo) {
+        $data = $this->select()->filtro(['validacion' => $codigo])->fila();
+        if ($this->bd->totalRegistros > 0) {
+            $this->establecerAtributos($data);
+            $this->activo = 1;
+            $this->validacion = 1;
+            $this->id_estatus = 1;
+            if ($this->salvar()->ejecutado()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-		$data = $this->select()->filtro(['validacion' => $codigo])->fila();
-		if ($this->bd->totalRegistros > 0) {
-			$this->establecerAtributos($data);
-			$this->activo = 1;
-			$this->validacion = 1;
-			$this->id_estatus = 1;
-			if ($this->salvar()->ejecutado()) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+    function obtenerUsuarioByEmail($correo) {
+        $data = $this->consulta()->filtro(['correo' => $correo])->fila();
 
-	function obtenerUsuarioByEmail($correo) {
-		$data = $this->consulta()->filtro(['correo' => $correo])->fila();
+        if (count($data) > 0) {
 
-		if (count($data) > 0) {
+            $this->establecerAtributos($data);
+            $this->registrarSesion();
 
-			$this->establecerAtributos($data);
-			$this->registrarSesion();
+            return true;
 
-			return true;
+        } else return false;
 
-		} else return false;
+    }
 
-	}
+    /**
+     * Cierra la sesión de un usuario
+     * @method cerrarSesion
+     *
+     * @param int $idUser Id del Usuario a cerrar sesion, si no es pasado se tomará el id instanciado
+     */
+    function cerrarSesion($idUser = "") {
+        if (empty($idUser))
+            $idUser = $this->id_usuario;
 
-	/**
-	 * Cierra la sesión de un usuario
-	 * @method cerrarSesion
-	 *
-	 * @param int $idUser Id del Usuario a cerrar sesion, si no es pasado se tomará el id instanciado
-	 */
-	function cerrarSesion($idUser = "") {
-		if (empty($idUser))
-			$idUser = $this->id_usuario;
+        $this->activo = 0;
+        $this->salvar();
+    }
 
-		$this->activo = 0;
-		$this->salvar();
-	}
+    function agregarPerfilSesion($perfil) {
+        if (is_array($perfil)) {
+            if (!in_array($perfil, $this->perfiles))
+                $this->perfiles = array_merge($this->perfiles, $perfil);
 
-	function agregarPerfilSesion($perfil) {
-		if (is_array($perfil)) {
-			if (!in_array($perfil, $this->perfiles))
-				$this->perfiles = array_merge($this->perfiles, $perfil);
+        } else {
+            $this->perfiles[] = $perfil;
+        }
 
-		} else {
-			$this->perfiles[] = $perfil;
-		}
+        $this->perfiles = array_unique($this->perfiles);
 
-		$this->perfiles = array_unique($this->perfiles);
+    }
 
+    function crearSesionUsuario() {
+        Helpers\Sesion::sessionLogin();
+        Helpers\Sesion::set('Usuario', $this);
+        //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
+        if (isset($data))
+            Helpers\Sesion::set('usuario', $data);
 
-	}
+        return $this;
+    }
 
-	function crearSesionUsuario() {
-		Helpers\Sesion::sessionLogin();
-		Helpers\Sesion::set('Usuario', $this);
-		//Se guarda como arreglo para mantener soporte a aplicaciones anteriores
-		if (isset($data))
-			Helpers\Sesion::set('usuario', $data);
+    function guardarSesion() {
+        Helpers\Sesion::set('Usuario', $this);
+    }
 
-		return $this;
-	}
+    function obtUsers() {
+        $this->consulta(['id_usuario',
+            'nombre_usuario',
+            'fecha_creacion',
+            'activo',
+            'ultima_session'
+        ]);
+        $this->join('s_usuarios_perfiles', '', ['clave'          => 'id_usuario',
+                                                'clave_relacion' => 'id_usuario'
+        ]);
+        $this->join('s_estatus', 'estatus', ['clave'          => 'id_estatus',
+                                             'clave_relacion' => 'id_estatus'
+        ]);
 
-	function guardarSesion() {
-		Helpers\Sesion::set('Usuario', $this);
-	}
-
-	function obtUsers() {
-		$this->consulta(['id_usuario',
-						 'nombre_usuario',
-						 'fecha_creacion',
-						 'activo',
-						 'ultima_session'
-		]);
-		$this->join('s_usuarios_perfiles', '', ['clave'          => 'id_usuario',
-												'clave_relacion' => 'id_usuario'
-		]);
-		$this->join('s_estatus', 'estatus', ['clave'          => 'id_estatus',
-											 'clave_relacion' => 'id_estatus'
-		]);
-
-		return $this->obt('id_usuario');
-	}
+        return $this->obt('id_usuario');
+    }
 }
