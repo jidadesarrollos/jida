@@ -177,7 +177,7 @@ class ValidadorJida extends \Jida\Core\Validador {
             $datosObl = $this->validaciones['obligatorio'];
             $bandera = 1;
 
-            $datosObl = (is_object($datosObl)) ? (array) $datosObl : $datosObl;
+            $datosObl = (is_object($datosObl)) ? (array)$datosObl : $datosObl;
 
             $this->mensajeError =
                 (array_key_exists('mensaje', $datosObl))
@@ -190,7 +190,7 @@ class ValidadorJida extends \Jida\Core\Validador {
             foreach ($this->validaciones as $validacion => $detalle) {
                 $CheckValor = FALSE;
                 $validacion = strtolower($validacion);
-
+                $detalle = (is_object($detalle)) ? array($detalle) : $detalle;
                 if ($bandera == 0 and (is_array($detalle) or $detalle == TRUE)) {
 
                     switch ($validacion) {

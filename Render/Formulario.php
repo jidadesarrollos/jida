@@ -946,19 +946,23 @@ class Formulario extends Selector {
 
         foreach ($this->_validaciones as $campo => $validaciones) {
 
-            $valorCampo = $data[$campo];
+            if (array_key_exists($campo, $data)) {
 
-            $validador = new ValidadorJida($this->_dataCampos[$campo], $validaciones);
-            $resultado = $validador->validarCampo($data[$campo]);
+                $valorCampo = $data[$campo];
 
-            if ($resultado['validacion'] !== true) {
-                $this->_errores[$campo] = $resultado['validacion'];
-                $this->msj('error', $resultado['validacion']);
-            } else {
-                $valorCampo = $resultado['campo'];
+                $validador = new ValidadorJida($this->_dataCampos[$campo], $validaciones);
+                $resultado = $validador->validarCampo($data[$campo]);
+
+                if ($resultado['validacion'] !== true) {
+                    $this->_errores[$campo] = $resultado['validacion'];
+                    $this->msj('error', $resultado['validacion']);
+                } else {
+                    $valorCampo = $resultado['campo'];
+                }
+
+                $datos[$campo] = (!is_array($data[$campo])) ? htmlspecialchars($valorCampo) : $valorCampo;
             }
 
-            $datos[$campo] = (!is_array($data[$campo])) ? htmlspecialchars($valorCampo) : $valorCampo;
 
 
         }
@@ -972,52 +976,52 @@ class Formulario extends Selector {
 
         }
 
-        return true;
+return true;
+
+}
+
+/**
+ * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
+ *
+ * Define valores para las variables de sesion __msjVista e __idVista
+ * @method msjVista
+ *
+ * @param string $type     Tipo de mensaje, puede ser: success,error,alert,info
+ * @param string $msj      Contenido del mensaje
+ * @param mixed  $redirect Por defecto es false, si se desea redireccionar se pasa la url
+ */
+static function msj($type, $msj, $redirect = false) {
+
+    $msj = Helpers\Mensajes::crear($type, $msj, true);
+    Helpers\Sesion::set('__msjForm', $msj);
+    if ($redirect) {
+        redireccionar($redirect);
+    }
+}
+
+/**
+ * Permite acceder al objeto selector de un campo
+ * @method campo
+ *
+ * @param string $id Identificador del campo
+ *
+ * @return object SelectorInput
+ */
+function campo($id) {
+
+    if (array_key_exists($id, $this->_campos)) {
+
+        return $this->_campos[$id];
+    } else {
+        throw new Excepcion("No existe el campo solicitado", $this->_ce . '2');
 
     }
+}
 
-    /**
-     * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
-     *
-     * Define valores para las variables de sesion __msjVista e __idVista
-     * @method msjVista
-     *
-     * @param string $type     Tipo de mensaje, puede ser: success,error,alert,info
-     * @param string $msj      Contenido del mensaje
-     * @param mixed  $redirect Por defecto es false, si se desea redireccionar se pasa la url
-     */
-    static function msj($type, $msj, $redirect = false) {
+function obtConsultaUpdate() {
 
-        $msj = Helpers\Mensajes::crear($type, $msj, true);
-        Helpers\Sesion::set('__msjForm', $msj);
-        if ($redirect) {
-            redireccionar($redirect);
-        }
-    }
-
-    /**
-     * Permite acceder al objeto selector de un campo
-     * @method campo
-     *
-     * @param string $id Identificador del campo
-     *
-     * @return object SelectorInput
-     */
-    function campo($id) {
-
-        if (array_key_exists($id, $this->_campos)) {
-
-            return $this->_campos[$id];
-        } else {
-            throw new Excepcion("No existe el campo solicitado", $this->_ce . '2');
-
-        }
-    }
-
-    function obtConsultaUpdate() {
-
-        return $this->_consultaUpdate;
-    }
+    return $this->_consultaUpdate;
+}
 
 
 }
