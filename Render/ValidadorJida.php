@@ -190,7 +190,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             foreach ($this->validaciones as $validacion => $detalle) {
                 $CheckValor = FALSE;
                 $validacion = strtolower($validacion);
-                $detalle = (is_object($detalle)) ? array($detalle) : $detalle;
+
+                $detalle = (is_object($detalle)) ?  json_decode(json_encode($detalle), TRUE): $detalle;
                 if ($bandera == 0 and (is_array($detalle) or $detalle == TRUE)) {
 
                     switch ($validacion) {
@@ -265,7 +266,7 @@ class ValidadorJida extends \Jida\Core\Validador {
 
             if (sizeof($datosValidacion) and array_key_exists('condicional', $datosValidacion)) {
 
-                if ($_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
+                if (isset($_POST[$datosValidacion['condicional']]) and $_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
                     $validacion = TRUE;
                 } else {
                     $validacion = FALSE;
@@ -312,7 +313,6 @@ class ValidadorJida extends \Jida\Core\Validador {
     }
 
     private function validarTelefono($validacion, $detalle) {
-
 
         $code = (array_key_exists("code", $detalle)) ? $detalle['code'] : FALSE;
         $ext = (array_key_exists("ext", $detalle)) ? $detalle['ext'] : FALSE;
