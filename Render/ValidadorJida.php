@@ -255,13 +255,22 @@ class ValidadorJida extends \Jida\Core\Validador {
     private function validarCampoLleno() {
 
         $validacion = TRUE;
+        if (array_key_exists('obligatorio', $this->validaciones)) {
 
-        if (array_key_exists('obligatorio', $this->validaciones) and is_array($this->validaciones['obligatorio']) and array_key_exists('condicional', $this->validaciones['obligatorio'])) {
+            if (is_object($this->validaciones['obligatorio'])) {
+                $datosValidacion = (array)$this->validaciones['obligatorio'];
+            } else if (is_array($this->validaciones['obligatorio'])) {
+                $datosValidacion = $this->validaciones['obligatorio'];
+            }
 
-            if ($_POST[$this->validaciones['obligatorio']['condicional']] == $this->validaciones['obligatorio']['condicion']) {
-                $validacion = TRUE;
-            } else {
-                $validacion = FALSE;
+            if (sizeof($datosValidacion) and array_key_exists('condicional', $datosValidacion)) {
+
+                if ($_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
+                    $validacion = TRUE;
+                } else {
+                    $validacion = FALSE;
+                }
+
             }
         }
 

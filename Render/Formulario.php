@@ -964,7 +964,6 @@ class Formulario extends Selector {
             }
 
 
-
         }
 
         if ($this->_errores) {
@@ -976,52 +975,57 @@ class Formulario extends Selector {
 
         }
 
-return true;
-
-}
-
-/**
- * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
- *
- * Define valores para las variables de sesion __msjVista e __idVista
- * @method msjVista
- *
- * @param string $type     Tipo de mensaje, puede ser: success,error,alert,info
- * @param string $msj      Contenido del mensaje
- * @param mixed  $redirect Por defecto es false, si se desea redireccionar se pasa la url
- */
-static function msj($type, $msj, $redirect = false) {
-
-    $msj = Helpers\Mensajes::crear($type, $msj, true);
-    Helpers\Sesion::set('__msjForm', $msj);
-    if ($redirect) {
-        redireccionar($redirect);
-    }
-}
-
-/**
- * Permite acceder al objeto selector de un campo
- * @method campo
- *
- * @param string $id Identificador del campo
- *
- * @return object SelectorInput
- */
-function campo($id) {
-
-    if (array_key_exists($id, $this->_campos)) {
-
-        return $this->_campos[$id];
-    } else {
-        throw new Excepcion("No existe el campo solicitado", $this->_ce . '2');
+        return true;
 
     }
-}
 
-function obtConsultaUpdate() {
+    /**
+     * Crea un mensaje a mostrar en un grid u objeto Tipo Vista
+     *
+     * Define valores para las variables de sesion __msjVista e __idVista
+     * @method msjVista
+     *
+     * @param string $type     Tipo de mensaje, puede ser: success,error,alert,info
+     * @param string $msj      Contenido del mensaje
+     * @param mixed  $redirect Por defecto es false, si se desea redireccionar se pasa la url
+     */
+    static function msj($type, $msj, $redirect = false) {
 
-    return $this->_consultaUpdate;
-}
+        $msj = Helpers\Mensajes::crear($type, $msj, true);
+        Helpers\Sesion::set('__msjForm', $msj);
+        if ($redirect) {
+            redireccionar($redirect);
+        }
+    }
+
+    /**
+     * Permite acceder al objeto selector de un campo
+     * @method campo
+     *
+     * @param string $id Identificador del campo
+     *
+     * @return object SelectorInput
+     */
+    function campo($id) {
+
+        if (array_key_exists($id, $this->_campos)) {
+
+            return $this->_campos[$id];
+        } else {
+            throw new Excepcion("No existe el campo solicitado", $this->_ce . '2');
+
+        }
+    }
+
+    function obtConsultaUpdate() {
+
+        return $this->_consultaUpdate;
+    }
+
+    function obtErrores() {
+
+        return $this->_errores;
+    }
 
 
 }
