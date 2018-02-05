@@ -264,7 +264,7 @@ class ValidadorJida extends \Jida\Core\Validador {
                 $datosValidacion = $this->validaciones['obligatorio'];
             }
 
-            if (sizeof($datosValidacion) and array_key_exists('condicional', $datosValidacion)) {
+            if (isset($datosValidacion) and sizeof($datosValidacion) and array_key_exists('condicional', $datosValidacion)) {
 
                 if (isset($_POST[$datosValidacion['condicional']]) and $_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
                     $validacion = TRUE;
