@@ -1,4 +1,5 @@
-if (!jd) var jd = Object();
+if (!jd)
+    var jd = Object();
 /**
  * Conjunto de funcionalidades para las vistas
  *
@@ -46,8 +47,7 @@ jd.vista.prototype = {
      */
     seleccionarAllRows: function () {
         var selector = '[data-jvista=seleccionarTodas]';
-        var opcSeleccionar = $(selector).size();
-
+        var opcSeleccionar = $(selector).length;
 
         if (opcSeleccionar > 0) {
             //var ctrlAllColumns = $( "[data-jvista=seleccionarTodas]" );
@@ -71,9 +71,8 @@ jd.vista.prototype = {
     validarBotones: function () {
         if (this.tipoControl == 2) {
 
-
             $("input:checkbox").on('click', function () {
-                var size = $('input:checkbox:checked').size();
+                var size = $('input:checkbox:checked').length;
                 var btnNoDisponibles = $("[data-multiple=false]");
 
                 if (size > 1) {
@@ -106,7 +105,7 @@ jd.vista.prototype = {
             }
         });
 
-    },//fin armarOpcionesOrden
+    }, //fin armarOpcionesOrden
     /**
      * Crea llamada ajax para modificar la vista según la funcionalidad
      * seleccionada
@@ -162,7 +161,7 @@ jd.vista.prototype = {
         var selector = '[data-jvista="seleccion"]';
         $ctrl = $(selector);
 
-        if ($ctrl.size() > 0) {
+        if ($ctrl.length > 0) {
             console.log("yeah man", $vista);
 
             $vista.on('click', selector, function (e) {
@@ -176,7 +175,8 @@ jd.vista.prototype = {
                 if (seleccion === false) {
                     if (typeof bootbox != 'undefined')
                         bootbox.alert(msj);
-                    else console.log("Debe seleccionar un campo a modificar");
+                    else
+                        console.log("Debe seleccionar un campo a modificar");
                     return false;
                 } else {
                     key = ($(this).data('jkey')) ? $(this).data('jkey') : 'id';
@@ -211,7 +211,9 @@ jd.vista.prototype = {
                 metodo: 'POST',
                 respuesta: "html",
                 funcionCarga: function () {
-                    bootbox.dialog({message: this.respuesta});
+                    bootbox.dialog({
+                        message: this.respuesta
+                    });
                 },
             });
         });
@@ -224,7 +226,8 @@ jd.vista.prototype = {
             var link = $this.data('link');
             var msj = $this.data('msj');
 
-            if (typeof link == 'undefined') link = $this.attr('href');
+            if (typeof link == 'undefined')
+                link = $this.attr('href');
 
             if ($this.data('select')) {
                 seleccion = $jvista.checkSeleccion();
@@ -244,84 +247,18 @@ jd.vista.prototype = {
         });
 
     }
-
 };
 /*fin prototype*/
 
-+function ($) {
-    var contenedor = '[data-liparent]';
-    var menu = function (ele) {
-        $(contenedor).on('click', this.checksubnivel);
-    };
-    menu.prototype.checksubnivel = function () {
-        var ele = $(this);
-        if (ele.children('ul').size() > 0) {
-            if (ele.children('ul').hasClass('show')) {
-                $("ul.show").removeClass('show');
-                ele.removeClass('selected');
-            } else {
-
-                $("ul.show").removeClass('show');
-                $("li").removeClass('selected');
-                ele.addClass('selected');
-                ele.children('ul').addClass('show');
-            }
-        }
-    };
-
-
-    var vSelector = '[data-jida="vista"]';
-
-    $(vSelector).each(function () {
-        var $vista = $(this);
-        var id = $vista.attr('id');
-        var tipoControl = $vista.data('tipocontrol');
-        jdVista = new jd.vista(id, tipoControl);
-        jdVista.armarVista();
-    });
-
-
-}(jQuery);
-
-
 $(document).ready(function () {
-
-    if ($("[data-dependiente]").size() > 0) {
-
-        $("[data-dependiente]").each(function (valor, campo) {
-
-            var $campo = $(campo);
-            var padre = $campo.data('dependiente');
-            var urlAccion = $campo.data('accion');
-
-            $("#" + padre).on('change', function () {
-                var $padre = $(this);
-                var id = $padre.attr('id');
-                var v = $padre.val();
-                var data = new Object();
-                data[id] = v;
-                new jd.ajax({
-                    metodo: "POST",
-                    url: urlAccion,
-                    parametros: data,
-                    funcionCarga: function (ajax) {
-                        $(campo).html(this.respuesta);
-                    }
-                });
-            });
-        });
-
-    }
-
+    'use strict';
     activarPaginador();
 
     $("[data-liparent] > a").on('click', function () {
         var ele = $(this).parent();
         var padreUl = ele.parents('ul');
         var hijosUL = ele.children('ul:first');
-
-        if (hijosUL.size() > 0) {
-
+        if (hijosUL.length > 0) {
             hijosUL.toggleClass('show');
             if (hijosUL.hasClass('show')) {
                 ele.addClass('selected');
@@ -330,31 +267,59 @@ $(document).ready(function () {
                 ele.removeClass('selected');
                 $("li").removeClass('selected');
             }
-
         }
 
     });
     $('[data-jida="goback"]').on('click', function () {
         window.history.back();
     });
+    var vSelector = '[data-jida="vista"]';
+
+    $(vSelector).each(function () {
+        var $vista = $(this);
+        var id = $vista.attr('id');
+        var tipoControl = $vista.data('tipocontrol');
+        var jdVista = new jd.vista(id, tipoControl);
+        jdVista.armarVista();
+    });
+
+
+    $('[data-modal=true]').on('click', function (e) {
+
+        e.preventDefault();
+        var $this = $(this);
+        var url = $this.attr('href');
+        // var msj = $this.data('msj');
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: url,
+        }).done(function (data) {
+            console.log('data');
+            bootbox.dialog({'message': data});
+        });
+    });
+    
+
 });
 
 function activarPaginador() {
-
     $("[data-paginador]").on('click', function (e) {
-
         var obj = $(this);
         var ul = obj.parents('ul');
         var pagina = location.href;
         e.preventDefault();
-
         if (pagina.search('pagina') != -1) {
             pagina = pagina.substr(0, pagina.search('pagina') - 1);
+
         }
-
         history.pushState(null, null, pagina + '/pagina/' + obj.data('paginador'));
-        datos = {'jvista': 'paginador', 'pagina': obj.data('paginador')};
 
+        datos = {
+            'jvista': 'paginador',
+            'pagina': obj.data('paginador')
+        };
         new jd.ajax({
             parametros: datos,
             url: ul.data('page'),
@@ -364,7 +329,5 @@ function activarPaginador() {
                 activarPaginador();
             }
         });
-
     });
-
 }

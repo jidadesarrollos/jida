@@ -263,7 +263,56 @@ class Formulario extends Selector {
         parent::__construct('form');
 
     }
+    /**
+     * Carga el Formulario a mostrar
+     *
+     * @internal Verifica si existe un archivo json para el formulario pedido, carga la informacion del mismo y la
+     *           procesa.
+     *
+     * Los formularios deben encontrarse en la carpeta formularios de Aplicacion o Framework, caso contrario arrojara
+     * excepcion.
+     *
+     * @method _cargarFormulario
+     * @param string $form Nombre del Formulario
+     */
+    private function _cargarFormulario($form, $dataEdicion) {
 
+        if (!strrpos($form, ".json")) {
+            $form = $form . ".json";
+        }
+
+        $path = Rutas::obtener($form, 'formulario')->absoluta();
+        if (!Helpers\Directorios::validar($path)) {
+            throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $path, $this->_ce . '2');
+        }
+        $this->_path = $path;
+
+        $this
+            ->validarJson();
+        $this->_configuaricionInicial();
+
+        $this->_procesarUpdate($dataEdicion);
+        $this->_instanciarCamposConfiguracion();
+        $this->_procesarEstructura();
+
+    }
+
+    private function _configuaricionInicial() {
+
+        $this->_id = $this->_configuracion->identificador;
+
+        $this->attr([
+            'id'      => 'form' . $this->_id,
+            'method'  => 'POST',
+            'name'    => 'form' . $this->_id,
+            'role'    => 'form',
+            'class'   => $this->css('form'),
+            'target'  => $this->target,
+            'enctype' => $this->enctype
+        ]);
+
+        $this->_botonEnvio();
+    }
     /**
      * Procesa la informacion para renderizar el formulario en modo update
      *
@@ -271,12 +320,21 @@ class Formulario extends Selector {
      */
     private function _procesarUpdate($dataEdicion) {
 
+        if (isset($_POST['btn' . $this->_id])) {
+            $dataEdicion = $_POST;
+        }
+
+        if (empty($dataEdicion)) {
+            return;
+        }
+
         if (is_array($dataEdicion)) {
 
             $this->_dataUpdate = $dataEdicion;
             $this->_dataUpdateMultiple = $dataEdicion;
 
         } else {
+
             $this->_idEdicion = $dataEdicion;
             $this->_obtenerDataUpdate();
         }
@@ -306,52 +364,17 @@ class Formulario extends Selector {
         if (!is_object($this->_idEdicion)) {
 
             $query = $this->_configuracion->query . ' where ' . $this->_configuracion->clave_primaria . "='" . $this->_idEdicion . "'";
+
             $data = BD::query($query);
             $this->_consultaUpdate = $query;
 
             if (count($data) > 0) {
                 $this->_dataUpdate = $data[0];
+
                 $this->_dataUpdateMultiple = $data;
             }
 
         }
-
-    }
-
-    /**
-     * Carga el Formulario a mostrar
-     *
-     * @internal Verifica si existe un archivo json para el formulario pedido, carga la informacion del mismo y la
-     *           procesa.
-     *
-     * Los formularios deben encontrarse en la carpeta formularios de Aplicacion o Framework, caso contrario arrojara
-     * excepcion.
-     *
-     * @method _cargarFormulario
-     * @param string $form Nombre del Formulario
-     */
-    private function _cargarFormulario($form, $dataEdicion) {
-
-        if (!strrpos($form, ".json")) {
-            $form = $form . ".json";
-        }
-
-        $path = Rutas::obtener($form, 'formulario')->absoluta();
-        if (!Helpers\Directorios::validar($path)) {
-            throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $path, $this->_ce . '2');
-        }
-        $this->_path = $path;
-
-        $this
-            ->validarJson();
-
-        if (!empty($dataEdicion)) {
-            $this->_procesarUpdate($dataEdicion);
-        }
-
-        $this->_instanciarCamposConfiguracion();
-        $this->_configuaricionInicial();
-        $this->_procesarEstructura();
 
     }
 
@@ -367,22 +390,7 @@ class Formulario extends Selector {
         return $this;
     }
 
-    private function _configuaricionInicial() {
 
-        $this->_id = $this->_configuracion->identificador;
-
-        $this->attr([
-            'id'      => 'form' . $this->_id,
-            'method'  => 'POST',
-            'name'    => 'form' . $this->_id,
-            'role'    => 'form',
-            'class'   => $this->css('form'),
-            'target'  => $this->target,
-            'enctype' => $this->enctype
-        ]);
-
-        $this->_botonEnvio();
-    }
 
     /**
      * Genera el boton de envio si es requerido
@@ -595,6 +603,7 @@ class Formulario extends Selector {
             $selectorInput->label = $label;
 
         }
+
 
         if (array_key_exists($selectorInput->name, $this->_dataUpdate)) {
             $selectorInput->valor($this->_dataUpdate[$selectorInput->name]);
