@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /**
  * Controlador de Session de la aplicación
  *
@@ -10,6 +10,7 @@
  */
 
 namespace Jida\Helpers;
+
 class Sesion {
 
     /**
@@ -21,6 +22,7 @@ class Sesion {
      */
 
     static function iniciar() {
+
         session_start();
         self::set('__idSession', self::getIdSession());
     }
@@ -33,6 +35,7 @@ class Sesion {
      *
      */
     static function getIdSession() {
+
         return session_id();
     }
 
@@ -48,18 +51,20 @@ class Sesion {
      *
      */
 
-    static function destruir($key = FALSE) {
+
+    static function destruir($key = false) {
+
         if ($key) {
             if (is_array($key)) {
                 foreach ($key as $clave) {
-                    if (isset($_SESSION[ $clave ])) {
-                        unset($_SESSION[ $clave ]);
+                    if (isset($_SESSION[$clave])) {
+                        unset($_SESSION[$clave]);
                     }
                 }
             } else {
 
                 if (array_key_exists($key, $_SESSION)) {
-                    unset($_SESSION[ $key ]);
+                    unset($_SESSION[$key]);
                 }
             }
 
@@ -69,7 +74,9 @@ class Sesion {
 
         }
 
-        return TRUE;
+
+        return true;
+
     }
 
     /**
@@ -80,7 +87,9 @@ class Sesion {
      * @deprecated
      * @see    self::destruir
      */
-    static function destroy($key = FALSE) {
+
+    static function destroy($key = false) {
+
         self::destruir($key);
     }
 
@@ -93,6 +102,7 @@ class Sesion {
      *
      */
     static function sessionLogin() {
+
         self::destroy('acl');
         self::set('isLoggin', TRUE);
         session_regenerate_id();
@@ -100,6 +110,7 @@ class Sesion {
     }
 
     static function set($clave, $param2, $param3 = "") {
+
         return self::editar($clave, $param2, $param3);
     }
 
@@ -120,11 +131,11 @@ class Sesion {
 
         if (!empty($param3)) {
 
-            $_SESSION[ $clave ][ $param2 ] = $param3;
+            $_SESSION[$clave][$param2] = $param3;
 
         } else
             if (!empty($clave)) {
-                $_SESSION[ $clave ] = $param2;
+                $_SESSION[$clave] = $param2;
             }
     }
 
@@ -140,11 +151,11 @@ class Sesion {
      */
     static function obt($clave, $clave2 = "") {
 
-        if (!empty($clave2) and isset ($_SESSION [ $clave ][ $clave2 ])) {
-            return $_SESSION [ $clave ][ $clave2 ];
+        if (!empty($clave2) and isset ($_SESSION [$clave][$clave2])) {
+            return $_SESSION [$clave][$clave2];
         } else
-            if (isset ($_SESSION [ $clave ])) {
-                return $_SESSION [ $clave ];
+            if (isset ($_SESSION [$clave])) {
+                return $_SESSION [$clave];
             } else {
                 return FALSE;
             }
@@ -194,6 +205,7 @@ class Sesion {
      *
      */
     static function activa() {
+
         if (self::get('isLoggin'))
             return TRUE;
         else
@@ -212,6 +224,7 @@ class Sesion {
      *
      */
     static function checkAcceso($perfil) {
+
         return self::checkPerfilAcceso($perfil);
     }
 
@@ -237,10 +250,12 @@ class Sesion {
             }
         }
 
-        return FALSE;
+        return false;
+
     }
 
     static function es($perfil) {
+
         if (is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')) {
             $perfiles = self::get('Usuario')->perfiles;
             if (!is_array($perfil)) $perfil = explode(" ", $perfil);
@@ -252,7 +267,8 @@ class Sesion {
 
         }
 
-        return FALSE;
+        return false;
+
     }
 
     /**
@@ -264,10 +280,13 @@ class Sesion {
      *
      */
     static function checkAdm() {
-        $perfiles = self::get('usuario', 'perfiles');
-        if (in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
-            return TRUE;
 
-        return FALSE;
+        $perfiles = self::obt('usuario', 'perfiles');
+        if (in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
+
+            return true;
+
+        return false;
+
     }
 } // END

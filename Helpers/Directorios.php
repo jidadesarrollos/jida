@@ -27,6 +27,7 @@ class Directorios extends \Directory {
      *
      */
     static function validar($dir) {
+
         if (file_exists($dir)) {
             return TRUE;
         } else {
@@ -73,6 +74,7 @@ class Directorios extends \Directory {
      *
      */
     static function listar($ruta) {
+
         $listado = [];
         if (is_dir($ruta)) {
             if ($directorio = opendir($ruta)) {
@@ -112,14 +114,14 @@ class Directorios extends \Directory {
                     if (empty($expReg)) {
                         // Guarda los archivos recorridos
                         if ($file != "." and $file != "..") {
-                            $arr[ $i ] = $file;
+                            $arr[$i] = $file;
                         }
                         ++$i;
                     } else {
                         // Guarda los archivos que coincidan con la expresion regular
                         $esCoincidencia = (preg_match($expReg, $file)) ? 1 : 0;
                         if ($esCoincidencia) {
-                            $arr[ $i ] = Cadenas::removerAcentos($file);
+                            $arr[$i] = Cadenas::removerAcentos($file);
                             ++$i;
                         }
                     }
@@ -180,6 +182,7 @@ class Directorios extends \Directory {
      *
      */
     static function limpiar($dir) {
+
         foreach (glob($dir . "/*") as $files) {
             if (is_dir($files)) {
                 self::eliminar($files);
@@ -200,11 +203,12 @@ class Directorios extends \Directory {
      *
      */
     static function getTotalArchivos($ruta) {
+
         $totalArchivos = 0;
         if ($handle = opendir($ruta)) {
             while (($file = readdir($handle)) !== FALSE) {
                 if (!in_array($file, ['.',
-                                      '..'
+                        '..'
                     ]) && !is_dir($ruta . $file)
                 )
                     $totalArchivos++;
