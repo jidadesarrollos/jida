@@ -168,9 +168,9 @@ class Selector {
      * Genera un selector HTML
      * @method crear
      *
-     * @param string $selector  Nombre Etiqueta HTML a crear
-     * @param array  $atributos Arreglo de atributos para el selector
-     * @param string $content   Contenido del selector
+     * @param string $selector Nombre Etiqueta HTML a crear
+     * @param array $atributos Arreglo de atributos para el selector
+     * @param string $content Contenido del selector
      */
     public static function crear($selector, $atributos = array(), $content = "", $tabs = 0) {
 
@@ -214,7 +214,6 @@ class Selector {
         } else {
             $selectorHTML .= " />";
         }
-
 
         return $selectorHTML . "\n";
     }
@@ -298,7 +297,7 @@ class Selector {
      *
      * @param string $value
      *          Va a ser el valor mostrado en el "value" del boton
-     * @param array  $valores
+     * @param array $valores
      *          arreglo de atributos personalizados.
      *
      */
@@ -361,7 +360,6 @@ class Selector {
 
         $html = "";
 
-
         if (!$this->selectorCierre()) {
             if (!empty($this->selector)) {
                 $html = "<" . $this->selector . " " . $this->renderAttr() . " />\n";
@@ -375,7 +373,6 @@ class Selector {
                     $html = "\n<" . $this->selector . "" . $this->renderAttr() . ">\n\t";
                     $html .= $this->renderContenido() . "\n</" . $this->selector . ">";
                 }
-
 
             }
 
@@ -494,7 +491,6 @@ class Selector {
             return $this->data->{$data};
         }
 
-
     }
 
     /**
@@ -503,7 +499,7 @@ class Selector {
      * Permite obtener o asignar valor a un selector.
      * @method attr
      *
-     * @param mixed $attr  Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es
+     * @param mixed $attr Si es string, puede ser el nombre del atributo que se desea obtener o asignar valor. Si es
      *                     un arreglo será tomado para asignar un conjunto de atributos
      * @param       $valor [opcional] Valor a asignar al string $attr
      *

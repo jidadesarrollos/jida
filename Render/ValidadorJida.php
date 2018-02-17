@@ -13,6 +13,7 @@ namespace Jida\Render;
 use Jida\Helpers as Helpers;
 
 class ValidadorJida extends \Jida\Core\Validador {
+
     /**
      * @var array $validaciones Arreglo opcional con parametros de la validación
      */
@@ -55,13 +56,14 @@ class ValidadorJida extends \Jida\Core\Validador {
      * @opciones string $opciones [opcional] Las opciones asociadas al campo a validar
      */
     function __construct($campo, $validaciones, $opciones = "") {
+
         $this->campo =& $campo;
 
         $this->getDataValidaciones();
         if (is_object($validaciones)) {
             $validacionesArray = [];
             foreach ($validaciones as $key => $value) {
-                $validacionesArray[ $key ] = $value;
+                $validacionesArray[$key] = $value;
             }
             $validaciones = $validacionesArray;
         }
@@ -79,6 +81,7 @@ class ValidadorJida extends \Jida\Core\Validador {
      * @return array $dataValidaciones
      */
     private function getDataValidaciones() {
+
         $this->validacionesDefault =
             [
                 'numerico'     => FALSE,
@@ -112,7 +115,7 @@ class ValidadorJida extends \Jida\Core\Validador {
 
         }
 
-        if ($this->dataValidaciones[ $nombreValidacion ]["expresion"] != "") {
+        if ($this->dataValidaciones[$nombreValidacion]["expresion"] != "") {
 
         } else {
             throw new Exception("Se llama a una expresion $nombreValidacion, la cual se encuentra indefinida", 1);
@@ -122,7 +125,7 @@ class ValidadorJida extends \Jida\Core\Validador {
         if (is_array($this->valorCampo)) {
             $band = TRUE;
             foreach ($this->valorCampo as $key => $value) {
-                $result = preg_match($this->dataValidaciones[ $nombreValidacion ]["expresion"], $value);
+                $result = preg_match($this->dataValidaciones[$nombreValidacion]["expresion"], $value);
                 if ($result != 1) {
                     $band = FALSE;
                 }
@@ -132,7 +135,7 @@ class ValidadorJida extends \Jida\Core\Validador {
             if (empty($this->valorCampo))
                 $resultValidacion = TRUE;
             else {
-                $resultValidacion = (preg_match($this->dataValidaciones[ $nombreValidacion ]["expresion"], $this->valorCampo)) ? TRUE : FALSE;
+                $resultValidacion = (preg_match($this->dataValidaciones[$nombreValidacion]["expresion"], $this->valorCampo)) ? TRUE : FALSE;
             }
         }
         if ($resultValidacion === TRUE) {
@@ -142,7 +145,7 @@ class ValidadorJida extends \Jida\Core\Validador {
              */
             if (array_key_exists($this->campo['name'], $_POST)) {
 
-                $_POST[ $this->campo['name'] ] = $this->valorCampo;
+                $_POST[$this->campo['name']] = $this->valorCampo;
             }
 
             return TRUE;
@@ -161,6 +164,7 @@ class ValidadorJida extends \Jida\Core\Validador {
      * @param string $campo Campo a validar
      */
     function validarCampo(&$campo) {
+
         $this->valorCampo =& $campo;
 
         //En caso de haber un error la variable bandera debe ser modificada a 1.
@@ -172,6 +176,9 @@ class ValidadorJida extends \Jida\Core\Validador {
 
             $datosObl = $this->validaciones['obligatorio'];
             $bandera = 1;
+
+            $datosObl = (is_object($datosObl)) ? (array)$datosObl : $datosObl;
+
             $this->mensajeError =
                 (array_key_exists('mensaje', $datosObl))
                     ? $datosObl['mensaje']
@@ -184,6 +191,7 @@ class ValidadorJida extends \Jida\Core\Validador {
                 $CheckValor = FALSE;
                 $validacion = strtolower($validacion);
 
+                $detalle = (is_object($detalle)) ?  json_decode(json_encode($detalle), TRUE): $detalle;
                 if ($bandera == 0 and (is_array($detalle) or $detalle == TRUE)) {
 
                     switch ($validacion) {
@@ -248,13 +256,22 @@ class ValidadorJida extends \Jida\Core\Validador {
     private function validarCampoLleno() {
 
         $validacion = TRUE;
+        if (array_key_exists('obligatorio', $this->validaciones)) {
 
-        if (array_key_exists('obligatorio', $this->validaciones) and is_array($this->validaciones['obligatorio']) and array_key_exists('condicional', $this->validaciones['obligatorio'])) {
+            if (is_object($this->validaciones['obligatorio'])) {
+                $datosValidacion = (array)$this->validaciones['obligatorio'];
+            } else if (is_array($this->validaciones['obligatorio'])) {
+                $datosValidacion = $this->validaciones['obligatorio'];
+            }
 
-            if ($_POST[ $this->validaciones['obligatorio']['condicional'] ] == $this->validaciones['obligatorio']['condicion']) {
-                $validacion = TRUE;
-            } else {
-                $validacion = FALSE;
+            if (isset($datosValidacion) and sizeof($datosValidacion) and array_key_exists('condicional', $datosValidacion)) {
+
+                if (isset($_POST[$datosValidacion['condicional']]) and $_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
+                    $validacion = TRUE;
+                } else {
+                    $validacion = FALSE;
+                }
+
             }
         }
 
@@ -275,6 +292,7 @@ class ValidadorJida extends \Jida\Core\Validador {
      * @method validarTiny
      */
     private function validarTiny($validacion, $detalle) {
+
         if (array_key_exists('obligatorio', $detalle)) {
             return $this->validarCampoLleno();
         } else {
@@ -283,11 +301,12 @@ class ValidadorJida extends \Jida\Core\Validador {
     }
 
     private function validarDocumentacion($validacion, $detalle) {
+
         $valor = $this->valorCampo;
         if (array_key_exists('campo_codigo', $detalle) and $detalle['campo_codigo'] === TRUE):
-            $valor = $_POST[ $this->campo['name'] . "-tipo-doc" ] . $this->valorCampo;
+            $valor = $_POST[$this->campo['name'] . "-tipo-doc"] . $this->valorCampo;
         endif;
-        $_POST[ $this->campo['name'] ] = $valor;
+        $_POST[$this->campo['name']] = $valor;
         $this->valorCampo = $valor;
 
         return $this->validarCadena('documentacion', $this->valorCampo);
@@ -295,13 +314,12 @@ class ValidadorJida extends \Jida\Core\Validador {
 
     private function validarTelefono($validacion, $detalle) {
 
-
         $code = (array_key_exists("code", $detalle)) ? $detalle['code'] : FALSE;
         $ext = (array_key_exists("ext", $detalle)) ? $detalle['ext'] : FALSE;
         $detalle['tipo'] = (array_key_exists("tipo", $detalle)) ? $detalle['tipo'] : "telefono";
         $todalDigitos = ($ext) ? 14 : 10;
-        $valorCodigo = (isset($_POST[ $this->campo['name'] . "-codigo" ])) ? $_POST[ $this->campo['name'] . "-codigo" ] : "";
-        $valorExt = (isset($_POST[ $this->campo['name'] . "-ext" ])) ? $_POST[ $this->campo['name'] . "-ext" ] : "";
+        $valorCodigo = (isset($_POST[$this->campo['name'] . "-codigo"])) ? $_POST[$this->campo['name'] . "-codigo"] : "";
+        $valorExt = (isset($_POST[$this->campo['name'] . "-ext"])) ? $_POST[$this->campo['name'] . "-ext"] : "";
 
         $valorTelefono = $valorCodigo . $this->valorCampo . $valorExt;
 
@@ -331,8 +349,9 @@ class ValidadorJida extends \Jida\Core\Validador {
     }
 
     private function igualdad($validacion, $detalle) {
+
         if (isset($this->dataValidaciones['campo'])) {
-            if ($this->valorCampo == $_POST[ $this->dataValidaciones['campo'] ]) {
+            if ($this->valorCampo == $_POST[$this->dataValidaciones['campo']]) {
                 return TRUE;
             } else {
                 return FALSE;

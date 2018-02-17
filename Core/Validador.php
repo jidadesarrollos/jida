@@ -54,7 +54,7 @@ class Validador {
                                       'mensaje'   => "El formato del email no es valido"
             ],
             'telefono'            => ['expresion' => "/^0?2[0-9]{9,13}$/",
-                                      'mensaje'   => "El formato del telefono debe ser 212 4222211"
+                                      'mensaje'   => "El formato del telefono debe ser 0212 4222211"
             ],
             'multiple'            => ['expresion' => "/^0?2[0-9]{9,13}$/",
                                       'mensaje'   => "El tel&eacute;fono ingresado no es v&aacute;lido"
@@ -108,7 +108,7 @@ class Validador {
                                       'mensaje'   => 'Formato de Fecha u hora incorrecto.'
             ],
             'limiteCaracteres'    => ['mensaje' => "La cadena no puede superar el total de caracteres permitidos"],
-            'documentacion'       => ['expresion' => "/^(([V|E|G|J|P|N]{1})?\d{7,10})*$/",
+            'documentacion'       => ['expresion' => "/^(([V|v|E|e|G|g|J|j|P|p|N|n]{1})?\d{7,10})*$/",
                                       'mensaje'   => "El campo debe tener el siguiente formato J12345678 o 12345678"
             ]
         ];
