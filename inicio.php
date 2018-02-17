@@ -57,7 +57,7 @@ if (class_exists('\Jida\Inicio\Manager')) {
     $manager = new \Jida\Inicio\Manager();
     $manager->inicio();
 
-    $ctrlGeneral = new \Jida\Core\Manager\JidaController();
+    #$ctrlGeneral = new \Jida\Core\Manager\JidaController();
 
 } else {
     include_once 'plantillas/error/errorConfig.php';

@@ -4,6 +4,7 @@ namespace Jida\Inicio;
 
 use Jida\Helpers as Helpers;
 use Jida\Configuracion as Conf;
+use App as App;
 
 global $JD;
 
@@ -24,7 +25,12 @@ class Manager {
 
         $this->_validador = new Validador();
         $this->_entorno = new Entorno();
-        $this->_configuracion = (array_key_exists('JIDA_CONF', $GLOBALS)) ? $GLOBALS['JIDA_CONF'] : new Conf\Config();
+
+        $this->_configuracion = new Conf\Config();
+        if (class_exists('App\Config\Configuracion')) {
+            $this->_configuracion = new App\Config\Configuracion();
+        }
+
         $this->_control = new Rutas\Control($this);
 
 

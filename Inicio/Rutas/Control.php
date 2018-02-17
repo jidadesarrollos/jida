@@ -9,8 +9,8 @@ class Control {
     private $_get;
     private $_manager;
     private $_urlOriginal;
-    private $_arrayUrl;
-    private $_configuracion;
+
+
     /**
      * @var string $_urlBase Url base de la app
      */
@@ -22,8 +22,8 @@ class Control {
     /**
      * URL
      */
-
-    private $_esJadmin;
+    public $arrayUrl;
+    public $configuracion;
 
     /**
      * Control constructor.
@@ -35,7 +35,7 @@ class Control {
 
         $this->_get = $_GET;
         $this->_manager = $manager;
-        $this->_configuracion = $manager->configuracion();
+        $this->configuracion = $manager->configuracion();
 
     }
 
@@ -45,9 +45,13 @@ class Control {
             $this->_urlOriginal = utf8_encode($this->_get['url']);
         }
         $this->_verificarEstructura();
-        $parser = $this->_procesar();
-
-        Helpers\Debug::imprimir($this->_get, $this->_arrayUrl, $this->_configuracion, true);
+        $controlador = $this->_procesar();
+        if ($controlador) {
+            $controlador->ejecutar();
+        } else {
+            exit("NO");
+        }
+        Helpers\Debug::imprimir($this->_get, $this->arrayUrl, $this->configuracion, true);
 
     }
 
@@ -60,7 +64,7 @@ class Control {
                 '.htm'
             ], '', $url));
 
-        $this->_arrayUrl = array_filter($url, function ($var) {
+        $this->arrayUrl = array_filter($url, function ($var) {
 
             return !!$var;
         });
@@ -75,7 +79,7 @@ class Control {
         $GLOBALS['__URL_APP'] = $this->_urlBase;
         Helpers\Sesion::set('URL_ACTUAL', $this->_urlBase . Helpers\Sesion::obt('URL_ACTUAL'));
 
-        if (count($this->_arrayUrl) > 0) {
+        if (count($this->arrayUrl) > 0) {
             $this->_validarIdioma();
         }
 
@@ -85,13 +89,13 @@ class Control {
 
     private function _validarIdioma() {
 
-        $actual = $this->_arrayUrl[0];
-        $idiomas = $this->_configuracion->idiomas;
+        $actual = $this->arrayUrl[0];
+        $idiomas = $this->configuracion->idiomas;
 
         if (array_key_exists($actual, $idiomas) or in_array($actual, $idiomas)) {
 
-            $this->_idioma = $this->_arrayUrl[0];
-            array_shift($this->_arrayUrl);
+            $this->_idioma = $this->arrayUrl[0];
+            array_shift($this->arrayUrl);
 
         }
 
@@ -99,7 +103,7 @@ class Control {
 
     private function _procesar() {
 
-        return new Parser($this->_arrayUrl);
+        return new Controlador($this);
 
     }
 
