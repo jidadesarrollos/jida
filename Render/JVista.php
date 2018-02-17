@@ -1127,7 +1127,9 @@ class JVista {
         Helpers\Sesion::set('__msjVista', ['msj' => Helpers\Mensajes::crear($tipo, $msj),
                                            'id'  => $idVista
         ]);
-        if (!empty($redireccion)) redireccionar($redireccion);
+        if (!empty($redireccion)) {
+            \Jida\Helpers\Rutas::redireccionar($redireccion);
+        }
 
     }
 

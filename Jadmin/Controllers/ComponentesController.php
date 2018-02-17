@@ -129,7 +129,7 @@ class ComponentesController extends JController {
 
 
             if (!$this->solicitudAjax())
-                redireccionar($this->url);
+                \Jida\Helpers\Rutas::redireccionar($this->url);
             else
                 Render\JVista::msj('componentes', 'error', "Debe seleccionar un componente");
 

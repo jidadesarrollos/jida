@@ -17,10 +17,6 @@ include_once 'Config/base.php';
 global $jdOpciones;
 $jdOpciones = [];
 
-/**
- * Directorio del directorio del framework
- */
-define('framework_dir', ROOT . 'Framework' . DS);
 define('DIR_FRAMEWORK', ROOT . 'Framework' . DS);
 define('DIR_APP', ROOT . 'Aplicacion' . DS);
 define('HTDOCS_DIR', ROOT . 'htdocs/');
@@ -52,9 +48,9 @@ if (file_exists(DIR_APP) and file_exists(DIR_APP . 'Config/appConfig.php')) {
     include_once 'Config/appConfig.php';
 }
 
-if (class_exists('\Jida\Inicio\Manager')) {
+if (class_exists('\Jida\Manager\Manager')) {
 
-    $manager = new \Jida\Inicio\Manager();
+    $manager = new \Jida\Manager\Manager();
     $manager->inicio();
 
     #$ctrlGeneral = new \Jida\Core\Manager\JidaController();

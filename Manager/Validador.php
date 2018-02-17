@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio;
+namespace Jida\Manager;
 
 
 class Validador {

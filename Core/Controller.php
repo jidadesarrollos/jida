@@ -235,8 +235,9 @@ class Controller {
 
         $this->url = $this->urlController();
         if (Helpers\Sesion::obt('Usuario') instanceof User)
-            $this->usuario = Helpers\Sesion::get('Usuario');
+            $this->usuario = Helpers\Sesion::obt('Usuario');
         else {
+
             $clase = MODELO_USUARIO;
             $this->usuario = new $clase;
         }

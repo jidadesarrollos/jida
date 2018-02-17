@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio\Rutas;
+namespace Jida\Manager\Rutas;
 
 use Jida\Helpers as Helpers;
 
@@ -37,6 +37,7 @@ class Procesador {
     protected function _modulo() {
 
         $padre = $this->_padre;
+
         $parametro = $padre->proximoParametro();
         $posModulo = $this->_validarNombre($parametro, 'upper');
 
@@ -52,17 +53,23 @@ class Procesador {
             }
 
         } elseif ($padre->jadmin) {
+
             $padre->ruta = 'framework';
             if ($this->_moduloJadmin($posModulo)) {
 
                 $padre->modulo = $posModulo;
                 $this->_namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
+
             } else {
+
+                $padre->reingresarParametro($posModulo);
                 $this->_namespace = $this->_namespaces['jida'];
+
             }
 
 
         } else {
+
             $this->_namespace = $this->_namespaces['app'];
             $padre->reingresarParametro($posModulo);
         }
@@ -85,7 +92,10 @@ class Procesador {
 
         if ($default) {
 
-            $controlador = ($this->_padre->modulo) ? $this->_validarNombre($this->_padre->modulo, 'upper') : 'Index';
+            $ctrlDefault = (empty($this->_padre->modulo) and $this->_padre->jadmin) ? 'Jadmin' : 'Index';
+            $controlador = ($this->_padre->modulo) ? $this->_validarNombre($this->_padre->modulo, 'upper') : $ctrlDefault;
+
+
             $default = $controlador;
 
         } else {
@@ -184,13 +194,12 @@ class Procesador {
 
         if (is_array($parametros) and $parametros) {
 
-            function limpiar($valor) {
+
+            $parametros = array_filter($parametros, function ($valor) {
 
                 return !empty($valor) or $valor === 0;
 
-            }
-
-            $parametros = array_filter($parametros, limpiar);
+            });
             $this->_padre->parametros = $parametros;
 
         }

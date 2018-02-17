@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio\Rutas;
+namespace Jida\Manager\Rutas;
 
 use Jida\Helpers as Helpers;
 
@@ -45,13 +45,16 @@ class Control {
             $this->_urlOriginal = utf8_encode($this->_get['url']);
         }
         $this->_verificarEstructura();
+
         $controlador = $this->_procesar();
+
         if ($controlador) {
             $controlador->ejecutar();
         } else {
             exit("NO");
         }
-        Helpers\Debug::imprimir($this->_get, $this->arrayUrl, $this->configuracion, true);
+
+
 
     }
 

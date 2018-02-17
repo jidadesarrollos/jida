@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio\Rutas;
+namespace Jida\Manager\Rutas;
 
 
 class Jadmin {

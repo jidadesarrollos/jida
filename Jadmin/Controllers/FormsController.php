@@ -179,9 +179,9 @@ class FormsController extends JController{
 						RenderHTML\Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
 
                         if($ambito==2){
-                            redireccionar('/jadmin/forms/configuracion-jida-form/formulario/'.$guardado['idResultado']);
+                            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/configuracion-jida-form/formulario/'.$guardado['idResultado']);
                         }else{
-                            redireccionar('/jadmin/forms/configuracion-formulario/formulario/'.$guardado['idResultado']);
+                            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/configuracion-formulario/formulario/'.$guardado['idResultado']);
                         }
 
 					}
@@ -232,7 +232,7 @@ class FormsController extends JController{
          Helpers\Sesion::set('__msjVista', Helpers\Mensajes::mensajeSuceso("Se han eliminados los formularios"));
 
          Helpers\Sesion::set('__idVista','formularios');
-         redireccionar('/jadmin/forms/');
+            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/');
         }else{
             throw new Exception("No se pudo eliminar el formulario", 1);
 

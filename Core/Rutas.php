@@ -53,7 +53,6 @@ class Rutas {
             } else if ($this->_validarModulo($modulo)) {
                 $form = array_shift($this->_solicitud);
                 $this->_rutaAbsoluta = $this->_rutaModulo . DS . 'Formularios' . DS . $form;
-                Helpers\Debug::imprimir($this->_rutaAbsoluta, $this->_rutaModulo, "AK", true);
             }
 
 

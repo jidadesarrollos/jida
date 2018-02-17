@@ -34,7 +34,7 @@ class Init{
 		if($this->crearArchivosRequeridos()){
 			$this->copiarHtdocs();
 
-			redireccionar($this->obtenerUrlPath().'jadmin/init/');
+			 \Jida\Helpers\Rutas::redireccionar($this->obtenerUrlPath().'jadmin/init/');
 		}
 	}
 

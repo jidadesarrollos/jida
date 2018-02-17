@@ -32,7 +32,7 @@ class UsersController extends JController {
     function cambioClave() {
 
         $this->dv->usarPlantilla('form');
-        $form = new Render\Formulario('CambioClave');
+        $form = new Render\Formulario('jida/CambioClave');
 
         $form->titulo("Cambio de Clave");
         $form->boton('principal', 'Cambiar Clave');

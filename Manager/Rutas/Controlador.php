@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio\Rutas;
+namespace Jida\Manager\Rutas;
 
 
 use Jida\Helpers as Helpers;
@@ -35,11 +35,13 @@ class Controlador {
     private function _parser() {
 
         $parametro = $this->proximoParametro($this->_arrayUrl);
+
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
         } else {
             $this->reingresarParametro($parametro);
         }
+
         $this->_procesador = new Procesador($this);
         $this->_procesador->procesar();
 
@@ -87,8 +89,6 @@ class Controlador {
             $this->_pagina->definirDirectorios();
             $this->_pagina->renderizar($controlador->vista);
 
-
-
         }
 
     }
@@ -110,7 +110,7 @@ class Controlador {
                 $this->controlador,
                 $this->metodo,
                 $this->jadmin);
-
+        $GLOBALS['dataVista'] = $dataVista;
         $this->_dataVista = $dataVista;
 
         return true;

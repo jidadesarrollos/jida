@@ -330,6 +330,7 @@ class Pagina {
         }
 
         $DataTpl = $this->data->obtPlantilla();
+
         /**
          * Se verifica si desea usarse una plantilla
          */

@@ -1,9 +1,6 @@
 <?php
-
-
 $imagen = $this->nexo('Imagen');
 $src = URL_IMGS . $this->obj->directorio ."/". $imagen->data('md',$this->obj);
-#\Jida\Helpers\Debug::imprimir($src,true);
 ?>
 <div class="container-fluid jida-container galeria">
 	<div class="row">

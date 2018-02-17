@@ -15,6 +15,7 @@ use Exception;
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use Jida\RenderHTML\Vista as Vista;
+use Jida\RenderHTML as RenderHTML;
 use Jida\Helpers as Helpers;
 
 class ObjetosController extends JController {
@@ -48,14 +49,14 @@ class ObjetosController extends JController {
         $data = $this->modelo->bd->obtTablasBD(TRUE);
 
         for ($i = 0; $i < count($data); $i++) {
-            array_unshift($data[ $i ], $data[ $i ]['table_name']);
+            array_unshift($data[$i], $data[$i]['table_name']);
         }
 
         $vista = new Jvista($data, ['titulos' => ['',
-                                                  'name',
-                                                  'type',
-                                                  'collation',
-                                                  'create'
+            'name',
+            'type',
+            'collation',
+            'create'
         ]
         ]);
 
@@ -65,7 +66,7 @@ class ObjetosController extends JController {
             ['span'  => 'fa fa-edit',
              'title' => "Generar Modelo",
              'href'  => $this->obtUrl('crearObjeto', ['{clave}',
-                                                      'jida'
+                 'jida'
              ])
             ],
 
@@ -84,10 +85,11 @@ class ObjetosController extends JController {
             $generador->ubicacion(DIR_FRAMEWORK . 'ModelFramework/');
         }
         $prefijos = ['m_',
-                     's_',
-                     't_'
+            's_',
+            't_'
         ];
         array_walk($prefijos, function (&$valor, $clave) {
+
             $valor = "/^" . $valor . "/";
         });
         $generador->extensionClass = FALSE;
@@ -126,6 +128,7 @@ class ObjetosController extends JController {
      * @access   private
      */
     private function validarObjetos(Componente $componente) {
+
         $objetosInexistentes = [];
         $objetosNuevos = [];
         $nombreComponente = Helpers\Cadenas::upperCamelCase($componente->componente);
@@ -138,6 +141,7 @@ class ObjetosController extends JController {
         $objetosCarpeta = [];
         Helpers\Directorios::listarDirectoriosRuta($rutaComponente, $objetosCarpeta, "/^.*Controller.class.php$/");
         array_walk($objetosCarpeta, function (&$objeto, $key) {
+
             $objeto = str_replace("Controller.class.php", "", $objeto);
         });
 
@@ -155,9 +159,9 @@ class ObjetosController extends JController {
 
         $arr = [];
         foreach ($nuevos as $key => $value) {
-            $arr[ $key ]['objeto'] = $value;
-            $arr[ $key ]['id_componente'] = $componente->id_componente;
-            $arr[ $key ]['descripcion'] = '';
+            $arr[$key]['objeto'] = $value;
+            $arr[$key]['id_componente'] = $componente->id_componente;
+            $arr[$key]['descripcion'] = '';
         }
 
         if (count($nuevos) > 0) {
@@ -249,6 +253,7 @@ class ObjetosController extends JController {
      * @method addDescripcion
      */
     function addDescripcion() {
+
         if ($this->entero($this->get('obj'))) {
 
             if (isset($_POST['s-ajax'])) {
@@ -271,7 +276,7 @@ class ObjetosController extends JController {
                 } else {
                     RenderHTML\Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
                 }
-                redireccionar('/jadmin/objetos/lista/comp/' . $Objeto->id_componente);
+                $this->redireccionar('/jadmin/objetos/lista/comp/' . $Objeto->id_componente);
             }
 
             $this->dv->form = $form->armarFormulario();
@@ -287,6 +292,7 @@ class ObjetosController extends JController {
      * @method validarNombreObjeto
      */
     private function validarNombreObjeto($nombre) {
+
         $nombreClase = Cadenas::upperCamelCase($nombre . "Controller");
         if (class_exists($nombreClase)) {
             return TRUE;
@@ -303,6 +309,7 @@ class ObjetosController extends JController {
      * @access public
      */
     function metodos() {
+
         $this->vista = "listaMetodos";
         $controladorMetodos = new MetodosController();
         $this->dv->vistaMetodos = $controladorMetodos->metodosObjeto();
@@ -316,6 +323,7 @@ class ObjetosController extends JController {
      *
      */
     function accesoPerfiles() {
+
         if ($this->get('metodo')) {
 
             $metodo = new Metodo($this->get('metodo'));

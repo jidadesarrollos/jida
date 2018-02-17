@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Inicio;
+namespace Jida\Manager;
 
 use Jida\Helpers as Helpers;
 use Jida\Configuracion as Conf;
@@ -44,6 +44,7 @@ class Manager {
             date_default_timezone_set(ZONA_HORARIA);
             Helpers\Sesion::iniciar();
             $_SERVER = array_merge($_SERVER, getallheaders());
+
 
             $this->_validador->inicio();
             $this->_control->validar();

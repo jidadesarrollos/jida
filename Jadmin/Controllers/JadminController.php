@@ -26,6 +26,7 @@ class JadminController extends JController {
 
 
     function __construct() {
+
         parent::__construct();
 
         $this->url = "/jadmin/";
@@ -49,8 +50,8 @@ class JadminController extends JController {
 
         if (isset($_GET['file'])) {
 
-            if (file_exists(framework_dir . 'json/validaciones.json')) {
-                $data = file_get_contents(framework_dir . 'json/validaciones.json');
+            if (file_exists(DIR_FRAMEWORK . 'json/validaciones.json')) {
+                $data = file_get_contents(DIR_FRAMEWORK . 'json/validaciones.json');
                 respuestaAjax($data);
             } else {
                 throw new Exception("No se consigue el archivo solicidado o no existe", 1);

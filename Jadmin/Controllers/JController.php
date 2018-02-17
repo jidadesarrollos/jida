@@ -60,8 +60,10 @@ class   JController extends Core\Controller {
     protected function validarSesion() {
 
         if (Helpers\Sesion::es($this->perfilesAdmin)) {
+
             return TRUE;
         } else {
+
             $this->formularioInicioSesion();
         }
     }
@@ -96,6 +98,7 @@ class   JController extends Core\Controller {
         $this->dv->usarPlantilla('login');
         $this->tituloPagina = NOMBRE_APP;
         $this->data('formLoggin', $form->armarFormulario());
+
 
     }
 

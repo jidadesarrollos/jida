@@ -261,26 +261,12 @@ class DataModel {
      */
     function __construct($id = FALSE) {
 
-        // if(!class_exists('\App\Config\BD'))
-        // throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce."1");
 
-        if (defined('MANEJADOR_BD') or defined('manejadorBD'))
-            $this->manejadorBD = (defined('MANEJADOR_BD')) ? MANEJADOR_BD : manejadorBD;
         $numeroParams = func_num_args();
-
-        $this->tablaQuery = $this->tablaBD;
+        $this->_validarBD();
         $param = func_get_args(0);
         $this->_clase = get_class($this);
-        $this->usoBD = $this->manejadorBD;
         $this->namespace = $this->obtNamespace($this->_clase);
-        if ($this->usoBD !== FALSE) {
-
-            $this->initBD();
-            $this->bd->mantener = true;
-        } else {
-            $this->usoBD = FALSE;
-        }
-
         //instancia objecto reflection
         $this->reflector = new ReflectionClass(get_class($this));
 
@@ -316,12 +302,37 @@ class DataModel {
         } else {
             $this->instanciarTieneUno()->instanciarTieneMuchos();
         }
-		if ($this->usoBD !== FALSE) {
+        if ($this->usoBD !== FALSE) {
 
-		}
-		$this->bd->mantener = false;
-		$this->bd->cerrarConexion();
+        }
+        if ($this->bd) {
+            $this->bd->mantener = false;
+            $this->bd->cerrarConexion();
+        }
 
+
+    }
+
+    /**
+     * @since 0.6.1
+     *
+     */
+    function _validarBD() {
+
+
+        $this->usoBD = !!class_exists('\App\Config\BD');
+
+        if ($this->usoBD) {
+
+            $this->tablaQuery = $this->tablaBD;
+            $bd = new \App\Config\BD();
+            $this->manejadorBD = $bd->manejador;
+            $this->initBD();
+            $this->bd->mantener = true;
+
+        }
+
+        $this->usoBD = $this->manejadorBD;
 
     }
 
@@ -424,11 +435,11 @@ class DataModel {
      */
     private function instanciarRelaciones() {
 
-		$this->bd->mantener=true;
-		
+        $this->bd->mantener = true;
+
         $data = $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery(implode(";", $this->consultaRelaciones), 2), array_keys($this->consultaRelaciones));
-		$this->bd->mantener=false;
-		$this->bd->cerrarConexion();
+        $this->bd->mantener = false;
+        $this->bd->cerrarConexion();
         foreach ($data as $relacion => $info) {
 
             $claseSola = $this->obtClaseNombre($relacion);

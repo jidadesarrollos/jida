@@ -1003,7 +1003,7 @@ class Formulario extends Selector {
         $msj = Helpers\Mensajes::crear($type, $msj, true);
         Helpers\Sesion::set('__msjForm', $msj);
         if ($redirect) {
-            redireccionar($redirect);
+            \Jida\Helpers\Rutas::redireccionar($redirect);
         }
     }
 
