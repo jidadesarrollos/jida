@@ -436,12 +436,12 @@
                     default:
 
                         if ($campo.val().trim() == "") resp = false;
-                        else  resp = true;
+                        else resp = true;
 
                         break;
                 }//final switch========================
 
-            } else  resp = true;
+            } else resp = true;
 
             return resp;
         },
@@ -456,7 +456,7 @@
             if (valorCampo != "") {
 
                 if (expresion.test(valorCampo)) return true;
-                else    return false;
+                else return false;
             } else {
                 return true;
             }//fin validacion
@@ -490,12 +490,12 @@
                 var celularValido = (expresionCel.test(valorCampo)) ? 1 : 0;
                 var TelefonoValido = (expresionTlf.test(valorCampo)) ? 1 : 0;
                 var internacionalValido = (expresionInter.test(valorCampo)) ? 1 : 0;
-                console.log("valido?", celularValido, TelefonoValido, valorCampo, parametros.tipo);
+
                 if (
                     parametros.tipo && (parametros.tipo == 'telefono' && TelefonoValido == 1 ||
-                    parametros.tipo == 'celular' && celularValido == 1 ||
-                    parametros.tipo == 'internacional' && internacionalValido == 1 ||
-                    parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1))
+                        parametros.tipo == 'celular' && celularValido == 1 ||
+                        parametros.tipo == 'internacional' && internacionalValido == 1 ||
+                        parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1))
                 ) {
 
                     return true;
@@ -510,9 +510,42 @@
          * verifica la igualdad entre dos campos
          */
         igualdad: function ($campo, validacion, parametros) {
-            campo = $("#" + parametros.campo);
 
-            if ($campo.val() == campo.val())
+            var $campoPadre = $("#" + parametros.campo);
+            var band = false;
+            console.log(parametros);
+            if (parametros.condicional) {
+                var $comparacion = $("#" + parametros.condicional);
+
+                if (parametros.tipo && parametros.tipo == "radio" || $comparacion.attr('type') == 'radio') {
+
+                    if ($comparacion.length < 1) {
+
+                        $comparacion = $("input[name=" + parametros.condicional + "]");
+                    }
+                    valor = $("input[name=" + parametros.condicional + "]:checked").val();
+
+                    var nombreCampo = $comparacion.attr('name');
+                    if (typeof nombreCampo == 'undefined') {
+                        console.error("El condicional para " + $campo.attr('name') + " no ha sido definido correctamente", $comparacion, parametros);
+                    }
+
+                } else {
+                    valor = $comparacion.val();
+                }
+                console.log($comparacion.val(), parametros.condicion);
+                if ($comparacion.val() == parametros.condicion) {
+                    band = true;
+                }
+            }else {
+                band = true;
+            }
+
+            if (!band) {
+                return true;
+            }
+
+            if ($campo.val() == $campoPadre.val())
                 return true;
             else
                 return false;
@@ -583,6 +616,7 @@
         igualdad: {'mensaje': 'Los campos no pueden ser iguales'}
 
     };
+
     /**
      *   =============================
      *   DECLARACION DEL PLUGIN
