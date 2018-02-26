@@ -12,7 +12,7 @@
  * @category bootstrap
  */
 
-include_once 'Config/base.php';
+include_once 'Config/Base.php';
 
 global $jdOpciones;
 $jdOpciones = [];
