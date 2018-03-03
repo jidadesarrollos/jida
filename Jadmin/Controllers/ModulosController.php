@@ -65,7 +65,7 @@ class ModulosController extends JController {
     /**
      *
      * @internal esta funcion realiza un mach entre los directorios en la aplicacion y
-     * la declaraciones en initConfig.php de los modulos si hay diferencia devuelve
+     * la declaraciones en __initConfig.php de los modulos si hay diferencia devuelve
      * un arreglo con con dos posiciones 0 direcciones y 1 declaraciones
      *
      * @method machModulo

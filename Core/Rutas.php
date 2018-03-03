@@ -8,7 +8,6 @@
 
 namespace Jida\Core;
 
-
 use Jida\Helpers as Helpers;
 
 class Rutas {
@@ -29,6 +28,9 @@ class Rutas {
         switch ($tipo) {
             case 'formulario':
                 $this->_analizarFormulario();
+                break;
+            case 'menu':
+                $this->_analizarMenu();
                 break;
             default:
                 $this->_analizar();
@@ -55,11 +57,27 @@ class Rutas {
                 $this->_rutaAbsoluta = $this->_rutaModulo . DS . 'Formularios' . DS . $form;
             }
 
-
         } else {
             $form = array_shift($this->_solicitud);
             $this->_rutaAbsoluta = DIR_APP . 'Formularios' . DS . $form;
             #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $form;
+        }
+    }
+
+    private function _analizarMenu() {
+        $jida = !!(in_array('jida', $this->_solicitud));
+        if (count($this->_solicitud) > 1) {
+            $modulo = array_shift($this->_solicitud);
+            if ($jida) {
+                $menu = array_shift($this->_solicitud);
+                $this->_rutaAbsoluta = DIR_FRAMEWORK . DS . 'Menus' . DS . $menu;
+            } else if ($this->_validarModulo($modulo)) {
+                $menu = array_shift($this->_solicitud);
+                $this->_rutaAbsoluta = $this->_rutaModulo . DS . 'Menus' . DS . $menu;
+            }
+        } else {
+            $menu = array_shift($this->_solicitud);
+            $this->_rutaAbsoluta = DIR_APP . 'Menus' . DS . $menu;
         }
     }
 
@@ -83,9 +101,7 @@ class Rutas {
         return $this->_limpiar($this->_rutaAbsoluta);
     }
 
-
     function _validarModulo($modulo, $jida = "") {
-
 
         if (array_key_exists(strtolower($modulo), $this->_conf->modulos)) {
             $this->_rutaModulo = DIR_APP . 'Modulos' . DS . ucwords($modulo);
