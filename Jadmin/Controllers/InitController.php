@@ -174,7 +174,7 @@ class InitController extends JController{
             ;
         $initConfig .= $this->saltodeLinea()
             . $this->definirArray('$GLOBALS[\'modulos\']',['Jadmin']);
-        $this   ->crear(DIR_APP."Config/__initConfig.php")
+        $this   ->crear(DIR_APP."Config/initConfig.php")
                     ->escribir($initConfig)
                     ->cerrar();
         return $this;

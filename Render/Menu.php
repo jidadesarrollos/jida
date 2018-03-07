@@ -1,12 +1,11 @@
 <?php
 /**
- * Objeto Renderizador de Menus
+ * Objeto Renderizador de Menu
  *
- * @author Julio Rodriguez
+ * @author Rosmy Rodriguez
  * @package JidaFramework
  * @version 1.0
- * @since 1.4
- * @see Selector
+ * @since 1.6
  * @category Render
  */
 
@@ -173,55 +172,6 @@ class Menu extends Selector {
         $this->html .= "</$this->selectorMenu>\n";
 
         return $this->html;
-
-    }
-
-
-    private function setAtributos($item) {
-
-        $atributos = [];
-
-        if (!empty($item->id))
-            $atributos['id'] = $item->id;
-
-        if (!empty($item->class))
-            $atributos['class'] = $item->class;
-
-        return $atributos;
-
-    }
-
-
-    private function obtHtml($items) {
-
-        $atributosMenu = $this->setAtributos($items);
-        $selectorMenu = new Selector('ul', $atributosMenu);
-
-        if (!empty($items->items)) {
-
-            foreach ($items->items as $item) {
-
-                $atributosItem = $this->setAtributos($item);
-                $selectorItem = new Selector('li', $atributosItem);
-
-                if (property_exists($item, 'url')) {
-                    $selectorLink = new Selector('a', ['href' => $item->url]);
-                    $label = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
-                    $selectorLink->addFinal($label);
-                    $selectorItem->addFinal($selectorLink->render());
-                }
-
-                $selectorMenu->addFinal($selectorItem->render());
-
-                if (property_exists($item, 'submenu')) {
-                    $this->obtHtml($item->submenu);
-                }
-
-            }
-
-        }
-
-        return $selectorMenu;
 
     }
 
