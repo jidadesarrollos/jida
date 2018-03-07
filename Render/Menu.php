@@ -96,7 +96,6 @@ class Menu extends Selector {
 
         $this->_path = $path;
         $this->validarJson();
-        //$this->obtHtml($this->menu);
 
     }
 
