@@ -71,7 +71,7 @@ class Menu extends Selector {
     }
 
     /**
-     * Carga el Menus a mostrar
+     * Carga el Menu a mostrar
      *
      * @internal Verifica si existe un archivo json para el menu pedido, carga la informacion del mismo y la
      * procesa.
@@ -80,7 +80,7 @@ class Menu extends Selector {
      * excepcion.
      *
      * @method cargarMenu
-     * @param string $menu Nombre del Menus
+     * @param string $menu Nombre del Menu
      */
     private function cargarMenu($menu) {
 

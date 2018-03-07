@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Clase Menus
+ * Clase Menu
  *
  * @package default
  * @author
@@ -134,7 +134,7 @@ class Menu extends BD\DataModel {
          if(!empty($menu)){
             $this->obtenerMenuByNombre($menu);
          }else{
-         	#throw new Exception("Menus no definido", 1);
+         	#throw new Exception("Menu no definido", 1);
          }
          #Helpers\Debug::mostrarArray(Helpers\Helpers\Sesion::get('usuario','perfiles'),false);
 

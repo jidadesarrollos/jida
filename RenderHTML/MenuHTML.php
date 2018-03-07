@@ -27,7 +27,7 @@ class MenuHTML extends BD\DBContainer{
      */
      var $configuracion=array('ul'=>array(),"li"=>array());
     /**
-     * Objeto Menus a manejar
+     * Objeto Menu a manejar
      */
     private $menu ="show";
 

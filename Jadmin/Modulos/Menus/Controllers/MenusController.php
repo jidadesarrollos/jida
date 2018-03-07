@@ -45,7 +45,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController
 
         $tabla->addMensajeNoRegistros('No hay Menus Registrados',
             ['link' => $this->obtUrl(''),
-                'txtLink' => 'Crear Menus']
+                'txtLink' => 'Crear Menu']
         );
         $tabla->acciones(['Nuevo' => ['href' => $this->obtUrl('gestionMenu')]]);
 
@@ -68,13 +68,13 @@ class MenusController extends \Jida\Jadmin\Controllers\JController
 
                 if ($classMenu->salvar($this->post())->ejecutado()):
                     $tipo = 'suceso';
-                    $msj = 'Menus <strong>' . $classMenu->menu . '</strong> creado exitosamente';
+                    $msj = 'Menu <strong>' . $classMenu->menu . '</strong> creado exitosamente';
                 else:
                     $tipo = 'error';
                     $msj = 'No se pudo crear el menu, por favor, vuelva a intentarlo';
                 endif;
 
-                Render\JVista::msj('menus', 'suceso', 'Menus <strong>' . $classMenu->menu . '</strong> creado exitosamente', $this->obtUrl('index'));
+                Render\JVista::msj('menus', 'suceso', 'Menu <strong>' . $classMenu->menu . '</strong> creado exitosamente', $this->obtUrl('index'));
             }
         }
 
@@ -93,7 +93,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController
 
             if (!empty($cMenu->id_menu)) {
                 $cMenu->eliminar($id);
-                // Render\Vista::msj('menus','suceso', 'Menus eliminado');
+                // Render\Vista::msj('menus','suceso', 'Menu eliminado');
 
             } else {
                 // Render\Vista::msj('menus',"error","No se ha eliminado menu");
