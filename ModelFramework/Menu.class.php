@@ -126,7 +126,7 @@ class Menu extends DataModel {
          if(!empty($menu)){
             $this->obtenerMenuByNombre($menu);
          }else{
-         	#throw new Exception("Menu no definido", 1); 	
+         	#throw new Exception("Menus no definido", 1);
          }
          #Debug::mostrarArray(Session::get('usuario','perfiles'),false);
          

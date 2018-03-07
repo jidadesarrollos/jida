@@ -25,7 +25,7 @@ class MenusOLDController extends JController {
     }
 
     function index() {
-        $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
+        $query = "select id_menu,nombre_menu \"Nombre Menus\" from s_menus";
         $this -> vista = 'menus';
 
         $vistaMenu = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Menus');
@@ -39,11 +39,11 @@ class MenusOLDController extends JController {
                                                                     'href'=>'/jadmin/menus/opciones/menu/{clave}/'),
                                                                     'html' =>array('span' =>array('atributos' =>
                                                                                         array('class' => 'glyphicon glyphicon-folder-open',
-																						'title'=>'Ver Opciones del Menu',)
+																						'title'=>'Ver Opciones del Menus',)
                                                                                     )))),
                                              '1' => array('a' =>array('atributos' =>array(
                                                                                 'href'=>'/jadmin/menus/eliminar-menu/menu/{clave}',
-                                                                                'class'=> 'btn','title'=>'Eliminar Menu',
+                                                                                'class'=> 'btn','title'=>'Eliminar Menus',
                                                                                 ),
                                                                 'html' => array('span' =>array(
                                                                                         'atributos' =>array(
@@ -57,7 +57,7 @@ class MenusOLDController extends JController {
                                                                 'html' => array('span' =>array(
                                                                                     'atributos' =>array(
                                                                                             'class' => 'glyphicon glyphicon-pencil',
-                                                                                            'title'=>'Modificar Menu',
+                                                                                            'title'=>'Modificar Menus',
                                                                                              )))))
                                                 );
 
@@ -89,7 +89,7 @@ class MenusOLDController extends JController {
 
             $valor = $classMenu->procesarMenu($post);
             if(isset($valor['result']['ejecutado']) and $valor['result']['ejecutado']==1){
-                $msj = Mensajes::mensajeSuceso('Menu <strong>'.$valor['accion'].'</strong> exitosamente');
+                $msj = Mensajes::mensajeSuceso('Menus <strong>'.$valor['accion'].'</strong> exitosamente');
                 Helpers\Sesion::set('__msjVista',$msj);
                 Helpers\Sesion::set('__idVista','menus');
                 redireccionar('/jadmin/menus/');
@@ -126,7 +126,7 @@ class MenusOLDController extends JController {
 
         $form = new RenderHTML\Formulario('ProcesarMenus', $tipoForm, $seleccion,2);
         $form -> action = '/jadmin/menus/set-menu/';
-        $this->dv->tituloForm = ($tipoForm == 1) ? 'Registrar Menu' : 'Modificar Menu';
+        $this->dv->tituloForm = ($tipoForm == 1) ? 'Registrar Menus' : 'Modificar Menus';
         $this->dv->formMenu = $form -> armarFormulario();
 
     }
@@ -139,7 +139,7 @@ class MenusOLDController extends JController {
 			$cMenu = new Menu($seleccion);
 	        if(!empty($cMenu->id_menu)){
 	        	$cMenu->eliminarObjeto($cMenu->id_menu);
-				RenderHTML\Vista::msj('menus','suceso', 'Menu eliminado');
+				RenderHTML\Vista::msj('menus','suceso', 'Menus eliminado');
 
 	        }else{
 	        	RenderHTML\Vista::msj('menus',"error","No se ha eliminado menu");

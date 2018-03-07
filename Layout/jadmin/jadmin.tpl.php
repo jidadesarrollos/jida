@@ -40,12 +40,6 @@
             ?>
             <hr/>
 
-            <?php
-            $menu = new \Jida\Render\Menu('MenuTest');
-            echo $menu->render();
-            ?>
-            <hr/>
-
             <ul class="nav nav-aside menu">
                 <li>
                     <a href="#" class="menu-toggle"><span class="fa fa-arrow-right"></span>

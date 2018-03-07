@@ -28,7 +28,7 @@ class JMenu extends Selector{
     private $idMenu="";
     private $nombreMenu;
     #Propiedades Heredadas========================
-    private $objetoMenu="Menu";
+    private $objetoMenu="Menus";
     private $opcionMenu="OpcionMenu";
     private $items=[];
 

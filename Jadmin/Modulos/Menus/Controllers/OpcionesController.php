@@ -44,7 +44,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController
 
         $tabla = new Render\JVista('Jida\Modelos\OpcionesMenu.obtOpciones',
             ['titulos' => ['Url', 'Nombre', 'Orden', 'Estatus']],
-            'Opciones de Menu ' . $nombre[0]['menu']
+            'Opciones de Menus ' . $nombre[0]['menu']
         );
 
         $tabla->clausula('filtro', ['id_menu' => $id_menu, 'padre' => $padre]);
@@ -95,7 +95,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController
             if ($padre != 0)
                 $titulo = 'Modificar Sub Item de ' . $nombre[0]['opcion_menu'];
             else
-                $titulo = 'Modificar Item de Menu';
+                $titulo = 'Modificar Item de Menus';
 
         } else {
 
@@ -106,7 +106,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController
             if ($padre != 0)
                 $titulo = 'Registar Sub item en ' . $nombre[0]['opcion_menu'];
             else
-                $titulo = 'Registar Item de Menu';
+                $titulo = 'Registar Item de Menus';
 
         }
 

@@ -27,7 +27,7 @@ class MenuHTML extends BD\DBContainer{
      */
      var $configuracion=array('ul'=>array(),"li"=>array());
     /**
-     * Objeto Menu a manejar
+     * Objeto Menus a manejar
      */
     private $menu ="show";
 
@@ -187,7 +187,8 @@ class MenuHTML extends BD\DBContainer{
                     }else{
                         $icono = Selector::crear("span",['class'=>$opcion['icono']]);
                     }
-                endif;
+                endif;
+
                 if($opcion['hijo']==1 or $opcion['hijo']=='t'){
                     $atributos = array_merge($atributos,$this->atributosLIParent);
                     $submenu="";
