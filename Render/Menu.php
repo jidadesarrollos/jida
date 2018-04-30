@@ -1,12 +1,11 @@
 <?php
 /**
- * Objeto Renderizador de Menus
+ * Objeto Renderizador de Menu
  *
- * @author Julio Rodriguez
+ * @author Rosmy Rodriguez
  * @package JidaFramework
  * @version 1.0
- * @since 1.4
- * @see Selector
+ * @since 1.6
  * @category Render
  */
 
@@ -32,15 +31,28 @@ class Menu extends Selector {
      */
     private $_path;
     /**
-     * @var $_configuracion Configuracion del menu
+     * @var $menu Configuracion del menu
      */
-    private $_configuracion;
+    private $menu;
     /**
-     * Arreglo de contenedor principal del menu
+     * Contenido del menu en HTML
      *
-     * @var array $_contenedor
+     * @var $html
      */
-    private $_contenedor;
+    private $html;
+    /**
+     * Contenedor del menu, puede ser un <div> o <ul> etc. Por defecto es <ul>
+     *
+     * @var $contenedor
+     */
+
+    public $selectorMenu = "ul";
+    /**
+     * Selector de elementos del menu, puede ser <div> o <li> etc. Por defecto es <li>
+     *
+     * @var $selector
+     */
+    public $selectorItem = "li";
 
     /**
      * Funcion constructora
@@ -51,7 +63,7 @@ class Menu extends Selector {
         $this->_conf = $GLOBALS['JIDA_CONF'];
 
         if ($menu) {
-            $this->_cargarMenu($menu);
+            $this->cargarMenu($menu);
         }
 
         parent::__construct($menu);
@@ -67,10 +79,10 @@ class Menu extends Selector {
      * Los menus deben encontrarse en la carpeta Menus de Aplicacion o Framework, caso contrario arrojara
      * excepcion.
      *
-     * @method _cargarMenu
+     * @method cargarMenu
      * @param string $menu Nombre del Menu
      */
-    private function _cargarMenu($menu) {
+    private function cargarMenu($menu) {
 
         if (!strrpos($menu, ".json")) {
             $menu = $menu . ".json";
@@ -90,7 +102,7 @@ class Menu extends Selector {
     private function validarJson() {
 
         $contenido = file_get_contents($this->_path);
-        $this->_configuracion = json_decode($contenido);
+        $this->menu = json_decode($contenido);
 
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new Excepcion("El menu  " . $this->_path . " no esta estructurado correctamente", $this->_ce . "1");
@@ -100,87 +112,79 @@ class Menu extends Selector {
 
     }
 
-    private function _atributosItem($item) {
+    /**
+     * Funcion recursiva que genera el HTML del selector
+     * @method _obtHtml
+     *
+     * @param array $menu Arreglo con la configuracion del menu
+     */
+    private function _obtHtml($menu) {
 
-        $attr = [];
+        $this->html .= "\n";
+        $this->html .= "<" . $this->selectorMenu;
 
-        if (!empty($item->id))
-            $attr['id'] = $item->id;
+        if (!empty($menu->id)) {
+            $this->html .= " id=\"" . $menu->id . "\"";
+        }
+        if (!empty($menu->class)) {
+            $this->html .= " class=\"" . $menu->class . "\"";
+        }
+        if (!empty($menu->style)) {
+            $this->html .= " style=\"" . $menu->style . "\"";
+        }
 
-        if (!empty($item->class))
-            $attr['class'] = $item->class;
-
-        if (!empty($item->style))
-            $attr['style'] = $item->style;
-
-        return $attr;
-
-    }
-
-    private function _agregarItems($menu) {
+        $this->html .= ">\n";
 
         if (!empty($menu->items)) {
 
             foreach ($menu->items as $key => $item) {
 
-                $selector = !empty($item->selector) ? $item->selector : 'li';
-                $attr = $this->_atributosItem($item);
-                $menuItem = new Selector($selector, $attr);
+                $this->html .= "<" . $this->selectorItem;
+
+                if (!empty($item->id)) {
+                    $this->html .= " id=\"" . $item->id . "\"";
+                }
+                if (!empty($item->class)) {
+                    $this->html .= " class=\"" . $item->class . "\"";
+                }
+                if (!empty($item->style)) {
+                    $this->html .= " style=\"" . $item->style . "\"";
+                }
+
+                $this->html .= ">";
 
                 if (property_exists($item, 'url')) {
                     $link = new Selector('a', ['href' => $item->url]);
                     $label = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
-                    $link->addInicio($label);
-                    $menuItem->addFinal($link->render());
+                    $link->addFinal($label);
+                    $this->html .= $link->render() . "\n";
                 }
 
                 if (!empty($item->submenu)) {
-
-                    $sm = $item->submenu;
-                    $selector = !empty($sm->selector) ? $sm->selector : 'ul';
-                    $attr = $this->_atributosItem($sm);
-                    $contenedor_sm = new Selector($selector, $attr);
-
-                    if (!empty($sm->items)) {
-
-                        foreach ($sm->items as $k => $item_sm) {
-                            $selector = !empty($item_sm->selector) ? $item_sm->selector : 'li';
-                            $attr = $this->_atributosItem($item_sm);
-                            $submenuItem = new Selector($selector, $attr);
-
-                            if (property_exists($item_sm, 'url')) {
-                                $link_sm = new Selector('a', ['href' => $item_sm->url]);
-                                $label = !empty($item_sm->encode_html) ? htmlentities($item_sm->label) : $item_sm->label;
-                                $link_sm->addInicio($label);
-                                $submenuItem->addFinal($link_sm->render());
-                            }
-
-                            $contenedor_sm->addFinal($submenuItem->render());
-                        }
-
-                        $menuItem->addFinal($contenedor_sm->render());
-                    }
+                    $this->_obtHtml($item->submenu);
                 }
 
-                $this->_contenedor->addFinal($menuItem->render());
+                $this->html .= "</$this->selectorItem>\n";
             }
         }
+
+        $this->html .= "</$this->selectorMenu>\n";
+
+        return $this->html;
+
     }
 
     /**
-     * Renderiza un menu
+     * Renderiza el menu
      *
      * @internal Genera el HTML de un menu creado en el Framework, con toda la personalizacion creada
      * @method render
      */
-    function render() {
+    public function render() {
 
-        $selector = !empty($this->_configuracion->selector) ? $this->_configuracion->selector : 'ul';
-        $attr = $this->_atributosItem($this->_configuracion);
-        $this->_contenedor = new Selector($selector, $attr);
-        $this->_agregarItems($this->_configuracion);
+        $menu = $this->_obtHtml($this->menu);
 
-        return $this->_contenedor->render();
+        return $menu;
 
     }
 

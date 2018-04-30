@@ -187,7 +187,8 @@ class MenuHTML extends BD\DBContainer{
                     }else{
                         $icono = Selector::crear("span",['class'=>$opcion['icono']]);
                     }
-                endif;
+                endif;
+
                 if($opcion['hijo']==1 or $opcion['hijo']=='t'){
                     $atributos = array_merge($atributos,$this->atributosLIParent);
                     $submenu="";

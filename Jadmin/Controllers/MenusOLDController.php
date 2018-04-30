@@ -39,7 +39,7 @@ class MenusOLDController extends JController {
                                                                     'href'=>'/jadmin/menus/opciones/menu/{clave}/'),
                                                                     'html' =>array('span' =>array('atributos' =>
                                                                                         array('class' => 'glyphicon glyphicon-folder-open',
-																						'title'=>'Ver Opciones del Menu',)
+																						'title'=>'Ver Opciones del Menus',)
                                                                                     )))),
                                              '1' => array('a' =>array('atributos' =>array(
                                                                                 'href'=>'/jadmin/menus/eliminar-menu/menu/{clave}',
