@@ -218,8 +218,7 @@ class Procesador {
      *
      * @return string $nombre Cadena Formateada resultante
      */
-    protected
-    function _validarNombre($str, $tipoCamelCase) {
+    protected function _validarNombre($str, $tipoCamelCase) {
 
         if (!empty($str)) {
             if ($tipoCamelCase == 'upper') {

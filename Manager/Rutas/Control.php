@@ -49,12 +49,16 @@ class Control {
         $controlador = $this->_procesar();
 
         if ($controlador) {
-            $controlador->ejecutar();
+            $this->_preparar($controlador);
         } else {
             exit("NO");
         }
 
 
+
+    }
+
+    private function _preparar($controlador) {
 
     }
 
