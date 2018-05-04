@@ -106,7 +106,7 @@ class Arranque {
      */
     private function _pipeLines ($controlador, $metodo) {
 
-        if (method_exists($controlador, $method)) {
+        if (method_exists($controlador, $metodo)) {
 
             $respuesta = call_user_func_array(
                 [
