@@ -26,7 +26,7 @@ class Inicio {
     public $arrayUrl;
     public $configuracion;
 
-    private $_controlador;
+    private $_arranque;
 
     /**
      * Inicio constructor.
@@ -44,11 +44,11 @@ class Inicio {
 
     private function _procesar () {
 
-        if (!$this->_controlador) {
-            $this->_controlador = new Arranque($this);
+        if (!$this->_arranque) {
+            $this->_arranque = new Arranque($this);
         }
 
-        return $this->_controlador;
+        return $this->_arranque;
 
     }
 
