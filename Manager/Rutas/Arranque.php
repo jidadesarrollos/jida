@@ -104,14 +104,14 @@ class Arranque {
      * @param $method Metodo a ejecutar. _jdPost o _jdPre
      * @since 0.6
      */
-    private function _pipeLines ($controlador, $method) {
+    private function _pipeLines ($controlador, $metodo) {
 
         if (method_exists($controlador, $method)) {
 
             $respuesta = call_user_func_array(
                 [
                     $controlador,
-                    '_jdPre'
+                    $metodo
                 ],
                 $this->parametros
             );
@@ -140,10 +140,7 @@ class Arranque {
 
         if ($this->_validar()) {
 
-
             $controlador = self::obtenerControlador(self::$controlador);
-            #$controlador = new $nombreObj;
-
 
             $this->_pipeLines($controlador, '_jdPre');
 
