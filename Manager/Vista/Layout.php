@@ -8,7 +8,6 @@ use Exception as Excepcion;
 class Layout {
 
     private $_DIRECTORIOS = [
-
         'jida' => 'Layout/',
         'app'  => 'Layout/'
     ];
