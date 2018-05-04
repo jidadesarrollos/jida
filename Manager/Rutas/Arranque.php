@@ -23,16 +23,19 @@ class Arranque {
      *
      */
     static public $Controlador;
-
+    public static $metodo = false;
+    /**
+     * @var bool
+     */
     static public $controlador = false;
     static public $namespace;
+    static public $ruta;
 
     public $default;
     public $jadmin = false;
-    public $metodo = false;
+
     public $modulo = false;
     public $parametros = [];
-    public $ruta;
     public $modulos;
 
 
@@ -147,7 +150,7 @@ class Arranque {
             call_user_func_array(
                 [
                     $controlador,
-                    $this->metodo
+                    self::$metodo
                 ],
                 $this->parametros
             );
@@ -174,10 +177,10 @@ class Arranque {
     private function _validar () {
 
 
-        //$this->_pagina = new Core\Pagina($this->controlador, $this->metodo, $this->modulo, $this->ruta, $this->jadmin);
+        //$this->_pagina = new Core\Pagina($this->controlador, self::$metodo, $this->modulo, $this->ruta, $this->jadmin);
 
 
-        $dataVista = new Core\DataVista($this->modulo, self::$controlador, $this->metodo, $this->jadmin);
+        $dataVista = new Core\DataVista($this->modulo, self::$controlador, self::$metodo, $this->jadmin);
         $GLOBALS['dataVista'] = $dataVista;
         $this->_dataVista = $dataVista;
 

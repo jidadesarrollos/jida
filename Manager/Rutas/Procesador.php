@@ -50,7 +50,7 @@ class Procesador {
         if (in_array($posModulo, $padre->modulos) or array_key_exists($posModulo, $padre->modulos)) {
 
             $padre->modulo = $posModulo;
-            $padre->ruta = 'app';
+            $padre::$ruta = 'app';
             if ($padre->jadmin) {
 
                 $this->_namespace = $this->_namespaces['modulo'] . $padre->modulo . '\\Jadmin\\Controllers\\';
@@ -62,7 +62,7 @@ class Procesador {
         }
         else if ($padre->jadmin) {
 
-            $padre->ruta = 'framework';
+            $padre::$ruta = 'jida';
             if ($this->_moduloJadmin($posModulo)) {
 
                 $padre->modulo = $posModulo;
@@ -158,8 +158,10 @@ class Procesador {
     private function _validarMetodo ($controlador, $metodo) {
 
         $reflection = new \ReflectionClass($controlador);
+        $padre = $this->_padre;
+
         if (method_exists($controlador, $metodo) and $reflection->getMethod($metodo)->isPublic()) {
-            $this->_padre->metodo = $metodo;
+            $padre::$metodo = $metodo;
 
             return true;
         }
@@ -199,7 +201,7 @@ class Procesador {
 
         }
 
-        $this->_padre->metodo = $metodo;
+        $padre::$metodo = $metodo;
 
         return true;
 

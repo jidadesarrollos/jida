@@ -9,26 +9,29 @@ use Jida\Helpers as Helpers;
 class Manager {
 
     use \Jida\Core\ObjetoManager;
-    private $_ce = 1006;
 
+    private $_ce = 1006;
     private $_data;
-    private $_controller;
+
     private $_namespace;
     private $_modulo;
-    private $_vista;
     private $_layout;
 
     public $Procesador;
-    public $Controlador;
 
-    public $Padre;
+
+    static public $controlador;
+    static public $Padre;
+    static public $vista;
 
     function __construct ($padre, $controlador, $data) {
 
-        $this->Controlador = $controlador;
-        $this->Padre = $padre;
+        self::$controlador = $controlador;
+
         $this->Procesador = $padre->procesador;
         $this->_data = $data;
+
+        self::$Padre = $padre;
 
         $this->_inicializar();
 
@@ -37,8 +40,8 @@ class Manager {
 
     private function _inicializar () {
 
-        $padre = $this->Padre;
-        $this->_controlador = $padre::$controlador;
+        $padre = self::$Padre;
+
         $this->_namespace = $padre::$namespace;
         $this->_modulo = $padre->modulo;
 
@@ -66,11 +69,11 @@ class Manager {
 
     function vista () {
 
-        if (!$this->_vista) {
-            $this->_vista = new Vista($this);
+        if (!self::$vista) {
+            self::$vista = new Vista($this);
         }
 
-        return $this->_vista;
+        return self::$vista;
 
     }
 

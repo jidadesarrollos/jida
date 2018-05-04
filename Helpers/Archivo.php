@@ -343,10 +343,10 @@ class Archivo {
             $nombreArchivo = $this->validarNombreArchivoCargado(0, $nombreAleatorio, $prefijo);
             $destino = $directorio . "/" . $nombreArchivo;
             $this->archivosCargados[] = [
-                'path' => $destino,
+                'path'       => $destino,
                 'directorio' => $directorio,
-                'nombre' => $nombreArchivo,
-                'extension' => $this->extension[0]
+                'nombre'     => $nombreArchivo,
+                'extension'  => $this->extension[0]
             ];
 
             if (!(Directorios::validar($directorio))) {
@@ -547,4 +547,6 @@ class Archivo {
         }
 
     }
+
+    static ob
 } // END
