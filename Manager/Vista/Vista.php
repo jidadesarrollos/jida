@@ -3,7 +3,9 @@
 /**
  *
  * Numero de error 1
+ *
  */
+
 namespace Jida\Manager\Vista;
 
 use Jida\Helpers as Helpers;
