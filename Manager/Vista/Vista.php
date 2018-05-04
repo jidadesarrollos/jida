@@ -1,10 +1,8 @@
 <?php
-
 /**
  * Corresponde al numero de excepciones,
  * Actualizar a medida que se vayan agregando excepciones
  * Numero de error 1
- *
  */
 
 namespace Jida\Manager\Vista;
@@ -20,23 +18,19 @@ class Vista {
     private $_nombre;
     private $_data;
 
-
     static public $padre;
     private $_DIRECTORIOS = [
-
         'jida' => 'Jadmin',
         'app'  => ''
     ];
 
     static public $directorio;
 
-
     function __construct ($padre) {
 
         self::$padre = $padre;
 
     }
-
 
     private function _obtenerDirectorio () {
 
@@ -58,11 +52,9 @@ class Vista {
             $directorio .= "/" . $this->_DIRECTORIOS['jida'];
         }
 
-
         self::$directorio = $directorio . "/Vistas/" . strtolower($arranque::$controlador);
 
     }
-
 
     function obtener () {
 
@@ -81,17 +73,15 @@ class Vista {
 
         if (strpos($vista, '.php') === false) {
             $vista .= ".php";
-
         };
 
         Helpers\Debug::imprimir($vista);
-
 
         if (!file_exists($vista)) {
             throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');
         }
 
-
         return $vista;
+
     }
 }
