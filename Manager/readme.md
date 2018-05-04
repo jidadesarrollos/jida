@@ -9,7 +9,7 @@ es el **Manager**.
 e instancia el validador y el Objeto Arranque
 
 
-Rutas\Control
+Rutas\Inicio
 -----
 
 Verifica la estructura de la url pasada. Si se solicita un idioma e instancia al objeto Arranque.  
