@@ -39,7 +39,7 @@ class Controller {
      *
      * @var boolean multiidioma
      */
-    var $multiidioma = FALSE;
+    var $multiidioma = false;
 
     var $urlCanonical = URL_APP;
     /**
@@ -47,7 +47,7 @@ class Controller {
      *
      * @var $layout
      */
-    var $layout = FALSE;
+    var $layout = false;
     /**
      * Define el idioma manejado al momento de la ejecucion del controlador
      *
@@ -183,7 +183,12 @@ class Controller {
     /**
      *
      * @var object $dv Instancia de clase DataVista
+     *
+     * PAra manejar la información que se pasa a las vistas se debe implementar
+     * el metodo self::data();
+     *
      * @see DataVista object
+     * @deprecated
      */
     var $dv;
 
@@ -210,7 +215,7 @@ class Controller {
 
     private $_urlBase;
 
-    function __construct() {
+    function __construct () {
 
         global $dataVista;
         $this->_urlBase = (defined('URL_BASE')) ? URL_BASE : '';
@@ -219,8 +224,10 @@ class Controller {
          * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
          * del controlador con error, por tanto se crea un objeto DataVista vacio
          */
-        if (!$dataVista instanceof DataVista) $dataVista = new DataVista();
-        if (defined('APP_MULTIIDIOMA')) $this->multiidioma = APP_MULTIIDIOMA;
+        if (!$dataVista instanceof DataVista)
+            $dataVista = new DataVista();
+        if (defined('APP_MULTIIDIOMA'))
+            $this->multiidioma = APP_MULTIIDIOMA;
         $this->dv = $dataVista;
         $this->idioma =& $this->dv->idioma;
 
@@ -270,7 +277,7 @@ class Controller {
      *
      * @return {object} \App\Config\Configuracion
      */
-    protected function _conf() {
+    protected function _conf () {
 
         return $GLOBALS['JIDA_CONF'];
     }
@@ -281,14 +288,14 @@ class Controller {
      * @since 1.4
      * @method validarVarGlobales
      */
-    function validarVarGlobales($bug = FALSE) {
+    function validarVarGlobales ($bug = false) {
 
         $this->post =& $_POST;
         $this->get =& $_GET;
         $this->request =& $_REQUEST;;
     }
 
-    private function instanciarHelpers() {
+    private function instanciarHelpers () {
 
         if (count($this->helpers) > 0) {
             foreach ($this->helpers as $key => $propiedad) {
@@ -298,7 +305,7 @@ class Controller {
         }
     }
 
-    private function instanciarModelos() {
+    private function instanciarModelos () {
 
         if (count($this->modelos) > 0) {
             foreach ($this->modelos as $key => $propiedad) {
@@ -312,7 +319,7 @@ class Controller {
      * @see        self::obtString
      * @deprecated 0.4
      */
-    protected function getString($valor) {
+    protected function getString ($valor) {
 
         return $this->obtString($valor);
     }
@@ -327,7 +334,7 @@ class Controller {
      * @return string $valor Valor sanado.
      * @since 1.5
      */
-    protected function obtString($valor) {
+    protected function obtString ($valor) {
 
         if (!empty($valor)) {
             $valor = htmlspecialchars($valor, ENT_QUOTES);
@@ -340,7 +347,7 @@ class Controller {
     /**
      * @deprecated 0.6
      */
-    protected function obtEntero($valor) {
+    protected function obtEntero ($valor) {
 
         return $this->entero($valor);
     }
@@ -353,7 +360,7 @@ class Controller {
      * @return int $valor;
      * @since 1.5
      */
-    protected function entero($valor) {
+    protected function entero ($valor) {
 
         if (!empty($valor)) {
             $valor = filter_var($valor, FILTER_VALIDATE_INT);
@@ -361,7 +368,7 @@ class Controller {
             return $valor;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -373,7 +380,7 @@ class Controller {
      * @return float $valor;
      * @since 0.1
      */
-    protected function decimal($valor) {
+    protected function decimal ($valor) {
 
         if (!empty($valor) and is_float($valor)) {
             return $valor;
@@ -390,7 +397,7 @@ class Controller {
      *
      * @method process
      */
-    protected function process() {
+    protected function process () {
 
         if (isset($_GET['form'])) {
             $nombreForm = Cadenas::upperCamelCase($_GET['form']);
@@ -401,7 +408,8 @@ class Controller {
                 $pk = $_GET['id'];
             }
             $formulario = new Formulario($nombreForm, $tipoForm, $pk);
-        } else {
+        }
+        else {
             throw new \Exception("No se ha definido el formulario a ejecutar", 100);
         }
     }
@@ -414,17 +422,18 @@ class Controller {
      *
      * @return boolean
      */
-    protected function solicitudAjax() {
+    protected function solicitudAjax () {
 
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) and !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
             and strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
-            $this->dv->solicitudAjax = TRUE;
+            $this->dv->solicitudAjax = true;
 
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
 
-            return FALSE;
+            return false;
         }
         exit;
     }
@@ -433,18 +442,19 @@ class Controller {
      * Setter para propiedad url
      * @method setUrl
      */
-    protected function _setUrl($url) {
+    protected function _setUrl ($url) {
 
         $this->url = $url;
     }
 
-    protected function obtPost($param) {
+    protected function obtPost ($param) {
 
         if (isset($this->post[$param])) {
 
             return $this->post[$param];
-        } else {
-            return FALSE;
+        }
+        else {
+            return false;
         }
     }
 
@@ -455,14 +465,15 @@ class Controller {
      * @param string $param Dato a solicitar
      *
      */
-    protected function get($param = "") {
+    protected function get ($param = "") {
 
         if (!empty($param)) {
             if (isset($this->get[$param]))
                 return $this->get[$param];
             else
-                return FALSE;
-        } else return $_GET;
+                return false;
+        }
+        else return $_GET;
 
     }
 
@@ -476,21 +487,23 @@ class Controller {
      * 2. Si es pasado $nuevoValor será retornado el objeto
      *
      */
-    protected function post($param = "", $nuevoValor = "") {
+    protected function post ($param = "", $nuevoValor = "") {
 
         if (empty($param)) {
             return $_POST;
-        } elseif ($nuevoValor !== "") {
+        }
+        else if ($nuevoValor !== "") {
 
             $this->post[$param] = $nuevoValor;
 
             return $this;
-        } else
+        }
+        else
             if (isset($this->post[$param]) or array_key_exists($param, $_POST)) {
                 return $this->post[$param];
             }
 
-        return FALSE;
+        return false;
 
     }
 
@@ -498,20 +511,22 @@ class Controller {
      * Retorna el valor request solicitado
      * @method request
      *
-     * @param string $param      Nombre del key a buscar o agregar
+     * @param string $param Nombre del key a buscar o agregar
      * @param string $nuevoValor [opcional] Valor a agregar a param
      */
-    protected function request($param = "", $nuevoValor = "") {
+    protected function request ($param = "", $nuevoValor = "") {
 
         if (empty($param)) {
             return $_REQUEST;
-        } elseif ($nuevoValor != "") {
+        }
+        else if ($nuevoValor != "") {
             $this->request[$param] = $nuevoValor;
-        } elseif (isset($this->request[$param]) or array_key_exists($param, $this->request)) {
+        }
+        else if (isset($this->request[$param]) or array_key_exists($param, $this->request)) {
             return $this->request[$param];
         }
 
-        return FALSE;
+        return false;
 
     }
 
@@ -520,9 +535,9 @@ class Controller {
      *
      * @method urlActual
      */
-    protected function urlActual($valor = 1) {
+    protected function urlActual ($valor = 1) {
 
-        $quienLlama = debug_backtrace(NULL, $valor + 1)[$valor]['function'];
+        $quienLlama = debug_backtrace(null, $valor + 1)[$valor]['function'];
 
         return $this->_urlBase . $this->urlController() . $this->convertirNombreAUrl($quienLlama) . "/";
     }
@@ -537,9 +552,9 @@ class Controller {
      *
      * @return string $url
      */
-    static function convertirNombreAUrl($nombre) {
+    static function convertirNombreAUrl ($nombre) {
 
-        $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $nombre, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $coincidencias = preg_split('#([A-Z][^A-Z]*)#', $nombre, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         return strtolower(implode("-", $coincidencias));
     }
@@ -548,48 +563,58 @@ class Controller {
      * Retorna la url del controlador actual
      * @method urlController
      */
-    protected function urlController($ctrl = "") {
+    protected function urlController ($ctrl = "") {
 
         $this->url = $this->obtURLApp();
         if (empty($ctrl)) {
             $controller = $this->_nombreController;
-        } else {
+        }
+        else {
 
             if (class_exists(Cadenas::upperCamelCase($ctrl) . "Controller")) {
                 $controller = str_replace('Controller', '', $ctrl);
-            } elseif (class_exists(Cadenas::upperCamelCase($ctrl))) {
+            }
+            else if (class_exists(Cadenas::upperCamelCase($ctrl))) {
 
                 $controller = (explode("\\", $ctrl));
                 $controller = end($controller);
                 $controller = str_replace('Controller', '', $controller);
 
-            } else
-                throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe", 1);
+            }
+            else
+                throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe",
+                                     1);
         }
 
 
         if (!empty($controller)) {
 
             if (strtolower($this->_modulo) == strtolower($controller)) {
-                if ($this->dv->_esJadmin) $this->url .= "jadmin/";
+                if ($this->dv->_esJadmin)
+                    $this->url .= "jadmin/";
                 $this->url .= strtolower($this->_modulo) . "/";
 
-            } else {
+            }
+            else {
 
                 if (empty($this->_modulo)) {
                     if (strtolower($controller) == 'index') {
 
                         $this->url = $this->obtURLApp();
-                        if ($this->dv->_esJadmin) $this->url .= "jadmin/";
+                        if ($this->dv->_esJadmin)
+                            $this->url .= "jadmin/";
 
-                    } else {
+                    }
+                    else {
 
                         $this->url = $this->obtURLApp();
-                        if ($this->dv->_esJadmin) $this->url .= "jadmin/";
+                        if ($this->dv->_esJadmin)
+                            $this->url .= "jadmin/";
 
                         $this->url .= $this->convertirNombreAUrl($controller) . "/";
                     }
-                } else {
+                }
+                else {
 
                     $this->url = $this->obtURLApp() . strtolower($this->_modulo) . "/" . $this->convertirNombreAUrl($controller) . "/";
                 }
@@ -601,10 +626,11 @@ class Controller {
         return $this->url;
     }
 
-    protected function urlModulo() {
+    protected function urlModulo () {
 
-        if (!empty($this->_modulo)) return $this->obtURLApp() . strtolower($this->_modulo) . "/";
-        else return FALSE;
+        if (!empty($this->_modulo))
+            return $this->obtURLApp() . strtolower($this->_modulo) . "/";
+        else return false;
 
     }
 
@@ -612,15 +638,14 @@ class Controller {
      * Devuelve la estructura de la url solicitada
      * @method getUrl
      *
-     * @param mixed  $metodo      Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la
+     * @param mixed $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la
      *                            url actual
      * @param string $controlador Nombre del controlador [aun no funcional]
      *
      * @return string $url
      */
 
-    protected function getUrl($metodo = "", $data = [])
-    {
+    protected function getUrl ($metodo = "", $data = []) {
 
         if (!empty($metodo)) {
 
@@ -632,23 +657,28 @@ class Controller {
 
                     $urlExplode = explode('/', $url[0]);
                     foreach ($urlExplode as $key => $value)
-                        $urlExplode[ $key ] = Cadenas::upperCamelCase($value);
+                        $urlExplode[$key] = Cadenas::upperCamelCase($value);
 
                     $ctrl = implode("\\", $urlExplode) . 'Controller';
-                } else
-                    $ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]) . 'Controller', $this->_clase);
+                }
+                else
+                    $ctrl = preg_replace("/[a-zA-Z]+Controller$/",
+                                         Cadenas::upperCamelCase($url[0]) . 'Controller',
+                                         $this->_clase);
 
 
                 $urlController = $this->urlController($ctrl);
                 $metodo = $url[1];
 
-            } else {
+            }
+            else {
                 $ctrl = $this->_clase;
                 $urlController = $this->urlController();
             }
 
             if (method_exists($ctrl, $metodo)) {
-                if ($metodo == 'index') $metodo = "";
+                if ($metodo == 'index')
+                    $metodo = "";
                 $params = "";
                 if (count($data) > 0) {
                     foreach ($data as $key => $value)
@@ -657,12 +687,14 @@ class Controller {
 
                 // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController . $this->convertirNombreAUrl($metodo) . "/" . $params;
-            } else {
+            }
+            else {
 
                 throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
 
-        } else {
+        }
+        else {
             return $this->urlActual(2);
         }
 
@@ -672,13 +704,13 @@ class Controller {
      * Devuelve la estructura de la url solicitada
      * @method obtUrl
      *
-     * @param mixed  $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url
+     * @param mixed $metodo Nombre del metodo del cual se quiere obtener la url, si no es pasado se devolvera la url
      *                       actual
-     * @param string $data   parametros pasados a la funcion
+     * @param string $data parametros pasados a la funcion
      *
      * @return string $url
      */
-    protected function obtUrl($metodo = "", $data = []) {
+    protected function obtUrl ($metodo = "", $data = []) {
 
         if (!empty($metodo)) {
 
@@ -689,23 +721,28 @@ class Controller {
                 if (strpos($url[0], "/")) {
                     $urlExplode = explode('/', $url[0]);
                     foreach ($urlExplode as $key => $value) {
-                        $urlExplode[ $key ] = Cadenas::upperCamelCase($value);
+                        $urlExplode[$key] = Cadenas::upperCamelCase($value);
                     }
                     $ctrl = implode("\\", $urlExplode) . 'Controller';
-                } else {
-                    $ctrl = preg_replace("/[a-zA-Z]+Controller$/", Cadenas::upperCamelCase($url[0]) . 'Controller', $this->_clase);
+                }
+                else {
+                    $ctrl = preg_replace("/[a-zA-Z]+Controller$/",
+                                         Cadenas::upperCamelCase($url[0]) . 'Controller',
+                                         $this->_clase);
                 }
 
                 $metodo = $url[1];
 
                 if (strpos($ctrl, 'JadminController')) {
                     $urlController = '/jadmin';
-                } else {
+                }
+                else {
                     $urlController = (strpos(strtolower($this->urlController($ctrl)), 'jadmin')) ? '' : '/jadmin';
                     $urlController .= $this->urlController($ctrl);
                 }
 
-            } else {
+            }
+            else {
 
                 $urlController = $this->urlController();
 
@@ -719,7 +756,8 @@ class Controller {
                         $urlController .= (strpos(strtolower($this->urlController()), 'jadmin')) ? '' : 'jadmin/';
                         $urlController .= $parametros;
 
-                    } else {
+                    }
+                    else {
                         $urlController = (strpos(strtolower($this->urlController()), 'jadmin')) ? '' : '/jadmin';
                         $urlController .= $this->urlController();
                     }
@@ -731,13 +769,15 @@ class Controller {
 
             if (method_exists($ctrl, $metodo)) {
 
-                if ($metodo == 'index') $metodo = "";
+                if ($metodo == 'index')
+                    $metodo = "";
 
                 $params = "";
 
                 if (count($data) > 0) {
                     foreach ($data as $key => $value) {
-                        if (is_array($value)) Helpers\Debug::mostrarArray(debug_backtrace());
+                        if (is_array($value))
+                            Helpers\Debug::mostrarArray(debug_backtrace());
                         $params .= "$value/";
                     }
                 }
@@ -747,11 +787,13 @@ class Controller {
 
                 return $this->_urlBase . $urlCompleta;
 
-            } else {
+            }
+            else {
                 throw new \Exception("El metodo < $metodo > pasado para estructurar la url no existe", 301);
             }
 
-        } else {
+        }
+        else {
             return $this->_urlBase . $this->urlActual(2);
         }
     }
@@ -759,10 +801,12 @@ class Controller {
     /**
      * Retorna el nombre del modulo en el que se encuentra el objeto
      */
-    function getModulo($obj) {
+    function getModulo ($obj) {
+
         if (is_object($obj)) {
             return $this->_modulo;
-        } else {
+        }
+        else {
             return $this->_404();
         }
 
@@ -776,26 +820,33 @@ class Controller {
      * @method getModelo;
      *
      */
-    private function getModelo() {
+    private function getModelo () {
+
         if (!is_object($this->modelo)) {
             if (!empty($this->modelo)) {
 
                 if (class_exists($this->modelo)) {
                     $this->modelo = new $this->modelo;
-                } else {
+                }
+                else {
 
                     throw new \Exception("El objeto $this->modelo especificado como modelo no existe", 1);
 
                 }
-            } else {
+            }
+            else {
 
-                $words = preg_split('#([A-Z][^A-Z]*)#', $this->_nombreController, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                $words = preg_split('#([A-Z][^A-Z]*)#',
+                                    $this->_nombreController,
+                                    null,
+                                    PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
                 $arrayModel = [];
                 foreach ($words as $key => $word) {
                     if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {
                         $arrayModel[] = substr($word, 0, strlen($word) - 2);
-                    } elseif (substr($word, strlen($word) - 1) == PLURAL_ATONO) {
+                    }
+                    else if (substr($word, strlen($word) - 1) == PLURAL_ATONO) {
                         $arrayModel[] = substr($word, 0, strlen($word) - 1);
                     }
                 }
@@ -819,7 +870,7 @@ class Controller {
      *
      * @param mixed $id
      */
-    protected function eliminarDatos($id) {
+    protected function eliminarDatos ($id) {
 
         if ($this->entero($id) == 0) {
             $id = $this->obtenerListaGet($id);
@@ -834,21 +885,23 @@ class Controller {
     /**
      * Genera una excepción 404.
      */
-    protected function _404() {
+    protected function _404 () {
+
         throw new \Exception("No se consigue el enlace solicitado", 404);
 
     }
 
 
-    protected function obtenerListaGet($lista) {
+    protected function obtenerListaGet ($lista) {
+
         $arr = explode(",", $lista);
-        $band = TRUE;
+        $band = true;
         foreach ($arr as $key => $value) {
             if ($this->entero($value) == 0) {
-                $band = FALSE;
+                $band = false;
             }
         }
-        if ($band == FALSE)
+        if ($band == false)
             return $band;
         else return $arr;
     }
@@ -861,17 +914,19 @@ class Controller {
      * @param mixed $respuesta Respuesta de la solicitud ajax
      * @param       int        tipo 1 json, 2 html.
      */
-    protected function respuestaAjax($respuesta, $tipo = 2) {
+    protected function respuestaAjax ($respuesta, $tipo = 2) {
 
         if ($tipo == 2) {
             echo $respuesta;
-        } else {
+        }
+        else {
             print(json_encode($respuesta));
         }
         exit;
     }
 
-    protected function respuestaJson($respuesta) {
+    protected function respuestaJson ($respuesta) {
+
         exit(json_encode($respuesta));
         exit;
     }
@@ -880,7 +935,8 @@ class Controller {
      * Realizar una redireccion
      * @method redireccionar
      */
-    protected function redireccionar($url) {
+    protected function redireccionar ($url) {
+
         header('location:' . $url . '');
         exit;
     }
@@ -890,14 +946,16 @@ class Controller {
      * @method obtURLApp
      *
      */
-    protected function obtURLApp() {
+    protected function obtURLApp () {
+
         $idioma = "";
         if ($this->multiidioma)
             $idioma = (empty($this->idioma)) ? "" : $this->idioma . "/";
 
         if (strtolower($_SERVER['SERVER_NAME']) == 'localhost') {
             return $GLOBALS['__URL_APP'] . $idioma;
-        } else {
+        }
+        else {
             return URL_APP . $idioma;
         }
     }
@@ -911,7 +969,8 @@ class Controller {
      * @return array
      * @since 1.4
      */
-    protected function obtJson($path) {
+    protected function obtJson ($path) {
+
         return json_decode(file_get_contents($path));
 
     }
@@ -922,8 +981,10 @@ class Controller {
      *
      * @since 1.4
      */
-    protected function layout($layout) {
-        if (!strpos($layout, ".tpl.php")) $layout .= ".tpl.php";
+    protected function layout ($layout) {
+
+        if (!strpos($layout, ".tpl.php"))
+            $layout .= ".tpl.php";
         $this->layout = $layout;
     }
 
@@ -931,27 +992,29 @@ class Controller {
      * Asigna los parametros pasados para que puedan ser accedidos desde la vista
      * @method data
      *
-     * @param mixed $data  Arreglo de variables a pasar a la vista o nombre de variable a pasar
-     * @param int   $valor [opcional] Si $data es un string $valor sera asignado como valor de la variable $data
+     * @param mixed $data Arreglo de variables a pasar a la vista o nombre de variable a pasar
+     * @param int $valor [opcional] Si $data es un string $valor sera asignado como valor de la variable $data
      *
      * @since 1.4
      *
      */
-    protected function data($data, $valor = "") {
+    protected function data ($data, $valor = "") {
+
         // Helpers\Debug::imprimir('Controleeer');
         // $this->establecerAtributos($data);
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $this->dv-> {
+                $this->dv->{
 
-$key
-}
+                $key
+                }
 
- =
-$value;
+                    =
+                    $value;
             }
-        } else $this->dv->{
-    $data} = $valor;
+        }
+        else $this->dv->{
+        $data} = $valor;
     }
 
 
