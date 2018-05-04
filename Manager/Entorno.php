@@ -1,9 +1,12 @@
 <?php
 
 namespace Jida\Manager;
+
 class Entorno {
 
-    function __construct() {
+    public $ce = 1001;
+
+    function __construct () {
 
         if (defined('ENTORNO_APP')) {
             $this->_configurar();
@@ -14,17 +17,18 @@ class Entorno {
 
     }
 
-    private function _configurar() {
+    private function _configurar () {
 
         if (ENTORNO_APP === 'dev') {
             return $this->_desarrollo();
-        } else {
+        }
+        else {
             return $this->_produccion();
         }
 
     }
 
-    private function _desarrollo() {
+    private function _desarrollo () {
 
         ini_set("display_errors", 1);
         ini_set("track_errors", 1);
@@ -33,7 +37,7 @@ class Entorno {
 
     }
 
-    private function _produccion() {
+    private function _produccion () {
 
         ini_set("display_errors", 0);
         ini_set("track_errors", 0);

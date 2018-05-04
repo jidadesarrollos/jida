@@ -169,7 +169,7 @@ class ACL
      *
      * @method validarAcceso
      * @private
-     * @param string $controlador Controlador a validar
+     * @param string $controlador Arranque a validar
      * @param string $metodo Nombre del metodo a validar
      * @param string $componente [opcional] Nombre del componente a validar
      * @return boolean

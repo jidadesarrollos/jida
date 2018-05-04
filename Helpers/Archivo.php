@@ -52,12 +52,12 @@ class Archivo {
      * @var mixed $nombreArchivosCargados Arreglo con los nombres a agregar a los archivos cargados, false
      * si no son creados.
      */
-    protected $nombresArchivosCargados = FALSE;
+    protected $nombresArchivosCargados = false;
     /**
      * @var array $archivosCargados Registra los archivos cargados
      *
      */
-    protected $archivosCargados = array();
+    protected $archivosCargados = [];
     /**
      * @var array $files Array $_FILES
      */
@@ -66,7 +66,7 @@ class Archivo {
      * Determina la existencia de un archivo
      * @var boolean $existencia
      */
-    protected $existencia = FALSE;
+    protected $existencia = false;
     /**
      * Define el directorio de ubicacion del archivo
      */
@@ -78,13 +78,14 @@ class Archivo {
     protected $finfo;
     protected $mime;
 
-    function __construct($file = "") {
+    function __construct ($file = "") {
+
         if (!empty($file) and array_key_exists($file, $_FILES))
             $this->checkCarga($_FILES[$file]);
         else {
             if (!empty($file)) {
                 $this->directorio = $file;
-                $this->existencia = TRUE;
+                $this->existencia = true;
             }
         }
     }
@@ -96,7 +97,7 @@ class Archivo {
      * @since 0.1
      *
      */
-    private function checkCarga($file) {
+    private function checkCarga ($file) {
 
         $this->files = $file;
 
@@ -120,7 +121,8 @@ class Archivo {
 
             }
 
-        } else {
+        }
+        else {
             #\Jida\Helpers\Debug::imprimir($this->files);
             return false;
         }
@@ -134,24 +136,27 @@ class Archivo {
      * @since 0.1
      *
      */
-    function validarCarga() {
+    function validarCarga () {
 
         $totalCarga = (is_array($this->tmp_name)) ? count($this->tmp_name) : 1;
         $archivosCargados = 0;
         if (is_array($this->tmp_name)) {
             foreach ($this->tmp_name as $key) {
-                if (is_uploaded_file($key)) ;
+                if (is_uploaded_file($key))
+                    ;
                 ++$archivosCargados;
             }//fin foreach
-        } else {
+        }
+        else {
             if (is_uploaded_file($this->tmp_name))
                 ++$archivosCargados;
         }
         if ($totalCarga == $archivosCargados) {
             $this->totalArchivosCargados = $archivosCargados;
 
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
             return false;
         }
 
@@ -164,7 +169,7 @@ class Archivo {
      * @since 0.1
      *
      */
-    private function obtenerExtension() {
+    private function obtenerExtension () {
 
         if (is_array($this->type)) {
 
@@ -175,12 +180,14 @@ class Archivo {
 
                 if ($explode[0] == 'application') {
                     $this->extension[$i] = substr($this->name[$i], strrpos($this->name[$i], ".") + 1);
-                } else
+                }
+                else
                     $this->extension[$i] = $explode[1];
                 $i++;
             }
 
-        } else {
+        }
+        else {
 
             $explode = explode("/", $this->type);
 
@@ -231,7 +238,8 @@ class Archivo {
      * @since 0.6
      *
      */
-    function obtMime() {
+    function obtMime () {
+
         return $this->mime;
     }
 
@@ -245,11 +253,12 @@ class Archivo {
      * @since 0.1
      * @deprecated 0.6
      */
-    function moverArchivoCargado($directorio, $nombreArchivo) {
+    function moverArchivoCargado ($directorio, $nombreArchivo) {
 
         if (move_uploaded_file($nombreArchivo, $directorio)) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
 
@@ -263,7 +272,8 @@ class Archivo {
      * @since 0.1
      * @deprecated 0.6
      */
-    function getTotalArchivosCargados() {
+    function getTotalArchivosCargados () {
+
         return $this->totalArchivosCargados;
     }
 
@@ -274,14 +284,16 @@ class Archivo {
      * @access public
      * @since 0.6
      */
-    function obtTotalArchivosCargados() {
+    function obtTotalArchivosCargados () {
+
         return $this->totalArchivosCargados;
     }
 
     /**
      * Permite editar los nombres para archivos cargados
      */
-    function setNombresArchivosCargados($nombresArchivos) {
+    function setNombresArchivosCargados ($nombresArchivos) {
+
         $this->nombresArchivosCargados = $nombresArchivos;
     }
 
@@ -298,7 +310,7 @@ class Archivo {
      * @access public
      * @since 0.1
      */
-    function moverArchivosCargados($directorio, $nombreAleatorio = FALSE, $prefijo = "") {
+    function moverArchivosCargados ($directorio, $nombreAleatorio = false, $prefijo = "") {
 
         if ($this->totalArchivosCargados > 1 or is_array($this->tmp_name)) {
 
@@ -317,22 +329,24 @@ class Archivo {
 
                     if (!is_writable($directorio)) {
                         throw new Exception("No tiene permisos en la carpeta $directorio", 900);
-                    } else
+                    }
+                    else
                         throw new Exception("No se pudo mover el archivo cargado $destino", 902);
 
                 }
 
             }
 
-        } else {
+        }
+        else {
 
             $nombreArchivo = $this->validarNombreArchivoCargado(0, $nombreAleatorio, $prefijo);
             $destino = $directorio . "/" . $nombreArchivo;
             $this->archivosCargados[] = [
-                'path'       => $destino,
+                'path' => $destino,
                 'directorio' => $directorio,
-                'nombre'     => $nombreArchivo,
-                'extension'  => $this->extension[0]
+                'nombre' => $nombreArchivo,
+                'extension' => $this->extension[0]
             ];
 
             if (!(Directorios::validar($directorio))) {
@@ -343,7 +357,8 @@ class Archivo {
 
                 if (!is_writable($directorio)) {
                     throw new Exception("No tiene permisos en la carpeta $directorio", 900);
-                } else
+                }
+                else
                     throw new Exception("No se pudo mover el archivo cargado $destino", 902);
             }
 
@@ -367,25 +382,28 @@ class Archivo {
      * @since 0.1
      *
      */
-    private function validarNombreArchivoCargado($numero, $aleatorio, $prefijo = "") {
+    private function validarNombreArchivoCargado ($numero, $aleatorio, $prefijo = "") {
 
         if ($aleatorio) {
 
             $fecha = md5(Date('U'));
             $random = rand(100000, 999999);
             $name = $fecha . $random;
-            if (!empty($prefijo)) $name = $prefijo . "-" . $name;
+            if (!empty($prefijo))
+                $name = $prefijo . "-" . $name;
 
             return $name . "." . $this->extension[0];
 
-        } else {
+        }
+        else {
 
             if (is_array($this->nombresArchivosCargados)) {
                 if (!array_key_exists($numero, $this->nombresArchivosCargados))
                     throw new Exception("no existe la clave solicitada", 901);
 
                 return $this->nombresArchivosCargados[$numero];
-            } else {
+            }
+            else {
                 if (is_array($this->name))
                     return str_replace(" ", "-", $this->name[$numero]);
                 else
@@ -404,7 +422,8 @@ class Archivo {
      * @since 0.1
      * @deprecated 0.6
      */
-    function getArchivosCargados() {
+    function getArchivosCargados () {
+
         return $this->archivosCargados;
     }
 
@@ -415,7 +434,8 @@ class Archivo {
      * @access public
      * @since 0.6
      */
-    function obtArchivosCargados() {
+    function obtArchivosCargados () {
+
         return $this->archivosCargados;
     }
 
@@ -423,12 +443,14 @@ class Archivo {
      *  Verifica la existencia de un archivo
      * @since 0.5.1
      */
-    static function existe($file = "") {
+    static function existe ($file = "") {
+
         if (empty($file))
             $file = self::$directorio;
         if (file_exists($file)) {
             return true;
-        } else {
+        }
+        else {
             return false;
         };
     }
@@ -437,10 +459,12 @@ class Archivo {
      * Elimina un archivo
      * @method eliminar
      */
-    function eliminar($dir) {
+    function eliminar ($dir) {
+
         if (unlink($dir)) {
             return true;
-        } else {
+        }
+        else {
             throw new Exception("No se puede eliminar el directorio $dir", 1);
 
             return false;
@@ -456,7 +480,7 @@ class Archivo {
      * @since 0.1
      *
      */
-    static function eliminarMultiplesArchivos($arr) {
+    static function eliminarMultiplesArchivos ($arr) {
 
         if (is_array($arr)) {
             $noEliminados = [];
@@ -469,7 +493,8 @@ class Archivo {
                 return $noEliminados;
             else
                 return true;
-        } else {
+        }
+        else {
             throw new Exception("Debes pasar un arreglo", 1);
 
             return false;
@@ -481,10 +506,12 @@ class Archivo {
      * @method eliminarArchivo
      * @deprecated
      */
-    static function eliminarArchivo($dir) {
+    static function eliminarArchivo ($dir) {
+
         if (unlink($dir)) {
             return true;
-        } else {
+        }
+        else {
             throw new Exception("No se puede eliminar el directorio $dir", 1);
 
             return false;
@@ -501,15 +528,20 @@ class Archivo {
      * @since 0.6
      *
      */
-    static function obtPeso($img, $unidad = 'mb') {
+    static function obtPeso ($img, $unidad = 'mb') {
 
-        $cantidades = ['mb' => '1048576', 'kb' => '1024', "b" => '1'];
+        $cantidades = [
+            'mb' => '1048576',
+            'kb' => '1024',
+            "b"  => '1'
+        ];
         $bytes = "";
 
         if (array_key_exists($unidad, $cantidades)) {
             return number_format(filesize($img) / $cantidades[$unidad], 2);
 
-        } else {
+        }
+        else {
 
             return false;
         }

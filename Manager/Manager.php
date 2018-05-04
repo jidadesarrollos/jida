@@ -14,14 +14,14 @@ class Manager {
 
     private $_validador;
     private $_entorno;
-    private $_control;
+    private $_inicio;
     private $_configuracion;
 
     /*Tiempos*/
     private $_tiempoInicio;
     private $_tiempoFin;
 
-    function __construct() {
+    function __construct () {
 
         $this->_validador = new Validador();
         $this->_entorno = new Entorno();
@@ -31,12 +31,12 @@ class Manager {
             $this->_configuracion = new App\Config\Configuracion();
         }
 
-        $this->_control = new Rutas\Control($this);
+        $this->_inicio = new Rutas\Inicio($this);
 
 
     }
 
-    public function inicio() {
+    public function inicio () {
 
         try {
 
@@ -47,16 +47,17 @@ class Manager {
 
 
             $this->_validador->inicio();
-            $this->_control->validar();
+            $this->_inicio->validar();
 
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             Helpers\Debug::imprimir("Capturada Excepcion en el manager", $e, true);
         }
 
 
     }
 
-    public function configuracion() {
+    public function configuracion () {
 
         return $this->_configuracion;
 

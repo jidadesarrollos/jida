@@ -1,6 +1,6 @@
 /**
  *
- *  jidaControl Controlador de mascara de campos
+ *  jidaControl Arranque de mascara de campos
  *
  * Plugin Jquery y HTML5 para manejo de controles de formularios
  *
@@ -215,7 +215,7 @@ jd.controladorInput.prototype = {
         }//final if...else
     },
     /**
-     * Controlador  por caracteres
+     * Arranque  por caracteres
      * TIPO : 1
      * Valida un campo, evaluando solamente el caracter ingresado en el momento
      */

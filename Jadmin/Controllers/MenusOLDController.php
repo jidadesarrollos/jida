@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Controlador de Menus
+ * Arranque de Menus
  *
  * @package Framework
  * @subpackage Jadmin

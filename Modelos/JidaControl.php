@@ -1,7 +1,7 @@
 <?PHP
 
 /**
- * Controlador de Funcionamiento del JIDA
+ * Arranque de Funcionamiento del JIDA
  *
  * @internal Clase Modelo para manejar los formularios del framework.
  *

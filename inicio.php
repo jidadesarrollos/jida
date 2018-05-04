@@ -48,6 +48,7 @@ if (file_exists(DIR_APP) and file_exists(DIR_APP . 'Config/appConfig.php')) {
     include_once 'Config/appConfig.php';
 }
 
+
 if (class_exists('\Jida\Manager\Manager')) {
 
     $manager = new \Jida\Manager\Manager();

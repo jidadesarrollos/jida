@@ -1,7 +1,7 @@
 
 <?PHP
 /**
- * Controlador de errores generales
+ * Arranque de errores generales
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @package Framework

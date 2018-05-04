@@ -1,6 +1,6 @@
 <?PHP
 /**
-*   Controlador de Formularios
+*   Arranque de Formularios
  *
  * @author Julio Rodriguez <jirc48@gmail.com>
  * @version 0.1.7 16/03/2014

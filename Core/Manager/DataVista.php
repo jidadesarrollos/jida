@@ -1,7 +1,7 @@
 <?php /**
  * Objeto Data para pasar información a Vistas y Layouts
  *
- * Objeto pasado por medio del jidaController del Controlador ejecutado
+ * Objeto pasado por medio del jidaController del Arranque ejecutado
  * a la clase Pagina para que pueda ser accedido en conjunto con los valores
  * pasados desde la vista
  *
@@ -48,12 +48,12 @@ class DataVista {
     var $meta_autor;
     var $meta_image;
     var $meta_url;
-    var $meta = array();
+    var $meta = [];
     var $url_canonical;
-    var $responsive = TRUE;
-    var $robots = TRUE;
-    var $solicitudAjax = FALSE;
-    var $google_verification = FALSE;
+    var $responsive = true;
+    var $robots = true;
+    var $solicitudAjax = false;
+    var $google_verification = false;
     var $metodo;
     var $modulo;
     var $controlador;
@@ -62,7 +62,7 @@ class DataVista {
     var $jsAgregado = [];
     var $cssAgregado = [];
     var $_esJadmin = false;
-    var $_esApp = FALSE;
+    var $_esApp = false;
     var $_urlCssBase;
     var $_urlJsBase;
     /**
@@ -73,7 +73,7 @@ class DataVista {
     private $_plantilla = "";
     private $_path = "app";
 
-    function __construct($modulo = "", $controlador = "", $metodo = "", $jadmin = false, $app = FALSE) {
+    function __construct ($modulo = "", $controlador = "", $metodo = "", $jadmin = false, $app = false) {
 
         $this->modulo = $modulo;
         $this->controlador = $controlador;
@@ -90,7 +90,7 @@ class DataVista {
         $this->_inicializar();
     }
 
-    private function _inicializar() {
+    private function _inicializar () {
 
         if (defined('URL_CSS'))
             $this->_urlCssBase = URL_CSS;
@@ -103,30 +103,34 @@ class DataVista {
      * Agrega un javascript para ser renderizado en el layout
      * @method incluirJS
      *
-     * @param mixed   $js     Arreglo o string con ubicación del js
+     * @param mixed $js Arreglo o string con ubicación del js
      * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación
      * @param         boolean footer True Define si el js se imprimirá arriba o abajo
      *
      */
-    function incluirJS($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
+    function incluirJS ($js, $dir = true, $contentJS = "", $footer = true) {
 
-        if ($dir === TRUE) $dir = URL_JS;
+        if ($dir === true)
+            $dir = URL_JS;
 
         if (!is_array($js))
             $js = explode(",", $js);
         foreach ($js as $key => $archivo) {
-            $finalDir = (is_string($archivo) and strpos($archivo, 'http') === FALSE) ? $dir : "";
+            $finalDir = (is_string($archivo) and strpos($archivo, 'http') === false) ? $dir : "";
             if (!empty($ambito)) {
                 if ($this->_esJadmin) {
                     $this->js[$ambito]['jadmin'][$key] = $finalDir . $archivo;
-                } else {
+                }
+                else {
                     $this->js[$ambito][$key] = $finalDir . $archivo;
                 }
 
-            } else {
+            }
+            else {
                 if ($this->_esJadmin) {
                     $this->js['jadmin'][$key] = $finalDir . $archivo;
-                } else
+                }
+                else
                     $this->js[$key] = $finalDir . $archivo;
             }
 
@@ -138,14 +142,14 @@ class DataVista {
 
     /**
      * @param        $js
-     * @param bool   $dir
+     * @param bool $dir
      * @param string $contentJS
-     * @param bool   $footer
+     * @param bool $footer
      *
      * @return mixed
-    @deprecated 0.6
+     * @deprecated 0.6
      */
-    function addJs($js, $dir = TRUE, $contentJS = "", $footer = TRUE) {
+    function addJs ($js, $dir = true, $contentJS = "", $footer = true) {
 
         return $this->incluirJS($js, $dir, $contentJS, $footer);
 
@@ -164,25 +168,28 @@ class DataVista {
      *
      * @deprecated 0.6
      */
-    function addJsModulo($js, $modulo = "") {
+    function addJsModulo ($js, $modulo = "") {
 
         $modulo = (!empty($modulo)) ? $modulo : $this->modulo;
 
-        if ($modulo !== TRUE) {
+        if ($modulo !== true) {
             if ($this->_esJadmin and !$this->_esApp) {
                 $ruta = '/Framework/Jadmin/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/js/';
-            } else {
+            }
+            else {
                 $ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/js/';
             }
         }
 
-        if (!is_array($js)) $js = explode(' ', $js);
+        if (!is_array($js))
+            $js = explode(' ', $js);
 
         if (is_array($js)) {
             foreach ($js as $key => $archivo) {
                 if (array_key_exists(strtolower($this->modulo), $this->js)) {
                     $this->js[strtolower($this->modulo)][] = $ruta . $archivo;
-                } else {
+                }
+                else {
                     if ($this->_esJadmin and array_key_exists('jadmin', $this->js)) {
                         $this->js['jadmin'][] = $ruta . $archivo;
                     }
@@ -202,15 +209,16 @@ class DataVista {
      * se encuentre el sistema
      * @method addcssModulo
      */
-    function addCssModulo($css, $ruta = true) {
+    function addCssModulo ($css, $ruta = true) {
 
         $modulo = $this->modulo;
         (Helpers\Cadenas::guionCase($modulo) == 'jadmin') ? $modulo = "Framework" : $modulo = "Aplicacion/Modulos/" . $modulo;
 
-        if ($ruta === TRUE) {
+        if ($ruta === true) {
             if ($this->_esJadmin and !$this->_esApp) {
                 $ruta = '/Framework/Jadmin/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/css/';
-            } else {
+            }
+            else {
                 $ruta = '/Aplicacion/Modulos/' . ucwords(strtolower($modulo)) . '/htdocs/css/';
             }
         }
@@ -224,7 +232,8 @@ class DataVista {
 
                 if (array_key_exists(strtolower($this->modulo), $this->css)) {
                     $this->css[strtolower($this->modulo)][] = $ruta . $archivo;
-                } else {
+                }
+                else {
                     if ($this->_esJadmin and array_key_exists('jadmin', $this->css)) {
                         $this->css['jadmin'][] = $ruta . $archivo;
                     }
@@ -240,13 +249,13 @@ class DataVista {
      * Agrega un javascript para ser renderizado en el layout
      * @method addjs
      *
-     * @param mixed   $js     Arreglo o string con ubicación del js
+     * @param mixed $js Arreglo o string con ubicación del js
      * @param boolean $ambito TRUE si se desea usar la constante URL_JS como path de ubicación
      * @param         string  ambito Usado para agregar el js solo para prod o dev
      */
-    function addJsAjax($js, $dir = TRUE, $ambito = "") {
+    function addJsAjax ($js, $dir = true, $ambito = "") {
 
-        if ($dir === TRUE)
+        if ($dir === true)
             $dir = $this->_urlJsBase;
 
         if (is_array($js)) {
@@ -256,7 +265,8 @@ class DataVista {
                 else
                     $this->jsAjax[] = $dir . $archivo;
             }
-        } else {
+        }
+        else {
             if (!empty($ambito))
                 $this->js[$ambito][] = $dir . $js;
             else
@@ -268,11 +278,11 @@ class DataVista {
      * Agrega un css a la hoja de estilo global
      * @method addCss
      *
-     * @param mixed   $css    Arreglo o string con ubicación del css
+     * @param mixed $css Arreglo o string con ubicación del css
      * @param boolean $ambito TRUE si se desea usar la constante URL_CSS como ubicacion
-     * @param string  $ambito Usado para agregar css solo para prod o dev
+     * @param string $ambito Usado para agregar css solo para prod o dev
      */
-    function addCSS($css, $url = "") {
+    function addCSS ($css, $url = "") {
 
         $constante = (empty($url)) ? $this->_urlCssBase : $url;
         if (is_array($css)) {
@@ -283,7 +293,8 @@ class DataVista {
                 else
                     $this->css[] = $constante . $value;
             }
-        } else {
+        }
+        else {
             array_push($this->cssAgregado, $css);
             if (!empty($ambito))
                 $this->css[$ambito][] = $constante . $css;
@@ -305,7 +316,7 @@ class DataVista {
      * @method removerCss
      * @param string $css Nombre del Archivo CSS a eliminar
      */
-    function removerCSS($archivo, $key = null) {
+    function removerCSS ($archivo, $key = null) {
 
         $arrayCss = &$this->css;
         if (!is_null($key) and array_key_exists($key, $this->css))
@@ -320,7 +331,7 @@ class DataVista {
         return false;
     }
 
-    function removerJs() {
+    function removerJs () {
 
     }
 
@@ -332,14 +343,14 @@ class DataVista {
      * @method setVista
      *
      * @param string $nombreVista Vista a utilizar
-     * @param string $path        a utilizar opciones disponibles 'app' 'jida' cualquier valor distinto será tomado
+     * @param string $path a utilizar opciones disponibles 'app' 'jida' cualquier valor distinto será tomado
      *                            como app
      *
      * @return void
      */
-    function usarPlantilla($nombreVista, $path = "") {
+    function usarPlantilla ($nombreVista, $path = "") {
 
-        if ($path == 'jida'){
+        if ($path == 'jida') {
             $this->_path = "jida";
         }
 
@@ -350,13 +361,13 @@ class DataVista {
     /**
      * @deprecated
      */
-    function setVistaAsTemplate($nombreVista, $path = "") {
+    function setVistaAsTemplate ($nombreVista, $path = "") {
 
         $this->usarPlantilla($nombreVista, $path);
 
     }
 
-    function obtPlantilla() {
+    function obtPlantilla () {
 
         if (!isset($this->_plantilla))
             $this->_plantilla = "";
@@ -365,7 +376,7 @@ class DataVista {
 
     }
 
-    function getPath() {
+    function getPath () {
 
         return $this->_path;
     }
@@ -374,14 +385,14 @@ class DataVista {
      * Agrega codigo Js al final de la vista, luego de incluir
      * @method addCodeJs
      *
-     * @param mixed   $arg1 Variable con codigo o Nombre del archivo, si es un archivo debe encontrarse en la misma
+     * @param mixed $arg1 Variable con codigo o Nombre del archivo, si es un archivo debe encontrarse en la misma
      *                      carpeta de las vistas
      * @param boolean $file Determina si lo pasado es una variable o una url de archivo.
      *
      */
-    function addCodeJs($arg1, $file = false) {
+    function addCodeJs ($arg1, $file = false) {
 
-        if ($file == TRUE)
+        if ($file == true)
             $this->js['code'][] = ['archivo' => $arg1];
         else {
             $this->js['code'][] = ['codigo' => $arg1];
@@ -394,12 +405,12 @@ class DataVista {
      *
      * @param array Arreglo de etiquetas meta, los keys deben coincidir con las meta definidas
      */
-    function editarMeta($array) {
+    function editarMeta ($array) {
 
         $this->establecerAtributos($array, __CLASS__);
     }
 
-    private function setMetaBasico() {
+    private function setMetaBasico () {
 
         $html = "";
         if (empty($this->meta_descripcion)) {
@@ -416,7 +427,7 @@ class DataVista {
         }
     }
 
-    function addMeta($meta) {
+    function addMeta ($meta) {
 
         $this->meta[] = $meta;
     }
@@ -432,7 +443,7 @@ class DataVista {
      * @param array    @arr Arreglo con valores
      * @param instance @clase Instancia de la clase
      */
-    protected function establecerAtributos($arr, $clase = "") {
+    protected function establecerAtributos ($arr, $clase = "") {
 
         if (empty($clase)) {
             $clase = $this->_clase;
@@ -442,11 +453,12 @@ class DataVista {
 
     }
 
-    function addJsCodigo($codigo) {
+    function addJsCodigo ($codigo) {
 
         if (array_key_exists('codigo', $this->js)) {
             $this->js['codigo'] .= $codigo;
-        } else {
+        }
+        else {
             $this->js['codigo'] = $codigo;
         }
 

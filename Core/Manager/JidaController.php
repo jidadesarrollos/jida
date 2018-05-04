@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Controlador global del framework
+ * Arranque global del framework
  *
  * @package Framework
  * @author  Julio Rodriguez <jirc48@gmail.com>
@@ -28,7 +28,7 @@ global $JD;
 class JidaController {
     private $_ce = "001";
     /**
-     * Define el nombre del Controlador requerido
+     * Define el nombre del Arranque requerido
      *
      * @var string $controlador
      * @access private
@@ -58,7 +58,7 @@ class JidaController {
      */
     private $_arrayUrl;
     /**
-     * Controlador solicitado
+     * Arranque solicitado
      *
      * @var $_metodo
      * @access private
@@ -66,7 +66,7 @@ class JidaController {
      */
     private $_metodo;
     /**
-     * Controlador solicitado
+     * Arranque solicitado
      *
      * @var string $_controlador
      * @access private
@@ -80,7 +80,7 @@ class JidaController {
      */
     private $_nombreControlador;
     /**
-     * Controlador solicitado
+     * Arranque solicitado
      *
      * @var $_modulo
      * @access private
@@ -279,7 +279,7 @@ class JidaController {
      */
 
     private function generarVariables() {
-        JD('Controlador', $this->_nombreControlador);
+        JD('Arranque', $this->_nombreControlador);
         JD('Vista', $this->vista);
         JD('Metodo', $this->_metodo);
         JD('Modulo', $this->_modulo);
@@ -617,7 +617,7 @@ class JidaController {
      * los parametros devueltos y pasarlos al metodo mostrarContenido
      *
      * @method ejecucion
-     * @param object $controlador <br>Objeto Controlador a instanciar
+     * @param object $controlador <br>Objeto Arranque a instanciar
      *
      * @access private
      */
@@ -642,7 +642,7 @@ class JidaController {
     }
 
     /**
-     * Realiza la ejecución del Controlador a instanciar
+     * Realiza la ejecución del Arranque a instanciar
      * @method ejecutarController
      */
     private function ejecutarController($controlador, $params = [], $checkDirs = TRUE) {

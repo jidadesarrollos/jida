@@ -1,6 +1,6 @@
 <?php
 /**
- * Controlador de Session de la aplicación
+ * Arranque de Session de la aplicación
  *
  * @package  framework
  * @category core

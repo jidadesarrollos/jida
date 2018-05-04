@@ -54,7 +54,7 @@ if(!array_key_exists('configVista', $GLOBALS)){
 	/**
 	 * Arreglo de configuracion para las Vistas creadas
 	 * con la clase Vista
-	 * @see Vista
+	 * @see Manager
 	 * @global array configVista
 	 */
 	$GLOBALS['configVista']=[

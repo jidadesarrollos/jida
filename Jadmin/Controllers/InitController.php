@@ -277,7 +277,7 @@ class InitController extends JController{
     
     private function crearControllerApp(){
         $this->gController->documentacion(
-        "Controlador Principal de la Aplicacion",null,
+        "Arranque Principal de la Aplicacion",null,
         ['className'=>'AppController','category'=>'controller','package'=>'Aplicacion']);
 
         $this->gController->agregarExtend('Controller')->crearController('App');

@@ -1,6 +1,6 @@
 <?PHP
 /**
- * Controlador de modulo de opciones
+ * Arranque de modulo de opciones
  *
  * @package Framework
  * @subpackage Jadmin

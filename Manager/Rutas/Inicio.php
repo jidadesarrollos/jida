@@ -4,8 +4,9 @@ namespace Jida\Manager\Rutas;
 
 use Jida\Helpers as Helpers;
 
-class Control {
+class Inicio {
 
+    private $_ce = '1002';
     private $_get;
     private $_manager;
     private $_urlOriginal;
@@ -25,13 +26,15 @@ class Control {
     public $arrayUrl;
     public $configuracion;
 
+    private $_controlador;
+
     /**
-     * Control constructor.
+     * Inicio constructor.
      *
      * @param $manager
      */
 
-    public function __construct($manager) {
+    public function __construct ($manager) {
 
         $this->_get = $_GET;
         $this->_manager = $manager;
@@ -39,42 +42,56 @@ class Control {
 
     }
 
-    public function validar() {
+    private function _procesar () {
+
+        if (!$this->_controlador) {
+            $this->_controlador = new Arranque($this);
+        }
+
+        return $this->_controlador;
+
+    }
+
+    public function validar () {
 
         if ($this->_get['url']) {
             $this->_urlOriginal = utf8_encode($this->_get['url']);
         }
         $this->_verificarEstructura();
 
-        $controlador = $this->_procesar();
 
-        if ($controlador) {
+        $this->_procesar()->ejecutar();
+
+        /*if ($controlador) {
             $this->_preparar($controlador);
-        } else {
-            exit("NO");
+            #$this->_preparar($controlador);
         }
-
+        else {
+            exit("NO");
+        }*/
 
 
     }
 
-    private function _preparar($controlador) {
-
-    }
-
-    private function _verificarEstructura() {
+    private function _verificarEstructura () {
 
         $url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_URL);
         $url = explode('/',
-            str_replace(['.php',
-                '.html',
-                '.htm'
-            ], '', $url));
+                       str_replace(
+                           [
+                               '.php',
+                               '.html',
+                               '.htm'
+                           ],
+                           '',
+                           $url));
 
-        $this->arrayUrl = array_filter($url, function ($var) {
 
-            return !!$var;
-        });
+        $this->arrayUrl = array_filter($url,
+            function ($var) {
+
+                return !!$var;
+            });
 
         unset($this->_get['url']);
         if (count($this->_get)) {
@@ -94,7 +111,7 @@ class Control {
 
     }
 
-    private function _validarIdioma() {
+    private function _validarIdioma () {
 
         $actual = $this->arrayUrl[0];
         $idiomas = $this->configuracion->idiomas;
@@ -105,12 +122,6 @@ class Control {
             array_shift($this->arrayUrl);
 
         }
-
-    }
-
-    private function _procesar() {
-
-        return new Controlador($this);
 
     }
 

@@ -4,7 +4,7 @@
  *
  *
  * @package  Framework
- * @category Controlador
+ * @category Arranque
  * @author   Julio Rodriguez jirc48@gmail.com
  *
  *
@@ -771,7 +771,7 @@ class Controller {
     /**
      * Verifica si el controlador tiene un modelo correspondiente
      *
-     * Para que el modelo del controlador sea conseguido debe tener el nombre del Controlador
+     * Para que el modelo del controlador sea conseguido debe tener el nombre del Arranque
      * en singular
      * @method getModelo;
      *
