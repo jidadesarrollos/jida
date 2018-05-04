@@ -1,5 +1,9 @@
 <?php
 
+/**
+ *
+ * Numero de error 1
+ */
 namespace Jida\Manager\Vista;
 
 use Jida\Helpers as Helpers;
@@ -9,8 +13,6 @@ use Exception as Excepcion;
 class Vista {
 
     private $_ce = 10009;
-    private $_ne = 1;
-
     private $_directorio;
     private $_nombre;
     private $_data;
