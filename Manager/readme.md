@@ -6,17 +6,17 @@ El objeto principal para el manejo de Rutas
 es el **Manager**.
 
 **Manager**: Se encarga de inicializar los valores de ejecución del framework, registra tiempo de incio, carga configuraciones 
-e instancia el validador y el Objeto Control.
+e instancia el validador y el Objeto Arranque
 
 
-Rutas\Control
+Rutas\Inicio
 -----
 
-Verifica la estructura de la url pasada. Si se solicita un idioma e instancia al objeto Controlador.  
+Verifica la estructura de la url pasada. Si se solicita un idioma e instancia al objeto Arranque.  
 parametros enviados.
 
 
-Rutas\Controlador
+Rutas\Arranque
 ----
 Disponibiliza la información de los componentes de la url de la petición.
 

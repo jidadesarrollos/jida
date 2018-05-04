@@ -1,5 +1,7 @@
 <?php
 /**
+ *
+ *
  * Corresponde al numero de excepciones,
  * Actualizar a medida que se vayan agregando excepciones
  * Numero de error 1
