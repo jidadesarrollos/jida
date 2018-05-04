@@ -10,7 +10,7 @@ class Manager {
 
     use \Jida\Core\ObjetoManager;
 
-    private $_ce = 1006;
+    private $_ce = 10006;
     private $_data;
 
     private $_namespace;

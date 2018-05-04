@@ -8,7 +8,7 @@ use Exception as Excepcion;
 
 class Vista {
 
-    private $_ce = 1000;
+    private $_ce = 10009;
     private $_ne = 1;
 
     private $_directorio;
