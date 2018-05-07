@@ -46,8 +46,6 @@ class Manager {
         $this->_modulo = $padre->modulo;
 
         $this->_layout = new Layout($this);
-        $vista = $this->vista();
-
 
     }
 
@@ -61,7 +59,9 @@ class Manager {
             ->leer()
             ->render($this->vista()->obtener());
 
-        return $salida;
+        echo $salida;
+
+
 
 
     }

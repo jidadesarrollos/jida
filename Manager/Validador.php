@@ -5,11 +5,13 @@ namespace Jida\Manager;
 
 class Validador {
 
-    function __construct() {
+    private $_ce = 10011;
+
+    function __construct () {
 
     }
 
-    public function inicio() {
+    public function inicio () {
 
         global $elementos;
         $elementos = [
@@ -21,7 +23,7 @@ class Validador {
 
     }
 
-    private function _validarConfiguracion() {
+    private function _validarConfiguracion () {
 
         if (class_exists('\App\Config\Configuracion')) {
             $configuracion = new \App\Config\Configuracion();

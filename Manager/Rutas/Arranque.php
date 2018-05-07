@@ -15,7 +15,7 @@ use Jida\Manager\Vista\Manager as Manager;
 
 class Arranque {
 
-    private $_ce = '1001';
+    private $_ce = 10002;
     private $_arrayUrl;
     public $procesador;
     /**
@@ -127,8 +127,9 @@ class Arranque {
     Static function obtenerControlador ($controlador) {
 
         if (!self::$Controlador or $controlador != self::$controlador) {
-            self::$controlador = $controlador;
-            $objeto = self::$namespace . self::$controlador;
+            self::$controlador = str_replace("Controller","", $controlador);
+
+            $objeto = self::$namespace . $controlador;
             self::$Controlador = new $objeto();
         }
 

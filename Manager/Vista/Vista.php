@@ -86,7 +86,7 @@ class Vista {
 
         };
 
-        Helpers\Debug::imprimir($vista);
+
 
 
         if (!file_exists($vista)) {

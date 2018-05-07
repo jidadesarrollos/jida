@@ -6,7 +6,7 @@ use Jida\Helpers as Helpers;
 
 class Inicio {
 
-    private $_ce = '10002';
+    private $_ce = 10003;
     private $_get;
     private $_manager;
     private $_urlOriginal;
