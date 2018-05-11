@@ -66,7 +66,7 @@ class Vista extends BD\DBContainer {
      * @var $filtroAgregado ;
      */
     private $filtroAgregado = FALSE;
-    /* Inicio de botones */
+    /* Lector de botones */
     /**
      * Define si el grid llevará un botón para nuevos registros
      *

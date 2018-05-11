@@ -46,6 +46,7 @@ class Manager {
         $this->_modulo = $padre->modulo;
 
         $this->_layout = new Layout($this);
+        $this->_layout->data = $this->_data;
 
     }
 
@@ -60,8 +61,6 @@ class Manager {
             ->render($this->vista()->obtener());
 
         echo $salida;
-
-
 
 
     }

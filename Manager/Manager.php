@@ -34,7 +34,7 @@ class Manager {
             $this->_configuracion = new App\Config\Configuracion();
         }
 
-        $this->_inicio = new Rutas\Inicio($this);
+        $this->_inicio = new Rutas\Lector($this);
 
 
     }

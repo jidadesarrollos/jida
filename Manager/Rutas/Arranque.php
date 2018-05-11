@@ -11,7 +11,7 @@ namespace Jida\Manager\Rutas;
 
 use Jida\Helpers as Helpers;
 use Jida\Core\Manager as Core;
-use Jida\Manager\Vista\Manager as Manager;
+use Jida\Manager\Vista\Manager as ManagerVista;
 
 class Arranque {
 
@@ -155,7 +155,8 @@ class Arranque {
 
             $this->_pipeLines($controlador, '_jdPost');
 
-            $this->_managerVista = new Manager($this, $controlador, $this->_dataVista);
+
+            $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
 
             $this->_managerVista->renderizar($this);
             /*

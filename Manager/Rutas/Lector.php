@@ -4,7 +4,7 @@ namespace Jida\Manager\Rutas;
 
 use Jida\Helpers as Helpers;
 
-class Inicio {
+class Lector {
 
     private $_ce = 10003;
     private $_get;
@@ -29,7 +29,7 @@ class Inicio {
     private $_arranque;
 
     /**
-     * Inicio constructor.
+     * Lector constructor.
      *
      * @param $manager
      */
@@ -62,13 +62,6 @@ class Inicio {
 
         $this->_procesar()->ejecutar();
 
-        /*if ($controlador) {
-            $this->_preparar($controlador);
-            #$this->_preparar($controlador);
-        }
-        else {
-            exit("NO");
-        }*/
 
 
     }
