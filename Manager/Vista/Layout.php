@@ -1,17 +1,22 @@
 <?php
+/**
+ * Codigo de error 3
+ */
 
 namespace Jida\Manager\Vista;
 
 use function Composer\Autoload\includeFile;
+use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 use Exception as Excepcion;
+use Jida\Manager\Estructura;
 use Jida\Render\Selector as Selector;
 
 class Layout {
 
     private $_DIRECTORIOS = [
-        'jida' => 'Layout/',
-        'app'  => 'Layout/'
+        'jida' => 'Framework/Layout/',
+        'app'  => 'Aplicacion/Layout/'
     ];
 
     private $_ce = '10008';
@@ -25,7 +30,6 @@ class Layout {
 
     private $_directorio;
 
-    static public $directorio;
     /**
      * @var _data Objeto Data Vista
      */
@@ -36,55 +40,58 @@ class Layout {
      */
     public $data;
 
+    static public $directorio;
+    private static $instancia;
+
     public function __construct ($padre) {
 
         self::$padre = $padre;
+        self::$instancia = $this;
 
     }
-
 
     public function leer () {
 
         $padre = self::$padre;
         $arranque = $padre::$Padre;
 
+        $actual = explode(DS, __DIR__);
+
+        $posicion = array_search(Estructura::DIR_JIDA, $actual);
+
+        $path = implode("/", array_chunk($actual, $posicion)[0]);
+
+        //$path .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
         $controlador = $arranque::$Controlador;
         $directorio = $this->_DIRECTORIOS['app'];
 
+        $tema = Config::obtener()->tema;
+
         if ($arranque->jadmin) {
-
-            $this->_directorio = "./Framework/";
             $directorio = $this->_DIRECTORIOS['jida'];
-
         }
 
-        self::$directorio = $this->_directorio . $directorio . $controlador->layout;
+        self::$directorio = $path . DS . $this->_directorio . $directorio;
+        if (!!$tema and !$arranque->jadmin) {
+            self::$directorio .= $tema . DS;
+        }
+
+        self::$directorio .= $controlador->layout;
 
         return $this;
 
     }
 
-
     public function render ($vista) {
-
 
         if (!self::$directorio or !$vista) {
             throw  new Excepcion('El parametro $vista es requerido para el metodo render', $this->_ce . '0001');
 
             return;
         }
-        ob_start();
 
-        $contenido = "";
-
-        include_once $vista;
-        $contenido = ob_get_clean();
-
-        include self::$directorio;
-        $layout = ob_get_clean();
-
-        return $layout;
-
+        $render = new Render();
+        return $render->imprimir(self::$directorio, $vista);
 
     }
 
@@ -94,11 +101,12 @@ class Layout {
      */
     public function printHeadTags () {
 
-        $this->imprimirMeta();
+        $msj = "El metodo printHeadTags se encuentra en desuso, por favor reemplazar por imprimir meta";
+        throw new Excepcion($msj, $this->_ce . 3);
+
     }
 
     public function imprimirMeta () {
-
 
         if (is_object($this->_data)) {
             return Meta::imprimir($this->_data);
@@ -106,7 +114,6 @@ class Layout {
 
         return;
     }
-
 
     /**
      * Imprime las lirerias del lado cliente
@@ -203,8 +210,15 @@ class Layout {
         return $html;
     }
 
-    public function __call ($param, $param2) {
 
-        Helpers\Debug::imprimir("no existe el metodo", $param, $param2, true);
+    static function obtener () {
+
+        if (!self::$instancia) {
+
+            throw new Excepcion("El objeto layout no ha sido instanciado", self::$_ce . "1");
+        }
+
+        return self::$instancia;
+
     }
 }

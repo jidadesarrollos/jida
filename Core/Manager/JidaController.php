@@ -548,7 +548,7 @@ class JidaController {
 
                 if ($clave === TRUE) {
                     if (isset($this->args[ $i ]) and isset($this->args[ $i + 1 ])) {
-                        no[ $this->args[ $i ] ] = $this->args[ $i + 1 ];
+                        $gets[ $this->args[ $i ] ] = $this->args[ $i + 1 ];
                     }
                 }
                 $i++;

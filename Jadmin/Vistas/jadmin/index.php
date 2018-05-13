@@ -1,3 +1,6 @@
+<?php
+
+?>
 <div class="col-md-6 col-sm-12 col-xs-12">
     <?= \Jida\Helpers\Mensajes::imprimirMensaje(); ?>
 </div>

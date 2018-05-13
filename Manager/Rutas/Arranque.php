@@ -9,6 +9,7 @@
 namespace Jida\Manager\Rutas;
 
 
+use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 use Jida\Core\Manager as Core;
 use Jida\Manager\Vista\Manager as ManagerVista;
@@ -29,6 +30,9 @@ class Arranque {
      */
     static public $controlador = false;
     static public $namespace;
+    /**
+     * @var $ruta Define si la ruta de archivos debe ser buscada en el framework o en la aplicacion
+     */
     static public $ruta;
 
     public $default;
@@ -51,7 +55,7 @@ class Arranque {
 
     public function __construct ($control) {
 
-        $this->modulos = $control->configuracion->modulos;
+        $this->modulos = Config::obtener()->modulos;
         $this->_arrayUrl = $control->arrayUrl;
         $this->_parser();
 
@@ -127,7 +131,7 @@ class Arranque {
     Static function obtenerControlador ($controlador) {
 
         if (!self::$Controlador or $controlador != self::$controlador) {
-            self::$controlador = str_replace("Controller","", $controlador);
+            self::$controlador = str_replace("Controller", "", $controlador);
 
             $objeto = self::$namespace . $controlador;
             self::$Controlador = new $objeto();

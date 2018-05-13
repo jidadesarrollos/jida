@@ -822,7 +822,7 @@ class Pagina {
      * @method printHeadTags
      *
      */
-    function printHeadTags() {
+    function $this->imprimirLibrerias('css');() {
         $meta = "";
         $itemprop = "";
         $initTab = 0;

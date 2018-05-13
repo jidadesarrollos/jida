@@ -15,24 +15,25 @@ class Manager {
 
     private $_ce = '1000';
 
+    private static $instancia;
     private $_validador;
     private $_entorno;
     private $_inicio;
-    private $_configuracion;
 
+    private $_configuracion;
     /*Tiempos*/
     private $_tiempoInicio;
+
     private $_tiempoFin;
+
+    static $configuracion;
 
     function __construct () {
 
         $this->_validador = new Validador();
         $this->_entorno = new Entorno();
 
-        $this->_configuracion = new Conf\Config();
-        if (class_exists('App\Config\Configuracion')) {
-            $this->_configuracion = new App\Config\Configuracion();
-        }
+        self::$configuracion = Conf\Config::obtener();
 
         $this->_inicio = new Rutas\Lector($this);
 
@@ -60,9 +61,7 @@ class Manager {
 
     }
 
-    public function configuracion () {
 
-        return $this->_configuracion;
 
-    }
+
 }
