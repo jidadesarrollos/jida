@@ -39,7 +39,14 @@ class Vista {
 
     }
 
-
+    /**
+     * Define el directorio de la vista solicitada
+     *
+     * Verifica la ubicación de la vista a partir de los componentes de la url
+     *
+     * @method _obtenerDirectorio
+     *
+     */
     private function _obtenerDirectorio () {
 
         $padre = self::$padre;
@@ -48,18 +55,30 @@ class Vista {
         $directorio = Estructura::path();
         $directorio .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
 
-        if (!!$arranque->modulo) {
+        if (!!$arranque->modulo and !$arranque->jadmin) {
             $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
         }
 
-        if ($arranque::$ruta === 'jida' and $arranque->jadmin) {
+        if ($arranque->jadmin) {
+
             $directorio .= "/" . $this->_DIRECTORIOS['jida'];
+
+            if(!!$arranque->modulo) {
+                $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
+            }
+
         }
 
         self::$directorio = $directorio . "/Vistas/" . strtolower($arranque::$controlador);
 
     }
 
+    /**
+     * Retorna la ruta fisica de la plantilla solicitada
+     *
+     * @param $plantilla
+     * @return bool|string
+     */
     function rutaPlantilla ($plantilla) {
 
         $plantilla = $plantilla . ".php";
@@ -88,6 +107,7 @@ class Vista {
         if (!self::$directorio) {
             $this->_obtenerDirectorio();
         }
+
 
         $vista = (!!$arranque::$metodo) ? $arranque::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista) ? $controlador->vista : $vista;

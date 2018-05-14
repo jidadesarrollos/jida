@@ -17,7 +17,7 @@
 
         <?=$this->imprimirMeta();?>
 
-        <?=$this->imprimirLibrerias('css',$this->data->moduloCss)?>
+        <?=$this->imprimirLibrerias('css',$this->moduloCss)?>
     </head>
 
     <body>
@@ -41,6 +41,6 @@
                 </div>
             </div><!--Cierre div full-container-->
         </div>
-		<?=$this->printJS($this->data->moduloJS)?>
+		<?=$this->printJS($this->moduloJS)?>
     </body>
 </html>

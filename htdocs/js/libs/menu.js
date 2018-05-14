@@ -1,6 +1,7 @@
 (function ($) {
     'use strict';
 
+
     var contenedor = '[data-liparent]';
     var menu = function (ele) {
         $(contenedor).on('click', this.checksubnivel);

@@ -548,5 +548,4 @@ class Archivo {
 
     }
 
-    static ob
 } // END

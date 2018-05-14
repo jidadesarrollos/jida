@@ -20,11 +20,12 @@ $data =& $this->data;
          </div>
    	</div>
    	<div class="col-md-8 text-right">
-   		<b>Total tablas : <?=count($this->data->tablas)?> </b>
+   		<b>Total tablas : <?=count($this->tablas)?> </b>
    	</div>
-   	<hr />
+   
+	<hr />
    <?=Jida\Helpers\Mensajes::imprimirMsjSesion()?>
-    <?php foreach ($this->data->tablas as $key => $tabla): ?>
+    <?php foreach ($this->tablas as $key => $tabla): ?>
         <div class="col-md-3 col-sm-4">
             <div class="checkbox">
                 <input type="checkbox" class="seleccionables" id="tablas_bd_<?=$tabla['table_name']?>" name="tablas_bd[]" value="<?=$tabla['table_name']?>">

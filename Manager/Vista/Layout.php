@@ -56,7 +56,7 @@ class Layout {
         $arranque = $padre::$Padre;
 
         $actual = explode(DS, __DIR__);
-
+        $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
         $posicion = array_search(Estructura::DIR_JIDA, $actual);
 
         $path = implode("/", array_chunk($actual, $posicion)[0]);
@@ -65,14 +65,13 @@ class Layout {
         $controlador = $arranque::$Controlador;
         $directorio = $this->_DIRECTORIOS['app'];
 
-        $tema = Config::obtener()->tema;
 
         if ($arranque->jadmin) {
-            $directorio = $this->_DIRECTORIOS['jida'];
+            $directorio = ($tema === 'jadmin') ? $this->_DIRECTORIOS['jida'] : $this->_DIRECTORIOS['app'];
         }
 
         self::$directorio = $path . DS . $this->_directorio . $directorio;
-        if (!!$tema and !$arranque->jadmin) {
+        if (!!$tema) {
             self::$directorio .= $tema . DS;
         }
 
@@ -91,6 +90,7 @@ class Layout {
         }
 
         $render = new Render();
+
         return $render->imprimir(self::$directorio, $vista);
 
     }
@@ -130,7 +130,7 @@ class Layout {
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         if (!property_exists($this->data, $lang))
             return false;
-        $data = $this->data->{$lang};
+        $data = $this->{$lang};
 
         //Se eliminan las librerias incluidas en un entorno distinto al actual
         //o que pertenezcan a un $modulo no solicitado

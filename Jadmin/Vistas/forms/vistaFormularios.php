@@ -1,3 +1,3 @@
 <?PHP
-echo $this->data->vistaForms;
+echo $this->vistaForms;
 ?>

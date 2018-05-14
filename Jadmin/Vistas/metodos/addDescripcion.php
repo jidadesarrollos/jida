@@ -1,5 +1,5 @@
 <?PHP 
 
 
-echo $this->data->form;
+echo $this->form;
 ?>

@@ -51,6 +51,8 @@ class Config {
      */
     var $tema = 'default';
 
+    var $temaJadmin = 'jadmin';
+
     /**
      * Variable para definicion del logo dentro de la aplicación
      *

@@ -1,6 +1,6 @@
 
 <?PHP
-echo "<h1>".$this->data->tituloForm."</h1>"; 
-if(isset($this->data->formMenu))
-echo $this->data->formMenu;
+echo "<h1>".$this->tituloForm."</h1>";
+if(isset($this->formMenu))
+echo $this->formMenu;
 ?>

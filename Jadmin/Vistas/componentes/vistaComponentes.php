@@ -1,6 +1,4 @@
 <?PHP 
 
 
-echo $this->data->vista;
-
-?>
+echo $this->vista;

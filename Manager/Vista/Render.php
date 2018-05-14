@@ -167,10 +167,7 @@ class Render {
     }
 
 
-    private
-    function __obtHTMLLibreria (
-        $lang, $libreria, $cont = 2
-    ) {
+    private function __obtHTMLLibreria ( $lang, $libreria, $cont = 2 ) {
 
         $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,
                                                                           'http') === false)) ? URL_BASE : "";
@@ -202,5 +199,119 @@ class Render {
         return $html;
     }
 
+    function segmento($segmento, $params = []) {
+
+        if (!is_array($params))
+            $params = array($params);
+
+        foreach ($params as $key => $p)
+            $this->$key = $p;
+
+        $directorio = DIR_APP . 'Segmentos/';
+        if (file_exists($directorio . $segmento . '.php')) {
+            echo $this->incluir('Aplicacion/Segmentos/' . $segmento);
+            // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
+            // return true;
+        } else {
+            throw new \Exception("No existe el segmento $segmento en la carpeta " . $directorio, 100);
+        }
+        return false;
+    }
+
+    /**
+     * Función para incluir archivos
+     * @param mixed $files Nombre de Archivo o arreglo de archivos a incluir
+     *
+     */
+    function incluir($archivo) {
+        if (is_array($archivo)) {
+            foreach ($archivo as $key => $ar) {
+                include_once $ar . '.php';
+            }
+        } elseif (is_string($archivo)) {
+            include_once $archivo . '.php';
+        }
+    }
+
+    /**
+     * Permite acceder a un nexo
+     *
+     */
+    function nexo($nexo, $modulo = "") {
+
+        $partes = explode(".", $nexo);
+        if (count($partes) > 1) {
+
+        } else {
+            $modulo = (empty($modulo)) ? ucwords($this->_modulo) : ucwords($modulo);
+
+            if ($this->_esJadmin) {
+
+                $namespace = '\Jida\Jadmin\Modulos\\' . $modulo . '\Nexos\\';
+            } else {
+                $namespace = '\App\Modulos\\' . $modulo . '\Nexos\\';
+            }
+        }
+        $nexoAbsoluto = $namespace . ucfirst($nexo);
+        if (!class_exists($nexoAbsoluto))
+            throw new Excepcion("No existe el nexo solicitado " . $nexoAbsoluto, $this->_ce . '90');
+
+        $objNexo = new $nexoAbsoluto;
+        return $objNexo;
+    }
+
+    /**
+     * Obtiene el texto correspondiente a una traduccion
+     *
+     * @internal Es un atajo para acceder al objeto traductor, el cual debe
+     * haber sido instanciado en el controlador previamente. El traductor debe
+     * haber sido pasado con el nombre de varible "traductor" al objeto DataVista
+     * @method cadena
+     * @param string $texto Texto a imprimir
+     * @param string $ubicacion Ubicacion dentro del sistema de traducciones
+     * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
+     *
+     */
+    function cadena($texto, $ubicacion, $seccion = "") {
+        if (!property_exists($this, 'traductor'))
+            throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente", $this->_ce . '10');
+
+        return $this->traductor->cadena($texto, $ubicacion);
+    }
+
+
+    function enlace($url = "") {
+        $path = (defined('URL_BASE')) ? URL_BASE : '';
+        if (!empty($this->idioma))
+            $enlace = $path . '/' . $this->idioma . '/' . $url;
+        else
+            $enlace = $path . $url;
+        return $enlace;
+    }
+
+    /**
+     * Retorna la url actual para el idioma pasado
+     *
+     * Metodo provisional para manejo de urls desde las vistas
+     * @method cambiarUrl
+     * @param {string} idioma
+     * @since 0.5
+     */
+    function cambiarUrl($idioma) {
+
+        $url = "/";
+        if (!empty($this->modulo))
+            $url .= $this->modulo . "/";
+        if (!empty($this->controlador) and strtolower($this->controlador) != 'index')
+            $url .= $this->controlador;
+        if (!empty($this->metodo) and strtolower($this->metodo) != 'index')
+            $url .= $this->metodo;
+
+        $base = URL_BASE;
+        $base = (empty($base)) ? "/" : "/" . URL_BASE . '/';
+        $url = explode("/", Helpers\Cadenas::guionCase($idioma, true) . '/' . Helpers\Cadenas::guionCase($url, true));
+        return $base . implode("/", array_filter($url));
+
+    }
 
 }

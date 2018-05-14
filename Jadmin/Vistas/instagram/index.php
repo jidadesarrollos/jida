@@ -4,7 +4,7 @@ use Jida\Helpers\Sesion as Sesion;
 
 ?>
 
-<form action="<?= $this->data->urlForm ?>" method="post" accept-charset="utf-8" id="formInstagram">
+<form action="<?= $this->urlForm ?>" method="post" accept-charset="utf-8" id="formInstagram">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1>Conexi&oacute;n con API Instagram</h1>
