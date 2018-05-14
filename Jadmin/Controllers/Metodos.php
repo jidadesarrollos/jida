@@ -13,7 +13,7 @@ namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\RenderHTML as RenderHTML;
 
-class MetodosController extends JController {
+class Metodos extends JController {
 
     function __construct($id = "") {
 
@@ -38,12 +38,12 @@ class MetodosController extends JController {
 
             foreach ($metodos as $key => $value) {
                 if ($value->name != '__construct' and $value->class == $nombreClase)
-                    $arrayMetodos[ $key ] = $value->name;
+                    $arrayMetodos[$key] = $value->name;
             }
 
             $claseMetodo = new Metodo();
             $claseMetodo->validarMetodosExistentes($arrayMetodos, $objeto->id_objeto);
-            $this->dv->vistaMetodos = MetodosController::vistaMetodos($objeto);
+            $this->dv->vistaMetodos = Metodos::vistaMetodos($objeto);
 
             return $this->dv->vistaMetodos;
         } else {
@@ -52,7 +52,6 @@ class MetodosController extends JController {
 
         return $this->data;
     }
-
 
     function addDescripcion() {
         if ($this->entero($this->get('metodo'))) {
@@ -93,7 +92,7 @@ class MetodosController extends JController {
                             'title'     => 'Agregar Descripci&oacute;n',
                             'data-link' => $this->url . "add-descripcion/metodo/{clave}",
                             'href'      => $this->url . "add-descripcion/metodo/{clave}",
-                            #'data-jvista'=>'modal'
+                #'data-jvista'=>'modal'
             ],
             'html'      => ['span' => ['atributos' => ['class' => 'fa fa-edit fa-lg']]]
         ]
@@ -103,7 +102,7 @@ class MetodosController extends JController {
                                                     'title'     => 'Editar Perfiles',
                                                     'data-link' => $this->url . "asignar-acceso/metodo/{clave}",
                                                     'href'      => $this->url . "asignar-acceso/metodo/{clave}",
-                                                    #'data-jvista'=>'modal'
+                                        #'data-jvista'=>'modal'
                                     ],
                                     'html'      => ['span' => ['atributos' => ['class' => 'fa fa-users fa-lg']]]
                                 ]

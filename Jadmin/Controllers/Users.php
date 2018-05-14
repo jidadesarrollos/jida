@@ -7,7 +7,7 @@ use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use Jida\Core\UsuarioManager as UsuarioManager;
 
-class UsersController extends JController {
+class Users extends JController {
 
     use UsuarioManager;
 

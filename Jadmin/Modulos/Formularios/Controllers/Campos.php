@@ -12,8 +12,7 @@ namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 use Jida\Helpers as Helpers;
 use Jida\Render as Render;
 
-
-class CamposController extends Fcontroller {
+class Campos extends Fcontroller {
 
     public $manejoParams = TRUE;
 
@@ -37,13 +36,11 @@ class CamposController extends Fcontroller {
                     ])
             ]);
 
-
         } else {
             $this->_404();
         }
 
     }
-
 
     function configuracion($idFormulario, $modulo, $idCampo) {
 

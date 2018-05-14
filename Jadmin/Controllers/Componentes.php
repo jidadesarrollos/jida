@@ -14,7 +14,7 @@ use Jida\Render as Render;
 use Jida\Helpers as Helpers;
 use Jida\Modelos\Viejos as Modelos;
 
-class ComponentesController extends JController {
+class Componentes extends JController {
 
     var $layout = "jadmin.tpl.php";
     var $manejoParams = TRUE;
@@ -49,7 +49,6 @@ class ComponentesController extends JController {
         ]);
 
         $vista->addMensajeNoRegistros('No hay Componentes');
-
 
         $this->dv->vista = $vista->obtenerVista();
 
@@ -87,7 +86,6 @@ class ComponentesController extends JController {
         $this->dv->fComponente = $form->armarFormulario();
     }
 
-
     private function validarComponente($componente) {
         if (in_array($componente, $GLOBALS['modulos']))
             return TRUE;
@@ -96,7 +94,6 @@ class ComponentesController extends JController {
     }
 
     function asignarAcceso($acceso = '') {
-
 
         if (!empty($acceso)) {
 
@@ -126,7 +123,6 @@ class ComponentesController extends JController {
             $this->dv->formAcceso = $form->armarFormulario();
 
         } else {
-
 
             if (!$this->solicitudAjax())
                 \Jida\Helpers\Rutas::redireccionar($this->url);

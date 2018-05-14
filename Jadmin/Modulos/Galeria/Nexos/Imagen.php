@@ -1,7 +1,7 @@
 <?php
 
 namespace Jida\Jadmin\Modulos\Galeria\Nexos;
-use Jida\Jadmin\Modulos\Galeria\Controllers\GaleriaController as ParentController;
+use Jida\Jadmin\Modulos\Galeria\Controllers\Galeria as ParentController;
 
 class Imagen extends ParentController{
 	

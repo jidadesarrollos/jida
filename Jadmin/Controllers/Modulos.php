@@ -1,13 +1,11 @@
 <?php
 
-
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Render as Render;
 use \Jida\helpers AS Helpers;
 
-class ModulosController extends JController {
-
+class Modulos extends JController {
 
     var $manejoParams = TRUE;
 
@@ -16,7 +14,6 @@ class ModulosController extends JController {
         $this->layout = "jadmin.tpl.php";
         $this->url = "/jadmin/Modulos/";
     }
-
 
     /**
      *
@@ -49,8 +46,8 @@ class ModulosController extends JController {
 
         for ($i = 0; $i < count($modulosCreados) - 1; $i++) {
             $linea[] = '1';
-            $linea[] = $modulosCreados[ $i ];
-            $linea[] = $modulosCreados[ $i + 1 ];
+            $linea[] = $modulosCreados[$i];
+            $linea[] = $modulosCreados[$i + 1];
             $result[] = $linea;
             unset($linea);
             $i++;
@@ -86,14 +83,14 @@ class ModulosController extends JController {
                 if ($val != 'Jadmin') {
                     if ($val == $val_1) {
 
-                        unset($declaraciones[ $key ]);
-                        unset($direcciones[ $key_1 ]);
-                        unset($direcciones[ $key_1 + 1 ]);
+                        unset($declaraciones[$key]);
+                        unset($direcciones[$key_1]);
+                        unset($direcciones[$key_1 + 1]);
                         break;
 
                     }
                 } else {
-                    unset($declaraciones[ $key ]);
+                    unset($declaraciones[$key]);
 
                 }
 
@@ -108,7 +105,6 @@ class ModulosController extends JController {
         return $arr;
 
     }//end method machModulo
-
 
     private function mensajeModulo() {
         $mach = self::machModulo();
@@ -134,17 +130,14 @@ class ModulosController extends JController {
 
     }
 
-
     public function index() {
-
 
         $mensaje = self::mensajeModulo();
         // Helpers\debug::imprimir($mensaje,true);
         $arre = self::arregloParatabla();
 
-
         $tabla = new Render\jvista($arre, ['titulos' => ['Nombre',
-                                                         'Direccion'
+            'Direccion'
         ]
         ], 'Modulos');
 
@@ -161,7 +154,6 @@ class ModulosController extends JController {
             ]
         ]);
 
-
         $tabla->addMensajeNoRegistros('No hay Modulos Registrados', [
             'link'    => $this->obtUrl(''),
             'txtLink' => 'Registrar modulo'
@@ -169,13 +161,10 @@ class ModulosController extends JController {
         $tabla->acciones(['nuevo ' => ['href' => $this->obtUrl('nuevo')]]);
         Helpers\Mensajes::crear('alerta', $mensaje);
 
-
         $this->data(['mensaje' => $mensaje]);
         $this->data(['tablaVista' => $tabla->obtenerVista()]);
 
-
     }
-
 
     public function nuevo() {
         $formulario = new \Jida\Render\Formulario('nuevoModulo');
@@ -185,7 +174,6 @@ class ModulosController extends JController {
         if ($this->post('btnModulo')) {
 
             if ($formulario->validar()) {
-
 
                 $formulario::msj('suceso', "modulo creado con exito");
 
@@ -202,9 +190,7 @@ class ModulosController extends JController {
         $this->dv->form = $formulario->armarFormulario();
     }
 
-
     private function crearModulo($name = '', $tipo = 0) {
-
 
         if ($name != '') {
             $name = Helpers\cadenas::upperCamelCase($name);
@@ -247,7 +233,6 @@ class ModulosController extends JController {
                 $extends = '\Jida\Core\Controller';
             }
 
-
             Helpers\directorios::crear($directorios);
 
             if ($tipo != 2) {
@@ -256,14 +241,11 @@ class ModulosController extends JController {
                 $this->crearArchivosEstandar($name, $directorios, $extends, $mixto);
             }
 
-
         }
 
     }
 
-
     private function crearArchivosEstandar($nombreArchivo, $directorios, $extiende, $mixto = '') {
-
 
         $nombreModelo = Helpers\Cadenas::obtenerSingular($nombreArchivo);
         $nombreArchivo .= 'Controller';
@@ -274,7 +256,6 @@ class ModulosController extends JController {
         ob_start();
         include_once '\plantillas\controlador.tpl.php';
         $content2 = $content .= ob_get_clean();
-
 
         $content = str_replace("{{{nombreArchivo}}}", $nombreArchivo, $content);
         $content = str_replace("{{{extiende}}}", $extiende, $content);
@@ -316,9 +297,7 @@ class ModulosController extends JController {
 
         }
 
-
     }
-
 
     private function listarKeyDir($ruta, $bool = FALSE) {
         $listado = [];

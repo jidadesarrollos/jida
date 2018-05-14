@@ -15,7 +15,7 @@ use Jida\Modelos as Modelos;
 
 use Jida\Componentes\InstagramManager as InstagramManager;
 
-class InstagramController extends JController {
+class Instagram extends JController {
 
     var $layout = "jadmin.tpl.php";
     var $manejoParams = TRUE;
@@ -39,7 +39,7 @@ class InstagramController extends JController {
         if ($this->get('code')) {
 
             $this->data(['urlForm' => $this->obtUrl('permisos'),
-                         'codigo' => $this->get('code')
+                         'codigo'  => $this->get('code')
             ]);
 
         } else {
