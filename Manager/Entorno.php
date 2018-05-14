@@ -4,7 +4,7 @@ namespace Jida\Manager;
 
 class Entorno {
 
-    public $ce = 1001;
+    public $ce = 10001;
 
     function __construct () {
 

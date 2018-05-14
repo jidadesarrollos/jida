@@ -77,7 +77,7 @@ class Vista {
             $vista .= ".php";
         };
 
-        Helpers\Debug::imprimir($vista);
+
 
         if (!file_exists($vista)) {
             throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');

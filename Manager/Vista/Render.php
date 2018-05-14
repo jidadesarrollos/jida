@@ -7,11 +7,10 @@ class Render {
     private $_dir;
     private $_nombre;
     private $_tema;
+    private $_ce = 10012;
 
 
-
-
-    function __constructor() {
+    function __constructor () {
 
     }
 
@@ -23,14 +22,14 @@ class Render {
      *
      * @method estructurar
      */
-    function estructurar() {
+    function estructurar () {
 
     }
 
     /**
      * Imprime la vista o layout solicitado
      */
-    function imprimir() {
+    function imprimir () {
 
     }
 

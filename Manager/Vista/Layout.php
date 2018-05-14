@@ -2,6 +2,7 @@
 
 namespace Jida\Manager\Vista;
 
+use function Composer\Autoload\includeFile;
 use Jida\Helpers as Helpers;
 use Exception as Excepcion;
 
@@ -24,6 +25,10 @@ class Layout {
     private $_directorio;
 
     static public $directorio;
+    /**
+     * @var _data Objeto Data Vista
+     */
+    private $_data;
 
     public function __construct ($padre) {
 
@@ -69,10 +74,32 @@ class Layout {
 
         $contenido = "";
 
-        include self::$directorio;
-
+        include_once $vista;
         $contenido = ob_get_clean();
 
+        include self::$directorio;
+        $layout = ob_get_clean();
 
+        return $layout;
+
+
+    }
+
+    /**
+     * @deprecated
+     */
+    public function printHeadTags () {
+
+        $this->imprimirMeta();
+    }
+
+    public function imprimirMeta () {
+
+
+        if (is_object($this->_data)) {
+            return Meta::imprimir($this->_data);
+        }
+
+        return;
     }
 }

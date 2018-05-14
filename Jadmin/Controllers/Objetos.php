@@ -18,8 +18,7 @@ use Jida\RenderHTML\Vista as Vista;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Helpers as Helpers;
 
-class ObjetosController extends JController {
-
+class Objetos extends JController {
 
     var $Mperfil = "";
     var $manejoParams = TRUE;
@@ -200,7 +199,6 @@ class ObjetosController extends JController {
             $this->layout = '../ajax.tpl.php';
     }
 
-
     protected function vistaObjetos($query) {
 
         $vista = new Vista($query, $GLOBALS['configPaginador'], "Objetos");
@@ -304,14 +302,14 @@ class ObjetosController extends JController {
     /**
      * Permite visualizar los metodos de un controlador
      *
-     * @see    MetodosController::vistaMetodos();
+     * @see    Metodos::vistaMetodos();
      * @method metodos
      * @access public
      */
     function metodos() {
 
         $this->vista = "listaMetodos";
-        $controladorMetodos = new MetodosController();
+        $controladorMetodos = new Metodos();
         $this->dv->vistaMetodos = $controladorMetodos->metodosObjeto();
     }
 

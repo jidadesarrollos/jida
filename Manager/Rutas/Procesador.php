@@ -14,7 +14,7 @@ class Procesador {
     protected $_padre;
     protected $_moduloValidado;
     protected $_default = 'Index';
-    private $_ce = '1004';
+    private $_ce = 10005;
     private $_namespaces = [
         'app'        => 'App\\Controllers\\',
         'modulo'     => 'App\\Modulos\\',

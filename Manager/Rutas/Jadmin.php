@@ -5,7 +5,8 @@ namespace Jida\Manager\Rutas;
 
 class Jadmin {
 
-    private $_ce = '10003';
+    private $_ce = 10004
+    ;
     static public $modulos = [
         'Formularios',
         'Galeria',

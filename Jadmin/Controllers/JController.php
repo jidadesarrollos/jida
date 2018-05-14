@@ -17,7 +17,7 @@ use Jida\Helpers as Helpers;
 use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Render as Render;
 
-class   JController extends Core\Controller {
+class JController extends Core\Controller {
 
     protected $urlHtdocs;
 
@@ -98,7 +98,6 @@ class   JController extends Core\Controller {
         $this->dv->usarPlantilla('login');
         $this->tituloPagina = NOMBRE_APP;
         $this->data('formLoggin', $form->armarFormulario());
-
 
     }
 

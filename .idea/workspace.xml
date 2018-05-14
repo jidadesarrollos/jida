@@ -2,21 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5da508b2-9a9c-4175-b2d4-703cda754ada" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Archivo.php" afterPath="$PROJECT_DIR$/Helpers/Archivo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/ArchivoCargado.php" afterPath="$PROJECT_DIR$/Helpers/ArchivoCargado.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Arrays.php" afterPath="$PROJECT_DIR$/Helpers/Arrays.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Cadenas.php" afterPath="$PROJECT_DIR$/Helpers/Cadenas.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Debug.php" afterPath="$PROJECT_DIR$/Helpers/Debug.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Directorios.php" afterPath="$PROJECT_DIR$/Helpers/Directorios.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/FechaHora.php" afterPath="$PROJECT_DIR$/Helpers/FechaHora.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/FuncionesBasicas.php" afterPath="$PROJECT_DIR$/Helpers/FuncionesBasicas.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Imagen.php" afterPath="$PROJECT_DIR$/Helpers/Imagen.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Mensajes.php" afterPath="$PROJECT_DIR$/Helpers/Mensajes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Numeros.php" afterPath="$PROJECT_DIR$/Helpers/Numeros.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Sesion.php" afterPath="$PROJECT_DIR$/Helpers/Sesion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Url.php" afterPath="$PROJECT_DIR$/Helpers/Url.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/debug/testVariables.php" afterPath="$PROJECT_DIR$/Helpers/debug/testVariables.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Jadmin/Controllers/JController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/JController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/FController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/FController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Galeria/Nexos/Imagen.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Galeria/Nexos/Imagen.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/AclController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Acl.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/ComponentesController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Componentes.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/DebugController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Debug.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/ElementosController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Elementos.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/FormsController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Forms.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/InitController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Init.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/InstagramController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Instagram.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/JadminController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Jadmin.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/MenusOLDController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/MenusOLD.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/MetodosController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Metodos.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/ModulosController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Modulos.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/ObjetosController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Objetos.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/OldsController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Olds.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/PerfilesController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Perfiles.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Controllers/UsersController.php" afterPath="$PROJECT_DIR$/Jadmin/Controllers/Users.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/CamposController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Campos.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/FormulariosController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Formularios.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Galeria/Controllers/GaleriaController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Galeria/Controllers/Galeria.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/MenusController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Menus.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/OpcionesController.php" afterPath="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Opciones.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,7 +36,18 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf>
+      <file leaf-file-name="Rutas.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Core/Rutas.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="96" column="5" lean-forward="true" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -56,6 +76,27 @@
         <option value="$PROJECT_DIR$/Helpers/ArchivoCargado.php" />
         <option value="$PROJECT_DIR$/Helpers/Archivo.php" />
         <option value="$PROJECT_DIR$/Helpers/debug/testVariables.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Acl.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Componentes.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Debug.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Elementos.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Forms.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Init.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Instagram.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Jadmin.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/JController.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/MenusOLD.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Metodos.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Modulos.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Objetos.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Olds.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Controllers/Perfiles.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Campos.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Formularios.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/FController.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Galeria/Controllers/Galeria.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Menus.php" />
+        <option value="$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Opciones.php" />
       </list>
     </option>
   </component>
@@ -77,10 +118,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="20" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="820" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1376" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -104,17 +145,12 @@
               <item name="jidaframework" type="b2602c69:ProjectViewProjectNode" />
               <item name="jidaframework" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
-            <path>
-              <item name="jidaframework" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jidaframework" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Helpers" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -122,6 +158,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.PHP" />
+    <property name="SearchEverywhereHistoryKey" value="rutas&#9;null&#9;null" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -138,6 +175,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="5da508b2-9a9c-4175-b2d4-703cda754ada" name="Default" comment="" />
@@ -148,11 +188,12 @@
       <workItem from="1511795211760" duration="630000" />
       <workItem from="1511828678770" duration="41000" />
       <workItem from="1511869425846" duration="11406000" />
+      <workItem from="1526302058765" duration="4588000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12077000" />
+    <option name="totallyTimeSpent" value="16665000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
@@ -194,7 +235,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#165#197#0#PHP" expanded="true" />
+            <element signature="e#165#197#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -204,7 +245,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#165#197#0#PHP" expanded="true" />
+            <element signature="e#165#197#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -213,7 +254,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="331">
           <caret line="91" column="16" lean-forward="true" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -225,14 +265,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/Url.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/Url.php" />
     <entry file="file://$PROJECT_DIR$/Helpers/Numeros.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -253,28 +286,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding>
-            <marker date="1511881389742" expanded="true" signature="971:1201" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="1070:1145" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="1123:1130" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="1286:1342" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="2930:3099" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="3024:3031" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="3487:3656" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="3581:3588" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="4088:4257" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="4182:4189" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="4648:4817" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="4742:4749" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="5248:5421" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="5346:5353" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="5812:5985" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="5910:5917" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="6424:6618" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="6543:6550" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="7022:7216" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="7141:7148" ph="×" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -286,28 +298,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/FuncionesBasicas.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1511881402347" expanded="true" signature="483:565" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="726:807" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="880:961" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1084:1165" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1175:1183" ph="ó" />
-            <marker date="1511881402347" expanded="true" signature="1273:1352" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1362:1370" ph="ó" />
-            <marker date="1511881402347" expanded="true" signature="1532:1611" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1773:1854" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2009:2090" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2167:2246" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2375:2454" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2608:2689" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/FuncionesBasicas.php" />
     <entry file="file://$PROJECT_DIR$/Helpers/FechaHora.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -328,9 +319,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding>
-            <marker date="1511881431462" expanded="true" signature="490:520" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -363,7 +352,7 @@
         <state relative-caret-position="51">
           <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
           <folding>
-            <element signature="e#165#197#0#PHP" expanded="true" />
+            <element signature="e#165#197#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -372,11 +361,240 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2210">
           <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/Rutas.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Menus/MenuTest.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Acl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Componentes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2125">
+          <caret line="134" column="0" lean-forward="true" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Debug.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding>
-            <marker date="1511881488159" expanded="true" signature="2541:2595" ph="..." />
-            <marker date="1511881488159" expanded="true" signature="3209:3374" ph="..." />
-            <marker date="1511881488159" expanded="true" signature="3404:3445" ph="..." />
+            <marker date="1526339765061" expanded="true" signature="1361:1579" ph="..." />
+            <marker date="1526339765061" expanded="true" signature="1449:1574" ph="..." />
+            <marker date="1526339765061" expanded="true" signature="2618:2873" ph="..." />
+            <marker date="1526339765061" expanded="true" signature="2698:2833" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Elementos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-812">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Forms.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="377" column="1" lean-forward="true" selection-start-line="377" selection-start-column="1" selection-end-line="377" selection-end-column="1" />
+          <folding>
+            <marker date="1526339823219" expanded="true" signature="1078:1252" ph="select id_fo... s_jida_formularios" />
+            <marker date="1526339823219" expanded="true" signature="3314:3444" ph="select id_fo... s_formularios" />
+            <marker date="1526339823219" expanded="true" signature="5125:5133" ph="í" />
+            <marker date="1526339823219" expanded="true" signature="7988:7996" ph="á" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Init.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5147">
+          <caret line="28" column="30" lean-forward="true" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Instagram.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="68" column="0" lean-forward="true" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Jadmin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/JController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="138" column="0" lean-forward="true" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/MenusOLD.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="365" column="0" lean-forward="true" selection-start-line="365" selection-start-column="0" selection-end-line="365" selection-end-column="0" />
+          <folding>
+            <marker date="1526339940914" expanded="true" signature="660:715" ph="select id_me... s_menus" />
+            <marker date="1526339940914" expanded="true" signature="7517:7590" ph="select id_op... s_opciones_menu" />
+            <marker date="1526339940914" expanded="true" signature="10815:10823" ph="ó" />
+            <marker date="1526339940914" expanded="true" signature="11505:11763" ph="select a.id_... s_opciones_menu" />
+            <marker date="1526339940914" expanded="true" signature="15900:15908" ph="ó" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Metodos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="158" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
+          <folding>
+            <marker date="1526339984423" expanded="true" signature="2365:2373" ph="ó" />
+            <marker date="1526339984423" expanded="true" signature="3083:3190" ph="select id_me... s_metodos" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Modulos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="320" column="0" lean-forward="true" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
+          <folding>
+            <marker date="1526339984558" expanded="true" signature="4388:4396" ph="¿" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Objetos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="389" column="1" lean-forward="true" selection-start-line="389" selection-start-column="1" selection-end-line="389" selection-end-column="1" />
+          <folding>
+            <marker date="1526340048761" expanded="true" signature="2631:2857" ph="select id_ob... s_objetos" />
+            <marker date="1526340048761" expanded="true" signature="5582:5692" ph="select id_ob... s_objetos" />
+            <marker date="1526340048761" expanded="true" signature="9233:9241" ph="ó" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Olds.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="80" column="0" lean-forward="true" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Perfiles.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="127" column="0" lean-forward="true" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding>
+            <marker date="1526340088332" expanded="true" signature="655:706" ph="select id_pe... s_perfiles" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Controllers/Users.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="114" column="0" lean-forward="true" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Campos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="116" column="1" lean-forward="true" selection-start-line="116" selection-start-column="1" selection-end-line="116" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/Formularios.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="302" column="0" lean-forward="true" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
+          <folding>
+            <marker date="1526340198869" expanded="true" signature="2717:2725" ph="¿" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Formularios/Controllers/FController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="56" column="7" lean-forward="true" selection-start-line="56" selection-start-column="7" selection-end-line="56" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Galeria/Controllers/Galeria.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="253" column="0" lean-forward="true" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Menus.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1526340295289" expanded="true" signature="1228:1236" ph="¿" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jadmin/Modulos/Menus/Controllers/Opciones.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="169" column="0" lean-forward="true" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+          <folding>
+            <marker date="1526340295214" expanded="true" signature="1742:1750" ph="¿" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/Rutas.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="96" column="5" lean-forward="true" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>

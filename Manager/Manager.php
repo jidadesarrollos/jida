@@ -1,4 +1,7 @@
 <?php
+/**
+ * ce = 0;
+ */
 
 namespace Jida\Manager;
 
