@@ -163,25 +163,12 @@ class Arranque {
             $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
 
             $this->_managerVista->renderizar($this);
-            /*
-                        $this->_pagina->data = $this->_dataVista;
-                        $this->_pagina->_namespace = $this->namespace;
-                        $this->_pagina->_controller = $this->controlador;
-                        $this->_pagina->_modulo = $this->modulo;
-                        $this->_pagina->layout = $controlador->layout;
-                        $this->_pagina->definirDirectorios();
-                        $this->_pagina->renderizar($controlador->vista);
 
-              */
         }
 
     }
 
     private function _validar () {
-
-
-        //$this->_pagina = new Core\Pagina($this->controlador, self::$metodo, $this->modulo, $this->ruta, $this->jadmin);
-
 
         $dataVista = new Core\DataVista($this->modulo, self::$controlador, self::$metodo, $this->jadmin);
         $GLOBALS['dataVista'] = $dataVista;
