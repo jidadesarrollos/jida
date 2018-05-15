@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5da508b2-9a9c-4175-b2d4-703cda754ada" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Archivo.php" afterPath="$PROJECT_DIR$/Helpers/Archivo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/ArchivoCargado.php" afterPath="$PROJECT_DIR$/Helpers/ArchivoCargado.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Arrays.php" afterPath="$PROJECT_DIR$/Helpers/Arrays.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Cadenas.php" afterPath="$PROJECT_DIR$/Helpers/Cadenas.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Debug.php" afterPath="$PROJECT_DIR$/Helpers/Debug.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Directorios.php" afterPath="$PROJECT_DIR$/Helpers/Directorios.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/FechaHora.php" afterPath="$PROJECT_DIR$/Helpers/FechaHora.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/FuncionesBasicas.php" afterPath="$PROJECT_DIR$/Helpers/FuncionesBasicas.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Imagen.php" afterPath="$PROJECT_DIR$/Helpers/Imagen.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Mensajes.php" afterPath="$PROJECT_DIR$/Helpers/Mensajes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Numeros.php" afterPath="$PROJECT_DIR$/Helpers/Numeros.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Sesion.php" afterPath="$PROJECT_DIR$/Helpers/Sesion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/Url.php" afterPath="$PROJECT_DIR$/Helpers/Url.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helpers/debug/testVariables.php" afterPath="$PROJECT_DIR$/Helpers/debug/testVariables.php" />
-    </list>
+    <list default="true" id="5da508b2-9a9c-4175-b2d4-703cda754ada" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +11,7 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -97,6 +81,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -104,16 +89,10 @@
               <item name="jidaframework" type="b2602c69:ProjectViewProjectNode" />
               <item name="jidaframework" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
-            <path>
-              <item name="jidaframework" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jidaframework" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Helpers" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -148,11 +127,12 @@
       <workItem from="1511795211760" duration="630000" />
       <workItem from="1511828678770" duration="41000" />
       <workItem from="1511869425846" duration="11406000" />
+      <workItem from="1526346246140" duration="16000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12077000" />
+    <option name="totallyTimeSpent" value="12093000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
@@ -162,13 +142,13 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -213,7 +193,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="331">
           <caret line="91" column="16" lean-forward="true" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -225,14 +204,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/Url.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/Url.php" />
     <entry file="file://$PROJECT_DIR$/Helpers/Numeros.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -253,28 +225,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding>
-            <marker date="1511881389742" expanded="true" signature="971:1201" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="1070:1145" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="1123:1130" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="1286:1342" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="2930:3099" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="3024:3031" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="3487:3656" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="3581:3588" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="4088:4257" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="4182:4189" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="4648:4817" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="4742:4749" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="5248:5421" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="5346:5353" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="5812:5985" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="5910:5917" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="6424:6618" ph="..." />
-            <marker date="1511881389742" expanded="false" signature="6543:6550" ph="×" />
-            <marker date="1511881389742" expanded="true" signature="7022:7216" ph="..." />
-            <marker date="1511881389742" expanded="true" signature="7141:7148" ph="×" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -286,28 +237,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/FuncionesBasicas.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1511881402347" expanded="true" signature="483:565" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="726:807" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="880:961" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1084:1165" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1175:1183" ph="ó" />
-            <marker date="1511881402347" expanded="true" signature="1273:1352" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1362:1370" ph="ó" />
-            <marker date="1511881402347" expanded="true" signature="1532:1611" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="1773:1854" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2009:2090" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2167:2246" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2375:2454" ph="..." />
-            <marker date="1511881402347" expanded="true" signature="2608:2689" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/FuncionesBasicas.php" />
     <entry file="file://$PROJECT_DIR$/Helpers/FechaHora.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -328,9 +258,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-          <folding>
-            <marker date="1511881431462" expanded="true" signature="490:520" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -372,11 +300,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2210">
           <caret line="134" column="16" lean-forward="false" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="16" />
-          <folding>
-            <marker date="1511881488159" expanded="true" signature="2541:2595" ph="..." />
-            <marker date="1511881488159" expanded="true" signature="3209:3374" ph="..." />
-            <marker date="1511881488159" expanded="true" signature="3404:3445" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
