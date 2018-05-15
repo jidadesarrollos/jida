@@ -1,4 +1,4 @@
 <?PHP 
 
-echo $this->data->vistaPerfiles;
+echo $this->vistaPerfiles;
 ?>

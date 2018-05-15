@@ -8,64 +8,64 @@
 ?>
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
 
-        <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-        Remove this if you use the .htaccess -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+    Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <?=$this->printHeadTags()?>
-        <?=$this->imprimirLibrerias('css','jadmin')?>
+    <?= $this->imprimirMeta(); ?>
+    <?= $this->imprimirLibrerias('css', 'jadmin') ?>
 
-        <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
-        <!--libs-->
-    </head>
+    <link rel="shortcut icon" href="/htdocs/img/jIcon.jpg">
+    <!--libs-->
+</head>
 
-    <body data-url="<?=URL_BASE?>">
+<body data-url="<?= URL_BASE ?>">
 
-     <div  class="jida-container">
-     	<nav class="navbar navbar-default navbar-fixed-top">
-			  <div class="container-fluid">
-			    <div class="navbar-header">
-			    	<a href="#" class="navbar-brand">
-			    		JIDAFramework.
-			    	</a>
-			    </div>
-			  </div>
-		</nav>
-         <div class="container-fluid">
-
-
-            <div class="row">
-	            <aside class="col-md-2 aside">
-	                    <?PHP
-                        $showMenu = (isset($_GET['showmenu']))?'long-menu':'short-menu';
-                        \Jida\Helpers\Debug::imprimir($showMenu);
-	                    $menuControl  = new \Jida\RenderHTML\MenuHTML('Principal');
-	                    $menuControl->configuracion['ul'][0]=array("class"=>"nav nav-aside");
-	                    $menuControl->configuracion['li'][0]=array('class'=>"li-parent",'data-liparent'=>'true');
-	                    $menuControl->configuracion['li']['caret']="li-caret";
-	                     echo $menuControl->showMenu();
-	                    ?>
-
-	            </aside>
-	            <main class="col-md-offset-2 col-lg-10 col-md-10 col-sm-12 col-xs-12 cp">
-	                <!-- <div class="row"> -->
-
-	                 <?=$contenido?>
-	            </main><!--Cierre col-lg-9 del contenido-->
+<div class="jida-container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">
+                    JIDAFramework.
+                </a>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <hr>
-                    <a class="pull-right" href="#" data-jida="goback">P&aacute;gina Anterior</a>
-                </div>
-            </div>
-            <div class="separador-footer"></div>
-            </div><!--Cierre div full-container-->
         </div>
+    </nav>
+    <div class="container-fluid">
 
-         <?=$this->imprimirLibrerias('js','jadmin')?>
-    </body>
+
+        <div class="row">
+            <aside class="col-md-2 aside">
+                <?PHP
+                $showMenu = (isset($_GET['showmenu'])) ? 'long-menu' : 'short-menu';
+
+                $menuControl = new \Jida\RenderHTML\MenuHTML('Principal');
+                $menuControl->configuracion['ul'][0] = ["class" => "nav nav-aside " . $showMenu];
+                $menuControl->configuracion['li'][0] = ['class' => "li-parent", 'data-liparent' => 'true'];
+                $menuControl->configuracion['li']['caret'] = "li-caret";
+                echo $menuControl->showMenu();
+                ?>
+
+            </aside>
+            <main class="col-md-offset-2 col-lg-10 col-md-10 col-sm-12 col-xs-12 cp">
+                <!-- <div class="row"> -->
+
+                <?= $contenido ?>
+            </main><!--Cierre col-lg-9 del contenido-->
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <a class="pull-right" href="#" data-jida="goback">P&aacute;gina Anterior</a>
+            </div>
+        </div>
+        <div class="separador-footer"></div>
+    </div><!--Cierre div full-container-->
+</div>
+
+<?= $this->imprimirLibrerias('js', 'jadmin') ?>
+</body>
 </html>

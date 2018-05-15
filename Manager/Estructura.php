@@ -13,5 +13,14 @@ class Estructura {
 
     const NOMBRE_VISTA = 'index';
 
+    static function path () {
+
+        $actual = explode(DS, __DIR__);
+        $posicion = array_search(self::DIR_JIDA, $actual);
+        $directorio = implode("/", array_chunk($actual, $posicion)[0]);
+
+        return $directorio;
+
+    }
 
 }

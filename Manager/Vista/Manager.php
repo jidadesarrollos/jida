@@ -37,15 +37,26 @@ class Manager {
 
     }
 
+    /**
+     * Procesa la data en el nuevo objeto data
+     *
+     * Esta funcion es provisoria hasta tanto el objeto dataVista sea reemplazado
+     */
+    private function _procesarData () {
+
+        Data::inicializar($this->_data);
+
+    }
 
     private function _inicializar () {
 
+        $this->_procesarData();
         $padre = self::$Padre;
 
         $this->_namespace = $padre::$namespace;
         $this->_modulo = $padre->modulo;
-
         $this->_layout = new Layout($this);
+
 
     }
 
@@ -55,13 +66,18 @@ class Manager {
 
     function renderizar () {
 
+        $data = Data::obtener();
+        $plantilla = $this->_data->obtPlantilla();
+        $vista = $this->vista();
+
+        $archivoVista = (!!$plantilla) ? $vista->rutaPlantilla($plantilla) : $vista->obtener();
+
         $salida = $this->_layout
             ->leer()
-            ->render($this->vista()->obtener());
+            ->render($archivoVista);
+
 
         echo $salida;
-
-
 
 
     }

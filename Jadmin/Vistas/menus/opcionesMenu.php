@@ -6,6 +6,6 @@
  * 
  * 
  */
-echo $this->data->vistaOpciones;
+echo $this->vistaOpciones;
 ?>
 

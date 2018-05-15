@@ -2,9 +2,10 @@
 
 namespace Jida\Manager\Rutas;
 
+use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 
-class Inicio {
+class Lector {
 
     private $_ce = 10003;
     private $_get;
@@ -29,7 +30,7 @@ class Inicio {
     private $_arranque;
 
     /**
-     * Inicio constructor.
+     * Lector constructor.
      *
      * @param $manager
      */
@@ -38,14 +39,14 @@ class Inicio {
 
         $this->_get = $_GET;
         $this->_manager = $manager;
-        $this->configuracion = $manager->configuracion();
+        $this->configuracion = Config::obtener();
 
     }
 
     private function _procesar () {
 
         if (!$this->_arranque) {
-            $this->_arranque = new Arranque($this);
+            $this->_arranque = new Arranque($this, $this->_manager);
         }
 
         return $this->_arranque;
@@ -61,14 +62,6 @@ class Inicio {
 
 
         $this->_procesar()->ejecutar();
-
-        /*if ($controlador) {
-            $this->_preparar($controlador);
-            #$this->_preparar($controlador);
-        }
-        else {
-            exit("NO");
-        }*/
 
 
     }
@@ -114,7 +107,7 @@ class Inicio {
     private function _validarIdioma () {
 
         $actual = $this->arrayUrl[0];
-        $idiomas = $this->configuracion->idiomas;
+        $idiomas = Config::obtener()->idiomas;
 
         if (array_key_exists($actual, $idiomas) or in_array($actual, $idiomas)) {
 

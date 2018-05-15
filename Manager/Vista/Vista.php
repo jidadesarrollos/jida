@@ -1,10 +1,12 @@
 <?php
+
 /**
  *
  *
  * Corresponde al numero de excepciones,
  * Actualizar a medida que se vayan agregando excepciones
  * Numero de error 1
+ *
  */
 
 namespace Jida\Manager\Vista;
@@ -20,13 +22,16 @@ class Vista {
     private $_nombre;
     private $_data;
 
+
     static public $padre;
     private $_DIRECTORIOS = [
+
         'jida' => 'Jadmin',
         'app'  => ''
     ];
 
     static public $directorio;
+
 
     function __construct ($padre) {
 
@@ -34,27 +39,62 @@ class Vista {
 
     }
 
+    /**
+     * Define el directorio de la vista solicitada
+     *
+     * Verifica la ubicación de la vista a partir de los componentes de la url
+     *
+     * @method _obtenerDirectorio
+     *
+     */
     private function _obtenerDirectorio () {
 
         $padre = self::$padre;
         $arranque = $padre::$Padre;
 
-        $actual = explode(DS, __DIR__);
-        $posicion = array_search('Framework', $actual);
-
-        $directorio = implode("/", array_chunk($actual, $posicion)[0]);
-
+        $directorio = Estructura::path();
         $directorio .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
 
-        if (!!$arranque->modulo) {
+        if (!!$arranque->modulo and !$arranque->jadmin) {
             $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
         }
 
-        if ($arranque::$ruta !== 'jida' and $arranque->jadmin) {
+        if ($arranque->jadmin) {
+
             $directorio .= "/" . $this->_DIRECTORIOS['jida'];
+
+            if(!!$arranque->modulo) {
+                $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
+            }
+
         }
 
         self::$directorio = $directorio . "/Vistas/" . strtolower($arranque::$controlador);
+
+    }
+
+    /**
+     * Retorna la ruta fisica de la plantilla solicitada
+     *
+     * @param $plantilla
+     * @return bool|string
+     */
+    function rutaPlantilla ($plantilla) {
+
+        $plantilla = $plantilla . ".php";
+
+        $path = Estructura::path() . DS . Estructura::DIR_APP . DS . "plantillas";
+        if (Helpers\Directorios::validar($path . DS . $plantilla)) {
+            return $ruta = $path . DS . $plantilla;
+        }
+
+        $path = Estructura::path() . DS . Estructura::DIR_JIDA . DS . "plantillas";
+        if (Helpers\Directorios::validar($path . DS . $plantilla)) {
+            return $path . DS . $plantilla;
+        }
+
+
+        return false;
 
     }
 
@@ -68,6 +108,7 @@ class Vista {
             $this->_obtenerDirectorio();
         }
 
+
         $vista = (!!$arranque::$metodo) ? $arranque::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista) ? $controlador->vista : $vista;
 
@@ -75,14 +116,14 @@ class Vista {
 
         if (strpos($vista, '.php') === false) {
             $vista .= ".php";
-        };
 
+        };
 
         if (!file_exists($vista)) {
             throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');
         }
 
-        return $vista;
 
+        return $vista;
     }
 }

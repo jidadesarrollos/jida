@@ -1,4 +1,4 @@
 <?PHP 
 
-echo $this->data->formAcceso;
+echo $this->formAcceso;
 ?>

@@ -1,5 +1,5 @@
 <?PHP 
 
-echo $this->data->vistaMetodos;
+echo $this->vistaMetodos;
 
 ?>

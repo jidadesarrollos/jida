@@ -1,4 +1,4 @@
-<form action="<?= $this->data->urlForm ?>" method="post" accept-charset="utf-8" id="formPermisosInstagram">
+<form action="<?= $this->urlForm ?>" method="post" accept-charset="utf-8" id="formPermisosInstagram">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
 
@@ -10,7 +10,7 @@
             </div>
 
             <div class="row">
-                <input type="hidden" name="codigo" id="codigo" value="<?= $this->data->codigo ?>"/>
+                <input type="hidden" name="codigo" id="codigo" value="<?= $this->codigo ?>"/>
                 <div class="col-md-12 top-15">
                     <input type="submit"
                            value="Acepto"

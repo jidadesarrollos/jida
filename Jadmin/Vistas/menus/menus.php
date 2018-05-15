@@ -1,4 +1,4 @@
 <?PHP
 
-echo $this->data->vistaMenu;
+echo $this->vistaMenu;
 ?>

@@ -329,7 +329,7 @@ class Pagina {
             $this->nombreVista = $nombreVista;
         }
 
-        $DataTpl = $this->data->obtPlantilla();
+        $DataTpl = $this->obtPlantilla();
 
         /**
          * Se verifica si desea usarse una plantilla
@@ -370,14 +370,14 @@ class Pagina {
      * @inconclusa
      */
     private function procesarVistaAbsoluta() {
-        if ($this->data->getPath() == "jida") {
+        if ($this->getPath() == "jida") {
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
         } else {
-            $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()) . ".php";
+            $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
             if (!file_exists($_plantilla)) {
 
                 $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
-                $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->data->obtPlantilla()) . ".php";
+                $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
 
                 if (!file_exists($_plantilla)) {
                     throw new Excepcion("La plantilla solicitada no existe : " . $_plantilla, $this->_ce . '10');
@@ -526,13 +526,13 @@ class Pagina {
         $code = array();
 
         $path = (defined('BASE_URL')) ? BASE_URL : '';
-        if (is_array($this->data->js)) {
+        if (is_array($this->js)) {
             $data = [];
             if (!empty($pos)) {
-                if (array_key_exists($pos, $this->data->js))
-                    $data = $this->data->js[$pos];
-                if (array_key_exists(ENTORNO_APP, $this->data->js) and array_key_exists($pos, $this->data->js[ENTORNO_APP]))
-                    $data = array_merge($data, $this->data->js[ENTORNO_APP][$pos]);
+                if (array_key_exists($pos, $this->js))
+                    $data = $this->js[$pos];
+                if (array_key_exists(ENTORNO_APP, $this->js) and array_key_exists($pos, $this->js[ENTORNO_APP]))
+                    $data = array_merge($data, $this->js[ENTORNO_APP][$pos]);
 
                 foreach ($data as $id => $archivo) {
                     $js .= Selector::crear('script', ['src' => $path . $archivo], null, $cont);
@@ -540,16 +540,16 @@ class Pagina {
                         $cont = 2;
                 }
             } else {
-                if (array_key_exists('footer', $this->data->js)) {
-                    $this->data->js = array_merge($this->data->js, $this->data->js['footer']);
-                    unset($this->data->js['footer']);
+                if (array_key_exists('footer', $this->js)) {
+                    $this->js = array_merge($this->js, $this->js['footer']);
+                    unset($this->js['footer']);
                 }
-                if (array_key_exists('head', $this->data->js)) {
-                    $this->data->js = array_merge($this->data->js, $this->data->js['head']);
-                    unset($this->data->js['head']);
+                if (array_key_exists('head', $this->js)) {
+                    $this->js = array_merge($this->js, $this->js['head']);
+                    unset($this->js['head']);
                 }
 
-                foreach ($this->data->js as $key => $archivo) {
+                foreach ($this->js as $key => $archivo) {
                     if (is_string($key)) {
                         if ($key == ENTORNO_APP) {
                             foreach ($archivo as $id => $archivoEntorno) {
@@ -577,7 +577,7 @@ class Pagina {
                 }
             }
         }
-        // foreach ($this->data->js as $key => $archivo) {
+        // foreach ($this->js as $key => $archivo) {
 //
         // if(is_string($key)){
 //
@@ -629,12 +629,12 @@ class Pagina {
         $cont = 0;
         $code = array();
 
-        if (is_array($this->data->jsAjax)) {
-            if (array_key_exists('code', $this->data->jsAjax)) {
-                $code = $this->data->jsAjax['code'];
-                unset($this->data->jsAjax['code']);
+        if (is_array($this->jsAjax)) {
+            if (array_key_exists('code', $this->jsAjax)) {
+                $code = $this->jsAjax['code'];
+                unset($this->jsAjax['code']);
             }
-            foreach ($this->data->jsAjax as $key => $archivo) {
+            foreach ($this->jsAjax as $key => $archivo) {
 
                 if (is_string($key)) {
                     if ($key == ENTORNO_APP) {
@@ -689,7 +689,7 @@ class Pagina {
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         if (!property_exists($this->data, $lang))
             return false;
-        $data = $this->data->{$lang};
+        $data = $this->{$lang};
 
         //Se eliminan las librerias incluidas en un entorno distinto al actual
         //o que pertenezcan a un $modulo no solicitado
@@ -768,8 +768,8 @@ class Pagina {
         $path = (defined('URL_BASE')) ? URL_BASE : "";
         $this->checkData();
         $cont = 0;
-        if (is_array($this->data->css)) {
-            foreach ($this->data->css as $key => $files) {
+        if (is_array($this->css)) {
+            foreach ($this->css as $key => $files) {
 
                 if (is_string($key)) {
 
@@ -822,61 +822,61 @@ class Pagina {
      * @method printHeadTags
      *
      */
-    function printHeadTags() {
+    function $this->imprimirLibrerias('css');() {
         $meta = "";
         $itemprop = "";
         $initTab = 0;
         //Titulo de La pagina
-        if (count($this->data->meta) > 0) {
+        if (count($this->meta) > 0) {
             $metaAdicional = "";
 
-            foreach ($this->data->meta as $key => $dataMeta) {
+            foreach ($this->meta as $key => $dataMeta) {
 
                 $metaAdicional .= Selector::crear('meta', $dataMeta, null, 2);
             }
             //$itemprop.=$metaAdicional;
             $meta .= $metaAdicional;
         }
-        if ($this->data->google_verification != FALSE) {
-            $meta .= Selector::crear('meta', ["name" => "google-site-verification", "content" => $this->data->google_verification]);
+        if ($this->google_verification != FALSE) {
+            $meta .= Selector::crear('meta', ["name" => "google-site-verification", "content" => $this->google_verification]);
         }
-        if ($this->data->responsive) {
+        if ($this->responsive) {
 
             $meta .= Selector::crear('meta', ["name" => "viewport", 'content' => "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"]);
         }
-        if (!empty($this->data->title)) {
-            $meta .= Selector::crear('TITLE', null, $this->data->title, 0);
+        if (!empty($this->title)) {
+            $meta .= Selector::crear('TITLE', null, $this->title, 0);
             $initTab = 2;
-            $meta .= Selector::crear('meta', ['name' => 'title', 'content' => $this->data->title], null, $initTab);
+            $meta .= Selector::crear('meta', ['name' => 'title', 'content' => $this->title], null, $initTab);
         }
-        if (!empty($this->data->meta_descripcion)) {
-            $meta .= Selector::crear('meta', ['name' => 'description', 'content' => $this->data->meta_descripcion], null, $initTab);
-            $itemprop .= Selector::crear('meta', ['itemprop' => 'description', 'content' => $this->data->meta_descripcion], null, 2);
+        if (!empty($this->meta_descripcion)) {
+            $meta .= Selector::crear('meta', ['name' => 'description', 'content' => $this->meta_descripcion], null, $initTab);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'description', 'content' => $this->meta_descripcion], null, 2);
         }
-        if (!empty($this->data->meta_autor)) {
-            $meta .= Selector::crear('meta', ['name' => 'author', 'content' => $this->data->meta_autor], null, 2);
-            $itemprop .= Selector::crear('meta', ['itemprop' => 'author', 'content' => $this->data->meta_autor], null, 2);
+        if (!empty($this->meta_autor)) {
+            $meta .= Selector::crear('meta', ['name' => 'author', 'content' => $this->meta_autor], null, 2);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'author', 'content' => $this->meta_autor], null, 2);
         }
-        if (!empty($this->data->meta_image)) {
-            $meta .= Selector::crear('meta', ['name' => 'image', 'content' => $this->data->meta_image], null, 2);
-            $itemprop .= Selector::crear('meta', ['itemprop' => 'image', 'content' => $this->data->meta_image], null, 2);
+        if (!empty($this->meta_image)) {
+            $meta .= Selector::crear('meta', ['name' => 'image', 'content' => $this->meta_image], null, 2);
+            $itemprop .= Selector::crear('meta', ['itemprop' => 'image', 'content' => $this->meta_image], null, 2);
         }
 
-        if (count($this->data->meta) > 0) {
+        if (count($this->meta) > 0) {
             $metaAdicional = "\t\t<!---Tags Meta-----!>\n";
 
-            foreach ($this->data->meta as $key => $dataMeta) {
+            foreach ($this->meta as $key => $dataMeta) {
 
                 $metaAdicional .= Selector::crear('meta', $dataMeta, null, 2);
             }
             //$itemprop.=$metaAdicional;
         }
-        if (!$this->data->robots) {
+        if (!$this->robots) {
             $itemprop .= Selector::crear('meta', ['name' => 'robots', 'content' => 'noindex'], null, 2);
         }
         //URL CANNONICA
-        if (!empty($this->data->url_canonical)) {
-            $itemprop .= Selector::crear('link', ['rel' => 'canonical', 'href' => $this->data->url_canonical], null, 2);
+        if (!empty($this->url_canonical)) {
+            $itemprop .= Selector::crear('link', ['rel' => 'canonical', 'href' => $this->url_canonical], null, 2);
         }
 
         return $meta . $itemprop . "\n";
@@ -933,7 +933,7 @@ class Pagina {
             $params = array($params);
 
         foreach ($params as $key => $p)
-            $this->data->$key = $p;
+            $this->$key = $p;
 
         $directorio = DIR_APP . 'Segmentos/';
         if (file_exists($directorio . $segmento . '.php')) {
@@ -1012,7 +1012,7 @@ class Pagina {
     function procesarVariables() {
         $propiedades = get_object_vars($this->data);
         foreach ($propiedades as $k => $value) {
-            $this->$k = $this->data->$k;
+            $this->$k = $this->$k;
         }
     }
 

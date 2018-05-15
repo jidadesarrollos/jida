@@ -14,6 +14,8 @@
 
 namespace Jida\Configuracion;
 
+use App\Config\Configuracion;
+
 class Config {
 
     /**
@@ -49,6 +51,8 @@ class Config {
      */
     var $tema = 'default';
 
+    var $temaJadmin = 'jadmin';
+
     /**
      * Variable para definicion del logo dentro de la aplicación
      *
@@ -56,4 +60,26 @@ class Config {
      * @access protected
      */
     var $logo;
+
+    private static $instancia;
+
+
+    public static function obtener () {
+
+        if (!self::$instancia) {
+
+            if (class_exists('\App\Config\Configuracion')) {
+
+                self::$instancia = new \App\Config\Configuracion();
+            }
+            else {
+                self::$instancia = new Config();
+            }
+
+        }
+
+        return self::$instancia;
+
+    }
+
 }

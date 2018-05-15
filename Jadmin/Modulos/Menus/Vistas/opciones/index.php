@@ -6,6 +6,6 @@
  * 
  * 
  */
-echo $this->data->tablaOpciones;
+echo $this->tablaOpciones;
 ?>
 

@@ -474,21 +474,21 @@ class Selector {
 
         if (!empty($valor)) {
 
-            $this->data->{$data} = $valor;
+            $this->{$data} = $valor;
 
             return;
         }
 
         if (is_array($data)) {
             foreach ($data as $id => $valor) {
-                $this->data->{$id} = $valor;
+                $this->{$id} = $valor;
             }
 
             return $this;
         }
 
         if (property_exists($this->data, $data)) {
-            return $this->data->{$data};
+            return $this->{$data};
         }
 
     }

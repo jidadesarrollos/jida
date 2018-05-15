@@ -15,7 +15,7 @@
         Remove this if you use the .htaccess -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <?=$this->printHeadTags()?>
+        <?=$this->imprimirMeta();?>
 
         <?=$this->imprimirLibrerias('css','jadmin')?>
     </head>

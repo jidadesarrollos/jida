@@ -1,6 +1,2 @@
 <?PHP
-
-echo $this->data->tablaVista
-
-
-?>
+echo $this->tablaVista;
