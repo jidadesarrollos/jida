@@ -4,6 +4,8 @@
 namespace Jida\Manager;
 
 
+use Jida\Helpers\Debug;
+
 class Estructura {
 
     public $_ce = 10009;
@@ -18,6 +20,7 @@ class Estructura {
         $actual = explode(DS, __DIR__);
         $posicion = array_search(self::DIR_JIDA, $actual);
         $directorio = implode("/", array_chunk($actual, $posicion)[0]);
+        Debug::imprimir($directorio, $_SERVER, true);
 
         return $directorio;
 

@@ -121,10 +121,7 @@ class Rutas {
         return implode($ds, $array);
     }
 
-    private
-    function _analizar (
-        $solicitud
-    ) {
+    private function _analizar ($solicitud) {
 
         if ($this->_validarModulo($solicitud)) {
             $this->_rutaAbsoluta = DIR_APP . 'Modulos' . DS . ucwords($solicitud);
