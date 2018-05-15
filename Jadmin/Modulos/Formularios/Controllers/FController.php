@@ -69,6 +69,7 @@ class Fcontroller extends JController {
             $clase = Helpers\Sesion::obt('JFormulario');
             if ($clase->identificador == $id) {
                 $this->_formulario = $clase;
+
                 return $this->_formulario;
             }
 

@@ -15,7 +15,8 @@ use Jida\Modelos\User as User;
 use Jida\RenderHTML\Vista as Vista;
 use Exception;
 
-class JadminController extends JController {
+class Jadmin extends JController {
+
     /**
      * objeto modelo jidaControl
      *
@@ -23,7 +24,6 @@ class JadminController extends JController {
      * @var object $jctrl
      */
     private $jctrl;
-
 
     function __construct() {
 
@@ -44,7 +44,6 @@ class JadminController extends JController {
     function dashboard() {
 
     }
-
 
     function json() {
 
