@@ -55,15 +55,17 @@ class Vista {
         $directorio = Estructura::path();
         $directorio .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
 
-        if (!!$arranque->modulo and !$arranque->jadmin) {
+        $moduloAgregado = false;
+        if (!!$arranque->modulo && $arranque::$ruta === 'app') {
             $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
+            $moduloAgregado = true;
         }
 
         if ($arranque->jadmin) {
 
             $directorio .= "/" . $this->_DIRECTORIOS['jida'];
 
-            if(!!$arranque->modulo) {
+            if (!!$arranque->modulo and !$moduloAgregado) {
                 $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
             }
 
