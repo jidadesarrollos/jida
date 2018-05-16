@@ -15,14 +15,32 @@ class Estructura {
 
     const NOMBRE_VISTA = 'index';
 
+    private static $url;
+
     static function path () {
 
         $actual = explode(DS, __DIR__);
         $posicion = array_search(self::DIR_JIDA, $actual);
         $directorio = implode("/", array_chunk($actual, $posicion)[0]);
-        Debug::imprimir($directorio, $_SERVER, true);
+
+        self::url();
+
 
         return $directorio;
+
+    }
+
+    static function url () {
+
+        if (array_key_exists('REQUEST_URI', $_SERVER)) {
+            self::$url = $_SERVER['REQUEST_URI'];
+
+        }
+        else {
+            Debug::imprimir("No existe REQUEST_URI", true);
+        }
+
+        return self::$url;
 
     }
 

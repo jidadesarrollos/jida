@@ -129,7 +129,7 @@ class Rutas {
 
     }
 
-    function absoluta () {
+        function absoluta () {
 
         return $this->_limpiar($this->_rutaAbsoluta);
     }
@@ -150,4 +150,6 @@ class Rutas {
         return new Rutas($ruta, $tipo);
     }
 
+
+    static function url
 }
