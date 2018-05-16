@@ -150,6 +150,4 @@ class Rutas {
         return new Rutas($ruta, $tipo);
     }
 
-
-    static function url
 }

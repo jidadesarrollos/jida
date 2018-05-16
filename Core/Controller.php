@@ -12,6 +12,7 @@
 
 namespace Jida\Core;
 
+use App\Config\Configuracion;
 use Jida\Core\Manager\DataVista as DataVista;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
@@ -41,7 +42,7 @@ class Controller {
      */
     var $multiidioma = false;
 
-    var $urlCanonical = URL_APP;
+    var $urlCanonical = Configuracion::URL_ABSOLUTA;
     /**
      *  Define el layout a usar por el controlador
      *
@@ -749,10 +750,10 @@ class Controller {
                 if (strpos(strtolower($this->_clase), 'jadmin')) {
 
                     if (URL_APP != '/') {
-                        $parametros = explode(URL_APP, $urlController);
+                        $parametros = explode(Configuracion::URL_ABSOLUTA, $urlController);
                         $parametros = $parametros[1];
 
-                        $urlController = URL_APP;
+                        $urlController = Configuracion::URL_ABSOLUTA;
                         $urlController .= (strpos(strtolower($this->urlController()), 'jadmin')) ? '' : 'jadmin/';
                         $urlController .= $parametros;
 
@@ -956,7 +957,7 @@ class Controller {
             return $GLOBALS['__URL_APP'] . $idioma;
         }
         else {
-            return URL_APP . $idioma;
+            return Configuracion::URL_ABSOLUTA . $idioma;
         }
     }
 

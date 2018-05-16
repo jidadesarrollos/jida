@@ -18,6 +18,8 @@ use App\Config\Configuracion;
 
 class Config {
 
+    const NOMBRE_APP = 'Aplicación Jida';
+    const URL_BASE = '/jida/jidadesarrollos/';
     /**
      * Variable para definicion de modulos dentro de la aplicación
      *

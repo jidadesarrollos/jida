@@ -5,6 +5,8 @@
 
 namespace Jida\Manager\Vista;
 
+use App\Config\Configuracion;
+use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
 use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios;
@@ -93,11 +95,11 @@ class Render {
     function htdocs ($folder, $item, $tema = true) {
 
         $path = (defined('URL_BASE')) ? URL_BASE : '';
-        $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
+        $url = $path .Configuracion::URL_BASE . '/htdocs' . $this->_tema . '/htdocs/' . $folder . '/' . $item;
         if ($tema)
             return $url;
 
-        return $path . URL_HTDOCS . $folder . '/' . $item;
+        return Configuracion::URL_ABSOLUTA . '/htdocs' . $folder . '/' . $item;
     }
 
     /**
@@ -167,7 +169,7 @@ class Render {
     }
 
 
-    private function __obtHTMLLibreria ( $lang, $libreria, $cont = 2 ) {
+    private function __obtHTMLLibreria ($lang, $libreria, $cont = 2) {
 
         $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,
                                                                           'http') === false)) ? URL_BASE : "";
@@ -199,10 +201,10 @@ class Render {
         return $html;
     }
 
-    function segmento($segmento, $params = []) {
+    function segmento ($segmento, $params = []) {
 
         if (!is_array($params))
-            $params = array($params);
+            $params = [$params];
 
         foreach ($params as $key => $p)
             $this->$key = $p;
@@ -212,9 +214,11 @@ class Render {
             echo $this->incluir('Aplicacion/Segmentos/' . $segmento);
             // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
             // return true;
-        } else {
+        }
+        else {
             throw new \Exception("No existe el segmento $segmento en la carpeta " . $directorio, 100);
         }
+
         return false;
     }
 
@@ -223,12 +227,14 @@ class Render {
      * @param mixed $files Nombre de Archivo o arreglo de archivos a incluir
      *
      */
-    function incluir($archivo) {
+    function incluir ($archivo) {
+
         if (is_array($archivo)) {
             foreach ($archivo as $key => $ar) {
                 include_once $ar . '.php';
             }
-        } elseif (is_string($archivo)) {
+        }
+        else if (is_string($archivo)) {
             include_once $archivo . '.php';
         }
     }
@@ -237,18 +243,20 @@ class Render {
      * Permite acceder a un nexo
      *
      */
-    function nexo($nexo, $modulo = "") {
+    function nexo ($nexo, $modulo = "") {
 
         $partes = explode(".", $nexo);
         if (count($partes) > 1) {
 
-        } else {
+        }
+        else {
             $modulo = (empty($modulo)) ? ucwords($this->_modulo) : ucwords($modulo);
 
             if ($this->_esJadmin) {
 
                 $namespace = '\Jida\Jadmin\Modulos\\' . $modulo . '\Nexos\\';
-            } else {
+            }
+            else {
                 $namespace = '\App\Modulos\\' . $modulo . '\Nexos\\';
             }
         }
@@ -257,6 +265,7 @@ class Render {
             throw new Excepcion("No existe el nexo solicitado " . $nexoAbsoluto, $this->_ce . '90');
 
         $objNexo = new $nexoAbsoluto;
+
         return $objNexo;
     }
 
@@ -272,20 +281,24 @@ class Render {
      * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
      *
      */
-    function cadena($texto, $ubicacion, $seccion = "") {
+    function cadena ($texto, $ubicacion, $seccion = "") {
+
         if (!property_exists($this, 'traductor'))
-            throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente", $this->_ce . '10');
+            throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente",
+                                $this->_ce . '10');
 
         return $this->traductor->cadena($texto, $ubicacion);
     }
 
 
-    function enlace($url = "") {
+    function enlace ($url = "") {
+
         $path = (defined('URL_BASE')) ? URL_BASE : '';
         if (!empty($this->idioma))
             $enlace = $path . '/' . $this->idioma . '/' . $url;
         else
             $enlace = $path . $url;
+
         return $enlace;
     }
 
@@ -297,7 +310,7 @@ class Render {
      * @param {string} idioma
      * @since 0.5
      */
-    function cambiarUrl($idioma) {
+    function cambiarUrl ($idioma) {
 
         $url = "/";
         if (!empty($this->modulo))
@@ -310,6 +323,7 @@ class Render {
         $base = URL_BASE;
         $base = (empty($base)) ? "/" : "/" . URL_BASE . '/';
         $url = explode("/", Helpers\Cadenas::guionCase($idioma, true) . '/' . Helpers\Cadenas::guionCase($url, true));
+
         return $base . implode("/", array_filter($url));
 
     }
