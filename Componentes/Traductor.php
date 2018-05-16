@@ -33,7 +33,7 @@ class Traductor {
     private $idiomaActual;
     private $ubicacion;
     private $textos;
-    private $path = "Aplicacion/traducciones/";
+    private $path = "Aplicacion/Traducciones/";
     private $textosSeccion = [];
     /**
      * Define el nombre del archivo para la seccion de textos
@@ -46,7 +46,8 @@ class Traductor {
      * Funcion constructora
      * @method __construct
      */
-    function __construct($idiomaActual, $data = []) {
+    function __construct ($idiomaActual, $data = []) {
+
         if (array_key_exists('path', $data)) {
             $this->path = $data['path'];
 
@@ -62,15 +63,18 @@ class Traductor {
         if (file_exists($this->path . $file)) {
             include_once $this->path . $file;
 
-        } else {
-            throw new \Exception("No existe el archivo de traducciones " . $this->idiomaActual . " en " . $this->path . $file, 950);
+        }
+        else {
+            throw new \Exception("No existe el archivo de traducciones " . $this->idiomaActual . " en " . $this->path . $file,
+                                 950);
 
         }
 
         $this->textos = $traducciones;
         if (array_key_exists('idiomas', $GLOBALS)) {
             $this->idiomas = $GLOBALS['idiomas'];
-        } else {
+        }
+        else {
             throw new \Exception("No se han configurado idiomas para manejar traducciones", 1);
         }
         if (!array_key_exists($this->idiomaActual, $this->idiomas))
@@ -78,15 +82,18 @@ class Traductor {
 
     }
 
-    function path($path = "") {
+    function path ($path = "") {
+
         if (!empty($path) and Directorios::validar($path)) {
             $this->path = $path;
-        } else {
+        }
+        else {
             return $this_ > path;
         }
     }
 
-    function seleccionarIdioma($idioma) {
+    function seleccionarIdioma ($idioma) {
+
         include_once strtolower($idioma) . ".php";
         $this->textos = $traducciones;
     }
@@ -96,7 +103,7 @@ class Traductor {
      * @param string $cadena Cadena string a buscar
      * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
      */
-    function cadena($cadena, $ubicacion = "") {
+    function cadena ($cadena, $ubicacion = "") {
 
 
         if (empty($ubicacion))
@@ -104,12 +111,13 @@ class Traductor {
 
         #Debug::mostrarArray($this->textos);
         if (!empty($ubicacion)) {
-            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[ $ubicacion ]))
-                return $this->textos[ $ubicacion ][ $cadena ];
-        } else {
+            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion]))
+                return $this->textos[$ubicacion][$cadena];
+        }
+        else {
 
             if (array_key_exists($cadena, $this->textos))
-                return $this->textos[ $cadena ];
+                return $this->textos[$cadena];
         }
 
         return 'Indefinido';
@@ -128,7 +136,7 @@ class Traductor {
      * @param string $ubicaicon
      *
      */
-    function seccion($cadena, $seccion = "", $ubicacion = "") {
+    function seccion ($cadena, $seccion = "", $ubicacion = "") {
 
         $this->validarSeccion($seccion);
 
@@ -137,18 +145,21 @@ class Traductor {
 
 
         if (!empty($ubicacion)) {
-            if (array_key_exists($ubicacion, $this->textosSeccion) and array_key_exists($cadena, $this->textosSeccion[ $ubicacion ]))
-                return $this->textosSeccion[ $ubicacion ][ $cadena ];
-        } else {
+            if (array_key_exists($ubicacion, $this->textosSeccion) and array_key_exists($cadena,
+                                                                                        $this->textosSeccion[$ubicacion]))
+                return $this->textosSeccion[$ubicacion][$cadena];
+        }
+        else {
 
             if (array_key_exists($cadena, $this->textosSeccion))
-                return $this->textosSeccion[ $cadena ];
+                return $this->textosSeccion[$cadena];
         }
 
         return 'Indefinido';
     }
 
-    private function validarSeccion($seccion) {
+    private function validarSeccion ($seccion) {
+
         if (!empty($seccion) and $seccion != $this->dir) {
 
             if (!file_exists($this->path . $this->idiomaActual . '/' . $seccion . ".php"))
@@ -158,7 +169,8 @@ class Traductor {
             include_once $this->path . $this->idiomaActual . DS . $seccion . ".php";
             if (isset($traducciones) and is_array($traducciones)) {
                 $this->textosSeccion = $traducciones;
-            } else throw new Exception("No esta definido el arreglo de traducciones para la seccion " . $seccion, 1);
+            }
+            else throw new Exception("No esta definido el arreglo de traducciones para la seccion " . $seccion, 1);
         }
     }
 
@@ -169,7 +181,8 @@ class Traductor {
      * @method addUbicacion
      * @param string $ubicacion
      */
-    function addUbicacion($ubicacion) {
+    function addUbicacion ($ubicacion) {
+
         $this->ubicacion = $ubicacion;
 
         return $this;
@@ -179,7 +192,8 @@ class Traductor {
      * Renderiza una URL conforme al idioma actual
      * @method renderURL
      */
-    function renderURL($url) {
+    function renderURL ($url) {
+
         return "/" . $this->idiomaActual . $url;
     }
 
@@ -188,25 +202,29 @@ class Traductor {
      * @method addSeccion
      * @param string $seccion
      */
-    function addSeccion($seccion) {
+    function addSeccion ($seccion) {
+
         $this->validarSeccion($seccion);
     }
 
-    function obtTraduccionesArray() {
+    function obtTraduccionesArray () {
+
         return $this->textos;
     }
 
     /**
      * Valida si una traduccion existe
      */
-    function validar($traduccion, $ubicacion = "") {
+    function validar ($traduccion, $ubicacion = "") {
+
         if (!empty($ubicacion) and array_key_exists($ubicacion, $this->textos)) {
-            if (array_key_exists($traduccion, $this->textos[ $ubicacion ]))
-                return TRUE;
-        } elseif (array_key_exists($traduccion, $this->textos)) {
-            return TRUE;
+            if (array_key_exists($traduccion, $this->textos[$ubicacion]))
+                return true;
+        }
+        else if (array_key_exists($traduccion, $this->textos)) {
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 }
