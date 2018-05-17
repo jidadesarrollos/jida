@@ -37,12 +37,9 @@
 
         _obtConfiguracion: function () {
             var defaultConfig = {
-                'preCarga': function () {
-                },
+                'preCarga': false,
                 'onLoadArchivo': this._defaultOnload,
-                'postCarga': function () {
-                    console.log("carga default");
-                },
+                'postCarga': false,
                 'multiple': false,
                 'name': "_jcargaArchivo",
                 'btnCarga': false,
@@ -168,6 +165,7 @@
 
             var continuar = true;
             if (!!plugin._configuracion.preCarga) {
+                console.log("entro aca:", !!plugin._configuracion.preCarga, plugin._configuracion.preCarga)
                 continuar = !!plugin._configuracion.preCarga.call(plugin, event);
 
             }
