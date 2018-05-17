@@ -23,7 +23,7 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
     var $inline;
 
 
-    function __construct($data = "", array $attr = []) {
+    function __construct ($data = "", array $attr = []) {
 
         $this->establecerAtributos($data, $this);
         if (array_key_exists('padre', $attr)) {
@@ -38,7 +38,7 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
 
     }
 
-    private function _procesarArregloOpciones() {
+    private function _procesarArregloOpciones () {
 
         $opciones = $this->_opciones;
         foreach ($opciones as $key => $opcion) {
@@ -57,14 +57,14 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
     }
 
 
-    function render() {
+    function render () {
 
         $salida = "";
 
         foreach ($this->_selectoresOpcion as $key => $selector) {
 
             $data = [
-                'input' => $selector->render(TRUE),
+                'input' => $selector->render(true),
                 'label' => $selector->label,
                 'type'  => $this->type,
 
@@ -85,9 +85,9 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
      *
      * @return $this
      */
-    function valor($valor) {
+    function valor ($valor) {
 
-        if (is_array($valor) and array_key_exists($valor, $this->_selectoresOpcion)) {
+        if (!is_array($valor) and array_key_exists($valor, $this->_selectoresOpcion)) {
             $this->_selectoresOpcion[$valor]->attr('checked', 'checked');
         }
 
