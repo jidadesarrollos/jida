@@ -126,7 +126,7 @@
         },
         _postData: function () {
 
-            console.log("ak-----------formData");
+
             var form = new FormData();
             var plugin = this;
             var name = (plugin._archivosCargados > 1) ? plugin._configuracion.name + "[]" : plugin._configuracion.name;
@@ -165,11 +165,12 @@
             var plugin = this;
             var archivos = ele.files;
             this._archivos = archivos;
-            var continar = true;
+
+            var continuar = true;
             if (!!plugin._configuracion.preCarga) {
                 continuar = !!plugin._configuracion.preCarga.call(plugin, event);
-            }
 
+            }
 
             if (archivos && continuar) {
 
