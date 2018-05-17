@@ -99,15 +99,19 @@
             var ele = e.currentTarget;
             var plugin = this;
             ++plugin._archivosCargados;
-            console.log("load end", this._configuracion.btnCarga);
-            console.log(plugin._archivosCargados + " == " + plugin._archivosSeleccionados);
-            console.log('configuracion url :', this._configuracion.url);
+            if (!!this._configuracion.loadend) {
+                this._configuracion.loadend.call(plugin, e);
+            }
             if (this._configuracion.btnCarga) {
 
                 $(this._configuracion.btnCarga).on('click', this._postData.bind(this));
 
-            } else if ((plugin._archivosCargados == plugin._archivosSeleccionados) && this._configuracion.url) {
-                console.log("aki papi");
+            }
+            else if (
+                (plugin._archivosCargados == plugin._archivosSeleccionados)
+                && this._configuracion.url
+            ) {
+
                 this._postData();
 
             }
@@ -121,7 +125,8 @@
             plugin._configuracion.onLoad.call(plugin, e);
         },
         _postData: function () {
-            console.log("post data");
+
+            console.log("ak-----------formData");
             var form = new FormData();
             var plugin = this;
             var name = (plugin._archivosCargados > 1) ? plugin._configuracion.name + "[]" : plugin._configuracion.name;
@@ -160,22 +165,30 @@
             var plugin = this;
             var archivos = ele.files;
             this._archivos = archivos;
-            plugin._configuracion.preCarga.call(plugin, event);
+            var continar = true;
+            if (!!plugin._configuracion.preCarga) {
+                continuar = !!plugin._configuracion.preCarga.call(plugin, event);
+            }
 
-            if (archivos) {
+
+            if (archivos && continuar) {
 
                 band = 0;
                 [].forEach.call(archivos, function (archivo) {
 
                     archivo.id_app = band;
                     ++band;
+
                     var reader = new FileReader();
+
                     reader.addEventListener('load', this._managerOnLoad.bind(plugin), false);
                     reader.addEventListener('loadend', this._managerLoadEnd.bind(plugin), false);
                     reader.readAsDataURL(archivo);
 
                 }.bind(plugin));
 
+            } else {
+                this.file.value = "";
             }
 
         },
@@ -195,8 +208,12 @@
         },
         _previewImage: function () {
 
+        },
+        limpiar: function () {
+
         }
     };
+
     /**
      *   =============================
      *   DECLARACION DEL PLUGIN

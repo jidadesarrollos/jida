@@ -87,7 +87,7 @@ class InputSeleccion extends InputBase implements SeleccionInterface {
      */
     function valor($valor) {
 
-        if (array_key_exists($valor, $this->_selectoresOpcion)) {
+        if (is_array($valor) and array_key_exists($valor, $this->_selectoresOpcion)) {
             $this->_selectoresOpcion[$valor]->attr('checked', 'checked');
         }
 
