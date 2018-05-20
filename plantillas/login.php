@@ -1,7 +1,7 @@
 <?php
 /**
  * Archivo vista de ...
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package
  * @category view
  * @version 1.0 //2014

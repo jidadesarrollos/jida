@@ -3,7 +3,7 @@
  * Modelo de Opciones de menu
  *
  * @package Framework
- * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 
 namespace Jida\RenderHTML;

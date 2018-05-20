@@ -2,7 +2,7 @@
 /**
  * Muestra todas las variables en el entorno al cargar la página
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 ?>
 

@@ -4,7 +4,7 @@
  *
  * @package framework
  * @subpackage jida
- * @author  Julio Rodríguez <jirc48@gmail.com>
+ * @author  Julio Rodríguez <jrodriguez@jidadesarrollos.com>
  */
 
 namespace Jida\RenderHTML;

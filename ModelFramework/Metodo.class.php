@@ -3,7 +3,7 @@
  * Clase Modelo de metodos de un objeto
  * 
  * 
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package
  * @category
  * @version

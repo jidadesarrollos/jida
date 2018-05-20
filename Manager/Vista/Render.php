@@ -10,6 +10,7 @@ use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
 use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios;
+use Jida\Manager\Estructura;
 use Jida\Render\Selector;
 use Exception as Excepcion;
 
@@ -95,7 +96,7 @@ class Render {
     function htdocs ($folder, $item, $tema = true) {
 
         $path = (defined('URL_BASE')) ? URL_BASE : '';
-        $url = $path .Configuracion::URL_BASE . '/htdocs' . $this->_tema . '/htdocs/' . $folder . '/' . $item;
+        $url = $path . Configuracion::URL_BASE . '/htdocs' . $this->_tema . '/htdocs/' . $folder . '/' . $item;
         if ($tema)
             return $url;
 
@@ -113,11 +114,12 @@ class Render {
      */
     function imprimirLibrerias ($lang, $modulo = "") {
 
+        $configuracion = Config::obtener();
         if (!$this->_data) {
             $this->_obtenerData();
         }
         $dataInclude = [];
-        $path = (defined('URL_BASE')) ? URL_BASE : "";
+        $path =  Estructura::url();
 
         if (!property_exists($this->_data, $lang))
             return false;
@@ -126,18 +128,18 @@ class Render {
         //Se eliminan las librerias incluidas en un entorno distinto al actual
         //o que pertenezcan a un $modulo no solicitado
         foreach ($data as $key => $value) {
-            if (is_array($value) and $key != ENTORNO_APP and $key != $modulo)
+            if (is_array($value) and $key != $configuracion::ENTORNO_APP and $key != $modulo)
                 unset($data[$key]);
         }//fin forech
 
-        if (array_key_exists(ENTORNO_APP, $data)) {
-            $dataInclude = $data[ENTORNO_APP];
+        if (array_key_exists($configuracion::ENTORNO_APP, $data)) {
+            $dataInclude = $data[$configuracion::ENTORNO_APP];
             //Se eliminan
             foreach ($dataInclude as $key => $value) {
                 if (is_array($value) and $key != $modulo)
                     unset($dataInclude[$key]);
             }
-            unset($data[ENTORNO_APP]);
+            unset($data[$configuracion::ENTORNO_APP]);
         }
 
         $librerias = array_merge($dataInclude, $data);

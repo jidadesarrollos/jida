@@ -3,7 +3,7 @@
 /**
  * Modelo de Usuario de la aplicacion
  *
- * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @author   Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package  Framework
  *
  * @category Model

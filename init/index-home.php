@@ -6,7 +6,7 @@
  * Inicializa las constantes principales y hace un llamado al archivo
  * inicio.php para finalizar el arranque de la aplicación
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 
 /**

@@ -4,7 +4,7 @@
  * Clase Vista
  *
  * Clase manejadora de vistas requeridas
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version 1.0 - 28/12/2013
  * @package Framework
  * @category Router

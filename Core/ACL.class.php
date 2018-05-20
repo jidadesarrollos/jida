@@ -10,7 +10,7 @@
  * @package Framework
  * @subpackage Core
  * @category permisologia
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version 0.1 10/02/2014
  * 
  */

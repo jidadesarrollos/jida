@@ -3,7 +3,7 @@
 /**
  * Arranque de errores generales
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package Framework
  * @category controlador
  * @version 0.1 02/01/2014

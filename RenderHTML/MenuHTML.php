@@ -5,7 +5,7 @@
  * Obtiene un menu de base de datos y maneja opciones para impresiones en HTML.
  *
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package Framework
  * @category Core
  * @version 0.1 5-3-2012

@@ -2,7 +2,7 @@
 /**
  * Clase para Selector
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package
  * @category
  * @version

@@ -7,8 +7,11 @@ class Validador {
 
     private $_ce = 10011;
 
+    static private $_entorno;
+
     function __construct () {
 
+        Entorno::configurar();
     }
 
     public function inicio () {
@@ -20,6 +23,8 @@ class Validador {
         ];
 
         $this->_validarConfiguracion();
+
+        return true;
 
     }
 

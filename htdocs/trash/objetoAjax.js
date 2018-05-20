@@ -5,7 +5,7 @@
  * ajax.
  * Utiliza libreria jQuery 1.8+
  * 
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version 1.0
  * @fecha : 14/07/2014 
  */

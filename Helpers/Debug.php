@@ -2,7 +2,7 @@
 /**
  * Clase con funcionalidades generales que permiten al programador hacer tests
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package Framework
  * @category Helpers
  * @version 0.1

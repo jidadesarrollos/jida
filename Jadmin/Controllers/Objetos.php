@@ -3,7 +3,7 @@
 /**
  * Definición de la clase ObjetosController
  *
- * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @author   Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package
  * @category Controller
  * @version  0.1

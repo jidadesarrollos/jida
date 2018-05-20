@@ -31,7 +31,6 @@ class Manager {
     function __construct () {
 
         $this->_validador = new Validador();
-        $this->_entorno = new Entorno();
 
         self::$configuracion = Conf\Config::obtener();
 
@@ -45,13 +44,18 @@ class Manager {
         try {
 
             $this->_tiempoInicio = microtime(true);
-            date_default_timezone_set(ZONA_HORARIA);
+            $config = self::$configuracion;
+            date_default_timezone_set($config::ZONA_HORARIA);
             Helpers\Sesion::iniciar();
             $_SERVER = array_merge($_SERVER, getallheaders());
 
 
-            $this->_validador->inicio();
-            $this->_inicio->validar();
+            if ($this->_validador->inicio()) {
+                $this->_inicio->validar();
+            }
+            else {
+                exit("no arranca");
+            }
 
         }
         catch (\Exception $e) {
@@ -60,8 +64,6 @@ class Manager {
 
 
     }
-
-
 
 
 }

@@ -2,7 +2,7 @@
 /**
  * Definición de la clase JidaFormulario
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package
  * @subpackage
  * @category Modelo

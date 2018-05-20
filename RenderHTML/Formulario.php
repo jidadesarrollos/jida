@@ -11,7 +11,7 @@
  * @create   : 21/05/2012
  * @update   :15/10/2013
  * @update   :04/04/2014
- * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @author   Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version  1.8
  *
  * Dependencias :

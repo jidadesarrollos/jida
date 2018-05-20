@@ -4,7 +4,7 @@
  *
  * @package Framework
  * @subpackage Jadmin
- * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version 0.1 13/01/2014
  */
 

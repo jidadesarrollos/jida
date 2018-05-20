@@ -5,7 +5,7 @@
  * 
  * Plugin Jquery y HTML5 para manejo de controles de formularios
  * 
- * @author : Julio Rodriguez <jirc48@gmail.com>
+ * @author : Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * 
  * 
  * Requiere : Jquery 1.9+, jqueryui 1.10,

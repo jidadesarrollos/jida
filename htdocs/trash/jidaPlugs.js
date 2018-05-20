@@ -3,7 +3,7 @@ if (!jd)
 /**
  * Conjunto de funcionalidades para las vistas
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version 1.2
  * @fecha : 13/11/2013
  */

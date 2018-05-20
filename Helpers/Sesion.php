@@ -4,7 +4,7 @@
  *
  * @package  framework
  * @category core
- * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @author   Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version  0.1.0 02/01/2014
  * @since    0.5
  */

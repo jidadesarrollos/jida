@@ -6,6 +6,8 @@ class Entorno {
 
     public $ce = 10001;
 
+    static private $_instancia;
+
     function __construct () {
 
         if (defined('ENTORNO_APP')) {
@@ -44,5 +46,12 @@ class Entorno {
         ini_set("html_errors", 0);
         error_reporting(0);
 
+    }
+
+    static function configurar () {
+
+        if (!self::$_instancia) {
+            self::$_instancia = new Entorno();
+        }
     }
 }

@@ -3,7 +3,7 @@
  * Arranque global del framework
  *
  * @package Framework
- * @author  Julio Rodriguez <jirc48@gmail.com>
+ * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @date    4/11/2016
  * @since   0.5
  *

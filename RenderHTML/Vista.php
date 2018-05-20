@@ -9,7 +9,7 @@
  *
  * @package  Framework
  * @category Core
- * @author   Julio Rodriguez <jirc48@gmail.com>
+ * @author   Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @version  1.2
  */
 

@@ -5,7 +5,7 @@
  *
  * @package  Framework
  * @category Arranque
- * @author   Julio Rodriguez jirc48@gmail.com
+ * @author   Julio Rodriguez jrodriguez@jidadesarrollos.com
  *
  *
  */

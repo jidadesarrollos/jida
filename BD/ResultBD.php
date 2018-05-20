@@ -4,7 +4,7 @@
  *
  * @internal Permite acceder y manejar la matriz resultado de una consulta a base de datos
  *
- * @author Julio Rodriguez <jirc48@gmail.com>
+ * @author Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  * @package Framework
  * @subpackage BD
  * @version 1.0
