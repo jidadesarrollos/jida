@@ -11,9 +11,11 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Componentes;
+use Jida\Configuracion\Config;
 use Jida\Core as Core;
 use Jida\Componentes\Traductor as Traductor;
 use Jida\Helpers as Helpers;
+use Jida\Manager\Estructura;
 use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Render as Render;
 
@@ -22,13 +24,13 @@ class JController extends Core\Controller {
     protected $urlHtdocs;
 
     var $idioma = 'es';
-    var $manejoParams = FALSE;
+    var $manejoParams = false;
     var $perfilesAdmin = [
         'JidaAdministrador',
         'Administrador'
     ];
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
 
@@ -37,9 +39,10 @@ class JController extends Core\Controller {
         if (empty($this->idioma)) {
             $this->idioma = 'es';
         }
-
+        $configuracion = Config::obtener();
+        $estructura = Estructura::url();
         $this->tr = new Traductor($this->idioma, ['path' => 'Framework/Traducciones/']);
-        $this->urlHtdocs = $this->obtURLApp() . "htdocs/bower_components/";
+        $this->urlHtdocs = $estructura . "/htdocs/bower_components/";
         $this->layout('jadmin');
         $this->definirJSGlobals();
         $this->usuario = Helpers\Sesion::obt('Usuario');
@@ -52,31 +55,33 @@ class JController extends Core\Controller {
         $this->data(['title'     => "JIDAPanel",
                      'traductor' => $this->tr,
                      'usuario'   => $this->usuario
-        ]);
+                    ]);
 
         $this->validarSesion();
     }
 
-    protected function validarSesion() {
+    protected function validarSesion () {
 
         if (Helpers\Sesion::es($this->perfilesAdmin)) {
 
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
 
             $this->formularioInicioSesion();
         }
     }
 
-    protected function formularioInicioSesion() {
+    protected function formularioInicioSesion () {
 
+        $configuracion = Config::obtener();
         $form = new Render\Formulario('jida/Login');
         $form->boton('principal')
             ->attr([
-                'value' => 'Iniciar Sesi&oacute;n',
-                'id'    => 'btnJadminLogin',
-                'name'  => 'btnJadminLogin'
-            ]);
+                       'value' => 'Iniciar Sesi&oacute;n',
+                       'id'    => 'btnJadminLogin',
+                       'name'  => 'btnJadminLogin'
+                   ]);
         if ($this->post('btnJadminLogin')) {
 
             $userClass = MODELO_USUARIO;
@@ -86,17 +91,22 @@ class JController extends Core\Controller {
 
                 $perfiles = $user->getPerfiles();
                 Helpers\Sesion::set('Usuario', $user);
-                Helpers\Sesion::set('__msjInicioSesion', Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
+                Helpers\Sesion::set('__msjInicioSesion',
+                                    Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
 
-                return TRUE;
-            } else {
+                return true;
+            }
+            else {
                 Formulario::msj('error', 'Usuario o clave invalidos');
             }
         }
 
         $this->layout('jadminIntro');
         $this->dv->usarPlantilla('login');
-        $this->tituloPagina = NOMBRE_APP;
+        $this->data([
+                        'nombreApp' => $configuracion::NOMBRE_APP
+                    ]);
+        $this->tituloPagina = $configuracion::NOMBRE_APP;
         $this->data('formLoggin', $form->armarFormulario());
 
     }
@@ -108,7 +118,7 @@ class JController extends Core\Controller {
      * @method definirJSGlobals
      *
      */
-    private function definirJSGlobals() {
+    private function definirJSGlobals () {
 
         if (strtolower($this->_modulo) == 'jadmin') {
             if (!array_key_exists('jadmin', $GLOBALS['_JS'])) {

@@ -13,17 +13,17 @@
     <div class="panel panel-login">
         <section class="panel-heading" role="title">
             <h1>
-            	<?php if (defined('LOGO_APP')): ?>
-					<img src="<?=LOGO_APP?>" alt="<?=NOMBRE_APP?>"  class="logo-admin top-nav"/>
-				<?php else: ?>
-						<?=NOMBRE_APP?>
-				<?php endif ?>
+                <?php if (defined('LOGO_APP')): ?>
+                    <img src="<?= $this->logo ?>" alt="<?= $this->nombreApp ?>" class="logo-admin top-nav"/>
+                <?php else: ?>
+                    <?= $this->nombreApp ?>
+                <?php endif ?>
                 <small>Administrador</small>
             </h1>
         </section>
         <section class="panel-body">
 
-            <?=$this->formLoggin?>
+            <?= $this->formLoggin ?>
         </section>
     </div>
 </div>

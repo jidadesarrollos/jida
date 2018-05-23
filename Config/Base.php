@@ -5,6 +5,9 @@ define("PS", PATH_SEPARATOR);
 define('ROOT', \Jida\Manager\Estructura::path());
 define('MODELO_USUARIO', '\Jida\Modelos\User');
 
+define('DIR_FRAMEWORK', ROOT . 'Framework' . DS);
+define('DIR_APP', ROOT . 'Aplicacion' . DS);
+
 /**
  * @constant MANEJADOR_PARAMS
  * Mantiene el funcionamiento del pase de parametros en las URLs entre las distintas versiones del Framework

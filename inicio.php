@@ -1,13 +1,20 @@
 <?php
 /**
+ *
  * Archivo de arranque de la aplicacion
+ * @since 0.1
+ * @author <jrodriguez@jidadesarrollos.com>
+ *
  */
-
-use \Jida\Manager\Estructura as Estructura;
 
 if (file_exists($ruta . '/vendor/autoload.php')) {
     require_once $ruta . '/vendor/autoload.php';
 }
+
+if (file_exists('vendor/autoload.php')) {
+    require_once 'vendor/autoload.php';
+}
+
 if (!file_exists($ruta . '/Config/Base.php')) {
 
     include_once 'plantillas/error/errorConfig.php';

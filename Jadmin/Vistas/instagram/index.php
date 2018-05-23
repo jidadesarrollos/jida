@@ -15,7 +15,7 @@ use Jida\Helpers\Sesion as Sesion;
             ?>
             <div class="alert alert-info">
                 <p>
-                    Autenticar cuenta de <strong><?= NOMBRE_APP ?></strong> para la API de Instagram.
+                    Autenticar cuenta de <strong><?= $this->nombreApp ?></strong> para la API de Instagram.
                 </p>
                 Para activar esta opci&oacute;n te enviaremos a un enlace donde
                 debes aceptar los terminos de Instagram para poder

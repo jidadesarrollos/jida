@@ -1,8 +1,9 @@
 <?php
 
-$url = (!URL_BASE or URL_BASE == '') ? '/' : URL_BASE;
 
 $usuario = is_object($this->usuario) ? $this->usuario->nombres . ' ' . $this->usuario->apellidos : '';
+$conf = \Jida\Configuracion\Config::obtener();
+$url = $conf::URL_BASE;
 
 ?>
 
@@ -11,9 +12,9 @@ $usuario = is_object($this->usuario) ? $this->usuario->nombres . ' ' . $this->us
         <div class="navbar-header">
             <a href="/" class="navbar-brand" target="_blank">
                 <?php if (defined('LOGO_APP')): ?>
-                    <img src="<?= LOGO_APP ?>" alt="<?= NOMBRE_APP ?>" class="logo-admin top-nav"/>
+                    <img src="<?= $conf::LOGO_APP ?>" alt="<?= $conf::NOMBRE_APP ?>" class="logo-admin top-nav"/>
                 <?php else: ?>
-                    <?= NOMBRE_APP ?>
+                    <?= $conf::NOMBRE_APP ?>
                 <?php endif ?>
             </a>
         </div>

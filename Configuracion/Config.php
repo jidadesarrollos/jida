@@ -14,12 +14,15 @@
 
 namespace Jida\Configuracion;
 
-use App\Config\Configuracion;
-
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
     const URL_BASE = '/jida/jidadesarrollos/';
+
+    const ENTORNO_APP = 'dev';
+    const ZONA_HORARIA = 'America/Caracas';
+    const MODELO_USUARIO = '\Jida\Modelos\User';
+    const LOGO_APP = '';
     /**
      * Variable para definicion de modulos dentro de la aplicación
      *
@@ -62,6 +65,7 @@ class Config {
      * @access protected
      */
     var $logo;
+
 
     private static $instancia;
 

@@ -25,6 +25,8 @@
 
 namespace Jida\Componentes;
 
+use Jida\Configuracion\Config;
+use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios as Directorios;
 
 class Traductor {
@@ -48,12 +50,14 @@ class Traductor {
      */
     function __construct ($idiomaActual, $data = []) {
 
+
+        $configuracion = Config::obtener();
         if (array_key_exists('path', $data)) {
             $this->path = $data['path'];
 
         }
         if (array_key_exists('ubicacion', $data)) {
-            $this->ubicacion = $ubicacion;
+            $this->ubicacion = $data['ubicacion'];
         }
 
         $this->idiomaActual = $idiomaActual;
@@ -71,8 +75,10 @@ class Traductor {
         }
 
         $this->textos = $traducciones;
-        if (array_key_exists('idiomas', $GLOBALS)) {
-            $this->idiomas = $GLOBALS['idiomas'];
+
+
+        if (property_exists($configuracion, 'idiomas')) {
+            $this->idiomas = $configuracion->idiomas;
         }
         else {
             throw new \Exception("No se han configurado idiomas para manejar traducciones", 1);

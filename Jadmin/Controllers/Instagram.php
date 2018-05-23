@@ -10,6 +10,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use Jida\Configuracion\Config;
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 
@@ -18,9 +19,18 @@ use Jida\Componentes\InstagramManager as InstagramManager;
 class Instagram extends JController {
 
     var $layout = "jadmin.tpl.php";
-    var $manejoParams = TRUE;
+    var $manejoParams = true;
 
-    function index() {
+    function __construct () {
+
+        parent::__construct();
+
+        $configuracion = Config::obtener();
+        $this->data(['nombreApp' => $configuracion::NOMBRE_APP]);
+
+    }
+
+    function index () {
 
         if ($this->post('btnPermisosInstagram')) {
             $ig = new InstagramManager();
@@ -34,15 +44,16 @@ class Instagram extends JController {
      * Metodo donde se redirecciona para establecer la conexion con la API
      * y generar el Access Token a utilizar en las consultas
      */
-    function permisos() {
+    function permisos () {
 
         if ($this->get('code')) {
 
             $this->data(['urlForm' => $this->obtUrl('permisos'),
                          'codigo'  => $this->get('code')
-            ]);
+                        ]);
 
-        } else {
+        }
+        else {
             if ($this->post('btnPermisosInstagram')) {
 
                 $ig = new InstagramManager();
@@ -56,10 +67,12 @@ class Instagram extends JController {
 
                 $redSocial->salvar();
 
-                Render\Formulario::msj('suceso', "Se han guardado los datos de Autenticación con Instagram exitosamente");
+                Render\Formulario::msj('suceso',
+                                       "Se han guardado los datos de Autenticación con Instagram exitosamente");
                 $this->redireccionar($this->obtUrl('index'));
 
-            } else {
+            }
+            else {
                 $this->_404();
             }
         }

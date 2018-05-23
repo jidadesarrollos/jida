@@ -18,7 +18,7 @@ class Manager {
     private static $instancia;
     private $_validador;
     private $_entorno;
-    private $_inicio;
+    private $_lector;
 
     private $_configuracion;
     /*Tiempos*/
@@ -34,7 +34,7 @@ class Manager {
 
         self::$configuracion = Conf\Config::obtener();
 
-        $this->_inicio = new Rutas\Lector($this);
+        $this->_lector = new Rutas\Lector($this);
 
 
     }
@@ -51,7 +51,7 @@ class Manager {
 
 
             if ($this->_validador->inicio()) {
-                $this->_inicio->validar();
+                $this->_lector->validar();
             }
             else {
                 exit("no arranca");

@@ -6,7 +6,7 @@
 
             <div class="alert alert-info">
                 Acepto los terminos y condiciones para acceder y mostrar la informaci&oacute;n de la cuenta de Instagram
-                en <?= NOMBRE_APP ?>.
+                en <?= $this->nombreApp ?>.
             </div>
 
             <div class="row">

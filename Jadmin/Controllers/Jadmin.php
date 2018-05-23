@@ -8,6 +8,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use Jida\Configuracion\Config;
 use Jida\Modelos\JidaControl as JidaControl;
 use Jida\Helpers as Helpers;
 use Jida\RenderHTML\Formulario as Formulario;
@@ -25,15 +26,20 @@ class Jadmin extends JController {
      */
     private $jctrl;
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
 
         $this->url = "/jadmin/";
         $this->jctrl = new JidaControl();
+
+        $estructura = Config::obtener();
+        $this->data([
+                        'nombreApp' => $estructura::NOMBRE_APP
+                    ]);
     }
 
-    function index() {
+    function index () {
 
         if (defined('DEFAULT_JADMIN')) {
             $this->redireccionar(DEFAULT_JADMIN);
@@ -41,27 +47,30 @@ class Jadmin extends JController {
 
     }
 
-    function dashboard() {
+    function dashboard () {
 
     }
 
-    function json() {
+    function json () {
 
         if (isset($_GET['file'])) {
 
             if (file_exists(DIR_FRAMEWORK . 'json/validaciones.json')) {
                 $data = file_get_contents(DIR_FRAMEWORK . 'json/validaciones.json');
                 respuestaAjax($data);
-            } else {
+            }
+            else {
                 throw new Exception("No se consigue el archivo solicidado o no existe", 1);
             }
 
-        } else {
+        }
+        else {
             throw new Exception("Pagina no encontrada", 404);
         }
     }
 
-    function phpInfo() {
+    function phpInfo () {
+
         echo phpinfo();
         exit;
 

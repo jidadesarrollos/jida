@@ -3,6 +3,8 @@
 namespace Jida\Manager;
 
 
+use Jida\Helpers\Debug;
+
 class Validador {
 
     private $_ce = 10011;
@@ -22,9 +24,29 @@ class Validador {
             'elementos' => []
         ];
 
-        $this->_validarConfiguracion();
+        $this->_configurarEntorno()
+            ->_validarConfiguracion();
 
         return true;
+
+    }
+
+    private function _configurarEntorno () {
+
+
+        if (function_exists('ini_set')) {
+            /**
+             * Inclusión de directorios de aplicación, framework y libs dentro del path
+             */
+            ini_set('include_path', DIR_APP . PS . DIR_FRAMEWORK . PS . get_include_path());
+
+        }
+        else {
+            throw new Exception("Debe activar la funcion ini_set para continuar..");
+
+        }
+
+        return $this;
 
     }
 

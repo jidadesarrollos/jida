@@ -40,6 +40,6 @@
                 </div>
             </div><!--Cierre div full-container-->
         </div>
-		<?=$this->printJS()?>
+		<?=$this->imprimirLibrerias('js');?>
     </body>
 </html>
