@@ -20,6 +20,7 @@ use Jida\Core\Rutas;
 use Jida\Core\Validador;
 use Jida\Helpers as Helpers;
 use Jida\BD\BD as BD;
+use Jida\Manager\Estructura;
 use Jida\Render\Inputs\Input as SelectorInput;
 
 class Formulario extends Selector {
@@ -260,7 +261,7 @@ class Formulario extends Selector {
         debug_backtrace()[1]['function'];
 
 
-        $this->action = JD('URL');
+        $this->action = Estructura::url();
         $this->attr('action', $this->action);
 
         parent::__construct('form');
