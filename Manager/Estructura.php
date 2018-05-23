@@ -36,7 +36,7 @@ class Estructura {
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
             self::$url = $_SERVER['REQUEST_URI'];
             $conf = Config::obtener();
-            Debug::imprimir($conf::URL_BASE, self::$url, true);
+            #Debug::imprimir($conf::URL_BASE, self::$url, true);
 
         }
         else {
