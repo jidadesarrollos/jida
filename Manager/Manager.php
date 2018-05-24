@@ -7,6 +7,7 @@ namespace Jida\Manager;
 
 use Jida\Helpers as Helpers;
 use Jida\Configuracion as Conf;
+use Jida\Core\Excepcion as Excepcion;
 use App as App;
 
 global $JD;
@@ -59,7 +60,12 @@ class Manager {
 
         }
         catch (\Exception $e) {
+
+            $excepcion = new Excepcion($e);
+            $excepcion->log();
+
             Helpers\Debug::imprimir("Capturada Excepcion en el manager", $e, true);
+
         }
 
 

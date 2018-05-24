@@ -34,7 +34,7 @@ class JController extends Core\Controller {
 
         parent::__construct();
 
-        $this->__url = JD('URL_COMPLETA');
+        $this->__url = Estructura::url();
 
         if (empty($this->idioma)) {
             $this->idioma = 'es';
