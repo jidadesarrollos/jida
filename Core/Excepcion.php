@@ -8,11 +8,10 @@
 
 namespace Jida\Core;
 
-
 use Jida\Helpers\Debug;
 use Jida\Manager\Estructura;
 
-class Excepcion extends \Exception {
+class Excepcion {
 
     protected $nombre_archivo;
 
@@ -50,8 +49,11 @@ class Excepcion extends \Exception {
         $archivo = fopen($this->ruta . '/' . $this->nombre_archivo, 'a+');
 
         if (fwrite($archivo, $texto . "\r\n")) {
+
             Debug::imprimir("Log registrado con exito.");
-            return $this;
+
+            return true;
+
         }
         else {
             return false;
