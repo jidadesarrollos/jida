@@ -6,7 +6,7 @@
  * Time: 11:32 AM
  */
 
-namespace Jida\Core;
+namespace Jida\Manager;
 
 use Jida\Helpers\Debug;
 use Jida\Manager\Estructura;

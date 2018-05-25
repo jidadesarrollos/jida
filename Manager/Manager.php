@@ -7,7 +7,6 @@ namespace Jida\Manager;
 
 use Jida\Helpers as Helpers;
 use Jida\Configuracion as Conf;
-use Jida\Core\Excepcion as Excepcion;
 use App as App;
 
 global $JD;
