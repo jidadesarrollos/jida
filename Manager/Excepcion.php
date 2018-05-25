@@ -65,7 +65,7 @@ class Excepcion {
             $directorio = $path . DIR_JF . '/Layout/error.tpl.php';
         }
 
-        $vista = $path . DIR_JF . "/Framework/plantillas/error/error.php";
+        $vista = $path . DIR_JF . "/plantillas/error/error.php";
 
         $layout = new Layout();
         $layout::definir($directorio);
