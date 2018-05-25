@@ -90,11 +90,9 @@ class Excepcion {
         $directorio = "";
 
         if (Directorios::validar($path . '/Aplicacion/Layout/' . $configuracion->tema . '/error.tpl.php')) {
-            Debug::imprimir("Layout Error de Aplicacion");
             $directorio = $path . '/Aplicacion/Layout/' . $configuracion->tema . '/error.tpl.php';
         }
         else {
-            Debug::imprimir("Layout Error de Framework");
             $directorio = $path . DIR_JF . '/Layout/error.tpl.php';
         }
 
