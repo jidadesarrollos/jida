@@ -43,10 +43,12 @@ class Layout {
     static public $directorio;
     private static $instancia;
 
-    public function __construct ($padre) {
+    public function __construct ($padre = "") {
 
-        self::$padre = $padre;
-        self::$instancia = $this;
+        if ($padre) {
+            self::$padre = $padre;
+            self::$instancia = $this;
+        }
 
     }
 
@@ -79,6 +81,12 @@ class Layout {
 
         return $this;
 
+    }
+
+
+    static function definir ($directorio) {
+
+        self::$directorio = $directorio;
     }
 
     public function render ($vista) {

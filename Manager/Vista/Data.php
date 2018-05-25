@@ -43,4 +43,9 @@ class Data {
         return self::$instancia;
 
     }
+
+    static function destruir () {
+
+        self::$instancia = false;
+    }
 }

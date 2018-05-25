@@ -8,15 +8,21 @@
 
 namespace Jida\Manager;
 
+use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Helpers\Debug;
+use Jida\Helpers\Directorios;
 use Jida\Manager\Estructura;
+use Jida\Manager\Vista\Data;
+use Jida\Manager\Vista\Layout;
 
 class Excepcion {
 
     use GeneradorCodigo;
     protected $ruta;
     protected $excepcion;
+
+    const PLANTILLAS_APP = 'Aplicacion/plantillas/';
 
     function __construct (\Exception $e) {
 
@@ -46,6 +52,28 @@ class Excepcion {
 
         $this->_registrar();
         Debug::imprimir("Capturada Excepcion en Log");
+
+        $configuracion = Config::obtener();
+
+        $path = Estructura::path();
+        $directorio = "";
+
+        if (Directorios::validar($path . '/Layout/error.tpl.php')) {
+            $directorio = $path . '/Layout/error.tpl.php';
+        }
+        else {
+            $directorio = $path . '/Framework/Layout/error.tpl.php';
+        }
+
+        $vista = $path . "/Framework/plantillas/error/error.php";
+
+        $layout = new Layout();
+        $layout::definir($directorio);
+        $data = new \stdClass();
+        $data->excepcion = $this->excepcion;
+        Data::destruir();
+        Data::inicializar($data);
+        echo $layout->render($vista);
 
 
     }
