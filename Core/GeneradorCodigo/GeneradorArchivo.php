@@ -36,11 +36,13 @@ trait GeneradorArchivo {
      * @method public crear
      * @param string $archivo Nombre del Archivo
      */
-    function crear ($archivo = "") {
+    function crear ($archivo = "", $modo = "w+") {
 
-        if (!empty($archivo))
+        if (!empty($archivo)) {
             $this->nombreArchivo = $archivo;
-        $this->archivo = fopen($this->nombreArchivo, 'w+');
+        }
+
+        $this->archivo = fopen($this->nombreArchivo, $modo);
 
         return $this;
     }

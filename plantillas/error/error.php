@@ -1,20 +1,19 @@
 <?php
-$e =& $this->excepcion;
+$e = $this->excepcion;
 ?>
 
 <header class="page-header">
     <h1>
-        Error <?= $e->codigo() ?>
+        Error <?= $e->codigo; ?>
     </h1>
 </header>
 <div class="alert alert-danger mt-30">
-    <?= $e->mensaje() ?>
+    <?= $e->mensaje; ?>
 </div>
 
 <div class="alert alert-warning">
     <ul>
-        <?php foreach ($e->traza() as $key => $hito): ?>
-
+        <?php foreach ($e->traza as $key => $hito): ?>
             <li>
                 <?php if (array_key_exists('file', $hito)) : ?>
                     <h5><strong><?= $key ?> Archivo: </strong>
@@ -34,8 +33,6 @@ $e =& $this->excepcion;
                 <?php endif ?>
 
             </li>
-
-
         <?php endforeach ?>
     </ul>
 </div>
