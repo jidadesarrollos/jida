@@ -1,14 +1,15 @@
 <?php
 /**
-* Clase Manejadora de archivos
-* @author Julio Rodriguez
-* @package
-* @version
-* @category
-*/
+ * Clase Manejadora de archivos
+ * @author Julio Rodriguez
+ * @package
+ * @version
+ * @category
+ */
 
 namespace Jida\Core\GeneradorCodigo;
-trait GeneradorArchivo{
+
+trait GeneradorArchivo {
 
     /**
      * Nombre del Archivo
@@ -25,7 +26,7 @@ trait GeneradorArchivo{
     /**
      * Define el contenido del Archivo
      *
-     * @var string $contenido;
+     * @var string $contenido ;
      */
     protected $contenido;
 
@@ -35,11 +36,15 @@ trait GeneradorArchivo{
      * @method public crear
      * @param string $archivo Nombre del Archivo
      */
-    function crear($archivo=""){
-        if(!empty($archivo)) $this->nombreArchivo = $archivo;
-        $this->archivo = fopen($this->nombreArchivo,'w+');
+    function crear ($archivo = "") {
+
+        if (!empty($archivo))
+            $this->nombreArchivo = $archivo;
+        $this->archivo = fopen($this->nombreArchivo, 'w+');
+
         return $this;
     }
+
     /**
      * Permite definir u obtener el directorio del archivo
      *
@@ -49,58 +54,78 @@ trait GeneradorArchivo{
      * @param url $dir Directorio a definir
      * @return mixed Objeto Instanciado o directorio
      */
-    function directorio($dir=""){
-        if(!empty($dir)){
-            $this->dir=$dir;
+    function directorio ($dir = "") {
+
+        if (!empty($dir)) {
+            $this->dir = $dir;
+
             return $this;
-        }else{
-           return $this->dir;
+        }
+        else {
+            return $this->dir;
         }
 
     }
-    function escribir($contenido=""){
-    	if(!empty($contenido)) $this->contenido=$contenido;
+
+    function escribir ($contenido = "") {
+
+        if (!empty($contenido))
+            $this->contenido = $contenido;
         fwrite($this->archivo, $this->contenido);
+
         return $this;
     }
-    function cerrar(){
+
+    function cerrar () {
+
         return fclose($this->archivo);
     }
 
-    function saltodeLinea($total=1){
-    	$saltos="";
-		for($i=0;$i<=$total;++$i){
-			$saltos.="\n";
-		}
-          return $saltos;
+    function saltodeLinea ($total = 1) {
+
+        $saltos = "";
+        for ($i = 0; $i <= $total; ++$i) {
+            $saltos .= "\n";
+        }
+
+        return $saltos;
 
     }
+
     /**
      * Agrega tabulaciones al archivo
      * @method tab
      * @access protected
      * @param int $cantidad Define el número de tabulaciones a ingresar
      */
-    function tab($cantidad=1){
-        $tabs="";
-        for($i=0;$i<$cantidad;++$i)
-            $tabs.="\t";
+    function tab ($cantidad = 1) {
+
+        $tabs = "";
+        for ($i = 0; $i < $cantidad; ++$i)
+            $tabs .= "\t";
+
         return $tabs;
     }
 
-    function retorno(){
-        $this->contenido.="\r";
+    function retorno () {
+
+        $this->contenido .= "\r";
+
         return $this;
     }
-    function addContenido($contenido){
-        $this->contenido.=$contenido;
+
+    function addContenido ($contenido) {
+
+        $this->contenido .= $contenido;
+
         return $this;
 
     }
 
-	function imprimirContenido($contenido=""){
-		echo "<pre>";
-		echo $contenido;
-		echo "</pre>";
-	}
+    function imprimirContenido ($contenido = "") {
+
+        echo "<pre>";
+        echo $contenido;
+        echo "</pre>";
+    }
 }

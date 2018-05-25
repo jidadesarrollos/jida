@@ -8,20 +8,19 @@
 
 namespace Jida\Manager;
 
+use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Helpers\Debug;
 use Jida\Manager\Estructura;
 
 class Excepcion {
 
-    protected $nombre_archivo;
-
+    use GeneradorCodigo;
     protected $ruta;
-
     protected $excepcion;
 
     function __construct (\Exception $e) {
 
-        $this->nombre_archivo = "jida_error_log.txt";
+        $this->nombreArchivo = "jida_error_log.txt";
         $this->ruta = Estructura::path();
         $this->excepcion = $e;
 
@@ -36,10 +35,15 @@ class Excepcion {
         $codigo = "Codigo: " . $this->excepcion->getCode();
         $archivo = "Archivo: " . $this->excepcion->getFile();
         $linea = "Linea: " . $this->excepcion->getLine();
-
         $log = implode(" | ", [$fecha, $error, $linea]);
 
-        $this->insertar($log);
+        $this
+            ->crear($this->nombreArchivo)
+            ->escribir($log)
+            ->cerrar();
+
+
+        //$this->insertar($log);
 
     }
 
