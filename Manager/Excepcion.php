@@ -26,9 +26,7 @@ class Excepcion {
 
     }
 
-    function log () {
-
-        Debug::imprimir("Capturada Excepcion en Log");
+    function _registrar () {
 
         $fecha = "Fecha: " . date('Y-m-d H:i:s');
         $error = "Error: " . $this->excepcion->getMessage();
@@ -42,8 +40,13 @@ class Excepcion {
             ->escribir($log)
             ->cerrar();
 
+    }
 
-        //$this->insertar($log);
+    function log () {
+
+        $this->_registrar();
+        Debug::imprimir("Capturada Excepcion en Log");
+
 
     }
 
