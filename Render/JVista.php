@@ -6,15 +6,17 @@
 
 namespace Jida\Render;
 
+use Jida\Core\Rutas;
 use Jida\Helpers as Helpers;
+use Jida\Render\Inputs\Estructura;
 
 class JVista {
 
     //Contenido Vista============================================
     private $dataVista;
-    var $ordenamientos = TRUE;
-    var $buscador = FALSE;
-    private $_debug = FALSE;
+    var $ordenamientos = true;
+    var $buscador = false;
+    private $_debug = false;
     private $nroFilas = 10;
     private $_ce = "10001";
     private $paginasMostradas = 7;
@@ -22,7 +24,7 @@ class JVista {
     private $titulos = [];
     private $titulosKey = [];
     private $contenedorAcciones;
-    private $accionesFila = FALSE;
+    private $accionesFila = false;
     private $_parametrosGET = [];
     /**
      * Permite definir los campos de ordenamiento para cada titulo
@@ -72,7 +74,7 @@ class JVista {
     /**
      * @var mixed acciones Permite definir acciones para toda la vista.
      */
-    private $acciones = FALSE;
+    private $acciones = false;
     #==============================================================
     # Opciones de funcionabilidad
     #==============================================================
@@ -84,7 +86,7 @@ class JVista {
     var $controlFila = 3;
     var $funcionNoRegistros;
     private $parametroPagina = "pagina";
-    private $usaBD = TRUE;
+    private $usaBD = true;
     /**
      * Parametros pasados como querystring y que son manipulados por el objeto
      *
@@ -99,13 +101,13 @@ class JVista {
      * @var boolean $analizaURL default true
      * @link /estructura-urls/
      */
-    var $analizaURL = TRUE;
+    var $analizaURL = true;
 
     /**
      * @var string mensajeNoRegistros Mensaje a mostrar si no se consigues registros
      */
     private $mensajeNoRegistros = "No se han conseguido Registros";
-    private $htmlPersonalizado = FALSE;
+    private $htmlPersonalizado = false;
     /**
      * @var array $filtros Permite definir los objetos de filtro
      */
@@ -216,33 +218,35 @@ class JVista {
     /**
      * Contructor de Jvista
      *
-     * @param mixed  $ejecucion Arreglo de datos o string con nombre del Objeto y metodo sobre el cual se obtendrá la
+     * @param mixed $ejecucion Arreglo de datos o string con nombre del Objeto y metodo sobre el cual se obtendrá la
      *                          información a usar en la vista El valor retornado por el objeto debe ser el objeto
      *
-     * @param array  $params    Arreglo de parametros de configuracion, por ejemplo titulos
-     * @param string $titulo    Titulo de la vista
+     * @param array $params Arreglo de parametros de configuracion, por ejemplo titulos
+     * @param string $titulo Titulo de la vista
      *
      */
-    function __construct($ejecucion, $parametros = [], $titulo = "") {
+    function __construct ($ejecucion, $parametros = [], $titulo = "") {
 
         if (is_array($ejecucion)) {
-            $this->usaBD = FALSE;
+            $this->usaBD = false;
             $this->tabla = new TablaSelector($ejecucion);
             $this->data = $ejecucion;
 
-//			$this->_definirKeys($ejecucion);
+            //			$this->_definirKeys($ejecucion);
 
-        } else {
+        }
+        else {
             $this->ejecucion = $ejecucion;
             $dataConsulta = explode(".", $ejecucion);
             $this->tabla = new TablaSelector();
 
-//			$this->_definirKeys($ejecucion);
+            //			$this->_definirKeys($ejecucion);
         }
 
         if (isset($_GET['pagina']))
             $this->paginaActual = $_GET['pagina'];
-        if (!empty($titulo)) $this->titulo = $titulo;
+        if (!empty($titulo))
+            $this->titulo = $titulo;
 
 
         $this->paginador = new ListaSelector();
@@ -259,7 +263,7 @@ class JVista {
         }
 
         if (array_key_exists($this->parametroPagina, $this->queryString))
-            $this->paginaActual = $this->queryString[ $this->parametroPagina ];
+            $this->paginaActual = $this->queryString[$this->parametroPagina];
 
         $this->establecerValoresDefault();
         $this->checkConfig();
@@ -273,24 +277,27 @@ class JVista {
      * Para el funcionamiento de este metodo el objeto debe usarse dentro del Framework JIDA.
      * @method validarPaginaConsulta
      */
-    private function validarPaginaConsulta() {
+    private function validarPaginaConsulta () {
+
+        $url = \Jida\Manager\Estructura::url();
 
         if ($this->analizaURL) {
-            $urlActual = URL_BASE . Helpers\Sesion::obt('URL_ACTUAL_COMPLETA');
+            $url = $url . Helpers\Sesion::obt('URL_ACTUAL_COMPLETA');
 
         }
-
-        $this->paginaConsulta = URL_BASE . JD('URL_COMPLETA');
-        $query = JD('QueryString');
+        $url = \Jida\Manager\Estructura::url();
+        $this->paginaConsulta = $url;
+        $query = $_GET;
         $this->queryString = (empty($query)) ? [] : $query;
 
     }
 
-    private function establecerValoresDefault() {
+    private function establecerValoresDefault () {
 
         if (empty($this->titulo)) {
             $nombre = explode(".", $this->ejecucion)[0];
-        } else {
+        }
+        else {
             $nombre = $this->titulo;
         }
 
@@ -301,11 +308,11 @@ class JVista {
 
     }
 
-    private function realizarConsulta() {
+    private function realizarConsulta () {
 
         $dataConsulta = explode(".", $this->ejecucion);
 
-        $this->_imprimir("--realizarConsulta", $dataConsulta, FALSE);
+        $this->_imprimir("--realizarConsulta", $dataConsulta, false);
         if (class_exists($dataConsulta[0])) {
 
             $this->objeto = new $dataConsulta[0];
@@ -314,12 +321,15 @@ class JVista {
 
                 if (method_exists($dataConsulta[0], $dataConsulta[1])) {
                     $this->obtInformacionObjeto($dataConsulta[1]);
-                } else throw new \Exception("No existe el metodo pasado", 1);
+                }
+                else throw new \Exception("No existe el metodo pasado", 1);
 
-            } else {
+            }
+            else {
                 $this->obtInformacionObjeto();
             }
-        } else {
+        }
+        else {
             throw new \Exception("No existe el objeto pasado: " . $dataConsulta[0], 2);
         }
 
@@ -332,7 +342,7 @@ class JVista {
      * @param array $data
      *
      */
-    private function procesarArrayData($data) {
+    private function procesarArrayData ($data) {
 
         $this->totalRegistros = count($data);
         $this->registros = $data;
@@ -350,30 +360,34 @@ class JVista {
      * @method obtInformacionObjeto
      *
      */
-    private function obtInformacionObjeto($metodo = FALSE) {
+    private function obtInformacionObjeto ($metodo = false) {
 
         $offset = ($this->paginaActual <= 1) ? 0 : (($this->paginaActual - 1) * $this->nroFilas);
 
         if ($metodo) {
             $this->objeto->$metodo();
-        } else {
+        }
+        else {
 
             if (count($this->campos) < 1) {
                 $this->campos = array_keys($this->objeto->obtenerPropiedades());
                 $this->objeto->consulta();
-            } else {
+            }
+            else {
                 $this->objeto->consulta($this->campos);
             }
         }
-        $this->_imprimir($this->paginaActual, $_GET, TRUE);
+        $this->_imprimir($this->paginaActual, $_GET, true);
         if (count($this->clausulas) > 0) {
             foreach ($this->clausulas as $key => $parametros) {
                 foreach ($parametros as $clausula => $param) {
                     if (is_array($param)) {
                         call_user_func_array([$this->objeto,
                                               $clausula
-                                             ], $param);
-                    } else {
+                                             ],
+                                             $param);
+                    }
+                    else {
                         $this->objeto->{$key}($parametros);
                     }
                 }
@@ -384,14 +398,15 @@ class JVista {
 
             $filtros = [];
             foreach ($this->buscador as $key => $filtro) {
-                $filtros[ $filtro ] = $_GET['busqueda'];
+                $filtros[$filtro] = $_GET['busqueda'];
             }
 
             $this->objeto->like($filtros, 'or');
 
         }
         if (isset($_GET['ordenar'])) {
-            $campoOrden = (array_key_exists($_GET['ordenar'], $this->camposOrder)) ? $this->camposOrder[ $_GET['ordenar'] ] : $_GET['ordenar'];
+            $campoOrden = (array_key_exists($_GET['ordenar'],
+                                            $this->camposOrder)) ? $this->camposOrder[$_GET['ordenar']] : $_GET['ordenar'];
             $this->_campoOrdenar = $campoOrden;
             if (isset($_GET['tipo_orden']) and in_array($_GET['tipo_orden'], $this->_ordenamientos)) {
                 $this->_tipoOrdenamiento = $_GET['tipo_orden'];
@@ -402,7 +417,7 @@ class JVista {
         $keysFiltro = array_keys($this->filtros);
         foreach ($keysFiltro as $key => $value) {
             if (array_key_exists($value, $_GET)) {
-                $this->objeto->filtro([$value => $_GET[ $value ]]);
+                $this->objeto->filtro([$value => $_GET[$value]]);
             }
         }
 
@@ -419,7 +434,7 @@ class JVista {
 
     }
 
-    private function _ejecutarFuncionData() {
+    private function _ejecutarFuncionData () {
 
         if (!empty($this->_funcionData)) {
             $_funcionData = $this->_funcionData;
@@ -433,7 +448,7 @@ class JVista {
      * obtiene los nombres de los campos consultados a base de datos
      * @method obtenerNombreCampos
      */
-    private function obtenerNombreCampos() {
+    private function obtenerNombreCampos () {
 
         $i = 0;
         while ($i < $this->objeto->bd->totalField($this->objeto->bd->result)) {
@@ -448,7 +463,7 @@ class JVista {
      * requeridos.
      * @method obtenerConsultaPaginada
      */
-    private function obtConsultaPaginada() {
+    private function obtConsultaPaginada () {
 
         $offset = ($this->paginaActual <= 1) ? 0 : (($this->paginaActual - 1) * $this->filasPorPagina);
         $this->query = $this->bd->addLimit($this->filasPorPagina, $offset, $this->queryReal);
@@ -462,7 +477,7 @@ class JVista {
      *
      * @deprecated 0.7
      */
-    function obtenerVista($function = "") {
+    function obtenerVista ($function = "") {
 
         return $this->render($function);
     }
@@ -474,13 +489,14 @@ class JVista {
      * @param function $function Funcion a ejecutar sobre la data obtenida de base de datos
      *
      */
-    function render($function = "", $parametrosFuncion = []) {
+    function render ($function = "", $parametrosFuncion = []) {
 
         if (!empty($function)) {
             $this->_funcionData = $function;
 
             if (!is_array($parametrosFuncion)) {
-                throw new Excepcion("Los parametros para la funcion del render deben ser pasados en un arreglo", $this->_ce . "0020");
+                throw new Excepcion("Los parametros para la funcion del render deben ser pasados en un arreglo",
+                                    $this->_ce . "0020");
             }
 
             $this->_parametrosFuncionData = $parametrosFuncion;
@@ -488,7 +504,8 @@ class JVista {
 
         if ($this->usaBD) {
             $this->realizarConsulta();
-        } else {
+        }
+        else {
             $this->procesarArrayData($this->data);
         }
 
@@ -518,7 +535,8 @@ class JVista {
 
             $seccionVista->innerHTML($vista);
 
-        } else {
+        }
+        else {
 
             $seccionVista->innerHTML($vista . $this->procesarNoRegistros());
         }
@@ -527,7 +545,7 @@ class JVista {
 
     }
 
-    private function checkMensajes() {
+    private function checkMensajes () {
 
         if (Helpers\Sesion::obt('__msjVista')) {
 
@@ -535,7 +553,7 @@ class JVista {
             if (is_array($msj) and array_key_exists('id', $msj) and $msj['id'] == $this->idVista) {
                 Helpers\Sesion::destruir('__msjVista');
 
-                return Selector::crear('div.col-md-12', NULL, $msj['msj']);
+                return Selector::crear('div.col-md-12', null, $msj['msj']);
             }
         }
 
@@ -546,7 +564,7 @@ class JVista {
      * Renderiza el titulo de la vista
      * @method checkTitulo
      */
-    private function checkTitulo() {
+    private function checkTitulo () {
 
         if (!empty($this->titulo)) {
             $attrSeccion = (array_key_exists('section', $this->configTitulo)) ? $this->configTitulo['section'] : [];
@@ -560,56 +578,61 @@ class JVista {
         }
     }
 
-    private function procesarControlFila() {
+    private function procesarControlFila () {
 
         if ($this->controlFila) {
 
-            $this->tabla->funcionColumna(0, function (Selector $selector, $control = 1) {
+            $this->tabla->funcionColumna(0,
+                function (Selector $selector, $control = 1) {
 
-                $types = [1   => 'radio',
-                          '2' => 'checkbox',
-                          3   => "hidden"
-                ];
+                    $types = [1   => 'radio',
+                              '2' => 'checkbox',
+                              3   => "hidden"
+                    ];
 
-                if ($this->tabla->tHead() instanceof Selector) {
-                    $columnasTitulo = $this->tabla->tHead()->Fila->columnas();
-                    if ($control != 3) {
-                        $inputTitle = new Selector('input',
-                                                   ["type"        => $types[ $control ],
-                                                    'id'          => 'obtTotalCol',
-                                                    'data-jvista' => 'seleccionarTodas',
-                                                    'name'        => 'seleccionar',
-                                                    'value'       => ""
-                                                   ]);
-                        $columnasTitulo[0]->innerHTML($inputTitle->render());
-                    } else {
+                    if ($this->tabla->tHead() instanceof Selector) {
+                        $columnasTitulo = $this->tabla->tHead()->Fila->columnas();
+                        if ($control != 3) {
+                            $inputTitle = new Selector('input',
+                                                       ["type"        => $types[$control],
+                                                        'id'          => 'obtTotalCol',
+                                                        'data-jvista' => 'seleccionarTodas',
+                                                        'name'        => 'seleccionar',
+                                                        'value'       => ""
+                                                       ]);
+                            $columnasTitulo[0]->innerHTML($inputTitle->render());
+                        }
+                        else {
 
-                        $input = new Selector('input', [
-                            "type"  => $types[ $control ],
-                            'id'    => 'radio' . $selector->innerHTML(),
-                            'value' => $selector->innerHTML(),
-                            'name'  => $this->nameInputLinea,
-                        ]);
-                        $selector->attr('style', 'display:none');
-                        $selector->innerHTML($input->render());
+                            $input = new Selector('input', [
+                                "type"  => $types[$control],
+                                'id'    => 'radio' . $selector->innerHTML(),
+                                'value' => $selector->innerHTML(),
+                                'name'  => $this->nameInputLinea,
+                            ]);
+                            $selector->attr('style', 'display:none');
+                            $selector->innerHTML($input->render());
+                        }
+
                     }
 
-                }
-
-            }, $this->controlFila);
+                },
+                                         $this->controlFila);
         }
     }
 
-    private function procesarFormBusqueda() {
+    private function procesarFormBusqueda () {
 
-        if ($this->totalRegistros < 1) return "";
+        if ($this->totalRegistros < 1)
+            return "";
         if (is_array($this->buscador)) {
             $div = new Selector('section');
             $valorBusqueda = "";
             if (isset($_GET['busqueda'])) {
                 $valorBusqueda = $_GET['busqueda'];
                 $url = $this->urlFiltro(['busqueda' => $_GET['busqueda']]);
-            } else {
+            }
+            else {
                 $url = $this->urlFiltro();
             }
             $inner = '
@@ -633,7 +656,7 @@ class JVista {
      * Verifica si se agregaron acciones a una fila
      * @method procesarAccionesFila
      */
-    private function procesarAccionesFila() {
+    private function procesarAccionesFila () {
 
         if (is_array($this->accionesFila) and count($this->accionesFila) > 0) {
 
@@ -643,11 +666,11 @@ class JVista {
                 if (is_array($acciones)) {
                     $keys = array_keys($fila->columnas);
 
-                    $colIni = $fila->columnas[ $keys[0] ];
+                    $colIni = $fila->columnas[$keys[0]];
 
                     foreach ($acciones as $key => $accion) {
 
-                        $addFila = TRUE;
+                        $addFila = true;
                         $accionFila = clone $accion;
 
                         $config = $this->configAccionesFila;
@@ -668,40 +691,45 @@ class JVista {
 
                                     //Helpers\Debug::imprimir('$href', $href);
 
-                                    array_walk($href, function (&$valor, $clave, $columnas) {
+                                    array_walk($href,
+                                        function (&$valor, $clave, $columnas) {
 
-//                                        Helpers\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
-//                                        if(count($this->keys) > 0) {
-//											$expReg = '{[' . implode('|', $this->keys) . ']}';
-//										}else{
-//											$expReg = '{[(.*){1}]}';
-//										}
+                                            //                                        Helpers\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
+                                            //                                        if(count($this->keys) > 0) {
+                                            //											$expReg = '{[' . implode('|', $this->keys) . ']}';
+                                            //										}else{
+                                            //											$expReg = '{[(.*){1}]}';
+                                            //										}
 
 
-//                                        if (preg_match('/' . $expReg . '/', $valor)) {
+                                            //                                        if (preg_match('/' . $expReg . '/', $valor)) {
                                             if (preg_match('/{(.*)}{1}/', $valor)) {
 
-                                            $valor = str_replace(['{',
-                                                                  '}'
-                                                                 ], "", $valor);
+                                                $valor = str_replace(['{',
+                                                                      '}'
+                                                                     ],
+                                                                     "",
+                                                                     $valor);
 
-                                            if (array_key_exists($valor, $columnas)) {
-                                                $valor = $columnas[ $valor ]->innerHTML();
+                                                if (array_key_exists($valor, $columnas)) {
+                                                    $valor = $columnas[$valor]->innerHTML();
+                                                }
+
+                                                //                                            Helpers\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
                                             }
 
-//                                            Helpers\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
-                                        }
+                                            //                                        Helpers\Debug::imprimir('FUERA', $valor);
 
-//                                        Helpers\Debug::imprimir('FUERA', $valor);
-
-                                    }, $fila->columnas);
+                                        },
+                                               $fila->columnas);
 
                                     $href = '/' . implode('/', $href) . '/';
                                     $accionFila->attr($clave, $href);
                                 }
 
-                            } else {
-                                $addFila = FALSE;
+                            }
+                            else {
+                                $addFila = false;
                             }
                         }
 
@@ -711,15 +739,17 @@ class JVista {
                         }
                     }
 
-//                    Helpers\Debug::imprimir('$contenido-------', $contenido,true);
+                    //                    Helpers\Debug::imprimir('$contenido-------', $contenido,true);
 
                     return $contenido;
 
-                } else {
+                }
+                else {
                     throw new \Exception("Las acciones pasadas a la fila no son validas", 1);
                 }
 
-            }, $this->accionesFila);
+            },
+                $this->accionesFila);
         }
     }
 
@@ -732,28 +762,30 @@ class JVista {
      * @return bool
      *
      */
-    private function _validarPerfilesFila($accionFila) {
+    private function _validarPerfilesFila ($accionFila) {
 
         if (array_key_exists('perfiles', $accionFila->attr)) {
 
             $perfiles = $accionFila->attr['perfiles'];
             if (is_array($perfiles)) {
 
-                $bandera = FALSE;
+                $bandera = false;
                 foreach ($perfiles as $perfil):
                     if (Helpers\Sesion::checkPerfilAcceso($perfil)) {
-                        $bandera = TRUE;
+                        $bandera = true;
                     }
                 endforeach;
 
                 return $bandera;
 
-            } else {
+            }
+            else {
                 return Helpers\Sesion::checkPerfilAcceso($perfiles);
             }
 
-        } else {
-            return TRUE;
+        }
+        else {
+            return true;
         }
     }
 
@@ -764,9 +796,9 @@ class JVista {
      * y hace el renderizado correspondiente
      * @method crearTitulos
      */
-    private function crearTitulos() {
+    private function crearTitulos () {
 
-        $tieneOpciones = ($this->accionesFila) ? TRUE : FALSE;
+        $tieneOpciones = ($this->accionesFila) ? true : false;
         if ($tieneOpciones) {
             array_push($this->titulos, $this->configFilaOpciones['html']);
         }
@@ -789,55 +821,65 @@ class JVista {
 
         if ($this->ordenamientos) {
 
-            if ($tieneOpciones) $columnasTitulos--;
+            if ($tieneOpciones)
+                $columnasTitulos--;
 
-            if ($tieneOpciones) $totalLinks--;
+            if ($tieneOpciones)
+                $totalLinks--;
             $camposOrden = $this->obtParametrosOrden();
 
             for ($i = 0; $i < $totalLinks; $i++) {
-                if ($i == 0 and $this->controlFila == 3) continue;
+                if ($i == 0 and $this->controlFila == 3)
+                    continue;
 
-                $columnasTitulos[ $i ]->ejecutarFuncion(
+                $columnasTitulos[$i]->ejecutarFuncion(
                     function (Selector $col, $indice, $titulos, $pagina, $jvista) {
 
                         $indiceMenu = $indice;
                         if (array_key_exists($indiceMenu, $titulos)) {
                             $ordenamiento = $this->_tipoOrdenamiento;
-                            if ($titulos[ $indiceMenu ] == $jvista->_campoOrdenar) {
+                            if ($titulos[$indiceMenu] == $jvista->_campoOrdenar) {
                                 $ordenamiento = ($this->_tipoOrdenamiento == 'asc') ? 'desc' : 'asc';
                             }
                             $params = ['href' => $this->procesarURL([
-                                                                        'ordenar'    => $titulos[ $indiceMenu ],
+                                                                        'ordenar'    => $titulos[$indiceMenu],
                                                                         'tipo_orden' => $ordenamiento,
                                                                         'pagina'     => $this->paginaActual
-                                                                    ], 0)
+                                                                    ],
+                                                                    0)
                             ];
                             $col->envolver('a', $params);
                         }
 
-                    }, $i, $camposOrden, $this->paginaConsulta, $this);
+                    },
+                    $i,
+                    $camposOrden,
+                    $this->paginaConsulta,
+                    $this);
             }
         }//fin ordenamientos
 
     }
 
-    private function obtParametrosOrden() {
+    private function obtParametrosOrden () {
 
         $params = [];
 
-        if (!$this->camposOrder) return $this->titulosKey;
+        if (!$this->camposOrder)
+            return $this->titulosKey;
         foreach ($this->titulosKey as $key => $value) {
             if (array_key_exists($value, $this->camposOrder)) {
-                $params[ $key ] = $this->camposOrder[ $value ];
-            } else {
-                $params[ $key ] = $value;
+                $params[$key] = $this->camposOrder[$value];
+            }
+            else {
+                $params[$key] = $value;
             }
         }
 
         return $params;
     }
 
-    function procesarAcciones() {
+    function procesarAcciones () {
 
         $inner = "";
         if (is_array($this->acciones)) {
@@ -859,7 +901,7 @@ class JVista {
      * Genera el páginador de la vista
      * @method crearPaginador
      */
-    private function crearPaginador() {
+    private function crearPaginador () {
 
         $division = $this->totalRegistros / $this->nroFilas;
         $this->totalPaginas = is_float($this->totalRegistros) ? ceil($division) : ceil($this->totalRegistros / $this->nroFilas);
@@ -890,7 +932,8 @@ class JVista {
                                 'class' => $this->configPaginador['classPaginaActual']
                             ])
                     ->contenido->attr(['href' => $this->procesarURL(['pagina' => $i])]);
-            } else {
+            }
+            else {
                 $item->attr([
                                 'class' => $this->configPaginador['classLink']
                             ])
@@ -917,7 +960,7 @@ class JVista {
         //----------------------------------------------------------
     }
 
-    function accionesFila($acciones) {
+    function accionesFila ($acciones) {
 
         if (is_array($acciones)) {
 
@@ -932,7 +975,7 @@ class JVista {
                 $attrAccion = array_merge($this->configAccionesFila, $accion, ['span' => ["class" => $accion['span']]]);
 
                 $nuevaAccion = new AccionVistaSelector("", $attrAccion);
-                $this->accionesFila[ $orden ] = $nuevaAccion;
+                $this->accionesFila[$orden] = $nuevaAccion;
 
             }
 
@@ -946,7 +989,7 @@ class JVista {
      * @method acciones
      * @param  array $acciones
      */
-    function acciones($acciones = FALSE) {
+    function acciones ($acciones = false) {
 
         if (is_array($acciones)) {
 
@@ -954,7 +997,7 @@ class JVista {
 
                 $attrAccion = array_merge($this->configAcciones, $accion);
                 $nuevaAccion = new AccionVistaSelector($key, $attrAccion);
-                $this->acciones[ $nuevaAccion->nombreAccion() ] = $nuevaAccion;
+                $this->acciones[$nuevaAccion->nombreAccion()] = $nuevaAccion;
 
             }
 
@@ -963,7 +1006,7 @@ class JVista {
         return $this;
     }
 
-//Geters===========================================
+    //Geters===========================================
 
     /**
      * Retorna el objeto Table Selector
@@ -975,7 +1018,7 @@ class JVista {
      * @see      Table
      * @link     Selector
      */
-    function tabla() {
+    function tabla () {
 
         return $this->tabla;
     }
@@ -985,7 +1028,7 @@ class JVista {
      *
      * @method checkGlobals
      */
-    private function checkGlobals() {
+    private function checkGlobals () {
 
         if (array_key_exists('configPaginador', $GLOBALS)) {
             $this->configPaginador = $GLOBALS['configPaginador'];
@@ -1015,7 +1058,7 @@ class JVista {
      *    ]);
      *
      */
-    function addFiltros($filtros) {
+    function addFiltros ($filtros) {
 
         if (is_array($filtros)) {
             $this->filtros = $filtros;
@@ -1045,7 +1088,7 @@ class JVista {
 
                     $link->innerHTML($itemFiltro);
                     $item = $listaItems->addItem($link->render());
-                    if (array_key_exists($campoFiltro, $_GET) and $_GET[ $campoFiltro ] == $idFiltro) {
+                    if (array_key_exists($campoFiltro, $_GET) and $_GET[$campoFiltro] == $idFiltro) {
 
                         $item->addClass('active');
                     }
@@ -1061,7 +1104,7 @@ class JVista {
 
     }
 
-    function renderFiltros() {
+    function renderFiltros () {
 
         if (count($this->filtros) > 0) {
             return Selector::crear('div.row', [], Selector::crear('div.col-md-12', [], $this->listaFiltros->render()));
@@ -1072,13 +1115,14 @@ class JVista {
      * Retorna la url para un filtro de la vista
      * @method urlFiltro
      */
-    private function urlFiltro($params = []) {
+    private function urlFiltro ($params = []) {
 
         if (is_array($params)) {
             $querystring = "";
             $i = 0;
             foreach ($params as $key => $value) {
-                if ($i > 0) $querystring .= "&";
+                if ($i > 0)
+                    $querystring .= "&";
                 if (!strpos($this->paginaConsulta, '?'))
                     $querystring .= "?";
                 $querystring .= $key . "=" . $value;
@@ -1087,29 +1131,32 @@ class JVista {
 
             // Debug::string($this->paginaConsulta,1);
             return $this->paginaConsulta . $querystring;
-        } else {
+        }
+        else {
             throw new \Exception("No se han pasado bien los parametros para la url", 1);
 
         }
     }
 
-    function procesarNoRegistros() {
+    function procesarNoRegistros () {
 
         if (!empty($this->funcionNoRegistros)) {
             return call_user_func_array($this->funcionNoRegistros, [$this]);
-        } else {
-            if ($this->htmlPersonalizado) return Selector::crear('div.col-md-12', NULL, $this->mensajeNoRegistros);
+        }
+        else {
+            if ($this->htmlPersonalizado)
+                return Selector::crear('div.col-md-12', null, $this->mensajeNoRegistros);
 
-            return Selector::crear('div.col-md-12', NULL, Helpers\Mensajes::crear('alert', $this->mensajeNoRegistros));
+            return Selector::crear('div.col-md-12', null, Helpers\Mensajes::crear('alert', $this->mensajeNoRegistros));
         }
     }
 
-    function obtTotalRegistros() {
+    function obtTotalRegistros () {
 
         return $this->totalRegistros;
     }
 
-    function obtConsulta() {
+    function obtConsulta () {
 
         $this->objeto->imprimir();
     }
@@ -1117,16 +1164,17 @@ class JVista {
     /**
      * Crea mensajes a mostrar en la vista
      *
-     * @param string  $msj         Mensaje a mostrar
-     * @param string  $idVista     Identificador
-     * @param string  $tipoMensaje Debe corresponder a una clase de mensajes configurara
+     * @param string $msj Mensaje a mostrar
+     * @param string $idVista Identificador
+     * @param string $tipoMensaje Debe corresponder a una clase de mensajes configurara
      * @param jidaUrl $redireccion Url a la cual redireccionar
      */
-    static function msj($idVista, $tipo, $msj, $redireccion = "") {
+    static function msj ($idVista, $tipo, $msj, $redireccion = "") {
 
-        Helpers\Sesion::set('__msjVista', ['msj' => Helpers\Mensajes::crear($tipo, $msj),
-                                           'id'  => $idVista
-        ]);
+        Helpers\Sesion::set('__msjVista',
+                            ['msj' => Helpers\Mensajes::crear($tipo, $msj),
+                             'id'  => $idVista
+                            ]);
         if (!empty($redireccion)) {
             \Jida\Helpers\Rutas::redireccionar($redireccion);
         }
@@ -1137,16 +1185,16 @@ class JVista {
      * Permite personalizar un mensaje en caso de no haber registros
      * @method addMensajeNoRegistro
      *
-     * @param string $msj  Mensaje a mostrar. Puede ser un string o una cadena HTML
-     * @param array  $data Data adicional para el mensaje.
+     * @param string $msj Mensaje a mostrar. Puede ser un string o una cadena HTML
+     * @param array $data Data adicional para el mensaje.
      *
      * @see self::mensajeRegistros
      * Las opciones a pasar son : cssContendor,link,cssLink,txtLink
      */
-    function addMensajeNoRegistros($msj, $cssDiv = []) {
+    function addMensajeNoRegistros ($msj, $cssDiv = []) {
 
         $dataDefault = [
-            'link'          => FALSE,
+            'link'          => false,
             'cssContenedor' => 'alert alert-warning',
             'attrLink'      => [],
             'cssLink'       => 'btn btn-default pull-right',
@@ -1157,7 +1205,7 @@ class JVista {
         $dataDefault = array_merge($dataDefault, $cssDiv);
 
         if ($dataDefault['link']) {
-            $this->htmlPersonalizado = TRUE;
+            $this->htmlPersonalizado = true;
             $msj .= Selector::crear('a.' . $dataDefault['cssLink'],
                                     array_merge(['href' => $dataDefault['link']], $dataDefault['attrLink']),
                                     $dataDefault['txtLink']);
@@ -1172,29 +1220,29 @@ class JVista {
      * @method clausula
      *
      * @param string $nombreClausula Nombre de la clausula a ejecutar
-     * @param mixed  $valores        Tantos valores como requiera $nombreClausula
+     * @param mixed $valores Tantos valores como requiera $nombreClausula
      */
-    function clausula($nombreClausula, $valores) {
+    function clausula ($nombreClausula, $valores) {
 
         $argumentos = func_num_args();
 
         if ($argumentos == 2)
-            $this->clausulas[ $nombreClausula ] = $valores;
-        elseif ($argumentos > 2) {
+            $this->clausulas[$nombreClausula] = $valores;
+        else if ($argumentos > 2) {
             $argumentos = func_get_args();
             $params = [];
             foreach ($argumentos as $key => $value) {
                 if ($key != 0)
-                    $params[ $nombreClausula ][] = $value;
+                    $params[$nombreClausula][] = $value;
             }
             // $this->clausulas=$params;
-            $this->clausulas[ $nombreClausula ] = $params;
+            $this->clausulas[$nombreClausula] = $params;
         }
         // Helpers\Debug::imprimir('$this->clausulas',$this->clausulas,true);
     }
 
 
-    function funcionFila($numeroFila, $function) {
+    function funcionFila ($numeroFila, $function) {
 
     }
 
@@ -1204,11 +1252,11 @@ class JVista {
      * @since 1.4
      * @method procesarURL
      *
-     * @param  array   $params Parametros a agregar en el querystring del link
-     * @param  boolean $print  Solo para uso de Debug, realiza impresion de valores y corta la ejecucion de codigo.
+     * @param  array $params Parametros a agregar en el querystring del link
+     * @param  boolean $print Solo para uso de Debug, realiza impresion de valores y corta la ejecucion de codigo.
      *
      */
-    private function procesarURL($params, $print = FALSE) {
+    private function procesarURL ($params, $print = false) {
 
         $params = array_merge($this->_parametrosGET, $params);
 
@@ -1216,7 +1264,7 @@ class JVista {
         return $this->paginaConsulta . '?' . http_build_query($params);
     }
 
-    private function checkConfig($config = []) {
+    private function checkConfig ($config = []) {
 
         if (empty($config)) {
             if (array_key_exists('configJVista', $GLOBALS))
@@ -1238,17 +1286,20 @@ class JVista {
      * @since 1.4
      *
      * @param mixed $configuracion valor o arreglo de valores
-     * @param mixed $valor         [opcional] Si $configuracion es un string $valor sera usado como asignacion
+     * @param mixed $valor [opcional] Si $configuracion es un string $valor sera usado como asignacion
      *                             para la variable de configuracion
      */
-    function configuracion($configuracion, $valor = "") {
+    function configuracion ($configuracion, $valor = "") {
 
         if (is_array($configuracion)) {
             foreach ($configuracion as $key => $value) {
-                if (property_exists($this, $key)) $this->{$key} = $value;
+                if (property_exists($this, $key))
+                    $this->{$key} = $value;
             }
-        } else {
-            if (property_exists($this, $configuracion)) $this->{$configuracion} = $valor;
+        }
+        else {
+            if (property_exists($this, $configuracion))
+                $this->{$configuracion} = $valor;
         }
     }
 
@@ -1258,7 +1309,7 @@ class JVista {
      *
      * @param $plantilla ;
      */
-    private function _obtTemplate($template, $params) {
+    private function _obtTemplate ($template, $params) {
 
         foreach ($params as $key => $value) {
             $template = str_replace("{{:" . $key . "}}", $value, $template);
@@ -1267,19 +1318,20 @@ class JVista {
         return $template;
     }
 
-    protected function _imprimir() {
+    protected function _imprimir () {
 
         $params = func_get_args();
         //array_push($params,$cortar);
         if ($this->_debug) {
             call_user_func_array(['\Jida\Helpers\Debug',
                                   'imprimir'
-                                 ], $params);
+                                 ],
+                                 $params);
         }
 
     }
 
-    private function _procesarParametros() {
+    private function _procesarParametros () {
 
         $params = $_GET;
         if (array_key_exists('pagina', $params))
@@ -1292,7 +1344,7 @@ class JVista {
     /**
      * Arma en un array las keys por las que se construye la tabla
      */
-    private function _definirKeys($data) {
+    private function _definirKeys ($data) {
 
         if (is_array($data) && count($data) > 0) {
             foreach ($data[0] as $key => $campo):
