@@ -31,6 +31,14 @@ class Estructura {
 
     }
 
+    /**
+     * Retorna la url actual de la aplicación en ejecución
+     *
+     * @method url
+     *
+     * @since 0.6.1
+     * @return mixed
+     */
     static function url () {
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
