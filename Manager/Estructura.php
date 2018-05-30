@@ -21,7 +21,11 @@ class Estructura {
     static function path () {
 
         $actual = explode(DS, __DIR__);
-        $posicion = array_search(self::DIR_JIDA, $actual);
+
+        $pathjida = (defined('\DIR_JF')) ? \DIR_JF : self::DIR_JIDA;
+
+
+        $posicion = array_search($pathjida, $actual);
         $directorio = implode("/", array_chunk($actual, $posicion)[0]);
 
         self::url();
