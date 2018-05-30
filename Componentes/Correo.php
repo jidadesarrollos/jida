@@ -15,8 +15,11 @@ use App\Config as Config;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
 use Jida\Helpers\Directorios as Directorios;
+use Jida\Manager\Estructura;
 
-require_once 'vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+$path = Estructura::path();
+
+require_once $path . '/Framework/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 
 class Correo {
 

@@ -5,8 +5,8 @@ define("PS", PATH_SEPARATOR);
 define('ROOT', \Jida\Manager\Estructura::path());
 define('MODELO_USUARIO', '\Jida\Modelos\User');
 
-define('DIR_FRAMEWORK', ROOT . 'Framework' . DS);
-define('DIR_APP', ROOT . 'Aplicacion' . DS);
+define('DIR_FRAMEWORK', ROOT . DS. 'Framework' . DS);
+define('DIR_APP', ROOT . DS . 'Aplicacion' . DS);
 
 /**
  * @constant MANEJADOR_PARAMS

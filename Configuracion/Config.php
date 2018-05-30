@@ -18,12 +18,14 @@ class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
     const URL_BASE = '/jida/jidadesarrollos/';
-
     const ENTORNO_APP = 'dev';
     const ZONA_HORARIA = 'America/Caracas';
     const MODELO_USUARIO = '\Jida\Modelos\User';
     const LOGO_APP = '';
     const PATH_JIDA = "vendor";
+    const ENVIAR_EMAIL_ERROR = false;
+    const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
+
     /**
      * Variable para definicion de modulos dentro de la aplicación
      *

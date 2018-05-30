@@ -8,6 +8,8 @@
 
 namespace Jida\Manager;
 
+use App\Config\Configuracion;
+use Jida\Componentes\Correo;
 use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Helpers\Debug;
@@ -21,6 +23,7 @@ class Excepcion {
     use GeneradorCodigo;
     protected $ruta;
     protected $excepcion;
+    protected $txtLog;
 
     const PLANTILLAS_APP = 'Aplicacion/plantillas/';
 
@@ -72,6 +75,12 @@ class Excepcion {
                            $detalle
                        ]);
 
+        $this->txtLog = implode("<br/>", [$codigo, $mensaje, $detalle]);
+
+        if (Configuracion::ENVIAR_EMAIL_ERROR) {
+            $this->_enviarEmail();
+        }
+
         $this
             ->crear($this->nombreArchivo, "a+")
             ->escribir($log)
@@ -114,6 +123,20 @@ class Excepcion {
         Data::inicializar($data);
         echo $layout->render($vista);
 
+
+    }
+
+    private function _enviarEmail () {
+
+        $destinatario = Configuracion::EMAIL_SOPORTE;
+        $detalle_error = str_replace("\r\n", "<br/>", $this->txtLog);
+
+        $correo = new Correo();
+        $correo->plantilla("error");
+        $correo->data(['aplicacion' => Configuracion::NOMBRE_APP, 'detalle_error' => $detalle_error]);
+        $correo->enviar($destinatario, "Error generado en " . Configuracion::NOMBRE_APP);
+
+        return $this;
 
     }
 

@@ -63,8 +63,6 @@ class Manager {
             $excepcion = new Excepcion($e);
             $excepcion->log();
 
-            //Helpers\Debug::imprimir("Capturada Excepcion en el manager", $e, true);
-
         }
 
 
