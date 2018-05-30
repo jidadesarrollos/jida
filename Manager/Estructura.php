@@ -22,9 +22,8 @@ class Estructura {
 
         $actual = explode(DS, __DIR__);
 
-        $pathjida = (defined('\DIR_JF')) ? \DIR_JF : self::DIR_JIDA;
-
-        Debug::imprimir($actual, $pathjida);
+        $conf = Config::obtener();
+        $pathjida = $conf::PATH_JIDA;
         $posicion = array_search($pathjida, $actual);
         $directorio = implode("/", array_chunk($actual, $posicion)[0]);
 

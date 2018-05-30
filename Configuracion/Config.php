@@ -23,6 +23,7 @@ class Config {
     const ZONA_HORARIA = 'America/Caracas';
     const MODELO_USUARIO = '\Jida\Modelos\User';
     const LOGO_APP = '';
+    const PATH_JIDA = "vendor";
     /**
      * Variable para definicion de modulos dentro de la aplicación
      *
