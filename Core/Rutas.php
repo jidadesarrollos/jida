@@ -50,7 +50,7 @@ class Rutas {
         $jida = !!(in_array('jida', $this->_solicitud));
         $path = Estructura::path();
 
-        if (count($this->_solicitud) > 1) {
+        if ((is_array($this->_solicitud) or is_object($this->_solicitud)) and count($this->_solicitud) > 1) {
 
             $modulo = array_shift($this->_solicitud);
             if ($jida) {
@@ -94,7 +94,7 @@ class Rutas {
     private function _analizarMenu () {
 
         $jida = !!(in_array('jida', $this->_solicitud));
-        if (count($this->_solicitud) > 1) {
+        if ((is_array($this->_solicitud) or is_object($this->_solicitud)) and count($this->_solicitud) > 1) {
 
             $modulo = array_shift($this->_solicitud);
             if ($jida) {

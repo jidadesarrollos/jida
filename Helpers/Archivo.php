@@ -113,7 +113,7 @@ class Archivo {
 
                 if (!empty($this->name)) {
                     $this->obtenerExtension();
-                    $this->totalArchivosCargados = count($file['tmp_name']);
+                    $this->totalArchivosCargados = is_array($file['tmp_name']) ? count($file['tmp_name']) : 1;
                     $this->validarCarga();
                     $this->finfo = finfo_open(FILEINFO_MIME_TYPE);
                     $this->mime = finfo_file($this->finfo, $this->tmp_name);
