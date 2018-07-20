@@ -13,6 +13,7 @@
 
 namespace Jida\Core\Manager;
 
+use App\Config\Configuracion;
 use Jida\Helpers as Helpers;
 use Jida\Render\Selector as Selector;
 use Jida\Core\Manager\JExcepcion as JExcepcion;
@@ -138,7 +139,7 @@ class Pagina {
         $this->_esJadmin = $jadmin;
         $this->_ruta = $ruta;
 
-        $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
+        $configuracion = Configuracion::obtener();
 
         if (is_object($configuracion)) {
 
@@ -981,7 +982,7 @@ class Pagina {
     function incluirLayout($archivo) {
 
         if (!$this->_tema) {
-            $this->_tema = $GLOBALS['configuracion']['tema'];
+            $this->_tema = $this->_conf->tema;
         }
 
         $directorio = 'Aplicacion/Layout/' . $this->_tema . '/';
