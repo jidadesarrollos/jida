@@ -219,7 +219,7 @@ class Controller {
     function __construct () {
 
         global $dataVista;
-        $this->_urlBase = (defined('URL_BASE')) ? URL_BASE : '';
+        $this->_urlBase = Configuracion::URL_BASE;
 
         /**
          * Si es capturada una excepción el objeto DAtaVista no es pasado a la segunda instancia
@@ -749,11 +749,11 @@ class Controller {
 
                 if (strpos(strtolower($this->_clase), 'jadmin')) {
 
-                    if (URL_APP != '/') {
-                        $parametros = explode(Configuracion::URL_ABSOLUTA, $urlController);
+                    if (Configuracion::URL_BASE != '') {
+                        $parametros = explode(Configuracion::URL_BASE, $urlController);
                         $parametros = $parametros[1];
 
-                        $urlController = Configuracion::URL_ABSOLUTA;
+                        $urlController = Configuracion::URL_BASE;
                         $urlController .= (strpos(strtolower($this->urlController()), 'jadmin')) ? '' : 'jadmin/';
                         $urlController .= $parametros;
 
