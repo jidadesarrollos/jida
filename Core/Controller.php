@@ -724,17 +724,17 @@ class Controller {
                     foreach ($urlExplode as $key => $value) {
                         $urlExplode[$key] = Cadenas::upperCamelCase($value);
                     }
-                    $ctrl = implode("\\", $urlExplode) . 'Controller';
+                    $ctrl = implode("\\", $urlExplode);
                 }
                 else {
                     $ctrl = preg_replace("/[a-zA-Z]+Controller$/",
-                                         Cadenas::upperCamelCase($url[0]) . 'Controller',
+                                         Cadenas::upperCamelCase($url[0]),
                                          $this->_clase);
                 }
 
                 $metodo = $url[1];
 
-                if (strpos($ctrl, 'JadminController')) {
+                if (strpos($ctrl, 'Jadmin')) {
                     $urlController = '/jadmin';
                 }
                 else {
@@ -747,6 +747,7 @@ class Controller {
 
                 $urlController = $this->urlController();
 
+                /*
                 if (strpos(strtolower($this->_clase), 'jadmin')) {
 
                     if (Configuracion::URL_BASE != '') {
@@ -762,7 +763,7 @@ class Controller {
                         $urlController = (strpos(strtolower($this->urlController()), 'jadmin')) ? '' : '/jadmin';
                         $urlController .= $this->urlController();
                     }
-                }
+                }*/
 
                 $ctrl = $this->_clase;
 
