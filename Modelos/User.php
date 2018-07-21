@@ -100,9 +100,10 @@ class User extends BD\DataModel {
         $clave = md5($clave);
 
         $result = $this->consulta()->filtro(
-            ['clave_usuario'  => $clave,
-             'nombre_usuario' => $usuario,
-             'validacion'     => 1
+            [
+                'clave_usuario'  => $clave,
+                'nombre_usuario' => $usuario,
+                'validacion'     => 1
             ])->fila();
         if (is_array($result) and count($result) > 0) {
 
@@ -191,8 +192,9 @@ class User extends BD\DataModel {
     function registrarSesion () {
 
         if (!empty($this->id_usuario)) {
-            $this->salvar(['ultima_session' => 'current_timestamp',
-                           'activo'         => 1
+            $this->salvar([
+                              'ultima_session' => 'current_timestamp',
+                              'activo'         => 1
                           ]);
             Helpers\Sesion::sessionLogin();
         }
@@ -276,10 +278,11 @@ class User extends BD\DataModel {
             $this->asociarPerfiles($perfiles);
         }
 
-        return ['idResultado' => $this->resultBD->idResultado(),
-                'ejecutado'   => $this->resultBD->ejecutado(),
-                'unico'       => $this->resultBD->esUnico(),
-                'validacion'  => $this->validacion
+        return [
+            'idResultado' => $this->resultBD->idResultado(),
+            'ejecutado'   => $this->resultBD->ejecutado(),
+            'unico'       => $this->resultBD->esUnico(),
+            'validacion'  => $this->validacion
         ];
     }
 
@@ -379,21 +382,24 @@ class User extends BD\DataModel {
 
     function obtUsers () {
 
-        $this->consulta(['id_usuario',
-                         'nombre_usuario',
-                         'fecha_creacion',
-                         'activo',
-                         'ultima_session'
+        $this->consulta([
+                            'id_usuario',
+                            'nombre_usuario',
+                            'fecha_creacion',
+                            'activo',
+                            'ultima_session'
                         ]);
         $this->join('s_usuarios_perfiles',
                     '',
-                    ['clave'          => 'id_usuario',
-                     'clave_relacion' => 'id_usuario'
+                    [
+                        'clave'          => 'id_usuario',
+                        'clave_relacion' => 'id_usuario'
                     ]);
         $this->join('s_estatus',
                     'estatus',
-                    ['clave'          => 'id_estatus',
-                     'clave_relacion' => 'id_estatus'
+                    [
+                        'clave'          => 'id_estatus',
+                        'clave_relacion' => 'id_estatus'
                     ]);
 
         return $this->obt('id_usuario');
