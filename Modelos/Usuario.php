@@ -8,7 +8,7 @@ use Exception;
 
 class Usuario extends BD\DataModel {
 
-    private $_ce = "130";
+    private $_ce = "900";
 
     var $id_usuario;
     var $nombre_usuario;
@@ -166,7 +166,7 @@ class Usuario extends BD\DataModel {
             $data = $this->bd->ejecutarQuery($query);
 
             if (is_array($data) and count($data) > 1) {
-                throw new Exception("No se han obtenido los perfiles del usuario", 1);
+                throw new Exception("No se han obtenido los perfiles del usuario", $this->_ce . 4);
             }
 
             while ($perfil = $this->bd->obtenerArrayAsociativo($data)) {
