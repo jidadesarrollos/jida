@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Codigo de Error: 1
+ */
 
 namespace Jida\Manager;
 
@@ -9,26 +11,59 @@ use Jida\Helpers\Debug;
 
 class Estructura {
 
-    public $_ce = 10009;
+    static public $_ce = 10009;
 
     const DIR_APP = 'Aplicacion';
-    const DIR_JIDA = 'Framework';
+    const DIR_JIDA = 'Jida';
 
     const NOMBRE_VISTA = 'index';
 
     private static $url;
 
-    static function path () {
+    static private function _obtenerDirectorio ($actual) {
 
         $actual = explode(DS, __DIR__);
-
         $conf = Config::obtener();
+
         $pathjida = $conf::PATH_JIDA;
         $posicion = array_search($pathjida, $actual);
-        $directorio = implode("/", array_chunk($actual, $posicion)[0]);
 
+        if ($posicion === false) {
+            $msj = 'La ruta del Jida Framework no se encuentra definida correctamente, Ruta definida: ' . $pathjida;
+            throw new \Exception($msj, self::$_ce . 1);
+        }
+
+        $band = true;
+        $siguiente = $actual;
+        $cont = 0;
+
+        while ($band) {
+
+            $siguiente = array_chunk($siguiente, $posicion)[1];
+            $posicion = array_search($pathjida, $siguiente);
+
+            if ($posicion === false) {
+                Debug::imprimir("ak", true);
+                $band = false;
+            }
+            else {
+                $item = ($cont === 0) ? $actual : $siguiente;
+                Debug::imprimir($item, "ak", $posicion, true);
+                $siguiente = array_chunk($item, $posicion)[0];
+            }
+
+        }
+
+        $directorio = implode("/", $siguiente);
+
+        return $directorio;
+
+    }
+
+    static function path () {
+
+        $directorio = self::_obtenerDirectorio();
         self::url();
-
 
         return $directorio;
 

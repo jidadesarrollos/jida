@@ -16,7 +16,7 @@
   "autoload": {
     "psr-4": {
       "Jida\\": [
-        "../Framework/"
+        "./"
       ],
       "App\\": [
         "../Aplicacion/"

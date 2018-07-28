@@ -14,6 +14,8 @@
 
 namespace Jida\Configuracion;
 
+use Jida\Helpers\Debug;
+
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
@@ -78,7 +80,6 @@ class Config {
         if (!self::$instancia) {
 
             if (class_exists('\App\Config\Configuracion')) {
-
                 self::$instancia = new \App\Config\Configuracion();
             }
             else {

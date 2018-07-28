@@ -11,7 +11,7 @@ class Configuracion extends Config {
 
     const URL_BASE = '';
     const URL_ABSOLUTA = '';
-    const PATH_JIDA = "Jida";
+    const PATH_JIDA = "jida";
 
     var $idiomas = [
         'es' => 'Español'

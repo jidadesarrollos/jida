@@ -2,10 +2,10 @@
 
 define('DS', DIRECTORY_SEPARATOR);
 define("PS", PATH_SEPARATOR);
-define('ROOT', \Jida\Manager\Estructura::path());
 define('MODELO_USUARIO', '\Jida\Modelos\User');
+define('ROOT', \Jida\Manager\Estructura::path());
 
-define('DIR_FRAMEWORK', ROOT . DS. 'Framework' . DS);
+define('DIR_FRAMEWORK', ROOT . DS . 'Framework' . DS);
 define('DIR_APP', ROOT . DS . 'Aplicacion' . DS);
 
 /**
