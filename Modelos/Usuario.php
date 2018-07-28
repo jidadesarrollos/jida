@@ -33,32 +33,6 @@ class Usuario extends BD\DataModel {
     protected $unico = ['nombre_usuario'];
     protected $registro = false;
 
-    protected function establecerAtributos ($arr, $clase = '') {
-
-        if (empty($clase))
-            $clase = $this->_clase;
-
-
-        if (is_object($clase))
-            $atributos = get_object_vars($clase);
-        else
-            $atributos = get_class_vars($clase);
-
-
-        foreach ($atributos as $k => $valor) {
-            if (is_object($arr)) {
-                if (property_exists($arr, $k))
-                    $this->$k = $arr->$k;
-            }
-            else {
-                if (isset($arr[$k]))
-                    $this->$k = $arr[$k];
-            }
-
-        }
-
-    }
-
     function asociarPerfiles ($perfiles) {
 
         $insert = "insert into s_usuarios_perfiles (id_usuario_perfil, id_usuario, id_perfil) values ";
@@ -98,16 +72,12 @@ class Usuario extends BD\DataModel {
         $this->id_estatus = (empty($this->id_estatus)) ? 1 : $this->id_estatus;
 
         if ($this->salvar($datos)) {
-            $this->id_usuario = $this->resultBD->idResultado();
             $this->asociarPerfiles($perfiles);
+            return $this->id_usuario;
         }
-
-        return [
-            'idResultado' => $this->resultBD->idResultado(),
-            'ejecutado'   => $this->resultBD->ejecutado(),
-            'unico'       => $this->resultBD->esUnico(),
-            'validacion'  => $this->validacion
-        ];
+        else {
+            return false;
+        }
 
     }
 
@@ -184,16 +154,15 @@ class Usuario extends BD\DataModel {
 
         $clave = md5($clave);
 
-        $result = $this->consulta()->filtro(
-            [
-                'clave_usuario'  => $clave,
-                'nombre_usuario' => $usuario,
-                'validacion'     => 1
-            ])->fila();
+        $result = $this->consulta()->filtro([
+                                                'clave_usuario'  => $clave,
+                                                'nombre_usuario' => $usuario,
+                                                'validacion'     => 1
+                                            ])->fila();
+
         if (is_array($result) and count($result) > 0) {
 
             $this->establecerAtributos($result);
-
             $this->__obtConsultaInstancia($this->id_usuario);
             $this->obtenerDataRelaciones();
             $this->iniciarSesion();
@@ -202,9 +171,13 @@ class Usuario extends BD\DataModel {
             $this->obtenerPerfiles();
 
             return $result;
+
         }
-        else
+        else {
+
             return false;
+
+        }
 
     }
 
@@ -212,9 +185,6 @@ class Usuario extends BD\DataModel {
 
         Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario', $this);
-
-        if (isset($data))
-            Helpers\Sesion::set('usuario', $data);
 
         return $this;
 
