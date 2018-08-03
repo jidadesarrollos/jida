@@ -2,13 +2,13 @@
 
 namespace Jida\Modelos;
 
-use Jida\BD as BD;
+use Jida\BD\DataModel;
 use Jida\Helpers as Helpers;
 use Exception;
 
-class Usuario extends BD\DataModel {
+class Usuario extends DataModel {
 
-    private $_ce = "900";
+    private $_ce = "90010";
 
     var $id_usuario;
     var $nombre_usuario;
@@ -35,25 +35,29 @@ class Usuario extends BD\DataModel {
 
     function asociarPerfiles ($perfiles) {
 
-        $insert = "insert into s_usuarios_perfiles (id_usuario_perfil, id_usuario, id_perfil) values ";
-        $i = 0;
+        $perfil = new UsuarioPerfil();
+        $perfil->eliminar($this->id_usuario, 'id_usuario');
 
-        foreach ($perfiles as $key => $idPerfil) {
+        foreach ($perfiles as $k => $idPerfil) {
 
-            if ($i > 0) {
-                $insert .= ",";
-            }
-
-            $insert .= "(null,$this->id_usuario,$idPerfil)";
-            $i++;
+            $perfil->id_usuario = $this->id_usuario;
+            $perfil->id_perfil = $idPerfil;
+            $perfil->salvar();
 
         }
 
-        $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
+        $resultado = $perfil->obtenerBy($this->id_usuario, 'id_usuario');
 
-        $this->bd->ejecutarQuery($delete . $insert, 2);
+        if (is_array($resultado) and count($resultado) > 0) {
 
-        return ['ejecutado' => 1];
+            return $resultado;
+
+        }
+        else {
+
+            return false;
+
+        }
 
     }
 
@@ -120,26 +124,14 @@ class Usuario extends BD\DataModel {
 
         if (is_array($this->perfiles) and count($this->perfiles) < 1) {
 
-            $query = "select
-                a.id_usuario_perfil AS id_usuario_perfil,
-                a.id_perfil AS id_perfil,
-                a.id_usuario AS id_usuario,
-                c.nombre_usuario,
-                c.nombres,
-                c.apellidos,
-                b.clave_perfil AS clave_perfil
-                from
-                s_usuarios_perfiles a
-                join s_perfiles b ON (a.id_perfil = b.id_perfil)
-                join s_usuarios c on (a.id_usuario = c.id_usuario) where a.id_usuario=$this->id_usuario";
-
-            $data = $this->bd->ejecutarQuery($query);
+            $perfiles = new UsuarioPerfil();
+            $data = $perfiles->obtPerfiles($this->id_usuario);
 
             if (is_array($data) and count($data) > 1) {
                 throw new Exception("No se han obtenido los perfiles del usuario", $this->_ce . 4);
             }
 
-            while ($perfil = $this->bd->obtenerArrayAsociativo($data)) {
+            foreach ($data as $k => $perfil) {
                 $this->perfiles[$perfil['clave_perfil']] = $perfil['clave_perfil'];
             }
 
@@ -150,20 +142,20 @@ class Usuario extends BD\DataModel {
 
     }
 
-    function validarLogin ($usuario, $clave, $validacion = true, $callback = null) {
+    function validarLogin ($usuario, $clave, $validacion = true) {
 
         $clave = md5($clave);
 
         $result = $this->consulta()->filtro([
                                                 'clave_usuario'  => $clave,
                                                 'nombre_usuario' => $usuario,
-                                                'validacion'     => 1
+                                                'validacion'     => $validacion
                                             ])->fila();
 
         if (is_array($result) and count($result) > 0) {
 
             $this->establecerAtributos($result);
-            $this->__obtConsultaInstancia($this->id_usuario);
+            $this->obtenerBy($this->id_usuario);
             $this->obtenerDataRelaciones();
             $this->iniciarSesion();
             $this->activo = 1;
