@@ -71,7 +71,7 @@ class Usuario extends DataModel {
 
     }
 
-    public function registrar ($datos, $perfiles = "", $validacion = true) {
+    public function guardar ($datos, $perfiles = "", $validacion = true) {
 
         if (empty($perfiles)) {
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", $this->_ce . 1);
