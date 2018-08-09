@@ -224,7 +224,7 @@ class Mysql extends ConexionBD {
 				   'idResultado' => ""
 		];
 
-		if (!Helpers\Sesion::get('__queryInsert')) {
+		if (!Helpers\Sesion::obt('__queryInsert')) {
 			$validadoUnico = false;
 			$validarExistencia = 0;
 			if (count($unico) >= 1) {

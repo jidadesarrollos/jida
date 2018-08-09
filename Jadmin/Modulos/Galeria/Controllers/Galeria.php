@@ -197,7 +197,7 @@ class Galeria extends JController {
             if ($this->entero($this->get('objeto'))) {
                 $id = $this->get('objeto');
             } else {
-                $id = Helpers\Sesion::get('objetoMedia');
+                $id = Helpers\Sesion::obt('objetoMedia');
             }
 
             if (Helpers\Sesion::obt('_formMedia') instanceof Render\Formulario) {

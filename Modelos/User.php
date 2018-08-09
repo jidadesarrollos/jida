@@ -238,7 +238,7 @@ class User extends BD\DataModel {
     function cambiarClave ($clave, $nuevaClave) {
 
         $clave = md5($clave);
-        //Helpers\Debug::imprimir("$clave===$this->clave_usuario",true);
+
         if ($clave === $this->clave_usuario) {
             $this->clave_usuario = md5($nuevaClave);
             $this->salvar();

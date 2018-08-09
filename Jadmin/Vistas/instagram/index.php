@@ -8,8 +8,8 @@ use Jida\Helpers\Sesion as Sesion;
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1>Conexi&oacute;n con API Instagram</h1>
-            <?php if (Sesion::get('__msjForm')):
-                echo Sesion::get('__msjForm');
+            <?php if (Sesion::obt('__msjForm')):
+                echo Sesion::obt('__msjForm');
                 Sesion::destroy('__msjForm');
             endif;
             ?>

@@ -8,10 +8,10 @@
 
 namespace Jida\Manager\Rutas;
 
-
 use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 use Jida\Core\Manager as Core;
+use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Manager as ManagerVista;
 
 class Arranque {
@@ -31,7 +31,7 @@ class Arranque {
     static public $controlador = false;
     static public $namespace;
     /**
-     * @var $ruta Define si la ruta de archivos debe ser buscada en el framework o en la aplicacion
+     * @var string $ruta Define si la ruta de archivos debe ser buscada en el framework o en la aplicacion
      */
     static public $ruta;
 
@@ -42,9 +42,7 @@ class Arranque {
     public $parametros = [];
     public $modulos;
 
-
     private $_dataVista;
-    private $_pagina;
     /**
      * Objeto Renderizador de la vista
      *
@@ -56,14 +54,14 @@ class Arranque {
     public function __construct ($control) {
 
         $this->modulos = Config::obtener()->modulos;
-        $this->_arrayUrl = $control->arrayUrl;
+        $this->_arrayUrl = Estructura::$partes;
         $this->_parser();
 
     }
 
     private function _parser () {
 
-        $parametro = $this->proximoParametro($this->_arrayUrl);
+        $parametro = $this->proximoParametro();
 
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
@@ -74,7 +72,6 @@ class Arranque {
 
         $this->procesador = new Procesador($this);
         $this->procesador->procesar();
-
 
     }
 
@@ -99,13 +96,14 @@ class Arranque {
     }
 
     /**
-     * Verifica si hay funcionalidades definidas a ejecutar previo o posteriormente al metodo solicitado
+     * Verifica si hay funcionalidades definidas a ejecutar previo o posterior al metodo solicitado
      *
      *
      * Realiza la ejecución de los metodos _jdPost o _jdPre si existen.
      *
-     * @param $controlador Arranque a ejecutar
-     * @param $method Metodo a ejecutar. _jdPost o _jdPre
+     * @param object $controlador Arranque a ejecutar
+     * @param string $method Metodo a ejecutar. _jdPost o _jdPre
+     *
      * @since 0.6
      */
     private function _pipeLines ($controlador, $metodo) {
@@ -126,7 +124,6 @@ class Arranque {
         }
 
     }
-
 
     Static function obtenerControlador ($controlador) {
 
@@ -159,10 +156,8 @@ class Arranque {
 
             $this->_pipeLines($controlador, '_jdPost');
 
-
             $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
-
-            $this->_managerVista->renderizar($this);
+            $this->_managerVista->renderizar();
 
         }
 
@@ -176,6 +171,5 @@ class Arranque {
 
         return true;
     }
-
 
 }

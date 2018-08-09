@@ -14,8 +14,6 @@
 
 namespace Jida\Configuracion;
 
-use Jida\Helpers\Debug;
-
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
@@ -52,7 +50,6 @@ class Config {
      */
     var $idiomas = ['es'];
 
-
     /**
      * Variable para definicion del tema a utilizar dentro de la aplicación
      *
@@ -71,10 +68,16 @@ class Config {
      */
     var $logo;
 
-
     private static $instancia;
 
-
+    /**
+     * Retorna la configuración del proyecto
+     *
+     * Retorna un objeto de tipo Config definido por el usuario si existe
+     * o la configuracion por defecto para Jida.
+     *
+     * @return \App\Config\Configuracion|Config
+     */
     public static function obtener () {
 
         if (!self::$instancia) {

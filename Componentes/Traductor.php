@@ -28,6 +28,7 @@ namespace Jida\Componentes;
 use Jida\Configuracion\Config;
 use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios as Directorios;
+use Jida\Manager\Estructura;
 
 class Traductor {
 
@@ -50,32 +51,14 @@ class Traductor {
      */
     function __construct ($idiomaActual, $data = []) {
 
-
         $configuracion = Config::obtener();
-        if (array_key_exists('path', $data)) {
-            $this->path = $data['path'];
-
-        }
-        if (array_key_exists('ubicacion', $data)) {
-            $this->ubicacion = $data['ubicacion'];
-        }
 
         $this->idiomaActual = $idiomaActual;
 
         $traducciones = [];
-        $file = strtolower($this->idiomaActual) . ".php";
-        if (file_exists($this->path . $file)) {
-            include_once $this->path . $file;
-
-        }
-        else {
-            throw new \Exception("No existe el archivo de traducciones " . $this->idiomaActual . " en " . $this->path . $file,
-                                 950);
-
-        }
+        $this->_obtenerArchivo($data);
 
         $this->textos = $traducciones;
-
 
         if (property_exists($configuracion, 'idiomas')) {
             $this->idiomas = $configuracion->idiomas;
@@ -88,14 +71,46 @@ class Traductor {
 
     }
 
+    /**
+     * Obtiene el arcghivo de traducciones
+     *
+     * @param array $data
+     * @throws \Exception
+     */
+    function _obtenerArchivo ($data) {
+
+        if (array_key_exists('path', $data)) {
+            $this->path = $data['path'];
+
+        }
+        if (array_key_exists('ubicacion', $data)) {
+            $this->ubicacion = $data['ubicacion'];
+        }
+        $path = Estructura::$directorio . DS . $this->path;
+        $archivo = $path . strtolower($this->idiomaActual) . ".php";
+
+        if (file_exists($archivo)) {
+            include_once $archivo;
+
+        }
+        else {
+            $msj = "No existe el archivo de traducciones " . $this->idiomaActual . " en " . $archivo;
+            throw new \Exception($msj, 950);
+
+        }
+
+    }
+
     function path ($path = "") {
 
         if (!empty($path) and Directorios::validar($path)) {
             $this->path = $path;
+
+            return;
         }
-        else {
-            return $this_ > path;
-        }
+
+        return $this->path;
+
     }
 
     function seleccionarIdioma ($idioma) {
@@ -110,7 +125,6 @@ class Traductor {
      * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
      */
     function cadena ($cadena, $ubicacion = "") {
-
 
         if (empty($ubicacion))
             $ubicacion = $this->ubicacion;
@@ -149,11 +163,12 @@ class Traductor {
         if (empty($ubicacion))
             $ubicacion = $this->ubicacion;
 
-
         if (!empty($ubicacion)) {
-            if (array_key_exists($ubicacion, $this->textosSeccion) and array_key_exists($cadena,
-                                                                                        $this->textosSeccion[$ubicacion]))
+            if (array_key_exists($ubicacion, $this->textosSeccion)
+                and array_key_exists($cadena, $this->textosSeccion[$ubicacion])) {
                 return $this->textosSeccion[$ubicacion][$cadena];
+            }
+
         }
         else {
 

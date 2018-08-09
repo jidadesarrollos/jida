@@ -153,14 +153,6 @@ class DataModel {
      */
     private $consultaRelaciones = [];
 
-
-    /**
-     * Arreglo que registra las propiedades de la clase que son objetos
-     *
-     * @var $propiedadesObjetos = [];
-     */
-    private $propiedadesObjetos;
-
     /**
      * Permite identificar si la consulta contiene una clausula where;
      *
@@ -1803,14 +1795,14 @@ class DataModel {
             $valores[] = "'" . Helpers\FechaHora::datetime() . "'";
         }
         if ($this->registroUser) {
-            if (Helpers\Sesion::get('Usuario')) {
-                $user = Helpers\Sesion::get('Usuario');
+            if (Helpers\Sesion::obt('Usuario')) {
+                $user = Helpers\Sesion::obt('Usuario');
                 if (is_array($user) and array_key_exists('id_usuario', $user))
                     $idUser = $user['id_usuario']; elseif (is_object($user) and property_exists($user, 'id_usuario'))
                     $idUser = ($user->id_usuario > 0) ? $user->id_usuario : 0;
             } else {
-                if (is_array(Helpers\Sesion::get('usuario')) and array_key_exists('id_usuario', Helpers\Sesion::get('usuario')))
-                    $idUser = Helpers\Sesion::get('usuario')['id_usuario']; else
+                if (is_array(Helpers\Sesion::obt('usuario')) and array_key_exists('id_usuario', Helpers\Sesion::obt('usuario')))
+                    $idUser = Helpers\Sesion::obt('usuario')['id_usuario']; else
                     $idUser = 0;
             }
 
@@ -1834,12 +1826,12 @@ class DataModel {
 
         if (count($dataUpdate) > 0) {
             if ($this->registroUser) {
-                $idUser = Helpers\Sesion::get('id_usuario');
+                $idUser = Helpers\Sesion::obt('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
                 if (Helpers\Sesion::checkLogg()) {
-                    if (is_object(Helpers\Sesion::get('Usuario')))
-                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('Usuario')->id_usuario; elseif (array_key_exists('id_usuario', Helpers\Sesion::get('usuario'))) {
-                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::get('usuario', 'id_usuario');
+                    if (is_object(Helpers\Sesion::obt('Usuario')))
+                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('Usuario')->id_usuario; elseif (array_key_exists('id_usuario', Helpers\Sesion::obt('usuario'))) {
+                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('usuario', 'id_usuario');
                     }
                 }
             }

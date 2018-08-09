@@ -12,15 +12,12 @@ use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Render\Selector;
+use Jida\Helpers as Helpers;
 use Exception as Excepcion;
 
 class Render {
 
     use ObjetoManager;
-
-    private $_dir;
-    private $_nombre;
-    private $_tema;
     private $_ce = 100012;
     private $_data;
 
@@ -33,9 +30,13 @@ class Render {
         }
     }
 
-
     /**
      * Imprime la vista o layout solicitado
+     *
+     * @method imprimir
+     * @param string $layout Ruta del layout a renderizar
+     * @param string $vista Ruta de la vista a renderizar
+     *
      */
     function imprimir ($layout, $vista) {
 
@@ -63,14 +64,17 @@ class Render {
 
         return $layout;
 
-
     }
 
     function __call ($metodo, $parametros) {
 
         $layout = Layout::obtener();
         if (method_exists($layout, $metodo)) {
-            call_user_func_array([$layout, $metodo], $parametros);
+            call_user_func_array([
+                                     $layout,
+                                     $metodo
+                                 ],
+                                 $parametros);
 
         }
 
@@ -93,14 +97,15 @@ class Render {
      * de un tema o en el contenido general.
      *
      */
+
     function htdocs ($folder, $item, $tema = true) {
 
-        $path = (defined('URL_BASE')) ? URL_BASE : '';
-        $url = $path . Configuracion::URL_BASE . '/htdocs' . $this->_tema . '/htdocs/' . $folder . '/' . $item;
+        $path = Estructura::$urlRuta;
+        $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
         if ($tema)
             return $url;
 
-        return Configuracion::URL_ABSOLUTA . '/htdocs' . $folder . '/' . $item;
+        return $path . "htdocs/" . $folder . '/' . $item;
     }
 
     /**
@@ -119,7 +124,7 @@ class Render {
             $this->_obtenerData();
         }
         $dataInclude = [];
-        $path =  Estructura::url();
+        $path = Estructura::url();
 
         if (!property_exists($this->_data, $lang))
             return false;
@@ -133,54 +138,69 @@ class Render {
         }//fin forech
 
         if (array_key_exists($configuracion::ENTORNO_APP, $data)) {
+
             $dataInclude = $data[$configuracion::ENTORNO_APP];
-            //Se eliminan
+
             foreach ($dataInclude as $key => $value) {
                 if (is_array($value) and $key != $modulo)
                     unset($dataInclude[$key]);
             }
+
             unset($data[$configuracion::ENTORNO_APP]);
+
         }
 
         $librerias = array_merge($dataInclude, $data);
+
         if (!empty($modulo)) {
+
             if (array_key_exists($modulo, $librerias)) {
+
                 $libreriasModulo = $librerias[$modulo];
                 unset($librerias[$modulo]);
                 $librerias = $libreriasModulo;
+
             }
+
         }
 
         $libsHTML = "";
         $cont = 0;
 
-
         foreach ($librerias as $id => $libreria) {
+
             if (is_array($libreria) and $lang == 'css') {
                 //se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
                 //a partir del arreglo $libreria
-                $libsHTML .= $this->__obtHTMLLibreria('link', $libreria, $cont);
+                $libsHTML .= $this->__obtHTMLLibreria('link',
+                                                      $libreria,
+                                                      $cont);
             }
-            else if (!is_array($libreria))
+            else if (!is_array($libreria)) {
                 $libsHTML .= $this->__obtHTMLLibreria($lang, $libreria, $cont);
+            }
 
             if ($cont == 0)
                 $cont = 2;
-        }//fin foreach=======================================
-        return $libsHTML;
-    }
+        }
 
+        return $libsHTML;
+
+    }
 
     private function __obtHTMLLibreria ($lang, $libreria, $cont = 2) {
 
-        $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,
-                                                                          'http') === false)) ? URL_BASE : "";
+        $path = Estructura::$urlRuta;
+
+        if ((defined('URL_BASE') and
+            (is_string($libreria) and strpos($libreria, 'http') === false))) {
+            $path = "";
+        }
 
         switch ($lang) {
             case 'js':
                 if (is_array($libreria))
-                    Debug::mostrarArray($libreria, 0);
-                $html = Selector::crear('script', ['src' => $path . $libreria], null, $cont);
+                    $html = Selector::crear('script', ['src' => $path . $libreria], null, $cont);
                 break;
             case 'link':
 
@@ -188,10 +208,19 @@ class Render {
                 $html = Selector::crear('link', $libreria, null, $cont);
                 break;
             default:
-                //css
+
+                $url = explode("/", $path . $libreria);
+
+                $link = "/" . implode("/",
+                                      array_filter($url,
+                                          function ($var) {
+
+                                              return !!$var;
+                                          }));
+
                 $html = Selector::crear('link',
                                         [
-                                            'href' => $path . $libreria,
+                                            'href' => $link,
                                             'rel'  => 'stylesheet',
                                             'type' => 'text/css'
                                         ],
@@ -291,7 +320,6 @@ class Render {
 
         return $this->traductor->cadena($texto, $ubicacion);
     }
-
 
     function enlace ($url = "") {
 

@@ -36,6 +36,11 @@ class Data {
 
     }
 
+    /**
+     * @return Object Retorna la instancia de un objeto Data
+     * @see Jida\Manager\Vista\Data
+     * 
+     */
     static function obtener () {
 
         self::validarInstancia();

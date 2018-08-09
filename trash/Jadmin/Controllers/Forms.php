@@ -28,7 +28,7 @@ class Forms extends JController {
      * Funcion constructora
      */
     function __construct() {
-//Helpers\Debug::imprimir(Helpers\Sesion::get('Usuario'),true);
+//Helpers\Debug::imprimir(Helpers\Sesion::obt('Usuario'),true);
         $this->jctrl = new Modelos\JidaControl();
         $this->url = "/jadmin/forms/";
         parent::__construct();

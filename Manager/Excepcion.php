@@ -75,7 +75,12 @@ class Excepcion {
                            $detalle
                        ]);
 
-        $this->txtLog = implode("<br/>", [$codigo, $mensaje, $detalle]);
+        $this->txtLog = implode("<br/>",
+                                [
+                                    $codigo,
+                                    $mensaje,
+                                    $detalle
+                                ]);
 
         if (Configuracion::ENVIAR_EMAIL_ERROR) {
             $this->_enviarEmail();
@@ -102,10 +107,10 @@ class Excepcion {
             $directorio = $path . '/Aplicacion/Layout/' . $configuracion->tema . '/error.tpl.php';
         }
         else {
-            $directorio = $path . DIR_JF . '/Layout/error.tpl.php';
+            $directorio = $path . DS . DIR_JF . '/Layout/error.tpl.php';
         }
 
-        $vista = $path . DIR_JF . "/plantillas/error/error.php";
+        $vista = $path . DS . DIR_JF . "/plantillas/error/error.php";
 
         $dataExcepcion = new \stdClass();
         $dataExcepcion->mensaje = $excepcion->getMessage();
@@ -133,7 +138,9 @@ class Excepcion {
 
         $correo = new Correo();
         $correo->plantilla("error");
-        $correo->data(['aplicacion' => Configuracion::NOMBRE_APP, 'detalle_error' => $detalle_error]);
+        $correo->data(['aplicacion'    => Configuracion::NOMBRE_APP,
+                       'detalle_error' => $detalle_error
+                      ]);
         $correo->enviar($destinatario, "Error generado en " . Configuracion::NOMBRE_APP);
 
         return $this;

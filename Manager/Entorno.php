@@ -10,6 +10,8 @@ class Entorno {
 
     function __construct () {
 
+
+
         if (defined('ENTORNO_APP')) {
             $this->_configurar();
 

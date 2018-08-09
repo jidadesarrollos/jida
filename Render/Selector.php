@@ -205,7 +205,14 @@ class Selector {
                 $selectorHTML .= " $key=\"$value\"";
             }
         }
-        if (!in_array($selector, ['img', 'hr', 'br', 'link', 'meta'])) {
+        if (!in_array($selector,
+                      [
+                          'img',
+                          'hr',
+                          'br',
+                          'link',
+                          'meta'
+                      ])) {
 
             if (!empty($content)) {
                 $selectorHTML .= ">\n" . $tabulaciones . "$content";
@@ -438,14 +445,17 @@ class Selector {
             }
         }
         if ((is_array($this->data) or is_object($this->data)) and count($this->data) > 0) {
+
             foreach ($this->data as $data => $value) {
-                if ($i > 0)
-                    $atribs .= " ";
-                if (is_array($value))
-                    $value = json_encode($value);
+
+                if ($i > 0) $atribs .= " ";
+                if (is_array($value)) $value = json_encode($value);
+
                 $atribs .= "data-" . $data . "='" . $value . "'";
+
                 ++$i;
             }
+
         }
 
         return $atribs;

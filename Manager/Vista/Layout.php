@@ -5,10 +5,9 @@
 
 namespace Jida\Manager\Vista;
 
-use function Composer\Autoload\includeFile;
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
 use Exception as Excepcion;
+use Jida\Helpers\Debug;
 use Jida\Manager\Estructura;
 use Jida\Render\Selector as Selector;
 
@@ -19,23 +18,19 @@ class Layout {
         'app'  => 'Aplicacion/Layout/'
     ];
 
-    private $_ce = '10008';
+    static private $_ce = '10008';
 
-    public static $padre;
     /**
-     * @var _controlador Arranque solicitado por la url
-     *
+     * @var object Objeto que llama o instancia a Layout
      */
-    private $_controlador;
-
-    private $_directorio;
+    public static $padre;
 
     /**
-     * @var _data Objeto Data Vista
+     * @var object $_data Objeto Data Vista
      */
     private $_data;
     /**
-     * @var $data  Objeto DataVista
+     * @var object $data Objeto DataVista
      * @deprecated
      */
     public $data;
@@ -52,28 +47,27 @@ class Layout {
 
     }
 
+    /**
+     * @return $this
+     */
     public function leer () {
 
         $padre = self::$padre;
         $arranque = $padre::$Padre;
 
-        $actual = explode(DS, __DIR__);
         $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
-        $posicion = array_search(Estructura::DIR_JIDA, $actual);
 
-        $path = implode("/", array_chunk($actual, $posicion)[0]);
-
-        //$path .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
+        $path = Estructura::$directorio;
         $controlador = $arranque::$Controlador;
         $directorio = $this->_DIRECTORIOS['app'];
 
-
         if ($arranque->jadmin) {
-            $directorio = ($tema === 'jadmin') ? $this->_DIRECTORIOS['jida'] : $this->_DIRECTORIOS['app'];
+            $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
+            $directorio = ($tema === 'jadmin') ? $dirJida : $this->_DIRECTORIOS['app'];
         }
 
-        self::$directorio = $path . DS . $this->_directorio . $directorio;
-        if (!!$tema) {
+        self::$directorio = $path . DS . $directorio;
+        if ($tema) {
             self::$directorio .= $tema . DS;
         }
 
@@ -83,18 +77,22 @@ class Layout {
 
     }
 
-
     static function definir ($directorio) {
 
         self::$directorio = $directorio;
     }
 
+    /**
+     * Renderiza una vista
+     * @method render
+     * @return void | string
+     */
     public function render ($vista) {
 
         if (!self::$directorio or !$vista) {
-            throw  new Excepcion('El parametro $vista es requerido para el metodo render', $this->_ce . '0001');
+            $msj = 'El parametro $vista es requerido para el metodo render';
+            throw  new Excepcion($msj, self::$_ce . '0001');
 
-            return;
         }
 
         $render = new Render();
@@ -110,7 +108,7 @@ class Layout {
     public function printHeadTags () {
 
         $msj = "El metodo printHeadTags se encuentra en desuso, por favor reemplazar por imprimir meta";
-        throw new Excepcion($msj, $this->_ce . 3);
+        throw new Excepcion($msj, self::$_ce . 3);
 
     }
 
@@ -135,7 +133,7 @@ class Layout {
     function imprimirLibrerias ($lang, $modulo = "") {
 
         $dataInclude = [];
-        $path = (defined('URL_BASE')) ? URL_BASE : "";
+
         if (!property_exists($this->data, $lang))
             return false;
         $data = $this->{$lang};
@@ -169,7 +167,6 @@ class Layout {
         $libsHTML = "";
         $cont = 0;
 
-
         foreach ($librerias as $id => $libreria) {
             if (is_array($libreria) and $lang == 'css') {
                 //se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
@@ -184,7 +181,6 @@ class Layout {
         }//fin foreach=======================================
         return $libsHTML;
     }
-
 
     private function __obtHTMLLibreria ($lang, $libreria, $cont = 2) {
 
@@ -217,7 +213,6 @@ class Layout {
 
         return $html;
     }
-
 
     static function obtener () {
 

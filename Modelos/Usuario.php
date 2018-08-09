@@ -73,6 +73,7 @@ class Usuario extends BD\DataModel {
 
         if ($this->salvar($datos)) {
             $this->asociarPerfiles($perfiles);
+
             return $this->id_usuario;
         }
         else {
@@ -89,6 +90,7 @@ class Usuario extends BD\DataModel {
 
         if ($this->salvar($datos)) {
             $this->asociarPerfiles($perfiles);
+
             return true;
         }
         else {
@@ -207,6 +209,7 @@ class Usuario extends BD\DataModel {
         if ($clave === $this->clave_usuario) {
             $this->clave_usuario = md5($nuevaClave);
             $this->salvar();
+
             return true;
         }
         else {

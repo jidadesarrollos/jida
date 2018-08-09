@@ -41,7 +41,7 @@ class JController extends Core\Controller {
         }
         $configuracion = Config::obtener();
         $estructura = Estructura::url();
-        $this->tr = new Traductor($this->idioma, ['path' => 'Framework/Traducciones/']);
+        $this->tr = new Traductor($this->idioma, ['path' => Estructura::$directorioJida . '/Jadmin/Traducciones/']);
         $this->urlHtdocs = $estructura . "/htdocs/bower_components/";
         $this->layout('jadmin');
         $this->definirJSGlobals();
@@ -52,9 +52,10 @@ class JController extends Core\Controller {
         }
 
         $this->dv->addCss('jida.css');
-        $this->data(['title'     => "JIDAPanel",
-                     'traductor' => $this->tr,
-                     'usuario'   => $this->usuario
+        $this->data([
+                        'title'     => "JIDAPanel",
+                        'traductor' => $this->tr,
+                        'usuario'   => $this->usuario
                     ]);
 
         $this->validarSesion();

@@ -69,7 +69,6 @@ class Manager {
         $data = Data::obtener();
         $plantilla = $this->_data->obtPlantilla();
         $vista = $this->vista();
-
         $archivoVista = (!!$plantilla) ? $vista->rutaPlantilla($plantilla) : $vista->obtener();
 
         $salida = $this->_layout

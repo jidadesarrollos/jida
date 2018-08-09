@@ -52,7 +52,7 @@ class Init extends JController {
         $this->vista = "init";
         // Helpers\Debug::imprimir($this->post(),'init');
         if ($this->post('btnBdConfig')) {
-            if (!Helpers\Sesion::get('dirApp')) $this->crearDirApp();
+            if (!Helpers\Sesion::obt('dirApp')) $this->crearDirApp();
             if (!$this->validarDatosBD()) {
 
                 RenderHTML\Formulario::msj('error', 'Faltan algunos datos, por favor valida y vuelve a intentarlo');

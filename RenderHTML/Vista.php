@@ -788,13 +788,13 @@ class Vista extends BD\DBContainer {
 
     function getMensajeSesion() {
 
-        if (Helpers\Sesion::get('__msjVista')):
-            if (Helpers\Sesion::get('__idVista') and strtolower($this->nombreVistaSinEspacios) == strtolower(Helpers\Sesion::get('__idVista')) or
-                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista) == strtolower(Helpers\Sesion::get('__idVista')))
+        if (Helpers\Sesion::obt('__msjVista')):
+            if (Helpers\Sesion::obt('__idVista') and strtolower($this->nombreVistaSinEspacios) == strtolower(Helpers\Sesion::obt('__idVista')) or
+                (isset($_SESSION['__idVista']) and strtolower($this->idDivVista) == strtolower(Helpers\Sesion::obt('__idVista')))
             ) {
                 Helpers\Sesion::destroy('__idVista');
 
-                return Helpers\Sesion::get('__msjVista');
+                return Helpers\Sesion::obt('__msjVista');
             } else {
                 return "";
             }

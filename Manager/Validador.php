@@ -2,8 +2,8 @@
 
 namespace Jida\Manager;
 
-
 use Jida\Helpers\Debug;
+use Exception as Excepcion;
 
 class Validador {
 
@@ -13,9 +13,40 @@ class Validador {
 
     function __construct () {
 
+        $this->_manejoErrores();
         Entorno::configurar();
+
     }
 
+    function _capturaErrores () {
+
+        $error = error_get_last();
+        if ($error) {
+            Debug::imprimir("Error capturado", $error);
+            exit("Error capturado" . $error['type']);
+
+            return;
+        }
+
+    }
+
+    private function _manejoErrores () {
+
+        set_error_handler([
+                              $this,
+                              '_capturaErrores'
+                          ]);
+    }
+
+    /**
+     * Verifica las estructuras y componentes habilitadas
+     *
+     * Valida la estructura general de configuración para la aplicación
+     * en ejecución
+     * @method inicio
+     * @return boolean true
+     *
+     */
     public function inicio () {
 
         global $elementos;
@@ -33,7 +64,6 @@ class Validador {
 
     private function _configurarEntorno () {
 
-
         if (function_exists('ini_set')) {
             /**
              * Inclusión de directorios de aplicación, framework y libs dentro del path
@@ -42,7 +72,7 @@ class Validador {
 
         }
         else {
-            throw new Exception("Debe activar la funcion ini_set para continuar..");
+            throw new Excepcion("Debe activar la funcion ini_set para continuar..");
 
         }
 
@@ -58,6 +88,5 @@ class Validador {
         }
 
     }
-
 
 }

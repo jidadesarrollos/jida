@@ -95,7 +95,6 @@ class Vista {
             return $path . DS . $plantilla;
         }
 
-
         return false;
 
     }
