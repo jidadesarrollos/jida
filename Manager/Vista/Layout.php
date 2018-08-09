@@ -19,7 +19,7 @@ class Layout {
         'app'  => 'Aplicacion/Layout/'
     ];
 
-    private $_ce = '10008';
+    private static $_ce = '10008';
 
     public static $padre;
     /**

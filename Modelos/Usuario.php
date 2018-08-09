@@ -20,7 +20,8 @@ class Usuario extends DataModel {
     var $sexo;
 
     var $activo;
-    var $id_estutus;
+    var $id_estatus;
+    var $id_empresa;
     var $ultima_session;
     var $validacion;
     var $codigo_recuperacion;
@@ -33,20 +34,29 @@ class Usuario extends DataModel {
     protected $unico = ['nombre_usuario'];
     protected $registro = false;
 
-    function asociarPerfiles ($perfiles) {
+    function __construct ($id = false) {
+
+        parent::__construct($id);
+
+    }
+
+    public function asociarPerfiles ($perfiles) {
 
         $perfil = new UsuarioPerfil();
         $perfil->eliminar($this->id_usuario, 'id_usuario');
 
         foreach ($perfiles as $k => $idPerfil) {
 
+            $perfil = new UsuarioPerfil();
             $perfil->id_usuario = $this->id_usuario;
             $perfil->id_perfil = $idPerfil;
             $perfil->salvar();
 
         }
 
-        $resultado = $perfil->obtenerBy($this->id_usuario, 'id_usuario');
+        $perfil = new UsuarioPerfil();
+        $perfil->consulta()->filtro(['id_usuario' => $this->id_usuario]);
+        $resultado = $perfil->obt();
 
         if (is_array($resultado) and count($resultado) > 0) {
 
@@ -61,7 +71,7 @@ class Usuario extends DataModel {
 
     }
 
-    function registrar ($datos, $perfiles = "", $validacion = true) {
+    public function registrar ($datos, $perfiles = "", $validacion = true) {
 
         if (empty($perfiles)) {
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", $this->_ce . 1);
@@ -85,37 +95,6 @@ class Usuario extends DataModel {
 
     }
 
-    function modificar ($idUsuario, $datos, $perfiles = "") {
-
-        if (empty($idUsuario)) {
-            throw new Exception("El usuario que desea modificar no existe.", $this->_ce . 2);
-        }
-
-        if ($this->salvar($datos)) {
-            $this->asociarPerfiles($perfiles);
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    function eliminar ($idUsuario) {
-
-        if (empty($idUsuario)) {
-            throw new Exception("El usuario que desea eliminar no existe.", $this->_ce . 3);
-        }
-
-        if ($this->eliminar($idUsuario)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
     private function obtenerPerfiles ($idUsuario = "") {
 
         if ($idUsuario != "") {
@@ -127,7 +106,7 @@ class Usuario extends DataModel {
             $perfiles = new UsuarioPerfil();
             $data = $perfiles->obtPerfiles($this->id_usuario);
 
-            if (is_array($data) and count($data) > 1) {
+            if (is_array($data) and count($data) < 1) {
                 throw new Exception("No se han obtenido los perfiles del usuario", $this->_ce . 4);
             }
 
@@ -166,9 +145,7 @@ class Usuario extends DataModel {
 
         }
         else {
-
             return false;
-
         }
 
     }
@@ -185,8 +162,10 @@ class Usuario extends DataModel {
 
     function cerrarSesion ($idUser = "") {
 
-        if (empty($idUser))
+        if (empty($idUser)) {
             $idUser = $this->id_usuario;
+        }
+
         $this->activo = 0;
         $this->salvar();
 
