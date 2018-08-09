@@ -2,13 +2,13 @@
 
 namespace Jida\Modelos;
 
-use Jida\BD as BD;
+use Jida\BD\DataModel;
 use Jida\Helpers as Helpers;
 use Exception;
 
-class Usuario extends BD\DataModel {
+class Usuario extends DataModel {
 
-    private $_ce = "900";
+    private $_ce = "90010";
 
     var $id_usuario;
     var $nombre_usuario;
@@ -20,7 +20,8 @@ class Usuario extends BD\DataModel {
     var $sexo;
 
     var $activo;
-    var $id_estutus;
+    var $id_estatus;
+    var $id_empresa;
     var $ultima_session;
     var $validacion;
     var $codigo_recuperacion;
@@ -33,31 +34,44 @@ class Usuario extends BD\DataModel {
     protected $unico = ['nombre_usuario'];
     protected $registro = false;
 
-    function asociarPerfiles ($perfiles) {
+    function __construct ($id = false) {
 
-        $insert = "insert into s_usuarios_perfiles (id_usuario_perfil, id_usuario, id_perfil) values ";
-        $i = 0;
-
-        foreach ($perfiles as $key => $idPerfil) {
-
-            if ($i > 0) {
-                $insert .= ",";
-            }
-
-            $insert .= "(null,$this->id_usuario,$idPerfil)";
-            $i++;
-
-        }
-
-        $delete = "delete from s_usuarios_perfiles where id_usuario=$this->id_usuario;";
-
-        $this->bd->ejecutarQuery($delete . $insert, 2);
-
-        return ['ejecutado' => 1];
+        parent::__construct($id);
 
     }
 
-    function registrar ($datos, $perfiles = "", $validacion = true) {
+    public function asociarPerfiles ($perfiles) {
+
+        $perfil = new UsuarioPerfil();
+        $perfil->eliminar($this->id_usuario, 'id_usuario');
+
+        foreach ($perfiles as $k => $idPerfil) {
+
+            $perfil = new UsuarioPerfil();
+            $perfil->id_usuario = $this->id_usuario;
+            $perfil->id_perfil = $idPerfil;
+            $perfil->salvar();
+
+        }
+
+        $perfil = new UsuarioPerfil();
+        $perfil->consulta()->filtro(['id_usuario' => $this->id_usuario]);
+        $resultado = $perfil->obt();
+
+        if (is_array($resultado) and count($resultado) > 0) {
+
+            return $resultado;
+
+        }
+        else {
+
+            return false;
+
+        }
+
+    }
+
+    public function registrar ($datos, $perfiles = "", $validacion = true) {
 
         if (empty($perfiles)) {
             throw new Exception("Debe asociarse al menos un perfil al usuario a registrar", $this->_ce . 1);
@@ -73,40 +87,7 @@ class Usuario extends BD\DataModel {
 
         if ($this->salvar($datos)) {
             $this->asociarPerfiles($perfiles);
-
             return $this->id_usuario;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    function modificar ($idUsuario, $datos, $perfiles = "") {
-
-        if (empty($idUsuario)) {
-            throw new Exception("El usuario que desea modificar no existe.", $this->_ce . 2);
-        }
-
-        if ($this->salvar($datos)) {
-            $this->asociarPerfiles($perfiles);
-
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    function eliminar ($idUsuario) {
-
-        if (empty($idUsuario)) {
-            throw new Exception("El usuario que desea eliminar no existe.", $this->_ce . 3);
-        }
-
-        if ($this->eliminar($idUsuario)) {
-            return true;
         }
         else {
             return false;
@@ -122,26 +103,14 @@ class Usuario extends BD\DataModel {
 
         if (is_array($this->perfiles) and count($this->perfiles) < 1) {
 
-            $query = "select
-                a.id_usuario_perfil AS id_usuario_perfil,
-                a.id_perfil AS id_perfil,
-                a.id_usuario AS id_usuario,
-                c.nombre_usuario,
-                c.nombres,
-                c.apellidos,
-                b.clave_perfil AS clave_perfil
-                from
-                s_usuarios_perfiles a
-                join s_perfiles b ON (a.id_perfil = b.id_perfil)
-                join s_usuarios c on (a.id_usuario = c.id_usuario) where a.id_usuario=$this->id_usuario";
+            $perfiles = new UsuarioPerfil();
+            $data = $perfiles->obtPerfiles($this->id_usuario);
 
-            $data = $this->bd->ejecutarQuery($query);
-
-            if (is_array($data) and count($data) > 1) {
+            if (is_array($data) and count($data) < 1) {
                 throw new Exception("No se han obtenido los perfiles del usuario", $this->_ce . 4);
             }
 
-            while ($perfil = $this->bd->obtenerArrayAsociativo($data)) {
+            foreach ($data as $k => $perfil) {
                 $this->perfiles[$perfil['clave_perfil']] = $perfil['clave_perfil'];
             }
 
@@ -152,20 +121,20 @@ class Usuario extends BD\DataModel {
 
     }
 
-    function validarLogin ($usuario, $clave, $validacion = true, $callback = null) {
+    function validarLogin ($usuario, $clave, $validacion = true) {
 
         $clave = md5($clave);
 
         $result = $this->consulta()->filtro([
                                                 'clave_usuario'  => $clave,
                                                 'nombre_usuario' => $usuario,
-                                                'validacion'     => 1
+                                                'validacion'     => $validacion
                                             ])->fila();
 
         if (is_array($result) and count($result) > 0) {
 
             $this->establecerAtributos($result);
-            $this->__obtConsultaInstancia($this->id_usuario);
+            $this->obtenerBy($this->id_usuario);
             $this->obtenerDataRelaciones();
             $this->iniciarSesion();
             $this->activo = 1;
@@ -176,9 +145,7 @@ class Usuario extends BD\DataModel {
 
         }
         else {
-
             return false;
-
         }
 
     }
@@ -195,8 +162,10 @@ class Usuario extends BD\DataModel {
 
     function cerrarSesion ($idUser = "") {
 
-        if (empty($idUser))
+        if (empty($idUser)) {
             $idUser = $this->id_usuario;
+        }
+
         $this->activo = 0;
         $this->salvar();
 
@@ -209,7 +178,6 @@ class Usuario extends BD\DataModel {
         if ($clave === $this->clave_usuario) {
             $this->clave_usuario = md5($nuevaClave);
             $this->salvar();
-
             return true;
         }
         else {
