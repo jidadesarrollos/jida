@@ -1,5 +1,6 @@
 {
-  "Core": "3000",
-  "Manager": "1000",
-  "Componentes": "4000"
+  "Core": 3000,
+  "Manager": 1000,
+  "Componentes": 4000,
+  "Render": 2000
 }

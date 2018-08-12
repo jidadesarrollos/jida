@@ -10,10 +10,11 @@ namespace Jida\Manager\Rutas;
 use Jida\Helpers as Helpers;
 use Jida\Manager\Rutas\Procesador\Controlador;
 use Jida\Manager\Rutas\Procesador\Metodo;
+use Jida\Manager\Rutas\Procesador\Modulo;
 
 class Procesador {
 
-    use Controlador, Metodo;
+    use Modulo, Controlador, Metodo;
 
     protected $_padre;
     protected $_moduloValidado;
@@ -44,57 +45,7 @@ class Procesador {
         $padre::$namespace = $this->_namespace;
     }
 
-    protected function _modulo () {
-
-        $padre = $this->_padre;
-
-        $parametro = $padre->proximoParametro();
-        $posModulo = $this->_validarNombre($parametro, 'upper');
-
-        if (in_array($posModulo, $padre->modulos) or array_key_exists($posModulo, $padre->modulos)) {
-
-            $padre::$modulo = $posModulo;
-            $padre::$ruta = 'app';
-            if ($padre->jadmin) {
-
-                $this->_namespace = $this->_namespaces['modulo'] . $padre::$modulo . '\\Jadmin\\Controllers\\';
-            }
-            else {
-                $this->_namespace = $this->_namespaces['modulo'] . $padre::$modulo . '\\Controllers\\';
-            }
-
-        }
-        else if ($padre->jadmin) {
-
-            $padre::$ruta = 'jida';
-            if ($this->_moduloJadmin($posModulo)) {
-
-                $padre::$modulo = $posModulo;
-                $this->_namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
-
-            }
-            else {
-                $padre->reingresarParametro($posModulo);
-                $this->_namespace = $this->_namespaces['jida'];
-            }
-
-        }
-        else {
-            $this->_namespace = $this->_namespaces['app'];
-            $padre->reingresarParametro($posModulo);
-        }
-
-    }
-
-    private function _moduloJadmin ($posModulo) {
-
-        $modulo = $this->_validarNombre($posModulo, 'upper');
-
-        return in_array($modulo, Jadmin::$modulos);
-
-    }
-
-    private function _argumentos () {
+   private function _argumentos () {
 
         $parametros = $this->_padre->arrayUrl();
 

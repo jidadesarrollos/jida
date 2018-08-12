@@ -7,7 +7,7 @@ use Exception as Excepcion;
 
 class Validador {
 
-    private $_ce = 10011;
+    private $_ce = 100011;
 
     static private $_entorno;
 
