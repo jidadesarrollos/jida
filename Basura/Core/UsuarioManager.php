@@ -135,7 +135,7 @@ trait UsuarioManager {
                 $retorno['guardado'] = ['ejecutado' => $user->getResult()->ejecutado()];
 
             } else {
-                Debug::imprimir('El formulario no cumple con las validaciones, revisar la clase Formulario de Render para ajustar este detalle', true);
+                exit('El formulario no cumple con las validaciones, revisar la clase Formulario de Render para ajustar este detalle');
                 // $retorno['guardado'] = $validacion;
             }
 

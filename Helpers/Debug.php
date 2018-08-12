@@ -19,11 +19,12 @@ class Debug {
      * @since 0.1
      *
      */
-    static function mostrarArray($ar, $exit = true) {
+    static function mostrarArray ($ar, $exit = true) {
+
         echo "\n<pre style=\"background:black;color:#dcdcdc\">\n";
         print_r($ar);
         echo "</pre>";
-        if ($exit == TRUE) {
+        if ($exit == true) {
             exit;
         }
     }
@@ -31,22 +32,62 @@ class Debug {
     /**
      * Muestra el contenido de las variables pasadas como parametros en bloques de impresion
      *
-     * @internal Mantiene la ejecucion a menos que reciba como parametro explicito true
-     *
-     * @access public
-     * @since 0.1
-     *
+     * @param array $impresiones Arreglo de impresiones a realizar.
+     * @param array $config Arreglo de configuraciones, tiene opciones para selector, corte y color de la impresion del arreglo
      */
-    static function imprimir() {
-        $numero = func_num_args();
-        for ($i = 0; $i < $numero; ++$i) {
-            $arg = func_get_arg($i);
-            if (is_array($arg) or is_object($arg)) self::mostrarArray($arg, 0);
-            elseif (is_string($arg) or is_int($arg) or is_float($arg))
-                self::cadena($arg, 0);
-            elseif (is_bool($arg) and $arg) {
-                exit;
+    static function imprimir ($impresiones = [], $config = []) {
+
+        if (!$impresiones) {
+            return;
+        }
+        if (is_bool($config))
+            $config = ['corte' => $config];
+        $estandar = [
+            'selector' => 'hr',
+            'corte'    => false,
+            'bg'       => 'white',
+            'color'    => 'black'
+
+        ];
+        $traza = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        echo "
+        <div style='font-size: 11px; color:red'>
+            <div>" . $traza["file"] . ", Linea " . $traza['line'] . "</div>
+        </div>
+        ";
+
+        $config = array_merge($estandar, $config);
+
+        if (is_string($impresiones)) {
+            $impresiones = explode("*", $impresiones);
+        }
+
+        foreach ($impresiones as $key => $impresion) {
+
+            if (is_array($impresion) or is_object($impresion)) {
+                echo "<pre style=\"background:" . $config['bg'] . "\">";
+                print_r($impresion);
+                echo "</pre>";
+
             }
+            else if (is_string($impresion)) {
+                echo $impresion;
+            }
+            else if (is_bool($impresion)) {
+                $booleano = ($impresion) ? "true" : "false";
+                echo "bool: $booleano";
+            }
+            if (array_key_exists('html', $config)) {
+                echo $config['html'];
+            }
+            else {
+                echo "<" . $config['selector'] . "/>";
+            }
+
+        }
+        if ($config['corte']) {
+            exit;
         }
     }
 
@@ -57,13 +98,15 @@ class Debug {
      * @since 0.1
      * @deprecated 0.6
      */
-    static function string($content, $exit = false, $tag = "hr") {
+    static function string ($content, $exit = false, $tag = "hr") {
+
         if (!is_array($content)) {
             echo $content . "<$tag/>";
-            if ($exit == TRUE) {
+            if ($exit == true) {
                 exit;
             }
-        } elseif (is_array($content) or is_object($content)) {
+        }
+        else if (is_array($content) or is_object($content)) {
             self::mostrarArray($content, $exit);
         }
     }
@@ -75,13 +118,15 @@ class Debug {
      * @since 0.6
      *
      */
-    static function cadena($content, $exit = false, $tag = "hr") {
+    static function cadena ($content, $exit = false, $tag = "hr") {
+
         if (!is_array($content)) {
             echo $content . "<$tag/>";
-            if ($exit == TRUE) {
+            if ($exit == true) {
                 exit;
             }
-        } elseif (is_array($content) or is_object($content)) {
+        }
+        else if (is_array($content) or is_object($content)) {
             self::mostrarArray($content, $exit);
         }
     }

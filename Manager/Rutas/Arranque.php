@@ -24,12 +24,14 @@ class Arranque {
      *
      */
     static public $Controlador;
-    public static $metodo = false;
+    static public $metodo = false;
     /**
      * @var bool
      */
     static public $controlador = false;
     static public $namespace;
+
+    static public $modulo;
     /**
      * @var string $ruta Define si la ruta de archivos debe ser buscada en el framework o en la aplicacion
      */
@@ -38,7 +40,6 @@ class Arranque {
     public $default;
     public $jadmin = false;
 
-    public $modulo = false;
     public $parametros = [];
     public $modulos;
 
@@ -140,31 +141,48 @@ class Arranque {
 
     public function ejecutar () {
 
-        if ($this->_validar()) {
+        try {
+            if ($this->_validar()) {
 
-            $controlador = self::obtenerControlador(self::$controlador);
+                $controlador = self::obtenerControlador(self::$controlador);
 
-            $this->_pipeLines($controlador, '_jdPre');
+                $this->_pipeLines($controlador, '_jdPre');
 
-            call_user_func_array(
-                [
-                    $controlador,
-                    self::$metodo
-                ],
-                $this->parametros
-            );
+                call_user_func_array(
+                    [
+                        $controlador,
+                        self::$metodo
+                    ],
+                    $this->parametros
+                );
 
-            $this->_pipeLines($controlador, '_jdPost');
+                $this->_pipeLines($controlador, '_jdPost');
 
-            $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
-            $this->_managerVista->renderizar();
+                $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
+                $this->_managerVista->renderizar();
 
+            }
+        }
+        catch (\Exception $e) {
+            Helpers\Debug::imprimir([
+                                        "capturada excepcion en arranque",
+                                        $e
+                                    ],
+                                    ['corte' => true]);
+        }
+        catch (\Error $e) {
+            Helpers\Debug::imprimir([
+                                        "capturado error en arranque",
+                                        $e
+                                    ],
+                                    ['corte' => true]);
         }
 
     }
 
     private function _validar () {
 
+        Estructura::definir($this);
         $dataVista = new Core\DataVista($this->modulo, self::$controlador, self::$metodo, $this->jadmin);
         $GLOBALS['dataVista'] = $dataVista;
         $this->_dataVista = $dataVista;

@@ -7,6 +7,7 @@ namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
 use Jida\Helpers\Debug;
+use Jida\Manager\Rutas\Arranque;
 
 class Estructura {
 
@@ -48,6 +49,13 @@ class Estructura {
      */
     static $directorioJida;
 
+    static public $namespace;
+    static public $ruta;
+    static public $modulo;
+    static public $controlador;
+    static public $metodo;
+    static public $jadmin;
+
     static private function _obtenerDirectorio () {
 
         $actual = explode(DS, __DIR__);
@@ -60,7 +68,6 @@ class Estructura {
         $directorio = implode("/", array_reverse($parte));
 
         self::$directorio = $directorio;
-        Debug::imprimir();
 
         return $directorio;
 
@@ -93,6 +100,7 @@ class Estructura {
     }
 
     static function procesar ($directorioJida) {
+
         try {
             self::_obtenerDirectorio();
             self::$directorioJida = $directorioJida;
@@ -125,10 +133,29 @@ class Estructura {
             self::$urlRuta = $pathDominio;
 
             self::$url = self::$dominio . $url;
-        }catch (Excepcion $e) {
+        }
+        catch (Excepcion $e) {
             Debug::imprimir($e);
         }
 
+    }
+
+    /**
+     * Define la estructura modular en ejecución del Framework
+     *
+     * Disponibiliza los valores del modulo, controlador y metodo
+     * utilizados, así como el namespace y la ruta
+     *
+     * @param Arranque $arranque
+     */
+    static public function definir (Arranque $arranque) {
+
+        self::$ruta = $arranque::$ruta;
+        self::$namespace = $arranque::$metodo;
+        self::$modulo = $arranque::$modulo;
+        self::$controlador = $arranque::$controlador;
+        self::$metodo = $arranque::$metodo;
+        self::$jadmin = $arranque->jadmin;
 
     }
 

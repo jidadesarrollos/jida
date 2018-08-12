@@ -16,6 +16,7 @@ use App\Config\Configuracion;
 use Jida\Core\Manager\DataVista as DataVista;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Cadenas as Cadenas;
+use Jida\Manager\Estructura;
 
 class Controller {
 
@@ -165,7 +166,6 @@ class Controller {
      * @var object $dv ;
      */
 
-
     private $_clase;
     /**
      * Nombre del controlador
@@ -240,7 +240,6 @@ class Controller {
 
         $this->_nombreController = str_replace("Controller", "", end($clase));
 
-
         $this->url = $this->urlController();
         if (Helpers\Sesion::obt('Usuario') instanceof User)
             $this->usuario = Helpers\Sesion::obt('Usuario');
@@ -257,7 +256,6 @@ class Controller {
         if ($this->solicitudAjax()) {
             $this->layout = "ajax.tpl.php";
         }
-
 
         $this->getModelo();
         $this->dv->usuario = Helpers\Sesion::obt('Usuario');
@@ -563,6 +561,7 @@ class Controller {
     /**
      * Retorna la url del controlador actual
      * @method urlController
+     * @deprecated
      */
     protected function urlController ($ctrl = "") {
 
@@ -586,7 +585,6 @@ class Controller {
                 throw new \Exception("La url no puede ser armada correctamente, el objeto <strong>$ctrl</strong> no existe",
                                      1);
         }
-
 
         if (!empty($controller)) {
 
@@ -666,7 +664,6 @@ class Controller {
                     $ctrl = preg_replace("/[a-zA-Z]+Controller$/",
                                          Cadenas::upperCamelCase($url[0]) . 'Controller',
                                          $this->_clase);
-
 
                 $urlController = $this->urlController($ctrl);
                 $metodo = $url[1];
@@ -801,69 +798,6 @@ class Controller {
     }
 
     /**
-     * Retorna el nombre del modulo en el que se encuentra el objeto
-     */
-    function getModulo ($obj) {
-
-        if (is_object($obj)) {
-            return $this->_modulo;
-        }
-        else {
-            return $this->_404();
-        }
-
-    }
-
-    /**
-     * Verifica si el controlador tiene un modelo correspondiente
-     *
-     * Para que el modelo del controlador sea conseguido debe tener el nombre del Arranque
-     * en singular
-     * @method getModelo;
-     *
-     */
-    private function getModelo () {
-
-        if (!is_object($this->modelo)) {
-            if (!empty($this->modelo)) {
-
-                if (class_exists($this->modelo)) {
-                    $this->modelo = new $this->modelo;
-                }
-                else {
-
-                    throw new \Exception("El objeto $this->modelo especificado como modelo no existe", 1);
-
-                }
-            }
-            else {
-
-                $words = preg_split('#([A-Z][^A-Z]*)#',
-                                    $this->_nombreController,
-                                    null,
-                                    PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-                $arrayModel = [];
-                foreach ($words as $key => $word) {
-                    if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {
-                        $arrayModel[] = substr($word, 0, strlen($word) - 2);
-                    }
-                    else if (substr($word, strlen($word) - 1) == PLURAL_ATONO) {
-                        $arrayModel[] = substr($word, 0, strlen($word) - 1);
-                    }
-                }
-
-                $model = (count($arrayModel) > 0) ? implode($arrayModel) : $this->_nombreController;
-                if (class_exists($model)) {
-                    $this->modelo = new $model;
-                }
-            }
-
-        }
-
-    }
-
-    /**
      * funcion estandard para eliminar registros, funcional solo con modelos que
      * extiendan del objeto DataModel.
      *
@@ -871,6 +805,7 @@ class Controller {
      * @method eliminar
      *
      * @param mixed $id
+     * @deprecated
      */
     protected function eliminarDatos ($id) {
 
@@ -892,7 +827,6 @@ class Controller {
         throw new \Exception("No se consigue el enlace solicitado", 404);
 
     }
-
 
     protected function obtenerListaGet ($lista) {
 
@@ -946,34 +880,20 @@ class Controller {
     /**
      * Retorna la url de la aplicacion actual
      * @method obtURLApp
+     * @deprecated since 0.6.1
      *
      */
     protected function obtURLApp () {
 
-        $idioma = "";
-        if ($this->multiidioma)
+        $url = Estructura::$urlBase;
+        if ($this->multiidioma) {
+
             $idioma = (empty($this->idioma)) ? "" : $this->idioma . "/";
+            $url . "/" . $idioma;
 
-        if (strtolower($_SERVER['SERVER_NAME']) == 'localhost') {
-            return $GLOBALS['__URL_APP'] . $idioma;
         }
-        else {
-            return Configuracion::URL_ABSOLUTA . $idioma;
-        }
-    }
 
-    /**
-     * Retorna un arreglo a partir de un archivo JSON
-     *
-     * @method obtJSON
-     * @param directory $path Directorio del archivo
-     *
-     * @return array
-     * @since 1.4
-     */
-    protected function obtJson ($path) {
-
-        return json_decode(file_get_contents($path));
+        return $url;
 
     }
 
@@ -1018,6 +938,5 @@ class Controller {
         else $this->dv->{
         $data} = $valor;
     }
-
 
 }

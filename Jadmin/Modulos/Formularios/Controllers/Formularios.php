@@ -11,10 +11,11 @@
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
 use Jida\Helpers as Helpers;
+use Jida\Jadmin\Controllers\JControl;
 use Jida\Modelos\Formulario;
 use Jida\Render as Render;
 
-class Formularios extends FController {
+class Formularios extends JControl {
 
     private $_rutaJida;
     public $manejoParams = TRUE;

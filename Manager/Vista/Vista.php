@@ -22,7 +22,6 @@ class Vista {
     private $_nombre;
     private $_data;
 
-
     static public $padre;
     private $_DIRECTORIOS = [
 
@@ -31,7 +30,6 @@ class Vista {
     ];
 
     static public $directorio;
-
 
     function __construct ($padre) {
 
@@ -56,7 +54,7 @@ class Vista {
         $directorio .= ($arranque::$ruta !== 'jida') ? "/" . Estructura::DIR_APP : "/" . Estructura::DIR_JIDA;
 
         $moduloAgregado = false;
-        if (!!$arranque->modulo && $arranque::$ruta === 'app') {
+        if (!!Estructura::$modulo && $arranque::$ruta === 'app') {
             $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
             $moduloAgregado = true;
         }
@@ -65,8 +63,8 @@ class Vista {
 
             $directorio .= "/" . $this->_DIRECTORIOS['jida'];
 
-            if (!!$arranque->modulo and !$moduloAgregado) {
-                $directorio .= "/Modulos/" . ucfirst($arranque->modulo);
+            if (!!Estructura::$modulo and !$moduloAgregado) {
+                $directorio .= "/Modulos/" . ucfirst(Estructura::$modulo);
             }
 
         }
@@ -102,16 +100,14 @@ class Vista {
     function obtener () {
 
         $padre = self::$padre;
-        $arranque = $padre::$Padre;
         $controlador = $padre::$controlador;
 
         if (!self::$directorio) {
             $this->_obtenerDirectorio();
         }
 
-
-        $vista = (!!$arranque::$metodo) ? $arranque::$metodo : Estructura::NOMBRE_VISTA;
-        $vista = (!!$controlador->vista) ? $controlador->vista : $vista;
+        $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
+        $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
         $vista = self::$directorio . "/" . $vista;
 
@@ -123,7 +119,6 @@ class Vista {
         if (!file_exists($vista)) {
             throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');
         }
-
 
         return $vista;
     }

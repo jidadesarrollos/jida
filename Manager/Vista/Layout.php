@@ -71,7 +71,7 @@ class Layout {
             self::$directorio .= $tema . DS;
         }
 
-        self::$directorio .= $controlador->layout;
+        self::$directorio .= $controlador->layout();
 
         return $this;
 

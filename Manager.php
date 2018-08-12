@@ -42,10 +42,13 @@ class Manager {
             $this->_validador = new Validador();
             $this->_lector = new Lector($this);
 
-
         }
         catch (\Exception $e) {
+            exit("capturada excepcion");
+        }
+        catch (\Error $e) {
             exit("capturado error");
+
         }
 
     }

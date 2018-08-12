@@ -108,7 +108,7 @@ class Componentes extends JController {
             if ($this->post('btnPerfilesAComponentes')) {
 
                 if ($form->validar()) {
-                    Helpers\Debug::imprimir('$this->post(', $this->post(), TRUE);
+
                     if ($comp->asignarAccesoPerfiles($this->post('id_perfil'))->ejecutado()) {
                         Render\JVista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente ' . $comp->componente, $this->urlController());
                     } else

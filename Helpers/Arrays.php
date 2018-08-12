@@ -31,7 +31,8 @@ class Arrays {
      * @example
      *
      */
-    static function filtro($matriz, $filtro) {
+    static function filtro ($matriz, $filtro) {
+
         $numeroFiltros = count($filtro);
         $array = [];
         foreach ($matriz as $key => $valores) {
@@ -54,7 +55,8 @@ class Arrays {
      * @since 0.1
      *
      */
-    static function combinar($ar1, $ar2) {
+    static function combinar ($ar1, $ar2) {
+
         foreach ($ar1 as $key => $value) {
             if (array_key_exists($key, $ar2)) {
                 $ar1[$key] = $ar2[$key];
@@ -77,7 +79,8 @@ class Arrays {
      * @since 0.1
      *
      */
-    static function obtenerHijosArray($arr, $busqueda, $filtro) {
+    static function obtenerHijosArray ($arr, $busqueda, $filtro) {
+
         $nuevoArreglo = [];
 
         foreach ($arr as $key => $value) {
@@ -100,8 +103,9 @@ class Arrays {
      * @since 0.1
      *
      */
-    static function obtenerKey($clave, $array, $mantenerKey = FALSE) {
-        $arrayResult = array();
+    static function obtenerKey ($clave, $array, $mantenerKey = false) {
+
+        $arrayResult = [];
         if (!is_array($array) and !is_object($array))
             throw new Exception(" El objeto pasado $array no es un arreglo", 1);
 
@@ -114,12 +118,15 @@ class Arrays {
                         if (property_exists($value, $fila))
                             $datos[$value] = $fila[$value];
                     }
-                    if (!empty($datos)) $arrayResult[] = $datos;
-                } else
+                    if (!empty($datos))
+                        $arrayResult[] = $datos;
+                }
+                else
                     if (property_exists($fila, $clave) and !empty($fila->$clave)) {
                         $arrayResult[] = $fila->$clave;
                     }
-            } else
+            }
+            else
                 if (!is_array($fila)) {
 
                     if (is_array($clave)) {
@@ -130,7 +137,8 @@ class Arrays {
                         }
                     }
 
-                } else {
+                }
+                else {
                     if (is_array($clave)) {
 
                         $datos = [];
@@ -139,8 +147,10 @@ class Arrays {
                                 $datos[$value] = $fila[$value];
                         }
 
-                        if (!empty($datos)) $arrayResult[] = $datos;
-                    } else
+                        if (!empty($datos))
+                            $arrayResult[] = $datos;
+                    }
+                    else
                         if (array_key_exists($clave, $fila)) {
                             $arrayResult[] = $fila[$clave];
                         }
@@ -148,7 +158,8 @@ class Arrays {
 
         }//fin foreach
 
-        if (!empty($datos)) $arrayResult[] = $datos;
+        if (!empty($datos))
+            $arrayResult[] = $datos;
 
         if (count($array) > 0)
             return $arrayResult;
@@ -167,25 +178,29 @@ class Arrays {
      * @since 0.1
      *
      */
-    static function addColumna($matriz, $valores, $usoKeyValores = FALSE) {
+    static function addColumna ($matriz, $valores, $usoKeyValores = false) {
 
         if (is_array($valores)) {
             foreach ($matriz as $key => &$vector) {
 
                 if (is_string($vector))
-                    $vector = array($vector);
+                    $vector = [$vector];
 
                 foreach ($valores as $clave => $valor) {
-                    if ($usoKeyValores == TRUE)
+                    if ($usoKeyValores == true)
                         $vector[$clave] = $valor;
                     else
                         $vector[] = $valor;
                 }
             }
-        } else {
+        }
+        else {
             foreach ($matriz as $key => &$vector) {
                 if (is_string($vector))
-                    $vector = array($vector, $valores);
+                    $vector = [
+                        $vector,
+                        $valores
+                    ];
                 else
                     $vector[] = $valores;
             }
@@ -205,17 +220,19 @@ class Arrays {
      * @example ca
      *
      */
-    static function convertirAObjeto($array) {
+    static function convertirAObjeto ($array) {
+
         $objeto = new stdClass();
         foreach ($array as $key => $value) {
-            if (is_array($value)) $objeto->$key = self::convertirAObjeto($value);
+            if (is_array($value))
+                $objeto->$key = self::convertirAObjeto($value);
             else $objeto->$key = $value;
         }
 
         return $objeto;
     }
 
-    static function ordenarMatriz($matriz, $campo, $inverso = FALSE) {
+    static function ordenarMatriz ($matriz, $campo, $inverso = false) {
 
         $pivote = [];
         foreach ($matriz as $key => $fila) {
@@ -223,8 +240,6 @@ class Arrays {
             $pivote[$fila[$campo]] = $fila;
 
         }
-
-        Debug::imprimir($pivote, true);
 
     }
 

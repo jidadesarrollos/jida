@@ -5,7 +5,6 @@
 
 namespace Jida\Manager\Vista;
 
-use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
 use Jida\Helpers\Debug;

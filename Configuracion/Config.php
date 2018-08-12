@@ -25,6 +25,11 @@ class Config {
     const PATH_JIDA = "vendor";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
+    /**
+     * Define si la aplicacion es multiidioma
+     * @const bolean MULTIIDIOMA
+     */
+    const MULTIIDIOMA = false;
 
     /**
      * Variable para definicion de modulos dentro de la aplicación

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jida\Manager\Vista;
 
 use Jida\Core\Controller as Controller;
@@ -18,7 +17,6 @@ class Manager {
     private $_layout;
 
     public $Procesador;
-
 
     static public $controlador;
     static public $Padre;
@@ -57,7 +55,6 @@ class Manager {
         $this->_modulo = $padre->modulo;
         $this->_layout = new Layout($this);
 
-
     }
 
     function excepcion () {
@@ -75,12 +72,9 @@ class Manager {
             ->leer()
             ->render($archivoVista);
 
-
         echo $salida;
 
-
     }
-
 
     function vista () {
 
@@ -91,6 +85,5 @@ class Manager {
         return self::$vista;
 
     }
-
 
 }
