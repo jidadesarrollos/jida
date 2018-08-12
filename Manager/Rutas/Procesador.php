@@ -19,7 +19,7 @@ class Procesador {
     protected $_padre;
     protected $_moduloValidado;
     protected $_default = 'Index';
-    private $_ce = 10005;
+    private static $_ce = 10005;
     private $_namespaces = [
         'app'        => 'App\\Controllers\\',
         'modulo'     => 'App\\Modulos\\',
@@ -45,7 +45,7 @@ class Procesador {
         $padre::$namespace = $this->_namespace;
     }
 
-   private function _argumentos () {
+    private function _argumentos () {
 
         $parametros = $this->_padre->arrayUrl();
 
