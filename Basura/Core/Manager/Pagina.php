@@ -274,7 +274,6 @@ class Pagina {
         return Helpers\Cadenas::lowerCamelCase($tpl);
     }
 
-
     /**
      * Define el directorio donde debe ser buscada la vista
      * @method obtenerDirectorioVista

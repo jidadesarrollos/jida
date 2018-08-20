@@ -15,7 +15,8 @@
  */
 
 namespace Jida\Core;
-class File{
+
+class File {
     /**
      * @var string Directorio Ubicación Física del archivo a crear/editar
      */
@@ -33,80 +34,96 @@ class File{
     /**
      * @var array $lineas Lineas del Archivo Guardadas en un array
      */
-    protected $lineas=array();
+    protected $lineas = [];
     /**
      * @var int $totalLineas Registra total de lineas del archivo
      */
     protected $totalLineas;
 
-    function __construct($directorio,$name){
-        $this->directorio=$directorio;
-        $this->name=$name;
+    function __construct ($directorio, $name) {
+
+        $this->directorio = $directorio;
+        $this->name = $name;
     }
 
     /**
      * Crea un archivo
      * @method crear
      */
-    function crear(){
-        if(!file_exists($this->directorio)){
+    function crear () {
+
+        if (!file_exists($this->directorio)) {
             Directorios::crear($this->directorio);
         }
-        $this->archivo=fopen($this->directorio."/".$this->name,'w');
-        if($this->archivo){
+        $this->archivo = fopen($this->directorio . "/" . $this->name, 'w');
+        if ($this->archivo) {
             return true;
-        }else{
+        }
+        else {
             return false;
         }
     }
 
-    function getLineas(){
-        while(!feof($this->archivo)){
-            $this->lineas[]=fgets($this->archivo);
+    function getLineas () {
+
+        while (!feof($this->archivo)) {
+            $this->lineas[] = fgets($this->archivo);
         }
-        $this->totalLineas=count($this->lineas);
+        $this->totalLineas = count($this->lineas);
 
     }
+
     /**
      * Devuelve el total de lineas de un archivo
      * @method getTotalLineas
      */
-    function getTotalLineas(){
-        if(count($this->lineas)>0){
-            $this->totalLineas=count($this->lineas);
+    function getTotalLineas () {
+
+        if (count($this->lineas) > 0) {
+            $this->totalLineas = count($this->lineas);
+
             return $this->totalLineas;
-        }else{
-            return  0;
+        }
+        else {
+            return 0;
         }
     }
+
     /**
      * Cierra un archivo abierto
      * @method cerrar
      */
-    function cerrar($archivo=null){
-        if(is_null($archivo)){
-            $archivo=& $this->archivo;
+    function cerrar ($archivo = null) {
+
+        if (is_null($archivo)) {
+            $archivo =& $this->archivo;
         }
         fclose($archivo);
     }
+
     /**
      * Cuenta las tabulaciones existentes en una linea
      * @method countTabs
      * @param string $line Linea a leer
      */
-    protected function countTabs($line){
+    protected function countTabs ($line) {
+
         $count = strspn($line, "\t");
+
         return $count;
     }
+
     /**
      * Agrega las tabulaciones necesarias para una linea
      * @method addTabs
      * @param int $numero Numero de Tabulaciones
      */
-    protected function addTabs($numero){
-        $tabs="";
-        for($i=0;$i<$numero;$i++)
-            $tabs.="\n";
+    protected function addTabs ($numero) {
+
+        $tabs = "";
+        for ($i = 0; $i < $numero; $i++)
+            $tabs .= "\n";
+
         return $tabs;
     }
 

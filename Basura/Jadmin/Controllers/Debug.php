@@ -12,13 +12,15 @@ class Debug extends JController {
 
     private $jctrl = "";
 
-    function __construct() {
+    function __construct () {
+
         $this->jctrl = new Modelos\JidaControl();
         parent::__construct();
         $this->layout = "jadmin.tpl.php";
     }
 
-    function query() {
+    function query () {
+
         $this->tituloPagina = "JidaDesarrollos - Consulta BD";
 
         if (isset($_POST['ejecutarQuery'])) {
@@ -61,7 +63,8 @@ class Debug extends JController {
                                 $i++;
                             }//fin segundo foreach
                         }
-                    } else {
+                    }
+                    else {
                         $nombreCols = 1;
                     }//fin validacion de registros
 
@@ -76,7 +79,8 @@ class Debug extends JController {
 
                 $this->dv->resultQuery = $tablas;
 
-            } else {
+            }
+            else {
                 throw new Exception("La consulta a base de datos esta vacia", 1);
 
             }

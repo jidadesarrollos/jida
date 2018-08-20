@@ -11,6 +11,7 @@
  */
 
 namespace Jida\BD;
+
 class ResultBD {
     /**
      * @var object $bd Objeto Instanciado manejador de base de datos
@@ -25,26 +26,29 @@ class ResultBD {
     protected $query;
     protected $idResultado;
     protected $unico;
-    private $ejecutado = FALSE;
+    private $ejecutado = false;
 
-    function __construct(DataModel $DataModel) {
+    function __construct (DataModel $DataModel) {
+
         $this->setValores($DataModel);
 
     }
 
-    function setValores(DataModel $DataModel) {
+    function setValores (DataModel $DataModel) {
+
         $this->dataModel = $DataModel;
         $this->bdObject = $this->dataModel->__get('bd');
         $this->idResultado = $this->bdObject->__get('idResult');
 
         $this->result = $this->dataModel->bd->result;
         if (!empty($this->idResultado) or $this->result)
-            $this->ejecutado = TRUE;
+            $this->ejecutado = true;
 
         return $this;
     }
 
-    function getData() {
+    function getData () {
+
         return $this->result;
     }
 
@@ -52,7 +56,8 @@ class ResultBD {
      * Valida si se ejecuto la consulta a base de datos
      * @method ejecutado
      */
-    function ejecutado() {
+    function ejecutado () {
+
         return $this->ejecutado;
     }
 
@@ -62,27 +67,33 @@ class ResultBD {
      * @return int Resultado
      * @see $this::idResultado
      */
-    function idResultado() {
+    function idResultado () {
+
         return $this->idResultado;
     }
 
-    function setUnico($unico) {
+    function setUnico ($unico) {
+
         $this->unico = $unico;
     }
 
-    function esUnico() {
+    function esUnico () {
+
         return $this->unico;
     }
 
-    function totalRegistros() {
+    function totalRegistros () {
+
         return $this->bdObject->totalRegistros();
     }
 
-    function query() {
+    function query () {
+
         return $this->dataModel->bd->query;
     }
 
-    function __set($property, $valor) {
+    function __set ($property, $valor) {
+
         if (property_exists($this, $property))
             $this->$property = $valor;
     }
@@ -93,7 +104,8 @@ class ResultBD {
      * @return array $idsInsertados
      * @since 1.4
      */
-    function ids() {
+    function ids () {
+
         return $this->dataModel->obtIdsResultados();
     }
 

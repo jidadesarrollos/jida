@@ -7,9 +7,10 @@ use \Jida\helpers AS Helpers;
 
 class Modulos extends JController {
 
-    var $manejoParams = TRUE;
+    var $manejoParams = true;
 
-    function __construct() {
+    function __construct () {
+
         parent::__construct();
         $this->layout = "jadmin.tpl.php";
         $this->url = "/jadmin/Modulos/";
@@ -29,14 +30,14 @@ class Modulos extends JController {
      * @since    0.5
      *
      */
-    private function arregloModulos($ruta) {
+    private function arregloModulos ($ruta) {
 
         $arr = self::listarkeyDir($ruta);
 
         return $arr;
     }
 
-    private function arregloParatabla() {
+    private function arregloParatabla () {
 
         $linea = [];
         $result = [];
@@ -72,7 +73,7 @@ class Modulos extends JController {
      *
      */
 
-    private function machModulo() {
+    private function machModulo () {
 
         $declaraciones = $GLOBALS['modulos'];
         $direcciones = self::arregloModulos('Aplicacion\Modulos');
@@ -89,7 +90,8 @@ class Modulos extends JController {
                         break;
 
                     }
-                } else {
+                }
+                else {
                     unset($declaraciones[$key]);
 
                 }
@@ -98,15 +100,17 @@ class Modulos extends JController {
 
         }//end foreach declaraciones
 
-        $arr = ['direcciones'   => $direcciones,
-                'declaraciones' => $declaraciones
+        $arr = [
+            'direcciones'   => $direcciones,
+            'declaraciones' => $declaraciones
         ];
 
         return $arr;
 
     }//end method machModulo
 
-    private function mensajeModulo() {
+    private function mensajeModulo () {
+
         $mach = self::machModulo();
         $mensaje = '';
         if (count($mach['direcciones']) > 0) {
@@ -130,34 +134,39 @@ class Modulos extends JController {
 
     }
 
-    public function index() {
+    public function index () {
 
         $mensaje = self::mensajeModulo();
         // Helpers\debug::imprimir($mensaje,true);
         $arre = self::arregloParatabla();
 
-        $tabla = new Render\jvista($arre, ['titulos' => ['Nombre',
-            'Direccion'
-        ]
+        $tabla = new Render\jvista($arre, [
+            'titulos' => [
+                'Nombre',
+                'Direccion'
+            ]
         ], 'Modulos');
 
         $tabla->accionesFila([
-            ['span'  => 'glyphicon glyphicon-edit',
-             'title' => 'Modificar menu',
-             'href'  => $this->obtUrl('', [$arre])
-            ],
-            ['span'        => 'glyphicon glyphicon-trash',
-             'title'       => 'Eliminar menu',
-             'href'        => $this->obtUrl('', ['{clave}']),
-             'data-jvista' => 'confirm',
-             'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?'
-            ]
-        ]);
+                                 [
+                                     'span'  => 'glyphicon glyphicon-edit',
+                                     'title' => 'Modificar menu',
+                                     'href'  => $this->obtUrl('', [$arre])
+                                 ],
+                                 [
+                                     'span'        => 'glyphicon glyphicon-trash',
+                                     'title'       => 'Eliminar menu',
+                                     'href'        => $this->obtUrl('', ['{clave}']),
+                                     'data-jvista' => 'confirm',
+                                     'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?'
+                                 ]
+                             ]);
 
-        $tabla->addMensajeNoRegistros('No hay Modulos Registrados', [
-            'link'    => $this->obtUrl(''),
-            'txtLink' => 'Registrar modulo'
-        ]);
+        $tabla->addMensajeNoRegistros('No hay Modulos Registrados',
+                                      [
+                                          'link'    => $this->obtUrl(''),
+                                          'txtLink' => 'Registrar modulo'
+                                      ]);
         $tabla->acciones(['nuevo ' => ['href' => $this->obtUrl('nuevo')]]);
         Helpers\Mensajes::crear('alerta', $mensaje);
 
@@ -166,7 +175,8 @@ class Modulos extends JController {
 
     }
 
-    public function nuevo() {
+    public function nuevo () {
+
         $formulario = new \Jida\Render\Formulario('nuevoModulo');
         $formulario->action = $this->obtUrl();
         $formulario->boton('principal')->attr('value', "Crear Modulo");
@@ -181,7 +191,8 @@ class Modulos extends JController {
 
                 $this->redireccionar('index');
 
-            } else {
+            }
+            else {
 
                 $formulario::msj('alerta', "No se guardo el registro");
 
@@ -190,7 +201,7 @@ class Modulos extends JController {
         $this->dv->form = $formulario->armarFormulario();
     }
 
-    private function crearModulo($name = '', $tipo = 0) {
+    private function crearModulo ($name = '', $tipo = 0) {
 
         if ($name != '') {
             $name = Helpers\cadenas::upperCamelCase($name);
@@ -205,7 +216,8 @@ class Modulos extends JController {
                 ];
                 $extends = '\Jida\Jadmin\Controllers\JController';
 
-            } elseif ($tipo == 2) {
+            }
+            else if ($tipo == 2) {
 
                 $directorios = [
                     '',
@@ -221,7 +233,8 @@ class Modulos extends JController {
                 $extends = '\Jida\Jadmin\Controllers\JController';
                 $mixto = '\Jida\Core\Controller';
 
-            } else {
+            }
+            else {
                 $directorios = [
                     '',
                     $Path . '/Controllers',
@@ -237,7 +250,8 @@ class Modulos extends JController {
 
             if ($tipo != 2) {
                 $this->crearArchivosEstandar($name, $directorios, $extends);
-            } else {
+            }
+            else {
                 $this->crearArchivosEstandar($name, $directorios, $extends, $mixto);
             }
 
@@ -245,7 +259,7 @@ class Modulos extends JController {
 
     }
 
-    private function crearArchivosEstandar($nombreArchivo, $directorios, $extiende, $mixto = '') {
+    private function crearArchivosEstandar ($nombreArchivo, $directorios, $extiende, $mixto = '') {
 
         $nombreModelo = Helpers\Cadenas::obtenerSingular($nombreArchivo);
         $nombreArchivo .= 'Controller';
@@ -299,11 +313,12 @@ class Modulos extends JController {
 
     }
 
-    private function listarKeyDir($ruta, $bool = FALSE) {
+    private function listarKeyDir ($ruta, $bool = false) {
+
         $listado = [];
         if (is_dir($ruta)) {
             if ($directorio = opendir($ruta)) {
-                while (($file = readdir($directorio)) !== FALSE) {
+                while (($file = readdir($directorio)) !== false) {
                     if ($file != "." and $file != '..') {
 
                         $listado[] = $file;

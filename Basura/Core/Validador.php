@@ -20,7 +20,6 @@ class Validador {
      */
     protected $mensajeError = "";
 
-
     /**
      * @var boolean $validacion TRUE si se cumple la valicación, FALSE caso contrario
      */
@@ -32,84 +31,109 @@ class Validador {
      */
     protected $dataValidaciones =
         [
-            'numerico'            => ['expresion' => "/^(?:\+|-)?\d+$/",
-                                      'mensaje'   => "Debe ser numerico"
+            'numerico'            => [
+                'expresion' => "/^(?:\+|-)?\d+$/",
+                'mensaje'   => "Debe ser numerico"
             ],
-            'obligatorio'         => ['expresion' => "/^.*$/",
-                                      'mensaje'   => "Es Obligatorio"
+            'obligatorio'         => [
+                'expresion' => "/^.*$/",
+                'mensaje'   => "Es Obligatorio"
             ],
-            'decimal'             => ['expresion' => "/^([0-9])*[.]?[0-9]*$/",
-                                      'mensaje'   => "Debe ser decimal y los decimales deben estar separados por coma"
+            'decimal'             => [
+                'expresion' => "/^([0-9])*[.]?[0-9]*$/",
+                'mensaje'   => "Debe ser decimal y los decimales deben estar separados por coma"
             ],
-            'caracteres'          => ['expresion' => "/^[A-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
-                                      'mensaje'   => "solo puede contener caractares"
+            'caracteres'          => [
+                'expresion' => "/^[A-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
+                'mensaje'   => "solo puede contener caractares"
             ],
-            'alfanumerico'        => ['expresion' => "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
-                                      'mensaje'   => "no puede contener caracteres especiales"
+            'alfanumerico'        => [
+                'expresion' => "/^[\dA-ZñÑa-záéíóúÁÉÍÓÚ.,\'{1} ]*$/",
+                'mensaje'   => "no puede contener caracteres especiales"
             ],
-            'programa'            => ['expresion' => "/^[\d\/\.A-Za-z_-]*$/",
-                                      'mensaje'   => "Solo puede poseer caracteres alfanumericos,underscore o guion"
+            'programa'            => [
+                'expresion' => "/^[\d\/\.A-Za-z_-]*$/",
+                'mensaje'   => "Solo puede poseer caracteres alfanumericos,underscore o guion"
             ],
-            'email'               => ['expresion' => "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
-                                      'mensaje'   => "El formato del email no es valido"
+            'email'               => [
+                'expresion' => "/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/",
+                'mensaje'   => "El formato del email no es valido"
             ],
-            'telefono'            => ['expresion' => "/^0?2[0-9]{9,13}$/",
-                                      'mensaje'   => "El formato del telefono debe ser 0212 4222211"
+            'telefono'            => [
+                'expresion' => "/^0?2[0-9]{9,13}$/",
+                'mensaje'   => "El formato del telefono debe ser 0212 4222211"
             ],
-            'multiple'            => ['expresion' => "/^0?2[0-9]{9,13}$/",
-                                      'mensaje'   => "El tel&eacute;fono ingresado no es v&aacute;lido"
+            'multiple'            => [
+                'expresion' => "/^0?2[0-9]{9,13}$/",
+                'mensaje'   => "El tel&eacute;fono ingresado no es v&aacute;lido"
             ],
-            'celular'             => ['expresion' => "/^0?(412|416|414|424|426)\d{7}$/",
-                                      'mensaje'   => "El formato del celular debe ser 4212 4222211"
+            'celular'             => [
+                'expresion' => "/^0?(412|416|414|424|426)\d{7}$/",
+                'mensaje'   => "El formato del celular debe ser 4212 4222211"
             ],
-            'coordenada'          => ['expresion' => "/^\-?[0-9]{2}\.[0-9]{3,15}/",
-                                      'mensaje'   => "La coordenada debe tener el siguiente formato"
+            'coordenada'          => [
+                'expresion' => "/^\-?[0-9]{2}\.[0-9]{3,15}/",
+                'mensaje'   => "La coordenada debe tener el siguiente formato"
             ],
-            'contrasenia'         => ['expresion' => "",
-                                      'mensaje'   => "Debe cumplir con las especificaciones establecidas."
+            'contrasenia'         => [
+                'expresion' => "",
+                'mensaje'   => "Debe cumplir con las especificaciones establecidas."
             ],
-            'internacional'       => ['expresion' => "/^[0-9]{9,18}$/",
-                                      'mensaje'   => "El telefono internacional no es valido"
+            'internacional'       => [
+                'expresion' => "/^[0-9]{9,18}$/",
+                'mensaje'   => "El telefono internacional no es valido"
             ],
-            'minuscula'           => ['expresion' => "/[a-z]/",
-                                      'mensaje'   => "El telefono internacional no es valido"
+            'minuscula'           => [
+                'expresion' => "/[a-z]/",
+                'mensaje'   => "El telefono internacional no es valido"
             ],
-            'mayuscula'           => ['expresion' => "/[A-Z]/",
-                                      'mensaje'   => "El telefono internacional no es valido"
+            'mayuscula'           => [
+                'expresion' => "/[A-Z]/",
+                'mensaje'   => "El telefono internacional no es valido"
             ],
-            'numero'              => ['expresion' => "/[0-9]/",
-                                      'mensaje'   => "El telefono internacional no es valido"
+            'numero'              => [
+                'expresion' => "/[0-9]/",
+                'mensaje'   => "El telefono internacional no es valido"
             ],
-            'caracteresEsp'       => ['expresion' => "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
-                                      'mensaje'   => "El campo debe contener alg&uacute;n caracter especial"
+            'caracteresEsp'       => [
+                'expresion' => "/(\||\!|\"|\#|\$|\%|\&|\/|\(|\)|\=|\'|\?|\<|\>|\,|\;|\.|\:|\-|\_|\*|\~|\^|\{|\}|\+)/",
+                'mensaje'   => "El campo debe contener alg&uacute;n caracter especial"
             ],
-            'twitter'             => ['expresion' => "/^[A-Za-z0-9._-]*$/",
-                                      'mensaje'   => "Formato de twitter incorrecto"
+            'twitter'             => [
+                'expresion' => "/^[A-Za-z0-9._-]*$/",
+                'mensaje'   => "Formato de twitter incorrecto"
             ],
-            'url'                 => ['expresion' => "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
-                                      'mensaje'   => "El formato de la URL no es correcto"
+            'url'                 => [
+                'expresion' => "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/",
+                'mensaje'   => "El formato de la URL no es correcto"
             ],
-            'seguridadComillas'   => ['expresion' => "(([A-Za-z0-9])*\'([A-Za-z0-9])*|\'([A-Za-z0-9])*|([A-Za-z0-9])*\')",
-                                      'mensaje'   => ""
-                                      /*NO PUEDEN HABER DOS COMILLAS SIMPLES EN EL MISMO CAMPO '' */
+            'seguridadComillas'   => [
+                'expresion' => "(([A-Za-z0-9])*\'([A-Za-z0-9])*|\'([A-Za-z0-9])*|([A-Za-z0-9])*\')",
+                'mensaje'   => ""
+                /*NO PUEDEN HABER DOS COMILLAS SIMPLES EN EL MISMO CAMPO '' */
             ],
-            'seguridadComentario' => ['expresion' => "([A-Za-z0-9\|\!\"\#\$\%\&\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+\*]|\/[A-Za-z0-9\|\!\"\#\$\%\&\/\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+])*/?",
-                                      'mensaje'   => ""
-                                      /*NO PUEDE HABER UN COMENTARIO EN EL CAMPO /* */
+            'seguridadComentario' => [
+                'expresion' => "([A-Za-z0-9\|\!\"\#\$\%\&\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+\*]|\/[A-Za-z0-9\|\!\"\#\$\%\&\/\(\)\=\?\<\>\,\;\.\:\-\_\~\^\{\}\+])*/?",
+                'mensaje'   => ""
+                /*NO PUEDE HABER UN COMENTARIO EN EL CAMPO /* */
             ],
-            'seguridadGuiones'    => ['expresion' => "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
-                                      'mensaje'   => ""
-                                      /*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/
+            'seguridadGuiones'    => [
+                'expresion' => "/^([A-Za-z0-9\._]|\-[A-Za-z0-9\._])*\-?$/",
+                'mensaje'   => ""
+                /*NO PUEDEN HABER DOS GUIONES CONSECUTIVOS --*/
             ],
-            'fecha'               => ['expresion' => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
-                                      'mensaje'   => 'El formato de fecha debe ser dd-mm-yyyy'
+            'fecha'               => [
+                'expresion' => "/^\d{2,4}[\-|\/]{1}\d{2}[\-|\/]{1}\d{2,4}$/",
+                'mensaje'   => 'El formato de fecha debe ser dd-mm-yyyy'
             ],
-            'fechaHora'           => ['expresion' => '/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
-                                      'mensaje'   => 'Formato de Fecha u hora incorrecto.'
+            'fechaHora'           => [
+                'expresion' => '/^[1-9]{2}/[1-9]{2}[/|-][1-9]{2}:[1-9]{2}:[1-9]{2}$/',
+                'mensaje'   => 'Formato de Fecha u hora incorrecto.'
             ],
             'limiteCaracteres'    => ['mensaje' => "La cadena no puede superar el total de caracteres permitidos"],
-            'documentacion'       => ['expresion' => "/^(([V|v|E|e|G|g|J|j|P|p|N|n]{1})?\d{7,10})*$/",
-                                      'mensaje'   => "El campo debe tener el siguiente formato J12345678 o 12345678"
+            'documentacion'       => [
+                'expresion' => "/^(([V|v|E|e|G|g|J|j|P|p|N|n]{1})?\d{7,10})*$/",
+                'mensaje'   => "El campo debe tener el siguiente formato J12345678 o 12345678"
             ]
         ];
     /**
@@ -123,79 +147,85 @@ class Validador {
      * Metodo Constructor
      * @method __construct
      *
-     * @param string $cadena          Cadena a validar
-     * @param mixed  $validacion      String o Array de validaciones a ejecutar a la cadena
-     * @param array  $datosValidacion [opcional] Datos adicionales a ejecutar en validacion a tener en cuenta
+     * @param string $cadena Cadena a validar
+     * @param mixed $validacion String o Array de validaciones a ejecutar a la cadena
+     * @param array $datosValidacion [opcional] Datos adicionales a ejecutar en validacion a tener en cuenta
      *
      */
-    function __construct($cadena = "", $validacion = "", $datosValidacion = []) {
+    function __construct ($cadena = "", $validacion = "", $datosValidacion = []) {
 
         $this->valorCampo = $cadena;
-        $this->validacion = TRUE;
-        $error = FALSE;
+        $this->validacion = true;
+        $error = false;
 
         if (is_array($validacion)) {
 
             for ($i = 0; $i < count($validacion); ++$i) {
                 if (!$error):
-                    if (!$this->validarCadena($validacion[ $i ], $datosValidacion)) {
-                        $this->errors = $validacion[ $i ];
-                        $this->validacion = FALSE;
-                        $error = TRUE;
+                    if (!$this->validarCadena($validacion[$i], $datosValidacion)) {
+                        $this->errors = $validacion[$i];
+                        $this->validacion = false;
+                        $error = true;
                         break;
                     }
                 endif;
             }//fin for
-        } else {
+        }
+        else {
 
             if (!empty($cadena) and !$this->validarCadena($validacion, $datosValidacion)) {
 
-                $this->validacion = FALSE;
+                $this->validacion = false;
                 $this->errors = $validacion;
-            } else {
-                $this->validacion = TRUE;
+            }
+            else {
+                $this->validacion = true;
             }
         }
 
     }
 
-    function validarCadena($nombreValidacion, $datosValidacion) {
+    function validarCadena ($nombreValidacion, $datosValidacion) {
 
         if ($nombreValidacion == "decimal" or $nombreValidacion == "numerico") {
             $this->valorCampo = str_replace(".", "", $this->valorCampo);
             $this->valorCampo = str_replace(",", ".", $this->valorCampo);
 
         }
-        if ($this->dataValidaciones[ $nombreValidacion ]['expresion'] != "") {
+        if ($this->dataValidaciones[$nombreValidacion]['expresion'] != "") {
 
-        } else {
+        }
+        else {
             throw new Exception("Se llama a una expresion $nombreValidacion, la cual se encuentra indefinida", 1);
 
         }
 
         if (is_array($this->valorCampo)) {
-            $band = TRUE;
+            $band = true;
             foreach ($this->valorCampo as $key => $value) {
-                $result = preg_match($this->dataValidaciones[ $nombreValidacion ]['expresion'], $value);
+                $result = preg_match($this->dataValidaciones[$nombreValidacion]['expresion'], $value);
                 if ($result != 1) {
-                    $band = FALSE;
+                    $band = false;
                 }
             }
-            $resultValidacion = ($band === TRUE) ? TRUE : FALSE;
-        } else {
-            $resultValidacion = (preg_match($this->dataValidaciones[ $nombreValidacion ]['expresion'], $this->valorCampo)) ? TRUE : FALSE;
+            $resultValidacion = ($band === true) ? true : false;
         }
-        if ($resultValidacion === TRUE) {
+        else {
+            $resultValidacion = (preg_match($this->dataValidaciones[$nombreValidacion]['expresion'],
+                                            $this->valorCampo)) ? true : false;
+        }
+        if ($resultValidacion === true) {
             /**
              * En caso de que sea decimal o numerico se reemplaza el valor formateado por el requerido
              * para el registro en base de datos
              */
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
 
             $this->obtenerMensajeError($nombreValidacion, $datosValidacion);
 
-            return FALSE;
+            return false;
         }
     }
 
@@ -204,13 +234,14 @@ class Validador {
      *
      * @obtener mensaje de error
      */
-    protected function obtenerMensajeError($validacion, $datos) {
+    protected function obtenerMensajeError ($validacion, $datos) {
 
         if (isset($datos['mensaje'])) {
             $this->mensajeError = $datos['mensaje'];
-        } else {
+        }
+        else {
 
-            $this->mensajeError = "El campo " . $this->dataValidaciones[ $validacion ]['mensaje'];
+            $this->mensajeError = "El campo " . $this->dataValidaciones[$validacion]['mensaje'];
         }
     }//fin función
 
@@ -220,23 +251,25 @@ class Validador {
      *
      * @access public static
      *
-     * @param mixed   $validacion nombre de la validacion o array de nombres
-     * @param string  $cadena     Cadena a validar
-     * @param boolean $mensaje    Define si se obtiene el mensaje de error o no.
+     * @param mixed $validacion nombre de la validacion o array de nombres
+     * @param string $cadena Cadena a validar
+     * @param boolean $mensaje Define si se obtiene el mensaje de error o no.
      *
      * @return boolean
      */
-    static function validar($validacion, $cadena, $mensaje = FALSE) {
+    static function validar ($validacion, $cadena, $mensaje = false) {
+
         $validador = new Validador();
         if (is_array($validacion)) {
-            $bandera = TRUE;
+            $bandera = true;
             foreach ($validacion as $key => $v) {
                 $validador->valorCampo = $cadena;
                 $bandera = $validador->validarCadena($v, ['mensaje' => $mensaje]);
             }
 
             return $bandera;
-        } else
+        }
+        else
             return $validador->validarCadena($validacion, ['mensaje' => $mensaje]);
     }
 
@@ -246,11 +279,13 @@ class Validador {
      *
      * @return boolean see::Validador::validacion;
      */
-    public function getValidacion() {
+    public function getValidacion () {
+
         return $this->validacion;
     }
 
-    public function getErrors() {
+    public function getErrors () {
+
         return $this->errors;
     }
 

@@ -48,8 +48,9 @@ class Instagram extends JController {
 
         if ($this->get('code')) {
 
-            $this->data(['urlForm' => $this->obtUrl('permisos'),
-                         'codigo'  => $this->get('code')
+            $this->data([
+                            'urlForm' => $this->obtUrl('permisos'),
+                            'codigo'  => $this->get('code')
                         ]);
 
         }

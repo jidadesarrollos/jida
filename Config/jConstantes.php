@@ -13,17 +13,16 @@ if (!array_key_exists('modulos', $GLOBALS)) {
 if (!defined('MODELO_USUARIO')) {
     define('MODELO_USUARIO', '\Jida\Modelos\User');
 }
-if (!defined('URL_BASE')) define('URL_BASE', "");
+if (!defined('URL_BASE'))
+    define('URL_BASE', "");
 //Debug::mostrarArray($GLOBALS['modulos'],false);
 if (!defined('MANEJADOR_BD'))
-    define('MANEJADOR_BD', FALSE);
+    define('MANEJADOR_BD', false);
 /**
  * @constante TITULO_SISTEMA Nombre de la aplicación
  */
 if (!defined('TITULO_SISTEMA'))
     define('TITULO_SISTEMA', 'Aplicación Jida - Framework');
-
-
 
 /**
  * Nombre de la aplicacion,
@@ -80,9 +79,10 @@ if (!defined('ENTORNO_APP')) {
      */
     define('ENTORNO_APP', dev);
 }
-if (!defined('entorno_app')) define('entorno_app', ENTORNO_APP);
+if (!defined('entorno_app'))
+    define('entorno_app', ENTORNO_APP);
 if (!defined('TEST_PLATFORM')) {
-    define('TEST_PLATFORM', FALSE);
+    define('TEST_PLATFORM', false);
 
 }
 #===============================================================================
@@ -93,21 +93,21 @@ if (!defined('NIVEL_ORM'))
     define('NIVEL_ORM', 1);
 
 if (!defined('DB_PREFIJOS')) {
-    define('DB_PREFIJOS', TRUE);
+    define('DB_PREFIJOS', true);
 }
 if (!defined('ORM_REGISTROS_RELACION')) {
     define('ORM_REGISTROS_RELACION', 20);
 }
 
 if (!defined('APP_MANTENIMIENTO')) {
-    define('APP_MANTENIMIENTO', FALSE);
+    define('APP_MANTENIMIENTO', false);
 }
 if (!defined('TPL_MANTENIMIENTO')) {
     define('TPL_MANTENIMIENTO', 'Framework/plantillas/mantenimiento.tpl.php');
 }
 
 if (!defined('PREFIJO_TABLA'))
-    define('PREFIJO_TABLA', TRUE);
+    define('PREFIJO_TABLA', true);
 if (!defined('PREFIJO_RELACIONAL'))
     define('PREFIJO_RELACIONAL', "r");
 
@@ -119,17 +119,17 @@ if (!defined('PLURAL_CONSONANTE')) {
 }
 
 if (!defined('FECHA_CREACION')) {
-    define('FECHA_CREACION', TRUE);
+    define('FECHA_CREACION', true);
 }
 if (!defined('FECHA_MODIFICACION')) {
-    define('FECHA_MODIFICACION', TRUE);
+    define('FECHA_MODIFICACION', true);
 }
 
 /**
  * Define la ubicacion fisica de las carpetas para archivos publicos y del lado cliente.
  */
-if (!defined('DIR_HTDOCS')) define('DIR_HTDOCS', ROOT . 'htdocs/');
-
+if (!defined('DIR_HTDOCS'))
+    define('DIR_HTDOCS', ROOT . 'htdocs/');
 
 /**
  * @constant MANEJADOR_PARAMS
@@ -138,7 +138,7 @@ if (!defined('DIR_HTDOCS')) define('DIR_HTDOCS', ROOT . 'htdocs/');
  * FALSE para versiones inferiores
  */
 if (!defined('MANEJADOR_PARAMS'))
-    define('MANEJADOR_PARAMS', TRUE);
+    define('MANEJADOR_PARAMS', true);
 
 define('LAYOUT_JIDA', 'jadminIntro.tpl.php');
 
@@ -163,8 +163,10 @@ if (!defined('DIR_LAYOUT_JIDA'))
      * Puede ser modificada su ubicación si desea personalizarse el disenio.
      */
     define('DIR_LAYOUT_JIDA', DIR_FRAMEWORK . "Layout/jadmin/");
-if (!defined('DIR_LAYOUT_APP')) define('DIR_LAYOUT_APP', DIR_APP . 'Layout/');
-if (!defined('DIR_PLANTILLAS_FRAMEWORK')) define('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK . "plantillas/");
+if (!defined('DIR_LAYOUT_APP'))
+    define('DIR_LAYOUT_APP', DIR_APP . 'Layout/');
+if (!defined('DIR_PLANTILLAS_FRAMEWORK'))
+    define('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK . "plantillas/");
 
 if (!defined('ZONA_HORARIA')) {
     /**
@@ -180,30 +182,46 @@ if (!defined('ZONA_HORARIA')) {
  * Determina si los caracteres especiales son codificados en código ASCII HTML
  * antes de ser guardados en base de datos
  */
-if (!defined('CODIFICAR_HTML_BD')) define('CODIFICAR_HTML_BD', FALSE);
+if (!defined('CODIFICAR_HTML_BD'))
+    define('CODIFICAR_HTML_BD', false);
 
-if (!defined('BD_REQUERIDA')) define('BD_REQUERIDA', FALSE);
+if (!defined('BD_REQUERIDA'))
+    define('BD_REQUERIDA', false);
 /**
  * Determina
  */
-if (!defined('PATH_APP')) define('PATH_APP', '/');
+if (!defined('PATH_APP'))
+    define('PATH_APP', '/');
 
 $GLOBALS['idiomas'] = ['es' => 'Espa&ntilde;ol'];
 
-if(!defined('URL_APP_PUBLICA')) define('URL_APP_PUBLICA','');
-if(!defined('URL_FB')) define('URL_FB','');
-if(!defined('URL_TWITTER')) define('URL_TWITTER','');
-if(!defined('URL_IMAGENES')) define('URL_IMAGENES','');
-if(!defined('URL_MEDIA_CORREOS')) define('URL_MEDIA_CORREOS','');
-if(!defined('URL_GOOGLE')) define('URL_GOOGLE','');
-if(!defined('URL_INSTAGRAM')) define('URL_INSTAGRAM','');
-if(!defined('CUENTA_TWITTER')) define('CUENTA_TWITTER','');
-if(!defined('CUENTA_INSTAGRAM')) define('CUENTA_INSTAGRAM','');
+if (!defined('URL_APP_PUBLICA'))
+    define('URL_APP_PUBLICA', '');
+if (!defined('URL_FB'))
+    define('URL_FB', '');
+if (!defined('URL_TWITTER'))
+    define('URL_TWITTER', '');
+if (!defined('URL_IMAGENES'))
+    define('URL_IMAGENES', '');
+if (!defined('URL_MEDIA_CORREOS'))
+    define('URL_MEDIA_CORREOS', '');
+if (!defined('URL_GOOGLE'))
+    define('URL_GOOGLE', '');
+if (!defined('URL_INSTAGRAM'))
+    define('URL_INSTAGRAM', '');
+if (!defined('CUENTA_TWITTER'))
+    define('CUENTA_TWITTER', '');
+if (!defined('CUENTA_INSTAGRAM'))
+    define('CUENTA_INSTAGRAM', '');
 /**
  * IMAGENES
  */
 
-if(!defined('IMG_TAM_LG')) define('IMG_TAM_LG', '1200');
-if(!defined('IMG_TAM_MD')) define('IMG_TAM_MD', '800');
-if(!defined('IMG_TAM_SM')) define('IMG_TAM_SM', '400');
-if(!defined('IMG_TAM_XS')) define('IMG_TAM_XS', '140');
+if (!defined('IMG_TAM_LG'))
+    define('IMG_TAM_LG', '1200');
+if (!defined('IMG_TAM_MD'))
+    define('IMG_TAM_MD', '800');
+if (!defined('IMG_TAM_SM'))
+    define('IMG_TAM_SM', '400');
+if (!defined('IMG_TAM_XS'))
+    define('IMG_TAM_XS', '140');

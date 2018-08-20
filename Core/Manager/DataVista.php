@@ -155,7 +155,6 @@ class DataVista {
 
     }
 
-
     /**
      * Permite agregar archivos JS pertenecientes a un modulo especifico
      *

@@ -2,7 +2,6 @@
 
 namespace App\Config;
 
-
 use Jida\Configuracion\Config;
 
 class Configuracion extends Config {
@@ -22,7 +21,6 @@ class Configuracion extends Config {
         'alert'  => 'alert alert-warning',
         'info'   => 'alert alert-info'
     ];
-
 
     var $modulos = [
         'contacto'  => 'Contacto',

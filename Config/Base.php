@@ -43,7 +43,6 @@ class Base {
         if (!defined('CODIFICAR_HTML_BD'))
             define('CODIFICAR_HTML_BD', false);
 
-
         /**
          * Entornos
          */
@@ -52,8 +51,7 @@ class Base {
         set_time_limit(180);
     }
 
-
-    static function path() {
+    static function path () {
 
         define('ROOT', \Jida\Manager\Estructura::path());
         define('DIR_FRAMEWORK', ROOT . DS . 'Framework' . DS);

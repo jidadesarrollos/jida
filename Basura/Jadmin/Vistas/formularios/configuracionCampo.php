@@ -3,4 +3,4 @@
 $data =& $this->data;
 ?>
 
-<?=$data->formCampo?>
+<?= $data->formCampo ?>

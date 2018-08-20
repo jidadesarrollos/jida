@@ -30,7 +30,8 @@ class ArchivoCargado extends Archivo {
      */
     var $cargaRealizada = "";
 
-    function __construct($file = "") {
+    function __construct ($file = "") {
+
         if (!isset($file) or is_array($file)) {
             $this->name = $file['name'];
             $this->type = $file['type'];
@@ -44,7 +45,8 @@ class ArchivoCargado extends Archivo {
         }
     }
 
-    function obtMime() {
+    function obtMime () {
+
         return $this->mime;
     }
 
@@ -52,31 +54,34 @@ class ArchivoCargado extends Archivo {
      * Verifica la carga de uno o varios archivos
      * @method validarCarga
      */
-    function validarCarga() {
+    function validarCarga () {
 
         $totalCarga = (is_array($this->tmp_name)) ? count($this->tmp_name) : 1;
         $archivosCargados = 0;
         if (is_array($this->tmp_name)) {
             foreach ($this->tmp_name as $key) {
 
-                if (is_uploaded_file($key)) ;
+                if (is_uploaded_file($key))
+                    ;
                 ++$archivosCargados;
             }//fin foreach
-        } else {
+        }
+        else {
             if (is_uploaded_file($this->tmp_name))
                 ++$archivosCargados;
         }
         if ($totalCarga == $archivosCargados) {
             $this->totalArchivosCargados = $archivosCargados;
 
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
             return false;
         }
 
     }
 
-    private function obtenerExtension() {
+    private function obtenerExtension () {
 
         if (is_array($this->type)) {
             $i = 0;
@@ -85,7 +90,8 @@ class ArchivoCargado extends Archivo {
                 $this->extension[$i] = $explode[1];
                 $i++;
             }
-        } else {
+        }
+        else {
             $explode = explode("/", $this->type);
             $this->extension = $explode[1];
         }
@@ -96,7 +102,8 @@ class ArchivoCargado extends Archivo {
      * Carga un archivo o directorio
      * @method moverDirectorio
      */
-    function moverDirectorio($directorio, $nombreArchivo) {
+    function moverDirectorio ($directorio, $nombreArchivo) {
+
         return self::moverArchivo($directorio, $nombreArchivo);
     }
 
@@ -106,30 +113,35 @@ class ArchivoCargado extends Archivo {
      * @param string $directorio Url en la cual se movera el archivo
      * @param mixed $nombreArchivo Archivo a mover
      */
-    function moverArchivo($directorio, $nombreArchivo) {
+    function moverArchivo ($directorio, $nombreArchivo) {
+
         if (move_uploaded_file($nombreArchivo, $directorio)) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
 
     }
 
-    function moverArchivosCargado($directorio, $archivos) {
-        $bandera = TRUE;
+    function moverArchivosCargado ($directorio, $archivos) {
+
+        $bandera = true;
         if (is_array($archivos)) {
             foreach ($archivos as $key => $archivo) {
 
                 $file = new Archivo($archivo);
                 if ($this->moverDirectorio($directorio, $file->tmp_name)) {
                     continue;
-                } else {
-                    $bandera = FALSE;
+                }
+                else {
+                    $bandera = false;
                 }
             }//final foreach    
-        } else {
+        }
+        else {
             if (!$this->moverDirectorio($directorio, $archivos->tmp_name)) {
-                $bandera = FALSE;
+                $bandera = false;
             }
         }
 
@@ -141,11 +153,12 @@ class ArchivoCargado extends Archivo {
      *
      * Usa file_get_contents para devolver el archivo como un string
      */
-    static function obtArchivo($rutaArchivo) {
+    static function obtArchivo ($rutaArchivo) {
 
         if (is_readable($rutaArchivo)) {
             return true;
-        } else {
+        }
+        else {
             throw new Exception("La ruta del archivo no es legible : " . $rutaArchivo);
 
             return false;
@@ -163,14 +176,16 @@ class ArchivoCargado extends Archivo {
      * @param string $contenido Contenido del archivo a crear
      * @param string $ruta Ruta donde debe ser guardado el archivo
      */
-    static function crearArchivo($nombreArchivo, $contenido, $ruta) {
+    static function crearArchivo ($nombreArchivo, $contenido, $ruta) {
 
     }//final funcion crearArchivo
 
-    static function eliminarArchivo($dir) {
+    static function eliminarArchivo ($dir) {
+
         if (unlink($dir)) {
             return true;
-        } else {
+        }
+        else {
             throw new Exception("No se puede eliminar el directorio $dir", 1);
 
             return false;

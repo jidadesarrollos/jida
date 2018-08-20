@@ -436,12 +436,12 @@
                     default:
 
                         if ($campo.val().trim() == "") resp = false;
-                        else  resp = true;
+                        else resp = true;
 
                         break;
                 }//final switch========================
 
-            } else  resp = true;
+            } else resp = true;
 
             return resp;
         },
@@ -456,7 +456,7 @@
             if (valorCampo != "") {
 
                 if (expresion.test(valorCampo)) return true;
-                else    return false;
+                else return false;
             } else {
                 return true;
             }//fin validacion
@@ -583,6 +583,7 @@
         igualdad: {'mensaje': 'Los campos no pueden ser iguales'}
 
     };
+
     /**
      *   =============================
      *   DECLARACION DEL PLUGIN

@@ -4,17 +4,18 @@ namespace Jida\Jadmin\Controllers;
 
 class Acl extends JController {
 
-    function __construct() {
+    function __construct () {
+
         $this->url = '/jadmin/acl/';
         parent::__construct();
         $this->layout = "jadmin.tpl.php";
     }
 
-    function index() {
+    function index () {
 
     }
 
-    function objetos() {
+    function objetos () {
 
     }
 }

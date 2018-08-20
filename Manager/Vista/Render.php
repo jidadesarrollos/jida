@@ -48,8 +48,8 @@ class Render {
         }
 
         $this->_obtenerData();
+
         ob_start();
-        $contenido = "";
 
         include_once $vista;
         $contenido = ob_get_clean();

@@ -15,13 +15,15 @@ class BD extends ConexionBD {
     private $configuracionBD = 'default';
     var $objeto;
 
-    function __construct($configuracionBD = 'default') {
+    function __construct ($configuracionBD = 'default') {
+
         $this->configuracionBD = $configuracionBD;
         parent::__construct();
         $this->_inicializarBD();
     }
 
-    private function _inicializarBD() {
+    private function _inicializarBD () {
+
         if (empty($this->manejador)) {
             throw new Excepcion("No se ha definido el manejador de base de datos", $this->_ce . '1');
 
@@ -40,7 +42,8 @@ class BD extends ConexionBD {
         }
     }
 
-    static function query($query) {
+    static function query ($query) {
+
         $consulta = new BD();
 
         return $consulta->objeto->obtenerDataCompleta($query);

@@ -6,36 +6,44 @@
  * @since 1.4
  * @version
  * @category
-*/
+ */
+
 namespace Jida;
-abstract class JElemento{
 
-	protected $nombre;
-	protected $descripcion;
-	protected $id;
+abstract class JElemento {
 
-	/**
-	 * Renderizacion del Elemento para el FrontEnd
-	 *
-	 * @method elemento
-	 */
-	abstract function elemento();
-	/**
-	 * Formulario del elemento a ser manejado en los paneles administrativos
-	 *
-	 * @method jform
-	 */
-	abstract function jform();
-	abstract function gestion($data);
+    protected $nombre;
+    protected $descripcion;
+    protected $id;
 
-	function nombre(){
-		return $this->nombre;
-	}
-	function descripcion(){
-		return $this->descripcion;
-	}
+    /**
+     * Renderizacion del Elemento para el FrontEnd
+     *
+     * @method elemento
+     */
+    abstract function elemento ();
 
-	function id(){
-		return $this->id;
-	}
+    /**
+     * Formulario del elemento a ser manejado en los paneles administrativos
+     *
+     * @method jform
+     */
+    abstract function jform ();
+
+    abstract function gestion ($data);
+
+    function nombre () {
+
+        return $this->nombre;
+    }
+
+    function descripcion () {
+
+        return $this->descripcion;
+    }
+
+    function id () {
+
+        return $this->id;
+    }
 }

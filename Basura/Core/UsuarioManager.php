@@ -15,19 +15,31 @@ use \Jida\Helpers\Debug as Debug;
 
 trait UsuarioManager {
 
-
     /**
      * Genera el grid de visualización de usuarios
      * @method vistaUser
      * @access protected
      * @param $url del controlador de usuarios que invoca el metodo
      */
-    protected function vistaUser($url = null, $perfiles = false, $titulos = false, $acciones = false, $accionesFila = false, $consulta = false, $idVista = false) {
+    protected function vistaUser (
+        $url = null, $perfiles = false, $titulos = false, $acciones = false, $accionesFila = false, $consulta = false,
+        $idVista = false
+    ) {
 
-        if (empty($url)) $url = $this->url;
-        if (!$titulos) $titulos = ['Usuario', 'Fecha Creaci&oacute;n', 'Activo', 'Ultima Sesi&oacute;n', 'Estatus'];
-        if (!$consulta) $consulta = '\Jida\Modelos\User.obtUsers';
-        if (!$idVista) $idVista = 'Usuarios';
+        if (empty($url))
+            $url = $this->url;
+        if (!$titulos)
+            $titulos = [
+                'Usuario',
+                'Fecha Creaci&oacute;n',
+                'Activo',
+                'Ultima Sesi&oacute;n',
+                'Estatus'
+            ];
+        if (!$consulta)
+            $consulta = '\Jida\Modelos\User.obtUsers';
+        if (!$idVista)
+            $idVista = 'Usuarios';
 
         $jvista = new Render\JVista($consulta, ['titulos' => $titulos], $idVista);
 
@@ -42,11 +54,25 @@ trait UsuarioManager {
             $jvista->accionesFila($accionesFila);
         else
             $jvista->accionesFila([
-                ['span' => 'glyphicon glyphicon-user', 'title' => 'Asignar perfiles de acceso', 'href' => $this->obtUrl('asociarPerfiles', ['{clave}']), 'data-jvista' => 'modal'],
-                ['span' => 'glyphicon glyphicon-edit', 'title' => 'Modificar usuario', 'href' => $this->obtUrl('setUsuario', ['{clave}'])],
-                ['span'        => 'glyphicon glyphicon-trash', 'title' => 'Eliminar Usuario', 'href' => $this->obtUrl('eliminarUsuario', ['{clave}']),
-                 'data-jvista' => 'confirm', 'data-msj' => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el usuario seleccionado?']
-            ]);
+                                      [
+                                          'span'        => 'glyphicon glyphicon-user',
+                                          'title'       => 'Asignar perfiles de acceso',
+                                          'href'        => $this->obtUrl('asociarPerfiles', ['{clave}']),
+                                          'data-jvista' => 'modal'
+                                      ],
+                                      [
+                                          'span'  => 'glyphicon glyphicon-edit',
+                                          'title' => 'Modificar usuario',
+                                          'href'  => $this->obtUrl('setUsuario', ['{clave}'])
+                                      ],
+                                      [
+                                          'span'        => 'glyphicon glyphicon-trash',
+                                          'title'       => 'Eliminar Usuario',
+                                          'href'        => $this->obtUrl('eliminarUsuario', ['{clave}']),
+                                          'data-jvista' => 'confirm',
+                                          'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el usuario seleccionado?'
+                                      ]
+                                  ]);
 
         if (is_array($acciones)):
             $jvista->acciones($acciones);
@@ -54,7 +80,6 @@ trait UsuarioManager {
             if ($acciones)
                 $jvista->acciones(['Registrar ' => ['href' => $this->obtUrl('setUsuario')]]);
         endif;
-
 
         $jvista->addMensajeNoRegistros('No hay Usuarios Registrados');
 
@@ -73,7 +98,7 @@ trait UsuarioManager {
      * @param $urlVista Url de la vista a la cual redireccionar
      * @method setUsuario
      */
-    protected function _setUsuario($idUser = '', $url = "", $externo = "", $idVista = 'usuarios', $urlVista = "") {
+    protected function _setUsuario ($idUser = '', $url = "", $externo = "", $idVista = 'usuarios', $urlVista = "") {
 
         $urlVista = (empty($urlVista)) ? $this->url : $urlVista;
 
@@ -88,8 +113,12 @@ trait UsuarioManager {
                 $accion = (!empty($idUser)) ? 'actualizado' : 'creado';
                 $msj = 'El usuario <strong>' . $this->post('nombre_usuario') . '</strong> ha sido ' . $accion . ' exitosamente';
                 Render\JVista::msj($idVista, 'suceso', $msj, $urlVista);
-            } else
-                Helpers\Sesion::set('__msjForm', Mensajes::crear('error', "No se ha podido registrar el usuario, vuelva a intentarlo"), false);
+            }
+            else
+                Helpers\Sesion::set('__msjForm',
+                                    Mensajes::crear('error',
+                                                    "No se ha podido registrar el usuario, vuelva a intentarlo"),
+                                    false);
 
         endif;
 
@@ -110,14 +139,18 @@ trait UsuarioManager {
      * @param $campoUpdate
      * @return array $form Arreglo asociativo con dos posiciones 'guardado' result del save de DBContainer 'form' Objeto Formulario
      */
-    protected function formGestionUser($campoUpdate = '', $metodo = 'set-usuario', $externo = '') {
+    protected function formGestionUser ($campoUpdate = '', $metodo = 'set-usuario', $externo = '') {
 
         $metodo = (empty($metodo)) ? 'set-usuario' : $metodo;
 
         $form = new Render\Formulario('RegistroUsuarios', $campoUpdate);
         $formPerfiles = new Render\Formulario('PerfilesAUsuario', $campoUpdate);
 
-        $retorno = ['guardado' => '', 'form' => '', 'formPerfiles' => ''];
+        $retorno = [
+            'guardado'     => '',
+            'form'         => '',
+            'formPerfiles' => ''
+        ];
 
         if ($this->post('btnRegistroUsuarios')) {
 
@@ -134,7 +167,8 @@ trait UsuarioManager {
 
                 $retorno['guardado'] = ['ejecutado' => $user->getResult()->ejecutado()];
 
-            } else {
+            }
+            else {
                 exit('El formulario no cumple con las validaciones, revisar la clase Formulario de Render para ajustar este detalle');
                 // $retorno['guardado'] = $validacion;
             }
@@ -156,7 +190,7 @@ trait UsuarioManager {
      * @param object $formulario Objeto Formulario de Perfiles a Usuario instanciado
      * @param mixed $user Objeto instanciado de usuario o en su defecto el id del usuario
      */
-    protected function registrarPerfilesDeUsuario($form, $user, $perfiles) {
+    protected function registrarPerfilesDeUsuario ($form, $user, $perfiles) {
 
         if (!is_object($user))
             $user = new Modelos\User($user);
@@ -177,7 +211,7 @@ trait UsuarioManager {
      * @method asociarPerfiles
      * @param string $user id del usuario al cual se quieren asociar los perfiles
      */
-    protected function _asociarPerfiles($user = '') {
+    protected function _asociarPerfiles ($user = '') {
 
         if (!empty($user)) {
             $form = new Render\Formulario('PerfilesAUsuario', $user);
@@ -191,11 +225,16 @@ trait UsuarioManager {
                 if ($form->validar()) {
                     $accion = $user->asociarPerfiles($this->post('id_perfil'));
                     if ($accion['ejecutado'] == 1) {
-                        Render\JVista::msj('componentes', 'suceso', 'Asignados los perfiles al usuario ' . $user->nombre_usuario, $this->urlController());
-                    } else {
+                        Render\JVista::msj('componentes',
+                                           'suceso',
+                                           'Asignados los perfiles al usuario ' . $user->nombre_usuario,
+                                           $this->urlController());
+                    }
+                    else {
                         Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
                     }
-                } else {
+                }
+                else {
                     Formulario::msj('error', "No se han asignado perfiles");
                 }
             }
@@ -205,9 +244,9 @@ trait UsuarioManager {
 
             $this->dv->form = $form->armarFormulario();
 
-        } else
+        }
+        else
             Render\JVista::msj('usuarios', 'error', "Debe seleccionar un usuario", $this->urlController());
-
 
     }
 
@@ -220,7 +259,7 @@ trait UsuarioManager {
      * @param int $tipoform
      * @param $campoUpdate Id del usuario al que se asignaran los perfiles
      */
-    protected function formAsignacionPerfiles($campoUpdate = "", $perfiles = "") {
+    protected function formAsignacionPerfiles ($campoUpdate = "", $perfiles = "") {
 
         $form = new Render\Formulario('PerfilesAUsuario', $campoUpdate);
 
@@ -228,8 +267,10 @@ trait UsuarioManager {
         $form->action = $this->urlController() . 'asociar-perfiles';
 
         if (!empty($perfiles) and is_array($perfiles)) {
-            $form->externo['id_perfil'] = "select id_perfil,perfil from s_perfiles where id_perfil in (" . implode(",", $perfiles) . ") order by perfil";
-        } else {
+            $form->externo['id_perfil'] = "select id_perfil,perfil from s_perfiles where id_perfil in (" . implode(",",
+                                                                                                                   $perfiles) . ") order by perfil";
+        }
+        else {
             $form->externo['id_perfil'] = "select id_perfil,perfil from s_perfiles where id_perfil order by id_perfil";
         }
 
@@ -244,7 +285,7 @@ trait UsuarioManager {
      * @return object $form Objeto Tipo Formulario
      * @see Formulario
      */
-    protected function _eliminarUsuario($idUser = '') {
+    protected function _eliminarUsuario ($idUser = '') {
 
         if (!empty($idUser)) {
             $user = new Modelos\User($idUser);
@@ -254,12 +295,12 @@ trait UsuarioManager {
             else
                 return false;
 
-        } else {
+        }
+        else {
             throw new Exception("Debes especificar un usuario para eliminarlo", 111);
         }
 
     }
-
 
     /**
      * Registra la sesion de un usuario
@@ -267,7 +308,7 @@ trait UsuarioManager {
      * @internal Crea la variable de Sesion Usuario con el usuario en sesión actual
      * @method crearSesionUsuario
      */
-    protected function crearSesionUsuario() {
+    protected function crearSesionUsuario () {
 
         Helpers\Sesion::sessionLogin();
         Helpers\Sesion::set('Usuario', $this->modelo);
@@ -286,7 +327,7 @@ trait UsuarioManager {
      * caso contrario retorna falso
      * @method validarInicioSesion
      */
-    protected function validarInicioSesion($usuario, $clave) {
+    protected function validarInicioSesion ($usuario, $clave) {
 
         $data = $this->modelo->validarLogin($usuario, $clave);
 
@@ -294,7 +335,8 @@ trait UsuarioManager {
             $this->crearSesionUsuario();
 
             return true;
-        } else
+        }
+        else
             return false;
     }
 
@@ -304,14 +346,15 @@ trait UsuarioManager {
      * @method cierresesion
      * @param string $url url para redireccionar al cerrar la sesion de usuario
      */
-    protected function _cierresesion($url = "") {
+    protected function _cierresesion ($url = "") {
 
         if (Helpers\Sesion::destruir()) {
 
             if (Helpers\Sesion::obt('Usuario') instanceof MODELO_USUARIO)
                 Helpers\Sesion::obt('Usuario')->cerrarSesion();
 
-            if (empty($url)) $url = $this->urlCierreSession;
+            if (empty($url))
+                $url = $this->urlCierreSession;
 
             $this->redireccionar($url);
         }
@@ -324,20 +367,22 @@ trait UsuarioManager {
      * @return object $form
      * @see Formulario
      */
-    protected function formularioLogin($called = FALSE) {
+    protected function formularioLogin ($called = false) {
 
         if ($called) {
             if (Helpers\Sesion::obt('FormLoggin') and Helpers\Sesion::obt('FormLoggin') instanceof Formulario) {
                 $form = Helpers\Sesion::obt('FormLoggin');
 
-            } else {
+            }
+            else {
                 $form = new Render\Formulario('Login', null);
                 $form->titulo('Iniciar Sesi&oacute;n');
                 // $form->boton('_labelBotonEnvio','Iniciar Sesi&oacute;n');
             }
 
             return $form;
-        } else
+        }
+        else
             $this->_404();
 
     }
@@ -348,7 +393,7 @@ trait UsuarioManager {
      * @return object $form Objeto Tipo Formulario
      * @see Formulario
      */
-    protected function formCambioContrasenia($idUser = '') {
+    protected function formCambioContrasenia ($idUser = '') {
 
         $form = new Render\Formulario('CambioClave', $idUser);
 
@@ -360,14 +405,13 @@ trait UsuarioManager {
      * @method generarContrasenia
      * @param int $length Tamaño de la cadena, por defecto 30
      */
-    protected function generarContrasenia($length = 30) {
+    protected function generarContrasenia ($length = 30) {
 
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $string = substr(str_shuffle($chars), 0, $length);
 
         return $string;
     }
-
 
 }
 

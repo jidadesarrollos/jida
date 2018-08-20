@@ -11,13 +11,14 @@
  */
 
 namespace Jida\BD;
+
 class Psql extends ConexionBD {
-    public $ejecucionQuery = TRUE;
+    public $ejecucionQuery = true;
     /**
      *
      * @var boolean
      */
-    public $enTransaccion = FALSE;
+    public $enTransaccion = false;
     public $valoresReservados = [];
     /**
      * Total de los Registro
@@ -36,7 +37,7 @@ class Psql extends ConexionBD {
      * Indica si se ha iniciado una Transaccion
      * @var unknown
      */
-    private $transaccionIniciada = FALSE;
+    private $transaccionIniciada = false;
 
     /**
      * Contabiliza total de errores en
@@ -59,8 +60,8 @@ class Psql extends ConexionBD {
      */
     protected $idCampo;
 
+    function __construct ($configuracion) {
 
-    function __construct($configuracion) {
         parent::__construct($configuracion);
     }
 
@@ -69,7 +70,7 @@ class Psql extends ConexionBD {
      *
      * @return int id conexion
      */
-    public function establecerConexion() {
+    public function establecerConexion () {
 
         $stringConexion = "host=$this->servidor port=$this->puerto user=$this->usuario password=$this->clave dbname=$this->bd";
         #Debug::mostrarArray($stringConexion,FALSE);
@@ -89,7 +90,8 @@ class Psql extends ConexionBD {
      *
      * @return void
      */
-    private function cerrarConexion() {
+    private function cerrarConexion () {
+
         pg_close($this->conexionID);
     }
 
@@ -97,14 +99,14 @@ class Psql extends ConexionBD {
      * Metodo para Realizar Insert en Base de Datos
      *
      * @param string $nombreTabla
-     * @param array  $camposTabla
-     * @param array  $valoresCampos
-     * @param id     $id
+     * @param array $camposTabla
+     * @param array $valoresCampos
+     * @param id $id
      * @return mixed retorna un array o un boolean
      */
-    public function insert($nombreTabla, $camposTabla, $valoresCampos, $id, $unico) {
+    public function insert ($nombreTabla, $camposTabla, $valoresCampos, $id, $unico) {
 
-        $validadoUnico = FALSE;
+        $validadoUnico = false;
         $queryCheck = "select $id from $nombreTabla where ";
         /**
          * @var $nivelCheck
@@ -117,15 +119,16 @@ class Psql extends ConexionBD {
                 if ($i > 0) {
                     $queryCheck .= " and ";
                 }
-                if ($camposTabla[ $i ] != 'id_usuario_creador' or $camposTabla[ $i ] != 'id_usuario_modificador' or $camposTabla[ $i ] != 'fecha_creacion' or $camposTabla[ $i ] != 'fecha_modificacion') {
+                if ($camposTabla[$i] != 'id_usuario_creador' or $camposTabla[$i] != 'id_usuario_modificador' or $camposTabla[$i] != 'fecha_creacion' or $camposTabla[$i] != 'fecha_modificacion') {
                     $queryCheck .= " $camposTabla[$i]=$valoresCampos[$i]";
                 }
 
             }
             $nivelCheck = 1;
 
-        } else {
-            $validadoUnico = TRUE;
+        }
+        else {
+            $validadoUnico = true;
             $i = 0;
 
             foreach ($unico as $campo) {
@@ -133,9 +136,11 @@ class Psql extends ConexionBD {
                 if ($i > 0) {
                     $queryCheck .= " and ";
                 }
-                if (array_key_exists($valor, $valoresCampos) and (is_null($valoresCampos[ $valor ]) or $valoresCampos[ $valor ] == "" or $valoresCampos[ $valor ] == 'null')) {
+                if (array_key_exists($valor,
+                                     $valoresCampos) and (is_null($valoresCampos[$valor]) or $valoresCampos[$valor] == "" or $valoresCampos[$valor] == 'null')) {
                     $queryCheck .= "$campo is $valoresCampos[$valor]";
-                } else {
+                }
+                else {
                     $queryCheck .= "$campo = $valoresCampos[$valor]";
                 }
 
@@ -149,28 +154,36 @@ class Psql extends ConexionBD {
 
         if ($this->totalRegistros == 0) {
 
-            $insert = sprintf("insert into %s (%s) VALUES (%s) returning %s", $nombreTabla, implode(', ', $camposTabla), implode(', ', $valoresCampos), $id);
+            $insert = sprintf("insert into %s (%s) VALUES (%s) returning %s",
+                              $nombreTabla,
+                              implode(', ', $camposTabla),
+                              implode(', ', $valoresCampos),
+                              $id);
 
             $id = $this->ejecutarQuery($insert);
             $resultado = $this->obtenerArray($id);
             if (is_array($resultado)) {
                 $ejecutado = 1;
-            } else {
+            }
+            else {
                 $ejecutado = 0;
             }
-            $result = ["idResultado" => $resultado[0],
-                       "query" => $insert,
-                       "ejecutado" => $ejecutado,
-                       "unico" => 0
+            $result = [
+                "idResultado" => $resultado[0],
+                "query"       => $insert,
+                "ejecutado"   => $ejecutado,
+                "unico"       => 0
             ];
-        } else {
+        }
+        else {
             $total = $this->obtenerArray($resultado);
             $ejecutado = 1;
 
-            $result = ["idResultado" => $resultado[0],
-                       "query" => $queryCheck,
-                       "ejecutado" => $nivelCheck,
-                       "unico" => ($nivelCheck == 0) ? 1 : 0,
+            $result = [
+                "idResultado" => $resultado[0],
+                "query"       => $queryCheck,
+                "ejecutado"   => $nivelCheck,
+                "unico"       => ($nivelCheck == 0) ? 1 : 0,
             ];
         }
 
@@ -182,10 +195,11 @@ class Psql extends ConexionBD {
      *
      * @param unknown $limit
      * @param unknown $offset
-     * @param string  $query
+     * @param string $query
      * @return string
      */
-    public function addLimit($limit, $offset, $query = "") {
+    public function addLimit ($limit, $offset, $query = "") {
+
         $this->query = (!empty ($query)) ? $query : $this->query;
         $this->query = "$this->query limit $limit offset $offset";
 
@@ -203,7 +217,7 @@ class Psql extends ConexionBD {
      *
      * @param string $query
      *          consulta a ejecutar
-     * @param int    $tipoQuery
+     * @param int $tipoQuery
      *          En caso de ser una consulta multiple no se devuelve el total de registros
      *
      *          <ul>
@@ -211,7 +225,8 @@ class Psql extends ConexionBD {
      *          <li>2 : Consulta Multiple</li>
      *          </ul>
      */
-    public function ejecutarQuery($query = "", $tipoquery = 2) {
+    public function ejecutarQuery ($query = "", $tipoquery = 2) {
+
         if (!empty ($query)) {
             $this->query = $query;
         };
@@ -236,7 +251,8 @@ class Psql extends ConexionBD {
             }
 
             $this->errorTransaccion = $this->errorTransaccion + 1;
-        } else {
+        }
+        else {
 
             $this->totalRegistros = pg_num_rows($this->result);
         }
@@ -246,10 +262,9 @@ class Psql extends ConexionBD {
 
             $this->cerrarConexion($this->con);
         }
-        $this->ejecucionQuery = (!$this->result) ? FALSE : TRUE;
+        $this->ejecucionQuery = (!$this->result) ? false : true;
 
         return $this->result;
-
 
     }
 
@@ -263,7 +278,7 @@ class Psql extends ConexionBD {
      * @return array $dataCompleta
      *
      */
-    public function obtenerDataCompleta($query = "", $key = "") {
+    public function obtenerDataCompleta ($query = "", $key = "") {
 
         $this->ejecutarQuery($query);
         $result = $this->result;
@@ -271,7 +286,8 @@ class Psql extends ConexionBD {
 
         while ($row = $this->obtenerArrayAsociativo($result)) {
             if (!empty($key))
-                $data[ $row[ $key ] ] = Cadenas::codificarArrayToHTML($row); else {
+                $data[$row[$key]] = Cadenas::codificarArrayToHTML($row);
+            else {
                 $data[] = Cadenas::codificarArrayToHTML($row);
             }
         }
@@ -284,7 +300,8 @@ class Psql extends ConexionBD {
     /**
      * Obtener todal de columnas de una consulta
      */
-    public function obtenerTotalCampos($query) {
+    public function obtenerTotalCampos ($query) {
+
         $total = pg_num_fields($q);
 
         return $total;
@@ -298,18 +315,18 @@ class Psql extends ConexionBD {
      * @return array $arr Data del registro de una columna del result
      *
      */
-    public function obtenerArray($result = "", $mayus = FALSE) {
+    public function obtenerArray ($result = "", $mayus = false) {
 
         if ($result != "") {
             $this->result = $result;
         }
         if ($this->result) {
             $arr = Cadenas::codificarArrayToHTML(pg_fetch_array($this->result), $mayus);
-        } else {
+        }
+        else {
             throw new Exception("El query $this->query no retorna valor", 1);
 
         }
-
 
         return $arr;
     }
@@ -317,7 +334,7 @@ class Psql extends ConexionBD {
     /**
      * Recuperda una fila del result de BD como un array Asociativo
      */
-    public function obtenerArrayAsociativo($result = "", $mayus = FALSE) {
+    public function obtenerArrayAsociativo ($result = "", $mayus = false) {
 
         if ($result != "") {
             $this->result = $result;
@@ -327,8 +344,9 @@ class Psql extends ConexionBD {
             $arr = Cadenas::codificarArrayToHTML(pg_fetch_assoc($result));
 
             return $arr;
-        } else {
-            return FALSE;
+        }
+        else {
+            return false;
         }
 
     }
@@ -338,13 +356,14 @@ class Psql extends ConexionBD {
      *
      * @return boolean true
      */
-    public function comenzarTransaccion() {
+    public function comenzarTransaccion () {
+
         echo "<hr>transaccion<hr>";
         $this->establecerConexion();
-        $this->enTransaccion = TRUE;
+        $this->enTransaccion = true;
         $this->ejecutarQuery("BEGIN");
 
-        return TRUE;
+        return true;
         $cn->bd->comenzarTransaccion();
     }
 
@@ -353,12 +372,13 @@ class Psql extends ConexionBD {
      *
      * @return boolean true
      */
-    private function commit() {
+    private function commit () {
+
         $this->ejecutarQuery('COMMIT;');
         $this->cerrarConexion($this->idConexion);
-        $this->enTransaccion = FALSE;
+        $this->enTransaccion = false;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -367,19 +387,20 @@ class Psql extends ConexionBD {
      * @param string $nombrePunto
      * @return boolean true
      */
-    private function rollback($nombrePunto = "") {
+    private function rollback ($nombrePunto = "") {
+
         $rollback = ($nombrePunto == "") ? "ROLLBACK;" : "ROLLBACK TO $nombrePunto;COMMIT;";
 
         $this->ejecutarQuery($rollback);
         $this->cerrarConexion($this->idConexion);
-        $this->enTransaccion = FALSE;
+        $this->enTransaccion = false;
         if (ERROR_PHP == 'dev') {
             foreach ($this->detalleError as $key => $value) {
                 echo $value;
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -391,10 +412,11 @@ class Psql extends ConexionBD {
      * @param string $nombrePunto
      * @return boolean true
      */
-    public function establecerPuntoControl($nombrePunto) {
+    public function establecerPuntoControl ($nombrePunto) {
+
         $this->ejecutarQuery("SAVEPOINT $nombrePunto;");
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -405,10 +427,12 @@ class Psql extends ConexionBD {
      * @param string $punto Nombre de savepoint creado si desea hacerse un rollback hasta el.
      *
      */
-    public function finalizarTransaccion($punto = "") {
+    public function finalizarTransaccion ($punto = "") {
+
         if ($this->errorTransaccion == 0) {
             $this->commit();
-        } else {
+        }
+        else {
             $this->rollback($punto);
         }
     }
@@ -419,7 +443,8 @@ class Psql extends ConexionBD {
      * @param unknown $result
      * @return multitype:
      */
-    public function fetchRow($result, $mayus = FALSE) {
+    public function fetchRow ($result, $mayus = false) {
+
         $fetch = Cadenas::codificarArrayToHTML(pg_fetch_row($result), $mayus);
 
         return $fetch;
@@ -431,7 +456,8 @@ class Psql extends ConexionBD {
      * @param string
      * @return int Numero de Columna
      */
-    public function totalField($q) {
+    public function totalField ($q) {
+
         if (empty($q))
             $q = $this->result;
         $total = pg_num_fields($q);
@@ -443,10 +469,11 @@ class Psql extends ConexionBD {
      * Retorna el nombre de un Campo del Query
      *
      * @param Object $q Result de la Consulta
-     * @param int    $i Numero del Campo
+     * @param int $i Numero del Campo
      * @return string
      */
-    public function obtenerNombreCampo($q, $i) {
+    public function obtenerNombreCampo ($q, $i) {
+
         $fetch = pg_field_name($q, $i);
 
         return $fetch;
@@ -459,7 +486,8 @@ class Psql extends ConexionBD {
      * @param string $esquema
      * @return array lista de Esquemas
      */
-    public function obtenerTablasBD($esquema = "") {
+    public function obtenerTablasBD ($esquema = "") {
+
         $tablasBDResult = $this->ejecutarQuery("select * from pg_tables where tablename='s_formularios'");
         $tablasBD['s_formularios'] = 's_formularios';
         if ($this->totalRegistros > 0) {
@@ -469,15 +497,17 @@ class Psql extends ConexionBD {
         return $tablasBD;
     }
 
-    function __get($propiedad) {
+    function __get ($propiedad) {
+
         if (property_exists($this, $propiedad)) {
             return $this->$propiedad;
-        } else {
-            return FALSE;
+        }
+        else {
+            return false;
         }
     }
 
-    function getValoresReservados() {
+    function getValoresReservados () {
 
         return $this->valoresReservados;
     }

@@ -14,9 +14,9 @@ use Jida\Render as Render;
 
 class Campos extends Fcontroller {
 
-    public $manejoParams = TRUE;
+    public $manejoParams = true;
 
-    function gestion($id, $modulo = 'app') {
+    function gestion ($id, $modulo = 'app') {
 
         if (!empty($id)) {
 
@@ -26,23 +26,25 @@ class Campos extends Fcontroller {
             $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
 
             $this->data([
-                'campos'           => $form->campos,
-                'moduloFormulario' => $modulo,
-                'idFormulario'     => $id,
-                'url'              => implode('/',
-                    ['/jadmin/formularios/campos/configuracion',
-                        $id,
-                        $modulo
-                    ])
-            ]);
+                            'campos' => $form->campos,
+                            'moduloFormulario' => $modulo,
+                            'idFormulario' => $id,
+                            'url' => implode('/',
+                                             [
+                                                 '/jadmin/formularios/campos/configuracion',
+                                                 $id,
+                                                 $modulo
+                                             ])
+                        ]);
 
-        } else {
+        }
+        else {
             $this->_404();
         }
 
     }
 
-    function configuracion($idFormulario, $modulo, $idCampo) {
+    function configuracion ($idFormulario, $modulo, $idCampo) {
 
         $error = false;
         $formulario = $idFormulario . '.json';
@@ -54,23 +56,29 @@ class Campos extends Fcontroller {
                 $data = $this->_formulario->dataCampo($idCampo)->obtenerPropiedades();
 
                 $form = new Render\Formulario('jida/CamposFormulario', $data);
-                $form->attr('action', $this->obtUrl('guardar', [
-                    $idFormulario, $modulo, $idCampo
-                ]));
+                $form->attr('action',
+                            $this->obtUrl('guardar',
+                                          [
+                                              $idFormulario,
+                                              $modulo,
+                                              $idCampo
+                                          ]));
 
                 $this->data(['form' => $form->render()]);
 
-            } else {
-                $error = TRUE;
+            }
+            else {
+                $error = true;
             }
 
         }
 
-        if ($error) $this->_404();
+        if ($error)
+            $this->_404();
 
     }
 
-    function guardar($formulario, $modulo, $idCampo) {
+    function guardar ($formulario, $modulo, $idCampo) {
 
         $formulario = $formulario . '.json';
         if ($this->_instanciarFormulario($formulario, $modulo)) {
@@ -79,17 +87,24 @@ class Campos extends Fcontroller {
             $this->_formulario->modulo($modulo);
             if ($this->_formulario->salvar()) {
                 $msj = Helpers\Mensajes::crear('suceso', 'Campo guardado correctamente.');
-                $this->respuestaJson(['ejecutado' => true, 'mensaje' => $msj]);
+                $this->respuestaJson([
+                                         'ejecutado' => true,
+                                         'mensaje'   => $msj
+                                     ]);
             }
 
-        } else {
+        }
+        else {
             $msj = Helpers\Mensajes::crear('suceso', 'No se pudo guardar el campo.');
-            $this->respuestaJson(['ejecutado' => false, 'mensaje' => $msj]);
+            $this->respuestaJson([
+                                     'ejecutado' => false,
+                                     'mensaje'   => $msj
+                                 ]);
         }
 
     }
 
-    function ordenar($formulario, $modulo) {
+    function ordenar ($formulario, $modulo) {
 
         if ($this->solicitudAjax() and $formulario) {
 
@@ -100,18 +115,20 @@ class Campos extends Fcontroller {
             if ($this->_formulario->salvar()) {
 
                 $this->respuestaJson([
-                    'ejecutado' => TRUE,
-                    'msj'       => "Se ha guardado el orden del formulario"
-                ]);
+                                         'ejecutado' => true,
+                                         'msj'       => "Se ha guardado el orden del formulario"
+                                     ]);
 
-            } else {
+            }
+            else {
                 $this->respuestaJson([
-                    'ejecutado' => FALSE,
-                    'msj'       => "No se ha podido guardar el formulario"
-                ]);
+                                         'ejecutado' => false,
+                                         'msj'       => "No se ha podido guardar el formulario"
+                                     ]);
             }
 
-        } else $this->_404();
+        }
+        else $this->_404();
 
     }
 }

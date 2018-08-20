@@ -2,18 +2,24 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Core\Controller as Controller;
-use Jida\Helpers as Helpers;
+use Jida\Core\ObjetoManager;
+use Jida\Helpers\Debug;
 
 class Manager {
 
-    use \Jida\Core\ObjetoManager;
+    use ObjetoManager;
 
-    private $_ce = 10006;
+    //    private $_ce = 10006;
     private $_data;
 
     private $_namespace;
     private $_modulo;
+    /**
+     * Instancia de objeto Layout
+     * @var object $_layout
+     * @see Layout
+     *
+     */
     private $_layout;
 
     public $Procesador;
@@ -65,6 +71,7 @@ class Manager {
 
         $data = Data::obtener();
         $plantilla = $this->_data->obtPlantilla();
+
         $vista = $this->vista();
         $archivoVista = (!!$plantilla) ? $vista->rutaPlantilla($plantilla) : $vista->obtener();
 
@@ -78,6 +85,7 @@ class Manager {
 
     function vista () {
 
+        //Debug::imprimir("ak", true);
         if (!self::$vista) {
             self::$vista = new Vista($this);
         }

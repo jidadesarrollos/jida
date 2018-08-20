@@ -24,7 +24,7 @@ class Init extends JController {
     private $GeneradorModelo;
     private $gController;
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
         $this->GeneradorModelo = new GeneradorCodigo\GeneradorModelo();
@@ -33,39 +33,46 @@ class Init extends JController {
          * Esta forma de insertar los archivos debe ser mejorada
          */
         $this->dv->addCSS([
-                $this->urlHtdocs . 'bootstrap/dist/css/bootstrap.min.css',
-                $this->urlHtdocs . "font-awesome/css/font-awesome.min.css",
-                $this->obtURLApp() . "/htdocs/css/jida/jida.css",
-            ]
-            , false);
+                              $this->urlHtdocs . 'bootstrap/dist/css/bootstrap.min.css',
+                              $this->urlHtdocs . "font-awesome/css/font-awesome.min.css",
+                              $this->obtURLApp() . "/htdocs/css/jida/jida.css",
+                          ]
+            ,
+                          false);
         $this->dv->addJS([
-            $this->urlHtdocs . "jquery/dist/jquery.js",
-            $this->urlHtdocs . 'bootstrap/dist/js/bootstrap.min.js',
-            $this->obtURLApp() . "htdocs/js/jida/min/jd.plugs.js",
-            $this->obtURLApp() . "htdocs/js/jida/tinymce.js",
+                             $this->urlHtdocs . "jquery/dist/jquery.js",
+                             $this->urlHtdocs . 'bootstrap/dist/js/bootstrap.min.js',
+                             $this->obtURLApp() . "htdocs/js/jida/min/jd.plugs.js",
+                             $this->obtURLApp() . "htdocs/js/jida/tinymce.js",
 
-        ], false);
+                         ],
+                         false);
 
     }
 
-    function index() {
+    function index () {
+
         $this->vista = "init";
         // Helpers\Debug::imprimir($this->post(),'init');
         if ($this->post('btnBdConfig')) {
-            if (!Helpers\Sesion::obt('dirApp')) $this->crearDirApp();
+            if (!Helpers\Sesion::obt('dirApp'))
+                $this->crearDirApp();
             if (!$this->validarDatosBD()) {
 
                 RenderHTML\Formulario::msj('error', 'Faltan algunos datos, por favor valida y vuelve a intentarlo');
-            } else {
+            }
+            else {
                 if ($this->configurarBD()) {
                     $this->crearControllerApp();
                     $this->agregarLayout();
                     $this->copiarHtdocs()->appConfig()->initConfig();
                     $this->crearUsuarioJadmin();
                     $this->redireccionar($this->getUrl('modelos'));
-                } else {
+                }
+                else {
 
-                    RenderHTML\Formulario::msj('error', 'No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
+                    RenderHTML\Formulario::msj('error',
+                                               'No se ha podido realizar la conexion a base de datos, verifica los datos y vuelve a intentarlo');
                 }
 
                 //Debug::string("final funcion",true);
@@ -80,7 +87,8 @@ class Init extends JController {
      * @method configurarBD
      *
      */
-    private function configurarBD() {
+    private function configurarBD () {
+
         //$bdConfig = file("Framework/Settings/BDConfig.jida");
         $arrayConfig =
             [
@@ -94,16 +102,30 @@ class Init extends JController {
 
             $bdConfig = "";
             #Debug::mostrarArray($bdConfig);
-            if (!Helpers\Directorios::validar(DIR_APP)) Helpers\Directorios::crear(DIR_APP);
+            if (!Helpers\Directorios::validar(DIR_APP))
+                Helpers\Directorios::crear(DIR_APP);
             Helpers\Directorios::crear(DIR_APP . "/Config");
             $bdConfig .= $this->abrirPHP() . $this->docBlock(
                     "Archivo de Configuración de Base de Datos"
                 );
-            $bdConfig .= $this->constante('MANEJADOR_BD', 'MySQL', 'string', 'Manejador de Base de datos utilizado en el sistema');
-            $bdConfig .= $this->constante('manejadorBD', 'MySQL', 'string', 'Manejador de Base de datos utilizado en el sistema');
+            $bdConfig .= $this->constante('MANEJADOR_BD',
+                                          'MySQL',
+                                          'string',
+                                          'Manejador de Base de datos utilizado en el sistema');
+            $bdConfig .= $this->constante('manejadorBD',
+                                          'MySQL',
+                                          'string',
+                                          'Manejador de Base de datos utilizado en el sistema');
 
             $bdConfig .= $this->saltodeLinea();
-            $bdConfig .= $this->docBlock('Arreglo de conexiones', null, ['var' => ['type' => 'array', 'name' => '$GLOBALS[\'conexiones\']']]);
+            $bdConfig .= $this->docBlock('Arreglo de conexiones',
+                                         null,
+                                         [
+                                             'var' => [
+                                                 'type' => 'array',
+                                                 'name' => '$GLOBALS[\'conexiones\']'
+                                             ]
+                                         ]);
 
             $bdConfig .= $this->definirArray('$GLOBALS[\'conexiones\']', ['default' => $arrayConfig]);
             $this->crear(DIR_APP . "Config/BDConfig.php")
@@ -112,7 +134,8 @@ class Init extends JController {
 
             return true;
 
-        } else {
+        }
+        else {
 
             return false;
         }
@@ -121,7 +144,8 @@ class Init extends JController {
     /**
      * Definicion archivo appConfig
      */
-    private function appConfig() {
+    private function appConfig () {
+
         $devCss = [
             $this->urlHtdocs . 'bootstrap/dist/css/bootstrap.min.css',
             $this->urlHtdocs . "font-awesome/css/font-awesome.min.css",
@@ -139,11 +163,12 @@ class Init extends JController {
         $appConfig =
             $this->abrirPHP()
             . $this->docBlock('Archivo de Configuracion de la Aplicación',
-                'El app config es creado para definir variables y constantes de configuracion que
+                              'El app config es creado para definir variables y constantes de configuracion que
 * puedan ser utilizadas en cualquier ambiente de la aplicacion (De desarrollo o produccion) ')
             . $this->saltodeLinea()
             . $this->docBlock(
-                'Archivos CSS Requeridos', 'Los archivos definidos en el primer nivel del arreglo serán incluidos
+                'Archivos CSS Requeridos',
+                'Los archivos definidos en el primer nivel del arreglo serán incluidos
 * siempre sin importar el ambiente de la aplicacion. Si se desea especificar archivos solo para un ambiente,
 * se debe definir una clave con el nombre del ambiente.
             ')
@@ -161,7 +186,8 @@ class Init extends JController {
         return $this;
     }
 
-    private function initConfig() {
+    private function initConfig () {
+
         $initConfig =
             $this->abrirPHP() .
             $this->docBlock(
@@ -171,7 +197,10 @@ class Init extends JController {
  * agrupar en un solo archivo todo lo que no desea ser pasado de un ambiente a otro.
                 '
             )
-            . $this->constante('APP_MANTENIMIENTO', FALSE, 'boolean', 'Define si la aplicacion se encuentra en mantenimiento')
+            . $this->constante('APP_MANTENIMIENTO',
+                               false,
+                               'boolean',
+                               'Define si la aplicacion se encuentra en mantenimiento')
             . $this->constante('URL_APP', '/', 'url', 'Direccion URL de la App')
             . $this->constante('ENTORNO_APP', 'dev', 'string', 'Define el entorno de la aplicacion');
         $initConfig .= $this->saltodeLinea()
@@ -183,8 +212,9 @@ class Init extends JController {
         return $this;
     }
 
-    private function validarDatosBD() {
-        $bandera = FALSE;
+    private function validarDatosBD () {
+
+        $bandera = false;
         $validaciones = ['obligatorio'];
 
         if (!empty($this->post('servidor')) and !empty($this->post('usuario_bd')) and
@@ -194,7 +224,7 @@ class Init extends JController {
             // Validador::validar($validaciones,$this->post('servidor')) and
             // Validador::validar($validaciones,$this->post('clave_bd'))
         ) {
-            $bandera = TRUE;
+            $bandera = true;
         }
 
         return $bandera;
@@ -203,7 +233,7 @@ class Init extends JController {
     /**
      * @method modelos;
      */
-    function modelos() {
+    function modelos () {
 
         $tablas = $this->GeneradorModelo->obtenerTablas();
         //Debug::mostrarArray($BDManager->obtenerTablas());
@@ -214,7 +244,8 @@ class Init extends JController {
                     $this->redireccionar($this->obtURLApp() . "jadmin/componentes/");
                 }
 
-            } else {
+            }
+            else {
                 Helpers\Sesion::set('__msj', Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
             }
 
@@ -229,13 +260,16 @@ class Init extends JController {
      * @method crearModelos
      * @return void
      */
-    private function crearModelos() {
+    private function crearModelos () {
+
         $objetos = $this->post('tablas_bd');
         $prefijos = explode(",", $this->post('txtPrefijos'));
 
-        array_walk($prefijos, function (&$valor, $clave) {
-            $valor = "/^" . $valor . "/";
-        });
+        array_walk($prefijos,
+            function (&$valor, $clave) {
+
+                $valor = "/^" . $valor . "/";
+            });
 
         foreach ($objetos as $key => $objeto) {
             $this->GeneradorModelo->generar($objeto, $prefijos);
@@ -244,7 +278,8 @@ class Init extends JController {
         return true;
     }
 
-    private function crearDirApp() {
+    private function crearDirApp () {
+
         $directorios = [
             'Aplicacion',
             'Aplicacion/Config',
@@ -254,10 +289,11 @@ class Init extends JController {
             'Aplicacion/Vistas'
         ];
         Helpers\Directorios::crear($directorios);
-        Helpers\Sesion::set('dirApp', TRUE);
+        Helpers\Sesion::set('dirApp', true);
     }
 
-    private function probarConexion($configuracion) {
+    private function probarConexion ($configuracion) {
+
         $GLOBALS['conexiones']['default'] = $configuracion;
         $manejador = "MySQL";
         try {
@@ -274,21 +310,29 @@ class Init extends JController {
             if ($bd->establecerConexion()) {
                 return true;
             }
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
 
             return false;
         }
     }
 
-    private function crearControllerApp() {
+    private function crearControllerApp () {
+
         $this->gController->documentacion(
-            "Arranque Principal de la Aplicacion", null,
-            ['className' => 'AppController', 'category' => 'controller', 'package' => 'Aplicacion']);
+            "Arranque Principal de la Aplicacion",
+            null,
+            [
+                'className' => 'AppController',
+                'category'  => 'controller',
+                'package'   => 'Aplicacion'
+            ]);
 
         $this->gController->agregarExtend('Controller')->crearController('App');
         $this->gController
             ->agregarExtend('AppController')
             ->metodoIndex(function () {
+
                 $content = $this->tab(1);
                 $content .= ' $this->layout="default.tpl.php";';
 
@@ -297,53 +341,68 @@ class Init extends JController {
             ->crearController('Index');
 
         $this->crearVista(
-            'index', 'index',
+            'index',
+            'index',
             Render\Selector::crear("a",
-                ['href' => $this->urlController(), 'class' => "text-center"],
-                'Configurar Aplicaci&oacute;n'
+                                   [
+                                       'href'  => $this->urlController(),
+                                       'class' => "text-center"
+                                   ],
+                                   'Configurar Aplicaci&oacute;n'
             )
         );
     }
 
-    protected function crearVista($controller, $metodo, $contenido = "") {
+    protected function crearVista ($controller, $metodo, $contenido = "") {
+
         $modulo = explode(".", $controller);
         $ubicacion = DIR_APP;
 
         if (count($modulo) > 1) {
 
             $ubicacion .= Helpers\Cadenas::upperCamelCase(Helpers\Cadenas::upperCamelCase($modulo[0])) . "/Vistas/" . Helpers\Cadenas::lowerCamelCase($modulo[1]) . "/";
-        } else {
+        }
+        else {
 
             $ubicacion .= "Vistas/" . Helpers\Cadenas::lowerCamelCase($controller) . "/";
         }
 
-        if (!Helpers\Directorios::validar($ubicacion)) Helpers\Directorios::crear($ubicacion);
+        if (!Helpers\Directorios::validar($ubicacion))
+            Helpers\Directorios::crear($ubicacion);
 
         $view =
             $this->abrirPHP()
-            . $this->docBlock("Archivo vista para $metodo", null,
-                ['category' => 'view', 'package' => 'Aplicacion'])
+            . $this->docBlock("Archivo vista para $metodo",
+                              null,
+                              [
+                                  'category' => 'view',
+                                  'package'  => 'Aplicacion'
+                              ])
             . $this->cerrarPHP()
             . $contenido;
         $this->crear($ubicacion . "/" . $metodo . ".php")
             ->escribir($view)->cerrar();
     }
 
-    private function agregarLayout() {
-        if (!Helpers\Directorios::validar(DIR_APP . "Layout")) Helpers\Directorios::crear(DIR_APP . "Layout");
+    private function agregarLayout () {
+
+        if (!Helpers\Directorios::validar(DIR_APP . "Layout"))
+            Helpers\Directorios::crear(DIR_APP . "Layout");
         copy(DIR_FRAMEWORK . "Layout/jadminIntro.tpl.php", DIR_APP . "Layout/default.tpl.php");
 
         return $this;
     }
 
-    private function copiarHtdocs() {
+    private function copiarHtdocs () {
+
         Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/js/", HTDOCS_DIR . "js/jida/");
         Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/css/", HTDOCS_DIR . "css/jida/");
 
         return $this;
     }
 
-    private function crearUsuarioJadmin() {
+    private function crearUsuarioJadmin () {
+
         $user = new Modelos\User();
 
         $user->initBD('MySQL');
@@ -354,7 +413,7 @@ class Init extends JController {
             'nombre_usuario' => $this->post('nombre_usuario'),
             'clave_usuario'  => md5($this->post('clave_usuario'))
         ];
-        $user->registrarUsuario($data, [1], FALSE);
+        $user->registrarUsuario($data, [1], false);
         $user->agregarPerfilSesion('JidaAdministrador');
 
         Helpers\Sesion::sessionLogin();

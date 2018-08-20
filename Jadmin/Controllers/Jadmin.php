@@ -12,8 +12,6 @@ class Jadmin extends JControl {
 
     function index () {
 
-        \Jida\Helpers\Debug::imprimir("ready");
-
     }
 
 }

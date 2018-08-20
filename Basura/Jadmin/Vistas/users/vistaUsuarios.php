@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 
 echo $this->vista;
 

@@ -68,14 +68,19 @@
     </script>
 <?PHP
 $variablesArray =
-    array(
-        "post"    => array(),
-        "get"     => array(),
-        "session" => array(),
+    [
+        "post" => [],
+        "get" => [],
+        "session" => [],
         //     "globals"=>array()
-    );
+    ];
 $band = 0;
-$posiciones = array('post', 'get', 'session', 'globals');
+$posiciones = [
+    'post',
+    'get',
+    'session',
+    'globals'
+];
 if (isset($_SESSION)) {
     if (count($_SESSION) > 0) {
         $variablesArray['session'] = $_SESSION;
@@ -109,7 +114,8 @@ foreach ($posiciones as $key => $value) {
                 $valor = "";
                 $i = 0;
                 foreach ($value as $key => $val) {
-                    if ($i > 0) $valor .= "<br>";
+                    if ($i > 0)
+                        $valor .= "<br>";
                     if (is_array($val))
                         $valor .= @"$key => $val";
                     $i++;

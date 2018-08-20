@@ -1,5 +1,6 @@
 <?php
 //require_once 'Config/constantesConfiguracion.php';
+
 /**
  * Clase ORM DBContainer
  *
@@ -13,9 +14,11 @@
  */
 
 namespace Jida\BD;
+
 use ReflectionClass;
 use ReflectionProperty;
 use Jida\Helpers as Helpers;
+
 class DBContainer {
 
     protected $fecha_creacion;
@@ -41,7 +44,7 @@ class DBContainer {
      * @var array $propiedadesPublicas
      * @access protected
      */
-    protected $propiedadesPublicas = array();
+    protected $propiedadesPublicas = [];
 
     /**
      * Indica la clave primaria en base de datos la cual debe tener
@@ -57,26 +60,26 @@ class DBContainer {
      *
      * @var boolean $registroMomentoGuardado
      */
-    protected $registroMomentoGuardado = FALSE;
+    protected $registroMomentoGuardado = false;
 
     /**
      *
      * @var unknown
      */
-    protected $noNumber = array ();
+    protected $noNumber = [];
     /**
      * Arreglo que define que campos juntos no pueden tener data
      * repetida
      * @var array $unico
      */
-    protected $unico=array();
+    protected $unico = [];
 
     /**
      * Define la conexion a base de datos a utilizar
      * @var string $configuracionBD
      * @access protected
      */
-    protected $configuracionBD="default";
+    protected $configuracionBD = "default";
     /**
      * Define el manejador de base de datos (mysql o psql)
      * @var string $manejadorBD
@@ -99,7 +102,7 @@ class DBContainer {
      * Registra las propiedades del objeto que tambien son objetos
      * @var $propiedadesObjetos
      */
-    private $propiedadesObjetos =array();
+    private $propiedadesObjetos = [];
     /**
      * Define si se deben convertir los caractes especiales HTML en su código ascii
      * al momento de guardar en base de datos
@@ -108,7 +111,7 @@ class DBContainer {
      *
      * @var $convertirAscciToBD
      */
-    private $convertAsciiToBD=TRUE;
+    private $convertAsciiToBD = true;
     /**
      * Define si se deben convertir los caractes especiales HTML en su código ascii
      * al momento de traer data de base de datos
@@ -117,13 +120,14 @@ class DBContainer {
      *
      * @var $convertirAscciToBD
      */
-    private $convertAsciiFromBD=TRUE;
+    private $convertAsciiFromBD = true;
     /**
      * Define las propiedades del objeto que son referencias a otro objeto
      * @var array $referenciasObjeto
      * @access private
      */
-    private $referenciasObjeto = array();
+    private $referenciasObjeto = [];
+
     /**
      * Contructor del BDContainer
      *
@@ -134,11 +138,12 @@ class DBContainer {
      * si es llamado por el ORM
      * @param object $clase Objeto clase que hereda del DBContainer
      */
-    public function __construct($clase = "", $id = "") {
+    public function __construct ($clase = "", $id = "") {
+
         //instanciar objeto de base de datos
 
         $this->initBD();
-        if(!empty($clase)){
+        if (!empty($clase)) {
             $this->obtenerPropiedadesObjeto();
             $this->clase = $clase;
         }
@@ -147,21 +152,25 @@ class DBContainer {
             $this->inicializarObjeto($id);
         }
     }
+
     /**
      * Permite realizar consultas de base de datos
      * @method obt
      * @access protected
      */
-    protected function consulta($campos=""){
+    protected function consulta ($campos = "") {
 
-        $query  = new Query($this->nombreTabla,$this->propiedadesPublicas);
+        $query = new Query($this->nombreTabla, $this->propiedadesPublicas);
+
         return $query->consulta($campos);
     }
+
     /**
      * Inicializa el objeto correspondiente para el manejo de la base de datos
      * @method initBD
      */
-    private function initBD(){
+    private function initBD () {
+
         if (!defined('manejadorBD')) {
             return false;
         }
@@ -181,14 +190,15 @@ class DBContainer {
     /**
      * Verifica que clases son identificadas como
      */
-    private function identificarReferencias(){
+    private function identificarReferencias () {
+
         foreach ($this->propiedadesPublicas as $prop => $val) {
 
-            if (substr($prop, 0,2)=='id' and $prop!=$this->clavePrimaria){
+            if (substr($prop, 0, 2) == 'id' and $prop != $this->clavePrimaria) {
                 $propiedad = str_replace("id_", "", $prop);
                 $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
-                if($propiedad!=$this->clase and class_exists($objeto,FALSE))
-                    $this->propiedadesObjetos[$propiedad]=new $objeto();
+                if ($propiedad != $this->clase and class_exists($objeto, false))
+                    $this->propiedadesObjetos[$propiedad] = new $objeto();
             }
         }
     }
@@ -198,15 +208,17 @@ class DBContainer {
      * @method inicializarObjeto
      * @param $clase metodo magico __CLASS__
      */
-    protected function inicializarObjeto($id) {
-        if(is_array($id)){
+    protected function inicializarObjeto ($id) {
 
-        }else{
+        if (is_array($id)) {
+
+        }
+        else {
             $this->identificarReferencias();
             $data = $this->consulta()
-                    ->filtro([$this->clavePrimaria=>$id])
-                    ->fila();
-            $this->establecerAtributos ( $data, $this->clase );
+                ->filtro([$this->clavePrimaria => $id])
+                ->fila();
+            $this->establecerAtributos($data, $this->clase);
         }
     }//fin función inicializaarObjeto
 
@@ -220,13 +232,14 @@ class DBContainer {
      * @param array @arr Arreglo con valores
      * @param instance @clase Instancia de la clase
      */
-    protected function establecerAtributos($arr, $clase="") {
-        if(empty($clase)){
-            $clase=$this->clase;
+    protected function establecerAtributos ($arr, $clase = "") {
+
+        if (empty($clase)) {
+            $clase = $this->clase;
         }
 
         $metodos = get_class_vars($clase);
-        foreach($metodos as $k => $valor) {
+        foreach ($metodos as $k => $valor) {
 
             if (isset($arr[$k])) {
                 $this->$k = $arr[$k];
@@ -234,9 +247,12 @@ class DBContainer {
         }
 
     }
-    function setEstablecerAtributos($arr,$clase=""){
-        $this->establecerAtributos($arr,$clase);
+
+    function setEstablecerAtributos ($arr, $clase = "") {
+
+        $this->establecerAtributos($arr, $clase);
     }
+
     /**
      * Convierte la data obtenida de un formulario en un Array Asociativo
      *
@@ -244,11 +260,13 @@ class DBContainer {
      * @param array $post arreglo $_POST obtenido del formulario
      * @return array $data arreglo asociativo generado
      */
-    protected function postEnArray($post) {
-        $data = array();
-        foreach ($post as $key => $value ) {
+    protected function postEnArray ($post) {
+
+        $data = [];
+        foreach ($post as $key => $value) {
             $data[$key] = $value;
         }
+
         return $data;
     }
 
@@ -269,35 +287,39 @@ class DBContainer {
      *          los campo fecha_modificado,hora_modificado,usuario_modificado
      *          salvarObjeto(__CLASS__);
      */
-    function salvarObjeto($clase, $datos = "", $momentoGuardado = FALSE) {
+    function salvarObjeto ($clase, $datos = "", $momentoGuardado = false) {
 
-        if (gettype ( $this->bd ) != 'object') {
-            throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
+        if (gettype($this->bd) != 'object') {
+            throw new Exception ("No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente",
+                                 1);
         }
         // si se pasan los datos se establecen los
         // valores en las propiedades de la clase
-        if (is_array ( $datos )) {
-            $this->establecerAtributos ( $datos, $clase );
+        if (is_array($datos)) {
+            $this->establecerAtributos($datos, $clase);
         }
 
-        $propiedades = $this->obtenerPropiedadesObjeto ();
+        $propiedades = $this->obtenerPropiedadesObjeto();
         $accion = "";
 
         if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
 
             $result = $this->insertarObjeto($momentoGuardado);
             $accion = "Insertado";
-        } else {
+        }
+        else {
 
             $result = $this->modificarObjeto($momentoGuardado);
             $accion = "Modificado";
         }
         $retorno = $result;
         $retorno['result'] = $result;
-        $retorno['accion'] =  $accion;
+        $retorno['accion'] = $accion;
+
         return $retorno;
 
     }
+
     /**
      * Salva un objeto instanciado
      *
@@ -315,40 +337,44 @@ class DBContainer {
      *
      */
 
-    function salvar($datos = "", $momentoGuardado = FALSE) {
+    function salvar ($datos = "", $momentoGuardado = false) {
 
-        if($momentoGuardado==FALSE){
-            $momentoGuardado = ($this->registroMomentoGuardado===TRUE) ?TRUE:FALSE;
+        if ($momentoGuardado == false) {
+            $momentoGuardado = ($this->registroMomentoGuardado === true) ? true : false;
         }
-        if (gettype ( $this->bd ) != 'object') {
-            throw new Exception ( "No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente", 1 );
+        if (gettype($this->bd) != 'object') {
+            throw new Exception ("No se encuentra definido el objeto de base de datos, porfavor verifique que se llame el contructor del dbContainer correctamente",
+                                 1);
         }
         // si se pasan los datos se establecen los
         // valores en las propiedades de la clase
-        if (is_array ( $datos )) {
-            $this->establecerAtributos ( $datos, $this->clase );
+        if (is_array($datos)) {
+            $this->establecerAtributos($datos, $this->clase);
         }
 
-        $propiedades = $this->obtenerPropiedadesObjeto ();
+        $propiedades = $this->obtenerPropiedadesObjeto();
         $accion = "";
 
         if (empty($this->propiedadesPublicas[$this->clavePrimaria])) {
 
             $result = $this->insertarObjeto($momentoGuardado);
             $accion = "Insertado";
-        } else {
+        }
+        else {
 
             $result = $this->modificarObjeto($momentoGuardado);
             $accion = "Modificado";
         }
-        $clave=  $this->clavePrimaria;
+        $clave = $this->clavePrimaria;
         $this->$clave = $result['idResultado'];
 
         $retorno = $result;
         $retorno['result'] = $result;
-        $retorno['accion'] =  $accion;
+        $retorno['accion'] = $accion;
+
         return $retorno;
     }
+
     /**
      * Obtiene todas las propiedades públicas de un objeto instanciado.
      *
@@ -356,11 +382,12 @@ class DBContainer {
      *
      * @return array $arrayPropiedades Arreglo con propiedades publicas
      */
-    private function obtenerPropiedadesObjeto() {
+    private function obtenerPropiedadesObjeto () {
+
         $reflector = new ReflectionClass(get_class($this));
         $propiedades = $reflector->getProperties(ReflectionProperty::IS_PUBLIC);
-        $arrayPropiedades = array();
-        foreach($propiedades as $propiedad ) {
+        $arrayPropiedades = [];
+        foreach ($propiedades as $propiedad) {
             if (!$propiedad->isStatic()) {
                 $arrayPropiedades[$propiedad->getName()] = $propiedad->getValue($this);
             }
@@ -374,45 +401,46 @@ class DBContainer {
      * @param string $momentoGuardado
      * @return unknown
      */
-    private function insertarObjeto($momentoGuardado = false) {
+    private function insertarObjeto ($momentoGuardado = false) {
 
-        $campos = array();
-        $valores = array();
+        $campos = [];
+        $valores = [];
 
-        foreach($this->propiedadesPublicas as $campo => $valor) {
+        foreach ($this->propiedadesPublicas as $campo => $valor) {
 
             if ($campo != $this->clavePrimaria) {
 
                 $campos[] = $campo;
                 switch ($valor) {
                     case '':
-                        if(!is_numeric($valor)){
-                            $valores[]="null";
-                        } else {
-                            $valores[]=$valor;
+                        if (!is_numeric($valor)) {
+                            $valores[] = "null";
+                        }
+                        else {
+                            $valores[] = $valor;
                         }
                         break;
                     case 'fn_unix_actual()':
-                        $valores[]=$valor;
+                        $valores[] = $valor;
                         break;
                     default:
-                        $valores[]="'".$valor."'";
+                        $valores[] = "'" . $valor . "'";
                         break;
                 }
             }
         }
-        if($momentoGuardado===true){
-					$campos[]='fecha_creacion';
-					$campos[]='fecha_modificacion';
-					$valores[]= "'".FechaHora::datetime()."'";
-					$valores[]= "'".FechaHora::datetime()."'";
-				}
-        $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria,$this->unico);
-		Helpers\Sesion::destroy('__queryInsert');
+        if ($momentoGuardado === true) {
+            $campos[] = 'fecha_creacion';
+            $campos[] = 'fecha_modificacion';
+            $valores[] = "'" . FechaHora::datetime() . "'";
+            $valores[] = "'" . FechaHora::datetime() . "'";
+        }
+        $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria, $this->unico);
+        Helpers\Sesion::destroy('__queryInsert');
+
         return $result;
 
     }//fin funcion insertarObjeto
-
 
     /**
      * Modifica un Objeto (UPDATE)
@@ -420,55 +448,58 @@ class DBContainer {
      * @param string $momentoGuardado
      * @return multitype:string number multitype:
      */
-    private function modificarObjeto($momentoGuardado = FALSE) {
+    private function modificarObjeto ($momentoGuardado = false) {
+
         $update = "update " . $this->nombreTabla . " set ";
         $i = 0;
 
-        foreach ( $this->propiedadesPublicas as $campo => $valor ) {
+        foreach ($this->propiedadesPublicas as $campo => $valor) {
 
             if ($campo != $this->clavePrimaria) {
                 if ($i > 0) {
                     $update .= ",";
                 }
-                 $campos[] = $campo;
-                    switch ($valor) {
-                        case '':
-                            if(!is_numeric($valor)){
-                                $campoValor="null";
-                            } else {
-                                $campoValor=$valor;
-                            }
-                            break;
-                        case 'fn_unix_actual()':
-                            $campoValor=$valor;
-                            break;
-                        default:
+                $campos[] = $campo;
+                switch ($valor) {
+                    case '':
+                        if (!is_numeric($valor)) {
+                            $campoValor = "null";
+                        }
+                        else {
+                            $campoValor = $valor;
+                        }
+                        break;
+                    case 'fn_unix_actual()':
+                        $campoValor = $valor;
+                        break;
+                    default:
 
-                            $campoValor="'".$valor."'";
-                            break;
-                    }
+                        $campoValor = "'" . $valor . "'";
+                        break;
+                }
                 $update .= "$campo=$campoValor ";
 
-                $i ++;
+                $i++;
             }
         }
-        if ($momentoGuardado === TRUE) {
+        if ($momentoGuardado === true) {
             $update .= ',fecha_modificacion=current_timestamp ';
         }
         $update .= "where $this->clavePrimaria=" . $this->propiedadesPublicas [$this->clavePrimaria] . ";";
 
-        $this->bd->ejecutarQuery ( $update );
-        if ($this->bd->ejecutarQuery ( $update )) {
+        $this->bd->ejecutarQuery($update);
+        if ($this->bd->ejecutarQuery($update)) {
             $ejecutado = 1;
-        } else {
+        }
+        else {
             $ejecutado = 0;
         }
-        $result = array (
-                "idResultado" => $this->propiedadesPublicas [$this->clavePrimaria],
-                "query" => $update,
-                "ejecutado" => $ejecutado,
-                "unico"=>0
-        );
+        $result = [
+            "idResultado" => $this->propiedadesPublicas [$this->clavePrimaria],
+            "query"       => $update,
+            "ejecutado"   => $ejecutado,
+            "unico"       => 0
+        ];
 
         return $result;
     }
@@ -476,7 +507,8 @@ class DBContainer {
     /**
      * Verifica si un objeto existe o no.
      */
-    private function validarExistenciaObjeto() {}
+    private function validarExistenciaObjeto () {
+    }
 
     /**
      * Devuelve el nombre de la clase usada
@@ -485,10 +517,12 @@ class DBContainer {
      *          Instancia de clase utilizada
      * @return string Nombre de clave primaria de la clase
      */
-    private function obtenerClavePrimaria() {
+    private function obtenerClavePrimaria () {
+
         $clase = $this->clase;
-        if(!empty($clase)){
+        if (!empty($clase)) {
             $clavePrimaria = ($this->clavePrimaria != "") ? $this->clavePrimaria : "id_" . $clase;
+
             return strtolower($clavePrimaria);
         }
 
@@ -502,27 +536,29 @@ class DBContainer {
      * @param array $datos el key es el campo el value los balores
      * @return boolean Retorna True O False si la Consulta se Ejecuta
      */
-     function eliminarDatos($datos) {
+    function eliminarDatos ($datos) {
+
         $query = "DELETE FROM " . $this->nombreTabla;
 
-        if (is_array ( $datos )) {
+        if (is_array($datos)) {
             $query .= " WHERE ";
             $i = 1;
-            foreach ( $datos as $campo => $valor ) {
-                $valor = is_numeric ( $valor ) ? $valor : "'$valor'";
+            foreach ($datos as $campo => $valor) {
+                $valor = is_numeric($valor) ? $valor : "'$valor'";
                 $query .= $campo . "=" . $valor;
-                if ($i < count ( $datos )) {
+                if ($i < count($datos)) {
                     $query .= " AND ";
                 }
-                $i ++;
+                $i++;
             }
             $query .= ";";
         }
-        $result = $this->bd->ejecutarQuery ( $query );
+        $result = $this->bd->ejecutarQuery($query);
 
         if ($result) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -535,24 +571,28 @@ class DBContainer {
      * @example eliminarMultiplesDatos(array(1,5,4,10),'id_form')
      * @return boolean ;
      */
-    function eliminarMultiplesDatos($arrayDatos, $campo) {
-        $datos = array ();
-        if(is_array($arrayDatos)){
-            foreach ( $arrayDatos as $key => $value ) {
-                if (is_numeric ( $value )) {
+    function eliminarMultiplesDatos ($arrayDatos, $campo) {
+
+        $datos = [];
+        if (is_array($arrayDatos)) {
+            foreach ($arrayDatos as $key => $value) {
+                if (is_numeric($value)) {
                     $datos [] = "$value";
-                } else {
+                }
+                else {
                     $datos [] = "\"$value\"";
                 }
             }
-        }else{
-            $datos[]=$arrayDatos;
+        }
+        else {
+            $datos[] = $arrayDatos;
         }
 
-        $query = sprintf ( "DELETE FROM %s where $campo in (%s)", $this->nombreTabla, implode ( ',', $datos ) );
-        if ($this->bd->ejecutarQuery ( $query )) {
+        $query = sprintf("DELETE FROM %s where $campo in (%s)", $this->nombreTabla, implode(',', $datos));
+        if ($this->bd->ejecutarQuery($query)) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -563,62 +603,67 @@ class DBContainer {
      * Esta funcion puede ser utilizada solo si es un objeto instanciado
      * @method eliminarObjeto
      */
-    function eliminarObjeto($id="") {
-        if(empty($id)){
+    function eliminarObjeto ($id = "") {
+
+        if (empty($id)) {
             $id = $this->$$this->clavePrimaria;
         }
 
-
         $query = "delete from $this->nombreTabla where $this->clavePrimaria = " . $id;
-        if ($this->bd->ejecutarQuery ( $query )) {
+        if ($this->bd->ejecutarQuery($query)) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
 
-
-    private function validarTipoDatoSQL(){
+    private function validarTipoDatoSQL () {
 
     }
+
     /**
      * Devuelve los datos de la tabla
      * @method getTabla
      * @deprecated Esta función será reemplazada posteriormente por el metodo $get
      *
      */
-    function getTabla($campos=null,$where,$order="",$claveArreglo=""){
-        if(!is_array($campos)){
+    function getTabla ($campos = null, $where, $order = "", $claveArreglo = "") {
+
+        if (!is_array($campos)) {
             $campos = array_keys($this->propiedadesPublicas);
-            $selectCompleto=TRUE;
-        }else{
+            $selectCompleto = true;
+        }
+        else {
 
         }
-        $query ="Select ";
-        $cont=0;
+        $query = "Select ";
+        $cont = 0;
         foreach ($campos as $key => $value) {
-            if($cont>0){
-                $query.=",";
+            if ($cont > 0) {
+                $query .= ",";
             }
-            $query.="$value";
+            $query .= "$value";
             $cont++;
         }//fin
-        $query.=" from $this->nombreTabla";
-        if(is_array($where)){
-            $i=0;
-            $query.=" where";
+        $query .= " from $this->nombreTabla";
+        if (is_array($where)) {
+            $i = 0;
+            $query .= " where";
             foreach ($where as $campo => $valor) {
-                if($i>0)
-                    $query.=" and ";
-                $query.=" $campo = '$valor'";
+                if ($i > 0)
+                    $query .= " and ";
+                $query .= " $campo = '$valor'";
                 $i++;
             }
         }
-        if(!empty($order)){
-            $query.="order by ".$order;
+        if (!empty($order)) {
+            $query .= "order by " . $order;
         }
-        return $this->bd->obtenerDataCompleta($query,$claveArreglo);
+
+        return $this->bd->obtenerDataCompleta($query, $claveArreglo);
     }//fin
+
     /**
      * Registra objetos a partir de los valores pasados
      * @method insert
@@ -628,72 +673,87 @@ class DBContainer {
      * @example $objeto->insert('campo1',array(1,2,3,4,5)). Esto creara 5 registros donde la columna campo1 tendra
      * los valores pasados por el array sucesivamente
      */
-    function insert($campos,$valores){
+    function insert ($campos, $valores) {
+
         $insert = "insert into $this->nombreTabla";
-        if(is_array($campos) or is_null($campo)){
-            if(is_null($campos))
+        if (is_array($campos) or is_null($campo)) {
+            if (is_null($campos))
                 $campos = $this->propiedadesPublicas;
-            $insert.="(".implode(", ", $campos).")";
-        }elseif(is_string($campos)){
-            $insert.=" ( $campos )";
+            $insert .= "(" . implode(", ", $campos) . ")";
         }
-        $insert.= "values ";
-        $i=0;
+        else if (is_string($campos)) {
+            $insert .= " ( $campos )";
+        }
+        $insert .= "values ";
+        $i = 0;
         foreach ($valores as $key => $value) {
-            if($i>0)$insert.=",";
-            $insert.="(";
-            if(is_array($value)){
-                $cont=0;
-                foreach($value  as $key => $v){
-                    if($cont>0) $insert.=",";
-                    $insert.="'$v'";
+            if ($i > 0)
+                $insert .= ",";
+            $insert .= "(";
+            if (is_array($value)) {
+                $cont = 0;
+                foreach ($value as $key => $v) {
+                    if ($cont > 0)
+                        $insert .= ",";
+                    $insert .= "'$v'";
                     ++$cont;
                 }
-            }else{
-                $insert.="'$value'";
             }
-            $insert.=")";
+            else {
+                $insert .= "'$value'";
+            }
+            $insert .= ")";
             $i++;
         }
 
         return $this->bd->ejecutarQuery($insert);
     }//final funcion insert
 
-    private function crearMetodos(){
+    private function crearMetodos () {
 
     }
 
-    function getPropiedadesPublicas(){
+    function getPropiedadesPublicas () {
 
         return $this->propiedadesPublicas;
     }
-    function getFechaCreacion(){
+
+    function getFechaCreacion () {
+
         return $this->fecha_creacion;
     }
-    function getFechaModificacion(){
+
+    function getFechaModificacion () {
+
         return $this->fecha_modificacion;
     }
+
     /**
      * Permite acceder a propiedades privadas o protegidas del objeto instanciado
      * @method _get()
      * @param string $propiedad Nombre de la propiedad a obtener
      */
-    function _get($propiedad){
-        if(property_exists($this, $propiedad)){
+    function _get ($propiedad) {
+
+        if (property_exists($this, $propiedad)) {
             return $this->$propiedad;
-        }else{
-            throw new Exception("La propiedad solicitada no existe ".$propiedad, 123);
+        }
+        else {
+            throw new Exception("La propiedad solicitada no existe " . $propiedad, 123);
         }
     }
 
-    function __get($propiedad){
+    function __get ($propiedad) {
+
         return $this->_get($propiedad);
     }
 
-    function salvarTodos($array){
-        if(is_array($array)){
+    function salvarTodos ($array) {
 
-        }else{
+        if (is_array($array)) {
+
+        }
+        else {
             throw new Exception("El valor pasado debe ser un array", 1);
 
         }

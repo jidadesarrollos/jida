@@ -62,7 +62,6 @@ class ConexionBD {
      */
     protected $conexionID;
 
-
     /**
      * Define el puerto de conexión a base de datos
      * @var string $puerto
@@ -76,14 +75,16 @@ class ConexionBD {
     /**
      * @throws Exception Error de Conexion a la Base de Datos
      */
-    public function __construct($conexion = "default", $clase = "") {
+    public function __construct ($conexion = "default", $clase = "") {
+
         $this->_clase = $clase;
         if (class_exists('\App\Config\BD')) {
             $this->_conexion = $conexion;
 
             $this->_establecerConfiguracion();
 
-        } else {
+        }
+        else {
             throw new Exception("No existe el objeto De configuracion de Base de datos", $this->_ce . "1");
 
         }
@@ -100,7 +101,8 @@ class ConexionBD {
      *
      *
      */
-    function cambiarBD($conexion) {
+    function cambiarBD ($conexion) {
+
         $this->_conexion = $conexion;
         $this->_establecerConfiguracion();
     }
@@ -109,7 +111,8 @@ class ConexionBD {
      * Establece los atributos de la conexion a partir de la propiedad del objeto BD
      * @method _establecerConfiguracion
      */
-    private function _establecerConfiguracion() {
+    private function _establecerConfiguracion () {
+
         $configuracion = new \App\Config\BD();
         $this->manejador = $configuracion->manejador;
         if (property_exists($configuracion, $this->_conexion)) {

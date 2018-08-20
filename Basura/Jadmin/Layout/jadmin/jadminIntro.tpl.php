@@ -1,45 +1,43 @@
-<?PHP 
+<?PHP
 /**
  * Layout por defecto para modulo jadmin del framework
  * @author Julio Rodriguez
  */
 
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
 
-        <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-        Remove this if you use the .htaccess -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+    Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <?=$this->imprimirMeta();?>
-        
-        <?=$this->imprimirLibrerias('css','jadmin')?>
-    </head>
+    <?= $this->imprimirMeta(); ?>
 
-    <body class="bg-primary darken5 login">
-        
-     <div  class="jida-container">
-         <div class="container-fluid">
-             
-             
-            
-                <div class="col-md-12 col-md-12 contenido-principal">
-                    <!-- <div class="row"> -->
-            
-                     <?=$contenido?>
-        
-                    <!-- </div> -->
-                    <!--Cierre col-lg-9 del contenido-->
-                </div><!--Cierre col-lg-9 del contenido-->                    
-                <div class="separador-footer">
-                    
-                </div>
-            </div><!--Cierre div full-container-->
+    <?= $this->imprimirLibrerias('css', 'jadmin') ?>
+</head>
+
+<body class="bg-primary darken5 login">
+
+<div class="jida-container">
+    <div class="container-fluid">
+
+
+        <div class="col-md-12 col-md-12 contenido-principal">
+            <!-- <div class="row"> -->
+
+            <?= $contenido ?>
+
+            <!-- </div> -->
+            <!--Cierre col-lg-9 del contenido-->
+        </div><!--Cierre col-lg-9 del contenido-->
+        <div class="separador-footer">
+
         </div>
-		<?=$this->imprimirLibrerias('js','admin')?>
-    </body>
+    </div><!--Cierre div full-container-->
+</div>
+<?= $this->imprimirLibrerias('js', 'admin') ?>
+</body>
 </html>

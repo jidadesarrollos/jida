@@ -2,6 +2,8 @@
 
 namespace Jida\Manager\Rutas\Procesador;
 
+use Jida\Configuracion\Config;
+
 Trait Modulo {
 
     protected function _modulo () {
@@ -49,8 +51,9 @@ Trait Modulo {
     private function _moduloJadmin ($posModulo) {
 
         $modulo = $this->_validarNombre($posModulo, 'upper');
+        $config = Config::obtener();
 
-        return in_array($modulo, Jadmin::$modulos);
+        return in_array($modulo, $config::$modulos);
 
     }
 

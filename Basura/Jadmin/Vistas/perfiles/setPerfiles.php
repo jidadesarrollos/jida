@@ -1,9 +1,9 @@
-<?PHP 
- /**
- * 
+<?PHP
+/**
+ *
  */
- $data =& $this->data;
- 
- echo $data->form;
- ?>
+$data =& $this->data;
+
+echo $data->form;
+?>
  

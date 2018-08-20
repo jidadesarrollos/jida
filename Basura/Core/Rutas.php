@@ -25,7 +25,6 @@ class Rutas {
 
     function __construct ($ruta, $tipo = "") {
 
-
         $this->_conf = Config::obtener();
 
         $this->_ruta = $ruta;

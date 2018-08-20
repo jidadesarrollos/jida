@@ -23,13 +23,13 @@ class DataModel {
 
     use \Jida\Core\ObjetoManager;
 
-    protected $debug = FALSE;
+    protected $debug = false;
     protected $tablaBD;
     protected $esquema;
     protected $manejadorBD;
-    private $consultaMultiple = FALSE;
-    private $join = FALSE;
-    private $usoLimit = FALSE;
+    private $consultaMultiple = false;
+    private $join = false;
+    private $usoLimit = false;
     private $_ce = '006';
     private $condicion = 'and';
     /**
@@ -61,8 +61,8 @@ class DataModel {
      * @example ['nombre',['valor1','valor2'],'valor3'];
      */
     protected $unico = [];
-    protected $registroMomentoGuardado = TRUE;
-    protected $registroUser = TRUE;
+    protected $registroMomentoGuardado = true;
+    protected $registroUser = true;
 
     /**
      * Arreglo que define las relaciones uno a uno del objeto
@@ -158,12 +158,12 @@ class DataModel {
      *
      * @var $usoWhere
      */
-    private $usoWhere = FALSE;
+    private $usoWhere = false;
 
     /**
      * @var boolean $usoBD Dedermina si es requerido el uso de base de datos
      */
-    protected $usoBD = FALSE;
+    protected $usoBD = false;
     /**
      * @property string $_groupby Registra la clausula order by de una consulta
      */
@@ -217,7 +217,7 @@ class DataModel {
      * @var boolean $paginar
      * @since 0.5
      */
-    private $_paginar = FALSE;
+    private $_paginar = false;
     /**
      * @var int $_paginaConsultada Numero de pagina consultada en la paginacion
      */
@@ -246,13 +246,11 @@ class DataModel {
      */
     protected $_totalRegistros;
 
-
     /**
      * Funcion constructora
      * @method __construct
      */
-    function __construct($id = FALSE) {
-
+    function __construct ($id = false) {
 
         $numeroParams = func_num_args();
         $this->_validarBD();
@@ -277,24 +275,26 @@ class DataModel {
                     $this->debug(func_get_arg(1), 1);
                     //$this->nivelORM = array_keys(func_get_arg(1))[0];
                     $this->nivelActualORM = func_get_arg(1)[array_keys(func_get_arg(1))[0]] + 1;
-                } else {
+                }
+                else {
                     $this->nivelActualORM = func_get_arg(1) + 1;
                 }
 
             }
-        } else {
+        }
+        else {
 
             //se obtienen propiedades de relacion de pertenencia
-
 
         }
         if ($id) {
             $this->instanciarObjeto($id);
 
-        } else {
+        }
+        else {
             $this->instanciarTieneUno()->instanciarTieneMuchos();
         }
-        if ($this->usoBD !== FALSE) {
+        if ($this->usoBD !== false) {
 
         }
         if ($this->bd) {
@@ -302,15 +302,13 @@ class DataModel {
             $this->bd->cerrarConexion();
         }
 
-
     }
 
     /**
      * @since 0.6.1
      *
      */
-    function _validarBD() {
-
+    function _validarBD () {
 
         $this->usoBD = !!class_exists('\App\Config\BD');
 
@@ -335,7 +333,7 @@ class DataModel {
      * @method instanciarTieneUno
      *
      */
-    private function instanciarTieneUno() {
+    private function instanciarTieneUno () {
 
         foreach ($this->tieneUno as $key => $class) {
 
@@ -354,11 +352,12 @@ class DataModel {
                     if (array_key_exists('fk', $class))
                         $this->$nombreClass = new $relacion($this->{$class['fk']}, $this->nivelActualORM);
 
-
-                } else {
+                }
+                else {
                     throw new Exception("No se encuentra definida correctamente la relacion para " . $this->_clase, 1);
                 }
-            } else {
+            }
+            else {
                 if (is_string($class) and class_exists($class) and !property_exists($this, $class)) {
 
                     $explode = explode('\\', $class);
@@ -369,19 +368,17 @@ class DataModel {
 
                     $obj = new $class();
                     //Helpers\Debug::imprimir($obj->pk);
-                    $this->$nombreClass = new $class(NULL, $this->nivelActualORM);
+                    $this->$nombreClass = new $class(null, $this->nivelActualORM);
 
                 }
             }
-
 
         }
 
         return $this;
     }
 
-    private function instanciarTieneMuchos() {
-
+    private function instanciarTieneMuchos () {
 
         foreach ($this->tieneMuchos as $key => $value) {
             if (!is_array($value)) {
@@ -390,7 +387,8 @@ class DataModel {
 
                 $this->{$class} = [];
                 // Debug::imprimir($key,$value,"-");
-            } else {
+            }
+            else {
                 $explode = explode('\\', $key);
                 $class = array_pop($explode);
                 $this->{$key} = [];
@@ -401,15 +399,13 @@ class DataModel {
     /**
      * Verifica las relaciones declaradas del Objeto
      */
-    protected function obtenerDataRelaciones() {
-
+    protected function obtenerDataRelaciones () {
 
         $this->obtTieneUno()->obtTieneMuchos()->obtPerteneceAUno()->obtPertenece()->instanciarRelaciones();
 
-
     }
 
-    private function obtPerteneceAUno() {
+    private function obtPerteneceAUno () {
 
         foreach ($this->perteneceAUno as $key => $relacion) {
 
@@ -425,19 +421,21 @@ class DataModel {
      * Define todas las propiedades de relación del objeto instanciado
      * @method instanciarRelaciones
      */
-    private function instanciarRelaciones() {
+    private function instanciarRelaciones () {
 
         $this->bd->mantener = true;
 
-        $data = $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery(implode(";", $this->consultaRelaciones), 2), array_keys($this->consultaRelaciones));
+        $data = $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery(implode(";", $this->consultaRelaciones), 2),
+                                                 array_keys($this->consultaRelaciones));
         $this->bd->mantener = false;
         $this->bd->cerrarConexion();
         foreach ($data as $relacion => $info) {
 
             $claseSola = $this->obtClaseNombre($relacion);
 
-            if (in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->tieneMuchos) or array_key_exists($relacion, $this->pertenece)) {
-
+            if (in_array($relacion, $this->tieneMuchos) or array_key_exists($relacion,
+                                                                            $this->tieneMuchos) or array_key_exists($relacion,
+                                                                                                                    $this->pertenece)) {
 
                 $this->{$this->obtClaseNombre($claseSola)} = [];
                 if ($info['totalRegistros'] > 0) {
@@ -448,8 +446,8 @@ class DataModel {
                     }
                 }
 
-
-            } elseif (in_array($relacion, $this->tieneUno) or array_key_exists($relacion, $this->tieneUno)) {
+            }
+            else if (in_array($relacion, $this->tieneUno) or array_key_exists($relacion, $this->tieneUno)) {
 
                 $rel = new $relacion();
                 if ($info['totalRegistros'] > 0) {
@@ -458,16 +456,19 @@ class DataModel {
 
                 $this->{$claseSola} = $rel;
 
-            } else if (array_key_exists($relacion, $this->perteneceAUno)) {
+            }
+            else if (array_key_exists($relacion, $this->perteneceAUno)) {
 
                 $rel = new $relacion();
                 if (array_key_exists(0, $info['result']))
-                    $rel->__establecerAtributos($info['result'][0]); else {
+                    $rel->__establecerAtributos($info['result'][0]);
+                else {
 
                 }
                 $this->{$claseSola} = $rel;
 
-            } else {
+            }
+            else {
 
                 $this->debug("no existe $relacion");
             }
@@ -482,7 +483,7 @@ class DataModel {
      * @method obtTieneMuchos
      *
      */
-    private function obtTieneMuchos() {
+    private function obtTieneMuchos () {
 
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
 
@@ -496,7 +497,7 @@ class DataModel {
                 $campos = array_key_exists('campos', $data) ? $data['campos'] : '';
                 $objRelacion->consulta($campos);
 
-                $relacion = FALSE;
+                $relacion = false;
                 if ((array_key_exists('relacion', $data))) {
 
                     $explode = explode('\\', $data['relacion']);
@@ -504,24 +505,26 @@ class DataModel {
                     if (count($explode) > 1) {
                         $objJoin = new $data['relacion']();
                         $relacion = $objJoin->tablaBD;
-                    } else {
+                    }
+                    else {
                         $relacion = $data['relacion'];
                     }
                 }
 
-
                 $camposRelacion = (array_key_exists('campos_relacion', $data)) ? $data['campos_relacion'] : [];
-
 
                 if ($relacion) {
 
-                    $objRelacion->join($relacion, $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}])->agrupar($camposRelacion);
-                } else {
+                    $objRelacion->join($relacion,
+                                       $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}])->agrupar($camposRelacion);
+                }
+                else {
                     //entra aqui si es una relacion 1 -> N
                     $objRelacion->filtro([$this->pk => $this->{$this->pk}]);
                 }
 
-            } else {
+            }
+            else {
                 //logica repetida?
                 $objRelacion = new $data();
                 $relacion = $objRelacion->__get('tablaBD');
@@ -536,7 +539,6 @@ class DataModel {
         return $this;
     }
 
-
     /**
      * Genera las consultas para las relaciones 1:1 del Objeto
      *
@@ -544,7 +546,7 @@ class DataModel {
      * es el objeto padre de la cardinalidad
      * @method
      */
-    private function obtTieneUno() {
+    private function obtTieneUno () {
 
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
         foreach ($this->tieneUno as $key => $relacion) {
@@ -559,8 +561,8 @@ class DataModel {
                 $rel = new $relacion();
                 $this->consultaRelaciones[$relacion] = $rel->consulta()->filtro([$this->pk => $this->{$this->pk}])->obtQuery();
 
-
-            } elseif (is_string($key) and class_exists($key)) {
+            }
+            else if (is_string($key) and class_exists($key)) {
                 $rel = new $key();
 
                 if (array_key_exists('fk', $relacion)) {
@@ -582,7 +584,7 @@ class DataModel {
      *
      * @since 0.5
      */
-    private function obtPertenece() {
+    private function obtPertenece () {
 
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
 
@@ -593,10 +595,11 @@ class DataModel {
                 $campos = array_key_exists('campos', $data) ? $data['campos'] : '';
 
                 $objRelacion->consulta($campos);
-                $relacion = (array_key_exists('relacion', $data)) ? $data['relacion'] : FALSE;
+                $relacion = (array_key_exists('relacion', $data)) ? $data['relacion'] : false;
                 $camposRelacion = (array_key_exists('campos_relacion', $data)) ? $data['campos_relacion'] : [];
                 if ($relacion) {
-                    $objRelacion->join($relacion, $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}]);
+                    $objRelacion->join($relacion,
+                                       $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}]);
                 }
 
                 $this->consultaRelaciones[$nombreRelacion] = $objRelacion->obtQuery();
@@ -611,7 +614,7 @@ class DataModel {
      * @method instanciar
      *
      */
-    function instanciar($id, $data = []) {
+    function instanciar ($id, $data = []) {
 
         return $this->instanciarObjeto($id, $data);
     }
@@ -622,7 +625,7 @@ class DataModel {
      *
      * @param int $id Identificador unico del registro;
      */
-    private function instanciarObjeto($id, $data = []) {
+    private function instanciarObjeto ($id, $data = []) {
 
         if (count($data) < 1) {
             $data = $this->__obtConsultaInstancia($id)->fila();
@@ -641,7 +644,7 @@ class DataModel {
         return $this;
     }//fin función inicializarObjeto
 
-    function __obtConsultaInstancia($id) {
+    function __obtConsultaInstancia ($id) {
 
         return $this->consulta()->filtro([$this->pk => $id]);
     }
@@ -654,13 +657,13 @@ class DataModel {
      * en la constante
      * @method validarRelaciones
      */
-    private function validarRelaciones() {
+    private function validarRelaciones () {
 
         if ($this->nivelActualORM < $this->nivelORM) {
             foreach ($this->tieneMuchos as $id => $key) {
 
                 if (is_integer($id) and class_exists($key)) {
-                    $keyObject = new $key(NULL, $this->nivelActualORM);
+                    $keyObject = new $key(null, $this->nivelActualORM);
                     $pk = $this->pk;
                     $this->$key = $keyObject->obtenerBy($this->$pk, $pk);
                 }
@@ -677,20 +680,21 @@ class DataModel {
      * Identifica el nombre de la tabla de base de datos
      * @method obtenerTablaBD
      */
-    private function obtenerTablaBD() {
-
+    private function obtenerTablaBD () {
 
     }
 
-    private function identificarObjetosRelacion() {
+    private function identificarObjetosRelacion () {
 
         foreach ($this->propiedades as $prop => $value) {
             if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
 
                 $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
-                if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto, $this->tieneUno))
-                    $this->tieneUno[$objeto] = ['obj' => $objeto,
-                                                'pk'  => $prop
+                if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto,
+                                                                                                        $this->tieneUno))
+                    $this->tieneUno[$objeto] = [
+                        'obj' => $objeto,
+                        'pk'  => $prop
                     ];
             }
         }
@@ -701,7 +705,7 @@ class DataModel {
      *
      * @method identificarPropertyObjects
      */
-    private function _identificarObjetosRelacion() {
+    private function _identificarObjetosRelacion () {
 
         if ($this->nivelActualORM < $this->nivelORM) {
 
@@ -714,14 +718,15 @@ class DataModel {
                     if ($propiedad != $this->_clase and class_exists($objeto)) {
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
                         //ninguna relacion del objeto relacionado
-                        $obj = new $objeto(NULL, 2);
+                        $obj = new $objeto(null, 2);
                         $pk = $this->pk;
                         if (!empty($this->$pk)) {
 
                             $obj->obtenerBy($this->$prop, $prop);
                             $this->$objeto = $obj;
-                        } else {
-                            $this->$objeto = new $objeto(NULL, 2);
+                        }
+                        else {
+                            $this->$objeto = new $objeto(null, 2);
                         }
                         $this->pertenece[$objeto] = $this->$objeto;
 
@@ -738,29 +743,29 @@ class DataModel {
      *
      * @param string $propiedad Nombre de la propiedad a obtener
      */
-    function __get($propiedad) {
+    function __get ($propiedad) {
 
         if (property_exists($this, $propiedad)) {
 
             return $this->$propiedad;
-        } else {
+        }
+        else {
             throw new Exception("La propiedad " . $propiedad . " solicitada no existe", 123);
         }
     }
 
-    function __establecerAtributos($arr) {
+    function __establecerAtributos ($arr) {
 
         $this->establecerAtributos($arr, $this->_clase);
 
         return $this;
     }
 
-
     /**
      * Inicializa el objeto correspondiente para el manejo de la base de datos
      * @method initBD
      */
-    private function initBD($manejador = "") {
+    private function initBD ($manejador = "") {
 
         if (!empty($manejador))
             $this->manejadorBD = $manejador;
@@ -791,7 +796,7 @@ class DataModel {
      *
      * @return array $arrayPropiedades Arreglo con propiedades publicas
      */
-    private function obtenerPropiedadesObjeto() {
+    private function obtenerPropiedadesObjeto () {
 
         $this->reflector = new ReflectionClass($this->_clase);
         $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -804,18 +809,16 @@ class DataModel {
         }
         $this->propiedades = $arrayPropiedades;
 
-
     }
-
 
     /**
      * Agrega la union de campos al query
      * @method join
      *
-     * @param string $clase  tabla o modelo con el que se desea unir
-     * @param mixed  $campos Campo o Campos a solicitar de la tabla join
+     * @param string $clase tabla o modelo con el que se desea unir
+     * @param mixed $campos Campo o Campos a solicitar de la tabla join
      */
-    function join($clase, $campos = "", $data = [], $tipoJoin = "") {
+    function join ($clase, $campos = "", $data = [], $tipoJoin = "") {
 
         $tablaRelacion = $this->tablaBD;
 
@@ -830,7 +833,8 @@ class DataModel {
                 $campos = array_keys($clase->obtenerPropiedades());
             }
 
-        } else {
+        }
+        else {
             $tablaJoin = $clase;
         }
         if (count($data) > 0) {
@@ -839,14 +843,16 @@ class DataModel {
             }
             if (array_key_exists('clave', $data)) {
                 $clave = $data['clave'];
-            } else {
+            }
+            else {
                 $clave = $data['clave_relacion'];
             }
             if (array_key_exists('tabla_join', $data)) {
                 $tablaRelacion = $data['tabla_join'];
             }
 
-        } else {
+        }
+        else {
             $clave = $claveRelacion = $this->pk;
 
         }
@@ -861,14 +867,15 @@ class DataModel {
                         $camposJoin .= ", ";
                     $camposJoin .= $tablaJoin . "." . $campos[$i];
                 }
-            } else {
+            }
+            else {
                 $camposJoin = $campos;
             }
 
             $_queryExplode[0] .= ", " . $camposJoin;
             $this->query = implode(" from ", $_queryExplode);
         }
-        $this->join = TRUE;
+        $this->join = true;
         $joinParteA = $tablaJoin . '.' . $clave;
         $joinParteB = $tablaRelacion . '.' . $claveRelacion;
         if (strpos($claveRelacion, "."))
@@ -881,17 +888,16 @@ class DataModel {
 
     }
 
-
     /**
      * Emula el in de base de datos
      * @method in
      *
      * @var        $filtro Arreglo de campos a filtrar
-     * @var string $clave  [opcional] Campo para realizar clausula, si se omite
+     * @var string $clave [opcional] Campo para realizar clausula, si se omite
      * será tomada la clave primaria
      * @return object $this Objeto instanciado
      */
-    function in($filtro, $clave = "", $condicion = "and") {
+    function in ($filtro, $clave = "", $condicion = "and") {
 
         $this->where($condicion);
         if (is_array($filtro)) {
@@ -910,16 +916,18 @@ class DataModel {
         return $this;
     }
 
-    function consultaSola() {
+    function consultaSola () {
 
         if (empty($campos)) {
             $campos = array_keys($this->propiedades);
         }
         if (is_array($campos)) {
-            array_walk($campos, function (&$key, $valor, $tabla) {
+            array_walk($campos,
+                function (&$key, $valor, $tabla) {
 
-                $key = $tabla . "." . $key;
-            }, $this->tablaQuery);
+                    $key = $tabla . "." . $key;
+                },
+                       $this->tablaQuery);
 
             $campos = implode(", ", $campos);
         }
@@ -927,7 +935,7 @@ class DataModel {
         $this->query = "SELECT $campos ";
 
         $this->query .= " from $this->tablaQuery ";
-        $this->usoWhere = FALSE;
+        $this->usoWhere = false;
 
         return $this;
     }
@@ -942,9 +950,9 @@ class DataModel {
      *                      $filasPagina
      *
      */
-    function consulta($campos = "", $nroPaginacion = FALSE) {
+    function consulta ($campos = "", $nroPaginacion = false) {
 
-        $banderaJoin = FALSE;
+        $banderaJoin = false;
         $join = "";
 
         if (empty($campos) or $campos == '*') {
@@ -953,27 +961,30 @@ class DataModel {
 
         if (is_array($campos)) {
 
-            array_walk($campos, function (&$key, $valor, $tabla) {
+            array_walk($campos,
+                function (&$key, $valor, $tabla) {
 
-                $key = $tabla . "." . $key;
-            }, $this->tablaQuery);
+                    $key = $tabla . "." . $key;
+                },
+                       $this->tablaQuery);
 
             $campos = implode(", ", $campos);
         }
-        if ($nroPaginacion !== FALSE) {
+        if ($nroPaginacion !== false) {
             $this->paginar($nroPaginacion);
         }
         if ($this->consultaMultiple)
-            $this->query .= "SELECT $campos "; else $this->query = "SELECT $campos ";
-        if ($banderaJoin === TRUE)
+            $this->query .= "SELECT $campos ";
+        else $this->query = "SELECT $campos ";
+        if ($banderaJoin === true)
             $this->query .= ", " . $camposJoin;
         $this->query .= " from $this->tablaQuery " . $join;
-        $this->usoWhere = FALSE;
+        $this->usoWhere = false;
 
         return $this;
     }
 
-    function query($campos = [], $tabla) {
+    function query ($campos = [], $tabla) {
 
         if (count($campos) < 1)
             $campos = ["*"];
@@ -981,7 +992,7 @@ class DataModel {
         $this->query .= implode(",", $campos);
         $this->tablaQuery = $tabla;
         $this->query .= " from " . $this->tablaQuery;
-        $this->usoWhere = FALSE;
+        $this->usoWhere = false;
 
         return $this;
     }
@@ -993,7 +1004,7 @@ class DataModel {
      *
      * @var obtenerpk
      */
-    private function obtenerpk() {
+    private function obtenerpk () {
 
         $clase = $this->_clase;
         if (!empty($clase)) {
@@ -1010,18 +1021,18 @@ class DataModel {
      *
      * @deprecated
      */
-    function __call($rel, $campos) {
+    function __call ($rel, $campos) {
 
         //chequear esto.
         if ($rel == 'initBD') {
             $this->initBD($campos[0]);
 
-            return TRUE;
+            return true;
         };
         if (method_exists($this, $rel)) {
 
-        } else {
-
+        }
+        else {
 
             $class = ucfirst($this->_obtenerSingular($rel));
 
@@ -1031,52 +1042,56 @@ class DataModel {
 
             if (in_array($class, $this->tieneMuchos)) {
 
-                $obj = new $class(NULL, 1);
+                $obj = new $class(null, 1);
                 if (method_exists($obj, 'consulta')) {
                     $pk = $this->pk;
 
                     $obj->$pk = $this->$pk;
                     if (!empty($this->$pk))
-                        return $obj->consultaSola($campos)->filtro([$this->pk => $this->$pk]); else
+                        return $obj->consultaSola($campos)->filtro([$this->pk => $this->$pk]);
+                    else
                         return $obj;
                 }
-            } else if (in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno) or in_array($class, $this->tieneMuchos)) {
+            }
+            else if (in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno) or in_array($class,
+                                                                                                                $this->tieneMuchos)) {
 
-                $obj = new $class(NULL, 1);
+                $obj = new $class(null, 1);
                 if (method_exists($obj, 'consulta')) {
                     if (!in_array($class, $this->tieneUno)) {
                         $pkRelacion = $this->tieneUno[$class]['fk'];
-                    } else {
+                    }
+                    else {
                         $pkRelacion = $obj->__get('pk');
                     }
                     // se obtiene el campo de clave primaria del objeto relacion
                     Debug::string($this->{$pkRelacion}, 1);
                     exit;
                     if (!empty($this->{$pkRelacion}))
-                        $this->$rel = $obj->instanciar($this->$pkRelacion); else
+                        $this->$rel = $obj->instanciar($this->$pkRelacion);
+                    else
                         $this->$rel = $obj;
 
                     return $this->$rel;
                 }
-            } else {
+            }
+            else {
 
                 throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
 
             }
         }
 
-
     }
-
 
     /**
      * Permite registrar una relacion uno a uno del objeto
      *
      * @method agregar
      * @param string $relacion Nombre de la relacion. ejemplo Usuario -> Perfil
-     * @param array  $datos    Datos a guardar
+     * @param array $datos Datos a guardar
      */
-    function agregar($relacion, $datos) {
+    function agregar ($relacion, $datos) {
 
         if (in_array($relacion, $this->tieneMuchos)) {
             $fk = $this->pk;
@@ -1089,7 +1104,7 @@ class DataModel {
 
     }
 
-    function agregarMuchos() {
+    function agregarMuchos () {
 
     }
 
@@ -1101,14 +1116,15 @@ class DataModel {
      *
      * @return array $datos Datos de la consulta
      */
-    function obtener($relacion) {
+    function obtener ($relacion) {
 
         if (class_exists($relacion)) {
             $rel = new $relacion();
             $pk = $this->pk;
 
             return $rel->obtenerBy($this->$pk, $this->pk);
-        } else {
+        }
+        else {
             throw new Exception("el objeto $relacion solicitado no existe", 1);
 
         }
@@ -1119,12 +1135,13 @@ class DataModel {
      * Agrega la clausula where a la consulta
      * @method where
      */
-    private function where($condicion = " and") {
+    private function where ($condicion = " and") {
 
         if (!$this->usoWhere) {
             $this->query .= " where ";
-            $this->usoWhere = TRUE;
-        } else {
+            $this->usoWhere = true;
+        }
+        else {
             $this->query .= " $condicion ";
         }
     }
@@ -1134,13 +1151,13 @@ class DataModel {
      * @method filtro
      *
      * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
-     * @param array $arrayOr     [opcional] Permite definir una condicion or de multiples valores
+     * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
      *
      * @return object $this Objeto DataModel instanciado
      *
      *
      */
-    function filtro($arrayFiltro = [], $arrayOr = []) {
+    function filtro ($arrayFiltro = [], $arrayOr = []) {
 
         $this->where();
         if (is_array($arrayFiltro)) {
@@ -1156,16 +1173,20 @@ class DataModel {
                     if (!strpos($key, ".")) {
 
                         if (empty($value[0]) || $value[0] == '')
-                            $this->query .= $key . $value[1] . " "; else
+                            $this->query .= $key . $value[1] . " ";
+                        else
                             $this->query .= "$this->tablaQuery.$key" . $value[1] . '\'' . $value[0] . "' ";
 
-                    } else {
+                    }
+                    else {
                         $this->query .= $key . $value[1] . $value[0] . " ";
                     }
-                } else {
+                }
+                else {
 
                     if (!strpos($key, "."))
-                        $this->query .= "$this->tablaQuery.$key='$value'"; else
+                        $this->query .= "$this->tablaQuery.$key='$value'";
+                    else
                         $this->query .= "$key='$value'";
                 }
 
@@ -1179,13 +1200,15 @@ class DataModel {
                         $this->query .= " and ";
 
                     if (!strpos($key, "."))
-                        $this->query .= " $this->tablaQuery.$key='$value'"; else
+                        $this->query .= " $this->tablaQuery.$key='$value'";
+                    else
                         $this->query .= $key . "='$value'";
                     ++$o;
                 }
                 $this->query .= ")";
             }
-        } else {
+        }
+        else {
             throw new Exception("No se ha definido correctamente el filtro", 201);
         }
 
@@ -1200,10 +1223,11 @@ class DataModel {
      *
      * @return object $this Objeto instanciado
      */
-    function agrupar($agrupacion) {
+    function agrupar ($agrupacion) {
 
         if (is_array($agrupacion))
-            $this->_groupBy .= " group by " . implode(",", $agrupacion); else
+            $this->_groupBy .= " group by " . implode(",", $agrupacion);
+        else
             $this->_groupBy .= " group by " . $agrupacion;
 
         return $this;
@@ -1215,7 +1239,7 @@ class DataModel {
      *
      * @see self::consulta
      */
-    function select($campos = "") {
+    function select ($campos = "") {
 
         $this->consulta($campos);
 
@@ -1227,10 +1251,10 @@ class DataModel {
      * Permite ordenar una consulta
      *
      * @method order
-     * @param mixed  $order nombre de campo o arreglo de campos por los que se desea ordenar
-     * @param string $type  Tipo de ordenado "asc" o "desc" por default es asc
+     * @param mixed $order nombre de campo o arreglo de campos por los que se desea ordenar
+     * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
      */
-    function order($order, $type = 'asc') {
+    function order ($order, $type = 'asc') {
 
         if (is_array($order))
             $order = implode(",", $order);
@@ -1241,7 +1265,7 @@ class DataModel {
         return $this;
     }
 
-    function condicion($cond) {
+    function condicion ($cond) {
 
         $this->condicion = $cond;
 
@@ -1252,11 +1276,11 @@ class DataModel {
      * Permite hacer una consulta like
      * @method like
      *
-     * @param array  $filtro
+     * @param array $filtro
      * @param string $condicion or u and
-     * @param int    $tipo      1=intermedio,2=inicio,3=final
+     * @param int $tipo 1=intermedio,2=inicio,3=final
      */
-    function like($arrayFiltro, $condicion = "or", $tipo = 1) {
+    function like ($arrayFiltro, $condicion = "or", $tipo = 1) {
 
         $this->where($this->condicion);
 
@@ -1288,7 +1312,8 @@ class DataModel {
                         ++$a;
                     }
 
-                } else {
+                }
+                else {
                     if ($i > 0)
                         $this->query .= " $condicion ";
                     $this->query .= "$key like";
@@ -1309,7 +1334,8 @@ class DataModel {
                 ++$i;
             }
             $this->query .= ")";
-        } else {
+        }
+        else {
             throw new Exception("No se ha definido correctamente el filtro", 200);
         }
 
@@ -1325,7 +1351,7 @@ class DataModel {
      *
      * @param array $arrayFiltro
      */
-    function regExp($arrayFiltro) {
+    function regExp ($arrayFiltro) {
 
         $this->where();
 
@@ -1344,8 +1370,7 @@ class DataModel {
      * @see BDObject::obtenerDataCompleta
      *
      */
-    function obt($key = "") {
-
+    function obt ($key = "") {
 
         if (!empty($this->_groupBy)) {
             $this->query .= ' ' . $this->_groupBy;
@@ -1376,7 +1401,7 @@ class DataModel {
      *
      * @since 0.5
      */
-    private function _paginarConsulta($key) {
+    private function _paginarConsulta ($key) {
 
         $data = explode('from', $this->query);
 
@@ -1386,7 +1411,6 @@ class DataModel {
 
         $this->_totalRegistros = $this->bd->totalRegistros;
         $division = $this->_totalRegistros / $this->filasPagina;
-
 
         if (is_float($division))
             $division = ceil($division);
@@ -1411,20 +1435,21 @@ class DataModel {
      * @return array
      * @since 0.5
      */
-    function dataPaginacion() {
+    function dataPaginacion () {
 
-        return ['consulta'     => $this->query,
-                'filasPagina'  => $this->filasPagina,
-                'registros'    => $this->_totalRegistros,
-                'paginaActual' => $this->_paginaConsultada,
-                'paginas'      => $this->_paginas
+        return [
+            'consulta'     => $this->query,
+            'filasPagina'  => $this->filasPagina,
+            'registros'    => $this->_totalRegistros,
+            'paginaActual' => $this->_paginaConsultada,
+            'paginas'      => $this->_paginas
         ];
     }
 
-    function addConsulta() {
+    function addConsulta () {
 
         $this->query .= ";";
-        $this->consultaMultiple = TRUE;
+        $this->consultaMultiple = true;
         $this->consulta();
 
         return $this;
@@ -1439,9 +1464,9 @@ class DataModel {
      * @method obtMultiple
      *
      */
-    function obtMultiple($keys) {
+    function obtMultiple ($keys) {
 
-        $this->consultaMultiple = FALSE;
+        $this->consultaMultiple = false;
 
         return $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery($this->query, 2), $keys);
 
@@ -1455,7 +1480,7 @@ class DataModel {
      *
      * @return array $data
      */
-    function obtenerTodo($key = "", $order = "") {
+    function obtenerTodo ($key = "", $order = "") {
 
         if (empty($order))
             $order = $this->pk;
@@ -1467,7 +1492,7 @@ class DataModel {
      * Retorna un vector asociativo de un registro obtenido de base de datos
      * @method fila
      */
-    function fila() {
+    function fila () {
 
         if (!empty($this->order))
             $this->query .= " " . $this->order;
@@ -1479,7 +1504,7 @@ class DataModel {
      * Retorna el query armado
      * @method obtQuery
      */
-    protected function obtQuery() {
+    protected function obtQuery () {
 
         return $this->query;
     }
@@ -1488,7 +1513,7 @@ class DataModel {
      * Permite registrar el objeto actual
      * @method salvar
      */
-    function salvar($data = "") {
+    function salvar ($data = "") {
 
         if (is_array($data)) {
             $this->establecerAtributos($data);
@@ -1499,7 +1524,8 @@ class DataModel {
 
             return $this->insertar();
 
-        } else {
+        }
+        else {
 
             return $this->modificar();
         }
@@ -1519,7 +1545,7 @@ class DataModel {
      *
      * @return boolean
      */
-    function eliminar($arrayDatos = "", $campo = "", $cond = "and") {
+    function eliminar ($arrayDatos = "", $campo = "", $cond = "and") {
 
         $totalParams = func_num_args();
         if (empty($campo))
@@ -1527,17 +1553,20 @@ class DataModel {
         if ($totalParams == 0) {
             $pk = $this->pk;
             $datos[] = $this->$pk;
-        } else {
+        }
+        else {
             $datos = [];
             if (is_array($arrayDatos)) {
                 foreach ($arrayDatos as $key => $value) {
                     if (is_numeric($value)) {
                         $datos [] = "$value";
-                    } else {
+                    }
+                    else {
                         $datos [] = "\"$value\"";
                     }
                 }
-            } else {
+            }
+            else {
                 $datos[] = "\"" . $arrayDatos . "\"";
             }
         }
@@ -1552,17 +1581,18 @@ class DataModel {
 
             }
             $query = sprintf("DELETE FROM %s where %s", $this->tablaBD, $where);
-        } else {
+        }
+        else {
             $query = sprintf("DELETE FROM %s where $campo in (%s)", $this->tablaBD, implode(',', $datos));
         }
 
-
         if ($this->bd->ejecutarQuery($query)) {
             #$this->bd->cerrarConexion();
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
             #$this->bd->cerrarConexion();
-            return FALSE;
+            return false;
         }
     }
 
@@ -1570,10 +1600,10 @@ class DataModel {
      * Permite instanciar el objeto por medio de una propiedad;
      * @method getBy
      *
-     * @param mixed  $valor     Patrón de busqueda
+     * @param mixed $valor Patrón de busqueda
      * @param string $propiedad de busqueda
      */
-    function obtenerBy($valor, $property = "") {
+    function obtenerBy ($valor, $property = "") {
 
         if (empty($property))
             $property = $this->pk;
@@ -1594,17 +1624,18 @@ class DataModel {
                 }
 
                 return $this;
-            } else {
-                return FALSE;
+            }
+            else {
+                return false;
             }
 
-        } else {
+        }
+        else {
             throw new Exception("la propiedad pasada para obtener el objeto no existe", 124);
 
         }
 
     }
-
 
     /**
      * Retorna un arreglo con las propiedades publicas del objeto
@@ -1613,7 +1644,7 @@ class DataModel {
      * @deprecated
      * @return array
      */
-    function objectAsArray() {
+    function objectAsArray () {
 
         $this->obtenerPropiedadesObjeto();
 
@@ -1626,11 +1657,11 @@ class DataModel {
      *
      * @return array Arreglo con propiedades publicas del objeto
      */
-    function obtenerPropiedades($relaciones = FALSE) {
+    function obtenerPropiedades ($relaciones = false) {
 
         $this->obtenerPropiedadesObjeto();
         $propiedadesRelaciones = [];
-        if ($relaciones !== FALSE) {
+        if ($relaciones !== false) {
             foreach ($this->perteneceAUno as $key => $valores) {
                 if (property_exists($this, $key)) {
                     $propiedadesRelaciones[$key] = $this->{$key}->obtenerPropiedades();
@@ -1646,22 +1677,23 @@ class DataModel {
      * Inserta multiples registros en Base de Datos
      * @method crearTodo
      *
-     * @param array $data   Data a insertar
+     * @param array $data Data a insertar
      * @param       boolean [$insertPK] bandera para indicarle al metodo si incluye la clave primaria en el query
      *
      * @return object ResultBD
      * @see ResultBD
      */
-    function salvarTodo($data, $insertPK = FALSE) {
+    function salvarTodo ($data, $insertPK = false) {
 
         if (is_array($data)) {
 
             $insert = "INSERT INTO " . $this->tablaBD . " ";
 
             if ($insertPK)
-                $insert .= "(" . implode(",", $this->obtenerCamposQuery(array_slice($data, 0, 1)[0], FALSE)) . ") VALUES "; else
+                $insert .= "(" . implode(",",
+                                         $this->obtenerCamposQuery(array_slice($data, 0, 1)[0], false)) . ") VALUES ";
+            else
                 $insert .= "(" . implode(",", $this->obtenerCamposQuery(array_slice($data, 0, 1)[0])) . ") VALUES ";
-
 
             $i = 0;
 
@@ -1674,12 +1706,12 @@ class DataModel {
                 ++$i;
             }
 
-
             $this->bd->ejecutarQuery($insert);
             $this->armarIdsInsertados();
 
             return $this->resultBD->setValores($this);
-        } else {
+        }
+        else {
             throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
         }
     }
@@ -1690,7 +1722,7 @@ class DataModel {
      * @method idsInsertados
      * @return array $idsInsertados
      */
-    private function armarIdsInsertados() {
+    private function armarIdsInsertados () {
 
         $lastId = $this->bd->idResult;
         $this->idsResultantes = [];
@@ -1701,7 +1733,7 @@ class DataModel {
         }
     }
 
-    function obtIdsResultados() {
+    function obtIdsResultados () {
 
         return $this->idsResultantes;
     }
@@ -1712,14 +1744,16 @@ class DataModel {
      *
      * @param array $data Data a insertar
      */
-    private function insertar($data = "") {
+    private function insertar ($data = "") {
 
         if (!$this->verificarUnicos()->esUnico()) {
 
-
             $data = $this->estructuraInsert();
 
-            $insert = sprintf("insert into %s (%s) VALUES (%s)", $this->tablaBD, implode(",", $this->obtenerCamposQuery()), implode(",", $data));
+            $insert = sprintf("insert into %s (%s) VALUES (%s)",
+                              $this->tablaBD,
+                              implode(",", $this->obtenerCamposQuery()),
+                              implode(",", $data));
 
             if ($this->bd->insertar($insert)) {
                 $pk = $this->pk;
@@ -1727,8 +1761,9 @@ class DataModel {
                 $this->resultBD->setValores($this);
 
             }
-        } else {
-            $this->resultBD->__set('ejecutado', FALSE);
+        }
+        else {
+            $this->resultBD->__set('ejecutado', false);
         }
 
         #$this->bd->cerrarConexion();
@@ -1742,7 +1777,7 @@ class DataModel {
      * @method obtenerCamposQuery
      * @return array $campos
      */
-    private function obtenerCamposQuery($campos = "", $unsetPK = TRUE) {
+    private function obtenerCamposQuery ($campos = "", $unsetPK = true) {
 
         if (empty($campos) or !is_array($campos))
             $campos = $this->propiedades;
@@ -1763,7 +1798,7 @@ class DataModel {
         return $campos;
     }
 
-    private function estructuraInsert($data = [], $insertPK = FALSE) {
+    private function estructuraInsert ($data = [], $insertPK = false) {
 
         if (count($data) < 1) {
             $data = $this->propiedades;
@@ -1776,21 +1811,23 @@ class DataModel {
                     case '':
                         if (!filter_var($valor, FILTER_VALIDATE_INT) and $valor !== 0) {
                             $valores[] = "null";
-                        } else {
+                        }
+                        else {
                             $valores[] = $valor;
                         }
                         break;
                     default:
                         if (!in_array($valor, $this->bd->getValoresReservados())) {
                             $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
-                        } else {
+                        }
+                        else {
                             $valores[] = $valor;
                         }
                         break;
                 }
             }
         }//fin foreach
-        if ($this->registroMomentoGuardado === TRUE) {
+        if ($this->registroMomentoGuardado === true) {
             $valores[] = "'" . Helpers\FechaHora::datetime() . "'";
             $valores[] = "'" . Helpers\FechaHora::datetime() . "'";
         }
@@ -1798,11 +1835,15 @@ class DataModel {
             if (Helpers\Sesion::obt('Usuario')) {
                 $user = Helpers\Sesion::obt('Usuario');
                 if (is_array($user) and array_key_exists('id_usuario', $user))
-                    $idUser = $user['id_usuario']; elseif (is_object($user) and property_exists($user, 'id_usuario'))
+                    $idUser = $user['id_usuario'];
+                else if (is_object($user) and property_exists($user, 'id_usuario'))
                     $idUser = ($user->id_usuario > 0) ? $user->id_usuario : 0;
-            } else {
-                if (is_array(Helpers\Sesion::obt('usuario')) and array_key_exists('id_usuario', Helpers\Sesion::obt('usuario')))
-                    $idUser = Helpers\Sesion::obt('usuario')['id_usuario']; else
+            }
+            else {
+                if (is_array(Helpers\Sesion::obt('usuario')) and array_key_exists('id_usuario',
+                                                                                  Helpers\Sesion::obt('usuario')))
+                    $idUser = Helpers\Sesion::obt('usuario')['id_usuario'];
+                else
                     $idUser = 0;
             }
 
@@ -1812,10 +1853,9 @@ class DataModel {
 
         return $valores;
 
-
     }//fin crearInsert
 
-    private function modificar() {
+    private function modificar () {
 
         $dataUpdate = [];
         if (!is_array($this->valoresIniciales)) {
@@ -1830,7 +1870,8 @@ class DataModel {
                 $dataUpdate['id_usuario_modificador'] = 0;
                 if (Helpers\Sesion::checkLogg()) {
                     if (is_object(Helpers\Sesion::obt('Usuario')))
-                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('Usuario')->id_usuario; elseif (array_key_exists('id_usuario', Helpers\Sesion::obt('usuario'))) {
+                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('Usuario')->id_usuario;
+                    else if (array_key_exists('id_usuario', Helpers\Sesion::obt('usuario'))) {
                         $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('usuario', 'id_usuario');
                     }
                 }
@@ -1846,7 +1887,8 @@ class DataModel {
                     case '':
                         if (!is_numeric($valor)) {
                             $campoValor = "null";
-                        } else {
+                        }
+                        else {
                             $campoValor = $valor;
                         }
                         break;
@@ -1854,7 +1896,8 @@ class DataModel {
                     default:
                         if (!in_array($valor, $this->bd->getValoresReservados())) {
                             $campoValor = "'" . $this->bd->escaparTexto($valor) . "'";
-                        } else {
+                        }
+                        else {
                             $campoValor = $this->bd->escaparTexto($valor);
                         }
 
@@ -1874,7 +1917,8 @@ class DataModel {
                 $this->establecerAtributos($dataUpdate);
             }
 
-        } else {
+        }
+        else {
 
             $this->query = "";
         }
@@ -1888,16 +1932,15 @@ class DataModel {
     /**
      * Limita la consulta a base de datos
      *
-     * @param int $limit  campo sobre el que empieza la consulta
+     * @param int $limit campo sobre el que empieza la consulta
      * @param int $offset limite de registros a traer
      */
-    function limit($limit = 100, $offset = 0) {
+    function limit ($limit = 100, $offset = 0) {
 
         if (!$this->usoLimit) {
             $this->_limit = $this->bd->limit($limit, $offset);
-            $this->usoLimit = TRUE;
+            $this->usoLimit = true;
         }
-
 
         return $this;
     }
@@ -1909,7 +1952,7 @@ class DataModel {
      *
      * @see self::unicos
      */
-    private function verificarUnicos($datos = "") {
+    private function verificarUnicos ($datos = "") {
 
         if (!is_array($this->unico))
             throw new Exception("No se ha creado correctamente el arreglo unico", 212);
@@ -1928,7 +1971,8 @@ class DataModel {
                         }
                     }
                     $filtro[] = $v . " ) ";
-                } else {
+                }
+                else {
                     $filtro[] = "$valorUnico='" . $this->propiedades[$valorUnico] . "'";
                 }
             }
@@ -1938,11 +1982,11 @@ class DataModel {
             $this->bd->ejecutarQuery($this->query);
 
             if ($this->bd->totalRegistros > 0) {
-                $this->resultBD->setValores($this)->setUnico(TRUE);
-            } else {
-                $this->resultBD->setValores($this)->setUnico(FALSE);
+                $this->resultBD->setValores($this)->setUnico(true);
             }
-
+            else {
+                $this->resultBD->setValores($this)->setUnico(false);
+            }
 
         }
 
@@ -1953,9 +1997,10 @@ class DataModel {
      * Devuelve el plural de una palabra
      * @method obtenerPlural
      */
-    private function obtenerPlural($palabra) {
+    private function obtenerPlural ($palabra) {
 
-        $vocales = ['a',
+        $vocales = [
+            'a',
             'e',
             'i',
             'o',
@@ -1964,23 +2009,26 @@ class DataModel {
         $ultima = substr($palabra, -1);
         if (in_array($ultima, $vocales)) {
             return $palabra . PLURAL_ATONO;
-        } else {
+        }
+        else {
             return $palabra . PLURAL_CONSONANTE;
         }
 
     }
 
-    private function _obtenerSingular($palabra) {
+    private function _obtenerSingular ($palabra) {
 
         $arrayPalabra = [];
-        $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, NULL, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         foreach ($palabra as $key => $word) {
             if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE) {
                 $arrayPalabra[] = substr($word, 0, strlen($word) - 2);
-            } elseif (substr($word, strlen($word) - 1) == PLURAL_ATONO) {
+            }
+            else if (substr($word, strlen($word) - 1) == PLURAL_ATONO) {
                 $arrayPalabra[] = substr($word, 0, strlen($word) - 1);
-            } else {
+            }
+            else {
                 $arrayPalabra[] = $word;
             }
         }
@@ -1994,12 +2042,12 @@ class DataModel {
      * @method getResult
      * @return object ResultBD();
      */
-    function getResult() {
+    function getResult () {
 
         return $this->resultBD;
     }
 
-    function envolverFiltro() {
+    function envolverFiltro () {
 
         $consulta = explode('where', $this->query);
         if (count($consulta > 0))
@@ -2008,7 +2056,7 @@ class DataModel {
         return $this;
     }
 
-    protected function guardarRelacion($arrayData) {
+    protected function guardarRelacion ($arrayData) {
 
     }
 
@@ -2016,18 +2064,19 @@ class DataModel {
      * Registra el total de registros de una tabla
      * @method totalRegistros
      */
-    function totalRegistros($filtro = FALSE) {
+    function totalRegistros ($filtro = false) {
 
         $this->query = "Select count(*) as total from " . $this->tablaBD . " ";
         if ($filtro)
-            return $this; else
+            return $this;
+        else
             return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from " . $this->tablaBD));
     }
 
-    private function debug($data, $string = TRUE, $condicion = FALSE) {
+    private function debug ($data, $string = true, $condicion = false) {
 
         if ($this->debug) {
-            ($string === TRUE) ? Debug::string($data, $condicion) : Debug::mostrarArray($data, $condicion);
+            ($string === true) ? Debug::string($data, $condicion) : Debug::mostrarArray($data, $condicion);
         }
 
         return $this;
@@ -2039,7 +2088,7 @@ class DataModel {
      *
      * @since 0.5
      */
-    function paginar($pagina) {
+    function paginar ($pagina) {
 
         $this->_establecerPaginacion($pagina);
 
@@ -2052,15 +2101,15 @@ class DataModel {
      *
      * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
      */
-    private function _establecerPaginacion($nroPagina = 1) {
+    private function _establecerPaginacion ($nroPagina = 1) {
 
         $this->_paginaConsultada = $nroPagina;
-        $this->_paginar = TRUE;
+        $this->_paginar = true;
 
         return $this;
     }
 
-    function imprimir($propiedad = "query", $exit = 1) {
+    function imprimir ($propiedad = "query", $exit = 1) {
 
         Debug::string($this->{$propiedad}, $exit);
     }
@@ -2070,10 +2119,10 @@ class DataModel {
      * @method entre
      *
      * @param string $campo Nombre del campo a usar
-     * @param mixed  $ini   Valor inicial
-     * @param mixed  $fin   Valor final
+     * @param mixed $ini Valor inicial
+     * @param mixed $fin Valor final
      */
-    function entre($campo, $ini, $fin) {
+    function entre ($campo, $ini, $fin) {
 
         $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
 
@@ -2083,7 +2132,7 @@ class DataModel {
      * Utiliza la clausula COUNT de mysql
      * @method contar
      */
-    function contar($campo = '*', $distinct = FALSE) {
+    function contar ($campo = '*', $distinct = false) {
 
         if ($campo != '*')
             $campo = $this->tablaQuery . '.' . $campo;
@@ -2092,7 +2141,7 @@ class DataModel {
             $campo = 'DISTINCT ' . $campo;
 
         $this->query = "SELECT  COUNT($campo) as total_count from $this->tablaQuery ";
-        $this->usoWhere = FALSE;
+        $this->usoWhere = false;
 
         return $this;
     }

@@ -1,46 +1,47 @@
 <?php
 /**
-* Clase Modelo
-* @author Julio Rodriguez
-* @package Framework
-* @version 1.4
-* @category Jida Model
-*/
+ * Clase Modelo
+ * @author Julio Rodriguez
+ * @package Framework
+ * @version 1.4
+ * @category Jida Model
+ */
 
 namespace Jida;
 
-class Elemento extends \DataModel{
+class Elemento extends \DataModel {
 
     #Aqui tus propiedades publicas================
-	var $id_elemento;
-	var $elemento;
-	var $data;
-	//var $autocarga;
-	var $area;
+    var $id_elemento;
+    var $elemento;
+    var $data;
+    //var $autocarga;
+    var $area;
 
     #Propiedades Heredadas========================
-    protected $tablaBD="t_elementos";
-    protected $pk="id_elemento";
+    protected $tablaBD = "t_elementos";
+    protected $pk = "id_elemento";
     //  protected $unico;
 
-	/**
-	 * Registra una nueva area de configuracion
-	 *
-	 * @method addArea
-	 * @since 1.4
-	 *
-	 */
-	static function addArea($config){
-		global $elementos;
-		array_push($elementos['areas'],$config);
+    /**
+     * Registra una nueva area de configuracion
+     *
+     * @method addArea
+     * @since 1.4
+     *
+     */
+    static function addArea ($config) {
 
-	}
+        global $elementos;
+        array_push($elementos['areas'], $config);
 
-	static function addElemento($elemento){
-		global $elementos;
-		array_push($elementos['elementos'],\String::upperCamelCase($elemento));
-	}
+    }
 
+    static function addElemento ($elemento) {
+
+        global $elementos;
+        array_push($elementos['elementos'], \String::upperCamelCase($elemento));
+    }
 
 }
 

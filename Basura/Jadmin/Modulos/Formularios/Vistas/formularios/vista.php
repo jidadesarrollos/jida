@@ -1,1 +1,1 @@
-<?=$this->vista?>
+<?= $this->vista ?>

@@ -1,38 +1,34 @@
 {
-	"nombre" : "Nuevo modulo",
-	"query":"null",
-	"clave_primaria":"null",
-	"identificador":"Modulo",
-	"estructura":"",
-
-	"campos":[
-		{
-			"name":"Nombre_modulo",
-			"type":"text",
-			"id":"",
-			"label":"Nombre :",
-			"placeholder":"Nombre",
-			"eventos":{
-				"obligatorio":{
-		          "mensaje":"Debe llenar este campo"
-		        }
-			}
-
-		},
-		{
-			"name":"tipo",
-			"orden": "2",
-			"id":"tipo",
-			"label":"Tipo de Modulo",
-			"type":"radio",
-			"opciones":"0=Aplicacion;1=Jadmin;2=Mixto",
-			"eventos":{
-				"obligatorio":{"mensaje":"Debe Seleccionar Un tipo"}
-			}
-		}
-        
-
-	]
-
-
+  "nombre": "Nuevo modulo",
+  "query": "null",
+  "clave_primaria": "null",
+  "identificador": "Modulo",
+  "estructura": "",
+  "campos": [
+    {
+      "name": "Nombre_modulo",
+      "type": "text",
+      "id": "",
+      "label": "Nombre :",
+      "placeholder": "Nombre",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe llenar este campo"
+        }
+      }
+    },
+    {
+      "name": "tipo",
+      "orden": "2",
+      "id": "tipo",
+      "label": "Tipo de Modulo",
+      "type": "radio",
+      "opciones": "0=Aplicacion;1=Jadmin;2=Mixto",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe Seleccionar Un tipo"
+        }
+      }
+    }
+  ]
 }

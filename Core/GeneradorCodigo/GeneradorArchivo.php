@@ -30,7 +30,6 @@ trait GeneradorArchivo {
      */
     protected $contenido;
 
-
     /**
      * Crea un archivo
      * @method public crear

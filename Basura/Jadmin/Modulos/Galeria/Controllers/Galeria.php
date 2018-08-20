@@ -9,10 +9,14 @@
 
 namespace Jida\Jadmin\Modulos\Galeria\Controllers;
 
-if (!defined('IMG_TAM_LG')) define('IMG_TAM_LG', '1200');
-if (!defined('IMG_TAM_LG')) define('IMG_TAM_MD', '800');
-if (!defined('IMG_TAM_LG')) define('IMG_TAM_SM', '400');
-if (!defined('IMG_TAM_LG')) define('IMG_TAM_XS', '140');
+if (!defined('IMG_TAM_LG'))
+    define('IMG_TAM_LG', '1200');
+if (!defined('IMG_TAM_LG'))
+    define('IMG_TAM_MD', '800');
+if (!defined('IMG_TAM_LG'))
+    define('IMG_TAM_SM', '400');
+if (!defined('IMG_TAM_LG'))
+    define('IMG_TAM_XS', '140');
 
 use Jida\Modelos as Modelos;
 use Jida\Helpers as Helpers;
@@ -23,56 +27,62 @@ class Galeria extends JController {
 
     var $manejoParams = true;
 
-    function __construct($js = TRUE) {
+    function __construct ($js = true) {
 
         parent::__construct();
         $this->modelo = new Modelos\ObjetoMedia();
 
-        if ($js === TRUE) {
+        if ($js === true) {
 
             $this->dv->addJs([
-                '/Framework/htdocs/js/dev/jCargaFile.js'
-            ], FALSE);
+                                 '/Framework/htdocs/js/dev/jCargaFile.js'
+                             ],
+                             false);
 
         }
 
         $this->dv->addJsModulo(['galeria-jd' => 'galeria.js']);
 
-        if ($this->solicitudAjax()) $this->layout('ajax');
+        if ($this->solicitudAjax())
+            $this->layout('ajax');
 
     }
 
     /**
      * Testing de carga
      */
-    function form() {
+    function form () {
 
         $this->dv->addJs(
-            ['/Framework/htdocs/js/jadmin/cargaArchivos.js'
-            ], false);
+            [
+                '/Framework/htdocs/js/jadmin/cargaArchivos.js'
+            ],
+            false);
 
     }
 
-    function cargaForm() {
+    function cargaForm () {
 
         // Helpers\Debug::imprimir($_POST,$_FILES,true);
     }
 
-    function index() {
+    function index () {
+
         $this->vista = "galeria";
 
-        $this->dv->seleccionMultiple = TRUE;
-        if ($this->post('funcion') == 'portada') $this->dv->seleccionMultiple = FALSE;
+        $this->dv->seleccionMultiple = true;
+        if ($this->post('funcion') == 'portada')
+            $this->dv->seleccionMultiple = false;
 
         $this->data([
-            'objetosGaleria' => $this->modelo->select()->obt()
-        ]);
+                        'objetosGaleria' => $this->modelo->select()->obt()
+                    ]);
 
     }
 
-    function imagenAjax() {
+    function imagenAjax () {
 
-        $respuesta = ['error' => TRUE];
+        $respuesta = ['error' => true];
 
         if ($_FILES['archivoGaleria']) {
 
@@ -87,14 +97,15 @@ class Galeria extends JController {
 
                     $path = HTDOCS_DIR . 'img/media/' . $anio . '/' . $mes;
 
-                    if (!Helpers\Directorios::validar($path)) Helpers\Directorios::crear($path);
+                    if (!Helpers\Directorios::validar($path))
+                        Helpers\Directorios::crear($path);
 
-                    if ($archivo->moverArchivosCargados($path, TRUE)) {
+                    if ($archivo->moverArchivosCargados($path, true)) {
 
                         $data = $this->_copiarImagenes($archivo, $pathWeb);
                         if ($data) {
 
-                            $respuesta['error'] = FALSE;
+                            $respuesta['error'] = false;
                             $respuesta['path'] = URL_IMGS . 'media/' . $anio . '/' . $mes;
                             $respuesta['data'] = $data;
                             if ($this->modelo->salvarTodo($data)) {
@@ -104,9 +115,11 @@ class Galeria extends JController {
                         }
 
                     }
-                } else $respuesta['msj'] = 'Formatos de Imagen no válidos';
+                }
+                else $respuesta['msj'] = 'Formatos de Imagen no válidos';
 
-            } else {
+            }
+            else {
 
                 $respuesta['msj'] = 'No se pudo realizar la carga, por favor vuelva a intentarlo';
             }
@@ -115,7 +128,7 @@ class Galeria extends JController {
 
     }
 
-    private function _copiarImagenes($img, $path) {
+    private function _copiarImagenes ($img, $path) {
 
         $imgs = $img->getArchivosCargados();
         $dataMedia = [];
@@ -129,25 +142,38 @@ class Galeria extends JController {
                 'interno'      => 1,
                 'directorio'   => $path,
 
-                'meta_data' => json_encode(['img' => $nombreImg . "." . $file['extension'],
-                                            'sm'  => $nombreImg . "-sm." . $file['extension'],
-                                            'min' => $nombreImg . "-xs." . $file['extension'],
-                                            'md'  => $nombreImg . "-md." . $file['extension'],
-                                            'lg'  => $nombreImg . "-lg." . $file['extension'],
-                ])
+                'meta_data' => json_encode([
+                                               'img' => $nombreImg . "." . $file['extension'],
+                                               'sm'  => $nombreImg . "-sm." . $file['extension'],
+                                               'min' => $nombreImg . "-xs." . $file['extension'],
+                                               'md'  => $nombreImg . "-md." . $file['extension'],
+                                               'lg'  => $nombreImg . "-lg." . $file['extension'],
+                                           ])
             ];
             $img->redimensionar(IMG_TAM_LG, IMG_TAM_LG, $file['path'], $file['path']);
-            $img->redimensionar(IMG_TAM_MD, IMG_TAM_MD, $file['path'], $file['directorio'] . "/" . $nombreImg . "-md." . $file['extension']);
-            $img->redimensionar(IMG_TAM_SM, IMG_TAM_SM, $file['path'], $file['directorio'] . "/" . $nombreImg . "-sm." . $file['extension']);
-            $img->redimensionar(IMG_TAM_XS, IMG_TAM_XS, $file['path'], $file['directorio'] . "/" . $nombreImg . "-xs." . $file['extension']);
+            $img->redimensionar(IMG_TAM_MD,
+                                IMG_TAM_MD,
+                                $file['path'],
+                                $file['directorio'] . "/" . $nombreImg . "-md." . $file['extension']);
+            $img->redimensionar(IMG_TAM_SM,
+                                IMG_TAM_SM,
+                                $file['path'],
+                                $file['directorio'] . "/" . $nombreImg . "-sm." . $file['extension']);
+            $img->redimensionar(IMG_TAM_XS,
+                                IMG_TAM_XS,
+                                $file['path'],
+                                $file['directorio'] . "/" . $nombreImg . "-xs." . $file['extension']);
 
-            $response['imagenes'][] = ['nombre' => $file['nombre'], "ext" => $file['extension']];
+            $response['imagenes'][] = [
+                'nombre' => $file['nombre'],
+                "ext"    => $file['extension']
+            ];
         }
 
         return $dataMedia;
     }
 
-    protected function _obtFormMedia($id) {
+    protected function _obtFormMedia ($id) {
 
         // \Jida\Helpers\Debug::imprimir('_obtFormMedia',$_GET,$id);
 
@@ -156,22 +182,22 @@ class Galeria extends JController {
         $form
             ->boton('principal')
             ->attr([
-                'value' => 'Guardar',
-                'type'  => 'button'
-            ])->data([
-                'accion' => 'guardarObjeto',
-                'id'     => $id,
-                'config' => '{"post":"guardarMedia"}'
-            ]);
+                       'value' => 'Guardar',
+                       'type'  => 'button'
+                   ])->data([
+                                'accion' => 'guardarObjeto',
+                                'id'     => $id,
+                                'config' => '{"post":"guardarMedia"}'
+                            ]);
         Helpers\Sesion::set('_formMedia', $form);
 
         return $form;
 
     }
 
-    function gestionMedia() {
+    function gestionMedia () {
 
-        $this->dv->addJsAjax('/Framework/Jadmin/Modulos/Galeria/htdocs/js/formulario.js', FALSE);
+        $this->dv->addJsAjax('/Framework/Jadmin/Modulos/Galeria/htdocs/js/formulario.js', false);
 
         if ($this->solicitudAjax()) {
 
@@ -180,35 +206,37 @@ class Galeria extends JController {
             $this->modelo->obtenerBy($id, 'id_objeto_media');
 
             $this->data([
-                'form' => $this->_obtFormMedia($id)->render(),
-                'obj'  => $this->modelo
-            ]);
+                            'form' => $this->_obtFormMedia($id)->render(),
+                            'obj'  => $this->modelo
+                        ]);
 
         }
     }
 
-    function editarMedia() {
+    function editarMedia () {
 
         $this->dv->addJsModulo([
-            'formulario-galeria' => 'formulario.js'
-        ]);
+                                   'formulario-galeria' => 'formulario.js'
+                               ]);
         if ($this->post('btnGestionObjetoMedia')) {
 
             if ($this->entero($this->get('objeto'))) {
                 $id = $this->get('objeto');
-            } else {
+            }
+            else {
                 $id = Helpers\Sesion::obt('objetoMedia');
             }
 
             if (Helpers\Sesion::obt('_formMedia') instanceof Render\Formulario) {
                 $form = Helpers\Sesion::obt('_formMedia');
-            } else {
+            }
+            else {
                 $form = $this->_obtFormMedia($id);
             }
 
             $result = [
                 'msj'       => 'No se pudo guardar el objeto',
-                'ejecutado' => FALSE,
+                'ejecutado' => false,
             ];
             $this->modelo->instanciar($id);
 
@@ -229,7 +257,8 @@ class Galeria extends JController {
         $this->respuestaJson(['error' => '404']);
     }
 
-    function eliminarImagenes() {
+    function eliminarImagenes () {
+
         if ($this->solicitudAjax() and $this->post('accion') == 'dlt') {
             $imagenes = explode(",", $this->post('img'));
             $Media = new ObjetoMedia();
@@ -244,8 +273,12 @@ class Galeria extends JController {
             if ($Media->eliminar($imagenes, 'id_objeto_media')) {
                 $this->respuestaJson(['ejecutado' => true]);
             }
-            $this->respuestaJson(['ejecutado' => false, 'error' => 'No se han podido eliminar los objetos']);
-        } else {
+            $this->respuestaJson([
+                                     'ejecutado' => false,
+                                     'error'     => 'No se han podido eliminar los objetos'
+                                 ]);
+        }
+        else {
             $this->_404();
         }
     }

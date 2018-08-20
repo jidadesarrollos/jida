@@ -16,7 +16,7 @@ use Jida\Manager\Vista\Manager as ManagerVista;
 
 class Arranque {
 
-    private static $_ce = 10002;
+   // private static $_ce = 10002;
     private $_arrayUrl;
     public $procesador;
     /**

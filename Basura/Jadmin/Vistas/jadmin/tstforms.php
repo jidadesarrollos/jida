@@ -5,4 +5,4 @@ $form = $data->form;
 ?>
 
 
-<?=$form->armarFormulario()?>
+<?= $form->armarFormulario() ?>

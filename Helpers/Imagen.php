@@ -56,11 +56,14 @@ class Imagen extends Archivo {
      * @since 0.1
      *
      */
-    function redimensionar($anchoEsperado, $altoEsperado, $rutaImg = "", $rutaNuevaImg = "") {
-        if (empty($rutaImg)) $rutaImg = $this->directorio;
+    function redimensionar ($anchoEsperado, $altoEsperado, $rutaImg = "", $rutaNuevaImg = "") {
+
+        if (empty($rutaImg))
+            $rutaImg = $this->directorio;
         if (empty($nombreImg) or is_null($nombreImg)) {
             $directorioImagen = $rutaImg;
-        } else {
+        }
+        else {
             $directorioImagen = $rutaImg . $nombreImg;
         }
         $infoImagen = getimagesize($directorioImagen);
@@ -81,12 +84,14 @@ class Imagen extends Archivo {
         if ($proporcionActual > $proporcionRedimension) {
             $anchoRedimension = $anchoEsperado;
             $altoRedimension = $anchoEsperado / $proporcionActual;
-        } else
+        }
+        else
             if ($proporcionActual < $proporcionRedimension) {
                 $anchoRedimension = $anchoEsperado * $proporcionActual;
                 $altoRedimension = $altoEsperado;
 
-            } else {
+            }
+            else {
                 $anchoRedimension = $anchoEsperado;
                 $altoRedimension = $altoEsperado;
             }
@@ -96,7 +101,16 @@ class Imagen extends Archivo {
         imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
         imagealphablending($lienzo, false);
         imagesavealpha($lienzo, true);
-        imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $anchoRedimension, $altoRedimension, $anchoActual, $altoActual);
+        imagecopyresampled($lienzo,
+                           $imagen,
+                           0,
+                           0,
+                           0,
+                           0,
+                           $anchoRedimension,
+                           $altoRedimension,
+                           $anchoActual,
+                           $altoActual);
         if ($this->exportarImagen($tipoImagen, $lienzo, $rutaAguardar)) {
             return true;
         }
@@ -114,7 +128,8 @@ class Imagen extends Archivo {
      * @since 0.1
      * @deprecated 0.6
      */
-    function exportarImagen($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+    function exportarImagen ($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+
         if (!empty($nombreImagen)) {
             $url = $url . $nombreImagen;
         }
@@ -147,7 +162,7 @@ class Imagen extends Archivo {
      * @since 0.6
      *
      */
-    function exportar($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+    function exportar ($tipoImagen, $lienzo, $url, $nombreImagen = "") {
 
         if (!empty($nombreImagen)) {
             $url = $url . $nombreImagen;
@@ -181,7 +196,8 @@ class Imagen extends Archivo {
      * @since 0.1
      *
      */
-    private function crearLienzo($tipoImagen, $url) {
+    private function crearLienzo ($tipoImagen, $url) {
+
         switch ($tipoImagen) {
             case "image/jpg":
             case "image/jpeg":
@@ -214,13 +230,16 @@ class Imagen extends Archivo {
      *
      *
      */
-    function recortar($alto, $ancho, $x, $y, $w, $h, $rutaImagen = "", $nuevaRuta = "") {
+    function recortar ($alto, $ancho, $x, $y, $w, $h, $rutaImagen = "", $nuevaRuta = "") {
+
         //Debug::string("$alto,$ancho,$x,$y,$w,$h");
-        if (empty($rutaImagen)) $rutaImagen = $this->directorio;
+        if (empty($rutaImagen))
+            $rutaImagen = $this->directorio;
         else $this->directorio = $rutaImagen;
         if (!$this->validarExistencia())
             throw new Exception("No existe la imagen requerida para recorte $rutaImagen", 2500);
-        if (empty($nuevaRuta)) $nuevaRuta = $rutaImagen;
+        if (empty($nuevaRuta))
+            $nuevaRuta = $rutaImagen;
 
         $infoImagen = getimagesize($rutaImagen);
         $lienzo = $this->crearLienzo($infoImagen['mime'], $rutaImagen);
@@ -241,7 +260,8 @@ class Imagen extends Archivo {
      * Verifica que el archivo cargado sea una imagen
      * @deprecated 0.6
      */
-    function validarCargaImagen() {
+    function validarCargaImagen () {
+
         if (function_exists('exif_imagetype'))
             return $this->useExifImagetype();
         else
@@ -252,7 +272,8 @@ class Imagen extends Archivo {
      * Verifica que el archivo cargado sea una imagen
      * @since 0.6
      */
-    function validarCarga() {
+    function validarCarga () {
+
         if (function_exists('exif_imagetype'))
             return $this->useExifImagetype();
         else
@@ -270,8 +291,13 @@ class Imagen extends Archivo {
      *
      *
      */
-    private function useExifImagetype() {
-        $arrayMimes = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+    private function useExifImagetype () {
+
+        $arrayMimes = [
+            IMAGETYPE_PNG,
+            IMAGETYPE_JPEG,
+            IMAGETYPE_GIF
+        ];
         if ($this->totalArchivosCargados > 1) {
             $total = $this->getTotalArchivosCargados();
             $band = true;
@@ -283,7 +309,8 @@ class Imagen extends Archivo {
             }
 
             return $band;
-        } else {
+        }
+        else {
 
             if (count($this->files) > 0) {
 
@@ -291,7 +318,8 @@ class Imagen extends Archivo {
 
                 if (!empty($tmpName)) {
                     $valor = exif_imagetype($tmpName);
-                    if (in_array($valor, $arrayMimes)) return true;
+                    if (in_array($valor, $arrayMimes))
+                        return true;
                 }
             }
 
@@ -302,7 +330,8 @@ class Imagen extends Archivo {
     /**
      * Edita los tipos de mymes aceptados para la carga de imagenes
      */
-    function setMimesAceptados($arr) {
+    function setMimesAceptados ($arr) {
+
         $this->mimesAceptados = $arr;
     }
 
@@ -313,11 +342,16 @@ class Imagen extends Archivo {
      * @return array
      *
      */
-    static function obtDimensiones($img) {
+    static function obtDimensiones ($img) {
 
         list($ancho, $alto, $mime, $attr) = getimagesize($img);
 
-        return ['ancho' => $ancho, 'alto' => $alto, 'mime' => $mime, 'attr' => $attr];
+        return [
+            'ancho' => $ancho,
+            'alto'  => $alto,
+            'mime'  => $mime,
+            'attr'  => $attr
+        ];
 
     }
 
@@ -334,10 +368,10 @@ class Imagen extends Archivo {
      * @since 0.1
      *
      */
-    function resize($ruta, $nombre = 'img', $directorio = false, $return = false) {
+    function resize ($ruta, $nombre = 'img', $directorio = false, $return = false) {
 
         $arr = [];
-        $bandera = FALSE;
+        $bandera = false;
 
         if (!$directorio):
             $directorio = $ruta;
@@ -349,7 +383,7 @@ class Imagen extends Archivo {
             $imagenes[] = $ruta;
         else {
             $imagenes = Directorios::listarDirectoriosRuta($ruta, $arr, '/.*\.[jpg|png|jpeg]/');
-            $bandera = TRUE;
+            $bandera = true;
         }
 
         foreach ($imagenes as $key => $img) {
@@ -368,11 +402,13 @@ class Imagen extends Archivo {
         }
 
         if ($return) {
-            $arrImagen = ['img' => $nombre . $key . '.' . $ext,
-                          'lg'  => $nombre . $key . '-lg.' . $ext,
-                          'md'  => $nombre . $key . '-md.' . $ext,
-                          'sm'  => $nombre . $key . '-sm.' . $ext,
-                          'xs'  => $nombre . $key . '-xs.' . $ext];
+            $arrImagen = [
+                'img' => $nombre . $key . '.' . $ext,
+                'lg'  => $nombre . $key . '-lg.' . $ext,
+                'md'  => $nombre . $key . '-md.' . $ext,
+                'sm'  => $nombre . $key . '-sm.' . $ext,
+                'xs'  => $nombre . $key . '-xs.' . $ext
+            ];
 
             return json_encode($arrImagen);
         }
@@ -395,7 +431,7 @@ class Imagen extends Archivo {
      *
      */
 
-    function resizeImagen($ruta, $nombre = 'img', $dimAlto, $dimAncho, $directorio = false) {
+    function resizeImagen ($ruta, $nombre = 'img', $dimAlto, $dimAncho, $directorio = false) {
 
         if (!$directorio)
             $directorio = $ruta;
@@ -403,7 +439,11 @@ class Imagen extends Archivo {
             Directorios::crear($directorio);
 
         $corte = explode('.', $ruta);
-        $extensiones = ['jpg' => 'jpg', 'png' => 'png', 'jpeg' => 'jpeg'];
+        $extensiones = [
+            'jpg'  => 'jpg',
+            'png'  => 'png',
+            'jpeg' => 'jpeg'
+        ];
         $ext = '';
         foreach ($extensiones as $key => $formato) {
             $aux = array_search($formato, $corte);

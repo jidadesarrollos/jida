@@ -7,8 +7,10 @@ namespace Jida\Manager\Vista;
 
 use Jida\Configuracion\Config;
 use Exception as Excepcion;
+use Jida\Core\Controlador\Control;
 use Jida\Helpers\Debug;
 use Jida\Manager\Estructura;
+use Jida\Manager\Rutas\Procesador\Controlador;
 use Jida\Render\Selector as Selector;
 
 class Layout {
@@ -58,6 +60,10 @@ class Layout {
         $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
 
         $path = Estructura::$directorio;
+        /**
+         * @var object $controlador
+         * @see \Jida\Core\Controlador;
+         */
         $controlador = $arranque::$Controlador;
         $directorio = $this->_DIRECTORIOS['app'];
 

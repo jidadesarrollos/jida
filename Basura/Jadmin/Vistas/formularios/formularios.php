@@ -1,5 +1,5 @@
 <?php
-$data=& $this->data;
+$data =& $this->data;
 
 echo $data->vista;
 ?>

@@ -1,12 +1,14 @@
 <?php
 /**
-* Clase Modelo
-* @author Julio Rodriguez
-* @package
-* @version
-* @category
-*/
+ * Clase Modelo
+ * @author Julio Rodriguez
+ * @package
+ * @version
+ * @category
+ */
+
 namespace Jida\Core;
-class Tema{
+
+class Tema {
 
 }

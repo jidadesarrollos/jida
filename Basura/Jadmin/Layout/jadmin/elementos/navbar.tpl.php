@@ -1,6 +1,5 @@
 <?php
 
-
 $usuario = is_object($this->usuario) ? $this->usuario->nombres . ' ' . $this->usuario->apellidos : '';
 $conf = \Jida\Configuracion\Config::obtener();
 $url = $conf::URL_BASE;

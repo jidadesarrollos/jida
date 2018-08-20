@@ -1,38 +1,33 @@
 {
-	"nombre" : "Inicio de Sesion",
-	"query":"false",
-	"clave_primaria":"false",
-	"identificador":"Login",
-	"estructura":"1x2",
-	"campos":[
-		{
-			"name":"nombre_usuario",
-			"type":"text",
-			"id":"nombre_usuario",
-			"label":"Nombre de Usuario",
-			"placeholder":"Nombre de Usuario",
-			"eventos":{
-				"obligatorio":{
-					"mensaje":"Debe ingresar su nombre de Usuario"
-				}
-			}
-
-		},
-		{
-			"name":"clave_usuario",
-			"id":"clave_usuario",
-			"type":"password",
-			"label":"Clave",
-			"placeholder":"Clave",
-			"eventos":{
-				"obligatorio":{
-					"mensaje":"Debe ingresar su clave"
-				}
-			}
-
-		}
-
-	]
-
-
+  "nombre": "Inicio de Sesion",
+  "query": "false",
+  "clave_primaria": "false",
+  "identificador": "Login",
+  "estructura": "1x2",
+  "campos": [
+    {
+      "name": "nombre_usuario",
+      "type": "text",
+      "id": "nombre_usuario",
+      "label": "Nombre de Usuario",
+      "placeholder": "Nombre de Usuario",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar su nombre de Usuario"
+        }
+      }
+    },
+    {
+      "name": "clave_usuario",
+      "id": "clave_usuario",
+      "type": "password",
+      "label": "Clave",
+      "placeholder": "Clave",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar su clave"
+        }
+      }
+    }
+  ]
 }

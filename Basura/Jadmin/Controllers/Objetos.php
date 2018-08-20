@@ -21,9 +21,9 @@ use Jida\Helpers as Helpers;
 class Objetos extends JController {
 
     var $Mperfil = "";
-    var $manejoParams = TRUE;
+    var $manejoParams = true;
 
-    function __construct($id = "") {
+    function __construct ($id = "") {
 
         $this->helpers = ['Arrays'];
 
@@ -43,55 +43,62 @@ class Objetos extends JController {
      *
      * @method analizadorBD
      */
-    function analizadorBD() {
+    function analizadorBD () {
 
-        $data = $this->modelo->bd->obtTablasBD(TRUE);
+        $data = $this->modelo->bd->obtTablasBD(true);
 
         for ($i = 0; $i < count($data); $i++) {
             array_unshift($data[$i], $data[$i]['table_name']);
         }
 
-        $vista = new Jvista($data, ['titulos' => ['',
-            'name',
-            'type',
-            'collation',
-            'create'
-        ]
+        $vista = new Jvista($data, [
+            'titulos' => [
+                '',
+                'name',
+                'type',
+                'collation',
+                'create'
+            ]
         ]);
 
         $vista->configuracion('nroFilas', 50);
 
         $vista->accionesFila([
-            ['span'  => 'fa fa-edit',
-             'title' => "Generar Modelo",
-             'href'  => $this->obtUrl('crearObjeto', ['{clave}',
-                 'jida'
-             ])
-            ],
+                                 [
+                                     'span'  => 'fa fa-edit',
+                                     'title' => "Generar Modelo",
+                                     'href'  => $this->obtUrl('crearObjeto',
+                                                              [
+                                                                  '{clave}',
+                                                                  'jida'
+                                                              ])
+                                 ],
 
-        ])->acciones([
-            'Crear Objetos' => ['href' => $this->getUrl('crearObjeto')]
-        ]);
+                             ])->acciones([
+                                              'Crear Objetos' => ['href' => $this->getUrl('crearObjeto')]
+                                          ]);
         $vista->controlFila = 2;
         $this->dv->tabla = $vista->obtenerVista();
     }
 
-    function crearObjeto($objeto, $ruta = "") {
+    function crearObjeto ($objeto, $ruta = "") {
 
         $elemento = new Jida\Elemento;
         $generador = new Jida\GeneradorModelo;
         if ($ruta == 'jida') {
             $generador->ubicacion(DIR_FRAMEWORK . 'ModelFramework/');
         }
-        $prefijos = ['m_',
+        $prefijos = [
+            'm_',
             's_',
             't_'
         ];
-        array_walk($prefijos, function (&$valor, $clave) {
+        array_walk($prefijos,
+            function (&$valor, $clave) {
 
-            $valor = "/^" . $valor . "/";
-        });
-        $generador->extensionClass = FALSE;
+                $valor = "/^" . $valor . "/";
+            });
+        $generador->extensionClass = false;
         if ($generador->generar($objeto, $prefijos)) {
             $msj = Helpers\Mensajes::crear('suceso', 'Objeto creado exitosamente');
             Session::set('__mensaje', $msj);
@@ -101,7 +108,7 @@ class Objetos extends JController {
 
     }
 
-    function index() {
+    function index () {
 
         $this->vista = "lista";
         $this->tituloPagina = "Objetos del Sistema";
@@ -126,23 +133,25 @@ class Objetos extends JController {
      * @method validarObjetos
      * @access   private
      */
-    private function validarObjetos(Componente $componente) {
+    private function validarObjetos (Componente $componente) {
 
         $objetosInexistentes = [];
         $objetosNuevos = [];
         $nombreComponente = Helpers\Cadenas::upperCamelCase($componente->componente);
         if ($nombreComponente == 'Principal') {
             $rutaComponente = DIR_APP . "Controller/";
-        } else {
+        }
+        else {
             $rutaComponente = ($nombreComponente == 'Jadmin') ? DIR_FRAMEWORK . 'Jadmin/Controllers/' : DIR_APP . "Modulos/" . $nombreComponente . "/Controller/";
         }
 
         $objetosCarpeta = [];
         Helpers\Directorios::listarDirectoriosRuta($rutaComponente, $objetosCarpeta, "/^.*Controller.class.php$/");
-        array_walk($objetosCarpeta, function (&$objeto, $key) {
+        array_walk($objetosCarpeta,
+            function (&$objeto, $key) {
 
-            $objeto = str_replace("Controller.class.php", "", $objeto);
-        });
+                $objeto = str_replace("Controller.class.php", "", $objeto);
+            });
 
         $objetos = new Objeto();
         $dataBD = $objetos->obtenerTodo();
@@ -177,7 +186,7 @@ class Objetos extends JController {
      * @method lista
      *
      */
-    function lista($item) {
+    function lista ($item) {
 
         $this->tituloPagina = "jida-Registro Componentes";
         $this->dv->vista = "";
@@ -191,7 +200,8 @@ class Objetos extends JController {
             $vista->tituloVista = "Objetos del Componente " . $comp->componente;
             $vista->mensajeError = "No hay registros de " . $vista->tituloVista . " <a href=\"" . $this->url . "set-objeto/comp/$idComponente\">Agregar objeto</a>";
             $this->dv->vista = $vista->obtenerVista();
-        } else {
+        }
+        else {
             Render\JVista::msj('componentes', 'alert', 'Debe seleccionar un componente');
         }
 
@@ -199,44 +209,51 @@ class Objetos extends JController {
             $this->layout = '../ajax.tpl.php';
     }
 
-    protected function vistaObjetos($query) {
+    protected function vistaObjetos ($query) {
 
         $vista = new Vista($query, $GLOBALS['configPaginador'], "Objetos");
         $vista->setParametrosVista(['idDivVista' => 'objetos']);
         $vista->setParametrosVista($GLOBALS['configVista']);
         $vista->filaOpciones = [
-            0 => ['a' => [
-                'atributos' => ['class' => 'btn',
-                                'title' => 'ver metodos',
-                                'href'  => $this->url . "metodos/obj/{clave}"
-                ],
-                'html'      => ['span' => ['atributos' => ['class' => 'glyphicon glyphicon-eye-open']]]
-            ]
+            0 => [
+                'a' => [
+                    'atributos' => [
+                        'class' => 'btn',
+                        'title' => 'ver metodos',
+                        'href'  => $this->url . "metodos/obj/{clave}"
+                    ],
+                    'html'      => ['span' => ['atributos' => ['class' => 'glyphicon glyphicon-eye-open']]]
+                ]
             ],
 
-            1 => ['a' => [
-                'atributos' => ['class' => 'btn',
-                                'title' => 'Agregar Descripci&oacute;n',
-                                'href'  => $this->url . "/add-descripcion/obj/{clave}"
-                ],
-                'html'      => ['span' => ['atributos' => ['class' => 'fa fa-info']]]
-            ]
+            1 => [
+                'a' => [
+                    'atributos' => [
+                        'class' => 'btn',
+                        'title' => 'Agregar Descripci&oacute;n',
+                        'href'  => $this->url . "/add-descripcion/obj/{clave}"
+                    ],
+                    'html'      => ['span' => ['atributos' => ['class' => 'fa fa-info']]]
+                ]
             ],
-            2 => ['a' => [
-                'atributos' => ['class' => 'btn',
-                                'title' => 'Asignar Accesos',
-                                'href'  => $this->url . "asignar-acceso/obj/{clave}"
-                ],
-                'html'      => ['span' => ['atributos' => ['class' => 'fa fa-users']]]
-            ]
+            2 => [
+                'a' => [
+                    'atributos' => [
+                        'class' => 'btn',
+                        'title' => 'Asignar Accesos',
+                        'href'  => $this->url . "asignar-acceso/obj/{clave}"
+                    ],
+                    'html'      => ['span' => ['atributos' => ['class' => 'fa fa-users']]]
+                ]
             ],
 
         ];
         $vista->acciones = [
-            'Agregar Descripci&oacute;n' => ['href'          => $this->url . 'set-objeto/obj/',
-                                             'data-jvista'   => 'seleccion',
-                                             'data-multiple' => 'true',
-                                             'data-jkey'     => 'obj'
+            'Agregar Descripci&oacute;n' => [
+                'href'          => $this->url . 'set-objeto/obj/',
+                'data-jvista'   => 'seleccion',
+                'data-multiple' => 'true',
+                'data-jkey'     => 'obj'
             ],
         ];
         $vista->mensajeError = "No hay registros de " . $vista->tituloVista . " <a href=\"" . $this->url . "set-objeto/\">Agregar objeto</a>";
@@ -250,7 +267,7 @@ class Objetos extends JController {
      * La descripción del objeto es usada para que un usuario final pueda visualizar un nombre entendible
      * @method addDescripcion
      */
-    function addDescripcion() {
+    function addDescripcion () {
 
         if ($this->entero($this->get('obj'))) {
 
@@ -265,20 +282,29 @@ class Objetos extends JController {
             $form->tituloFormulario = "Agregar Descripci&oacute;n del Objeto " . $Objeto->objeto;
             if ($this->post('btnDescripcionMetodo')) {
                 $validacion = $form->validarFormulario();
-                if ($validacion === TRUE) {
+                if ($validacion === true) {
                     if ($Objeto->salvar($_POST)->ejecutado() == 1) {
-                        RenderHTML\Vista::msj('objetos', 'suceso', "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
-                    } else {
-                        RenderHTML\Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
+                        RenderHTML\Vista::msj('objetos',
+                                              'suceso',
+                                              "La descripci&oacute;n del Metodo <strong>$Objeto->objeto</strong> ha sido registrada exitosamente");
                     }
-                } else {
-                    RenderHTML\Vista::msj('objetos', 'error', "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
+                    else {
+                        RenderHTML\Vista::msj('objetos',
+                                              'error',
+                                              "No se ha podido registrar la descripci&oacute;n, por favor vuelva a intentarlo");
+                    }
+                }
+                else {
+                    RenderHTML\Vista::msj('objetos',
+                                          'error',
+                                          "No se ha podido registrar la descripci&oacute;n, vuelva a intentarlo luego");
                 }
                 $this->redireccionar('/jadmin/objetos/lista/comp/' . $Objeto->id_componente);
             }
 
             $this->dv->form = $form->armarFormulario();
-        } else {
+        }
+        else {
 
             throw new Exception("Pagina no conseguida", 404);
         }
@@ -289,13 +315,14 @@ class Objetos extends JController {
      * Valida la estructura del nombre de un objeto
      * @method validarNombreObjeto
      */
-    private function validarNombreObjeto($nombre) {
+    private function validarNombreObjeto ($nombre) {
 
         $nombreClase = Cadenas::upperCamelCase($nombre . "Controller");
         if (class_exists($nombreClase)) {
-            return TRUE;
-        } else {
-            return FALSE;
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -306,7 +333,7 @@ class Objetos extends JController {
      * @method metodos
      * @access public
      */
-    function metodos() {
+    function metodos () {
 
         $this->vista = "listaMetodos";
         $controladorMetodos = new Metodos();
@@ -320,7 +347,7 @@ class Objetos extends JController {
      * @access public
      *
      */
-    function accesoPerfiles() {
+    function accesoPerfiles () {
 
         if ($this->get('metodo')) {
 
@@ -333,19 +360,26 @@ class Objetos extends JController {
 
             if ($this->post('btnPerfilesAMetodos')) {
                 $validacion = $form->validarFormulario($_POST);
-                if ($validacion === TRUE) {
+                if ($validacion === true) {
                     $accion = $metodo->asignarAccesoPerfiles($this->post('id_perfil'));
                     if ($accion['ejecutado'] == 1) {
-                        RenderHTML\Vista::msj('metodosObjeto', 'suceso', 'Asignado los perfiles de acceso al metodo ' . $metodo->nombre_metodo, $this->url . "metodos/obj/" . $metodo->id_objeto);
-                    } else {
-                        RenderHTML\Formulario::msj('error', 'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
+                        RenderHTML\Vista::msj('metodosObjeto',
+                                              'suceso',
+                                              'Asignado los perfiles de acceso al metodo ' . $metodo->nombre_metodo,
+                                              $this->url . "metodos/obj/" . $metodo->id_objeto);
                     }
-                } else {
+                    else {
+                        RenderHTML\Formulario::msj('error',
+                                                   'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
+                    }
+                }
+                else {
                     RenderHTML\Formulario::msj('error', 'No se han asignado perfiles');
                 }
             }
             $this->dv->formAcceso = $form->armarFormulario();
-        } else {
+        }
+        else {
             RenderHTML\Vista::msj('objetos', 'error', 'Debe seleccionar un metodo', $this->url);
         }
 
@@ -358,7 +392,7 @@ class Objetos extends JController {
      * @access public
      *
      */
-    function asignarAcceso() {
+    function asignarAcceso () {
 
         if ($this->entero($this->get('obj')) > 0) {
             $this->vista = "accesoPerfiles";
@@ -370,19 +404,26 @@ class Objetos extends JController {
             $form->tituloFormulario = "Asignar acceso de perfiles al objeto $obj->objeto";
             if ($this->post('btnPerfilesAObjetos')) {
                 $validacion = $form->validarFormulario();
-                if ($validacion === TRUE) {
+                if ($validacion === true) {
                     $accion = $obj->asignarAccesoPerfiles($this->post('id_perfil'));
                     if ($accion['ejecutado'] == 1) {
-                        RenderHTML\Vista::msj("objetos", 'suceso', 'Asignados los perfiles de acceso al objeto ' . $obj->objeto, $this->getUrl('lista', ['comp' => $obj->id_componente]));
-                    } else {
-                        RenderHTML\Formulario::msj('error', "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                        RenderHTML\Vista::msj("objetos",
+                                              'suceso',
+                                              'Asignados los perfiles de acceso al objeto ' . $obj->objeto,
+                                              $this->getUrl('lista', ['comp' => $obj->id_componente]));
                     }
-                } else {
+                    else {
+                        RenderHTML\Formulario::msj('error',
+                                                   "No se pudieron asignar los perfiles, por favor vuelva a intentarlo");
+                    }
+                }
+                else {
                     RenderHTML\Formulario::msj('error', "No se han asignado perfiles");
                 }
             }
             $this->dv->formAcceso = $form->armarFormulario();
-        } else {
+        }
+        else {
             RenderHTML\Vista::msj("objetos", 'suceso', "Debe seleccionar un objeto", $this->urlController());
         }
     }

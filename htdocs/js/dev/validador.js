@@ -493,9 +493,9 @@
 
                 if (
                     parametros.tipo && (parametros.tipo == 'telefono' && TelefonoValido == 1 ||
-                        parametros.tipo == 'celular' && celularValido == 1 ||
-                        parametros.tipo == 'internacional' && internacionalValido == 1 ||
-                        parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1))
+                    parametros.tipo == 'celular' && celularValido == 1 ||
+                    parametros.tipo == 'internacional' && internacionalValido == 1 ||
+                    parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1))
                 ) {
 
                     return true;

@@ -17,16 +17,17 @@ use Jida\Modelos\Viejos as Modelos;
 class Componentes extends JController {
 
     var $layout = "jadmin.tpl.php";
-    var $manejoParams = TRUE;
+    var $manejoParams = true;
 
-    function __construct($id = "") {
+    function __construct ($id = "") {
+
         parent::__construct();
 
         $this->url = "/jadmin/componentes/";
         $this->dv->title = "Componentes de " . TITULO_SISTEMA;
     }
 
-    function index() {
+    function index () {
 
         $this->vista = "vistaComponentes";
 
@@ -36,17 +37,19 @@ class Componentes extends JController {
 
         $vista->controlFila = 1;
         $vista->accionesFila([
-            ['span'        => 'glyphicon glyphicon-folder-open',
-             'title'       => "Ver objetos del componente",
-             'href'        => $this->obtUrl('objetos.lista', ['{clave}']),
-             'data-jvista' => 'modal'
-            ],
-            ['span'        => 'glyphicon glyphicon-edit',
-             'title'       => "Asignar perfiles de acceso",
-             'href'        => $this->obtUrl('asignarAcceso', ['{clave}']),
-             'data-jvista' => 'modal'
-            ]
-        ]);
+                                 [
+                                     'span'        => 'glyphicon glyphicon-folder-open',
+                                     'title'       => "Ver objetos del componente",
+                                     'href'        => $this->obtUrl('objetos.lista', ['{clave}']),
+                                     'data-jvista' => 'modal'
+                                 ],
+                                 [
+                                     'span'        => 'glyphicon glyphicon-edit',
+                                     'title'       => "Asignar perfiles de acceso",
+                                     'href'        => $this->obtUrl('asignarAcceso', ['{clave}']),
+                                     'data-jvista' => 'modal'
+                                 ]
+                             ]);
 
         $vista->addMensajeNoRegistros('No hay Componentes');
 
@@ -54,11 +57,12 @@ class Componentes extends JController {
 
     }
 
-    function setComponente($idComponente = "") {
+    function setComponente ($idComponente = "") {
 
         $tipoForm = 1;
 
-        if (!empty($idComponente)) $tipoForm = 2;
+        if (!empty($idComponente))
+            $tipoForm = 2;
 
         $form = new Render\Formulario('Componente', $tipoForm, $idComponente, 2);
         $form->action = $this->url . 'set-componente';
@@ -72,12 +76,17 @@ class Componentes extends JController {
                 if ($F->validarFormulario()) {
                     $_POST['componente'] = strtolower($this->post('componente'));
                     if ($comp->salvar($_POST)->ejecutado() == 1) {
-                        RenderHTML\Vista::msj('componentes', 'suceso', 'Componente <strong>' . $this->post('componente') . '</strong> guardado', $this->url . '');
-                    } else {
+                        RenderHTML\Vista::msj('componentes',
+                                              'suceso',
+                                              'Componente <strong>' . $this->post('componente') . '</strong> guardado',
+                                              $this->url . '');
+                    }
+                    else {
                         RenderHTML\Formulario::msj('error', 'No se pudo registrar el componente');
                     }
                 }
-            } else    RenderHTML\Formulario::msj('error', 'El componente no existe');
+            }
+            else    RenderHTML\Formulario::msj('error', 'El componente no existe');
 
         }
         if ($this->solicitudAjax())
@@ -86,14 +95,15 @@ class Componentes extends JController {
         $this->dv->fComponente = $form->armarFormulario();
     }
 
-    private function validarComponente($componente) {
+    private function validarComponente ($componente) {
+
         if (in_array($componente, $GLOBALS['modulos']))
-            return TRUE;
+            return true;
         else
-            return FALSE;
+            return false;
     }
 
-    function asignarAcceso($acceso = '') {
+    function asignarAcceso ($acceso = '') {
 
         if (!empty($acceso)) {
 
@@ -110,10 +120,16 @@ class Componentes extends JController {
                 if ($form->validar()) {
 
                     if ($comp->asignarAccesoPerfiles($this->post('id_perfil'))->ejecutado()) {
-                        Render\JVista::msj('componentes', 'suceso', 'Asignados los perfiles de acceso al componente ' . $comp->componente, $this->urlController());
-                    } else
-                        RenderHTML\Formulario::msj('error', 'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
-                } else
+                        Render\JVista::msj('componentes',
+                                           'suceso',
+                                           'Asignados los perfiles de acceso al componente ' . $comp->componente,
+                                           $this->urlController());
+                    }
+                    else
+                        RenderHTML\Formulario::msj('error',
+                                                   'No se pudieron asignar los perfiles, por favor vuelva a intentarlo');
+                }
+                else
                     RenderHTML\Formulario::msj('error', 'No se han asignado perfiles');
             }
 
@@ -122,7 +138,8 @@ class Componentes extends JController {
 
             $this->dv->formAcceso = $form->armarFormulario();
 
-        } else {
+        }
+        else {
 
             if (!$this->solicitudAjax())
                 \Jida\Helpers\Rutas::redireccionar($this->url);

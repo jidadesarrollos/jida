@@ -9,6 +9,7 @@
  */
 
 namespace Jida\Helpers;
+
 class Numeros {
 
     /**
@@ -24,25 +25,25 @@ class Numeros {
      */
     static $separadorDecimales = ",";
 
-    static $monedaAntes = FALSE;
+    static $monedaAntes = false;
 
     /**
      * Devuelve un número en formato de moneda
      * @method moneda
      *
      * @param mixed $valor Numero a formatear
-     * @param int   $decimales
+     * @param int $decimales
      *
      * @return string $numero Numero resultante
      * @access public
      * @since  0.1
      */
-    public static function moneda($valor, $decimales = 2, $moneda = FALSE) {
-
+    public static function moneda ($valor, $decimales = 2, $moneda = false) {
 
         $numero = number_format($valor, $decimales, self::$separadorDecimales, self::$separadorMiles);
         if ($moneda) {
-            if (self::$monedaAntes) return self::$moneda . " " . $numero;
+            if (self::$monedaAntes)
+                return self::$moneda . " " . $numero;
 
             return $numero . " " . self::$moneda;
         }
@@ -57,7 +58,7 @@ class Numeros {
      * @access   public
      * @since    0.1
      */
-    public static function validarInt($valor) {
+    public static function validarInt ($valor) {
 
         return filter_var($valor, FILTER_VALIDATE_INT);
     }
@@ -65,7 +66,7 @@ class Numeros {
     /**
      * @deprecated 0.5
      */
-    public static function _moneda($numero, $decimales = 2, $type = "bolivar") {
+    public static function _moneda ($numero, $decimales = 2, $type = "bolivar") {
 
         switch ($type) {
             case 'dolar':
@@ -90,12 +91,12 @@ class Numeros {
      * @since      0.1
      * @deprecated 0.5
      */
-    public static function floatBD($valor) {
+    public static function floatBD ($valor) {
 
         self::aFloat($valor);
     }
 
-    public static function aFloat($valor) {
+    public static function aFloat ($valor) {
 
         $valor = str_replace(".", "", $valor);
         $valor = str_replace(",", ".", $valor);

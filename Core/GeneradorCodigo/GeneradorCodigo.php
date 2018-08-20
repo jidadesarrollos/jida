@@ -95,7 +95,6 @@ trait GeneradorCodigo {
         $array = $name . "=[\n";
         $ini = 0;
 
-
         foreach ($valores as $key => $value) {
             if (is_array($value)) {
                 if ($ini > 0)
@@ -151,7 +150,12 @@ trait GeneradorCodigo {
      */
     protected function crearFuncion ($nombre, $params = [], $ambito, $contenido = "") {
 
-        $arrayAmbito = ['public', 'private', 'protected', 'static'];
+        $arrayAmbito = [
+            'public',
+            'private',
+            'protected',
+            'static'
+        ];
         $funcion = "";
         if (!in_array($ambito, $arrayAmbito))
             $ambito = "";

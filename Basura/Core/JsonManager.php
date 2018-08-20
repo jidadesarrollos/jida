@@ -13,8 +13,7 @@ namespace Jida\Core;
 use Jida\Helpers as Helpers;
 use Exception;
 
-class JsonManager
-{
+class JsonManager {
     use ObjetoManager;
     /**
      * Archivo o string a leer
@@ -36,8 +35,8 @@ class JsonManager
      *
      * @param string $json Objeto JSON a Parsear
      */
-    function __construct($json = "")
-    {
+    function __construct ($json = "") {
+
         $clase = __CLASS__;
 
         if (!empty($json)) {
@@ -46,8 +45,7 @@ class JsonManager
 
     }
 
-    protected function _obtenerJSON($json = "")
-    {
+    protected function _obtenerJSON ($json = "") {
 
         $json = (empty($json)) ? $this->_json : $json;
 
@@ -61,17 +59,18 @@ class JsonManager
                 $this->_objetoJson = $data;
                 $this->establecerAtributos($this->_objetoJson, $this);
 
-            } else {
+            }
+            else {
                 throw new Exception("El valor pasado no es un objeto json: " . $json, $this->_ce . '1');
 
             }
 
-
-        } else {
-            throw new Exception("El archivo pedido no existe o no se encuentra en la ubicación correcta " . $json, $this->_ce . '1');
+        }
+        else {
+            throw new Exception("El archivo pedido no existe o no se encuentra en la ubicación correcta " . $json,
+                                $this->_ce . '1');
         }
 
     }
-
 
 }

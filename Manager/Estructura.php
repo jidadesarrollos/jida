@@ -1,6 +1,6 @@
 <?php
 /*
- * Codigo de Error: 1
+ * Codigo de Error: 2
  */
 
 namespace Jida\Manager;
@@ -59,11 +59,17 @@ class Estructura {
     static private function _obtenerDirectorio () {
 
         $actual = explode(DS, __DIR__);
+        unset($actual[array_search('Manager', $actual)]);
         $conf = Config::obtener();
+        $carpeta = $conf::PATH_JIDA;
+        $cuenta = array_count_values($actual);
 
-        $posicion = array_search($conf::PATH_JIDA, $actual);
+        if (!array_key_exists($carpeta, $cuenta)) {
+            throw new \Exception("La carpeta especificada para el Jida no existe", self::$_ce . 2);
+        }
+
         $inverso = array_reverse($actual);
-
+        $posicion = array_search($carpeta, $inverso) + 1;
         $parte = array_splice($inverso, $posicion);
         $directorio = implode("/", array_reverse($parte));
 

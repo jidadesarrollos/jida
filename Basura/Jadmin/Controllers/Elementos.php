@@ -17,30 +17,49 @@ use Jida\Modelos as Modelos;
 class Elementos extends JController {
 
     var $layout = "jadmin.tpl.php";
-    var $helpers = ['Arrays', 'Cadenas', 'Debug'];
+    var $helpers = [
+        'Arrays',
+        'Cadenas',
+        'Debug'
+    ];
 
-    function __construct() {
+    function __construct () {
+
         parent::__construct();
         $this->dv->addJsModulo('/Framework/htdocs/js/jadmin/elementos.js', false);
     }
 
-    function index() {
+    function index () {
+
         global $elementos;
         $elemento = new Modelos\Elemento();
 
         if (Helpers\Directorios::validar(DIR_APP . "Contenido/elementos.php")) {
             include_once 'Contenido/elementos.php';
-        } else {
+        }
+        else {
             //Helpers\Debug::string(DIR_APP."Contenido/elementos.php");
         }
 
         $tema = JD('TEMA_APP');
 
-        $listaElementos = ['jida' => ['namespace' => '\Jida\Elementos\\', 'elementos' => []]];
-        Helpers\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . 'Elementos', $listaElementos['jida']['elementos'], '/.php/');
+        $listaElementos = [
+            'jida' => [
+                'namespace' => '\Jida\Elementos\\',
+                'elementos' => []
+            ]
+        ];
+        Helpers\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . 'Elementos',
+                                                   $listaElementos['jida']['elementos'],
+                                                   '/.php/');
         if (!empty($tema)) {
-            $listaElementos[$tema] = ['namespace' => '\App\Layout\\' . $tema . '\\Elementos\\', 'elementos' => []];
-            Helpers\Directorios::listarDirectoriosRuta(DIR_APP . 'Layout/' . $tema . '/Elementos/', $listaElementos[$tema]['elementos'], '/php/');
+            $listaElementos[$tema] = [
+                'namespace' => '\App\Layout\\' . $tema . '\\Elementos\\',
+                'elementos' => []
+            ];
+            Helpers\Directorios::listarDirectoriosRuta(DIR_APP . 'Layout/' . $tema . '/Elementos/',
+                                                       $listaElementos[$tema]['elementos'],
+                                                       '/php/');
         }
         #Helpers\Debug::imprimir(JD('TEMA_APP'),$listaElementos,true);
         $listadoFinal = [];
@@ -58,20 +77,21 @@ class Elementos extends JController {
         // ->consulta()
         // ->in($this->Arrays->obtenerKey('id',$elementos['areas']),'area')
         // ->obt();
-// 		
+        //
         // foreach ($data as $key => $elemento) {
         // $elementosCargados[$elemento['area']][] = $elemento;
         // }
         $this->data([
-            'areas'             => $elementos['areas'],
-            'elementos'         => $listadoFinal,
-            'elementosCargados' => $elementosCargados
-        ]);
+                        'areas'             => $elementos['areas'],
+                        'elementos'         => $listadoFinal,
+                        'elementosCargados' => $elementosCargados
+                    ]);
         $this->vista = 'listaElementos';
 
     }
 
-    function guardar() {
+    function guardar () {
+
         if ($this->solicitudAjax() and $this->post('btnGuardarElemento')) {
             $eleUsado = new Elementos\Elemento();
 

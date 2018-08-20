@@ -4,6 +4,7 @@
  */
 
 namespace Jida\Core\Controlador;
+
 Trait Respuesta {
 
     /**
@@ -25,7 +26,6 @@ Trait Respuesta {
         exit(json_encode($respuesta));
         exit;
     }
-
 
     /**
      * Genera una excepción 404.

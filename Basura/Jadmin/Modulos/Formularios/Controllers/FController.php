@@ -24,7 +24,8 @@ class Fcontroller extends JController {
     protected $_formulario;
     protected $_ce = '110000';
 
-    function __construct() {
+    function __construct () {
+
         parent::__construct();
         $this->dv->addJsModulo('formularios.js', 'formularios');
     }
@@ -36,7 +37,7 @@ class Fcontroller extends JController {
      * @param string $path Directorio fisico del formulario
      * @return array
      */
-    protected function _dataFormulario($formulario, $modulo = "app") {
+    protected function _dataFormulario ($formulario, $modulo = "app") {
 
         $this->_instanciarFormulario($formulario, $modulo);
 
@@ -61,7 +62,7 @@ class Fcontroller extends JController {
      * @param string $path
      * @return bool|\Jida\Modelos\Formulario
      */
-    protected function _instanciarFormulario($id, $modulo = 'jida') {
+    protected function _instanciarFormulario ($id, $modulo = 'jida') {
 
         Helpers\Sesion::destruir('JFormulario');
         if (is_object(Helpers\Sesion::obt('JFormulario'))) {

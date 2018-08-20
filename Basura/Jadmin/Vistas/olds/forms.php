@@ -2,4 +2,4 @@
 
 ?>
 
-<?=$this->vista?>
+<?= $this->vista ?>

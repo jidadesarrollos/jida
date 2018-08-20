@@ -2,8 +2,7 @@
 
 namespace Jida\Core\Manager;
 
-interface ConfiguracionTemplate
-{
+interface ConfiguracionTemplate {
     var $tema;
     var $cssMensajes;
     var $logo;

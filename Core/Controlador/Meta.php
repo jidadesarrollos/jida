@@ -15,7 +15,4 @@ class Meta {
     protected $css;
     protected $url;
 
-
-
-
 }

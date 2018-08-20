@@ -15,9 +15,9 @@ class Users extends JController {
 
     var $layout = 'jadmin.tpl.php';
 
-    var $manejoParams = TRUE;
+    var $manejoParams = true;
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
 
@@ -29,7 +29,7 @@ class Users extends JController {
         $this->url = '/jadmin/users/';
     }
 
-    function cambioClave() {
+    function cambioClave () {
 
         $this->dv->usarPlantilla('form');
         $form = new Render\Formulario('jida/CambioClave');
@@ -55,7 +55,8 @@ class Users extends JController {
 
                         if (defined('DEFAULT_JADMIN')) {
                             $this->redireccionar(DEFAULT_JADMIN);
-                        } else {
+                        }
+                        else {
                             $msj = Helpers\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
                             Helpers\Sesion::editar('__msj', $msj);
 
@@ -64,22 +65,24 @@ class Users extends JController {
 
                     }
 
-                } else {
+                }
+                else {
                     $form::msj('error', 'Las claves ingresadas no coinciden');
                 }
 
-            } else {
+            }
+            else {
                 $form::msj('error', 'La clave ingresada no coincide con su clave actual');
             }
 
         }
 
         $this->data([
-            'form' => $form->render()
-        ]);
+                        'form' => $form->render()
+                    ]);
     }
 
-    function index() {
+    function index () {
 
         $vista = $this->vistaUser();
         $this->vista = "vistaUsuarios";
@@ -87,24 +90,28 @@ class Users extends JController {
 
     }
 
-    function setUsuario($idUser = '') {
+    function setUsuario ($idUser = '') {
+
         $this->_setUsuario($idUser);
     }
 
-    function asociarPerfiles($idUser = '') {
+    function asociarPerfiles ($idUser = '') {
+
         $this->_asociarPerfiles($idUser);
     }
 
-    function cierresesion($url = '') {
+    function cierresesion ($url = '') {
+
         $this->_cierresesion($url);
     }
 
-    function eliminarUsuario($idUser = '') {
+    function eliminarUsuario ($idUser = '') {
 
         if ($this->_eliminarUsuario($idUser)) {
             $tipo = 'suceso';
             $msj = 'Usuario eliminado exitosamente';
-        } else {
+        }
+        else {
             $tipo = 'error';
             $msj = 'El usuario no ha podido ser eliminado, por favor intente de nuevo';
         }

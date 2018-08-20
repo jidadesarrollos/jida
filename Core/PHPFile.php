@@ -11,18 +11,18 @@
  */
 
 namespace Jida\Core;
-class PHPFile extends File{
 
+class PHPFile extends File {
 
     private $content;
     private $accion;
 
-    function __construct($directorio,$name){
-        parent::__construct($directorio,$name);
+    function __construct ($directorio, $name) {
 
-
+        parent::__construct($directorio, $name);
 
     }
+
     /**
      * Crea una clase php
      * @method crearClase
@@ -30,25 +30,26 @@ class PHPFile extends File{
      * @param string $tipo Tipo de clase a crear 0 Clase default 1 Modelo 2 Controller
      * @param string $extends Dependencia de la clase
      */
-    function crearClase($nombre,$tipo,$extends){
+    function crearClase ($nombre, $tipo, $extends) {
+
         $this->archivo;
 
     }
 
-    private function addCommentBlock($linea=0,$content=null){
-        $coment = "\/**".PHP_EOL."*";
+    private function addCommentBlock ($linea = 0, $content = null) {
+
+        $coment = "\/**" . PHP_EOL . "*";
         // if(!is_null($content) and !is_empty($content)){
-            // $coment.=
+        // $coment.=
         // }
-        $coment.=PHP_EOL."*/";
+        $coment .= PHP_EOL . "*/";
         $this->archivo;
     }
 
+    function agregarSaltoLinea () {
 
-    function agregarSaltoLinea(){
-        return $this->content.="\n";
+        return $this->content .= "\n";
     }
-
 
 }//fin clase
 

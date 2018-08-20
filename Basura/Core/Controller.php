@@ -165,7 +165,6 @@ class Controller {
      * @var object $dv ;
      */
 
-
     private $_clase;
     /**
      * Nombre del controlador
@@ -240,7 +239,6 @@ class Controller {
 
         $this->_nombreController = str_replace("Controller", "", end($clase));
 
-
         $this->url = $this->urlController();
         if (Helpers\Sesion::obt('Usuario') instanceof User)
             $this->usuario = Helpers\Sesion::obt('Usuario');
@@ -257,7 +255,6 @@ class Controller {
         if ($this->solicitudAjax()) {
             $this->layout = "ajax.tpl.php";
         }
-
 
         $this->getModelo();
         $this->dv->usuario = Helpers\Sesion::obt('Usuario');
@@ -587,7 +584,6 @@ class Controller {
                                      1);
         }
 
-
         if (!empty($controller)) {
 
             if (strtolower($this->_modulo) == strtolower($controller)) {
@@ -666,7 +662,6 @@ class Controller {
                     $ctrl = preg_replace("/[a-zA-Z]+Controller$/",
                                          Cadenas::upperCamelCase($url[0]) . 'Controller',
                                          $this->_clase);
-
 
                 $urlController = $this->urlController($ctrl);
                 $metodo = $url[1];
@@ -893,7 +888,6 @@ class Controller {
 
     }
 
-
     protected function obtenerListaGet ($lista) {
 
         $arr = explode(",", $lista);
@@ -1018,6 +1012,5 @@ class Controller {
         else $this->dv->{
         $data} = $valor;
     }
-
 
 }

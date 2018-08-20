@@ -32,7 +32,7 @@
             <div
                     id="listaCamposFormulario"
                     class="list-group list-form-item mt-15"
-                    data-url="<?=$this->url?>">
+                    data-url="<?= $this->url ?>">
                 <?php
                 foreach ($this->campos as $key => $campo):
                     if (is_object($campo)) :
@@ -44,7 +44,7 @@
                            data-modulo="<?= $this->moduloFormulario ?>"
                            class="list-group-item"> <?= $campo->name ?></a>
 
-                        <?php
+                    <?php
                     endif;
                 endforeach
                 ?>

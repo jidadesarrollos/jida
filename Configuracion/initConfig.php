@@ -29,7 +29,6 @@ define('URL_INSTAGRAM', '');
 define('CUENTA_TWITTER', '');
 define('CUENTA_INSTAGRAM', '');
 
-
 # - img size
 define('IMG_TAM_LG', '1600');
 define('IMG_TAM_MD', '720');

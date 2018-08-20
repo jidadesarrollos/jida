@@ -19,14 +19,15 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
 
     var $manejoParams = true;
 
-    function __construct() {
+    function __construct () {
+
         $this->layout = "jadmin.tpl.php";
         $this->url = "/jadmin/menus/";
         parent::__construct();
 
     }
 
-    public function index($id_menu, $padre = 0) {
+    public function index ($id_menu, $padre = 0) {
 
         if ($padre == 0) {
             $padre = 'n-a';
@@ -36,32 +37,91 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
         $nombre = $menu->obt();
 
         $tabla = new Render\JVista('Jida\Modelos\OpcionesMenu.obtOpciones',
-            ['titulos' => ['Url', 'Nombre', 'Orden', 'Estatus']],
-            'Opciones de Menu ' . $nombre[0]['menu']
+                                   [
+                                       'titulos' => [
+                                           'Url',
+                                           'Nombre',
+                                           'Orden',
+                                           'Estatus'
+                                       ]
+                                   ],
+                                   'Opciones de Menu ' . $nombre[0]['menu']
         );
 
-        $tabla->clausula('filtro', ['id_menu' => $id_menu, 'padre' => $padre]);
+        $tabla->clausula('filtro',
+                         [
+                             'id_menu' => $id_menu,
+                             'padre'   => $padre
+                         ]);
 
         $tabla->accionesFila([
-            ['span' => 'glyphicon glyphicon-plus', 'title' => 'Agregar Opciones', 'href' => $this->obtUrl('gestionOpcion', ['{clave}', $id_menu])],
-            ['span' => 'glyphicon glyphicon-edit', 'title' => 'Modificar opcion', 'href' => $this->obtUrl('gestionOpcion', [$padre, $id_menu, '{clave}'])],
-            ['span' => 'glyphicon glyphicon-eye-open', 'title' => 'ver', 'href' => $this->obtUrl('index', [$id_menu, '{clave}'])],
-            ['span'        => 'glyphicon glyphicon-trash', 'title' => 'Eliminar opcion', 'href' => $this->obtUrl('eliminarOpcion', ['{clave}', $id_menu, $padre]),
-             'data-jvista' => 'confirm', 'data-msj' => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?']
-        ]);
+                                 [
+                                     'span'  => 'glyphicon glyphicon-plus',
+                                     'title' => 'Agregar Opciones',
+                                     'href'  => $this->obtUrl('gestionOpcion',
+                                                              [
+                                                                  '{clave}',
+                                                                  $id_menu
+                                                              ])
+                                 ],
+                                 [
+                                     'span'  => 'glyphicon glyphicon-edit',
+                                     'title' => 'Modificar opcion',
+                                     'href'  => $this->obtUrl('gestionOpcion',
+                                                              [
+                                                                  $padre,
+                                                                  $id_menu,
+                                                                  '{clave}'
+                                                              ])
+                                 ],
+                                 [
+                                     'span'  => 'glyphicon glyphicon-eye-open',
+                                     'title' => 'ver',
+                                     'href'  => $this->obtUrl('index',
+                                                              [
+                                                                  $id_menu,
+                                                                  '{clave}'
+                                                              ])
+                                 ],
+                                 [
+                                     'span'        => 'glyphicon glyphicon-trash',
+                                     'title'       => 'Eliminar opcion',
+                                     'href'        => $this->obtUrl('eliminarOpcion',
+                                                                    [
+                                                                        '{clave}',
+                                                                        $id_menu,
+                                                                        $padre
+                                                                    ]),
+                                     'data-jvista' => 'confirm',
+                                     'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el menu seleccionado?'
+                                 ]
+                             ]);
 
-        $tabla->addMensajeNoRegistros('No hay opciones Registradas', [
-            'link'    => $this->obtUrl('gestionOpcion', [$padre, $id_menu]),
-            'txtLink' => 'Crear Opcion'
-        ]);
-        $tabla->acciones(['Nuevo ' => ['href' => $this->obtUrl('gestionOpcion', [$padre, $id_menu])]]);
+        $tabla->addMensajeNoRegistros('No hay opciones Registradas',
+                                      [
+                                          'link'    => $this->obtUrl('gestionOpcion',
+                                                                     [
+                                                                         $padre,
+                                                                         $id_menu
+                                                                     ]),
+                                          'txtLink' => 'Crear Opcion'
+                                      ]);
+        $tabla->acciones([
+                             'Nuevo ' => [
+                                 'href' => $this->obtUrl('gestionOpcion',
+                                                         [
+                                                             $padre,
+                                                             $id_menu
+                                                         ])
+                             ]
+                         ]);
         $tabla->acciones(['Volver ' => ['href' => $this->obtUrl('index', [$id_menu])]]);
 
         $this->data(['tablaOpciones' => $tabla->obtenerVista()]);
 
     }
 
-    public function gestionOpcion($padre = 0, $id_menu, $id = '') {
+    public function gestionOpcion ($padre = 0, $id_menu, $id = '') {
 
         $modelosPerfiles = new Modelos\OpcionMenuPerfil();
 
@@ -69,7 +129,8 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
 
             $padre = 0;
 
-        } else {
+        }
+        else {
 
             $ModeloPadre = new Modelos\OpcionesMenu($padre);
             $nombre = $ModeloPadre->consulta('opcion_menu')->filtro(['id_opcion_menu' => $padre])->obt();
@@ -86,7 +147,8 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
             else
                 $titulo = 'Modificar Item de Menu';
 
-        } else {
+        }
+        else {
 
             $btn = 'Registrar';
             $formulario = new Render\Formulario('RegistroOpcion');
@@ -125,13 +187,21 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
                     $matriz = [];
 
                     foreach ($id_perfil as $key => $value)
-                        $matriz[] = ['id_opcion_menu' => $id, 'id_perfil' => $value];
+                        $matriz[] = [
+                            'id_opcion_menu' => $id,
+                            'id_perfil'      => $value
+                        ];
 
                     $modelosPerfiles->salvarTodo($matriz);
 
-                    $this->redireccionar($this->obtUrl('index', [$id_menu, $padre]));
+                    $this->redireccionar($this->obtUrl('index',
+                                                       [
+                                                           $id_menu,
+                                                           $padre
+                                                       ]));
 
-                } else Helpers\Debug::imprimir('error al guardar');
+                }
+                else Helpers\Debug::imprimir('error al guardar');
 
                 // $this->redireccionar('\jadmin\menus\index');
             }
@@ -141,7 +211,7 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
         $this->dv->form = $formulario->armarFormulario();
     }
 
-    function eliminarOpcion($id = '', $id_menu, $padre) {
+    function eliminarOpcion ($id = '', $id_menu, $padre) {
 
         if ($this->entero($id)) {
 
@@ -154,13 +224,19 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
                 $modelosPerfiles = new Modelos\OpcionMenuPerfil();
                 $modelosPerfiles->eliminar($id, 'id_opcion_menu');
 
-            } else {
+            }
+            else {
                 // Render\Vista::msj('menus',"error","No se ha eliminado menu");
             }
 
-            $this->redireccionar($this->obtUrl('index', [$id_menu, $padre]));
+            $this->redireccionar($this->obtUrl('index',
+                                               [
+                                                   $id_menu,
+                                                   $padre
+                                               ]));
 
-        } else {
+        }
+        else {
             throw new Exception("Debe seleccionar un menu", 1);
         }
     }//fin funcion

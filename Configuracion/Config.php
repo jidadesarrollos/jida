@@ -37,7 +37,7 @@ class Config {
      * @var $modulos
      * @access protected
      */
-    var $modulos = [];
+    public static $modulos = [];
 
     /**
      * Variable para definicion de clases para mensajes dentro de la aplicación

@@ -480,9 +480,9 @@
                 var TelefonoValido = (expresionTlf.test(valorCampo)) ? 1 : 0;
                 var internacionalValido = (expresionInter.test(valorCampo)) ? 1 : 0;
                 if (parametros.tipo && (parametros.tipo == 'telefono' && TelefonoValido == 1 ||
-                        parametros.tipo == 'celular' && celularValido == 1 ||
-                        parametros.tipo == 'internacional' && internacionalValido == 1 ||
-                        parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1)) ||
+                    parametros.tipo == 'celular' && celularValido == 1 ||
+                    parametros.tipo == 'internacional' && internacionalValido == 1 ||
+                    parametros.tipo == "multiple" && (TelefonoValido == 1 || celularValido == 1)) ||
                     !parametros.tipo && TelefonoValido == 1) {
 
                     return true;

@@ -19,14 +19,15 @@ class Perfiles extends JController {
     /**
      * Funcion constructora
      */
-    function __construct($id = "") {
+    function __construct ($id = "") {
+
         parent::__construct();
         $this->url = "/jadmin/perfiles/";
         $this->layout = "jadmin.tpl.php";
 
     }
 
-    function index() {
+    function index () {
 
         $this->tituloPagina = "Lista de Perfiles";
         $this->vista = "vistaPerfiles";
@@ -36,12 +37,18 @@ class Perfiles extends JController {
         $vista->tipoControl = 2;
         $vista->acciones = [
             'Registrar' => ['href' => $this->url . 'set-perfiles'],
-            'Modificar' => ['href'          => $this->url . 'set-perfiles',
-                            'data-jvista'   => 'seleccion',
-                            'data-multiple' => 'true', 'data-jkey' => 'perfil'],
-            'Eliminar'  => ['href'          => $this->url . 'eliminar',
-                            'data-jvista'   => 'seleccion',
-                            'data-multiple' => 'true', 'data-jkey' => 'perfil'],
+            'Modificar' => [
+                'href'          => $this->url . 'set-perfiles',
+                'data-jvista'   => 'seleccion',
+                'data-multiple' => 'true',
+                'data-jkey'     => 'perfil'
+            ],
+            'Eliminar'  => [
+                'href'          => $this->url . 'eliminar',
+                'data-jvista'   => 'seleccion',
+                'data-multiple' => 'true',
+                'data-jkey'     => 'perfil'
+            ],
 
         ];
         $this->dv->vistaPerfiles = $vista->obtenerVista();
@@ -51,7 +58,7 @@ class Perfiles extends JController {
      * Procesar un perfil
      * @method process
      */
-    function setPerfiles() {
+    function setPerfiles () {
 
         $pk = "";
         $tipoForm = 1;
@@ -69,7 +76,7 @@ class Perfiles extends JController {
 
             $msj = 'No se ha podido registrar el perfil, vuelva a intenarlo';
             $validacion = $form->validarFormulario();
-            if ($validacion === TRUE) {
+            if ($validacion === true) {
                 $perfil = New Perfil($pk);
                 $_POST['clave_perfil'] = Helpers\Cadenas::upperCamelCase($_POST['perfil']);
                 #Debug::mostrarArray($_POST);
@@ -77,7 +84,8 @@ class Perfiles extends JController {
                 if ($guardado['ejecutado']) {
                     $msj = "El perfil <strong>$perfil->perfil</strong> ha sido registrado exitosamente";
                     RenderHTML\Vista::msj('perfiles', 'suceso', $msj, '/jadmin/perfiles/');
-                } else {
+                }
+                else {
                     if ($guardado['unico'] == 1) {
                         $msj = "El perfil <strong>$_POST[nombre_perfil]</strong> ya se encuentra registrado";
                     }
@@ -88,7 +96,7 @@ class Perfiles extends JController {
         $this->dv->form = $form->armarFormulario();
     }//final funcion
 
-    function eliminar() {
+    function eliminar () {
 
         if ($this->get('perfil')) {
             $total = explode(",", $this->get('perfil'));
@@ -98,11 +106,12 @@ class Perfiles extends JController {
                 $perfil->eliminarObjeto($this->get('perfil'));
                 $msj = "Perfil eliminado exitosamente";
                 RenderHTML\Vista::msj('perfiles', 'error', $msj, $this->urlController());
-            } else {
+            }
+            else {
                 $noNumerico = false;
                 foreach ($total as $key => $value) {
                     if ($this->entero($value) == 0) {
-                        $noNumerico = TRUE;
+                        $noNumerico = true;
                     }
 
                 }
@@ -110,12 +119,14 @@ class Perfiles extends JController {
                     $perfil->eliminarMultiplesDatos($total, 'id_perfil');
                     $msj = "Perfiles eliminados exitosamente";
                     RenderHTML\Vista::msj('perfiles', 'error', $msj, $this->urlController());
-                } else {
+                }
+                else {
                     $msj = "No se ha logro eliminar el perfil, porfavor vuelva a intentarlo";
                     RenderHTML\Vista::msj('perfiles', 'error', $msj, $this->urlController());
                 }
             }
-        } else {
+        }
+        else {
             $msj = "No se ha podido realizar la acci&oacute;n vuelva a intentarlo";
             RenderHTML\Vista::msj('perfiles', 'error', $msj, $this->urlController());
         }

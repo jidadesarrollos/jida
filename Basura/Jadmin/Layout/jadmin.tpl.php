@@ -4,7 +4,6 @@
  * @author Julio Rodriguez
  */
 
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -44,7 +43,9 @@
 
                 $menuControl = new \Jida\RenderHTML\MenuHTML('Principal');
                 $menuControl->configuracion['ul'][0] = ["class" => "nav nav-aside " . $showMenu];
-                $menuControl->configuracion['li'][0] = ['class' => "li-parent", 'data-liparent' => 'true'];
+                $menuControl->configuracion['li'][0] = ['class'         => "li-parent",
+                                                        'data-liparent' => 'true'
+                ];
                 $menuControl->configuracion['li']['caret'] = "li-caret";
                 echo $menuControl->showMenu();
                 ?>

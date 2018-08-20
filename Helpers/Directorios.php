@@ -26,12 +26,13 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function validar($dir) {
+    static function validar ($dir) {
 
         if (file_exists($dir)) {
-            return TRUE;
-        } else {
-            return FALSE;
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -45,19 +46,20 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function crear($directorio, $mode = 0777) {
+    static function crear ($directorio, $mode = 0777) {
 
         if (is_array($directorio)) {
 
             foreach ($directorio as $key => $dir) {
                 if (!self::validar($dir)) {
-                    mkdir($dir, $mode, TRUE);
+                    mkdir($dir, $mode, true);
                 }
             }
 
-        } else {
+        }
+        else {
             if (!file_exists($directorio)) {
-                mkdir($directorio, $mode, TRUE);
+                mkdir($directorio, $mode, true);
             }
         }
     }
@@ -73,12 +75,12 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function listar($ruta) {
+    static function listar ($ruta) {
 
         $listado = [];
         if (is_dir($ruta)) {
             if ($directorio = opendir($ruta)) {
-                while (($file = readdir($directorio)) !== FALSE) {
+                while (($file = readdir($directorio)) !== false) {
                     if ($file != "." and $file != '..') {
                         $listado[] = $file;
                     }
@@ -93,22 +95,22 @@ class Directorios extends \Directory {
      * Funcion que recorre y lista todos archivos segun el patron contenido en $expReg
      * @method  listarDirectoriosRuta
      *
-     * @param string $ruta   Directorio a recorrer
-     * @param string $arr    Arreglo que guarda los archivos recorridos
+     * @param string $ruta Directorio a recorrer
+     * @param string $arr Arreglo que guarda los archivos recorridos
      * @param string $expReg Expresion regular para filtrar por el nombre del archivo
-     * @param string $i      Indice
+     * @param string $i Indice
      *
      * @return $arr Array con todos las coincidencias de $expReg
      * @access public
      * @since  0.1
      *
      */
-    static public function listarDirectoriosRuta($ruta, &$arr, $expReg = '', &$i = 0) {
+    static public function listarDirectoriosRuta ($ruta, &$arr, $expReg = '', &$i = 0) {
 
         if (is_dir($ruta)) {
             if ($directorio = opendir($ruta)) {
 
-                while (($file = readdir($directorio)) !== FALSE) {
+                while (($file = readdir($directorio)) !== false) {
 
                     // Se lista lo que hay en el directorio, mostraría tanto archivos como directorios
                     if (empty($expReg)) {
@@ -117,7 +119,8 @@ class Directorios extends \Directory {
                             $arr[$i] = $file;
                         }
                         ++$i;
-                    } else {
+                    }
+                    else {
                         // Guarda los archivos que coincidan con la expresion regular
                         $esCoincidencia = (preg_match($expReg, $file)) ? 1 : 0;
                         if ($esCoincidencia) {
@@ -134,13 +137,13 @@ class Directorios extends \Directory {
                 closedir($directorio);
             }
 
-        } else {
+        }
+        else {
             throw new \Exception("La ruta a listar no es una ruta valida $ruta", 333);
         }
 
         return $arr;
     }
-
 
     /**
      * Elimina un directorio y su contenido
@@ -152,20 +155,22 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function eliminar($dir) {
+    static function eliminar ($dir) {
 
         foreach (glob($dir . "/*") as $files) {
             if (is_dir($files)) {
                 self::eliminar($files);
-            } else {
+            }
+            else {
                 unlink($files);
             }
         }
 
         if (rmdir($dir)) {
-            return TRUE;
-        } else {
-            return FALSE;
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -181,12 +186,13 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function limpiar($dir) {
+    static function limpiar ($dir) {
 
         foreach (glob($dir . "/*") as $files) {
             if (is_dir($files)) {
                 self::eliminar($files);
-            } else {
+            }
+            else {
                 unlink($files);
             }
         }
@@ -202,14 +208,16 @@ class Directorios extends \Directory {
      * @since  0.1
      *
      */
-    static function getTotalArchivos($ruta) {
+    static function getTotalArchivos ($ruta) {
 
         $totalArchivos = 0;
         if ($handle = opendir($ruta)) {
-            while (($file = readdir($handle)) !== FALSE) {
-                if (!in_array($file, ['.',
-                        '..'
-                    ]) && !is_dir($ruta . $file)
+            while (($file = readdir($handle)) !== false) {
+                if (!in_array($file,
+                              [
+                                  '.',
+                                  '..'
+                              ]) && !is_dir($ruta . $file)
                 )
                     $totalArchivos++;
             }
@@ -230,14 +238,14 @@ class Directorios extends \Directory {
      * @since  0.1
      *
      */
-    static function copiar($origen, $destino) {
+    static function copiar ($origen, $destino) {
 
         if (is_dir($origen) and is_readable($origen)) {
 
             if (!self::validar($destino))
                 self::crear($destino);
             $origenDir = dir($origen);
-            while (($file = $origenDir->read()) !== FALSE) {
+            while (($file = $origenDir->read()) !== false) {
                 if ($file == '.' or $file == '..')
                     continue;
 
@@ -246,7 +254,8 @@ class Directorios extends \Directory {
                     self::copiar($origen . '/' . $file, $destino . '/' . $file);
                     continue;
 
-                } else copy($origen . '/' . $file, $destino . '/' . $file);
+                }
+                else copy($origen . '/' . $file, $destino . '/' . $file);
             }
         }
     }

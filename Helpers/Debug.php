@@ -59,7 +59,7 @@ class Debug {
 
         $config = array_merge($estandar, $config);
 
-        if (is_string($impresiones)) {
+        if (is_string($impresiones) or is_numeric($impresiones)) {
             $impresiones = explode("*", $impresiones);
         }
 
@@ -71,12 +71,15 @@ class Debug {
                 echo "</pre>";
 
             }
-            else if (is_string($impresion)) {
+            else if (is_string($impresion) or is_int($impresion)) {
                 echo $impresion;
             }
             else if (is_bool($impresion)) {
                 $booleano = ($impresion) ? "true" : "false";
                 echo "bool: $booleano";
+            }
+            else {
+                "ESTE NO ENCAJA $impresion";
             }
             if (array_key_exists('html', $config)) {
                 echo $config['html'];

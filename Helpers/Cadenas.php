@@ -23,7 +23,7 @@ class Cadenas {
      * @since 0.1
      *
      **/
-    static function upperCamelCase($cadena, $espacios = true) {
+    static function upperCamelCase ($cadena, $espacios = true) {
 
         $strUpperCase = ucwords($cadena);
         if ($espacios === true) {
@@ -43,7 +43,7 @@ class Cadenas {
      * @since 0.1
      *
      */
-    static function lowerCamelCase($cadena, $espacios = true) {
+    static function lowerCamelCase ($cadena, $espacios = true) {
 
         if (!empty($cadena)) {
 
@@ -66,7 +66,7 @@ class Cadenas {
      *
      */
 
-    static function resumen($texto = '', $tamaño = 50) {
+    static function resumen ($texto = '', $tamaño = 50) {
 
         if (strlen($texto) >= $tamaño) {
             //echo $texto;exit;
@@ -81,7 +81,8 @@ class Cadenas {
 
                 return $textoFinal;
 
-            } else {
+            }
+            else {
 
                 $posicionBlancoEspacio = strrpos($texto, ' ');
 
@@ -92,7 +93,8 @@ class Cadenas {
             }
             //echo $valorCortado;exit;
 
-        } else {
+        }
+        else {
 
             return $texto;
 
@@ -110,12 +112,13 @@ class Cadenas {
      * @since 0.1
      *
      */
-    static function rellenarString($texto = '', $tamaño = 10, $remplazar) {
+    static function rellenarString ($texto = '', $tamaño = 10, $remplazar) {
 
         $totalString = strlen($texto);
         if ($totalString == $tamaño) {
             return $texto;
-        } else {
+        }
+        else {
             return str_pad($texto, $tamaño, $remplazar, STR_PAD_LEFT);
         }
     }
@@ -124,7 +127,8 @@ class Cadenas {
      * Generar Hash a Partir de un String
      * @method sha256
      */
-    public static function sha256($parametro = null) {
+    public static function sha256 ($parametro = null) {
+
         return hash('sha256', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy123456789' . $parametro . date('U'));
     }
 
@@ -137,7 +141,7 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function codificarArrayToHTML($array) {
+    public static function codificarArrayToHTML ($array) {
 
         if (is_array($array)) {
             foreach ($array as $key => $value) {
@@ -159,8 +163,9 @@ class Cadenas {
      *
      *
      */
-    public static function codificarHTML($cadena, $inversa = false) {
-        $arrAcentos = array(
+    public static function codificarHTML ($cadena, $inversa = false) {
+
+        $arrAcentos = [
             'á' => "&aacute;",
             'é' => '&eacute;',
             'í' => '&iacute;',
@@ -175,11 +180,11 @@ class Cadenas {
             'ñ' => "&ntilde;",
             '¿' => '&iquest;',
             "'" => "&#39;"
-        );
+        ];
         if (!empty($cadena) and is_string($cadena)) {
 
             $cadena = explode(" ", $cadena);
-            $arrCadena = array();
+            $arrCadena = [];
             foreach ($cadena as $valor) {
                 $band = 0;
 
@@ -187,7 +192,8 @@ class Cadenas {
                     if ($inversa) {
                         $valorBuscado = $value;
                         $modificador = $key;
-                    } else {
+                    }
+                    else {
                         $valorBuscado = $key;
                         $modificador = $value;
                     }
@@ -196,7 +202,8 @@ class Cadenas {
 
                         $valor = str_replace($valorBuscado, $modificador, $valor);
                         $band = 2;
-                    } else {
+                    }
+                    else {
 
                     }
                 } // fin foreach interno
@@ -205,7 +212,8 @@ class Cadenas {
             $cadenaFinal = implode(" ", $arrCadena);
 
             return $cadenaFinal;
-        } else {
+        }
+        else {
             return $cadena;
         }
     } // fin función
@@ -221,12 +229,15 @@ class Cadenas {
      *
 
      */
-    public static function guionCase($string, $camel = FALSE) {
+    public static function guionCase ($string, $camel = false) {
+
         if ($camel) {
             $data = preg_split('/(?=[A-Z])/', $string);
             $string = implode(' ', $data);
         }
-        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/', '', $string);
+        $string = preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\&|\´|\(|\))/',
+                               '',
+                               $string);
         $string = self::removerAcentos($string);
 
         return self::removerAcentos(strtolower(str_replace(" ", "-", $string)));
@@ -242,7 +253,8 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function guionCaseToString($guionCase) {
+    public static function guionCaseToString ($guionCase) {
+
         $cadena = '/\/\\\'\?\¿\_';
         //$guionCase= str_replace(["¿","?","/"], $replace, $subject)
         preg_replace('/(\\|\¡|\!|\¿|\?|\/|\_|\'|\"|\*|\[|\]|\{|\}|\=|\+|\.|\$|\n|\t|\r|\|&)/', '', $guionCase);
@@ -262,8 +274,9 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function removerAcentos($cadena, $enie = "ni") {
-        $arrAcentos = array(
+    public static function removerAcentos ($cadena, $enie = "ni") {
+
+        $arrAcentos = [
             'á' => "a",
             'é' => 'e',
             'í' => 'i',
@@ -277,10 +290,10 @@ class Cadenas {
             'Ñ' => strtoupper($enie),
             'ñ' => $enie,
             '¿' => ''
-        );
+        ];
         if (!empty($cadena) and is_string($cadena)) {
             $cadena = explode(" ", $cadena);
-            $arrCadena = array();
+            $arrCadena = [];
 
             foreach ($cadena as $valor) {
                 $band = 0;
@@ -296,7 +309,8 @@ class Cadenas {
             $cadenaFinal = implode(" ", $arrCadena);
 
             return $cadenaFinal;
-        } else {
+        }
+        else {
             return $cadena;
         }
     } // fin función
@@ -315,27 +329,38 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function obtenerSingular($palabra) {
-        $arrayPalabra = array();
+    public static function obtenerSingular ($palabra) {
+
+        $arrayPalabra = [];
         $palabra = preg_split('#([A-Z][^A-Z]*)#', $palabra, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         foreach ($palabra as $key => $word) {
             $ultimaLetraSingular = substr($word, strlen($word) - 3, 1);
             $penultima = substr($word, strlen($word) - 2, 1);
-            $pluralAtono = ['í', 'ú', 'y', 'd', 'r', 'n', 'l'];
+            $pluralAtono = [
+                'í',
+                'ú',
+                'y',
+                'd',
+                'r',
+                'n',
+                'l'
+            ];
             if (substr($word, strlen($word) - 2) == PLURAL_CONSONANTE
                 and in_array($ultimaLetraSingular, $pluralAtono)
 
             ) {
 
                 $arrayPalabra[] = substr($word, 0, strlen($word) - 2);
-            } elseif (
+            }
+            else if (
                 substr($word, strlen($word) - 1) == PLURAL_ATONO
                 and !in_array($penultima, ['u'])
 
             ) {
                 $arrayPalabra[] = substr($word, 0, strlen($word) - 1);
-            } else {
+            }
+            else {
                 $arrayPalabra[] = $word;
             }
         }
@@ -357,12 +382,20 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function obtenerPlural($palabra) {
-        $vocales = ['a', 'e', 'i', 'o', 'u'];
+    public static function obtenerPlural ($palabra) {
+
+        $vocales = [
+            'a',
+            'e',
+            'i',
+            'o',
+            'u'
+        ];
         $ultima = substr($palabra, -1);
         if (in_array($ultima, $vocales)) {
             return $palabra . PLURAL_ATONO;
-        } else {
+        }
+        else {
             return $palabra . PLURAL_CONSONANTE;
         }
 
@@ -378,8 +411,10 @@ class Cadenas {
      * @since 0.1
      *
      */
-    public static function vacio($string, $reemplazo) {
-        if (empty($string)) return $reemplazo;
+    public static function vacio ($string, $reemplazo) {
+
+        if (empty($string))
+            return $reemplazo;
 
         return $string;
     }
