@@ -17,12 +17,12 @@ namespace Jida\Configuracion;
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
-    const URL_BASE = '/jida/jidadesarrollos/';
+    const URL_BASE = '';
     const ENTORNO_APP = 'dev';
     const ZONA_HORARIA = 'America/Caracas';
     const MODELO_USUARIO = '\Jida\Modelos\User';
     const LOGO_APP = '';
-    const PATH_JIDA = "vendor";
+    const PATH_JIDA = "";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
     /**
