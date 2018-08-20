@@ -22,8 +22,8 @@ class Validador {
 
         $error = error_get_last();
         if ($error) {
-            Debug::imprimir("Error capturado", $error);
-            exit("Error capturado" . $error['type']);
+//            Debug::imprimir("Error capturado", $error);
+//            exit("Error capturado" . $error['type']);
 
             return;
         }
@@ -31,7 +31,7 @@ class Validador {
     }
 
     private function _manejoErrores () {
-
+        // TODO: corregir manejo de errores
         set_error_handler([
                               $this,
                               '_capturaErrores'
