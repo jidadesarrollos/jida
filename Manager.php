@@ -6,12 +6,12 @@
 namespace Jida;
 
 use Jida\Config\Base;
-use Jida\Helpers as Helpers;
 use Jida\Configuracion as Conf;
+use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Manager\Rutas\Lector;
 use Jida\Manager\Validador;
-use Jida\Manager\Excepcion;
 
 class Manager {
 
@@ -36,8 +36,10 @@ class Manager {
             $this->ruta = $ruta;
 
             Base::constantes();
+
             self::$configuracion = Conf\Config::obtener();
             Estructura::procesar($ruta);
+            Base::path();
 
             $this->_validador = new Validador();
             $this->_lector = new Lector($this);

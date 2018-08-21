@@ -2,7 +2,6 @@
 
 namespace Jida\Manager;
 
-use Jida\Helpers\Debug;
 use Exception as Excepcion;
 
 class Validador {
@@ -32,10 +31,10 @@ class Validador {
 
     private function _manejoErrores () {
         // TODO: corregir manejo de errores
-        set_error_handler([
-                              $this,
-                              '_capturaErrores'
-                          ]);
+        //        set_error_handler([
+        //                              $this,
+        //                              '_capturaErrores'
+        //                          ]);
     }
 
     /**

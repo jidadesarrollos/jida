@@ -22,7 +22,9 @@ Trait Metodo {
     public function _metodo () {
 
         $posMetodo = $this->_padre->proximoParametro();
+
         $padre = $this->_padre;
+
         $controlador = $this->_namespace . $padre::$controlador;
         $default = true;
 

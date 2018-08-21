@@ -9,14 +9,14 @@
 namespace Jida\Manager\Rutas;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
 use Jida\Core\Manager as Core;
+use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Manager as ManagerVista;
 
 class Arranque {
 
-   // private static $_ce = 10002;
+    // private static $_ce = 10002;
     private $_arrayUrl;
     public $procesador;
     /**
@@ -41,7 +41,6 @@ class Arranque {
     public $jadmin = false;
 
     public $parametros = [];
-    public $modulos;
 
     private $_dataVista;
     /**
@@ -54,7 +53,9 @@ class Arranque {
 
     public function __construct ($control) {
 
-        $this->modulos = Config::obtener()->modulos;
+        $conf = Config::obtener();
+
+        $this->modulos = $conf::$modulos;
         $this->_arrayUrl = Estructura::$partes;
         $this->_parser();
 
@@ -183,7 +184,7 @@ class Arranque {
     private function _validar () {
 
         Estructura::definir($this);
-        $dataVista = new Core\DataVista($this->modulo, self::$controlador, self::$metodo, $this->jadmin);
+        $dataVista = new Core\DataVista(self::$modulo, self::$controlador, self::$metodo, $this->jadmin);
         $GLOBALS['dataVista'] = $dataVista;
         $this->_dataVista = $dataVista;
 

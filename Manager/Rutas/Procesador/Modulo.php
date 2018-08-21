@@ -11,9 +11,13 @@ Trait Modulo {
         $padre = $this->_padre;
 
         $parametro = $padre->proximoParametro();
+
         $posModulo = $this->_validarNombre($parametro, 'upper');
 
-        if (in_array($posModulo, $padre->modulos) or array_key_exists($posModulo, $padre->modulos)) {
+        if ($posModulo and
+            (in_array($posModulo, $padre->modulos) or
+                array_key_exists($posModulo, $padre->modulos))
+        ) {
 
             $padre::$modulo = $posModulo;
             $padre::$ruta = 'app';
@@ -29,7 +33,7 @@ Trait Modulo {
         else if ($padre->jadmin) {
 
             $padre::$ruta = 'jida';
-            if ($this->_moduloJadmin($posModulo)) {
+            if ($posModulo and $this->_moduloJadmin($posModulo)) {
 
                 $padre::$modulo = $posModulo;
                 $this->_namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';

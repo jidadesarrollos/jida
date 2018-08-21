@@ -36,12 +36,14 @@ class Procesador {
 
     public function procesar () {
 
+        $padre = $this->_padre;
+
         $this->_moduloValidado = false;
         $this->_modulo();
         $this->_controlador();
         $this->_metodo();
         $this->_argumentos();
-        $padre = $this->_padre;
+
         $padre::$namespace = $this->_namespace;
     }
 

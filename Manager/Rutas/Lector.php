@@ -44,9 +44,6 @@ class Lector {
 
     public function validar () {
 
-        if ($this->_get['url']) {
-            $this->_urlOriginal = utf8_encode($this->_get['url']);
-        }
         $this
             ->_verificarEstructura()
             ->_procesar()
@@ -85,7 +82,7 @@ class Lector {
         $urlActual = $urlBase . Helpers\Sesion::obt('URL_ACTUAL');
         Helpers\Sesion::set('URL_ACTUAL', $urlActual);
 
-        if (count($this->arrayUrl) > 0) {
+        if (count(Estructura::$partes) > 0) {
             $this->_validarIdioma();
         }
 

@@ -3,7 +3,6 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
-use Jida\Helpers\Debug;
 
 class Manager {
 
@@ -58,7 +57,7 @@ class Manager {
         $padre = self::$Padre;
 
         $this->_namespace = $padre::$namespace;
-        $this->_modulo = $padre->modulo;
+        $this->_modulo = $padre::$modulo;
         $this->_layout = new Layout($this);
 
     }
@@ -85,7 +84,6 @@ class Manager {
 
     function vista () {
 
-        //Debug::imprimir("ak", true);
         if (!self::$vista) {
             self::$vista = new Vista($this);
         }
