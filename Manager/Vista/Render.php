@@ -49,6 +49,8 @@ class Render {
 
         $this->_obtenerData();
 
+        $jadminLayout = new \Jida\Jadmin\Layout\Layout();
+
         ob_start();
 
         include_once $vista;
