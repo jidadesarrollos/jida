@@ -12,48 +12,29 @@
     <title>Jadmin - Login</title>
 
     <!-- Bootstrap core CSS-->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Framework/Jadmin/Layout/jadmin/htdocs/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="Framework/Jadmin/Layout/jadmin/htdocs/vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
+          type="text/css">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin.css" rel="stylesheet">
+    <link href="Framework/Jadmin/Layout/jadmin/htdocs/css/jadmin.css" rel="stylesheet">
 
 </head>
 
 <body class="bg-dark">
 
 <div class="container">
-    <div class="card card-login mx-auto mt-5">
-        <div class="card-header">Login</div>
-        <div class="card-body">
-            <form>
-                <div class="form-group">
-                    <div class="form-label-group">
-                        <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Usuario"
-                               autofocus="autofocus">
-                        <label for="usuario">Usuario</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-label-group">
-                        <input type="password" id="clave" name="clave" class="form-control" placeholder="Clave">
-                        <label for="clave">Password</label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </form>
-        </div>
-    </div>
+    <?= $contenido ?>
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/jquery/jquery.min.js"></script>
+<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 </body>
 
