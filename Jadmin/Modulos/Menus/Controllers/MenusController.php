@@ -56,7 +56,7 @@ class MenusController extends \Jida\Jadmin\Controllers\JController
     public function gestionMenu($id = '')
     {
 
-        $form = new Render\Formulario('Menus', $id);
+        $form = new Render\Formulario('jida/Menus', $id);
         $classMenu = new Modelos\Menus($id);
 
         $form->boton('principal')->attr('value', "Crear menu");

@@ -100,7 +100,7 @@ class OpcionesController extends \Jida\Jadmin\Controllers\JController
         } else {
 
             $btn = 'Registrar';
-            $formulario = new Render\Formulario('RegistroOpcion');
+            $formulario = new Render\Formulario('jida/RegistroOpcion');
             $opcion = new Modelos\OpcionesMenu();
 
             if ($padre != 0)
