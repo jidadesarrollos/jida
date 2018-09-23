@@ -20,14 +20,6 @@ class Procesador {
     protected $_moduloValidado;
     protected $_default = 'Index';
     private static $_ce = 10005;
-    private $_namespaces = [
-        'app'        => 'App\\Controllers\\',
-        'modulo'     => 'App\\Modulos\\',
-        'jida'       => '\\Jida\\Jadmin\\Controllers\\',
-        'jidaModulo' => '\\Jida\\Jadmin\\Modulos\\'
-
-    ];
-    private $_namespace;
 
     function __construct (Arranque $padre) {
 
@@ -36,15 +28,12 @@ class Procesador {
 
     public function procesar () {
 
-        $padre = $this->_padre;
-
         $this->_moduloValidado = false;
         $this->_modulo();
         $this->_controlador();
         $this->_metodo();
         $this->_argumentos();
 
-        $padre::$namespace = $this->_namespace;
     }
 
     private function _argumentos () {

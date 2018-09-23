@@ -51,7 +51,7 @@ if (!defined('DIR_EXCEPCION_PLANTILLAS'))
      * @constant   DIR_EXCEPCION_PLANTILLAS
      * @deprecated 2.0
      */
-    define('DIR_EXCEPCION_PLANTILLAS', DIR_FRAMEWORK . "plantillas/error/");
+    define('DIR_EXCEPCION_PLANTILLAS', DIR_FRAMEWORK . DS . "plantillas/error/");
 if (!defined('DIR_PLANTILLAS_APP'))
     /**
      * Define la ubicacion de las plantillas de una aplicacion
@@ -162,11 +162,11 @@ if (!defined('DIR_LAYOUT_JIDA'))
      *
      * Puede ser modificada su ubicación si desea personalizarse el disenio.
      */
-    define('DIR_LAYOUT_JIDA', DIR_FRAMEWORK . "Layout/jadmin/");
+    define('DIR_LAYOUT_JIDA', DIR_FRAMEWORK . DS . "Layout/jadmin/");
 if (!defined('DIR_LAYOUT_APP'))
     define('DIR_LAYOUT_APP', DIR_APP . 'Layout/');
 if (!defined('DIR_PLANTILLAS_FRAMEWORK'))
-    define('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK . "plantillas/");
+    define('DIR_PLANTILLAS_FRAMEWORK', DIR_FRAMEWORK . DS . "plantillas/");
 
 if (!defined('ZONA_HORARIA')) {
     /**

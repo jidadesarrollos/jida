@@ -12,8 +12,6 @@
 namespace Jida\Componentes;
 
 use App\Config as Config;
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Debug as Debug;
 use Jida\Helpers\Directorios as Directorios;
 use Jida\Manager\Estructura;
 
@@ -121,8 +119,8 @@ class Correo {
         if (Directorios::validar(DIR_APP . $this->plantilla)) {
             $plantilla = DIR_APP . $this->plantilla;
         }
-        else if (Directorios::validar(DIR_FRAMEWORK . 'Layout/correo/' . $this->plantilla . "tpl.php")) {
-            $plantilla = DIR_FRAMEWORK . 'Layout/correo/' . $this->plantilla . "tpl.php";
+        else if (Directorios::validar(DIR_FRAMEWORK . DS . 'Layout/correo/' . $this->plantilla . "tpl.php")) {
+            $plantilla = DIR_FRAMEWORK . DS . 'Layout/correo/' . $this->plantilla . "tpl.php";
         }
         if (empty($plantilla))
             throw new \Exception("No existe la plantilla de correo " . DIR_APP . $this->plantilla, 500);

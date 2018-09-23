@@ -86,7 +86,7 @@ class Objetos extends JController {
         $elemento = new Jida\Elemento;
         $generador = new Jida\GeneradorModelo;
         if ($ruta == 'jida') {
-            $generador->ubicacion(DIR_FRAMEWORK . 'ModelFramework/');
+            $generador->ubicacion(DIR_FRAMEWORK . DS . 'ModelFramework/');
         }
         $prefijos = [
             'm_',
@@ -139,10 +139,10 @@ class Objetos extends JController {
         $objetosNuevos = [];
         $nombreComponente = Helpers\Cadenas::upperCamelCase($componente->componente);
         if ($nombreComponente == 'Principal') {
-            $rutaComponente = DIR_APP . "Controller/";
+            $rutaComponente = DIR_APP . DS . "Controller/";
         }
         else {
-            $rutaComponente = ($nombreComponente == 'Jadmin') ? DIR_FRAMEWORK . 'Jadmin/Controllers/' : DIR_APP . "Modulos/" . $nombreComponente . "/Controller/";
+            $rutaComponente = ($nombreComponente == 'Jadmin') ? DIR_FRAMEWORK . DS . 'Jadmin/Controllers/' : DIR_APP . DS . "Modulos/" . $nombreComponente . "/Controller/";
         }
 
         $objetosCarpeta = [];

@@ -2,6 +2,8 @@
 
 namespace Jida\Manager\Rutas\Procesador;
 
+use Jida\Manager\Estructura;
+
 Trait Metodo {
 
     private function _validarMetodo ($controlador, $metodo) {
@@ -25,7 +27,7 @@ Trait Metodo {
 
         $padre = $this->_padre;
 
-        $controlador = $this->_namespace . $padre::$controlador;
+        $controlador = Estructura::$namespace . $padre::$controlador;
         $default = true;
 
         if ($posMetodo) {

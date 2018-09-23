@@ -6,6 +6,6 @@
 </head>
 <body>
 <h3>Layout</h3>
-<?= $contenido ?>
+{contenido}
 </body>
 </html>

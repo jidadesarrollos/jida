@@ -12,9 +12,10 @@
 
 namespace Jida\BD;
 
+use Exception;
 use Jida\Helpers as Helpers;
 use Jida\Helpers\Debug as Debug;
-use Exception;
+use Jida\Manager\Estructura;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -256,7 +257,8 @@ class DataModel {
         $this->_validarBD();
         $param = func_get_args(0);
         $this->_clase = get_class($this);
-        $this->namespace = $this->obtNamespace($this->_clase);
+
+        $this->namespace = Estructura::$namespace;
         //instancia objecto reflection
         $this->reflector = new ReflectionClass(get_class($this));
 
@@ -1053,8 +1055,9 @@ class DataModel {
                         return $obj;
                 }
             }
-            else if (in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno) or in_array($class,
-                                                                                                                $this->tieneMuchos)) {
+            else if (in_array($class, $this->tieneUno) or array_key_exists($class, $this->tieneUno)
+                or in_array($class,
+                            $this->tieneMuchos)) {
 
                 $obj = new $class(null, 1);
                 if (method_exists($obj, 'consulta')) {
@@ -1077,7 +1080,7 @@ class DataModel {
             }
             else {
 
-                throw new Exception("El objeto solicitado como relacion no existe $rel", 1);
+                throw new Exception("El objeto solicitado como relacion no existe $class $rel", 1);
 
             }
         }

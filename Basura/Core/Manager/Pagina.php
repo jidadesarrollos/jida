@@ -186,7 +186,7 @@ class Pagina {
             $this->modulo = $modulo;
 
         if (defined('DIR_FRAMEWORK')) {
-            $this->rutaFramework = DIR_FRAMEWORK . "Jadmin/Vistas/";
+            $this->rutaFramework = DIR_FRAMEWORK . "/Jadmin/Vistas/";
         }
         else {
             throw new Excepcion("No se encuentra definida la ruta de las vistas del admin jida. verifique las configuraciones",
@@ -281,7 +281,7 @@ class Pagina {
     private function obtenerDirectorioVista () {
 
         if ($this->_ruta == 'framework') {
-            $this->directorioVista = DIR_FRAMEWORK . "Jadmin/";
+            $this->directorioVista = DIR_FRAMEWORK . "/Jadmin/";
 
             if (!empty($this->modulo)) {
                 $this->directorioVista .= 'Modulos/' . $this->modulo . "/Vistas/";
@@ -460,7 +460,7 @@ class Pagina {
             }
             else {
 
-                $path = DIR_FRAMEWORK . 'plantillas/error/';
+                $path = DIR_FRAMEWORK . '/plantillas/error/';
             }
         }
         else {

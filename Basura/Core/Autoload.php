@@ -82,19 +82,19 @@ class Autoload {
             $archivo = $directorio . $clase . ".class.php";
             $archivo2 = $directorio . $clase . ".php";
             if ($bandera !== true) {
-                if (file_exists(DIR_FRAMEWORK . $archivo)) {
+                if (file_exists(DIR_FRAMEWORK .  DS .$archivo)) {
                     require_once $archivo;
                     $bandera = true;
                 }
-                else if (file_exists(DIR_APP . $archivo)) {
+                else if (file_exists(DIR_APP . DS . $archivo)) {
                     require_once $archivo;
                     $bandera = true;
                 }
-                else if (file_exists(DIR_FRAMEWORK . $archivo2)) {
+                else if (file_exists(DIR_FRAMEWORK . DS .  $archivo2)) {
                     require_once $archivo2;
                     $bandera = true;
                 }
-                else if (file_exists(DIR_APP . $archivo2)) {
+                else if (file_exists(DIR_APP . DS . $archivo2)) {
                     require_once $archivo2;
                     $bandera = true;
                 }

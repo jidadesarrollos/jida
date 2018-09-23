@@ -29,7 +29,6 @@ class Arranque {
      * @var bool
      */
     static public $controlador = false;
-    static public $namespace;
 
     static public $modulo;
     /**
@@ -132,7 +131,8 @@ class Arranque {
         if (!self::$Controlador or $controlador != self::$controlador) {
             self::$controlador = str_replace("Controller", "", $controlador);
 
-            $objeto = self::$namespace . $controlador;
+            $objeto = Estructura::$namespace . $controlador;
+
             self::$Controlador = new $objeto();
         }
 

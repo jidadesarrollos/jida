@@ -21,8 +21,8 @@ class Validador {
 
         $error = error_get_last();
         if ($error) {
-//            Debug::imprimir("Error capturado", $error);
-//            exit("Error capturado" . $error['type']);
+            //            Debug::imprimir("Error capturado", $error);
+            //            exit("Error capturado" . $error['type']);
 
             return;
         }
@@ -30,6 +30,7 @@ class Validador {
     }
 
     private function _manejoErrores () {
+
         // TODO: corregir manejo de errores
         //        set_error_handler([
         //                              $this,
@@ -67,7 +68,7 @@ class Validador {
             /**
              * Inclusión de directorios de aplicación, framework y libs dentro del path
              */
-            ini_set('include_path', DIR_APP . PS . DIR_FRAMEWORK . PS . get_include_path());
+            ini_set('include_path', DIR_APP . DS . DIR_FRAMEWORK . DS . get_include_path());
 
         }
         else {

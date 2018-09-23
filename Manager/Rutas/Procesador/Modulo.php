@@ -3,8 +3,19 @@
 namespace Jida\Manager\Rutas\Procesador;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
+use Jida\Manager\Rutas\Jadmin;
 
 Trait Modulo {
+
+    private $_namespaces = [
+        'app'        => 'App\\Controllers\\',
+        'modulo'     => 'App\\Modulos\\',
+        'jida'       => '\\Jida\\Jadmin\\Controllers\\',
+        'jidaModulo' => '\\Jida\\Jadmin\\Modulos\\'
+
+    ];
+    private $_namespace;
 
     protected function _modulo () {
 
@@ -21,35 +32,37 @@ Trait Modulo {
 
             $padre::$modulo = $posModulo;
             $padre::$ruta = 'app';
-            if ($padre->jadmin) {
-
-                $this->_namespace = $this->_namespaces['modulo'] . $padre::$modulo . '\\Jadmin\\Controllers\\';
-            }
-            else {
-                $this->_namespace = $this->_namespaces['modulo'] . $padre::$modulo . '\\Controllers\\';
-            }
+            $namespace = $this->_namespaces['modulo'] . $padre::$modulo;
+            $namespace .= ($padre->jadmin) ? '\\Jadmin\\Controllers\\' : '\\Controllers\\';
+            $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Modulos' . DS . $posModulo;
+            $rutaModulo .= ($padre->jadmin) ? DS . 'Jadmin' : '';
 
         }
         else if ($padre->jadmin) {
 
             $padre::$ruta = 'jida';
+
             if ($posModulo and $this->_moduloJadmin($posModulo)) {
 
                 $padre::$modulo = $posModulo;
-                $this->_namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
-
+                $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
+                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . $posModulo;
             }
             else {
                 $padre->reingresarParametro($posModulo);
-                $this->_namespace = $this->_namespaces['jida'];
+                $namespace = $this->_namespaces['jida'];
+                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin';
             }
 
         }
         else {
-            $this->_namespace = $this->_namespaces['app'];
+            $namespace = $this->_namespaces['app'];
+            $rutaModulo = Estructura::$directorio . DS . "Aplicacion";
             $padre->reingresarParametro($posModulo);
         }
 
+        Estructura::$namespace = $namespace;
+        Estructura::$rutaModulo = $rutaModulo;
     }
 
     private function _moduloJadmin ($posModulo) {
@@ -57,7 +70,7 @@ Trait Modulo {
         $modulo = $this->_validarNombre($posModulo, 'upper');
         $config = Config::obtener();
 
-        return in_array($modulo, $config::$modulos);
+        return in_array($modulo, Jadmin::$modulos);
 
     }
 

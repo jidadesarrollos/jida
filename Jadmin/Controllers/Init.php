@@ -11,11 +11,11 @@ namespace Jida\Jadmin\Controllers;
 
 use Exception;
 use Jida\BD as BD;
-use Jida\Render as Render;
+use Jida\Core\GeneradorCodigo as GeneradorCodigo;
 use Jida\Helpers as Helpers;
 use Jida\Modelos as Modelos;
+use Jida\Render as Render;
 use Jida\RenderHTML as RenderHTML;
-use Jida\Core\GeneradorCodigo as GeneradorCodigo;
 
 class Init extends JController {
 
@@ -102,9 +102,9 @@ class Init extends JController {
 
             $bdConfig = "";
             #Debug::mostrarArray($bdConfig);
-            if (!Helpers\Directorios::validar(DIR_APP))
-                Helpers\Directorios::crear(DIR_APP);
-            Helpers\Directorios::crear(DIR_APP . "/Config");
+            if (!Helpers\Directorios::validar(DIR_APP . DS))
+                Helpers\Directorios::crear(DIR_APP . DS);
+            Helpers\Directorios::crear(DIR_APP . DS . "/Config");
             $bdConfig .= $this->abrirPHP() . $this->docBlock(
                     "Archivo de Configuración de Base de Datos"
                 );
@@ -128,7 +128,7 @@ class Init extends JController {
                                          ]);
 
             $bdConfig .= $this->definirArray('$GLOBALS[\'conexiones\']', ['default' => $arrayConfig]);
-            $this->crear(DIR_APP . "Config/BDConfig.php")
+            $this->crear(DIR_APP . DS . "Config/BDConfig.php")
                 ->escribir($bdConfig)
                 ->cerrar();
 
@@ -179,7 +179,7 @@ class Init extends JController {
 * la aplicacion. Si se desea especificar archivos solo para un ambiente, se debe definir una clave con el nombre del ambiente.
             ')
             . $this->definirArray('$GLOBALS[\'_JS\']', ['dev' => $devJS]);
-        $this->crear(DIR_APP . "Config/appConfig.php")
+        $this->crear(DIR_APP . DS . "Config/appConfig.php")
             ->escribir($appConfig)
             ->cerrar();
 
@@ -205,7 +205,7 @@ class Init extends JController {
             . $this->constante('ENTORNO_APP', 'dev', 'string', 'Define el entorno de la aplicacion');
         $initConfig .= $this->saltodeLinea()
             . $this->definirArray('$GLOBALS[\'modulos\']', ['Jadmin']);
-        $this->crear(DIR_APP . "Config/initConfig.php")
+        $this->crear(DIR_APP . DS . "Config/initConfig.php")
             ->escribir($initConfig)
             ->cerrar();
 
@@ -356,7 +356,7 @@ class Init extends JController {
     protected function crearVista ($controller, $metodo, $contenido = "") {
 
         $modulo = explode(".", $controller);
-        $ubicacion = DIR_APP;
+        $ubicacion = DIR_APP . DS;
 
         if (count($modulo) > 1) {
 
@@ -386,17 +386,17 @@ class Init extends JController {
 
     private function agregarLayout () {
 
-        if (!Helpers\Directorios::validar(DIR_APP . "Layout"))
-            Helpers\Directorios::crear(DIR_APP . "Layout");
-        copy(DIR_FRAMEWORK . "Layout/jadminIntro.tpl.php", DIR_APP . "Layout/default.tpl.php");
+        if (!Helpers\Directorios::validar(DIR_APP . DS . "Layout"))
+            Helpers\Directorios::crear(DIR_APP . DS . "Layout");
+        copy(DIR_FRAMEWORK . DS . "Layout/jadminIntro.tpl.php", DIR_APP . DS . "Layout/default.tpl.php");
 
         return $this;
     }
 
     private function copiarHtdocs () {
 
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/js/", HTDOCS_DIR . "js/jida/");
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/css/", HTDOCS_DIR . "css/jida/");
+        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/js/", HTDOCS_DIR . "js/jida/");
+        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/css/", HTDOCS_DIR . "css/jida/");
 
         return $this;
     }

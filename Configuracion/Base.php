@@ -49,13 +49,18 @@ class Base {
         define('dev', 'dev');
         define('prod', 'prod');
         set_time_limit(180);
+
     }
 
     static function path () {
 
         define('ROOT', \Jida\Manager\Estructura::path());
-        define('DIR_FRAMEWORK', ROOT . DS . 'Framework' . DS);
-        define('DIR_APP', ROOT . DS . 'Aplicacion' . DS);
+        define('DIR_FRAMEWORK', ROOT . DS . 'Framework');
+        define('DIR_APP', ROOT . DS . 'Aplicacion');
+
+        if (file_exists(DIR_APP . DS . 'index.php')) {
+            include_once DIR_APP . DS . 'index.php';
+        }
 
     }
 }

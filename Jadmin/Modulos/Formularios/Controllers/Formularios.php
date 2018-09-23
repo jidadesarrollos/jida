@@ -10,6 +10,7 @@
 
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
+use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Modelos\Formulario;
@@ -18,15 +19,15 @@ use Jida\Render as Render;
 class Formularios extends JControl {
 
     private $_rutaJida;
-    public $manejoParams = TRUE;
+    public $manejoParams = true;
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
-        $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
+        $this->_rutaJida = DIR_FRAMEWORK . DS . 'formularios';
     }
 
-    function index($modulo = "") {
+    function index ($modulo = "") {
 
         $this->vista = 'vista';
         $forms = [];
@@ -40,7 +41,8 @@ class Formularios extends JControl {
                 ]
             ];
 
-        } else {
+        }
+        else {
             $forms = $this->_obtenerFormularios($modulo);
         }
 
@@ -53,10 +55,12 @@ class Formularios extends JControl {
                     $dataFormulario = $this->_dataVistaFormulario($formulario, $data['modulo']);
                     if ($dataFormulario) {
                         $formularios[] = $dataFormulario;
-                    } else {
+                    }
+                    else {
                         $formsInvalidos[] = $formulario;
                     }
-                } else {
+                }
+                else {
                     unset($data[$index]);
                 }
             }
@@ -64,7 +68,8 @@ class Formularios extends JControl {
         }
 
         $params = [
-            'titulos' => ['nombre',
+            'titulos' => [
+                'nombre',
                 'estructura',
                 'ID',
                 'Clave Primaria',
@@ -77,42 +82,49 @@ class Formularios extends JControl {
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
-            ['span'  => 'fa fa-edit',
-             'title' => "Editar",
-             'href'  => $this->obtUrl('gestion', ['{clave}',
-                 '{modulo}'
-             ])
-            ],
-            ['span'  => 'fa fa-plus-square-o',
-             'title' => 'Editar Campos',
-             'href'  => $this->obtUrl('campos.gestion',
-                 ['{clave}',
-                     '{modulo}'
-                 ])
-            ],
-            ['span'        => 'fa fa-trash',
-             'title'       => "Eliminar Formulario",
-             'href'        => $this->obtUrl('eliminar', ['{clave}']),
-             'data-jvista' => 'confirm',
-             'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'
-            ],
+                                  [
+                                      'span'  => 'fa fa-edit',
+                                      'title' => "Editar",
+                                      'href'  => $this->obtUrl('gestion',
+                                                               [
+                                                                   '{clave}',
+                                                                   '{modulo}'
+                                                               ])
+                                  ],
+                                  [
+                                      'span'  => 'fa fa-plus-square-o',
+                                      'title' => 'Editar Campos',
+                                      'href'  => $this->obtUrl('campos.gestion',
+                                                               [
+                                                                   '{clave}',
+                                                                   '{modulo}'
+                                                               ])
+                                  ],
+                                  [
+                                      'span'        => 'fa fa-trash',
+                                      'title'       => "Eliminar Formulario",
+                                      'href'        => $this->obtUrl('eliminar', ['{clave}']),
+                                      'data-jvista' => 'confirm',
+                                      'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el formulario seleccionado?'
+                                  ],
 
-        ]);
+                              ]);
         $jvista->acciones([
-            'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
+                              'Nuevo Formulario' => ['href' => $this->obtUrl('gestion')]
 
-        ]);
+                          ]);
         $this->data([
-            'vista' => $jvista->render()
-        ]);
+                        'vista' => $jvista->render()
+                    ]);
 
     }
 
-    private function _procesarModulo($modulo) {
+    private function _procesarModulo ($modulo) {
 
         if ($modulo == 'app') {
             $path = DIR_APP . 'Formularios';
-        } else {
+        }
+        else {
             $path = DIR_APP . 'Modulos' . DS . ucwords($modulo) . DS . 'Formularios';
         }
 
@@ -134,9 +146,10 @@ class Formularios extends JControl {
     /**
      * Retorna un arreglo con el listado de formularios existentes en la aplicación.
      */
-    private function _obtenerFormularios($modulo = "") {
+    private function _obtenerFormularios ($modulo = "") {
 
-        $modulos = $this->_conf()->modulos;
+        $conf = Config::obtener();
+        $modulos = $conf::$modulos;
         $coleccion = [];
 
         if ($modulo and array_key_exists($modulo, $modulos)) {
@@ -145,7 +158,8 @@ class Formularios extends JControl {
                 $coleccion[$modulo] = $archivos;
             }
 
-        } else {
+        }
+        else {
             foreach ($modulos as $modulo) {
                 $archivos = $this->_procesarModulo($modulo);
                 if ($archivos) {
@@ -162,9 +176,10 @@ class Formularios extends JControl {
     /**
      * Lee la data del formulario y retorna un arreglo con los valores
      */
-    private function _dataVistaFormulario($formulario, $modulo) {
+    private function _dataVistaFormulario ($formulario, $modulo) {
 
-        $data = $this->_dataFormulario($formulario, $modulo);
+        //$data = $this->_dataFormulario($formulario, $modulo);
+        $data = "";
         if ($data) {
             if (array_key_exists('query', $data)) {
 
@@ -175,11 +190,11 @@ class Formularios extends JControl {
             }
         }
 
-        return FALSE;
+        return false;
 
     }
 
-    private function _dataGestion($nombreFormulario, $modulo) {
+    private function _dataGestion ($nombreFormulario, $modulo) {
 
         $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
         $dataForm = $this->_dataFormulario($nombreFormulario, $modulo);
@@ -190,7 +205,8 @@ class Formularios extends JControl {
 
             if (is_array($campo)) {
                 $campos[] = $campo['name'];
-            } else {
+            }
+            else {
                 $campos[] = $campo->name;
             }
 
@@ -201,7 +217,7 @@ class Formularios extends JControl {
 
     }
 
-    function gestion($id = "", $modulo = "") {
+    function gestion ($id = "", $modulo = "") {
 
         $dataForm = [];
         $nombreFormulario = "";
@@ -211,7 +227,8 @@ class Formularios extends JControl {
             $dataForm = $this->_dataGestion($nombreFormulario, $modulo);
             $titulo = 'Editar <strong>' . $dataForm['nombre'] . '</strong>';
 
-        } else {
+        }
+        else {
             $this->_formulario = new Formulario();
             $titulo = 'Crear Nuevo Formulario';
         }
@@ -230,7 +247,8 @@ class Formularios extends JControl {
                 array_merge(
                     ['principal' => 'Principal'],
                     $this->_conf()->modulos
-                ), true
+                ),
+                true
             );
         if ($modulo) {
 
@@ -247,26 +265,29 @@ class Formularios extends JControl {
 
                 if ($this->post('btnGestionFormulario')) {
                     $this->redireccionar($this->obtUrl('index'));
-                } else {
+                }
+                else {
 
                     $modulo = (!empty($this->post('modulo'))) ? $this->post('modulo') : $modulo;
 
                     $this->redireccionar($this->obtUrl(
                         'Campos.gestion',
-                        [$this->_formulario->identificador,
+                        [
+                            $this->_formulario->identificador,
                             $modulo
                         ]
                     ));
                 }
 
-            } else {
+            }
+            else {
                 exit("no guarda");
             }
         }
 
         $this->data([
-            'form' => $form->render()
-        ]);
+                        'form' => $form->render()
+                    ]);
 
     }
 
@@ -276,7 +297,7 @@ class Formularios extends JControl {
      * @param string $nombreFormulario identificador del formulario en UpperCamelCase
      * @param string $modulo Modulo al cual pertenece el formulario a guardar
      */
-    function _guardarFormulario($nombreFormulario, $modulo) {
+    function _guardarFormulario ($nombreFormulario, $modulo) {
 
         $post = $this->post();
         $post['modulo'] = (empty($post['modulo'])) ? $modulo : $post['modulo'];
@@ -286,17 +307,18 @@ class Formularios extends JControl {
             $msj = Helpers\Mensajes::crear('suceso', 'Formulario guardado correctamente');
             Helpers\Sesion::set('__msj', $msj);
 
-            return TRUE;
+            return true;
 
-        } else {
-            Helpers\Debug::imprimir("No se pudo guardar el formulario", TRUE);
+        }
+        else {
+            Helpers\Debug::imprimir("No se pudo guardar el formulario", true);
         }
 
-        return FALSE;
+        return false;
 
     }
 
-    function eliminar() {
+    function eliminar () {
 
     }
 

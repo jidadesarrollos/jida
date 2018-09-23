@@ -5,16 +5,13 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Configuracion\Config;
 use Exception as Excepcion;
-use Jida\Core\Controlador\Control;
-use Jida\Helpers\Debug;
+use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
-use Jida\Manager\Rutas\Procesador\Controlador;
-use Jida\Render\Selector as Selector;
 
 class Layout {
 
+    use Archivo, Render, RenderLayout;
     private $_DIRECTORIOS = [
         'jida' => 'Framework/Layout/',
         'app'  => 'Aplicacion/Layout/'
@@ -52,7 +49,7 @@ class Layout {
     /**
      * @return $this
      */
-    public function leer () {
+    private function leer () {
 
         $padre = self::$padre;
         $arranque = $padre::$Padre;
@@ -95,15 +92,17 @@ class Layout {
      */
     public function render ($vista) {
 
+        $this->leer();
+
         if (!self::$directorio or !$vista) {
             $msj = 'El parametro $vista es requerido para el metodo render';
             throw  new Excepcion($msj, self::$_ce . '0001');
 
         }
 
-        $render = new Render();
+        $layout = $this->_obtenerContenido(self::$directorio, ['contenido' => $vista]);
 
-        return $render->imprimir(self::$directorio, $vista);
+        echo $layout;
 
     }
 
@@ -137,87 +136,8 @@ class Layout {
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      */
     function imprimirLibrerias ($lang, $modulo = "") {
+        //TODO: logica para imprimir librerias
 
-        $dataInclude = [];
-
-        if (!property_exists($this->data, $lang))
-            return false;
-        $data = $this->{$lang};
-
-        //Se eliminan las librerias incluidas en un entorno distinto al actual
-        //o que pertenezcan a un $modulo no solicitado
-        foreach ($data as $key => $value) {
-            if (is_array($value) and $key != ENTORNO_APP and $key != $modulo)
-                unset($data[$key]);
-        }//fin forech
-
-        if (array_key_exists(ENTORNO_APP, $data)) {
-            $dataInclude = $data[ENTORNO_APP];
-            //Se eliminan
-            foreach ($dataInclude as $key => $value) {
-                if (is_array($value) and $key != $modulo)
-                    unset($dataInclude[$key]);
-            }
-            unset($data[ENTORNO_APP]);
-        }
-
-        $librerias = array_merge($dataInclude, $data);
-        if (!empty($modulo)) {
-            if (array_key_exists($modulo, $librerias)) {
-                $libreriasModulo = $librerias[$modulo];
-                unset($librerias[$modulo]);
-                $librerias = $libreriasModulo;
-            }
-        }
-
-        $libsHTML = "";
-        $cont = 0;
-
-        foreach ($librerias as $id => $libreria) {
-            if (is_array($libreria) and $lang == 'css') {
-                //se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
-                //a partir del arreglo $libreria
-                $libsHTML .= $this->__obtHTMLLibreria('link', $libreria, $cont);
-            }
-            else if (!is_array($libreria))
-                $libsHTML .= $this->__obtHTMLLibreria($lang, $libreria, $cont);
-
-            if ($cont == 0)
-                $cont = 2;
-        }//fin foreach=======================================
-        return $libsHTML;
-    }
-
-    private function __obtHTMLLibreria ($lang, $libreria, $cont = 2) {
-
-        $path = (defined('URL_BASE') and (is_string($libreria) and strpos($libreria,
-                                                                          'http') === false)) ? URL_BASE : "";
-
-        switch ($lang) {
-            case 'js':
-                if (is_array($libreria))
-                    Debug::mostrarArray($libreria, 0);
-                $html = Selector::crear('script', ['src' => $path . $libreria], null, $cont);
-                break;
-            case 'link':
-
-                $libreria['href'] = $path . $libreria['href'];
-                $html = Selector::crear('link', $libreria, null, $cont);
-                break;
-            default:
-                //css
-                $html = Selector::crear('link',
-                                        [
-                                            'href' => $path . $libreria,
-                                            'rel'  => 'stylesheet',
-                                            'type' => 'text/css'
-                                        ],
-                                        null,
-                                        2);
-                break;
-        }
-
-        return $html;
     }
 
     static function obtener () {
@@ -230,4 +150,5 @@ class Layout {
         return self::$instancia;
 
     }
+
 }

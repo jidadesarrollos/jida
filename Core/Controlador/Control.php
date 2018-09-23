@@ -7,12 +7,11 @@
 namespace Jida\Core\Controlador;
 
 use Jida\Configuracion\Config;
-use Jida\Core\Manager\DataVista;
 
 class Control {
 
     use \Jida\Core\ObjetoManager;
-    use Inicio, Url, Respuesta;
+    use Inicio, Url, Respuesta, Peticion;
 
     public $multiidioma;
     public $titulo;
@@ -20,6 +19,7 @@ class Control {
     protected $helpers = [];
 
     protected $modelos = [];
+    protected $modelo;
     protected $usuario;
 
     private $post;
@@ -28,17 +28,12 @@ class Control {
     private $_layout;
     private $request;
 
-    /**
-     * Objejo DataVista
-     * @property object DataVista
-     * @see DataVistaa
-     */
-    private $_dataVista;
     static private $_ce = 30003;
 
     function __construct () {
 
         $this->_inicializar();
+        $this->_procesarPeticiones();
 
     }
 
@@ -71,11 +66,11 @@ class Control {
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $this->_dataVista->{$key} = $value;
+                $this->_data->{$key} = $value;
             }
         }
         else {
-            $this->dv->{$data} = $valor;
+            $this->_data->{$data} = $valor;
         }
 
     }

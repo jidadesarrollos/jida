@@ -463,7 +463,7 @@ class JidaController {
 
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
-                if (Helpers\Directorios::validar(DIR_FRAMEWORK . 'Jadmin/Modulos/' . $posModulo)) {
+                if (Helpers\Directorios::validar(DIR_FRAMEWORK . DS . 'Jadmin/Modulos/' . $posModulo)) {
 
                     $this->_controladorDefault = $posModulo;
                     $this->_namespace = $namespace . '\\' . $posModulo . '\\Controllers\\';

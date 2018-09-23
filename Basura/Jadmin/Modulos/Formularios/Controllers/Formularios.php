@@ -22,7 +22,7 @@ class Formularios extends FController {
     function __construct () {
 
         parent::__construct();
-        $this->_rutaJida = DIR_FRAMEWORK . 'formularios';
+        $this->_rutaJida = DIR_FRAMEWORK . DS . 'formularios';
     }
 
     function index ($modulo = "") {

@@ -2,8 +2,6 @@
 
 namespace Jida\Core\Controlador;
 
-use Jida\Helpers\Debug;
-
 Trait Inicio {
 
     protected $_clase;
@@ -12,12 +10,19 @@ Trait Inicio {
     protected $_namespace;
     protected $_modulo;
 
+    /**
+     * @var object $data Objeto Data para pasar la informacion a las vistas
+     * @see Data
+     */
+    private $_data;
+
     private function _inicializar () {
 
         $partes = explode("\\", get_class($this));
         $clase = array_pop($partes);
         $this->_clase = $clase;
         $this->_namespace = implode("\\", $partes);
+        $this->_data = new Data();
 
     }
 }

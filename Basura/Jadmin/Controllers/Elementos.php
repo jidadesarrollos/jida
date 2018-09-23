@@ -49,7 +49,7 @@ class Elementos extends JController {
                 'elementos' => []
             ]
         ];
-        Helpers\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . 'Elementos',
+        Helpers\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . '/Elementos',
                                                    $listaElementos['jida']['elementos'],
                                                    '/.php/');
         if (!empty($tema)) {
@@ -57,7 +57,7 @@ class Elementos extends JController {
                 'namespace' => '\App\Layout\\' . $tema . '\\Elementos\\',
                 'elementos' => []
             ];
-            Helpers\Directorios::listarDirectoriosRuta(DIR_APP . 'Layout/' . $tema . '/Elementos/',
+            Helpers\Directorios::listarDirectoriosRuta(DIR_APP . '/Layout/' . $tema . '/Elementos/',
                                                        $listaElementos[$tema]['elementos'],
                                                        '/php/');
         }

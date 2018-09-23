@@ -11,24 +11,15 @@
 
 namespace Jida\Manager\Vista;
 
+use Exception as Excepcion;
 use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura as Estructura;
-use Exception as Excepcion;
 
 class Vista {
 
+    use Archivo;
     private $_ce = 10009;
-    private $_directorio;
-    private $_nombre;
-    private $_data;
-
     static public $padre;
-    private $_DIRECTORIOS = [
-
-        'jida' => 'Jadmin',
-        'app'  => ''
-    ];
-
     static public $directorio;
 
     function __construct ($padre) {
@@ -61,25 +52,28 @@ class Vista {
 
     }
 
-    function obtener () {
+    function obtener ($plantilla = "") {
 
         $padre = self::$padre;
         $controlador = $padre::$controlador;
 
-        $directorio = Estructura::$directorio;
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $vista = $directorio . "/" . $vista;
+        $modulo = Estructura::$modulo;
+        $modulo = (!$modulo && Estructura::$jadmin) ? "jadmin" : "index";
+
+        $vista = Estructura::$rutaModulo . "/Vistas/$modulo/$vista";
 
         if (strpos($vista, '.php') === false) {
             $vista .= ".php";
-        };
+        }
 
         if (!file_exists($vista)) {
             throw new Excepcion('L1a vista solicitada no existe: ' . $vista, $this->_ce . '1');
         }
 
-        return $vista;
+        return $this->_obtenerContenido($vista);
     }
+
 }

@@ -11,7 +11,6 @@
 namespace Jida\Render;
 
 use Exception as Excepcion;
-use Jida\Helpers as Helpers;
 
 class Selector {
 
@@ -444,12 +443,16 @@ class Selector {
                 ++$i;
             }
         }
-        if ((is_array($this->data) or is_object($this->data)) and count($this->data) > 0) {
+
+        if ((is_array($this->data) or (is_object($this->data) and $this->data instanceof \Countable))
+            and count($this->data) > 0) {
 
             foreach ($this->data as $data => $value) {
 
-                if ($i > 0) $atribs .= " ";
-                if (is_array($value)) $value = json_encode($value);
+                if ($i > 0)
+                    $atribs .= " ";
+                if (is_array($value))
+                    $value = json_encode($value);
 
                 $atribs .= "data-" . $data . "='" . $value . "'";
 

@@ -37,6 +37,7 @@ class Config {
      * @var $modulos
      * @access protected
      */
+    //TODO: Crear propiedad privada y generar metodo getter
     public static $modulos = [];
 
     /**
@@ -45,7 +46,7 @@ class Config {
      * @var $mensajes
      * @access protected
      */
-    var $mensajes = [];
+    public $mensajes = [];
 
     /**
      * Variable para definicion de los idiomas dentro de la aplicación
@@ -53,7 +54,7 @@ class Config {
      * @var $idiomas
      * @access protected
      */
-    var $idiomas = ['es'];
+    public $idiomas = ['es'];
 
     /**
      * Variable para definicion del tema a utilizar dentro de la aplicación
@@ -61,9 +62,9 @@ class Config {
      * @var $tema
      * @access protected
      */
-    var $tema = 'default';
+    public $tema = 'default';
 
-    var $temaJadmin = 'jadmin';
+    public $temaJadmin = 'jadmin';
 
     /**
      * Variable para definicion del logo dentro de la aplicación
@@ -71,7 +72,7 @@ class Config {
      * @var $logo
      * @access protected
      */
-    var $logo;
+    public $logo;
 
     private static $instancia;
 

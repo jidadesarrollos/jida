@@ -1,6 +1,7 @@
 <?php
 /*
  * Codigo de Error: 2
+ * TODO: Repasar definicion de propiedades directorios y rutas.
  */
 
 namespace Jida\Manager;
@@ -51,11 +52,17 @@ class Estructura {
 
     static public $namespace;
     static public $ruta;
+    static public $rutaJida;
     static public $modulo;
     static public $controlador;
     static public $metodo;
     static public $jadmin;
+    static public $rutaModulo;
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     static private function _obtenerDirectorio () {
 
         $actual = explode(DS, __DIR__);
@@ -70,9 +77,10 @@ class Estructura {
 
         $inverso = array_reverse($actual);
         $posicion = array_search($carpeta, $inverso) + 1;
+
         $parte = array_splice($inverso, $posicion);
         $directorio = implode("/", array_reverse($parte));
-
+        self::$rutaJida = $directorio . DS . $carpeta;
         self::$directorio = $directorio;
 
         return $directorio;
@@ -157,7 +165,6 @@ class Estructura {
     static public function definir (Arranque $arranque) {
 
         self::$ruta = $arranque::$ruta;
-        self::$namespace = $arranque::$metodo;
         self::$modulo = $arranque::$modulo;
         self::$controlador = $arranque::$controlador;
         self::$metodo = $arranque::$metodo;

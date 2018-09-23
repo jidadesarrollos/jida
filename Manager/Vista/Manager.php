@@ -3,6 +3,7 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
+use Jida\Manager\Estructura;
 
 class Manager {
 
@@ -56,7 +57,7 @@ class Manager {
         $this->_procesarData();
         $padre = self::$Padre;
 
-        $this->_namespace = $padre::$namespace;
+        $this->_namespace = Estructura::$namespace;
         $this->_modulo = $padre::$modulo;
         $this->_layout = new Layout($this);
 
@@ -68,17 +69,12 @@ class Manager {
 
     function renderizar () {
 
-        $data = Data::obtener();
         $plantilla = $this->_data->obtPlantilla();
 
         $vista = $this->vista();
-        $archivoVista = (!!$plantilla) ? $vista->rutaPlantilla($plantilla) : $vista->obtener();
+        $contenido = $vista->obtener($plantilla);
 
-        $salida = $this->_layout
-            ->leer()
-            ->render($archivoVista);
-
-        echo $salida;
+        $this->_layout->render($contenido);
 
     }
 

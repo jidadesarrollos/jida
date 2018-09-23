@@ -55,8 +55,8 @@ class Jadmin extends JController {
 
         if (isset($_GET['file'])) {
 
-            if (file_exists(DIR_FRAMEWORK . 'json/validaciones.json')) {
-                $data = file_get_contents(DIR_FRAMEWORK . 'json/validaciones.json');
+            if (file_exists(DIR_FRAMEWORK .  DS . 'json/validaciones.json')) {
+                $data = file_get_contents(DIR_FRAMEWORK . DS . 'json/validaciones.json');
                 respuestaAjax($data);
             }
             else {

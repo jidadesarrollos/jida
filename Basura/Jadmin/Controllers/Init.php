@@ -386,17 +386,17 @@ class Init extends JController {
 
     private function agregarLayout () {
 
-        if (!Helpers\Directorios::validar(DIR_APP . "Layout"))
-            Helpers\Directorios::crear(DIR_APP . "Layout");
-        copy(DIR_FRAMEWORK . "Layout/jadminIntro.tpl.php", DIR_APP . "Layout/default.tpl.php");
+        if (!Helpers\Directorios::validar(DIR_APP . DS . "Layout"))
+            Helpers\Directorios::crear(DIR_APP . DS . "Layout");
+        copy(DIR_FRAMEWORK . DS . "Layout/jadminIntro.tpl.php", DIR_APP . DS . "Layout/default.tpl.php");
 
         return $this;
     }
 
     private function copiarHtdocs () {
 
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/js/", HTDOCS_DIR . "js/jida/");
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . "htdocs/css/", HTDOCS_DIR . "css/jida/");
+        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/js/", HTDOCS_DIR . "js/jida/");
+        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/css/", HTDOCS_DIR . "css/jida/");
 
         return $this;
     }
