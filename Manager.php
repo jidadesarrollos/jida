@@ -1,11 +1,10 @@
 <?php
 /**
- * ce = 1;
+ * ce = 2;
  */
 
 namespace Jida;
 
-use Jida\Config\Base;
 use Jida\Configuracion as Conf;
 use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura;
@@ -35,11 +34,12 @@ class Manager {
 
             $this->ruta = $ruta;
 
-            Base::constantes();
+            Conf\Base::constantes();
 
             self::$configuracion = Conf\Config::obtener();
+
             Estructura::procesar($ruta);
-            Base::path();
+            Conf\Base::path();
 
             $this->_validador = new Validador();
             $this->_lector = new Lector($this);
@@ -49,7 +49,6 @@ class Manager {
             exit("capturada excepcion");
         }
         catch (\Error $e) {
-            exit("capturado error");
 
         }
 
@@ -62,10 +61,15 @@ class Manager {
             $this->_tiempoInicio = microtime(true);
 
             $config = self::$configuracion;
+            if (!$config) {
+                $msj = "No se consigue el objeto de configuración";
+                throw new \Exception($msj, $this->_ce . 2);
+            }
 
             date_default_timezone_set($config::ZONA_HORARIA);
-            $_SERVER = array_merge($_SERVER, getallheaders());
             Helpers\Sesion::iniciar();
+
+            $_SERVER = array_merge($_SERVER, getallheaders());
 
             if ($this->_validador->inicio()) {
                 $this->_lector->validar();

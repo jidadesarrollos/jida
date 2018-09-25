@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Config;
+namespace Jida\Configuracion;
 
 class Base {
 

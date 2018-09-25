@@ -12,19 +12,25 @@
 namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
+use Jida\Configuracion\Config;
 use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura as Estructura;
 
 class Vista {
 
-    use Archivo;
-    private $_ce = 10009;
+    use Archivo, Render;
+
+    static private $_ce = 10009;
     static public $padre;
     static public $directorio;
+
+    private $_tema;
 
     function __construct ($padre) {
 
         self::$padre = $padre;
+        $conf = Config::obtener();
+        $this->_tema = $conf->tema;
 
     }
 

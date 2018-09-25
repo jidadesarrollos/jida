@@ -1,6 +1,6 @@
 <?php
 /**
- * Codigo de error 3
+ * Codigo de error 4
  */
 
 namespace Jida\Manager\Vista;
@@ -35,6 +35,8 @@ class Layout {
     public $data;
 
     static public $directorio;
+    private $_tema;
+
     private static $instancia;
 
     public function __construct ($padre = "") {
@@ -56,6 +58,7 @@ class Layout {
 
         $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
 
+        $this->_tema = $tema;
         $path = Estructura::$directorio;
         /**
          * @var object $controlador
