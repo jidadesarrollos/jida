@@ -1,0 +1,34 @@
+{
+  "nombre": "Jadmin",
+  "id": "step1",
+  "class": "nav nav-aside menu short-menu",
+  "items": {
+    "dashboard": {
+      "id": "dashboard",
+      "class": "li-parent",
+      "label": "<span class=\"fa fa-tachometer\"></span> <span>Dashboard</span>",
+      "url": "#",
+      "encode_html": false,
+      "submenu": {
+        "id": "",
+        "class": "",
+        "items": {
+          "submenu-1": {
+            "id": "submenu-1",
+            "class": "",
+            "label": "<span class=\"fa fa-cog\"></span> <span class=\"inner-text\">Sub-menu 1</span>",
+            "url": "/jadmin/#",
+            "encode_html": false
+          }
+        }
+      }
+    },
+    "logout": {
+      "id": "logout",
+      "class": "li-parent",
+      "label": "<span class=\"fa fa-power-off\"></span> <span>Cerrar sesion</span>",
+      "url": "/jadmin/users/cierresesion/",
+      "encode_html": false
+    }
+  }
+}
