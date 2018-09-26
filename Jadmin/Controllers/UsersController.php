@@ -2,10 +2,9 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use Jida\Core\UsuarioManager as UsuarioManager;
 use Jida\Helpers as Helpers;
 use Jida\Render as Render;
-use Jida\Modelos as Modelos;
-use Jida\Core\UsuarioManager as UsuarioManager;
 
 class UsersController extends JController {
 
@@ -32,7 +31,7 @@ class UsersController extends JController {
     function cambioClave() {
 
         $this->dv->usarPlantilla('form');
-        $form = new Render\Formulario('CambioClave');
+        $form = new Render\Formulario('jida/CambioClave');
 
         $form->titulo("Cambio de Clave");
         $form->boton('principal', 'Cambiar Clave');
@@ -75,8 +74,8 @@ class UsersController extends JController {
         }
 
         $this->data([
-            'form' => $form->render()
-        ]);
+                        'form' => $form->render()
+                    ]);
     }
 
     function index() {
@@ -88,14 +87,17 @@ class UsersController extends JController {
     }
 
     function setUsuario($idUser = '') {
+
         $this->_setUsuario($idUser);
     }
 
     function asociarPerfiles($idUser = '') {
+
         $this->_asociarPerfiles($idUser);
     }
 
     function cierresesion($url = '') {
+
         $this->_cierresesion($url);
     }
 

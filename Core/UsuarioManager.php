@@ -8,10 +8,10 @@
 
 namespace Jida\Core;
 
-use Jida\Render as Render;
+use Jida\Helpers as Helpers;
+use Jida\Helpers\Debug as Debug;
 use Jida\Modelos as Modelos;
-use \Jida\Helpers as Helpers;
-use \Jida\Helpers\Debug as Debug;
+use Jida\Render as Render;
 
 trait UsuarioManager {
 
@@ -114,8 +114,8 @@ trait UsuarioManager {
 
         $metodo = (empty($metodo)) ? 'set-usuario' : $metodo;
 
-        $form = new Render\Formulario('RegistroUsuarios', $campoUpdate);
-        $formPerfiles = new Render\Formulario('PerfilesAUsuario', $campoUpdate);
+        $form = new Render\Formulario('jida/RegistroUsuarios', $campoUpdate);
+        $formPerfiles = new Render\Formulario('jida/PerfilesAUsuario', $campoUpdate);
 
         $retorno = ['guardado' => '', 'form' => '', 'formPerfiles' => ''];
 
@@ -180,7 +180,7 @@ trait UsuarioManager {
     protected function _asociarPerfiles($user = '') {
 
         if (!empty($user)) {
-            $form = new Render\Formulario('PerfilesAUsuario', $user);
+            $form = new Render\Formulario('jida/PerfilesAUsuario', $user);
             $user = new Modelos\User($user);
 
             $form->action = $this->url . "asociar-perfiles";
@@ -222,7 +222,7 @@ trait UsuarioManager {
      */
     protected function formAsignacionPerfiles($campoUpdate = "", $perfiles = "") {
 
-        $form = new Render\Formulario('PerfilesAUsuario', $campoUpdate);
+        $form = new Render\Formulario('jida/PerfilesAUsuario', $campoUpdate);
 
         $form->valueBotonForm = 'Asignar Perfiles';
         $form->action = $this->urlController() . 'asociar-perfiles';
@@ -331,7 +331,7 @@ trait UsuarioManager {
                 $form = Helpers\Sesion::get('FormLoggin');
 
             } else {
-                $form = new Render\Formulario('Login', null);
+                $form = new Render\Formulario('jida/Login', null);
                 $form->titulo('Iniciar Sesi&oacute;n');
                 // $form->boton('_labelBotonEnvio','Iniciar Sesi&oacute;n');
             }
@@ -350,7 +350,7 @@ trait UsuarioManager {
      */
     protected function formCambioContrasenia($idUser = '') {
 
-        $form = new Render\Formulario('CambioClave', $idUser);
+        $form = new Render\Formulario('jida/CambioClave', $idUser);
 
         return $form;
     }
