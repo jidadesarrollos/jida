@@ -12,15 +12,14 @@
 //_-----------------------------------------
 namespace Jida\Core\Manager;
 
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Debug as Debug;
-use Jida\Core\Manager\ACL as ACL;
-use ReflectionClass;
-//use Jida\Core\ExcepcionController as Excepcion;
 use Exception as Excepcion;
-use Jida\Core\Manager\JExcepcion as JExcepcion;
-use App as App;
 use Jida as Jida;
+use Jida\Core\Manager\ACL as ACL;
+use Jida\Core\Manager\JExcepcion as JExcepcion;
+use Jida\Helpers as Helpers;
+use ReflectionClass;
+
+//use Jida\Core\ExcepcionController as Excepcion;
 
 //_-----------------------------------------
 global $JD;
@@ -204,7 +203,10 @@ class JidaController {
              */
 
             Helpers\Sesion::destruir('__formValidacion');
-            $_SERVER = array_merge($_SERVER, getallheaders());
+
+            if (function_exists('getallheaders')) {
+                $_SERVER = array_merge($_SERVER, getallheaders());
+            }
 
             $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
 
