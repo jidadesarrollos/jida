@@ -167,15 +167,15 @@ function processUrl(key, value) {
 
     });
 
-    $linkToggle.on('click', function (e) {
-
-        e.preventDefault();
-
-        setLinkMenuClass($linkToggle);
-        band = (dataMenu.showMenu === true) ? false : true;
-        toggleMenu(band);
-
-    });
+    // $linkToggle.on('click', function (e) {
+    //
+    //     e.preventDefault();
+    //
+    //     setLinkMenuClass($linkToggle);
+    //     band = (dataMenu.showMenu === true) ? false : true;
+    //     toggleMenu(band);
+    //
+    // });
 
     $("body").tooltip({
         selector: '[data-toggle="tooltip"]',
