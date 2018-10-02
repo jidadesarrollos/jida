@@ -415,7 +415,7 @@ class Selector {
 
         $atribs = "";
         $i = 0;
-        if ((is_array($this->attr) or is_object($this->attr)) and count($this->attr) > 0) {
+        if ((is_array($this->attr) or is_object($this->attr) or $this->attr instanceof \Countable) and count($this->attr) > 0) {
 
             foreach ($this->attr as $attr => $value) {
                 $atribs .= " ";
