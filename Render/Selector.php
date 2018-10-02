@@ -11,7 +11,6 @@
 namespace Jida\Render;
 
 use Exception as Excepcion;
-use Jida\Helpers as Helpers;
 
 class Selector {
 
@@ -135,7 +134,7 @@ class Selector {
      */
     private function getElementosData() {
 
-        if (count($this->data) > 0) {
+        if ((is_array($this->data) or is_object($this->data)) and count($this->data) > 0) {
 
             if ($this->selector == 'TABLE') {
                 #Debug::mostrarArray($this->data);
@@ -157,7 +156,7 @@ class Selector {
      */
     private function getAttr() {
 
-        if (count($this->attr) > 0) {
+        if ((is_array($this->attr) or is_object($this->attr)) and count($this->attr) > 0) {
             foreach ($this->attr as $key => $value) {
                 $this->selectorCreado .= " $key=\"$value\"";
             }
@@ -407,7 +406,7 @@ class Selector {
 
         $atribs = "";
         $i = 0;
-        if (count($this->attr) > 0) {
+        if ((is_array($this->attr) or is_object($this->attr)) and count($this->attr) > 0) {
 
             foreach ($this->attr as $attr => $value) {
                 $atribs .= " ";
@@ -426,7 +425,7 @@ class Selector {
                 ++$i;
             }
         }
-        if (count($this->data) > 0) {
+        if ((is_array($this->data) or is_object($this->data)) and count($this->data) > 0) {
             foreach ($this->data as $data => $value) {
                 if ($i > 0) $atribs .= " ";
                 if (is_array($value)) $value = json_encode($value);
