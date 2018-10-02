@@ -425,7 +425,7 @@ class Selector {
                 ++$i;
             }
         }
-        if ($this->data and count($this->data) > 0) {
+        if (null !== $this->data and count($this->data) > 0) {
             foreach ($this->data as $data => $value) {
                 if ($i > 0) $atribs .= " ";
                 if (is_array($value)) $value = json_encode($value);
