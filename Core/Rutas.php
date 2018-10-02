@@ -69,7 +69,7 @@ class Rutas {
 
         $menu = array_shift($this->_solicitud);
         $this->_rutaAbsoluta = DIR_APP . 'Menus' . DS . $menu;
-        #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $menu;
+        #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Menus' . DS . $menu;
 
     }
 
