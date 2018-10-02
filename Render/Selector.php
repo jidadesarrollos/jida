@@ -415,7 +415,7 @@ class Selector {
 
         $atribs = "";
         $i = 0;
-        if ((is_array($this->attr) or is_object($this->attr) or $this->attr instanceof \Countable) and count($this->attr) > 0) {
+        if ((is_array($this->attr) or is_object($this->attr)) and count($this->attr) > 0) {
 
             foreach ($this->attr as $attr => $value) {
                 $atribs .= " ";
@@ -435,7 +435,8 @@ class Selector {
                 ++$i;
             }
         }
-        if ((is_array($this->data) or is_object($this->data) or $this->data instanceof \Countable) and count($this->data) > 0) {
+        if ((is_array($this->attr) or (is_object($this->attr) and $this->attr instanceof \Countable))
+            and count($this->attr) > 0) {
             foreach ($this->data as $data => $value) {
                 if ($i > 0)
                     $atribs .= " ";
