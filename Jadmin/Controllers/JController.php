@@ -10,25 +10,25 @@
 
 namespace Jida\Jadmin\Controllers;
 
-use Jida\Componentes;
-use Jida\Core as Core;
 use Jida\Componentes\Traductor as Traductor;
+use Jida\Core as Core;
 use Jida\Helpers as Helpers;
-use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Render as Render;
+use Jida\RenderHTML\Formulario as Formulario;
 
 class   JController extends Core\Controller {
 
     protected $urlHtdocs;
 
     var $idioma = 'es';
-    var $manejoParams = FALSE;
+    var $title = NOMBRE_APP;
+    var $manejoParams = false;
     var $perfilesAdmin = [
         'JidaAdministrador',
         'Administrador'
     ];
 
-    function __construct() {
+    function __construct () {
 
         parent::__construct();
 
@@ -49,32 +49,33 @@ class   JController extends Core\Controller {
         }
 
         $this->dv->addCss('jida.css');
-        $this->data(['title'     => "JIDAPanel",
+        $this->data(['title'     => $this->title,
                      'traductor' => $this->tr,
                      'usuario'   => $this->usuario
-        ]);
+                    ]);
 
         $this->validarSesion();
     }
 
-    protected function validarSesion() {
+    protected function validarSesion () {
 
         if (Helpers\Sesion::es($this->perfilesAdmin)) {
-            return TRUE;
-        } else {
+            return true;
+        }
+        else {
             $this->formularioInicioSesion();
         }
     }
 
-    protected function formularioInicioSesion() {
+    protected function formularioInicioSesion () {
 
         $form = new Render\Formulario('jida/Login');
         $form->boton('principal')
             ->attr([
-                'value' => 'Iniciar Sesi&oacute;n',
-                'id'    => 'btnJadminLogin',
-                'name'  => 'btnJadminLogin'
-            ]);
+                       'value' => 'Iniciar Sesi&oacute;n',
+                       'id'    => 'btnJadminLogin',
+                       'name'  => 'btnJadminLogin'
+                   ]);
         if ($this->post('btnJadminLogin')) {
 
             $userClass = MODELO_USUARIO;
@@ -84,10 +85,12 @@ class   JController extends Core\Controller {
 
                 $perfiles = $user->getPerfiles();
                 Helpers\Sesion::set('Usuario', $user);
-                Helpers\Sesion::set('__msjInicioSesion', Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
+                Helpers\Sesion::set('__msjInicioSesion',
+                                    Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
 
-                return TRUE;
-            } else {
+                return true;
+            }
+            else {
                 Formulario::msj('error', 'Usuario o clave invalidos');
             }
         }
@@ -106,7 +109,7 @@ class   JController extends Core\Controller {
      * @method definirJSGlobals
      *
      */
-    private function definirJSGlobals() {
+    private function definirJSGlobals () {
 
         if (strtolower($this->_modulo) == 'jadmin') {
             if (!array_key_exists('jadmin', $GLOBALS['_JS'])) {
