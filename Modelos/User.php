@@ -104,7 +104,7 @@ class User extends BD\DataModel {
              'nombre_usuario' => $usuario,
              'validacion'     => 1
             ])->fila();
-        if ($result instanceof \Countable and count($result) > 0) {
+        if (count($result) > 0) {
 
             $this->establecerAtributos($result);
 
