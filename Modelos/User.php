@@ -104,7 +104,7 @@ class User extends BD\DataModel {
              'nombre_usuario' => $usuario,
              'validacion'     => 1
             ])->fila();
-        if (count($result) > 0) {
+        if ($result instanceof \Countable and count($result) > 0) {
 
             $this->establecerAtributos($result);
 
@@ -280,9 +280,9 @@ class User extends BD\DataModel {
         }
 
         return ['idResultado' => $this->resultBD->idResultado(),
-                'ejecutado'  => $this->resultBD->ejecutado(),
-                'unico'      => $this->resultBD->esUnico(),
-                'validacion' => $this->validacion
+                'ejecutado'   => $this->resultBD->ejecutado(),
+                'unico'       => $this->resultBD->esUnico(),
+                'validacion'  => $this->validacion
         ];
     }
 
