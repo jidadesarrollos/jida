@@ -2176,6 +2176,23 @@ class DataModel {
     }
 
     /**
+     * Utiliza la clausula SUM de mysql
+     * @method sumar
+     */
+    function sumar ($campo = '*') {
+
+        if ($campo != '*') {
+            $campo = $this->tablaQuery . '.' . $campo;
+        }
+
+        $this->query = "SELECT  SUM($campo) as total from $this->tablaQuery ";
+        $this->usoWhere = false;
+
+        return $this;
+
+    }
+
+    /**
      * Agrega la condicion para obetener un valor nulo
      * @param $campo
      * @param string $condicion
