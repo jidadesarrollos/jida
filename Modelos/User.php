@@ -104,10 +104,10 @@ class User extends BD\DataModel {
              'nombre_usuario' => $usuario,
              'validacion'     => 1
             ])->fila();
-        if (count($result) > 0) {
+
+        if ((is_array($result) or (is_object($result) and $result instanceof \Countable)) and count($result) > 0) {
 
             $this->establecerAtributos($result);
-
             $this->__obtConsultaInstancia($this->id_usuario);
             $this->obtenerDataRelaciones();
             $this->registrarSesion();
@@ -116,9 +116,11 @@ class User extends BD\DataModel {
             $this->obtenerPerfiles();
 
             return $result;
+
         }
-        else
+        else {
             return false;
+        }
 
     }
 
