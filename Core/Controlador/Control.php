@@ -1,26 +1,33 @@
 <?php
 /**
  * Objecto Controlador Padre
- * ce: 1
+ * ce: 4
  */
 
 namespace Jida\Core\Controlador;
 
 use Jida\Configuracion\Config;
+use Jida\Core\ObjetoManager;
+use Jida\Manager\Vista\Layout;
 
 class Control {
 
-    use \Jida\Core\ObjetoManager;
-    use Inicio, Url, Respuesta, Peticion;
+    use ObjetoManager, Inicio, Url, Respuesta, Peticion;
+    use Getter;
 
     public $multiidioma;
     public $titulo;
     protected $vista;
     protected $helpers = [];
 
+    /**
+     * @var Layout Objeto layout instanciado
+     */
+    protected $Layout;
     protected $modelos = [];
     protected $modelo;
     protected $usuario;
+    protected $dv;
 
     private $post;
 
@@ -42,6 +49,8 @@ class Control {
      * @method layout
      *
      * @since 1.4
+     * @param string $layout
+     * @return string
      */
     public function layout ($layout = "") {
 

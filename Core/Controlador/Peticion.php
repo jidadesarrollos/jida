@@ -21,17 +21,22 @@ Trait Peticion {
 
     }
 
-    protected function post ($propiedad, $valor = "") {
+    protected function post ($propiedad = "", $valor = "") {
 
         if ($valor) {
             $this->_post[$propiedad] = $valor;
         }
 
-        if (!array_key_exists($propiedad, $this->_post)) {
-            return;
+        if (!empty($propiedad)) {
+
+            if (!array_key_exists($propiedad, $this->_post)) {
+                return;
+            }
+
+            return $this->_post[$propiedad];
         }
 
-        return $this->_post[$propiedad];
+        return $this->_post;
 
     }
 

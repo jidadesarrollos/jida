@@ -12,9 +12,7 @@ use App\Config\Configuracion;
 use Jida\Componentes\Correo;
 use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
-use Jida\Helpers\Debug;
 use Jida\Helpers\Directorios;
-use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Layout;
 
@@ -128,7 +126,6 @@ class Excepcion {
         Data::inicializar($data);
         echo $layout->render($vista);
 
-
     }
 
     private function _enviarEmail () {
@@ -138,8 +135,9 @@ class Excepcion {
 
         $correo = new Correo();
         $correo->plantilla("error");
-        $correo->data(['aplicacion'    => Configuracion::NOMBRE_APP,
-                       'detalle_error' => $detalle_error
+        $correo->data([
+            'aplicacion'    => Configuracion::NOMBRE_APP,
+            'detalle_error' => $detalle_error
                       ]);
         $correo->enviar($destinatario, "Error generado en " . Configuracion::NOMBRE_APP);
 
@@ -147,5 +145,10 @@ class Excepcion {
 
     }
 
+    public static function procesar ($msj, $codigo) {
+
+        throw new \Exception($msj, $codigo);
+
+    }
 
 }

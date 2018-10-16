@@ -5,6 +5,8 @@
 
 namespace Jida\Core\Controlador;
 
+use Jida\Manager\Excepcion;
+
 Trait Respuesta {
 
     /**
@@ -32,7 +34,8 @@ Trait Respuesta {
      */
     protected function _404 () {
 
-        throw new \Exception("No se consigue el enlace solicitado", 404);
+        $msj = "No se consigue el enlace solicitado";
+        Excepcion::procesar($msj, 404);
 
     }
 }

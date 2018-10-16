@@ -3,16 +3,16 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
-use Jida\Helpers\Debug;
+use Jida\Manager\Vista\Data\Meta;
+use Jida\Manager\Vista\Data\Plantilla;
 
 class Data {
 
-    use ObjetoManager;
+    use ObjetoManager, Plantilla, Meta;
     private static $data;
     private static $instancia;
 
-
-    private function __construct ($data) {
+    function __construct ($data) {
 
         if (is_object($data)) {
             $this->copiarAtributos($data);
@@ -38,8 +38,8 @@ class Data {
 
     /**
      * @return Object Retorna la instancia de un objeto Data
-     * @see Jida\Manager\Vista\Data
-     * 
+     * @see \Jida\Manager\Vista
+     *
      */
     static function obtener () {
 

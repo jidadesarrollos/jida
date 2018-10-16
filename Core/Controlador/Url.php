@@ -3,12 +3,14 @@
 namespace Jida\Core\Controlador;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 
 Trait Url {
 
     /**
      * Realizar una redireccion
      * @method redireccionar
+     * @param $url
      */
     protected function redireccionar ($url) {
 
@@ -28,7 +30,7 @@ Trait Url {
         if ($this->multiidioma) {
 
             $idioma = (empty($this->idioma)) ? "" : $this->idioma . "/";
-            $url . "/" . $idioma;
+            $url = "$url/$idioma";
 
         }
 
@@ -40,18 +42,20 @@ Trait Url {
      * Devuelve la estructura de la url solicitada
      * @method obtUrl
      *
-     * @param string $metodo Nombre del metodo o ruta a solicitar url
-     * @param string $data parametros pasados a la funcion
+     * @param null $ruta
+     * @param array $data parametros pasados a la funcion
+     * @return string $url
+     * @throws \Exception
      * @example  obtUrl('controlador/metodo', ['p1'=> $valor])
      *
-     * @return string $url
      */
     protected function obtUrl ($ruta = null, $data = []) {
 
         $url = Estructura::$url;
 
         if (!is_string($ruta)) {
-            throw new \Exception("El valor de url pasado no es valido", self::_ce . 1);
+            $msj = "El valor de url pasado no es valido";
+            Excepcion::procesar($msj, self::$_ce . 1);
         }
 
         $url .= "/$ruta";

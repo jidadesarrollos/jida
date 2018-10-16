@@ -1160,6 +1160,7 @@ class DataModel {
      *
      *
      */
+
     function filtro ($arrayFiltro = [], $arrayOr = []) {
 
         $this->where();

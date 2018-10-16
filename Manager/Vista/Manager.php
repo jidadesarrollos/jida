@@ -69,7 +69,7 @@ class Manager {
 
     function renderizar () {
 
-        $plantilla = $this->_data->obtPlantilla();
+        $plantilla = $this->_data->plantilla();
 
         $vista = $this->vista();
         $contenido = $vista->obtener($plantilla);
@@ -88,4 +88,11 @@ class Manager {
 
     }
 
+    function __get ($propiedad) {
+
+        if ($propiedad == 'data') {
+            return $this->_data;
+        }
+
+    }
 }

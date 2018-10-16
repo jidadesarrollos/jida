@@ -4,6 +4,7 @@ namespace Jida\Manager\Vista;
 
 use Jida\Helpers\Directorios;
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 
 Trait Archivo {
 
@@ -11,14 +12,15 @@ Trait Archivo {
      * Obtiene el contenido de un archivo ya parseado y lo retorna en una variable
      *
      * @param $archivo
+     * @param array $datos
      * @return string
      * @throws \Exception
      */
     private function _obtenerContenido ($archivo, $datos = []) {
 
         if (!Directorios::validar($archivo)) {
-            $msj = "No existe el archivo pasado para obtener contenido";
-            throw new \Exception($msj, self::_ce . 11);
+            $msj = 'No existe el archivo pasado para obtener contenido';
+            Excepcion::procesar($msj, self::$_ce . 11);
         }
         extract($datos);
         ob_start();
@@ -37,6 +39,10 @@ Trait Archivo {
     /**
      * Permite incluir objetos media
      * @deprecated
+     * @param $folder
+     * @param $item
+     * @param bool $tema
+     * @return string
      */
     function media ($folder, $item, $tema = true) {
 
@@ -50,15 +56,19 @@ Trait Archivo {
      * @params string $item nombre del archivo
      * @params boolean $tema Determina si el archivo debe buscarse en el contenido
      * de un tema o en el contenido general.
-     *
+     * @param $folder
+     * @param $item
+     * @param bool $tema
+     * @return string
      */
 
     function htdocs ($folder, $item, $tema = true) {
 
         $path = Estructura::$urlRuta;
         $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
-        if ($tema)
+        if ($tema) {
             return $url;
+        }
 
         return $path . "htdocs/" . $folder . '/' . $item;
     }

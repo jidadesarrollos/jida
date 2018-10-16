@@ -4,14 +4,15 @@ namespace Jida\Jadmin\Controllers;
 
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
-use Jida\Render as Render;
 use Jida\Helpers as Helpers;
+use Jida\Render as Render;
 
 class JControl extends Controlador {
 
     function __construct () {
 
         parent::__construct();
+        $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
 
     }

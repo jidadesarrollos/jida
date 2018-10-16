@@ -76,7 +76,7 @@ class Manager {
             }
             else {
                 $msj = "La aplicación no se encuentra configurada de forma correcta";
-                throw new \Exception($msj, $this->_ce . 1);
+                Excepcion::procesar($msj, $this->_ce . 1);
             }
 
             $this->_tiempoFin = microtime(true);

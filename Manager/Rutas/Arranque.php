@@ -4,6 +4,8 @@
  *
  *  Ejecuta el procesaodor para identificar la petición solicitada. Instancia al controlador y ejecuta el metodo
  * pedido. Posteriormente realiza el llamado al objeto pagina para realizar la renderización.
+ *
+ * $_ce 1
  */
 
 namespace Jida\Manager\Rutas;
@@ -12,11 +14,13 @@ use Jida\Configuracion\Config;
 use Jida\Core\Manager as Core;
 use Jida\Helpers as Helpers;
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
+use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Manager as ManagerVista;
 
 class Arranque {
 
-    // private static $_ce = 10002;
+    private static $_ce = 10002;
     private $_arrayUrl;
     public $procesador;
     /**
@@ -126,12 +130,17 @@ class Arranque {
 
     }
 
-    Static function obtenerControlador ($controlador) {
+    public static function obtenerControlador ($controlador) {
 
         if (!self::$Controlador or $controlador != self::$controlador) {
             self::$controlador = str_replace("Controller", "", $controlador);
 
             $objeto = Estructura::$namespace . $controlador;
+
+            if (!class_exists($objeto)) {
+
+                Excepcion::procesar("El controlador solicitado no existe", self::$_ce . 1);
+            }
 
             self::$Controlador = new $objeto();
         }
@@ -143,9 +152,9 @@ class Arranque {
     public function ejecutar () {
 
         try {
-            if ($this->_validar()) {
+            $controlador = self::obtenerControlador(self::$controlador);
 
-                $controlador = self::obtenerControlador(self::$controlador);
+            if ($this->_validar()) {
 
                 $this->_pipeLines($controlador, '_jdPre');
 
@@ -165,18 +174,10 @@ class Arranque {
             }
         }
         catch (\Exception $e) {
-            Helpers\Debug::imprimir([
-                                        "capturada excepcion en arranque",
-                                        $e
-                                    ],
-                                    ['corte' => true]);
+            Helpers\Debug::imprimir(["capturada excepcion en arranque", $e], true);
         }
         catch (\Error $e) {
-            Helpers\Debug::imprimir([
-                                        "capturado error en arranque",
-                                        $e
-                                    ],
-                                    ['corte' => true]);
+            Helpers\Debug::imprimir(["capturado error en arranque", $e], true);
         }
 
     }
@@ -184,9 +185,22 @@ class Arranque {
     private function _validar () {
 
         Estructura::definir($this);
-        $dataVista = new Core\DataVista(self::$modulo, self::$controlador, self::$metodo, $this->jadmin);
-        $GLOBALS['dataVista'] = $dataVista;
-        $this->_dataVista = $dataVista;
+
+        $ctrl = Estructura::$namespace . self::$controlador;
+        $ctrl = new $ctrl();
+        $ControlPadre = 'Jida\Core\Controlador\Control';
+        $esData = (self::$Controlador instanceof $ControlPadre);
+
+        if (!$esData) {
+            $dataVista = new Core\DataVista(self::$modulo, self::$controlador, self::$metodo, $this->jadmin);
+            $GLOBALS['dataVista'] = $dataVista;
+            $this->_dataVista = $dataVista;
+        }
+        else {
+            $data = Data::obtener();
+            $GLOBALS['dataVista'] = $data;
+            $this->_dataVista = $data;
+        }
 
         return true;
     }

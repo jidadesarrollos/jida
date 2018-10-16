@@ -25,12 +25,15 @@ class Vista {
     static public $directorio;
 
     private $_tema;
+    private $_data;
 
     function __construct ($padre) {
 
         self::$padre = $padre;
         $conf = Config::obtener();
         $this->_tema = $conf->tema;
+
+        $this->_data = $padre->data;
 
     }
 

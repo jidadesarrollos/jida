@@ -28,12 +28,15 @@ Trait Render {
         if (!property_exists($this, $propiedad)) {
 
             $configuracion = Config::obtener();
-            if (!property_exists($configuracion, $propiedad)) {
-                $msj = "La propiedad pedida no existe: " . $propiedad;
-                throw new \Exception($msj, self::$_ce . 4);
+            if (property_exists($this->_data, $propiedad)) {
+                return $this->_data->{$propiedad};
+            }
+            if (property_exists($configuracion, $propiedad)) {
+                return $configuracion::$propiedad;
             }
 
-            return $configuracion::$propiedad;
+            $msj = "La propiedad pedida no existe: " . $propiedad;
+            throw new \Exception($msj, self::$_ce . 4);
 
         }
 

@@ -2,6 +2,8 @@
 
 namespace Jida\Core\Controlador;
 
+use Jida\Manager\Vista\Data;
+
 Trait Inicio {
 
     protected $_clase;
@@ -22,7 +24,7 @@ Trait Inicio {
         $clase = array_pop($partes);
         $this->_clase = $clase;
         $this->_namespace = implode("\\", $partes);
-        $this->_data = new Data();
+        $this->_data = Data::inicializar(null);
 
     }
 }
