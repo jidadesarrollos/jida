@@ -21,10 +21,8 @@ class Manager {
 
     /*Tiempos*/
     private $_tiempoInicio;
-
     private $_tiempoFin;
-
-    static $configuracion;
+    public static $configuracion;
 
     private $ruta;
 

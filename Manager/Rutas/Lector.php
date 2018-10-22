@@ -69,7 +69,7 @@ class Lector {
 
     private function _verificarEstructura () {
 
-        if (array_key_exists('url', $this->_get)) {
+        if (isset($this->_get['url'])) {
             unset($this->_get['url']);
         }
 
