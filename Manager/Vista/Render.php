@@ -11,6 +11,7 @@ Trait Render {
      *
      * Toma la url relativa
      */
+
     private function incluir () {
 
     }
