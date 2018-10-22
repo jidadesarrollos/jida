@@ -7,6 +7,7 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
+use Jida\Helpers\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Layout\Procesador;
 
@@ -101,7 +102,10 @@ class Layout {
             $config = Config::obtener();
             self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Layout/';
             $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
-            $directorio = ($tema === 'jadmin') ? $dirJida : $this->_DIRECTORIOS['app'];
+
+            $directorio = ($tema === 'jadmin' || Directorios::validar($dirJida . $tema))
+                ? $dirJida
+                : $this->_DIRECTORIOS['app'];
         }
 
         self::$directorio = $path . DS . $directorio;
@@ -125,6 +129,7 @@ class Layout {
     private function _configuracion () {
 
         $archivoConfiguracion = self::$_path . "tema.json";
+
         if (!file_exists($archivoConfiguracion)) {
             $msj = "No se consigue el archivo de configuracion del tema $this->_tema";
             \Jida\Manager\Excepcion::procesar($msj, self::$_ce . 5);
