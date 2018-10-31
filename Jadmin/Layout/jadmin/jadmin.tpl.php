@@ -156,7 +156,6 @@
 <!-- Custom scripts for all pages-->
 <script src="Framework/Jadmin/Layout/jadmin/htdocs/js/jadmin.js"></script>
 
->>>>>>> rosmy-layout
 </body>
 
 </html>
