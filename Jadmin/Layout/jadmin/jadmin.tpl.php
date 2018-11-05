@@ -1,161 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadmin</title>
-
-    <!-- Bootstrap core CSS-->
-    <link href="Framework/Jadmin/Layout/jadmin/htdocs/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom fonts for this template-->
-    <link href="Framework/Jadmin/Layout/jadmin/htdocs/vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
-          type="text/css">
-
-    <!-- Page level plugin CSS-->
-    <link href="Framework/Jadmin/Layout/jadmin/htdocs/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="Framework/Jadmin/Layout/jadmin/htdocs/css/jadmin.css" rel="stylesheet">
-
+    <?= $this->imprimirLibrerias('css') ?>
 </head>
 
-<body id="page-top">
+<body class="adminbody">
 
-<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+<div id="main">
 
-    <a class="navbar-brand mr-1" href="">JIDA Framework</a>
+    <!-- top bar navigation -->
+    <div class="headerbar">
 
-    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Navbar -->
-    <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
-        <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user-circle fa-fw"></i>
+        <!-- LOGO -->
+        <div class="headerbar-left">
+            <a href="<?= \App\Config\Configuracion::URL_BASE ?>/jadmin" class="logo">
+                <span><?= \App\Config\Configuracion::NOMBRE_APP ?></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="jadmin/users/cambio-clave">Cambiar clave</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Salir</a>
-            </div>
-        </li>
-    </ul>
-
-</nav>
-
-<div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="sidebar navbar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link" href="">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Pages</span>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                <h6 class="dropdown-header">Login Screens:</h6>
-                <a class="dropdown-item" href="login.html">Login</a>
-                <a class="dropdown-item" href="register.html">Register</a>
-                <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
-                <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header">Other Pages:</h6>
-                <a class="dropdown-item" href="404.html">404 Page</a>
-                <a class="dropdown-item active" href="blank.html">Blank Page</a>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="charts.html">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="tables.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
-        </li>
-    </ul>
-
-    <div id="content-wrapper">
-
-        <div class="container-fluid">
-
-            <!-- Page Content -->
-            <h1>Panel administrativo</h1>
-            <hr>
-
-            <?= $contenido ?>
-
         </div>
-        <!-- /.container-fluid -->
 
-        <!-- Sticky Footer -->
-        <footer class="sticky-footer">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright © JIDA Framework <?= date('Y') ?></span>
-                </div>
-            </div>
-        </footer>
+        <nav class="navbar-custom">
+
+            <ul class="list-inline float-right mb-0">
+
+                <li class="list-inline-item dropdown notif">
+                    <a class="nav-link dropdown-toggle nav-user" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <img src="Framework/Jadmin/Layout/jadmin/htdocs/images/avatars/admin.png" alt="Profile image"
+                             class="avatar-rounded">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <!-- item-->
+                        <div class="dropdown-item noti-title">
+                            <h5 class="text-overflow">
+                                <small>Hola, [usuario]</small>
+                            </h5>
+                        </div>
+
+                        <!-- item-->
+                        <a href="/jadmin/users/cambio-clave" class="dropdown-item notify-item">
+                            <i class="fa fa-cog"></i> <span>Cambiar clave</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="/jadmin/users/cierresesion" class="dropdown-item notify-item">
+                            <i class="fa fa-power-off"></i> <span>Salir</span>
+                        </a>
+
+                    </div>
+                </li>
+
+            </ul>
+
+            <ul class="list-inline menu-left mb-0">
+                <li class="float-left">
+                    <button class="button-menu-mobile open-left">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+                </li>
+            </ul>
+
+        </nav>
 
     </div>
-    <!-- /.content-wrapper -->
+    <!-- End Navigation -->
 
-</div>
-<!-- /#wrapper -->
+    <!-- Left Sidebar -->
+    <div class="left main-sidebar">
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
+        <div class="sidebar-inner leftscroll">
 
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Desea cerrar sesión?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+            <div id="sidebar-menu">
+
+                <?php
+                $menu = new \Jida\Render\Menu('Jadmin');
+                echo $menu->render();
+                ?>
+
+                <div class="clearfix"></div>
+
             </div>
-            <div class="modal-body">Haga click en cerrar sesión para salir.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" href="/jadmin/users/cierresesion">Cerrar sesión</a>
-            </div>
+
+            <div class="clearfix"></div>
+
         </div>
+
     </div>
+    <!-- End Sidebar -->
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+
+                <?= $contenido ?>
+
+            </div>
+            <!-- END container-fluid -->
+
+        </div>
+        <!-- END content -->
+
+    </div>
+    <!-- END content-page -->
+
+    <footer class="footer">
+        <span class="text-right">
+            Copyright 2018 <a target="_blank" href="#">Jida Desarrollos</a>
+        </span>
+        <span class="float-right">
+            Powered by <a target="_blank" href="http://www.jidadesarrollos.com"><b>Jida Desarrollos</b></a>
+        </span>
+    </footer>
+
 </div>
+<!-- END main -->
 
-<!-- Bootstrap core JavaScript-->
-<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/jquery/jquery.min.js"></script>
-<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="Framework/Jadmin/Layout/jadmin/htdocs/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="Framework/Jadmin/Layout/jadmin/htdocs/js/jadmin.js"></script>
+<?= $this->imprimirLibrerias('js') ?>
 
 </body>
-
 </html>

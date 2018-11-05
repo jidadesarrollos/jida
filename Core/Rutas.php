@@ -108,7 +108,7 @@ class Rutas {
         }
         else {
             $menu = array_shift($this->_solicitud);
-            $this->_rutaAbsoluta = DIR_APP . 'Menus' . DS . $menu;
+            $this->_rutaAbsoluta = DIR_APP . DS . 'Menus' . DS . $menu;
         }
 
     }
