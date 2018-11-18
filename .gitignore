@@ -1,5 +1,8 @@
-/node_modules/
-/vendor/
 .idea
-Jida/
-package-lock.json
+node_modules
+bower_components
+/Aplicacion/Config/BD.php
+/Aplicacion/Config/Configuracion.php
+/Framework
+/vendor
+/error.log

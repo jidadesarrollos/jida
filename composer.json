@@ -1,34 +1,16 @@
 {
-  "name": "jida/framework",
-  "description": "Framework Hmvc para el desarrollo de aplicaciones en entorno web",
-  "type": "Framework",
+  "name": "jida/app",
+  "description": "Plantilla basica para el desarrollo de aplicaciones en entorno web con Jida Framework",
+  "type": "project",
   "license": "mit",
-  "version": "0.6.1",
+  "version": "0.1",
   "authors": [
     {
-      "name": "jrodriguez",
-      "email": "jrodriguez@jidadesarrollos.com"
+      "name": "rrodriguez",
+      "email": "rrodriguez@jidadesarrollos.com"
     }
   ],
   "require": {
-    "phpmailer/phpmailer": "^5.2"
-  },
-  "autoload": {
-    "psr-4": {
-      "Jida\\": [
-        "./"
-      ],
-      "App\\": [
-        "../Aplicacion/"
-      ]
-    }
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "bower install"
-    ],
-    "post-update-cmd": [
-      "bower install"
-    ]
+    "jida/framework": "dev-bootstrap-julio"
   }
 }
