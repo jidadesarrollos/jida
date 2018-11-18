@@ -2,6 +2,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
 use Jida\Helpers as Helpers;
@@ -14,6 +15,17 @@ class JControl extends Controlador {
         parent::__construct();
         $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
+
+        $urlBase = Configuracion::URL_BASE;
+        $nombreApp = Configuracion::NOMBRE_APP;
+
+        $menu = new Render\Menu('Jadmin');
+
+        $this->data([
+                        'menu'      => $menu->render(),
+                        'urlBase'   => $urlBase,
+                        'nombreApp' => $nombreApp
+                    ]);
 
     }
 
