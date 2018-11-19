@@ -8,8 +8,8 @@ namespace Jida\Manager\Vista;
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Directorios;
+use Jida\Medios as Medios;
+use Jida\Medios\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Render\Selector;
 
@@ -322,7 +322,7 @@ class _Render {
 
         $base = URL_BASE;
         $base = (empty($base)) ? "/" : "/" . URL_BASE . '/';
-        $url = explode("/", Helpers\Cadenas::guionCase($idioma, true) . '/' . Helpers\Cadenas::guionCase($url, true));
+        $url = explode("/", Medios\Cadenas::guionCase($idioma, true) . '/' . Medios\Cadenas::guionCase($url, true));
 
         return $base . implode("/", array_filter($url));
 

@@ -15,7 +15,7 @@ if (!defined('IMG_TAM_LG')) define('IMG_TAM_SM', '400');
 if (!defined('IMG_TAM_LG')) define('IMG_TAM_XS', '140');
 
 use Jida\Modelos as Modelos;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render as Render;
 use Jida\Jadmin\Controllers\JController as JController;
 
@@ -55,7 +55,7 @@ class Galeria extends JController {
 
     function cargaForm() {
 
-        // Helpers\Debug::imprimir($_POST,$_FILES,true);
+        // Medios\Debug::imprimir($_POST,$_FILES,true);
     }
 
     function index() {
@@ -78,7 +78,7 @@ class Galeria extends JController {
 
             $anio = date('Y');
             $mes = date('m');
-            $archivo = new Helpers\Imagen('archivoGaleria');
+            $archivo = new Medios\Imagen('archivoGaleria');
             $pathWeb = "/media/$anio/$mes/";
 
             if ($archivo->validarCarga()) {
@@ -87,7 +87,7 @@ class Galeria extends JController {
 
                     $path = HTDOCS_DIR . 'img/media/' . $anio . '/' . $mes;
 
-                    if (!Helpers\Directorios::validar($path)) Helpers\Directorios::crear($path);
+                    if (!Medios\Directorios::validar($path)) Medios\Directorios::crear($path);
 
                     if ($archivo->moverArchivosCargados($path, TRUE)) {
 
@@ -149,10 +149,10 @@ class Galeria extends JController {
 
     protected function _obtFormMedia($id) {
 
-        // \Jida\Helpers\Debug::imprimir('_obtFormMedia',$_GET,$id);
+        // \Jida\Medios\Debug::imprimir('_obtFormMedia',$_GET,$id);
 
         $form = new Render\Formulario('GestionObjetoMedia', $id);
-        Helpers\Sesion::set('objetoMedia', $id);
+        Medios\Sesion::set('objetoMedia', $id);
         $form
             ->boton('principal')
             ->attr([
@@ -163,7 +163,7 @@ class Galeria extends JController {
                 'id'     => $id,
                 'config' => '{"post":"guardarMedia"}'
             ]);
-        Helpers\Sesion::set('_formMedia', $form);
+        Medios\Sesion::set('_formMedia', $form);
 
         return $form;
 
@@ -197,11 +197,11 @@ class Galeria extends JController {
             if ($this->entero($this->get('objeto'))) {
                 $id = $this->get('objeto');
             } else {
-                $id = Helpers\Sesion::obt('objetoMedia');
+                $id = Medios\Sesion::obt('objetoMedia');
             }
 
-            if (Helpers\Sesion::obt('_formMedia') instanceof Render\Formulario) {
-                $form = Helpers\Sesion::obt('_formMedia');
+            if (Medios\Sesion::obt('_formMedia') instanceof Render\Formulario) {
+                $form = Medios\Sesion::obt('_formMedia');
             } else {
                 $form = $this->_obtFormMedia($id);
             }

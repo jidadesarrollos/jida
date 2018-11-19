@@ -9,7 +9,7 @@
 
 namespace Jida\Core\GeneradorCodigo;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class GeneradorController extends GeneradorObjeto {
 
@@ -27,8 +27,8 @@ class GeneradorController extends GeneradorObjeto {
 
         $controller .= $this->saltodeLinea() . $this->cierre();
         $directorio = DIR_APP . $this->modulo . "Controller/";
-        if (!Helpers\Directorios::validar($directorio))
-            Helpers\Directorios::crear($directorio);
+        if (!Medios\Directorios::validar($directorio))
+            Medios\Directorios::crear($directorio);
         $this
             ->crear($directorio . $this->nombreArchivo())
             ->escribir($controller)

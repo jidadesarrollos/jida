@@ -3,7 +3,7 @@
 namespace Jida\Manager\Rutas;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 
 class Lector {
@@ -79,8 +79,8 @@ class Lector {
 
         $urlBase = Estructura::$urlBase;
 
-        $urlActual = $urlBase . Helpers\Sesion::obt('URL_ACTUAL');
-        Helpers\Sesion::set('URL_ACTUAL', $urlActual);
+        $urlActual = $urlBase . Medios\Sesion::obt('URL_ACTUAL');
+        Medios\Sesion::set('URL_ACTUAL', $urlActual);
 
         if (count(Estructura::$partes) > 0) {
             $this->_validarIdioma();

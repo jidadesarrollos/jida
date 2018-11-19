@@ -12,7 +12,7 @@
 namespace Jida\Componentes;
 
 use App\Config as Config;
-use Jida\Helpers\Directorios as Directorios;
+use Jida\Medios\Directorios as Directorios;
 use Jida\Manager\Estructura;
 
 $path = Estructura::path();

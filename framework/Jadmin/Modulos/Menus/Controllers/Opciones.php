@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Modulos\menus\Controllers;
 
 use Exception;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Modelos as Modelos;
 use Jida\Render as Render;
 

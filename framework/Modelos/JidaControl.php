@@ -14,7 +14,7 @@
 
 namespace Jida\Modelos;
 use Jida\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\RenderHTML as RenderHTML;
 use Exception;
 class JidaControl extends BD\DBContainer{

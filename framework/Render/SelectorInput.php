@@ -11,7 +11,7 @@
 namespace Jida\Render;
 
 use Jida\BD\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception as Excepcion;
 
 class SelectorInput extends Selector {
@@ -263,14 +263,14 @@ class SelectorInput extends Selector {
         foreach ($options as $key => $data) {
 
             if ($this->name == 'control') {
-                //Helpers\Debug::imprimir($key, $data);
+                //Medios\Debug::imprimir($key, $data);
             }
 
             if (is_array($data)) {
 
                 $key = array_keys($data);
                 if ($this->name == 'control') {
-                    //Helpers\Debug::imprimir($key, $data);
+                    //Medios\Debug::imprimir($key, $data);
                 }
 
                 $opcion = new Selector('option', ['value' => $data[ $key[0] ]]);

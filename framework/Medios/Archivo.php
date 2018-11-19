@@ -7,9 +7,9 @@
  * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
-use Jida\Helpers\Debug as Debug;
+use Jida\Medios\Debug as Debug;
 use \Exception;
 
 class Archivo {
@@ -123,7 +123,7 @@ class Archivo {
 
         }
         else {
-            #\Jida\Helpers\Debug::imprimir($this->files);
+            #\Jida\Medios\Debug::imprimir($this->files);
             return false;
         }
 

@@ -3,7 +3,7 @@
 namespace Jida\Modelos;
 
 use Jida\BD\DataModel;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class Usuario extends DataModel {
@@ -78,7 +78,7 @@ class Usuario extends DataModel {
         }
 
         if ($validacion === true) {
-            $codigo = hash("sha256", Helpers\FechaHora::timestampUnix() . Helpers\FechaHora::datetime());
+            $codigo = hash("sha256", Medios\FechaHora::timestampUnix() . Medios\FechaHora::datetime());
             $this->validacion = $codigo;
             $this->activo = 0;
         }
@@ -152,8 +152,8 @@ class Usuario extends DataModel {
 
     function iniciarSesion () {
 
-        Helpers\Sesion::sessionLogin();
-        Helpers\Sesion::set('Usuario', $this);
+        Medios\Sesion::sessionLogin();
+        Medios\Sesion::set('Usuario', $this);
 
         return $this;
 

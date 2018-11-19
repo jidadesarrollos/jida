@@ -11,7 +11,7 @@
 namespace Jida\Render\Inputs;
 
 use Jida\BD\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception as Excepcion;
 use Jida\Render\Selector as Selector;
 
@@ -75,7 +75,7 @@ class Select extends InputBase implements SeleccionInterface {
             throw new \Exception('La opción solicitada no existe', $this->_ce . '000001');
         }
 
-        #Helpers\Debug::imprimir($opcion, $salida, true);
+        #Medios\Debug::imprimir($opcion, $salida, true);
         return $salida;
 
     }

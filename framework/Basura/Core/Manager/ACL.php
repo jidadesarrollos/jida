@@ -11,10 +11,10 @@
 
 namespace Jida\Core\Manager;
 
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Debug as Debug;
+use Jida\Medios as Medios;
+use Jida\Medios\Debug as Debug;
 use Jida\Core\Session as Session;
-use Jida\Helpers\Arrays as Arrays;
+use Jida\Medios\Arrays as Arrays;
 
 class ACL {
 
@@ -39,23 +39,23 @@ class ACL {
 
         $this->componenteObject = $componenteObject = new \Jida\Modelos\Componente();
         $this->perfilObject = new \Jida\Modelos\Perfil();
-        $this->usuario = Helpers\Sesion::obt('Usuario');
+        $this->usuario = Medios\Sesion::obt('Usuario');
         $modeloUser = MODELO_USUARIO;
 
         if (!is_a($this->usuario, MODELO_USUARIO)) {
 
             $this->usuario = new $modeloUser();
-            Helpers\Sesion::set('Usuario', $this->usuario);
+            Medios\Sesion::set('Usuario', $this->usuario);
         }
         if (count($this->usuario->perfiles) < 1)
             $this->usuario->agregarPerfilSesion('UsuarioPublico');
-        if (!Helpers\Sesion::obt('ACL')) {
+        if (!Medios\Sesion::obt('ACL')) {
             $this->leerEstructura();
 
             $this->leerPerfiles();
         }
         else {
-            $this->_acl = Helpers\Sesion::obt('ACL');
+            $this->_acl = Medios\Sesion::obt('ACL');
         }
 
     }

@@ -10,7 +10,7 @@
 
 namespace Jida\Render;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class ValidadorJida extends \Jida\Core\Validador {
 
@@ -341,7 +341,7 @@ class ValidadorJida extends \Jida\Core\Validador {
 
             return TRUE;
         } else {
-            //Helpers\Debug::imprimir($detalle);
+            //Medios\Debug::imprimir($detalle);
             $this->obtenerMensajeError($detalle['tipo'], $detalle);
 
             return FALSE;

@@ -9,7 +9,7 @@
 
 namespace Jida\Render;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class AccionVistaSelector extends Selector {
     /**
@@ -48,8 +48,8 @@ class AccionVistaSelector extends Selector {
      */
     private function _armarValores() {
 
-        $this->nombreAccion = Helpers\Cadenas::lowerCamelCase($this->innerHTML());
-        $this->attr('id', Helpers\Cadenas::lowerCamelCase("accion " . $this->innerHTML()));
+        $this->nombreAccion = Medios\Cadenas::lowerCamelCase($this->innerHTML());
+        $this->attr('id', Medios\Cadenas::lowerCamelCase("accion " . $this->innerHTML()));
         $this->attr($this->dataAccion);
 
     }

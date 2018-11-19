@@ -9,7 +9,7 @@
  * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class Cadenas {
 

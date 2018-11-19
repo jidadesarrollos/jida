@@ -24,8 +24,8 @@ namespace Jida\BD;
 
 use Mysqli;
 use Exception;
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Cadenas as Cadenas;
+use Jida\Medios as Medios;
+use Jida\Medios\Cadenas as Cadenas;
 
 class Mysql extends ConexionBD {
 
@@ -104,8 +104,8 @@ class Mysql extends ConexionBD {
         }
 
         $this->mysqli = new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd);
-        #$sesion = Helpers\Sesion::obt('iddb');
-        #Helpers\Sesion::editar("iddb", $sesion + 1);
+        #$sesion = Medios\Sesion::obt('iddb');
+        #Medios\Sesion::editar("iddb", $sesion + 1);
 
         if ($this->mysqli->connect_error) {
             $this->_conexion = false;
@@ -229,7 +229,7 @@ class Mysql extends ConexionBD {
             'idResultado' => ""
         ];
 
-        if (!Helpers\Sesion::obt('__queryInsert')) {
+        if (!Medios\Sesion::obt('__queryInsert')) {
             $validadoUnico = false;
             $validarExistencia = 0;
             if (count($unico) >= 1) {
@@ -252,7 +252,7 @@ class Mysql extends ConexionBD {
 
             if ($validarExistencia === 0) {
                 $this->ejecutarQuery($insert);
-                Helpers\Sesion::set('__queryInsert', $insert);
+                Medios\Sesion::set('__queryInsert', $insert);
                 if ($this->mysqli->insert_id != "") {
                     $ejecutado = 1;
                 }
@@ -298,9 +298,9 @@ class Mysql extends ConexionBD {
     function cerrarConexion () {
 
         if ($this->_conexion and $this->mysqli->ping()) {
-            $sesion = Helpers\Sesion::obt('iddb');
-            #			Helpers\Sesion::editar("iddb", $sesion - 1);
-            #			Helpers\Debug::imprimir("cerramos ", $sesion - 1);
+            $sesion = Medios\Sesion::obt('iddb');
+            #			Medios\Sesion::editar("iddb", $sesion - 1);
+            #			Medios\Debug::imprimir("cerramos ", $sesion - 1);
             $this->mysqli->close();
             $this->_conexion = false;
         }

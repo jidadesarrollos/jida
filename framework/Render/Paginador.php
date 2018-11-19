@@ -8,7 +8,7 @@
 */
 namespace Jida\Render;
 use Jida\Core  		as Core;
-use Jida\Helpers 	as Helpers;
+use Jida\Medios 	as Helpers;
 class Paginador extends  ListaSelector{
 	use Core\ObjetoManager;
 	var $linkFinal 			=TRUE;
@@ -45,7 +45,7 @@ class Paginador extends  ListaSelector{
 		$this->paginaActual = $config['paginaActual']+1;
 		
 		if(empty($this->urlPaginacion)){
-			//Helpers\Debug::imprimir(JD('URL'),true);
+			//Medios\Debug::imprimir(JD('URL'),true);
 			$this->urlPaginacion = JD('URL');
 		}
 		
@@ -69,7 +69,7 @@ class Paginador extends  ListaSelector{
 				$this->items[$pagina]->addClass($this->classItemActivo);
 			
 		}
-		#Helpers\Debug::imprimir($this->paginas,count($this->items),true);
+		#Medios\Debug::imprimir($this->paginas,count($this->items),true);
 		
 		if($this->paginaActual > 1){
 			//Solo se agrega el "volver al principio" si hay más de una página entre la actual 
@@ -90,7 +90,7 @@ class Paginador extends  ListaSelector{
 			$this->items[$this->paginas] = $linkFinal;
 		}
 		
-	#	Helpers\Debug::imprimir($this->items,true);
+	#	Medios\Debug::imprimir($this->items,true);
 	}
 
 	private function _url($pagina){

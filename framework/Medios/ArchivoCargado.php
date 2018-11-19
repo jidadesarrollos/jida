@@ -7,11 +7,11 @@
  * @author  Julio Rodriguez <jrodriguez@jidadesarrollos.com>
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 /**
  * Class ArchivoCargado
- * @package Jida\Helpers
+ * @package Jida\Medios
  * @deprecated 0.6
  *
  */

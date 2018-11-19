@@ -12,7 +12,7 @@ namespace Jida\Jadmin\Controllers;
 
 use Exception;
 use Jida\Modelos as Modelos;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\RenderHTML as RenderHTML;
 
 class Forms extends JController {
@@ -28,7 +28,7 @@ class Forms extends JController {
      * Funcion constructora
      */
     function __construct() {
-//Helpers\Debug::imprimir(Helpers\Sesion::obt('Usuario'),true);
+//Medios\Debug::imprimir(Medios\Sesion::obt('Usuario'),true);
         $this->jctrl = new Modelos\JidaControl();
         $this->url = "/jadmin/forms/";
         parent::__construct();
@@ -185,18 +185,18 @@ class Forms extends JController {
                         RenderHTML\Formulario::msj('suceso', "El formulario <strong> $_POST[nombre_f]</strong> ha sido registrado exitosamente");
 
                         if ($ambito == 2) {
-                            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/configuracion-jida-form/formulario/' . $guardado['idResultado']);
+                            \Jida\Medios\Rutas::redireccionar('/jadmin/forms/configuracion-jida-form/formulario/' . $guardado['idResultado']);
                         } else {
-                            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/configuracion-formulario/formulario/' . $guardado['idResultado']);
+                            \Jida\Medios\Rutas::redireccionar('/jadmin/forms/configuracion-formulario/formulario/' . $guardado['idResultado']);
                         }
 
                     }
                 } else {
 
-                    Helpers\Sesion::set('__msjForm', Helpers\Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
+                    Medios\Sesion::set('__msjForm', Medios\Mensajes::mensajeError("El query <strong>$_POST[query_f]</strong> no est&aacute; formulado correctamente"));
                 }
             } else {
-                Helpers\Sesion::set('__msjForm', Helpers\Mensajes::mensajeError("No se ha podido registrar el formulario"));
+                Medios\Sesion::set('__msjForm', Medios\Mensajes::mensajeError("No se ha podido registrar el formulario"));
             }
         }
         $this->dv->formulario = $formulario->armarFormulario();
@@ -238,10 +238,10 @@ class Forms extends JController {
             $arrayIds[$key] = $this->entero($id);
         }
         if ($this->jctrl->eliminarFormulario($arrayIds)) {
-            Helpers\Sesion::set('__msjVista', Helpers\Mensajes::mensajeSuceso("Se han eliminados los formularios"));
+            Medios\Sesion::set('__msjVista', Medios\Mensajes::mensajeSuceso("Se han eliminados los formularios"));
 
-            Helpers\Sesion::set('__idVista', 'formularios');
-            \Jida\Helpers\Rutas::redireccionar('/jadmin/forms/');
+            Medios\Sesion::set('__idVista', 'formularios');
+            \Jida\Medios\Rutas::redireccionar('/jadmin/forms/');
         } else {
             throw new Exception("No se pudo eliminar el formulario", 1);
 
@@ -295,9 +295,9 @@ class Forms extends JController {
             if ($formCampo->validarFormulario() === TRUE) {
 
                 $proceso = $jctrl->procesarCampos($_POST, $form);
-                Helpers\Sesion::set('__msj', Helpers\Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
+                Medios\Sesion::set('__msj', Medios\Mensajes::mensajeSuceso("Campo $_POST[name] ha sido modificado exitosamente"));
             } else {
-                Helpers\Sesion::set('__msj', Helpers\Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));
+                Medios\Sesion::set('__msj', Medios\Mensajes::mensajeError("No se pudo guardar la configuraci&oacute;n"));
             }
             $this->dv->formCampo = $formCampo->armarFormularioEstructura();
         }
@@ -331,7 +331,7 @@ class Forms extends JController {
             }
 
             $jctrl->setOrdenCamposForm($arrayOrden, $form = "");
-            $msj = Helpers\Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
+            $msj = Medios\Mensajes::mensajeSuceso("Se ha guardado el orden del formulario");
             respuestaAjax(json_encode(array("ejecutado" => TRUE, 'msj' => $msj)));
         }
     }

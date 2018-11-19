@@ -14,7 +14,7 @@
  * @version  0.1 12/01/2014
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class Mensajes {
 

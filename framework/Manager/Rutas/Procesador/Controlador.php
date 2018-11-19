@@ -2,7 +2,7 @@
 
 namespace Jida\Manager\Rutas\Procesador;
 
-use Jida\Helpers\Debug;
+use Jida\Medios\Debug;
 
 Trait Controlador {
 

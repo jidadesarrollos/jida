@@ -10,8 +10,8 @@
 namespace Jida\Core\GeneradorCodigo;
 
 use Jida\BD as BD;
-use Jida\Helpers\Cadenas as Cadenas;
-use Jida\Helpers as Helpers;
+use Jida\Medios\Cadenas as Cadenas;
+use Jida\Medios as Medios;
 
 class GeneradorObjeto extends BD\DataModel {
     use GeneradorCodigo;
@@ -44,7 +44,7 @@ class GeneradorObjeto extends BD\DataModel {
 
         parent::__construct();
         $this->String = new Cadenas();
-        $this->Directorio = new Helpers\Directorios();
+        $this->Directorio = new Medios\Directorios();
         // $this->extension="class.php";
         $this->extension = ".php";
     }

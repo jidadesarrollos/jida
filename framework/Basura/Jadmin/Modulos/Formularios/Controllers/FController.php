@@ -10,7 +10,7 @@
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
 use Jida\Jadmin\Controllers\JController as JController;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render as Render;
 use Jida\Core\GeneradorCodigo;
 
@@ -64,10 +64,10 @@ class Fcontroller extends JController {
      */
     protected function _instanciarFormulario ($id, $modulo = 'jida') {
 
-        Helpers\Sesion::destruir('JFormulario');
-        if (is_object(Helpers\Sesion::obt('JFormulario'))) {
+        Medios\Sesion::destruir('JFormulario');
+        if (is_object(Medios\Sesion::obt('JFormulario'))) {
 
-            $clase = Helpers\Sesion::obt('JFormulario');
+            $clase = Medios\Sesion::obt('JFormulario');
             if ($clase->identificador == $id) {
                 $this->_formulario = $clase;
 

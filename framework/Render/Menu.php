@@ -13,7 +13,7 @@ namespace Jida\Render;
 
 use \Exception as Excepcion;
 use Jida\Core\Rutas;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Menu extends Selector {
 
@@ -90,7 +90,7 @@ class Menu extends Selector {
 
         $path = Rutas::obtener($menu, 'menu')->absoluta();
 
-        if (!Helpers\Directorios::validar($path)) {
+        if (!Medios\Directorios::validar($path)) {
             throw new Excepcion("No se consigue el archivo de configuracion del menu " . $path, $this->_ce . '1');
         }
 

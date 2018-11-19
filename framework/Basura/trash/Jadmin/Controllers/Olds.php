@@ -3,7 +3,7 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Render as Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Core\GeneradorCodigo;
 
 class Olds extends JController {

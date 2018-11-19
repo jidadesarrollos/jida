@@ -3,7 +3,7 @@
  * Clase para TablaSelector
  */
 namespace Jida\Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class TablaSelector extends Selector{
@@ -114,7 +114,8 @@ class TablaSelector extends Selector{
 		}
 
 		return $this;
-	}
+	}
+
 	private function renderTFoot(){
 
 	}

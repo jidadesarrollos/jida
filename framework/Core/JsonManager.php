@@ -10,7 +10,7 @@ namespace Jida\Core;
  * @since 0.5.1
  */
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class JsonManager {
@@ -49,7 +49,7 @@ class JsonManager {
 
         $json = (empty($json)) ? $this->_json : $json;
 
-        if (Helpers\Archivo::existe($json)) {
+        if (Medios\Archivo::existe($json)) {
 
             $contenido = file_get_contents($json);
             $data = json_decode($contenido);

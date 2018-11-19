@@ -18,7 +18,7 @@ namespace Jida\Render;
 use \Exception as Excepcion;
 use Jida\Core\Rutas;
 use Jida\Core\Validador;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\BD\BD as BD;
 use Jida\Manager\Estructura;
 use Jida\Render\Inputs\Input as SelectorInput;
@@ -287,7 +287,7 @@ class Formulario extends Selector {
         }
 
         $path = Rutas::obtener($form, 'formulario')->absoluta();
-        if (!Helpers\Directorios::validar($path)) {
+        if (!Medios\Directorios::validar($path)) {
             throw new Excepcion("No se consigue el archivo de configuracion del formulario " . $path, $this->_ce . '1');
         }
         $this->_path = $path;
@@ -588,7 +588,7 @@ class Formulario extends Selector {
                 break;
             default:
                 $namespace = '\App\Config\Formularios\\';
-                $claseUpper = $namespace . Helpers\Cadenas::upperCamelCase($_campo->type);
+                $claseUpper = $namespace . Medios\Cadenas::upperCamelCase($_campo->type);
                 if (class_exists($claseUpper)) {
                     $selector = new $claseUpper($_campo, ['padre' => $this]);
                 }
@@ -734,7 +734,7 @@ class Formulario extends Selector {
         if (is_array($fieldsets) and count($fieldsets) > 0) {
             foreach ($fieldsets as $key => $value) {
                 $id = "";
-                if (!Helpers\Numeros::validarInt($value)) {
+                if (!Medios\Numeros::validarInt($value)) {
                     $id = $key;
                     $fieldset = new Selector('fieldset', ['id' => 'field' . ucwords($this->_id) . '-' . $key]);
 
@@ -777,9 +777,9 @@ class Formulario extends Selector {
         if ($this->_titulo)
             $contenedor->addInicio($this->_titulo->render());
 
-        if (Helpers\Sesion::obt('__msjForm')) {
-            $this->addFinal(Helpers\Sesion::obt('__msjForm'));
-            Helpers\Sesion::destruir('__msjForm');
+        if (Medios\Sesion::obt('__msjForm')) {
+            $this->addFinal(Medios\Sesion::obt('__msjForm'));
+            Medios\Sesion::destruir('__msjForm');
         }
 
         foreach ($this->_arrayOrden as $id => $position) {
@@ -1002,9 +1002,9 @@ class Formulario extends Selector {
         }
 
         if ($this->_errores) {
-            Helpers\Sesion::set('__erroresForm', $this->_errores);
-            Helpers\Sesion::set('_dataPostForm', $datos);
-            Helpers\Sesion::set('__dataPostForm', 'id_form', $this->_idEdicion);
+            Medios\Sesion::set('__erroresForm', $this->_errores);
+            Medios\Sesion::set('_dataPostForm', $datos);
+            Medios\Sesion::set('__dataPostForm', 'id_form', $this->_idEdicion);
 
             return false;
 
@@ -1026,10 +1026,10 @@ class Formulario extends Selector {
      */
     static function msj ($type, $msj, $redirect = false) {
 
-        $msj = Helpers\Mensajes::crear($type, $msj, true);
-        Helpers\Sesion::set('__msjForm', $msj);
+        $msj = Medios\Mensajes::crear($type, $msj, true);
+        Medios\Sesion::set('__msjForm', $msj);
         if ($redirect) {
-            \Jida\Helpers\Rutas::redireccionar($redirect);
+            \Jida\Medios\Rutas::redireccionar($redirect);
         }
     }
 

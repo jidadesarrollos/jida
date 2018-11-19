@@ -6,7 +6,7 @@
 namespace Jida;
 
 use Jida\Configuracion as Conf;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Rutas\Lector;
@@ -44,7 +44,7 @@ class Manager {
 
         }
         catch (\Exception $e) {
-            Helpers\Debug::imprimir([$e], true);
+            Medios\Debug::imprimir([$e], true);
             exit("capturada excepcion");
         }
         catch (\Error $e) {
@@ -66,7 +66,7 @@ class Manager {
             }
 
             date_default_timezone_set($config::ZONA_HORARIA);
-            Helpers\Sesion::iniciar();
+            Medios\Sesion::iniciar();
 
             $_SERVER = array_merge($_SERVER, getallheaders());
 
@@ -82,7 +82,7 @@ class Manager {
 
         }
         catch (\Exception $e) {
-            Helpers\Debug::imprimir($e);
+            Medios\Debug::imprimir($e);
             $excepcion = new Excepcion($e);
             $excepcion->log();
 

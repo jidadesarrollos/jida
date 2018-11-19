@@ -26,8 +26,8 @@
 namespace Jida\Componentes;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers\Debug;
-use Jida\Helpers\Directorios as Directorios;
+use Jida\Medios\Debug;
+use Jida\Medios\Directorios as Directorios;
 use Jida\Manager\Estructura;
 
 class Traductor {

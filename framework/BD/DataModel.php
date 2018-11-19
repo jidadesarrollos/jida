@@ -13,8 +13,8 @@
 namespace Jida\BD;
 
 use Exception;
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Debug as Debug;
+use Jida\Medios as Medios;
+use Jida\Medios\Debug as Debug;
 use Jida\Manager\Estructura;
 use ReflectionClass;
 use ReflectionProperty;
@@ -350,7 +350,7 @@ class DataModel {
                     if (array_key_exists('objeto', $class)) {
                         $relacion = $class['objeto'];
                     }
-                    #Helpers\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
+                    #Medios\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
                     if (array_key_exists('fk', $class))
                         $this->$nombreClass = new $relacion($this->{$class['fk']}, $this->nivelActualORM);
 
@@ -369,7 +369,7 @@ class DataModel {
                     // $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
 
                     $obj = new $class();
-                    //Helpers\Debug::imprimir($obj->pk);
+                    //Medios\Debug::imprimir($obj->pk);
                     $this->$nombreClass = new $class(null, $this->nivelActualORM);
 
                 }
@@ -691,7 +691,7 @@ class DataModel {
         foreach ($this->propiedades as $prop => $value) {
             if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
 
-                $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
+                $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
                 if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto,
                                                                                                         $this->tieneUno))
                     $this->tieneUno[$objeto] = [
@@ -715,7 +715,7 @@ class DataModel {
                 if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
                     $propiedad = str_replace("id_", "", $prop);
 
-                    $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
+                    $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
 
                     if ($propiedad != $this->_clase and class_exists($objeto)) {
                         //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
@@ -1832,21 +1832,21 @@ class DataModel {
             }
         }//fin foreach
         if ($this->registroMomentoGuardado === true) {
-            $valores[] = "'" . Helpers\FechaHora::datetime() . "'";
-            $valores[] = "'" . Helpers\FechaHora::datetime() . "'";
+            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
+            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
         }
         if ($this->registroUser) {
-            if (Helpers\Sesion::obt('Usuario')) {
-                $user = Helpers\Sesion::obt('Usuario');
+            if (Medios\Sesion::obt('Usuario')) {
+                $user = Medios\Sesion::obt('Usuario');
                 if (is_array($user) and array_key_exists('id_usuario', $user))
                     $idUser = $user['id_usuario'];
                 else if (is_object($user) and property_exists($user, 'id_usuario'))
                     $idUser = ($user->id_usuario > 0) ? $user->id_usuario : 0;
             }
             else {
-                if (is_array(Helpers\Sesion::obt('usuario')) and array_key_exists('id_usuario',
-                                                                                  Helpers\Sesion::obt('usuario')))
-                    $idUser = Helpers\Sesion::obt('usuario')['id_usuario'];
+                if (is_array(Medios\Sesion::obt('usuario')) and array_key_exists('id_usuario',
+                                                                                  Medios\Sesion::obt('usuario')))
+                    $idUser = Medios\Sesion::obt('usuario')['id_usuario'];
                 else
                     $idUser = 0;
             }
@@ -1870,13 +1870,13 @@ class DataModel {
 
         if (count($dataUpdate) > 0) {
             if ($this->registroUser) {
-                $idUser = Helpers\Sesion::obt('id_usuario');
+                $idUser = Medios\Sesion::obt('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
-                if (Helpers\Sesion::checkLogg()) {
-                    if (is_object(Helpers\Sesion::obt('Usuario')))
-                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('Usuario')->id_usuario;
-                    else if (array_key_exists('id_usuario', Helpers\Sesion::obt('usuario'))) {
-                        $dataUpdate['id_usuario_modificador'] = Helpers\Sesion::obt('usuario', 'id_usuario');
+                if (Medios\Sesion::checkLogg()) {
+                    if (is_object(Medios\Sesion::obt('Usuario')))
+                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('Usuario')->id_usuario;
+                    else if (array_key_exists('id_usuario', Medios\Sesion::obt('usuario'))) {
+                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('usuario', 'id_usuario');
                     }
                 }
             }

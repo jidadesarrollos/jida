@@ -10,8 +10,8 @@ namespace Jida\Core;
 
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
-use \Jida\Helpers as Helpers;
-use \Jida\Helpers\Debug as Debug;
+use \Jida\Medios as Helpers;
+use \Jida\Medios\Debug as Debug;
 
 trait UsuarioManager {
 
@@ -115,7 +115,7 @@ trait UsuarioManager {
                 Render\JVista::msj($idVista, 'suceso', $msj, $urlVista);
             }
             else
-                Helpers\Sesion::set('__msjForm',
+                Medios\Sesion::set('__msjForm',
                                     Mensajes::crear('error',
                                                     "No se ha podido registrar el usuario, vuelva a intentarlo"),
                                     false);
@@ -311,12 +311,12 @@ trait UsuarioManager {
      */
     protected function crearSesionUsuario () {
 
-        Helpers\Sesion::sessionLogin();
-        Helpers\Sesion::set('Usuario', $this->modelo);
+        Medios\Sesion::sessionLogin();
+        Medios\Sesion::set('Usuario', $this->modelo);
 
         #- Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if (isset($data))
-            Helpers\Sesion::set('usuario', $data);
+            Medios\Sesion::set('usuario', $data);
 
         return $this;
     }
@@ -349,10 +349,10 @@ trait UsuarioManager {
      */
     protected function _cierresesion ($url = "") {
 
-        if (Helpers\Sesion::destruir()) {
+        if (Medios\Sesion::destruir()) {
 
-            if (Helpers\Sesion::obt('Usuario') instanceof MODELO_USUARIO)
-                Helpers\Sesion::obt('Usuario')->cerrarSesion();
+            if (Medios\Sesion::obt('Usuario') instanceof MODELO_USUARIO)
+                Medios\Sesion::obt('Usuario')->cerrarSesion();
 
             if (empty($url))
                 $url = $this->urlCierreSession;
@@ -371,8 +371,8 @@ trait UsuarioManager {
     protected function formularioLogin ($called = false) {
 
         if ($called) {
-            if (Helpers\Sesion::obt('FormLoggin') and Helpers\Sesion::obt('FormLoggin') instanceof Formulario) {
-                $form = Helpers\Sesion::obt('FormLoggin');
+            if (Medios\Sesion::obt('FormLoggin') and Medios\Sesion::obt('FormLoggin') instanceof Formulario) {
+                $form = Medios\Sesion::obt('FormLoggin');
 
             }
             else {

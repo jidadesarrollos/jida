@@ -14,8 +14,8 @@ namespace Jida\Core;
 
 use App\Config\Configuracion;
 use Jida\Core\Manager\DataVista as DataVista;
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Cadenas as Cadenas;
+use Jida\Medios as Medios;
+use Jida\Medios\Cadenas as Cadenas;
 use Jida\Manager\Estructura;
 
 class Controller {
@@ -241,8 +241,8 @@ class Controller {
         $this->_nombreController = str_replace("Controller", "", end($clase));
 
         $this->url = $this->urlController();
-        if (Helpers\Sesion::obt('Usuario') instanceof User)
-            $this->usuario = Helpers\Sesion::obt('Usuario');
+        if (Medios\Sesion::obt('Usuario') instanceof User)
+            $this->usuario = Medios\Sesion::obt('Usuario');
         else {
 
             $clase = MODELO_USUARIO;
@@ -258,7 +258,7 @@ class Controller {
         }
 
         $this->getModelo();
-        $this->dv->usuario = Helpers\Sesion::obt('Usuario');
+        $this->dv->usuario = Medios\Sesion::obt('Usuario');
         if (count($this->helpers) > 0) {
             for ($i = 0; $i < count($this->helpers); ++$i) {
                 $object = $this->helpers[$i];
@@ -298,7 +298,7 @@ class Controller {
 
         if (count($this->helpers) > 0) {
             foreach ($this->helpers as $key => $propiedad) {
-                $helper = '\\Jida\\Helpers\\' . $propiedad;
+                $helper = '\\Jida\\Medios\\' . $propiedad;
                 $this->$propiedad = new $helper();
             }
         }
@@ -683,7 +683,7 @@ class Controller {
                         $params .= "$key/$value/";
                 }
 
-                // Helpers\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
+                // Medios\Debug::string($urlController.$this->convertirNombreAUrl($metodo)."/".$params,true);
                 return $urlController . $this->convertirNombreAUrl($metodo) . "/" . $params;
             }
             else {
@@ -776,7 +776,7 @@ class Controller {
                 if (count($data) > 0) {
                     foreach ($data as $key => $value) {
                         if (is_array($value))
-                            Helpers\Debug::mostrarArray(debug_backtrace());
+                            Medios\Debug::mostrarArray(debug_backtrace());
                         $params .= "$value/";
                     }
                 }
@@ -922,7 +922,7 @@ class Controller {
      */
     protected function data ($data, $valor = "") {
 
-        // Helpers\Debug::imprimir('Controleeer');
+        // Medios\Debug::imprimir('Controleeer');
         // $this->establecerAtributos($data);
         if (is_array($data)) {
             foreach ($data as $key => $value) {

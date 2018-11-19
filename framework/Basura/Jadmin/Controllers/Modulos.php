@@ -137,7 +137,7 @@ class Modulos extends JController {
     public function index () {
 
         $mensaje = self::mensajeModulo();
-        // Helpers\debug::imprimir($mensaje,true);
+        // Medios\debug::imprimir($mensaje,true);
         $arre = self::arregloParatabla();
 
         $tabla = new Render\jvista($arre, [
@@ -168,7 +168,7 @@ class Modulos extends JController {
                                           'txtLink' => 'Registrar modulo'
                                       ]);
         $tabla->acciones(['nuevo ' => ['href' => $this->obtUrl('nuevo')]]);
-        Helpers\Mensajes::crear('alerta', $mensaje);
+        Medios\Mensajes::crear('alerta', $mensaje);
 
         $this->data(['mensaje' => $mensaje]);
         $this->data(['tablaVista' => $tabla->obtenerVista()]);
@@ -204,7 +204,7 @@ class Modulos extends JController {
     private function crearModulo ($name = '', $tipo = 0) {
 
         if ($name != '') {
-            $name = Helpers\cadenas::upperCamelCase($name);
+            $name = Medios\cadenas::upperCamelCase($name);
             $Path = 'Aplicacion/Modulos/' . $name;
             if ($tipo == 1) {
 
@@ -246,7 +246,7 @@ class Modulos extends JController {
                 $extends = '\Jida\Core\Controller';
             }
 
-            Helpers\directorios::crear($directorios);
+            Medios\directorios::crear($directorios);
 
             if ($tipo != 2) {
                 $this->crearArchivosEstandar($name, $directorios, $extends);
@@ -261,7 +261,7 @@ class Modulos extends JController {
 
     private function crearArchivosEstandar ($nombreArchivo, $directorios, $extiende, $mixto = '') {
 
-        $nombreModelo = Helpers\Cadenas::obtenerSingular($nombreArchivo);
+        $nombreModelo = Medios\Cadenas::obtenerSingular($nombreArchivo);
         $nombreArchivo .= 'Controller';
 
         $arch = fopen($directorios[1] . '/' . $nombreArchivo . '.php', 'w+');

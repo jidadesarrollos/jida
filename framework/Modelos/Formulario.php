@@ -17,7 +17,7 @@ namespace Jida\Modelos;
 use Exception as Excepcion;
 use Jida\Core\GeneradorCodigo;
 use Jida\Core\JsonManager as JsonManager;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Formulario extends JsonManager {
 
@@ -117,14 +117,14 @@ class Formulario extends JsonManager {
                                                   "jida"
                                               ])) {
 
-                $ubicacion .= DS . 'Modulos' . DS . Helpers\Cadenas::upperCamelCase($modulo);
-                if (!Helpers\Directorios::validar($ubicacion)) {
+                $ubicacion .= DS . 'Modulos' . DS . Medios\Cadenas::upperCamelCase($modulo);
+                if (!Medios\Directorios::validar($ubicacion)) {
                     throw new Excepcion("El modulo pasado para guardar el formulario no existe " . $ubicacion,
                                         $this->_ce . '003');
                 }
                 $ubicacion .= DS . 'Formularios';
 
-                if (!Helpers\Directorios::validar($ubicacion)) {
+                if (!Medios\Directorios::validar($ubicacion)) {
                     throw new Excepcion("El Formulario pasado no existe en el modulo " . $modulo . " no existe " . $ubicacion,
                                         $this->_ce . '004');
 
@@ -190,7 +190,7 @@ class Formulario extends JsonManager {
         if (empty($nombre))
             $nombre = $this->nombre;
 
-        $identificador = Helpers\Cadenas::upperCamelCase($nombre);
+        $identificador = Medios\Cadenas::upperCamelCase($nombre);
         $this->identificador = $identificador;
 
         return $identificador;
@@ -267,7 +267,7 @@ class Formulario extends JsonManager {
         }
         $json['campos'] = $campos;
 
-        #Helpers\Debug::imprimir($json, true);
+        #Medios\Debug::imprimir($json, true);
 
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
     }
@@ -302,8 +302,8 @@ class Formulario extends JsonManager {
         $modulo = (isset($data['modulo'])) ? $data['modulo'] : $this->_modulo;
         $directorio = $this->path($modulo);
 
-        if (!Helpers\Directorios::validar($directorio)) {
-            Helpers\Directorios::crear($directorio);
+        if (!Medios\Directorios::validar($directorio)) {
+            Medios\Directorios::crear($directorio);
         }
         $nombre = $directorio . DS . $this->identificador . ".json";
 
@@ -386,7 +386,7 @@ class Formulario extends JsonManager {
                 $ubicacion = DIR_APP . DS . 'Formularios';
                 break;
             default:
-                $modulo = Helpers\Cadenas::upperCamelCase($modulo);
+                $modulo = Medios\Cadenas::upperCamelCase($modulo);
                 $ubicacion = DIR_APP . DS . 'Modulos' . DS . $modulo . DS . 'Formularios';
                 break;
         }

@@ -12,7 +12,7 @@ use App\Config\Configuracion;
 use Jida\Componentes\Correo;
 use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
-use Jida\Helpers\Directorios;
+use Jida\Medios\Directorios;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Layout;
 

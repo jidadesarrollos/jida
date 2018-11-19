@@ -16,7 +16,7 @@ use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use Jida\RenderHTML\Vista as Vista;
 use Jida\RenderHTML as RenderHTML;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Objetos extends JController {
 
@@ -100,7 +100,7 @@ class Objetos extends JController {
             });
         $generador->extensionClass = false;
         if ($generador->generar($objeto, $prefijos)) {
-            $msj = Helpers\Mensajes::crear('suceso', 'Objeto creado exitosamente');
+            $msj = Medios\Mensajes::crear('suceso', 'Objeto creado exitosamente');
             Session::set('__mensaje', $msj);
         }
 
@@ -119,7 +119,7 @@ class Objetos extends JController {
         $vista = $this->vistaObjetos($query);
         $vista->tituloVista = "Objetos";
         $msjError = "No hay registros de " . $vista->tituloVista . " <a href=\"" . $this->url . "set-objeto\">Agregar objeto</a>";
-        $vista->mensajeError = Helpers\Mensajes::mensajeAlerta($msjError);
+        $vista->mensajeError = Medios\Mensajes::mensajeAlerta($msjError);
         $this->dv->vista = $vista->obtenerVista();
 
     }
@@ -137,7 +137,7 @@ class Objetos extends JController {
 
         $objetosInexistentes = [];
         $objetosNuevos = [];
-        $nombreComponente = Helpers\Cadenas::upperCamelCase($componente->componente);
+        $nombreComponente = Medios\Cadenas::upperCamelCase($componente->componente);
         if ($nombreComponente == 'Principal') {
             $rutaComponente = DIR_APP . DS . "Controller/";
         }
@@ -146,7 +146,7 @@ class Objetos extends JController {
         }
 
         $objetosCarpeta = [];
-        Helpers\Directorios::listarDirectoriosRuta($rutaComponente, $objetosCarpeta, "/^.*Controller.class.php$/");
+        Medios\Directorios::listarDirectoriosRuta($rutaComponente, $objetosCarpeta, "/^.*Controller.class.php$/");
         array_walk($objetosCarpeta,
             function (&$objeto, $key) {
 

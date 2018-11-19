@@ -2,7 +2,7 @@
 
 ?>
 <div class="col-md-6 col-sm-12 col-xs-12">
-    <?= \Jida\Helpers\Mensajes::imprimir(); ?>
+    <?= \Jida\Medios\Mensajes::imprimir(); ?>
 </div>
 
 <div class="col-md-12 col-sm-12 col-xs-12">

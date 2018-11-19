@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\RenderHTML as RenderHTML;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\RenderHTML\Vista as Vista;
 
 class Perfiles extends JController {
@@ -78,7 +78,7 @@ class Perfiles extends JController {
             $validacion = $form->validarFormulario();
             if ($validacion === true) {
                 $perfil = New Perfil($pk);
-                $_POST['clave_perfil'] = Helpers\Cadenas::upperCamelCase($_POST['perfil']);
+                $_POST['clave_perfil'] = Medios\Cadenas::upperCamelCase($_POST['perfil']);
                 #Debug::mostrarArray($_POST);
                 $guardado = $perfil->salvar($_POST);
                 if ($guardado['ejecutado']) {

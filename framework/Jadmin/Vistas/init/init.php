@@ -12,7 +12,7 @@ $data = &$this -> data;
 </h1>
 <form action="<?= $this -> url ?>" method="post" class="row">
 	
-	<?=\Jida\Helpers\Mensajes::imprimirMensaje('__msjForm') ?>
+	<?=\Jida\Medios\Mensajes::imprimirMensaje('__msjForm') ?>
 	<div class="row">
 		<fieldset class="col-md-6 col-md-offset-3" id="formBdConfig">
 			<legend>

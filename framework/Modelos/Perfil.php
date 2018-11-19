@@ -11,7 +11,7 @@
 
 namespace Jida\Modelos;
 use Jida\BD as BD;
-use Jida\Helpers\Debug as Debug;
+use Jida\Medios\Debug as Debug;
 class Perfil extends BD\DataModel{
 	
 	/**

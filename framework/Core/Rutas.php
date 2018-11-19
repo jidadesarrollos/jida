@@ -10,7 +10,7 @@
 namespace Jida\Core;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 
 class Rutas {
@@ -67,14 +67,14 @@ class Rutas {
             $form = array_shift($this->_solicitud);
 
             $directorio = $path . DS . Estructura::DIR_APP . DS . 'Formularios' . DS . $form;
-            if (Helpers\Directorios::validar($directorio)) {
+            if (Medios\Directorios::validar($directorio)) {
                 $this->_rutaAbsoluta = $directorio;
 
                 return;
             }
 
             $directorio = $path . DS . Estructura::DIR_JIDA . DS . 'Formularios' . DS . $form;
-            if (Helpers\Directorios::validar($directorio)) {
+            if (Medios\Directorios::validar($directorio)) {
                 $this->_rutaAbsoluta = $directorio;
 
                 return;

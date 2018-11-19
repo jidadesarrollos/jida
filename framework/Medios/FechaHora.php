@@ -12,7 +12,7 @@
  * @version     0.1 - 09/09/2013
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class FechaHora {
 

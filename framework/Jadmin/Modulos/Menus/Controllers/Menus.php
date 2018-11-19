@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Modulos\menus\Controllers;
 
 use Exception;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 
@@ -58,7 +58,7 @@ class Menus extends \Jida\Jadmin\Controllers\JController {
         if ($this->post('btnMenus')) {
             if ($form->validar()) {
 
-                $this->post('identificador', Helpers\Cadenas::guionCase($this->post('menu')));
+                $this->post('identificador', Medios\Cadenas::guionCase($this->post('menu')));
 
                 if ($classMenu->salvar($this->post())->ejecutado()):
                     $tipo = 'suceso';

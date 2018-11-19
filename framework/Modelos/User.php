@@ -13,7 +13,7 @@
 namespace Jida\Modelos;
 
 use Jida\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class User extends BD\DataModel {
@@ -196,7 +196,7 @@ class User extends BD\DataModel {
                               'ultima_session' => 'current_timestamp',
                               'activo'         => 1
                           ]);
-            Helpers\Sesion::sessionLogin();
+            Medios\Sesion::sessionLogin();
         }
         else return false;
 
@@ -265,7 +265,7 @@ class User extends BD\DataModel {
         $this->establecerAtributos($datos);
 
         if ($validacion === true) {
-            $codigo = hash("sha256", Helpers\FechaHora::timestampUnix() . Helpers\FechaHora::datetime());
+            $codigo = hash("sha256", Medios\FechaHora::timestampUnix() . Medios\FechaHora::datetime());
             $this->validacion = $codigo;
             $this->activo = 0;
         }
@@ -366,18 +366,18 @@ class User extends BD\DataModel {
 
     function crearSesionUsuario () {
 
-        Helpers\Sesion::sessionLogin();
-        Helpers\Sesion::set('Usuario', $this);
+        Medios\Sesion::sessionLogin();
+        Medios\Sesion::set('Usuario', $this);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if (isset($data))
-            Helpers\Sesion::set('usuario', $data);
+            Medios\Sesion::set('usuario', $data);
 
         return $this;
     }
 
     function guardarSesion () {
 
-        Helpers\Sesion::set('Usuario', $this);
+        Medios\Sesion::set('Usuario', $this);
     }
 
     function obtUsers () {

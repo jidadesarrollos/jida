@@ -12,7 +12,7 @@ namespace Jida\Manager\Rutas;
 
 use Jida\Configuracion\Config;
 use Jida\Core\Manager as Core;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Data;
@@ -174,10 +174,10 @@ class Arranque {
             }
         }
         catch (\Exception $e) {
-            Helpers\Debug::imprimir(["capturada excepcion en arranque", $e], true);
+            Medios\Debug::imprimir(["capturada excepcion en arranque", $e], true);
         }
         catch (\Error $e) {
-            Helpers\Debug::imprimir(["capturado error en arranque", $e], true);
+            Medios\Debug::imprimir(["capturado error en arranque", $e], true);
         }
 
     }

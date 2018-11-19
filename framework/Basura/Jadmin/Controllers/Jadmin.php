@@ -10,7 +10,7 @@ namespace Jida\Jadmin\Controllers;
 
 use Jida\Configuracion\Config;
 use Jida\Modelos\JidaControl as JidaControl;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Modelos\User as User;
 use Jida\RenderHTML\Vista as Vista;

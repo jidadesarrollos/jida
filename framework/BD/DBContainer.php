@@ -17,7 +17,7 @@ namespace Jida\BD;
 
 use ReflectionClass;
 use ReflectionProperty;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class DBContainer {
 
@@ -196,7 +196,7 @@ class DBContainer {
 
             if (substr($prop, 0, 2) == 'id' and $prop != $this->clavePrimaria) {
                 $propiedad = str_replace("id_", "", $prop);
-                $objeto = Helpers\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
+                $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
                 if ($propiedad != $this->clase and class_exists($objeto, false))
                     $this->propiedadesObjetos[$propiedad] = new $objeto();
             }
@@ -436,7 +436,7 @@ class DBContainer {
             $valores[] = "'" . FechaHora::datetime() . "'";
         }
         $result = $this->bd->insert($this->nombreTabla, $campos, $valores, $this->clavePrimaria, $this->unico);
-        Helpers\Sesion::destroy('__queryInsert');
+        Medios\Sesion::destroy('__queryInsert');
 
         return $result;
 

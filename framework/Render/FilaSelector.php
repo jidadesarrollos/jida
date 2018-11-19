@@ -8,7 +8,7 @@
 */
 
 namespace Jida\Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class FilaSelector extends Selector{
@@ -25,7 +25,7 @@ class FilaSelector extends Selector{
 	function __construct($columnas,$selectorColumnas="TD"){
 
 		parent::__construct();
-		#Helpers\Debug::imprimir($columnas);
+		#Medios\Debug::imprimir($columnas);
 		$this->dataColumnas = $columnas;
 		$this->selectorColumnas = $selectorColumnas;
 		$this->totalColumnas = count($this->dataColumnas);

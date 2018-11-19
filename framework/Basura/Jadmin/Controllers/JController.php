@@ -14,7 +14,7 @@ use Jida\Componentes;
 use Jida\Configuracion\Config;
 use Jida\Core as Core;
 use Jida\Componentes\Traductor as Traductor;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\RenderHTML\Formulario as Formulario;
 use Jida\Render as Render;
@@ -45,7 +45,7 @@ class JController extends Core\Controller {
         $this->urlHtdocs = $estructura . "/htdocs/bower_components/";
         $this->layout('jadmin');
         $this->definirJSGlobals();
-        $this->usuario = Helpers\Sesion::obt('Usuario');
+        $this->usuario = Medios\Sesion::obt('Usuario');
 
         if ($this->solicitudAjax()) {
             $this->layout = 'ajax.tpl.php';
@@ -63,7 +63,7 @@ class JController extends Core\Controller {
 
     protected function validarSesion () {
 
-        if (Helpers\Sesion::es($this->perfilesAdmin)) {
+        if (Medios\Sesion::es($this->perfilesAdmin)) {
 
             return true;
         }
@@ -91,9 +91,9 @@ class JController extends Core\Controller {
             if ($user->validarLogin($this->post('nombre_usuario'), $this->post('clave_usuario'))) {
 
                 $perfiles = $user->getPerfiles();
-                Helpers\Sesion::set('Usuario', $user);
-                Helpers\Sesion::set('__msjInicioSesion',
-                                    Helpers\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
+                Medios\Sesion::set('Usuario', $user);
+                Medios\Sesion::set('__msjInicioSesion',
+                                    Medios\Mensajes::crear('suceso', 'Bienvenido ' . $user->nombre_usuario));
 
                 return true;
             }

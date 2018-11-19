@@ -15,7 +15,7 @@
 namespace Jida\BD;
 
 use \Exception as Excepcion;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class ConexionBD {
     use \Jida\Core\ObjetoManager;

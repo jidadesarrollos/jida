@@ -7,7 +7,7 @@
 namespace Jida\Render;
 
 use Jida\Core\Rutas;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render\Inputs\Estructura;
 
 class JVista {
@@ -282,7 +282,7 @@ class JVista {
         $url = \Jida\Manager\Estructura::url();
 
         if ($this->analizaURL) {
-            $url = $url . Helpers\Sesion::obt('URL_ACTUAL_COMPLETA');
+            $url = $url . Medios\Sesion::obt('URL_ACTUAL_COMPLETA');
 
         }
         $url = \Jida\Manager\Estructura::url();
@@ -301,9 +301,9 @@ class JVista {
             $nombre = $this->titulo;
         }
 
-        $this->idVista = Helpers\Cadenas::lowerCamelCase($nombre);
-        $this->configArticleVista['id'] = Helpers\Cadenas::lowerCamelCase('Vista ' . $nombre);
-        $this->configTabla['id'] = Helpers\Cadenas::lowerCamelCase('data ' . $nombre);
+        $this->idVista = Medios\Cadenas::lowerCamelCase($nombre);
+        $this->configArticleVista['id'] = Medios\Cadenas::lowerCamelCase('Vista ' . $nombre);
+        $this->configTabla['id'] = Medios\Cadenas::lowerCamelCase('data ' . $nombre);
 
 
     }
@@ -547,11 +547,11 @@ class JVista {
 
     private function checkMensajes () {
 
-        if (Helpers\Sesion::obt('__msjVista')) {
+        if (Medios\Sesion::obt('__msjVista')) {
 
-            $msj = Helpers\Sesion::obt('__msjVista');
+            $msj = Medios\Sesion::obt('__msjVista');
             if (is_array($msj) and array_key_exists('id', $msj) and $msj['id'] == $this->idVista) {
-                Helpers\Sesion::destruir('__msjVista');
+                Medios\Sesion::destruir('__msjVista');
 
                 return Selector::crear('div.col-md-12', null, $msj['msj']);
             }
@@ -689,12 +689,12 @@ class JVista {
                                     $href = str_replace('{clave}', $colIni->innerHTML(), $href);
                                     $href = array_filter(explode('/', $href));
 
-                                    //Helpers\Debug::imprimir('$href', $href);
+                                    //Medios\Debug::imprimir('$href', $href);
 
                                     array_walk($href,
                                         function (&$valor, $clave, $columnas) {
 
-                                            //                                        Helpers\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
+                                            //                                        Medios\Debug::imprimir('$valor valeeee', $valor, '$clave', $clave, '$this->keys', $this->keys);
                                             //                                        if(count($this->keys) > 0) {
                                             //											$expReg = '{[' . implode('|', $this->keys) . ']}';
                                             //										}else{
@@ -715,10 +715,10 @@ class JVista {
                                                     $valor = $columnas[$valor]->innerHTML();
                                                 }
 
-                                                //                                            Helpers\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
+                                                //                                            Medios\Debug::imprimir('$valor despues-------', $valor, 'Siuuuuuuuuu', $expReg, '/' . $expReg . '/', TRUE);
                                             }
 
-                                            //                                        Helpers\Debug::imprimir('FUERA', $valor);
+                                            //                                        Medios\Debug::imprimir('FUERA', $valor);
 
                                         },
                                                $fila->columnas);
@@ -739,7 +739,7 @@ class JVista {
                         }
                     }
 
-                    //                    Helpers\Debug::imprimir('$contenido-------', $contenido,true);
+                    //                    Medios\Debug::imprimir('$contenido-------', $contenido,true);
 
                     return $contenido;
 
@@ -771,7 +771,7 @@ class JVista {
 
                 $bandera = false;
                 foreach ($perfiles as $perfil):
-                    if (Helpers\Sesion::checkPerfilAcceso($perfil)) {
+                    if (Medios\Sesion::checkPerfilAcceso($perfil)) {
                         $bandera = true;
                     }
                 endforeach;
@@ -780,7 +780,7 @@ class JVista {
 
             }
             else {
-                return Helpers\Sesion::checkPerfilAcceso($perfiles);
+                return Medios\Sesion::checkPerfilAcceso($perfiles);
             }
 
         }
@@ -1147,7 +1147,7 @@ class JVista {
             if ($this->htmlPersonalizado)
                 return Selector::crear('div.col-md-12', null, $this->mensajeNoRegistros);
 
-            return Selector::crear('div.col-md-12', null, Helpers\Mensajes::crear('alert', $this->mensajeNoRegistros));
+            return Selector::crear('div.col-md-12', null, Medios\Mensajes::crear('alert', $this->mensajeNoRegistros));
         }
     }
 
@@ -1171,12 +1171,12 @@ class JVista {
      */
     static function msj ($idVista, $tipo, $msj, $redireccion = "") {
 
-        Helpers\Sesion::set('__msjVista',
-                            ['msj' => Helpers\Mensajes::crear($tipo, $msj),
+        Medios\Sesion::set('__msjVista',
+                            ['msj' => Medios\Mensajes::crear($tipo, $msj),
                              'id'  => $idVista
                             ]);
         if (!empty($redireccion)) {
-            \Jida\Helpers\Rutas::redireccionar($redireccion);
+            \Jida\Medios\Rutas::redireccionar($redireccion);
         }
 
     }
@@ -1238,7 +1238,7 @@ class JVista {
             // $this->clausulas=$params;
             $this->clausulas[$nombreClausula] = $params;
         }
-        // Helpers\Debug::imprimir('$this->clausulas',$this->clausulas,true);
+        // Medios\Debug::imprimir('$this->clausulas',$this->clausulas,true);
     }
 
 
@@ -1260,7 +1260,7 @@ class JVista {
 
         $params = array_merge($this->_parametrosGET, $params);
 
-        #Helpers\Debug::imprimir($this->_parametrosGET,true);
+        #Medios\Debug::imprimir($this->_parametrosGET,true);
         return $this->paginaConsulta . '?' . http_build_query($params);
     }
 
@@ -1323,7 +1323,7 @@ class JVista {
         $params = func_get_args();
         //array_push($params,$cortar);
         if ($this->_debug) {
-            call_user_func_array(['\Jida\Helpers\Debug',
+            call_user_func_array(['\Jida\Medios\Debug',
                                   'imprimir'
                                  ],
                                  $params);

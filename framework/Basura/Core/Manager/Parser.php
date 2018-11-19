@@ -7,7 +7,7 @@
 
 namespace Jida\Core\Manager;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Parser {
     private $_config = false;
@@ -29,7 +29,7 @@ class Parser {
 
     private function _parserModulos () {
 
-        Helpers\Debug::imprimir($this->_modulos);
+        Medios\Debug::imprimir($this->_modulos);
 
         foreach ($this->_modulos as $key => $modulo) {
 
@@ -44,13 +44,13 @@ class Parser {
 
     private function _parserModulo ($modulo) {
 
-        $clase = 'App\Modulos\\' . Helpers\Cadenas::upperCamelCase($modulo) . '\\' . $this->_claseConfiguracion;
+        $clase = 'App\Modulos\\' . Medios\Cadenas::upperCamelCase($modulo) . '\\' . $this->_claseConfiguracion;
 
         if (class_exists($clase)) {
-            Helpers\Debug::imprimir($clase, true);
+            Medios\Debug::imprimir($clase, true);
         }
         else {
-            Helpers\Debug::imprimir("no existe " . $clase);
+            Medios\Debug::imprimir("no existe " . $clase);
         }
 
     }

@@ -13,7 +13,7 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura as Estructura;
 
 class Vista {
@@ -48,12 +48,12 @@ class Vista {
         $plantilla = $plantilla . ".php";
 
         $path = Estructura::path() . DS . Estructura::DIR_APP . DS . "plantillas";
-        if (Helpers\Directorios::validar($path . DS . $plantilla)) {
+        if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $ruta = $path . DS . $plantilla;
         }
 
         $path = Estructura::path() . DS . Estructura::DIR_JIDA . DS . "plantillas";
-        if (Helpers\Directorios::validar($path . DS . $plantilla)) {
+        if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $path . DS . $plantilla;
         }
 

@@ -9,7 +9,7 @@
 
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render as Render;
 
 class Campos extends Fcontroller {
@@ -20,7 +20,7 @@ class Campos extends Fcontroller {
 
         if (!empty($id)) {
 
-            Helpers\Sesion::destruir('JFormulario');
+            Medios\Sesion::destruir('JFormulario');
 
             $nombreFormulario = $id . '.json';
             $form = $this->_instanciarFormulario($nombreFormulario, $modulo);
@@ -86,7 +86,7 @@ class Campos extends Fcontroller {
             $this->_formulario->dataCampo($idCampo, $this->post());
             $this->_formulario->modulo($modulo);
             if ($this->_formulario->salvar()) {
-                $msj = Helpers\Mensajes::crear('suceso', 'Campo guardado correctamente.');
+                $msj = Medios\Mensajes::crear('suceso', 'Campo guardado correctamente.');
                 $this->respuestaJson([
                                          'ejecutado' => true,
                                          'mensaje'   => $msj
@@ -95,7 +95,7 @@ class Campos extends Fcontroller {
 
         }
         else {
-            $msj = Helpers\Mensajes::crear('suceso', 'No se pudo guardar el campo.');
+            $msj = Medios\Mensajes::crear('suceso', 'No se pudo guardar el campo.');
             $this->respuestaJson([
                                      'ejecutado' => false,
                                      'mensaje'   => $msj

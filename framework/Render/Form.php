@@ -604,7 +604,7 @@ class Form extends \Selector {
         $msj = Mensajes::crear($type, $msj);
         Session::set('__msjForm', $msj);
         if ($redirect) {
-            \Jida\Helpers\Rutas::redireccionar($redirect);
+            \Jida\Medios\Rutas::redireccionar($redirect);
         }
     }
 

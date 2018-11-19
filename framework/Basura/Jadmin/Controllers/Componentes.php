@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Render as Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Modelos\Viejos as Modelos;
 
 class Componentes extends JController {
@@ -142,7 +142,7 @@ class Componentes extends JController {
         else {
 
             if (!$this->solicitudAjax())
-                \Jida\Helpers\Rutas::redireccionar($this->url);
+                \Jida\Medios\Rutas::redireccionar($this->url);
             else
                 Render\JVista::msj('componentes', 'error', "Debe seleccionar un componente");
 

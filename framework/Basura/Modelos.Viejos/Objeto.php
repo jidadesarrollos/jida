@@ -10,7 +10,7 @@
 
 namespace Jida\Modelos\Viejos;
 use Jida\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 class Objeto extends BD\DataModel{
     
     /**
@@ -126,7 +126,7 @@ class Objeto extends BD\DataModel{
             }
         } 
         $objetos = $this->getTabla(null,$objetos,'descripcion','id_objeto');
-        $idsObjetos = Helpers\Arrays::obtenerKey('id_objeto', $objetos);
+        $idsObjetos = Medios\Arrays::obtenerKey('id_objeto', $objetos);
         
         $queryMetodos = "select id_metodo,metodo,descripcion,id_objeto from s_metodos where id_objeto in (".implode(",", $idsObjetos).") order by id_objeto";
         $resultMetodos = $this->bd->ejecutarQuery($queryMetodos);

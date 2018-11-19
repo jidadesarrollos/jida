@@ -12,8 +12,8 @@
 //_-----------------------------------------
 namespace Jida\Core\Manager;
 
-use Jida\Helpers as Helpers;
-use Jida\Helpers\Debug as Debug;
+use Jida\Medios as Medios;
+use Jida\Medios\Debug as Debug;
 use Jida\Core\Manager\ACL as ACL;
 use ReflectionClass;
 //use Jida\Core\ExcepcionController as Excepcion;
@@ -195,12 +195,12 @@ class JidaController {
             /**
              * Registro de tiempo inicial de ejecución
              */
-            Helpers\Sesion::set('__TIEjecucion', microtime(true));
+            Medios\Sesion::set('__TIEjecucion', microtime(true));
             /**
              * Seteo de zona horaria
              */
 
-            $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Helpers\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
+            $configuracion = (is_array($GLOBALS['JIDA_CONF'])) ? Medios\Arrays::convertirAObjeto($GLOBALS['JIDA_CONF']) : $GLOBALS['JIDA_CONF'];
 
             if (is_object($configuracion)) {
 
@@ -213,8 +213,8 @@ class JidaController {
             //$this->_parser = new Parser($this->modulosExistentes);
 
             $_SESSION['urlAnterior'] = isset($_SESSION['URL_ACTUAL']) ? $_SESSION['URL_ACTUAL'] : "";
-            JD('URL_ANTERIOR', Helpers\Sesion::obt('URL_ACTUAL'));
-            Helpers\Sesion::set('URL_ACTUAL', $_GET['url']);
+            JD('URL_ANTERIOR', Medios\Sesion::obt('URL_ACTUAL'));
+            Medios\Sesion::set('URL_ACTUAL', $_GET['url']);
 
             JD('URL_COMPLETA', "/" . $_GET['url']);
             JD('URL', "/" . $_GET['url'] . "/");
@@ -252,9 +252,9 @@ class JidaController {
             $GLOBALS['__URL_APP'] = $this->appRoot;
             //$ini = substr($this->appRoot, 1);
             $ini = $this->appRoot;
-            Helpers\Sesion::set('URL_ACTUAL', $ini . Helpers\Sesion::obt('URL_ACTUAL'));
-            //Helpers\Debug::imprimir($ini,true);
-            JD('URL', Helpers\Sesion::obt('URL_ACTUAL'));
+            Medios\Sesion::set('URL_ACTUAL', $ini . Medios\Sesion::obt('URL_ACTUAL'));
+            //Medios\Debug::imprimir($ini,true);
+            JD('URL', Medios\Sesion::obt('URL_ACTUAL'));
             /**
              * variable global con todos los parametros pasados via url
              */
@@ -463,7 +463,7 @@ class JidaController {
 
                 $namespace = 'Jida\\Jadmin\\Modulos';
 
-                if (Helpers\Directorios::validar(DIR_FRAMEWORK . DS . 'Jadmin/Modulos/' . $posModulo)) {
+                if (Medios\Directorios::validar(DIR_FRAMEWORK . DS . 'Jadmin/Modulos/' . $posModulo)) {
 
                     $this->_controladorDefault = $posModulo;
                     $this->_namespace = $namespace . '\\' . $posModulo . '\\Controllers\\';
@@ -686,8 +686,8 @@ class JidaController {
     private function ejecutarController ($controlador, $params = [], $checkDirs = true) {
 
         $args = $this->args;
-        #Helpers\Debug::imprimir("jida",$params);
-        $metodo = Helpers\Cadenas::lowerCamelCase($this->_metodo);
+        #Medios\Debug::imprimir("jida",$params);
+        $metodo = Medios\Cadenas::lowerCamelCase($this->_metodo);
         $retorno = [];
 
         #se instancia el controlador solicitado
@@ -752,7 +752,7 @@ class JidaController {
 
     private function jidaExcepcion (Excepcion $excepcion) {
 
-        Helpers\Debug::imprimir($excepcion, true);
+        Medios\Debug::imprimir($excepcion, true);
     }
 
     /**
@@ -765,7 +765,7 @@ class JidaController {
         try {
             //if(ENTORNO_APP=='dev' and $excepcion->getCode()!=404)
             global $dataVista;
-            // Helpers\Debug::imprimir($excepcion);
+            // Medios\Debug::imprimir($excepcion);
             if (strpos($this->_controlador, 'Controller') === false)
                 $ctrlError = $this->_controlador . "Controller";
             else
@@ -797,7 +797,7 @@ class JidaController {
             $this->vista->establecerAtributos(['modulo' => 'jadmin']);
             $this->vista->pathLayout('Framework/Layout');
             $this->controladorObject = 'Jida\Core\Excepcion';
-            Helpers\Debug::imprimir($e);
+            Medios\Debug::imprimir($e);
             //$this->mostrarContenido($ctrlExcepcion->vista);
         }
     }
@@ -846,10 +846,10 @@ class JidaController {
 
         if (!empty($str)) {
             if ($tipoCamelCase == 1) {
-                $nombre = str_replace(" ", "", Helpers\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
+                $nombre = str_replace(" ", "", Medios\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
             }
             else {
-                $nombre = str_replace(" ", "", Helpers\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
+                $nombre = str_replace(" ", "", Medios\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
             }
 
             return $nombre;

@@ -11,7 +11,7 @@
  * @version  0.1
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class Directorios extends \Directory {
 

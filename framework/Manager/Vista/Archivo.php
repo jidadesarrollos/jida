@@ -2,7 +2,7 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Helpers\Directorios;
+use Jida\Medios\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 

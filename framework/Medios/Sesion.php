@@ -9,7 +9,7 @@
  * @since    0.5
  */
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class Sesion {
 

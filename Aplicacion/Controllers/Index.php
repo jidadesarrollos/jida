@@ -6,12 +6,12 @@
 namespace App\Controllers;
 
 use Jida\Render as Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Index extends App {
 
     function index () {
-        Helpers\Debug::imprimir("llego aca", true);
+        Medios\Debug::imprimir("llego aca", true);
     }
 
 }

@@ -11,7 +11,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Modelos as Modelos;
 
 class Elementos extends JController {
@@ -34,11 +34,11 @@ class Elementos extends JController {
         global $elementos;
         $elemento = new Modelos\Elemento();
 
-        if (Helpers\Directorios::validar(DIR_APP . "Contenido/elementos.php")) {
+        if (Medios\Directorios::validar(DIR_APP . "Contenido/elementos.php")) {
             include_once 'Contenido/elementos.php';
         }
         else {
-            //Helpers\Debug::string(DIR_APP."Contenido/elementos.php");
+            //Medios\Debug::string(DIR_APP."Contenido/elementos.php");
         }
 
         $tema = JD('TEMA_APP');
@@ -49,7 +49,7 @@ class Elementos extends JController {
                 'elementos' => []
             ]
         ];
-        Helpers\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . '/Elementos',
+        Medios\Directorios::listarDirectoriosRuta(DIR_FRAMEWORK . '/Elementos',
                                                    $listaElementos['jida']['elementos'],
                                                    '/.php/');
         if (!empty($tema)) {
@@ -57,11 +57,11 @@ class Elementos extends JController {
                 'namespace' => '\App\Layout\\' . $tema . '\\Elementos\\',
                 'elementos' => []
             ];
-            Helpers\Directorios::listarDirectoriosRuta(DIR_APP . '/Layout/' . $tema . '/Elementos/',
+            Medios\Directorios::listarDirectoriosRuta(DIR_APP . '/Layout/' . $tema . '/Elementos/',
                                                        $listaElementos[$tema]['elementos'],
                                                        '/php/');
         }
-        #Helpers\Debug::imprimir(JD('TEMA_APP'),$listaElementos,true);
+        #Medios\Debug::imprimir(JD('TEMA_APP'),$listaElementos,true);
         $listadoFinal = [];
 
         foreach ($listaElementos as $modulo => $data) {

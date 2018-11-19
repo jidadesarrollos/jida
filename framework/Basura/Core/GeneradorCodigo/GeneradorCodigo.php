@@ -2,7 +2,7 @@
 
 namespace Jida\Core\GeneradorCodigo;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 trait GeneradorCodigo {
     use GeneradorArchivo;
@@ -162,7 +162,7 @@ trait GeneradorCodigo {
         if (!empty($ambito))
             $funcion .= $ambito . " ";
         $funcion =
-            "function " . Helpers\Cadenas::lowerCamelCase($nombre) . "(";
+            "function " . Medios\Cadenas::lowerCamelCase($nombre) . "(";
         if (count($params) > 0)
             $funcion .= implode(",", $params);
         $funcion .= ")" . $this->apertura();

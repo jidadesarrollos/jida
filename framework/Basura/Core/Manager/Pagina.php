@@ -14,11 +14,11 @@
 namespace Jida\Core\Manager;
 
 use App\Config\Configuracion;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\Render\Selector as Selector;
 use Jida\Core\Manager\JExcepcion as JExcepcion;
-use Jida\Helpers\Directorios as Directorios;
+use Jida\Medios\Directorios as Directorios;
 use Exception as Excepcion;
 
 class Pagina {
@@ -200,7 +200,7 @@ class Pagina {
             $this->rutaApp = DIR_APP . "Vistas" . "/";
         }
 
-        $this->url = (Helpers\Sesion::obt('URL_ACTUAL')[0] != "/") ? "/" . Helpers\Sesion::obt('URL_ACTUAL') : Helpers\Sesion::obt('URL_ACTUAL');
+        $this->url = (Medios\Sesion::obt('URL_ACTUAL')[0] != "/") ? "/" . Medios\Sesion::obt('URL_ACTUAL') : Medios\Sesion::obt('URL_ACTUAL');
     }
 
     /**
@@ -269,9 +269,9 @@ class Pagina {
     private function obtNombreTpl ($tpl) {
 
         if (strpos($tpl, '.tpl.php') === false)
-            return Helpers\Cadenas::lowerCamelCase($tpl . '.tpl.php');
+            return Medios\Cadenas::lowerCamelCase($tpl . '.tpl.php');
 
-        return Helpers\Cadenas::lowerCamelCase($tpl);
+        return Medios\Cadenas::lowerCamelCase($tpl);
     }
 
     /**
@@ -302,8 +302,8 @@ class Pagina {
             }
         }
 
-        $controlador = Helpers\Cadenas::lowerCamelCase(Helpers\Cadenas::guionCaseToString($this->controlador));
-        $controller = Helpers\Cadenas::lowerCamelCase(str_replace('Controller', '', $controlador));
+        $controlador = Medios\Cadenas::lowerCamelCase(Medios\Cadenas::guionCaseToString($this->controlador));
+        $controller = Medios\Cadenas::lowerCamelCase(str_replace('Controller', '', $controlador));
         $this->directorioVista .= $controller . "/";
 
         return $this->directorioVista;
@@ -340,7 +340,7 @@ class Pagina {
                 $rutaVista = $this->rutaExcepciones . $nombreVista . '.php';
             }
             else {
-                $rutaVista = $rutaVista . Helpers\Cadenas::lowerCamelCase($this->nombreVista) . ".php";
+                $rutaVista = $rutaVista . Medios\Cadenas::lowerCamelCase($this->nombreVista) . ".php";
             }
         }
 
@@ -370,11 +370,11 @@ class Pagina {
             $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
         }
         else {
-            $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
+            $_plantilla = $this->urlPlantilla . Medios\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
             if (!file_exists($_plantilla)) {
 
                 $this->urlPlantilla = DIR_PLANTILLAS_FRAMEWORK;
-                $_plantilla = $this->urlPlantilla . Helpers\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
+                $_plantilla = $this->urlPlantilla . Medios\Cadenas::lowerCamelCase($this->obtPlantilla()) . ".php";
 
                 if (!file_exists($_plantilla)) {
                     throw new Excepcion("La plantilla solicitada no existe : " . $_plantilla, $this->_ce . '10');
@@ -1247,7 +1247,7 @@ class Pagina {
 
         $base = URL_BASE;
         $base = (empty($base)) ? "/" : "/" . URL_BASE . '/';
-        $url = explode("/", Helpers\Cadenas::guionCase($idioma, true) . '/' . Helpers\Cadenas::guionCase($url, true));
+        $url = explode("/", Medios\Cadenas::guionCase($idioma, true) . '/' . Medios\Cadenas::guionCase($url, true));
 
         return $base . implode("/", array_filter($url));
 

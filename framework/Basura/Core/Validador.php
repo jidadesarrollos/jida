@@ -11,7 +11,7 @@
 
 namespace Jida\Core;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 
 class Validador {
 

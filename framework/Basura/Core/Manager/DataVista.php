@@ -14,7 +14,7 @@
 
 namespace Jida\Core\Manager;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception;
 
 class DataVista {
@@ -198,7 +198,7 @@ class DataVista {
             }
         }
 
-        // Helpers\Debug::imprimir($this->js,$js,true);
+        // Medios\Debug::imprimir($this->js,$js,true);
     }
 
     /**
@@ -211,7 +211,7 @@ class DataVista {
     function addCssModulo ($css, $ruta = true) {
 
         $modulo = $this->modulo;
-        (Helpers\Cadenas::guionCase($modulo) == 'jadmin') ? $modulo = "Framework" : $modulo = "Aplicacion/Modulos/" . $modulo;
+        (Medios\Cadenas::guionCase($modulo) == 'jadmin') ? $modulo = "Framework" : $modulo = "Aplicacion/Modulos/" . $modulo;
 
         if ($ruta === true) {
             if ($this->_esJadmin and !$this->_esApp) {

@@ -1,6 +1,6 @@
 <?php
 
-use Jida\Helpers\Sesion as Sesion;
+use Jida\Medios\Sesion as Sesion;
 
 ?>
 

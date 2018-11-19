@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Controllers;
 
 use Exception;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Modelos\Viejos as ModelosViejos;
 use Jida\Modelos as Modelos;
@@ -92,24 +92,24 @@ class MenusOLD extends JController {
             $valor = $classMenu->procesarMenu($post);
             if (isset($valor['result']['ejecutado']) and $valor['result']['ejecutado'] == 1) {
                 $msj = Mensajes::mensajeSuceso('Menu <strong>' . $valor['accion'] . '</strong> exitosamente');
-                Helpers\Sesion::set('__msjVista', $msj);
-                Helpers\Sesion::set('__idVista', 'menus');
+                Medios\Sesion::set('__msjVista', $msj);
+                Medios\Sesion::set('__idVista', 'menus');
                 redireccionar('/jadmin/menus/');
             } else {
 
                 $msj = Mensajes::mensajeError($valor);
 
-                Helpers\Sesion::set('__msjForm', $msj);
+                Medios\Sesion::set('__msjForm', $msj);
 
-                Helpers\Sesion::set('__dataPostForm', $post);
+                Medios\Sesion::set('__dataPostForm', $post);
                 redireccionar('/jadmin/menus/procesar-menu/');
             }
 
         } else {
 
             $msj = Mensajes::mensajeError('No se ha podido procesar el menu');
-            Helpers\Sesion::set('__msjForm', $msj);
-            Helpers\Sesion::set('__DataPostForm', $post);
+            Medios\Sesion::set('__msjForm', $msj);
+            Medios\Sesion::set('__DataPostForm', $post);
             redireccionar('/jadmin/procesar-menu/');
         }
     }//final funcion
@@ -151,7 +151,7 @@ class MenusOLD extends JController {
 
         } else
             if (is_array($this->get('menu'))) {
-                Helpers\Debug::mostrarArray($this->get('menu'));
+                Medios\Debug::mostrarArray($this->get('menu'));
 
             } else {
                 throw new Exception("Debe seleccionar un menu", 1);
@@ -232,8 +232,8 @@ class MenusOLD extends JController {
                             $opcionesPerfil = new ModelosViejos\OpcionMenuPerfil();
                             $opcionesPerfil->eliminarAccesos($opcionMenu->getResult()->idResultado())->salvarTodo($perfiles);
                         } else {
-                            Helpers\Debug::mostrarArray($this->obtPost('id_perfil'), 0);
-                            Helpers\Debug::string("No entramos");
+                            Medios\Debug::mostrarArray($this->obtPost('id_perfil'), 0);
+                            Medios\Debug::string("No entramos");
                         }
                         RenderHTML\Vista::msj('opciones', 'sucess', $msj, $this->url . 'opciones/menu/' . $idMenu . '/padre/' . $post['padre']);
                     } else {

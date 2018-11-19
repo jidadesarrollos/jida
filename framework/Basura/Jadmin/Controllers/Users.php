@@ -2,7 +2,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use Jida\Core\UsuarioManager as UsuarioManager;
@@ -36,7 +36,7 @@ class Users extends JController {
 
         $form->titulo("Cambio de Clave");
         $form->boton('principal', 'Cambiar Clave');
-        $user = Helpers\Sesion::obt('Usuario');
+        $user = Medios\Sesion::obt('Usuario');
 
         if ($this->post('btnCambioClave')) {
 
@@ -49,16 +49,16 @@ class Users extends JController {
 
                     if ($user->salvar()) {
 
-                        $msj = Helpers\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
-                        Helpers\Sesion::editar('__msj', $msj);
-                        Helpers\Sesion::editar('Usuario', $user);
+                        $msj = Medios\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
+                        Medios\Sesion::editar('__msj', $msj);
+                        Medios\Sesion::editar('Usuario', $user);
 
                         if (defined('DEFAULT_JADMIN')) {
                             $this->redireccionar(DEFAULT_JADMIN);
                         }
                         else {
-                            $msj = Helpers\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
-                            Helpers\Sesion::editar('__msj', $msj);
+                            $msj = Medios\Mensajes::crear('suceso', 'La clave se ha cambiado exitosamente');
+                            Medios\Sesion::editar('__msj', $msj);
 
                             $this->redireccionar($this->obtUrl('jadmin.index'));
                         }

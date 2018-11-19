@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Modulos\menus\Controllers;
 
 use Exception;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Modelos as Modelos;
 use Jida\Render as Render;
 
@@ -201,7 +201,7 @@ class Opciones extends \Jida\Jadmin\Controllers\JController {
                                                        ]));
 
                 }
-                else Helpers\Debug::imprimir('error al guardar');
+                else Medios\Debug::imprimir('error al guardar');
 
                 // $this->redireccionar('\jadmin\menus\index');
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Helpers;
+namespace Jida\Medios;
 
 class Rutas {
 

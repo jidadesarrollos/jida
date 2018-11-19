@@ -11,7 +11,7 @@
 namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Modelos\Formulario;
 use Jida\Render as Render;
@@ -35,7 +35,7 @@ class Formularios extends JControl {
 
             $forms = [
                 'jida' => [
-                    'formularios' => Helpers\Directorios::listar($this->_rutaJida),
+                    'formularios' => Medios\Directorios::listar($this->_rutaJida),
                     'path'        => $this->_rutaJida,
                     'modulo'      => 'Jida'
                 ]
@@ -78,7 +78,7 @@ class Formularios extends JControl {
             ]
         ];
 
-        //Helpers\Debug::imprimir($formularios,true);
+        //Medios\Debug::imprimir($formularios,true);
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
@@ -128,8 +128,8 @@ class Formularios extends JControl {
             $path = DIR_APP . 'Modulos' . DS . ucwords($modulo) . DS . 'Formularios';
         }
 
-        if (Helpers\Directorios::validar($path)) {
-            $archivos = Helpers\Directorios::listar($path);
+        if (Medios\Directorios::validar($path)) {
+            $archivos = Medios\Directorios::listar($path);
             if (!$archivos) {
                 return;
             }
@@ -304,14 +304,14 @@ class Formularios extends JControl {
 
         if ($this->_formulario->salvar($post)) {
 
-            $msj = Helpers\Mensajes::crear('suceso', 'Formulario guardado correctamente');
-            Helpers\Sesion::set('__msj', $msj);
+            $msj = Medios\Mensajes::crear('suceso', 'Formulario guardado correctamente');
+            Medios\Sesion::set('__msj', $msj);
 
             return true;
 
         }
         else {
-            Helpers\Debug::imprimir("No se pudo guardar el formulario", true);
+            Medios\Debug::imprimir("No se pudo guardar el formulario", true);
         }
 
         return false;

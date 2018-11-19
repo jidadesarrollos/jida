@@ -12,7 +12,7 @@ namespace Jida\Jadmin\Controllers;
 use Exception;
 use Jida\BD as BD;
 use Jida\Render as Render;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Modelos as Modelos;
 use Jida\RenderHTML as RenderHTML;
 use Jida\Core\GeneradorCodigo as GeneradorCodigo;
@@ -53,9 +53,9 @@ class Init extends JController {
     function index () {
 
         $this->vista = "init";
-        // Helpers\Debug::imprimir($this->post(),'init');
+        // Medios\Debug::imprimir($this->post(),'init');
         if ($this->post('btnBdConfig')) {
-            if (!Helpers\Sesion::obt('dirApp'))
+            if (!Medios\Sesion::obt('dirApp'))
                 $this->crearDirApp();
             if (!$this->validarDatosBD()) {
 
@@ -102,9 +102,9 @@ class Init extends JController {
 
             $bdConfig = "";
             #Debug::mostrarArray($bdConfig);
-            if (!Helpers\Directorios::validar(DIR_APP))
-                Helpers\Directorios::crear(DIR_APP);
-            Helpers\Directorios::crear(DIR_APP . "/Config");
+            if (!Medios\Directorios::validar(DIR_APP))
+                Medios\Directorios::crear(DIR_APP);
+            Medios\Directorios::crear(DIR_APP . "/Config");
             $bdConfig .= $this->abrirPHP() . $this->docBlock(
                     "Archivo de Configuración de Base de Datos"
                 );
@@ -246,7 +246,7 @@ class Init extends JController {
 
             }
             else {
-                Helpers\Sesion::set('__msj', Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
+                Medios\Sesion::set('__msj', Mensajes::crear('error', 'Debes Seleccionar alguna tabla'));
             }
 
         }
@@ -288,8 +288,8 @@ class Init extends JController {
             'Aplicacion/Layout',
             'Aplicacion/Vistas'
         ];
-        Helpers\Directorios::crear($directorios);
-        Helpers\Sesion::set('dirApp', true);
+        Medios\Directorios::crear($directorios);
+        Medios\Sesion::set('dirApp', true);
     }
 
     private function probarConexion ($configuracion) {
@@ -360,15 +360,15 @@ class Init extends JController {
 
         if (count($modulo) > 1) {
 
-            $ubicacion .= Helpers\Cadenas::upperCamelCase(Helpers\Cadenas::upperCamelCase($modulo[0])) . "/Vistas/" . Helpers\Cadenas::lowerCamelCase($modulo[1]) . "/";
+            $ubicacion .= Medios\Cadenas::upperCamelCase(Medios\Cadenas::upperCamelCase($modulo[0])) . "/Vistas/" . Medios\Cadenas::lowerCamelCase($modulo[1]) . "/";
         }
         else {
 
-            $ubicacion .= "Vistas/" . Helpers\Cadenas::lowerCamelCase($controller) . "/";
+            $ubicacion .= "Vistas/" . Medios\Cadenas::lowerCamelCase($controller) . "/";
         }
 
-        if (!Helpers\Directorios::validar($ubicacion))
-            Helpers\Directorios::crear($ubicacion);
+        if (!Medios\Directorios::validar($ubicacion))
+            Medios\Directorios::crear($ubicacion);
 
         $view =
             $this->abrirPHP()
@@ -386,8 +386,8 @@ class Init extends JController {
 
     private function agregarLayout () {
 
-        if (!Helpers\Directorios::validar(DIR_APP . DS . "Layout"))
-            Helpers\Directorios::crear(DIR_APP . DS . "Layout");
+        if (!Medios\Directorios::validar(DIR_APP . DS . "Layout"))
+            Medios\Directorios::crear(DIR_APP . DS . "Layout");
         copy(DIR_FRAMEWORK . DS . "Layout/jadminIntro.tpl.php", DIR_APP . DS . "Layout/default.tpl.php");
 
         return $this;
@@ -395,8 +395,8 @@ class Init extends JController {
 
     private function copiarHtdocs () {
 
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/js/", HTDOCS_DIR . "js/jida/");
-        Helpers\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/css/", HTDOCS_DIR . "css/jida/");
+        Medios\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/js/", HTDOCS_DIR . "js/jida/");
+        Medios\Directorios::copiar(DIR_FRAMEWORK . DS . "htdocs/css/", HTDOCS_DIR . "css/jida/");
 
         return $this;
     }
@@ -416,9 +416,9 @@ class Init extends JController {
         $user->registrarUsuario($data, [1], false);
         $user->agregarPerfilSesion('JidaAdministrador');
 
-        Helpers\Sesion::sessionLogin();
+        Medios\Sesion::sessionLogin();
         $user->registrarSesion();
-        Helpers\Sesion::set('Usuario', $user);
+        Medios\Sesion::set('Usuario', $user);
 
         return $this;
     }

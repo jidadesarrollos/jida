@@ -7,7 +7,7 @@
 
 namespace Jida\Manager\Rutas;
 
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Jida\Manager\Rutas\Procesador\Controlador;
 use Jida\Manager\Rutas\Procesador\Metodo;
 use Jida\Manager\Rutas\Procesador\Modulo;
@@ -72,10 +72,10 @@ class Procesador {
             return false;
         }
         if ($tipoCamelCase == 'upper') {
-            $nombre = str_replace(" ", "", Helpers\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
+            $nombre = str_replace(" ", "", Medios\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
         }
         else {
-            $nombre = str_replace(" ", "", Helpers\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
+            $nombre = str_replace(" ", "", Medios\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
         }
 
         return $nombre;

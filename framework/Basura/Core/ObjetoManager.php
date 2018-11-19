@@ -9,7 +9,7 @@
 
 namespace Jida\Core;
 
-use \Jida\Helpers\Debug as Debug;
+use \Jida\Medios\Debug as Debug;
 
 trait ObjetoManager {
 

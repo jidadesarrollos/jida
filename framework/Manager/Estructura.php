@@ -7,7 +7,7 @@
 namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
-use Jida\Helpers\Debug;
+use Jida\Medios\Debug;
 use Jida\Manager\Rutas\Arranque;
 
 class Estructura {

@@ -11,7 +11,7 @@
 namespace Jida\Render\Inputs;
 
 use Jida\BD\BD as BD;
-use Jida\Helpers as Helpers;
+use Jida\Medios as Medios;
 use Exception as Excepcion;
 use Jida\Render\CloneSelector as CloneSelector;
 use Jida\Render\Selector as Selector;
@@ -44,7 +44,7 @@ class Input extends InputBase {
         if (property_exists($params, 'class')) {
             $this->addClass($params->class);
         }
-        #Helpers\Debug::imprimir($params);
+        #Medios\Debug::imprimir($params);
 
     }
 

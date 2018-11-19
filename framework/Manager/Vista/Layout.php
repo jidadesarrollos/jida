@@ -7,7 +7,7 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
-use Jida\Helpers\Directorios;
+use Jida\Medios\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Layout\Procesador;
 
