@@ -1,0 +1,102 @@
+{
+  "nombre": "Registro de Opcion",
+  "identificador": "RegistroOpcion",
+  "estructura": "2x5",
+  "query": "select a.id_opcion_menu,id_menu,url_opcion,opcion_menu,icono,orden, selector_icono,id_estatus, padre, id_perfil from s_opciones_menu a left join s_opciones_menu_perfiles b on (a.id_opcion_menu=b.id_opcion_menu)",
+  "clave_primaria": "a.id_opcion_menu",
+  "campos": [
+    {
+      "name": "selector_icono",
+      "orden": "6",
+      "id": "selector_icono",
+      "type": "select",
+      "label": "Selector del Icono",
+      "opciones": "1=Span;2=Imagen"
+    },
+    {
+      "name": "id_opcion_menu",
+      "orden": "10",
+      "id": "id_opcion_menu",
+      "type": "hidden"
+    },
+    {
+      "name": "icono",
+      "orden": "5",
+      "type": "text",
+      "id": "icono",
+      "placeholder": "clase css fuente o url de imagen",
+      "label": "Icono"
+    },
+    {
+      "name": "id_estatus",
+      "orden": "4",
+      "type": "select",
+      "id": "id_estatus",
+      "label": "Estatus",
+      "opciones": "select * from s_estatus where id_estatus in(1,2)"
+    },
+    {
+      "name": "orden",
+      "orden": "3",
+      "id": "orden",
+      "label": "Orden",
+      "type": "text",
+      "eventos": {
+        "numerico": {
+          "mensaje": "El orden debe ser numerico"
+        }
+      }
+    },
+    {
+      "name": "padre",
+      "orden": "2",
+      "type": "select",
+      "id": "padre",
+      "label": "Padre",
+      "opciones": "=principal;select id_opcion_menu, opcion_menu from s_opciones_menu"
+    },
+    {
+      "name": "url_opcion",
+      "orden": "1",
+      "id": "url_opcion",
+      "label": "Url",
+      "type": "text",
+      "eventos": {
+        "programa": {
+          "mensaje": "formato de url invalido "
+        }
+      }
+    },
+    {
+      "name": "id_menu",
+      "orden": "9",
+      "type": "hidden",
+      "id": "id_menu"
+    },
+    {
+      "name": "opcion_menu",
+      "orden": "7",
+      "id": "opcion_menu",
+      "label": "Nombre de Opcion",
+      "type": "text",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "El nombre de la opcion es obligatorio"
+        }
+      }
+    },
+    {
+      "name": "id_perfil",
+      "orden": "8",
+      "id": "id_perfil",
+      "label": "Perfiles Con Acceso",
+      "type": "checkbox",
+      "opciones": "select id_perfil, perfil from s_perfiles",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe Seleccionar Un Perfil"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+.jvista {
+  background: #fff;
+  z-index: -40;
+  border-radius: 2px;
+  h1 {
+    font-size: 22px;
+  }
+  .seccion-busqueda {
+    padding-bottom: 30px;
+
+  }
+  table {
+    border: 1px solid @brand-primary;
+    thead {
+      background: @brand-primary;
+      * {
+        color: #fff;
+      }
+
+    }
+    th {
+      * {
+        font-size: 16px;
+      }
+    }
+    tr {
+
+      td, th {
+        border-color: @brand-primary;
+      }
+      &:hover {
+        background: fade(@brand-primary, 20%);
+      }
+    }
+  }
+  .text-right {
+
+    .btn-vista {
+      color: #fff;
+      background: @brand-primary;
+      .transicion(.2s);
+      .radius(2px);
+      &:hover {
+        background: darken(@brand-primary, 15%);
+        .transicion(.2s);
+      }
+    }
+  }
+
+}
+

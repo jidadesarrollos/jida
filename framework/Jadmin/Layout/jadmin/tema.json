@@ -1,0 +1,29 @@
+{
+  "link": {
+    "shortcut icon": "Framework/Jadmin/Layout/jadmin/htdocs/images/favicon.ico"
+  },
+  "dev": {
+    "css": {
+      "bootstrap": "Framework/Jadmin/Layout/jadmin/htdocs/css/bootstrap.min.css",
+      "font-awesome": "Framework/Jadmin/Layout/jadmin/htdocs/font-awesome/css/font-awesome.min.css",
+      "dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
+      "style": "Framework/Jadmin/Layout/jadmin/htdocs/css/style.css"
+    },
+    "js": {
+      "jquery": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.min.js",
+      "modernizr": "Framework/Jadmin/Layout/jadmin/htdocs/js/modernizr.min.js",
+      "moment": "Framework/Jadmin/Layout/jadmin/htdocs/js/moment.min.js",
+      "popper": "Framework/Jadmin/Layout/jadmin/htdocs/js/popper.min.js",
+      "bootstrap": "Framework/Jadmin/Layout/jadmin/htdocs/js/bootstrap.min.js",
+      "detect": "Framework/Jadmin/Layout/jadmin/htdocs/js/detect.js",
+      "fastclick": "Framework/Jadmin/Layout/jadmin/htdocs/js/fastclick.js",
+      "jq-blockUI": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.blockUI.js",
+      "jq-nicescroll": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.nicescroll.js",
+      "jq-dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/jquery.dataTables.min.js",
+      "bt-dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
+      "jadmin": "Framework/Jadmin/Layout/jadmin/htdocs/js/jadmin.js"
+    }
+  },
+  "prod": {
+  }
+}

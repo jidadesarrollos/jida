@@ -1,0 +1,41 @@
+{
+  "validaciones": {
+    "obligatorio": [
+      "mensaje",
+      "condicion",
+      "condicional",
+      "tipo"
+    ],
+    "numerico": "prueba",
+    "otro": "prueba",
+    "decimal": "mensaje",
+    "fecha": "mensaje",
+    "caracteres": "mensaje",
+    "celular": "mensaje",
+    "telefono": [
+      {
+        "label": "tipo",
+        "valores": [
+          "multiple",
+          "local",
+          "celular",
+          "input",
+          "checkbox"
+        ]
+      },
+      "ext",
+      "tipo"
+    ],
+    "caracteresEspeciales": "mensaje",
+    "tiny": "mensaje",
+    "alfanumerico": "mensaje",
+    "documentacion": "mensaje",
+    "programa": "mensaje",
+    "minuscula": "mensaje",
+    "mayuscula": "mensaje",
+    "numero": "mensaje",
+    "caracteresEsp": "mensaje",
+    "coordenada": "mensaje",
+    "internacional": "mensaje"
+  }
+}

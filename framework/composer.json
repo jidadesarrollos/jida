@@ -1,0 +1,34 @@
+{
+  "name": "jida/framework",
+  "description": "Framework Hmvc para el desarrollo de aplicaciones en entorno web",
+  "type": "Framework",
+  "license": "mit",
+  "version": "0.6.1",
+  "authors": [
+    {
+      "name": "jrodriguez",
+      "email": "jrodriguez@jidadesarrollos.com"
+    }
+  ],
+  "require": {
+    "phpmailer/phpmailer": "^5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jida\\": [
+        "./"
+      ],
+      "App\\": [
+        "../Aplicacion/"
+      ]
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "npm install"
+    ],
+    "post-update-cmd": [
+      "npm update"
+    ]
+  }
+}

@@ -7,7 +7,7 @@
 
 namespace App\Controllers;
 
-class App extends \Jida\Core\Controller {
+class App extends \Jida\Core\Controlador {
 
     function __construct () {
 

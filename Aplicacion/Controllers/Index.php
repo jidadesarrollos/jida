@@ -11,7 +11,6 @@ use Jida\Helpers as Helpers;
 class Index extends App {
 
     function index () {
-
         Helpers\Debug::imprimir("llego aca", true);
     }
 
