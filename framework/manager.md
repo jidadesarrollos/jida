@@ -6,7 +6,7 @@ del framework.
 Realiza la instancia del Validador para verificar que
 toda la estructura inicial necesaria se encuentre armada.
 
-Intancia al *Lector*, que es quien se encarga
+Instancia al *Lector*, que es quien se encarga
 de procesar la url solicitada desde el navegador
 e interpretar que es lo que significa y que componentes
 requiere.

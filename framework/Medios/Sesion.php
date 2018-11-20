@@ -11,7 +11,11 @@
 
 namespace Jida\Medios;
 
+use Jida\Modulos\Usuario\Usuario;
+
 class Sesion {
+
+    static public $user;
 
     /**
      * @internal Inicia una nueva sesión.
@@ -20,11 +24,11 @@ class Sesion {
      * @since    0.1
      *
      */
-
-    static function iniciar () {
+    static function iniciar() {
 
         session_start();
         self::set('__idSession', self::getIdSession());
+        self::$user = new Usuario();
     }
 
     /**
@@ -34,7 +38,7 @@ class Sesion {
      * @since    0.1
      *
      */
-    static function getIdSession () {
+    static function getIdSession() {
 
         return session_id();
     }
@@ -51,7 +55,7 @@ class Sesion {
      *
      */
 
-    static function destruir ($key = false) {
+    static function destruir($key = false) {
 
         if ($key) {
             if (is_array($key)) {
@@ -60,16 +64,14 @@ class Sesion {
                         unset($_SESSION[$clave]);
                     }
                 }
-            }
-            else {
+            } else {
 
                 if (array_key_exists($key, $_SESSION)) {
                     unset($_SESSION[$key]);
                 }
             }
 
-        }
-        else {
+        } else {
             session_destroy();
             session_unset();
 
@@ -88,7 +90,7 @@ class Sesion {
      * @see    self::destruir
      */
 
-    static function destroy ($key = false) {
+    static function destroy($key = false) {
 
         self::destruir($key);
     }
@@ -101,7 +103,7 @@ class Sesion {
      * @since     0.1
      *
      */
-    static function sessionLogin () {
+    static function sessionLogin() {
 
         self::destroy('acl');
         self::set('isLoggin', true);
@@ -109,7 +111,7 @@ class Sesion {
         self::set('__idSession', self::getIdSession());
     }
 
-    static function set ($clave, $param2, $param3 = "") {
+    static function set($clave, $param2, $param3 = "") {
 
         return self::editar($clave, $param2, $param3);
     }
@@ -127,14 +129,13 @@ class Sesion {
      * @since    0.1
      *
      */
-    static function editar ($clave, $param2, $param3 = "") {
+    static function editar($clave, $param2, $param3 = "") {
 
         if (!empty($param3)) {
 
             $_SESSION[$clave][$param2] = $param3;
 
-        }
-        else
+        } else
             if (!empty($clave)) {
                 $_SESSION[$clave] = $param2;
             }
@@ -150,51 +151,16 @@ class Sesion {
      * @since    0.1
      *
      */
-    static function obt ($clave, $clave2 = "") {
+    static function obt($clave, $clave2 = "") {
 
         if (!empty($clave2) and isset ($_SESSION [$clave][$clave2])) {
             return $_SESSION [$clave][$clave2];
-        }
-        else
+        } else
             if (isset ($_SESSION [$clave])) {
                 return $_SESSION [$clave];
-            }
-            else {
+            } else {
                 return false;
             }
-    }
-
-    /**
-     * Genera una nueva variable de sesión
-     * * @method get
-     *
-     * @access public
-     *
-     * @param string clave key de la variable de session a obtener
-     *
-     * @since  0.5
-     * @deprecated
-     *
-     */
-    static public function get ($clave, $clave2 = '') {
-
-        return self::obt($clave, $clave2);
-
-    }
-
-    /**
-     * @internal Verifica si el usuario actual tiene sesión iniciada
-     * en el sistema
-     *
-     * @return boolean true
-     * @since    0.1
-     * @deprecated
-     * @see      activa
-     *
-     */
-    static function checkLogg () {
-
-        return self::activa();
     }
 
     /**
@@ -207,9 +173,9 @@ class Sesion {
      * @see      activo
      *
      */
-    static function activa () {
+    static function activa() {
 
-        if (self::get('isLoggin'))
+        if (self::obt('isLoggin'))
             return true;
         else
             return false;
@@ -226,41 +192,15 @@ class Sesion {
      * @since    0.1
      *
      */
-    static function checkAcceso ($perfil) {
+    static function checkAcceso($perfil) {
 
         return self::checkPerfilAcceso($perfil);
     }
 
-    /**
-     * @internal Verifica que el usuario actual tenga exactamente el mimso perfil
-     * que el perfil requerido
-     * @method checkPerfilAcceso
-     *
-     * @param string $perfil Clave del perfil a consultar
-     *
-     * @return boolean TRUE si es conseguida o FALSE si no se consigue
-     * @since    0.1
-     *
-     */
-    static function checkPerfilAcceso ($perfil) {
+    static function es($perfil) {
 
         if (is_object(self::obt('Usuario')) and property_exists(self::obt('Usuario'), 'perfiles')) {
-
             $perfiles = self::obt('Usuario')->perfiles;
-
-            if (is_array($perfiles) and in_array(Cadenas::upperCamelCase($perfil), $perfiles)) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    static function es ($perfil) {
-
-        if (is_object(self::get('Usuario')) and property_exists(self::get('Usuario'), 'perfiles')) {
-            $perfiles = self::get('Usuario')->perfiles;
             if (!is_array($perfil))
                 $perfil = explode(" ", $perfil);
 
@@ -275,22 +215,5 @@ class Sesion {
 
     }
 
-    /**
-     * @internal Verifica si el usuario en sesion es administrador
-     *
-     * @method checkAdm
-     * @return boolean
-     * @since    0.1
-     *
-     */
-    static function checkAdm () {
+}
 
-        $perfiles = self::obt('usuario', 'perfiles');
-        if (in_array('JidaAdministrador', $perfiles) or in_array('Administrador', $perfiles))
-
-            return true;
-
-        return false;
-
-    }
-} // END

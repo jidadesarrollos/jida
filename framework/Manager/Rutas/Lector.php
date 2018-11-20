@@ -3,16 +3,15 @@
 namespace Jida\Manager\Rutas;
 
 use Jida\Configuracion\Config;
-use Jida\Medios as Medios;
+
 use Jida\Manager\Estructura;
+use Jida\Medios\Sesion;
 
 class Lector {
 
     // private $_ce = 10003;
     private $_get;
     private $_manager;
-    private $_urlOriginal;
-
     /**
      * @var array $_args Argumentos GET.
      */
@@ -79,8 +78,8 @@ class Lector {
 
         $urlBase = Estructura::$urlBase;
 
-        $urlActual = $urlBase . Medios\Sesion::obt('URL_ACTUAL');
-        Medios\Sesion::set('URL_ACTUAL', $urlActual);
+        $urlActual = $urlBase . Sesion::obt('URL_ACTUAL');
+        Sesion::set('URL_ACTUAL', $urlActual);
 
         if (count(Estructura::$partes) > 0) {
             $this->_validarIdioma();

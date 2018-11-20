@@ -1,15 +1,13 @@
-<?php
-$data = $this->data;
-
-if (isset($data->formLoggin)) { ?>
-
-    <div class="card card-login mx-auto mt-5">
-        <div class="card-header">JIDA Framework</div>
-        <div class="card-body">
-            <?= $data->formLoggin ?>
-        </div>
+<div class="col-md-6 col-md-offset-3 top-60">
+    <div class="panel panel-default panel-login">
+        <section class="panel-heading" role="title">
+            <h1>
+                JIDA Framework <br/>
+                <small>Desarrollo de aplicaciones</small>
+            </h1>
+        </section>
+        <section class="panel-body">
+            <?= $this->formulario ?>
+        </section>
     </div>
-
-    <?php
-
-}
+</div>

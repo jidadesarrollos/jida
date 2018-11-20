@@ -54,7 +54,7 @@ class Arranque {
      */
     private $_managerVista;
 
-    public function __construct ($control) {
+    public function __construct($control) {
 
         $conf = Config::obtener();
 
@@ -64,14 +64,13 @@ class Arranque {
 
     }
 
-    private function _parser () {
+    private function _parser() {
 
         $parametro = $this->proximoParametro();
 
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
-        }
-        else {
+        } else {
             $this->reingresarParametro($parametro);
         }
 
@@ -80,7 +79,7 @@ class Arranque {
 
     }
 
-    public function proximoParametro () {
+    public function proximoParametro() {
 
         $proximo = array_shift($this->_arrayUrl);
 
@@ -88,13 +87,13 @@ class Arranque {
 
     }
 
-    public function reingresarParametro ($parametro) {
+    public function reingresarParametro($parametro) {
 
         array_unshift($this->_arrayUrl, $parametro);
 
     }
 
-    public function arrayUrl () {
+    public function arrayUrl() {
 
         return $this->_arrayUrl;
 
@@ -111,7 +110,7 @@ class Arranque {
      *
      * @since 0.6
      */
-    private function _pipeLines ($controlador, $metodo) {
+    private function _pipeLines($controlador, $metodo) {
 
         if (method_exists($controlador, $metodo)) {
 
@@ -130,7 +129,7 @@ class Arranque {
 
     }
 
-    public static function obtenerControlador ($controlador) {
+    public static function obtenerControlador($controlador) {
 
         if (!self::$Controlador or $controlador != self::$controlador) {
             self::$controlador = str_replace("Controller", "", $controlador);
@@ -149,7 +148,7 @@ class Arranque {
 
     }
 
-    public function ejecutar () {
+    public function ejecutar() {
 
         try {
             $controlador = self::obtenerControlador(self::$controlador);
@@ -172,22 +171,18 @@ class Arranque {
                 $this->_managerVista->renderizar();
 
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Medios\Debug::imprimir(["capturada excepcion en arranque", $e], true);
-        }
-        catch (\Error $e) {
+        } catch (\Error $e) {
             Medios\Debug::imprimir(["capturado error en arranque", $e], true);
         }
 
     }
 
-    private function _validar () {
+    private function _validar() {
 
         Estructura::definir($this);
 
-        $ctrl = Estructura::$namespace . self::$controlador;
-        $ctrl = new $ctrl();
         $ControlPadre = 'Jida\Core\Controlador\Control';
         $esData = (self::$Controlador instanceof $ControlPadre);
 
@@ -195,14 +190,14 @@ class Arranque {
             $dataVista = new Core\DataVista(self::$modulo, self::$controlador, self::$metodo, $this->jadmin);
             $GLOBALS['dataVista'] = $dataVista;
             $this->_dataVista = $dataVista;
-        }
-        else {
+        } else {
             $data = Data::obtener();
             $GLOBALS['dataVista'] = $data;
             $this->_dataVista = $data;
         }
 
         return true;
+
     }
 
 }
