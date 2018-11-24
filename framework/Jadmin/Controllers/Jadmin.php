@@ -8,6 +8,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use Jida\Manager\Vista\RenderLayout;
 use Jida\Medios\Sesion;
 
 class Jadmin extends JControl {
@@ -15,7 +16,6 @@ class Jadmin extends JControl {
     function __construct() {
 
         parent::__construct();
-
 
     }
 
@@ -30,6 +30,11 @@ class Jadmin extends JControl {
     }
 
     private function _inicioSesion() {
+
+        $this->layout('jlogin');
+
+        $this->dv->incluirCSS('login.css', '/framework/Jadmin/Layout/jadmin/htdocs/css/');
+
         $this->vista('login');
         $this->data('formulario', 'formulario de inicio de sesion');
     }
