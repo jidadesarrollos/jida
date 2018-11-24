@@ -6,12 +6,11 @@ use Jida\Modulos\Usuario\Modelos\Usuario;
 
 class Permisos {
 
-
-    function __construct ($user = null or Usuario) {
+    function __construct(Usuario $user = null) {
         //todo: write construct
     }
 
-    function es () {
+    function es() {
         //todo: write method validation
     }
 

@@ -13,7 +13,7 @@ namespace Jida\Medios;
 
 use Jida\Medios\Sesion\Functions;
 use Jida\Medios\Sesion\Validacion;
-use Jida\Modelos\Usuario;
+use Jida\Modulos\Usuario\Usuario;
 
 class Sesion {
 

@@ -16,6 +16,7 @@ class Jadmin extends JControl {
 
         parent::__construct();
 
+
     }
 
     function index() {
