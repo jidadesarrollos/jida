@@ -11,10 +11,12 @@
 
 namespace Jida\Medios;
 
+use Jida\Medios\Sesion\Functions;
 use Jida\Modulos\Usuario\Usuario;
 
 class Sesion {
 
+    use Functions;
     static public $user;
 
     /**
@@ -29,8 +31,9 @@ class Sesion {
         session_start();
         self::set('__idSession', self::getIdSession());
 
-self::$user = new Usuario();
-}
+        self::$user = new Usuario();
+    }
+
     /**
      * @internal Retorna el id de la sessión
      * @method getIdSession
