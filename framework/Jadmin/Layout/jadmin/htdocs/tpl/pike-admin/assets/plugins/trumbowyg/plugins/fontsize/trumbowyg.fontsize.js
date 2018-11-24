@@ -83,7 +83,7 @@
                     'medium': '中',
                     'large': '大',
                     'x-large': '最大',
-                    'custom': '自訂大小',
+                    'custom': '自訂大小'
                 },
                 fontCustomSize: {
                     title: '自訂義字體大小',
@@ -138,7 +138,8 @@
                             var selectedText = trumbowyg.getRangeText();
                             if ($(text).html() === selectedText) {
                                 $(text).css('font-size', values.size);
-                            } else {
+                            }
+                            else {
                                 trumbowyg.range.deleteContents();
                                 var html = '<span style="font-size: ' + values.size + ';">' + selectedText + '</span>';
                                 var node = $(html)[0];

@@ -3,10 +3,11 @@
     Author     : Atta-Ur-Rehman Shah (http://attacomsian.com)
 */
 .daterangepicker .btn-primary, .daterangepicker .btn-primary:hover, .daterangepicker .btn-primary:focus,
-.daterangepicker .btn-primary.disabled, .daterangepicker .btn-primary:disabled{
+.daterangepicker .btn-primary.disabled, .daterangepicker .btn-primary:disabled {
     background-color: #6200ea;
     border-color: #6200ea;
 }
+
 .input-daterange input {
     text-align: center
 }
@@ -15,10 +16,12 @@
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px
 }
+
 .input-daterange input:last-child {
     border-bottom-right-radius: 3px;
     border-top-right-radius: 3px
 }
+
 .daterangepicker {
     position: absolute;
     left: 0;
@@ -26,6 +29,7 @@
     width: auto;
     padding: 0
 }
+
 .daterangepicker.dropdown-menu {
     max-width: none;
     background-color: transparent;
@@ -34,6 +38,7 @@
     -webkit-box-shadow: none;
     box-shadow: none
 }
+
 .daterangepicker.dropup {
     margin-top: -7px
 }
@@ -104,7 +109,7 @@
     font-size: 12px
 }
 
-.daterangepicker th>i {
+.daterangepicker th > i {
     top: 0
 }
 
@@ -112,8 +117,9 @@
 .daterangepicker th.prev {
     cursor: pointer
 }
+
 .daterangepicker th.next i,
-.daterangepicker th.prev i{
+.daterangepicker th.prev i {
     font-size: 20px;
 }
 
@@ -149,8 +155,8 @@
     border-radius: 3px;
 }
 
-.daterangepicker .table-condensed tr>td,
-.daterangepicker .table-condensed tr>th {
+.daterangepicker .table-condensed tr > td,
+.daterangepicker .table-condensed tr > th {
     padding: 9px;
     line-height: 1
 }
@@ -244,7 +250,7 @@
     padding: 7px 0
 }
 
-.ranges ul+.daterangepicker-inputs {
+.ranges ul + .daterangepicker-inputs {
     border-top: 1px solid #e5e5e5
 }
 
@@ -274,18 +280,18 @@
     padding-top: 19px
 }
 
-.ranges .daterangepicker-inputs .daterangepicker_input+.daterangepicker_input {
+.ranges .daterangepicker-inputs .daterangepicker_input + .daterangepicker_input {
     margin-top: 19px
 }
 
-.ranges .daterangepicker-inputs .daterangepicker_input>span {
+.ranges .daterangepicker-inputs .daterangepicker_input > span {
     display: block;
     font-size: 12px;
     margin-bottom: 7px;
     color: #999
 }
 
-.ranges .daterangepicker-inputs+.range_inputs {
+.ranges .daterangepicker-inputs + .range_inputs {
     border-top: 1px solid #e5e5e5
 }
 
@@ -298,11 +304,11 @@
     width: 100%
 }
 
-.ranges .range_inputs .btn+.btn {
+.ranges .range_inputs .btn + .btn {
     margin-top: 12px
 }
 
-@media (min-width:769px) {
+@media (min-width: 769px) {
     .ranges {
         margin: 7px
     }
@@ -358,7 +364,7 @@
     transform: rotate(180deg)
 }
 
-.daterange-custom-display>i {
+.daterange-custom-display > i {
     display: inline-block;
     font-size: 28px;
     font-weight: 400;
@@ -372,7 +378,7 @@
     font-weight: 400
 }
 
-.daterange-custom-display b>i {
+.daterange-custom-display b > i {
     font-size: 11px;
     display: block;
     line-height: 12px;
@@ -387,16 +393,18 @@
     margin: 0 4px
 }
 
-@media (max-width:769px) {
+@media (max-width: 769px) {
     .opensleft,
     .opensright {
-        left: 0!important;
+        left: 0 !important;
         right: 0
     }
+
     .opensleft .calendars,
     .opensright .calendars {
         float: none
     }
+
     .daterangepicker.opensleft .calendar,
     .daterangepicker.opensleft .calendars,
     .daterangepicker.opensleft .ranges,
@@ -405,15 +413,18 @@
     .daterangepicker.opensright .ranges {
         float: none
     }
+
     .daterangepicker {
         width: 100%;
         padding-left: 20px;
         padding-right: 20px
     }
+
     .daterangepicker .calendar {
         margin-left: 0;
         margin-right: 0
     }
+
     .daterangepicker .ranges {
         width: 100%
     }

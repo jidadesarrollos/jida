@@ -36,7 +36,7 @@
             },
             zh_tw: {
                 mention: '標記'
-            },
+            }
         },
 
         plugins: {

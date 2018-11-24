@@ -35,10 +35,10 @@
                 }
             },
             zh_tw: {
-               history: {
-                   redo: '重做',
-                   undo: '復原'
-               }
+                history: {
+                    redo: '重做',
+                    undo: '復原'
+                }
             }
         },
         plugins: {
@@ -121,8 +121,7 @@
                             // or focused element differs from previous one
                             if (focusElText.slice(-1).match(/\s/) ||
                                 !arraysAreIdentical(latestStateTagsList, newStateTagsList) ||
-                                t.o.plugins.history._index <= 0 || focusEl !== prevFocusEl)
-                            {
+                                t.o.plugins.history._index <= 0 || focusEl !== prevFocusEl) {
                                 t.o.plugins.history._index += 1;
                                 // remove newer entries in history when something new was added
                                 // because timeline was changes with interaction
@@ -131,7 +130,8 @@
                                 );
                                 // now add new state to modifed history
                                 t.o.plugins.history._stack.push(newState);
-                            } else {
+                            }
+                            else {
                                 // modify last stack entry
                                 t.o.plugins.history._stack[index] = newState;
                             }
@@ -155,7 +155,8 @@
 
                         if (enable) {
                             button.removeClass('trumbowyg-disable');
-                        } else if (!button.hasClass('trumbowyg-disable')) {
+                        }
+                        else if (!button.hasClass('trumbowyg-disable')) {
                             button.addClass('trumbowyg-disable');
                         }
                     };

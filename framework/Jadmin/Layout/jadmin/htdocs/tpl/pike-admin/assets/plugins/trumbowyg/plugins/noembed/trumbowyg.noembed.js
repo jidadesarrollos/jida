@@ -47,7 +47,7 @@
             zh_tw: {
                 noembed: '插入影片',
                 noembedError: '錯誤'
-            },
+            }
         },
 
         plugins: {
@@ -84,7 +84,8 @@
                                                 setTimeout(function () {
                                                     trumbowyg.closeModal();
                                                 }, 250);
-                                            } else {
+                                            }
+                                            else {
                                                 trumbowyg.addErrorOnModalField(
                                                     $('input[type=text]', $modal),
                                                     data.error

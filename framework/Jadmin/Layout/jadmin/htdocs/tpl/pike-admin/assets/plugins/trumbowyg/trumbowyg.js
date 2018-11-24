@@ -125,7 +125,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
     configurable: false
 });
 
-
 (function (navigator, window, document, $) {
     'use strict';
 
@@ -189,7 +188,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     case 'html':
                         return t.html(params);
                 }
-            } catch (c) {
+            }
+            catch (c) {
             }
         }
 
@@ -215,7 +215,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         // Localization management
         if (options.lang != null || $trumbowyg.langs[options.lang] != null) {
             t.lang = $.extend(true, {}, $trumbowyg.langs.en, $trumbowyg.langs[options.lang]);
-        } else {
+        }
+        else {
             t.lang = $trumbowyg.langs.en;
         }
 
@@ -260,7 +261,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             });
         }
 
-
         /**
          * When the button is associated to a empty object
          * fn and title attributs are defined from the button key value
@@ -280,7 +280,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         t.btnsDef = {
             viewHTML: {
                 fn: 'toggle',
-                class: 'trumbowyg-not-disable',
+                class: 'trumbowyg-not-disable'
             },
 
             undo: {
@@ -418,7 +418,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
         if (options.btns) {
             t.o.btns = options.btns;
-        } else if (!t.o.semantic) {
+        }
+        else if (!t.o.semantic) {
             t.o.btns[3] = ['bold', 'italic', 'underline', 'strikethrough'];
         }
 
@@ -464,7 +465,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 // Disable image resize, try-catch for old IE
                 t.doc.execCommand('enableObjectResizing', false, false);
                 t.doc.execCommand('defaultParagraphSeparator', false, 'p');
-            } catch (e) {
+            }
+            catch (e) {
             }
 
             t.buildEditor();
@@ -516,7 +518,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 t.$box
                     .insertAfter(t.$ta)
                     .append(t.$ed, t.$ta);
-            } else {
+            }
+            else {
                 t.$ed = t.$ta;
                 html = t.$ed.html();
 
@@ -588,7 +591,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         try {
                             t.execCmd(key.fn, key.param);
                             return false;
-                        } catch (c) {
+                        }
+                        catch (c) {
                         }
                     }
                 })
@@ -598,7 +602,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 .on(updateEventName + ' compositionend', function (e) {
                     if (e.type === 'compositionend') {
                         composition = false;
-                    } else if (composition) {
+                    }
+                    else if (composition) {
                         return;
                     }
 
@@ -610,11 +615,13 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
                     if ((e.ctrlKey || e.metaKey) && (keyCode === 89 || keyCode === 90)) {
                         t.$c.trigger('tbwchange');
-                    } else if (!ctrl && keyCode !== 17) {
+                    }
+                    else if (!ctrl && keyCode !== 17) {
                         var compositionEndIE = t.isIE ? e.type === 'compositionend' : true;
                         t.semanticCode(false, compositionEndIE && keyCode === 13);
                         t.$c.trigger('tbwchange');
-                    } else if (typeof e.which === 'undefined') {
+                    }
+                    else if (typeof e.which === 'undefined') {
                         t.semanticCode(false, false, true);
                     }
 
@@ -673,12 +680,14 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                             try {
                                 // <= IE10
                                 t.doc.selection.createRange().pasteHTML(text);
-                            } catch (c) {
+                            }
+                            catch (c) {
                                 // IE 11
                                 t.doc.getSelection().getRangeAt(0).insertNode(t.doc.createTextNode(text));
                             }
                             t.$c.trigger('tbwchange', e);
-                        } catch (d) {
+                        }
+                        catch (d) {
                             // Not IE
                             t.execCmd('insertText', (e.originalEvent || e).clipboardData.getData('text/plain'));
                         }
@@ -730,7 +739,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             }
         },
 
-
         // Build button pane, use o.btns option
         buildBtnPane: function () {
             var t = this,
@@ -753,7 +761,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         if (t.isSupportedBtn(btn)) { // It's a supported button
                             $btnGroup.append(t.buildBtn(btn));
                         }
-                    } catch (c) {
+                    }
+                    catch (c) {
                     }
                 });
 
@@ -764,7 +773,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             t.$box.prepend($btnPane);
         },
-
 
         // Build a button and his action
         buildBtn: function (btnName) { // btnName is name of the button
@@ -814,7 +822,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     }
                 });
                 t.$box.append($dropdown.hide());
-            } else if (btn.key) {
+            }
+            else if (btn.key) {
                 t.keys[btn.key] = {
                     fn: btn.fn || btnName,
                     param: btn.param || btnName
@@ -863,7 +872,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         isSupportedBtn: function (b) {
             try {
                 return this.btnsDef[b].isSupported();
-            } catch (c) {
+            }
+            catch (c) {
             }
             return true;
         },
@@ -933,7 +943,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                             top: fixedFullWidth ? oh : oh + (scrollTop - offset) + 'px',
                             zIndex: 15
                         });
-                    } else if (t.isFixed) {
+                    }
+                    else if (t.isFixed) {
                         t.isFixed = false;
                         bp.removeAttr('style');
                         $([t.$ta, t.$ed]).css({marginTop: 0});
@@ -954,7 +965,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             if (disable) {
                 t.$ta.attr('disabled', true);
-            } else {
+            }
+            else {
                 t.$ta.removeAttr('disabled');
             }
             t.$box.toggleClass(prefix + 'disabled', disable);
@@ -974,7 +986,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         .removeClass(prefix + 'textarea')
                         .show()
                 );
-            } else {
+            }
+            else {
                 t.$box.after(
                     t.$ed
                         .css({height: ''})
@@ -997,13 +1010,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             $(window).off('scroll.' + t.eventNamespace + ' resize.' + t.eventNamespace);
         },
 
-
         // Empty the editor
         empty: function () {
             this.$ta.val('');
             this.syncCode(true);
         },
-
 
         // Function call when click on viewHTML button
         toggle: function () {
@@ -1023,7 +1034,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 $('.' + prefix + 'viewHTML-button', t.$btnPane).toggleClass(prefix + 'active');
                 if (t.$box.hasClass(prefix + 'editor-visible')) {
                     t.$ta.attr('tabindex', -1);
-                } else {
+                }
+                else {
                     t.$ta.removeAttr('tabindex');
                 }
 
@@ -1066,7 +1078,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             }
         },
 
-
         // HTML Code management
         html: function (html) {
             var t = this;
@@ -1088,7 +1099,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             var t = this;
             if (!force && t.$ed.is(':visible')) {
                 t.syncTextarea();
-            } else {
+            }
+            else {
                 // wrap the content in a div it's easier to get the innerhtml
                 var html = $('<div>').html(t.$ta.val());
                 //scrub the html before loading into the doc
@@ -1181,9 +1193,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             if (this.o.semantic != null && typeof this.o.semantic === 'object' && this.o.semantic.hasOwnProperty(oldTag)) {
                 newTag = this.o.semantic[oldTag];
-            } else if (this.o.semantic === true && this.DEFAULT_SEMANTIC_MAP.hasOwnProperty(oldTag)) {
+            }
+            else if (this.o.semantic === true && this.DEFAULT_SEMANTIC_MAP.hasOwnProperty(oldTag)) {
                 newTag = this.DEFAULT_SEMANTIC_MAP[oldTag];
-            } else {
+            }
+            else {
                 return;
             }
 
@@ -1362,7 +1376,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             t.$c.trigger('tbw' + (isFullscreen ? 'open' : 'close') + 'fullscreen');
         },
 
-
         /*
          * Call method of trumbowyg if exist
          * else try to call anonymous function
@@ -1378,18 +1391,22 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             try {
                 t.doc.execCommand('styleWithCSS', false, forceCss || false);
-            } catch (c) {
+            }
+            catch (c) {
             }
 
             try {
                 t[cmd + skipTrumbowyg](param);
-            } catch (c) {
+            }
+            catch (c) {
                 try {
                     cmd(param);
-                } catch (e2) {
+                }
+                catch (e2) {
                     if (cmd === 'insertHorizontalRule') {
                         param = undefined;
-                    } else if (cmd === 'formatBlock' && t.isIE) {
+                    }
+                    else if (cmd === 'formatBlock' && t.isIE) {
                         param = '<' + param + '>';
                     }
 
@@ -1405,7 +1422,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 }
             }
         },
-
 
         // Open a modal box
         openModal: function (title, content) {
@@ -1458,7 +1474,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     }
                 });
 
-
             // Build ModalBox and animate to show them
             var $box = $('<div/>', {
                 class: prefix + 'modal-box',
@@ -1474,7 +1489,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     opacity: 1
                 }, 100);
 
-
             // Append title
             $('<span/>', {
                 text: title,
@@ -1483,15 +1497,12 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             $modal.height($box.outerHeight() + 10);
 
-
             // Focus in modal box
             $('input:first', $box).focus();
-
 
             // Append Confirm and Cancel buttons
             t.buildModalBtn('submit', $box);
             t.buildModalBtn('reset', $box);
-
 
             $(window).trigger('scroll');
 
@@ -1578,7 +1589,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         if (field.required && values[n] === '') {
                             valid = false;
                             t.addErrorOnModalField($field, t.lang.required);
-                        } else if (field.pattern && !field.pattern.test(values[n])) {
+                        }
+                        else if (field.pattern && !field.pattern.test(values[n])) {
                             valid = false;
                             t.addErrorOnModalField($field, field.patternError);
                         }
@@ -1665,7 +1677,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                             $img.attr({
                                 width: v.width
                             });
-                        } else {
+                        }
+                        else {
                             $img.removeAttr('width');
                         }
                     }
@@ -1728,7 +1741,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                             stop = true;
                         }
                         charIndex = nextCharIndex;
-                    } else {
+                    }
+                    else {
                         var cn = node.childNodes,
                             i = cn.length;
 
@@ -1760,12 +1774,14 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
                 if ($btn.length > 0) {
                     $btn.addClass(activeClasses);
-                } else {
+                }
+                else {
                     try {
                         $btn = $('.' + prefix + 'dropdown .' + prefix + btnName + '-dropdown-button', t.$box);
                         var dropdownBtnName = $btn.parent().data('dropdown');
                         $('.' + prefix + dropdownBtnName + '-button', t.$box).addClass(activeClasses);
-                    } catch (e) {
+                    }
+                    catch (e) {
                     }
                 }
             });
@@ -1776,7 +1792,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             if (element && element.parentNode) {
                 element = element.parentNode;
-            } else {
+            }
+            else {
                 return tags;
             }
 

@@ -1,19 +1,19 @@
 import isArray from '../utils/is-array';
 import isDate from '../utils/is-date';
 import map from '../utils/map';
-import { createInvalid } from './valid';
-import { Moment, isMoment } from '../moment/constructor';
-import { getLocale } from '../locale/locales';
-import { hooks } from '../utils/hooks';
+import {createInvalid} from './valid';
+import {isMoment, Moment} from '../moment/constructor';
+import {getLocale} from '../locale/locales';
+import {hooks} from '../utils/hooks';
 import checkOverflow from './check-overflow';
 
-import { configFromStringAndArray }  from './from-string-and-array';
-import { configFromStringAndFormat } from './from-string-and-format';
-import { configFromString }          from './from-string';
-import { configFromArray }           from './from-array';
-import { configFromObject }          from './from-object';
+import {configFromStringAndArray} from './from-string-and-array';
+import {configFromStringAndFormat} from './from-string-and-format';
+import {configFromString} from './from-string';
+import {configFromArray} from './from-array';
+import {configFromObject} from './from-object';
 
-function createFromConfig (config) {
+function createFromConfig(config) {
     var res = new Moment(checkOverflow(prepareConfig(config)));
     if (res._nextDay) {
         // Adding is smart enough around DST
@@ -24,7 +24,7 @@ function createFromConfig (config) {
     return res;
 }
 
-export function prepareConfig (config) {
+export function prepareConfig(config) {
     var input = config._i,
         format = config._f;
 
@@ -40,13 +40,17 @@ export function prepareConfig (config) {
 
     if (isMoment(input)) {
         return new Moment(checkOverflow(input));
-    } else if (isArray(format)) {
+    }
+    else if (isArray(format)) {
         configFromStringAndArray(config);
-    } else if (format) {
+    }
+    else if (format) {
         configFromStringAndFormat(config);
-    } else if (isDate(input)) {
+    }
+    else if (isDate(input)) {
         config._d = input;
-    } else {
+    }
+    else {
         configFromInput(config);
     }
 
@@ -57,26 +61,32 @@ function configFromInput(config) {
     var input = config._i;
     if (input === undefined) {
         config._d = new Date();
-    } else if (isDate(input)) {
+    }
+    else if (isDate(input)) {
         config._d = new Date(+input);
-    } else if (typeof input === 'string') {
+    }
+    else if (typeof input === 'string') {
         configFromString(config);
-    } else if (isArray(input)) {
+    }
+    else if (isArray(input)) {
         config._a = map(input.slice(0), function (obj) {
             return parseInt(obj, 10);
         });
         configFromArray(config);
-    } else if (typeof(input) === 'object') {
+    }
+    else if (typeof(input) === 'object') {
         configFromObject(config);
-    } else if (typeof(input) === 'number') {
+    }
+    else if (typeof(input) === 'number') {
         // from milliseconds
         config._d = new Date(input);
-    } else {
+    }
+    else {
         hooks.createFromInputFallback(config);
     }
 }
 
-export function createLocalOrUTC (input, format, locale, strict, isUTC) {
+export function createLocalOrUTC(input, format, locale, strict, isUTC) {
     var c = {};
 
     if (typeof(locale) === 'boolean') {

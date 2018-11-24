@@ -100,7 +100,8 @@
                     trumbowyg.pasteHandlers.push(function () {
                         try {
                             trumbowyg.$ed.html(cleanIt(trumbowyg.$ed.html()));
-                        } catch (c) {
+                        }
+                        catch (c) {
                         }
                     });
                 }

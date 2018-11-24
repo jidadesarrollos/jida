@@ -30,7 +30,6 @@
         }
     };
 
-
     $.extend(true, $.trumbowyg, {
         langs: {
             en: {

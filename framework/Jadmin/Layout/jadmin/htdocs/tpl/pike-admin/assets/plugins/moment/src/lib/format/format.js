@@ -12,7 +12,7 @@ export var formatTokenFunctions = {};
 // padded:   ['MM', 2]
 // ordinal:  'Mo'
 // callback: function () { this.month() + 1 }
-export function addFormatToken (token, padded, ordinal, callback) {
+export function addFormatToken(token, padded, ordinal, callback) {
     var func = callback;
     if (typeof callback === 'string') {
         func = function () {
@@ -47,7 +47,8 @@ function makeFormatFunction(format) {
     for (i = 0, length = array.length; i < length; i++) {
         if (formatTokenFunctions[array[i]]) {
             array[i] = formatTokenFunctions[array[i]];
-        } else {
+        }
+        else {
             array[i] = removeFormattingTokens(array[i]);
         }
     }

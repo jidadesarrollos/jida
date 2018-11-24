@@ -67,7 +67,6 @@
 
     // jshint camelcase:true
 
-
     function hex(x) {
         return ('0' + parseInt(x).toString(16)).slice(-2);
     }
@@ -75,9 +74,11 @@
     function colorToHex(rgb) {
         if (rgb.search('rgb') === -1) {
             return rgb.replace('#', '');
-        } else if (rgb === 'rgba(0, 0, 0, 0)') {
+        }
+        else if (rgb === 'rgba(0, 0, 0, 0)') {
             return 'transparent';
-        } else {
+        }
+        else {
             rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
             return hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
         }
@@ -95,7 +96,8 @@
             var backColor = colorToHex(element.style.backgroundColor);
             if (trumbowyg.o.plugins.colors.colorList.indexOf(backColor) >= 0) {
                 tags.push('backColor' + backColor);
-            } else {
+            }
+            else {
                 tags.push('backColorFree');
             }
         }
@@ -104,13 +106,15 @@
         var foreColor;
         if (element.style.color !== '') {
             foreColor = colorToHex(element.style.color);
-        } else if (element.hasAttribute('color')) {
+        }
+        else if (element.hasAttribute('color')) {
             foreColor = colorToHex(element.getAttribute('color'));
         }
         if (foreColor) {
             if (trumbowyg.o.plugins.colors.colorList.indexOf(foreColor) >= 0) {
                 tags.push('foreColor' + foreColor);
-            } else {
+            }
+            else {
                 tags.push('foreColorFree');
             }
         }

@@ -26,8 +26,8 @@
                 template: 'Şablon'
             },
             zh_tw: {
-                template: '模板',
-            },
+                template: '模板'
+            }
         }
     });
 

@@ -7,7 +7,7 @@
  */
 
 /* globals MathJax */
-(function($) {
+(function ($) {
     'use strict';
     $.extend(true, $.trumbowyg, {
         langs: {
@@ -35,13 +35,13 @@
                 mathml: '插入方程式',
                 formulas: '方程式',
                 inline: '內嵌'
-            },
+            }
         },
         plugins: {
             mathml: {
-                init: function(trumbowyg) {
+                init: function (trumbowyg) {
                     var btnDef = {
-                        fn: function() {
+                        fn: function () {
                             trumbowyg.saveRange();
                             var mathMLoptions = {
                                 formulas: {
@@ -55,23 +55,25 @@
                                         checked: true
                                     },
                                     type: 'checkbox',
-                                    required: false,
+                                    required: false
                                 }
                             };
 
-                            var mathmlCallback = function(v) {
+                            var mathmlCallback = function (v) {
                                 var delimitor = v.inline ? '$' : '$$';
                                 if (trumbowyg.currentMathNode) {
                                     $(trumbowyg.currentMathNode).html(delimitor + ' ' + v.formulas + ' ' + delimitor).attr('formulas', v.formulas).attr('inline', (v.inline ? 'true' : 'false'));
-                                } else {
+                                }
+                                else {
                                     var html = '<span class="mathMlContainer" contenteditable="false" formulas="' + v.formulas + '" inline="' + (v.inline ? 'true' : 'false') + '" >' + delimitor + ' ' + v.formulas + ' ' + delimitor + '</span>';
                                     var node = $(html)[0];
-                                    node.onclick = function(e) {
+                                    node.onclick = function (e) {
                                         trumbowyg.currentMathNode = this;
                                         mathMLoptions.formulas.value = $(this).attr('formulas');
-                                        if ($(this).attr('inline') === "true") {
+                                        if ($(this).attr('inline') === 'true') {
                                             mathMLoptions.inline.attributes.checked = true;
-                                        } else {
+                                        }
+                                        else {
                                             delete mathMLoptions.inline.attributes.checked;
                                         }
                                         trumbowyg.openModalInsert(trumbowyg.lang.mathml, mathMLoptions, mathmlCallback);

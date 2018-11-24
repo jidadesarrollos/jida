@@ -5,7 +5,7 @@
 $(function () {
     //default date range picker
     $('#daterange').daterangepicker({
-        autoApply:true
+        autoApply: true
     });
 
     //date time picker
@@ -19,6 +19,6 @@ $(function () {
 
     //single date
     $('#date').daterangepicker({
-        singleDatePicker: true,
+        singleDatePicker: true
     });
 });

@@ -42,7 +42,7 @@
                 ruby: '加入 ruby 文字',
                 rubyModal: 'Ruby 彈跳視窗',
                 rubyText: 'Ruby 文字'
-            },
+            }
         },
         plugins: {
             ruby: {
@@ -55,7 +55,7 @@
                                 {
                                     rubyText: {
                                         label: trumbowyg.lang.rubyText,
-                                        required: false,
+                                        required: false
                                     },
                                     modal: {
                                         label: trumbowyg.lang.rubyModal,

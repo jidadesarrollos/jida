@@ -73,7 +73,7 @@
                 file: '檔案',
                 errFileReaderNotSupported: '你的瀏覽器不支援FileReader',
                 errInvalidImage: '不正確的檔案格式'
-             },
+            }
         },
         // jshint camelcase:true
 
@@ -115,7 +115,8 @@
                                             trumbowyg.execCmd('insertImage', fReader.result);
                                             $(['img[src="', fReader.result, '"]:not([alt])'].join(''), trumbowyg.$box).attr('alt', values.alt);
                                             trumbowyg.closeModal();
-                                        } else {
+                                        }
+                                        else {
                                             trumbowyg.addErrorOnModalField(
                                                 $('input[type=file]', $modal),
                                                 trumbowyg.lang.errInvalidImage

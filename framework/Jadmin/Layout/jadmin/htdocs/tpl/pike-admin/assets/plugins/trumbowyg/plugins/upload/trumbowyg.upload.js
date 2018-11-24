@@ -190,7 +190,8 @@
                                         success: function (data) {
                                             if (trumbowyg.o.plugins.upload.success) {
                                                 trumbowyg.o.plugins.upload.success(data, trumbowyg, $modal, values);
-                                            } else {
+                                            }
+                                            else {
                                                 if (!!getDeep(data, trumbowyg.o.plugins.upload.statusPropertyName.split('.'))) {
                                                     var url = getDeep(data, trumbowyg.o.plugins.upload.urlPropertyName.split('.'));
                                                     trumbowyg.execCmd('insertImage', url);
@@ -205,7 +206,8 @@
                                                         trumbowyg.closeModal();
                                                     }, 250);
                                                     trumbowyg.$c.trigger('tbwuploadsuccess', [trumbowyg, data, url]);
-                                                } else {
+                                                }
+                                                else {
                                                     trumbowyg.addErrorOnModalField(
                                                         $('input[type=file]', $modal),
                                                         trumbowyg.lang[data.message]
@@ -230,7 +232,8 @@
                                 try {
                                     // If multiple files allowed, we just get the first.
                                     file = e.target.files[0];
-                                } catch (err) {
+                                }
+                                catch (err) {
                                     // In IE8, multiple files not allowed
                                     file = e.target.value;
                                 }

@@ -6,7 +6,6 @@
  * Author : Casella Edoardo (Civile)
  */
 
-
 (function ($) {
     'use strict';
 
@@ -39,7 +38,7 @@
             },
             zh_tw: {
                 preformatted: '代碼範例 <pre>'
-            },
+            }
         },
         // jshint camelcase:true
 
@@ -59,7 +58,8 @@
                                     else {
                                         trumbowyg.execCmd('insertHTML', '<pre><code>' + strip(text) + '</code></pre>');
                                     }
-                                } catch (e) {
+                                }
+                                catch (e) {
                                 }
                             }
                         },
@@ -87,7 +87,8 @@
                     parentEl = parentEl.parentNode;
                 }
             }
-        } else if ((selection = document.selection) && selection.type !== 'Control') {
+        }
+        else if ((selection = document.selection) && selection.type !== 'Control') {
             parentEl = selection.createRange().parentElement();
         }
 
@@ -114,7 +115,8 @@
 
         if (document.selection) { //for IE
             container = document.selection.createRange().parentElement();
-        } else {
+        }
+        else {
             var select = window.getSelection();
             if (select.rangeCount > 0) {
                 container = select.getRangeAt(0).startContainer.parentNode;
@@ -127,9 +129,11 @@
 
         if (ispre && iscode) {
             $(container).contents().unwrap('code').unwrap('pre');
-        } else if (ispre) {
+        }
+        else if (ispre) {
             $(container).contents().unwrap('pre');
-        } else if (iscode) {
+        }
+        else if (iscode) {
             $(container).contents().unwrap('code');
         }
     }

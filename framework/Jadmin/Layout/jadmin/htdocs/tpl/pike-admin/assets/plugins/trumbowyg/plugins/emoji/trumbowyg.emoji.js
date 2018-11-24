@@ -950,7 +950,8 @@
 
                 trumbowyg.addBtnDef(customEmojiBtnName, customEmojiBtnDef);
                 dropdown.push(customEmojiBtnName);
-            } else { // Default behaviour
+            }
+            else { // Default behaviour
                 var btn = emoji.replace(/:/g, ''),
                     defaultEmojiBtnName = 'emoji-' + btn,
                     defaultEmojiBtnDef = {

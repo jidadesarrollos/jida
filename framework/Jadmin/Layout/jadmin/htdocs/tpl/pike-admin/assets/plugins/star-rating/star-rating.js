@@ -9,23 +9,25 @@
  * https://github.com/kartik-v/bootstrap-star-rating/blob/master/LICENSE.md
  */
 (function (factory) {
-    "use strict";
+    'use strict';
     //noinspection JSUnresolvedVariable
     if (typeof define === 'function' && define.amd) { // jshint ignore:line
         // AMD. Register as an anonymous module.
         define(['jquery'], factory); // jshint ignore:line
-    } else { // noinspection JSUnresolvedVariable
+    }
+    else { // noinspection JSUnresolvedVariable
         if (typeof module === 'object' && module.exports) { // jshint ignore:line
             // Node/CommonJS
             // noinspection JSUnresolvedVariable
             module.exports = factory(require('jquery')); // jshint ignore:line
-        } else {
+        }
+        else {
             // Browser globals
             factory(window.jQuery);
         }
     }
 }(function ($) {
-    "use strict";
+    'use strict';
 
     $.fn.ratingLocales = {};
     $.fn.ratingThemes = {};
@@ -87,7 +89,8 @@
                 }
                 finalVal = $h.isEmpty(val) ? chk : val;
                 out = parseFloat(finalVal);
-            } else {
+            }
+            else {
                 out = parseFloat(options[vattr]);
             }
             return isNaN(out) ? chk : out;
@@ -152,15 +155,16 @@
             var self = this, $container = self.$container, isClear = type === 'clear';
             if (self.rtl) {
                 return isClear ? $container.append(content) : $container.prepend(content);
-            } else {
+            }
+            else {
                 return isClear ? $container.prepend(content) : $container.append(content);
             }
         },
         _generateRating: function () {
             var self = this, $el = self.$element, $rating, $container, w;
-            $container = self.$container = $(document.createElement("div")).insertBefore($el);
+            $container = self.$container = $(document.createElement('div')).insertBefore($el);
             $h.addCss($container, self._getContainerCss());
-            self.$rating = $rating = $(document.createElement("div")).attr('class', 'rating-stars').appendTo($container)
+            self.$rating = $rating = $(document.createElement('div')).attr('class', 'rating-stars').appendTo($container)
                 .append(self._getStars('empty')).append(self._getStars('filled'));
             self.$emptyStars = $rating.find('.empty-stars');
             self.$filledStars = $rating.find('.filled-stars');
@@ -197,7 +201,7 @@
                 return;
             }
             self._addContent('caption', '<div class="caption">' + html + '</div>');
-            self.$caption = self.$container.find(".caption");
+            self.$caption = self.$container.find('.caption');
         },
         _renderClear: function () {
             var self = this, css, $clr = self.clearElement ? $(self.clearElement) : '';
@@ -207,7 +211,7 @@
             css = self._getClearClass();
             if ($clr.length) {
                 $h.addCss($clr, css);
-                $clr.attr({"title": self.clearButtonTitle}).html(self.clearButton);
+                $clr.attr({'title': self.clearButtonTitle}).html(self.clearButton);
                 self.$clear = $clr;
                 return;
             }
@@ -275,7 +279,8 @@
                     if (e.handled !== true) {
                         callback(e);
                         e.handled = true;
-                    } else {
+                    }
+                    else {
                         return false;
                     }
                 },
@@ -294,12 +299,13 @@
                     //noinspection JSUnresolvedVariable
                     touches = !$h.isEmpty(ev.touches) ? ev.touches : ev.changedTouches;
                     pos = self.events._getTouchPosition(touches[0]);
-                    if (e.type === "touchend") {
+                    if (e.type === 'touchend') {
                         self._setStars(pos);
                         params = [self.$element.val(), self._getCaption()];
                         self.$element.trigger('change').trigger('rating:change', params);
                         self.starClicked = true;
-                    } else {
+                    }
+                    else {
                         out = self.calculate(pos);
                         caption = out.val <= clrVal ? self.fetchCaption(clrVal) : out.caption;
                         w = self.getWidthFromValue(clrVal);
@@ -452,8 +458,8 @@
             if (val && val !== self.clearValue) {
                 val = $h.applyPrecision(val, $h.getDecimalPlaces(self.step));
             }
-            cssVal = typeof vCss === "function" ? vCss(val) : vCss[val];
-            capVal = typeof vCap === "function" ? vCap(val) : vCap[val];
+            cssVal = typeof vCss === 'function' ? vCss(val) : vCss[val];
+            capVal = typeof vCap === 'function' ? vCap(val) : vCap[val];
             cap = $h.isEmpty(capVal) ? self.defaultCaption.replace(/\{rating}/g, val) : capVal;
             css = $h.isEmpty(cssVal) ? self.clearCaptionClass : cssVal;
             caption = (val === self.clearValue) ? self.clearCaption : cap;

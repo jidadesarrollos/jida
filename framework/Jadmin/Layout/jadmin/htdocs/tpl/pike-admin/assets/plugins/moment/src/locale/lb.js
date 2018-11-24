@@ -14,6 +14,7 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
     };
     return withoutSuffix ? format[key][0] : format[key][1];
 }
+
 function processFutureTime(string) {
     var number = string.substr(0, string.indexOf(' '));
     if (eifelerRegelAppliesToNumber(number)) {
@@ -21,6 +22,7 @@ function processFutureTime(string) {
     }
     return 'an ' + string;
 }
+
 function processPastTime(string) {
     var number = string.substr(0, string.indexOf(' '));
     if (eifelerRegelAppliesToNumber(number)) {
@@ -28,6 +30,7 @@ function processPastTime(string) {
     }
     return 'virun ' + string;
 }
+
 /**
  * Returns true if the word before the given number loses the '-n' ending.
  * e.g. 'an 10 Deeg' but 'a 5 Deeg'
@@ -43,26 +46,30 @@ function eifelerRegelAppliesToNumber(number) {
     if (number < 0) {
         // Negative Number --> always true
         return true;
-    } else if (number < 10) {
+    }
+    else if (number < 10) {
         // Only 1 digit
         if (4 <= number && number <= 7) {
             return true;
         }
         return false;
-    } else if (number < 100) {
+    }
+    else if (number < 100) {
         // 2 digits
         var lastDigit = number % 10, firstDigit = number / 10;
         if (lastDigit === 0) {
             return eifelerRegelAppliesToNumber(firstDigit);
         }
         return eifelerRegelAppliesToNumber(lastDigit);
-    } else if (number < 10000) {
+    }
+    else if (number < 10000) {
         // 3 or 4 digits --> recursively check first digit
         while (number >= 10) {
             number = number / 10;
         }
         return eifelerRegelAppliesToNumber(number);
-    } else {
+    }
+    else {
         // Anything larger than 4 digits: recursively check first n-3 digits
         number = number / 1000;
         return eifelerRegelAppliesToNumber(number);
@@ -100,20 +107,20 @@ export default moment.defineLocale('lb', {
             }
         }
     },
-    relativeTime : {
-        future : processFutureTime,
-        past : processPastTime,
-        s : 'e puer Sekonnen',
-        m : processRelativeTime,
-        mm : '%d Minutten',
-        h : processRelativeTime,
-        hh : '%d Stonnen',
-        d : processRelativeTime,
-        dd : '%d Deeg',
-        M : processRelativeTime,
-        MM : '%d Méint',
-        y : processRelativeTime,
-        yy : '%d Joer'
+    relativeTime: {
+        future: processFutureTime,
+        past: processPastTime,
+        s: 'e puer Sekonnen',
+        m: processRelativeTime,
+        mm: '%d Minutten',
+        h: processRelativeTime,
+        hh: '%d Stonnen',
+        d: processRelativeTime,
+        dd: '%d Deeg',
+        M: processRelativeTime,
+        MM: '%d Méint',
+        y: processRelativeTime,
+        yy: '%d Joer'
     },
     ordinalParse: /\d{1,2}\./,
     ordinal: '%d.',

@@ -31,7 +31,8 @@
                                     reader.readAsDataURL(items[i].getAsFile());
                                 }
                             }
-                        } catch (c) {
+                        }
+                        catch (c) {
                         }
                     });
                 }
