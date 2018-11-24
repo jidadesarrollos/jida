@@ -33,8 +33,8 @@ class Sesion {
 
         self::editar('__idSession', self::getIdSession());
 
-        //self::$usuario = new Usuario(1);
-//        Debug::imprimir([self::obt('__idSession')], true);
+        #self::$usuario = new Usuario(1);
+        #Debug::imprimir([self::obt('__idSession')], true);
 
         if (self::obt('_usuario')
             and self::obt('_usuario') instanceof \Jida\Modulos\Usuario\Usuario) {
