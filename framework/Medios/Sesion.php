@@ -31,8 +31,11 @@ class Sesion {
         session_start();
         self::editar('__idSession', self::getIdSession());
 
-        if (self::obt('_usuario'))
-            self::$usuario = new Usuario();
+        self::$usuario = new Usuario();
+        if (self::obt('_usuario')) {
+
+        }
+
 
     }
 
