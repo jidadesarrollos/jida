@@ -16,31 +16,29 @@ use Jida\Render as Render;
 
 class JControl extends Controlador {
 
-    function __construct () {
+    function __construct() {
 
         parent::__construct();
+
         $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
         $urlBase = Configuracion::URL_BASE;
         $nombreApp = Configuracion::NOMBRE_APP;
+
         $menu = new Render\Menu('Jadmin');
+
         $this->data([
-                        'menu'      => $menu->render(),
-                        'urlBase'   => $urlBase,
-                        'nombreApp' => $nombreApp
-                    ]);
+            'menu'      => $menu->render(),
+            'urlBase'   => $urlBase,
+            'nombreApp' => $nombreApp
+        ]);
+
     }
 
-    function phpInfo () {
+    function phpInfo() {
 
         echo phpinfo();
         exit;
-
-    }
-
-    protected function _formularioInicioSesion () {
-
-        $configuracion = Config::obtener();
 
     }
 
