@@ -17,29 +17,17 @@ class Configuracion extends Config {
         'es' => 'Español'
     ];
     public $mensajes = [
-        'error'  => 'alert alert-danger',
+        'error' => 'alert alert-danger',
         'suceso' => 'alert alert-success',
-        'alert'  => 'alert alert-warning',
-        'info'   => 'alert alert-info'
+        'alert' => 'alert alert-warning',
+        'info' => 'alert alert-info'
     ];
 
-    public static $modulos = [
-        'contacto'  => 'Contacto',
-        'clientes'  => 'Clientes',
-        'reseller'  => 'Reseller',
-        'correos'   => 'Correos',
-        'servicios' => 'Servicios',
-        'empresas'  => 'Empresas',
-        'panel'     => 'Panel',
-        'testing'   => 'Testing',
-        'recursos'  => 'Recursos',
-        'usuarios'  => 'Usuarios',
-        'instagram' => 'Instagram'
-    ];
+    public static $modulos = [];
 
     public $tema = 'preview';
 
-    function __construct () {
+    function __construct() {
 
         $this->definir('configMensajes', $this->mensajes);
         $this->definir('tema',
@@ -60,13 +48,13 @@ class Configuracion extends Config {
 
     }
 
-    private function definir ($variable, $valor) {
+    private function definir($variable, $valor) {
 
         $GLOBALS[$variable] = $valor;
 
     }
 
-    public function inicio () {
+    public function inicio() {
 
         $GLOBALS['_CSS'] = \App\Config\Cliente\CSS::archivos();
         $GLOBALS['_JS'] = \App\Config\Cliente\JS::archivos();
@@ -76,7 +64,7 @@ class Configuracion extends Config {
 
     }
 
-    static function obtener () {
+    static function obtener() {
 
     }
 }
