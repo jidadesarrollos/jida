@@ -110,4 +110,6 @@ class Control {
         return $this->vista;
 
     }
+
+
 }

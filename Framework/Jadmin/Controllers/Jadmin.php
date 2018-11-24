@@ -31,9 +31,9 @@ class Jadmin extends JControl {
 
     private function _inicioSesion() {
 
-        $this->layout('jlogin');
+        $this->layout('login');
 
-        $this->dv->incluirCSS('login.css', '/framework/Jadmin/Layout/jadmin/htdocs/css/');
+        #$this->dv->incluirCSS('login.css', '');
 
         $this->vista('login');
         $this->data('formulario', 'formulario de inicio de sesion');

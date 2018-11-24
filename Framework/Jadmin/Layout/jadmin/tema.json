@@ -4,10 +4,17 @@
   },
   "dev": {
     "css": {
-      "bootstrap": "Framework/Jadmin/Layout/jadmin/htdocs/css/bootstrap.min.css",
-      "font-awesome": "Framework/Jadmin/Layout/jadmin/htdocs/font-awesome/css/font-awesome.min.css",
-      "dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
-      "style": "Framework/Jadmin/Layout/jadmin/htdocs/css/style.css"
+      "principal": {
+        "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
+        "font-awesome": "Framework/Jadmin/Layout/jadmin/htdocs/font-awesome/css/font-awesome.min.css",
+        "dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
+        "style": "Framework/Jadmin/Layout/jadmin/htdocs/css/style.css"
+      },
+      "login": {
+        "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
+        "login": "{tema}/jadmin/htdocs/css/login.css"
+      },
+      "style1": "style2"
     },
     "js": {
       "jquery": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.min.js",

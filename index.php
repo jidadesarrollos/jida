@@ -1,6 +1,6 @@
 <?php
 
-$ruta = 'framework';
+$ruta = 'Framework';
 define('DIR_JF', $ruta);
 
 if (file_exists($ruta . '/vendor/autoload.php')) {

@@ -7,6 +7,7 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Layout\Procesador;
@@ -50,14 +51,15 @@ class Layout {
      */
     private static $_urlTema;
 
-    private $_js = [];
+    private $_js  = [];
     private $_css = [];
 
     /**
      * Layout constructor.
+     *
      * @param mixed $padre
      */
-    public function __construct ($padre = null) {
+    public function __construct($padre = null) {
 
         if ($padre) {
             self::$padre = $padre;
@@ -81,7 +83,7 @@ class Layout {
      *
      * @return $this
      */
-    private function _leer () {
+    private function _leer() {
 
         $padre = self::$padre;
         $arranque = $padre::$Padre;
@@ -100,7 +102,7 @@ class Layout {
         self::$_urlTema = Estructura::$urlBase . 'Aplicacion/Layout/';
         if ($arranque->jadmin) {
             $config = Config::obtener();
-            self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Layout/';
+            self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema . "/";
             $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
 
             $directorio = ($tema === 'jadmin' || Directorios::validar($dirJida . $tema))
@@ -124,9 +126,10 @@ class Layout {
 
     /**
      * Obtiene la configuración del tema implementado
+     *
      * @throws Excepcion
      */
-    private function _configuracion () {
+    private function _configuracion() {
 
         $archivoConfiguracion = self::$_path . "tema.json";
 
@@ -151,7 +154,7 @@ class Layout {
 
     }
 
-    static function definir ($directorio) {
+    static function definir($directorio) {
 
         self::$directorio = $directorio;
     }
@@ -159,11 +162,12 @@ class Layout {
     /**
      * Renderiza una vista
      * @method render
+     *
      * @param $vista
      * @return void | string
      * @throws Excepcion
      */
-    public function render ($vista) {
+    public function render($vista) {
 
         if (!self::$directorio or !$vista) {
             $msj = 'El parametro $vista es requerido para el metodo render';
@@ -187,7 +191,7 @@ class Layout {
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      * @throws Excepcion
      */
-    function imprimirLibrerias ($lenguajes, $modulo = "") {
+    function imprimirLibrerias($lenguajes, $modulo = "") {
 
         $configuracion = $this->_configuracion;
         $lenguajes = (is_string($lenguajes)) ? (array)$lenguajes : $lenguajes;
@@ -196,13 +200,13 @@ class Layout {
         foreach ($lenguajes as $lenguaje) {
             switch ($lenguaje) {
                 case 'head':
-                    $retorno = $this->_imprimirHead($configuracion);
+                    $retorno = $this->_imprimirHead($configuracion, $modulo);
                     break;
                 case 'js':
-                    $retorno = $this->_imprimirJS($configuracion->{$lenguaje});
+                    $retorno = $this->_imprimirJS($configuracion->{$lenguaje}, $modulo);
                     break;
                 case 'css':
-                    $retorno = $this->_imprimirCSS($configuracion->{$lenguaje});
+                    $retorno = $this->_imprimirCSS($configuracion->{$lenguaje}, $modulo);
                     break;
             }
         }
@@ -215,7 +219,7 @@ class Layout {
      * @return Layout
      * @throws Excepcion
      */
-    static function obtener () {
+    static function obtener() {
 
         if (!self::$instancia) {
             \Jida\Manager\Excepcion::procesar("El objeto layout no ha sido instanciado", self::$_ce . "1");
