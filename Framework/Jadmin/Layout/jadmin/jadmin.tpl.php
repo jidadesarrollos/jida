@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadmin</title>
-    <?= $this->imprimirLibrerias('css') ?>
+    <?= $this->imprimirLibrerias('css', 'principal') ?>
 </head>
 
 <body class="adminbody">
@@ -12,6 +12,7 @@
 <div id="main">
 
     <?php
+
     //todo: cambiar por metodo para incluir layout
     include 'elementos/header.php';
     ?>
@@ -55,6 +56,7 @@
     <!-- END content-page -->
 
     <?php
+
     //todo:cambiar por metodo para incluir layout
     include 'elementos/footer.php';
     ?>
