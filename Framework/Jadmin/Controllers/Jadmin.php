@@ -9,7 +9,6 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Medios\Sesion;
-use Jida\Modelos\Usuario;
 use Jida\Render\Formulario;
 
 class Jadmin extends JControl {
@@ -34,6 +33,18 @@ class Jadmin extends JControl {
 
         $this->layout('login');
         $this->vista('login');
+
+        $formLogin = new Formulario('Login');
+
+        if ($this->post('btnLogin')):
+            if ($formLogin->validar()) {
+
+            }
+        endif;
+
+        $this->data([
+            'formulario' => $formLogin->render()
+        ]);
 
     }
 
