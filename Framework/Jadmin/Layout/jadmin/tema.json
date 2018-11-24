@@ -1,34 +1,34 @@
 {
   "link": {
-    "shortcut icon": "Framework/Jadmin/Layout/jadmin/htdocs/images/favicon.ico"
+    "shortcut icon": "{tema}htdocs/images/favicon.ico"
   },
   "dev": {
     "css": {
       "principal": {
         "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
-        "font-awesome": "Framework/Jadmin/Layout/jadmin/htdocs/font-awesome/css/font-awesome.min.css",
-        "dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
-        "style": "Framework/Jadmin/Layout/jadmin/htdocs/css/style.css"
+        "font-awesome": "{tema}htdocs/font-awesome/css/font-awesome.min.css",
+        "dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
+        "style": "{tema}htdocs/css/style.css"
       },
       "login": {
         "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
-        "login": "{tema}/jadmin/htdocs/css/login.css"
-      },
-      "style1": "style2"
+        "font-awesome": "{tema}htdocs/font-awesome/css/font-awesome.min.css",
+        "login": "{tema}htdocs/css/login.css"
+      }
     },
     "js": {
-      "jquery": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.min.js",
-      "modernizr": "Framework/Jadmin/Layout/jadmin/htdocs/js/modernizr.min.js",
-      "moment": "Framework/Jadmin/Layout/jadmin/htdocs/js/moment.min.js",
-      "popper": "Framework/Jadmin/Layout/jadmin/htdocs/js/popper.min.js",
-      "bootstrap": "Framework/Jadmin/Layout/jadmin/htdocs/js/bootstrap.min.js",
-      "detect": "Framework/Jadmin/Layout/jadmin/htdocs/js/detect.js",
-      "fastclick": "Framework/Jadmin/Layout/jadmin/htdocs/js/fastclick.js",
-      "jq-blockUI": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.blockUI.js",
-      "jq-nicescroll": "Framework/Jadmin/Layout/jadmin/htdocs/js/jquery.nicescroll.js",
-      "jq-dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/jquery.dataTables.min.js",
-      "bt-dataTables": "Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
-      "jadmin": "Framework/Jadmin/Layout/jadmin/htdocs/js/jadmin.js"
+      "jquery": "{tema}htdocs/js/jquery.min.js",
+      "modernizr": "{tema}htdocs/js/modernizr.min.js",
+      "moment": "{tema}htdocs/js/moment.min.js",
+      "popper": "{tema}htdocs/js/popper.min.js",
+      "bootstrap": "{tema}htdocs/js/bootstrap.min.js",
+      "detect": "{tema}htdocs/js/detect.js",
+      "fastclick": "{tema}htdocs/js/fastclick.js",
+      "jq-blockUI": "{tema}htdocs/js/jquery.blockUI.js",
+      "jq-nicescroll": "{tema}htdocs/js/jquery.nicescroll.js",
+      "jq-dataTables": "{tema}htdocs/plugins/datatables/jquery.dataTables.min.js",
+      "bt-dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
+      "jadmin": "{tema}htdocs/js/jadmin.js"
     }
   },
   "prod": {
