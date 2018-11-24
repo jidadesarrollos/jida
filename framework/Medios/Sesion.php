@@ -13,6 +13,7 @@ namespace Jida\Medios;
 
 use Jida\Medios\Sesion\Functions;
 use Jida\Medios\Sesion\Validacion;
+use Jida\Modelos\Usuario;
 
 class Sesion {
 
@@ -35,7 +36,6 @@ class Sesion {
         if (self::obt('_usuario')) {
 
         }
-
 
     }
 
