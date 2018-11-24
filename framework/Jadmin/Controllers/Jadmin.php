@@ -30,6 +30,7 @@ class Jadmin extends JControl {
 
     private function _inicioSesion() {
         $this->vista('login');
+        $this->data('formulario', 'formulario de inicio de sesion');
     }
 
 }
