@@ -6,43 +6,52 @@ use Jida\Configuracion\Config;
 
 class Configuracion extends Config {
 
-    var $logo = 'default/htdocs/images/logo.png';
-
-    const NOMBRE_APP = 'Aplicación Jida';
+    var $logo = '/default/htdocs/images/logo.png';
 
     const URL_BASE = '';
     const URL_ABSOLUTA = '';
-    const PATH_JIDA = "Framework";
+    const ENTORNO_APP = 'dev';
+    const PATH_JIDA = "framework";
 
-    const ENVIAR_EMAIL_ERROR = false;
-    const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
-
-    var $mensajes = [
+    public $idiomas = [
+        'es' => 'Español'
+    ];
+    public $mensajes = [
         'error'  => 'alert alert-danger',
         'suceso' => 'alert alert-success',
         'alert'  => 'alert alert-warning',
         'info'   => 'alert alert-info'
     ];
 
-    var $tema = 'default';
-
-    var $idiomas = [
-        'es' => 'Español'
+    public static $modulos = [
+        'contacto'  => 'Contacto',
+        'clientes'  => 'Clientes',
+        'reseller'  => 'Reseller',
+        'correos'   => 'Correos',
+        'servicios' => 'Servicios',
+        'empresas'  => 'Empresas',
+        'panel'     => 'Panel',
+        'testing'   => 'Testing',
+        'recursos'  => 'Recursos',
+        'usuarios'  => 'Usuarios',
+        'instagram' => 'Instagram'
     ];
+
+    public $tema = 'preview';
 
     function __construct () {
 
         $this->definir('configMensajes', $this->mensajes);
         $this->definir('tema',
-                       [
-                           'configuracion' => $this->tema
-                       ]);
+            [
+                'configuracion' => $this->tema
+            ]);
 
         /**
          * @deprecated 0.6
          */
         $GLOBALS['Configuracion'] = $this;
-        $this->modulos['app'] = 'app';
+        self::$modulos['app'] = 'app';
 
         /**
          * @since 0.6
@@ -70,5 +79,4 @@ class Configuracion extends Config {
     static function obtener () {
 
     }
-
 }
