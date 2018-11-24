@@ -1171,7 +1171,7 @@ class JVista {
      */
     static function msj ($idVista, $tipo, $msj, $redireccion = "") {
 
-        Medios\Sesion::set('__msjVista',
+        Medios\Sesion::editar('__msjVista',
                             ['msj' => Medios\Mensajes::crear($tipo, $msj),
                              'id'  => $idVista
                             ]);

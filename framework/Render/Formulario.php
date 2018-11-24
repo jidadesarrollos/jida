@@ -1002,9 +1002,9 @@ class Formulario extends Selector {
         }
 
         if ($this->_errores) {
-            Medios\Sesion::set('__erroresForm', $this->_errores);
-            Medios\Sesion::set('_dataPostForm', $datos);
-            Medios\Sesion::set('__dataPostForm', 'id_form', $this->_idEdicion);
+            Medios\Sesion::editar('__erroresForm', $this->_errores);
+            Medios\Sesion::editar('_dataPostForm', $datos);
+            Medios\Sesion::editar('__dataPostForm', 'id_form', $this->_idEdicion);
 
             return false;
 
@@ -1027,7 +1027,7 @@ class Formulario extends Selector {
     static function msj ($type, $msj, $redirect = false) {
 
         $msj = Medios\Mensajes::crear($type, $msj, true);
-        Medios\Sesion::set('__msjForm', $msj);
+        Medios\Sesion::editar('__msjForm', $msj);
         if ($redirect) {
             \Jida\Medios\Rutas::redireccionar($redirect);
         }

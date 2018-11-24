@@ -252,7 +252,7 @@ class Mysql extends ConexionBD {
 
             if ($validarExistencia === 0) {
                 $this->ejecutarQuery($insert);
-                Medios\Sesion::set('__queryInsert', $insert);
+                Medios\Sesion::editar('__queryInsert', $insert);
                 if ($this->mysqli->insert_id != "") {
                     $ejecutado = 1;
                 }

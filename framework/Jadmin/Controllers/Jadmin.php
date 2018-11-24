@@ -20,7 +20,7 @@ class Jadmin extends JControl {
 
     function index() {
 
-        $user = Sesion::$user;
+        $user = Sesion::$usuario;
 
         if (!$user->permisos->es('jadmin')) {
             return $this->_inicioSesion();

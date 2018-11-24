@@ -305,7 +305,7 @@ class Formularios extends JControl {
         if ($this->_formulario->salvar($post)) {
 
             $msj = Medios\Mensajes::crear('suceso', 'Formulario guardado correctamente');
-            Medios\Sesion::set('__msj', $msj);
+            Medios\Sesion::editar('__msj', $msj);
 
             return true;
 

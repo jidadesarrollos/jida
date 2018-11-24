@@ -153,7 +153,7 @@ class Usuario extends DataModel {
     function iniciarSesion () {
 
         Medios\Sesion::sessionLogin();
-        Medios\Sesion::set('Usuario', $this);
+        Medios\Sesion::editar('Usuario', $this);
 
         return $this;
 

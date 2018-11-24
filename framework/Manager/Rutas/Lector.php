@@ -79,7 +79,7 @@ class Lector {
         $urlBase = Estructura::$urlBase;
 
         $urlActual = $urlBase . Sesion::obt('URL_ACTUAL');
-        Sesion::set('URL_ACTUAL', $urlActual);
+        Sesion::editar('URL_ACTUAL', $urlActual);
 
         if (count(Estructura::$partes) > 0) {
             $this->_validarIdioma();

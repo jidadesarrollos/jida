@@ -23,7 +23,8 @@ Trait Functions {
 
             $_SESSION[$clave][$param2] = $param3;
 
-        } else
+        }
+        else
             if (!empty($clave)) {
                 $_SESSION[$clave] = $param2;
             }
@@ -43,12 +44,52 @@ Trait Functions {
 
         if (!empty($clave2) and isset ($_SESSION [$clave][$clave2])) {
             return $_SESSION [$clave][$clave2];
-        } else
+        }
+        else
             if (isset ($_SESSION [$clave])) {
                 return $_SESSION [$clave];
-            } else {
+            }
+            else {
                 return false;
             }
+
+    }
+
+    /**
+     * Elimina una variable de sesón o la session completa
+     *
+     * @internal Si es pasado un key se elimina una variable especifica,
+     * caso contrario se elimina la session completa
+     * @var $key clave o arreglo de claves de variable de session que se desea eliminar
+     * @method destruir
+     * @access   public
+     * @since    0.1
+     *
+     */
+
+    static function destruir($key = false) {
+
+        if ($key) {
+
+            if (!is_array(($key)) and array_key_exists($key, $_SESSION)) {
+                unset($_SESSION[$key]);
+                return true;
+            }
+
+            foreach ($key as $clave) {
+                if (isset($_SESSION[$clave])) unset($_SESSION[$clave]);
+            }
+
+            return true;
+
+        }
+        else {
+            session_destroy();
+            session_unset();
+        }
+
+        return true;
+
     }
 
 }

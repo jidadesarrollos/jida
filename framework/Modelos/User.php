@@ -367,17 +367,17 @@ class User extends BD\DataModel {
     function crearSesionUsuario () {
 
         Medios\Sesion::sessionLogin();
-        Medios\Sesion::set('Usuario', $this);
+        Medios\Sesion::editar('Usuario', $this);
         //Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if (isset($data))
-            Medios\Sesion::set('usuario', $data);
+            Medios\Sesion::editar('usuario', $data);
 
         return $this;
     }
 
     function guardarSesion () {
 
-        Medios\Sesion::set('Usuario', $this);
+        Medios\Sesion::editar('Usuario', $this);
     }
 
     function obtUsers () {

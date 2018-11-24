@@ -115,7 +115,7 @@ trait UsuarioManager {
                 Render\JVista::msj($idVista, 'suceso', $msj, $urlVista);
             }
             else
-                Medios\Sesion::set('__msjForm',
+                Medios\Sesion::editar('__msjForm',
                                     Mensajes::crear('error',
                                                     "No se ha podido registrar el usuario, vuelva a intentarlo"),
                                     false);
@@ -312,11 +312,11 @@ trait UsuarioManager {
     protected function crearSesionUsuario () {
 
         Medios\Sesion::sessionLogin();
-        Medios\Sesion::set('Usuario', $this->modelo);
+        Medios\Sesion::editar('Usuario', $this->modelo);
 
         #- Se guarda como arreglo para mantener soporte a aplicaciones anteriores
         if (isset($data))
-            Medios\Sesion::set('usuario', $data);
+            Medios\Sesion::editar('usuario', $data);
 
         return $this;
     }

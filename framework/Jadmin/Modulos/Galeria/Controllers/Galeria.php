@@ -152,7 +152,7 @@ class Galeria extends JController {
         // \Jida\Medios\Debug::imprimir('_obtFormMedia',$_GET,$id);
 
         $form = new Render\Formulario('GestionObjetoMedia', $id);
-        Medios\Sesion::set('objetoMedia', $id);
+        Medios\Sesion::editar('objetoMedia', $id);
         $form
             ->boton('principal')
             ->attr([
@@ -163,7 +163,7 @@ class Galeria extends JController {
                 'id'     => $id,
                 'config' => '{"post":"guardarMedia"}'
             ]);
-        Medios\Sesion::set('_formMedia', $form);
+        Medios\Sesion::editar('_formMedia', $form);
 
         return $form;
 
