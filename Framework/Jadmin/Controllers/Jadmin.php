@@ -34,7 +34,7 @@ class Jadmin extends JControl {
         $this->layout('login');
         $this->vista('login');
 
-        $formLogin = new Formulario('Login');
+        $formLogin = new Formulario('menus/Login');
 
         if ($this->post('btnLogin')):
             if ($formLogin->validar()) {

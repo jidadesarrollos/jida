@@ -24,6 +24,7 @@ class Estructura {
     static $url;
     /**
      * Estracto de la url correspondiente al dominio
+     *
      * @var string $dominio
      */
     static $dominio;
@@ -63,7 +64,7 @@ class Estructura {
      * @return string
      * @throws \Exception
      */
-    static private function _obtenerDirectorio () {
+    static private function _obtenerDirectorio() {
 
         $actual = explode(DS, __DIR__);
         unset($actual[array_search('Manager', $actual)]);
@@ -87,7 +88,7 @@ class Estructura {
 
     }
 
-    static function path () {
+    static function path() {
 
         if (!self::$directorio)
             self::_obtenerDirectorio();
@@ -104,7 +105,7 @@ class Estructura {
      * @since 0.6.1
      * @return mixed
      */
-    static function url () {
+    static function url() {
 
         if (!self::$url)
             self::procesar();
@@ -113,7 +114,7 @@ class Estructura {
 
     }
 
-    static function procesar ($directorioJida) {
+    static function procesar($directorioJida) {
 
         try {
             self::_obtenerDirectorio();
@@ -124,12 +125,12 @@ class Estructura {
             unset($_GET['url']);
 
             $url = str_replace([
-                                   '.php',
-                                   '.html',
-                                   '.htm'
-                               ],
-                               '',
-                               $url);
+                '.php',
+                '.html',
+                '.htm'
+            ],
+                '',
+                $url);
 
             $url = explode('/', $url);
 
@@ -162,7 +163,7 @@ class Estructura {
      *
      * @param Arranque $arranque
      */
-    static public function definir (Arranque $arranque) {
+    static public function definir(Arranque $arranque) {
 
         self::$ruta = $arranque::$ruta;
         self::$modulo = $arranque::$modulo;
@@ -172,4 +173,12 @@ class Estructura {
 
     }
 
+    /**
+     * Retorna la ruta de carpetas de un modulo solicitado
+     *
+     * @param $directorio
+     */
+    static public function modulo($directorio) {
+
+    }
 }
