@@ -57,7 +57,8 @@ trait ObjetoManager {
             if (is_object($arr) and property_exists($arr, $k)) {
                 $this->$k = $arr->$k;
             }
-            else if (isset($arr[$k])) $this->$k = $arr[$k];
+            else if (is_array($arr) and isset($arr[$k]))
+                $this->$k = $arr[$k];
         }
 
     }

@@ -173,8 +173,6 @@ class Arranque {
             }
         } catch (\Exception $e) {
             Medios\Debug::imprimir(["capturada excepcion en arranque", $e], true);
-        } catch (\Error $e) {
-            Medios\Debug::imprimir(["capturado error en arranque", $e], true);
         }
 
     }
