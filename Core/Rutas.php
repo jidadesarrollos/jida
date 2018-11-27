@@ -48,8 +48,8 @@ class Rutas {
             if ($jida) {
                 $form = array_shift($this->_solicitud);
 
-                #$this->_rutaAbsoluta = DIR_FRAMEWORK . DS . 'Formularios' . DS . $form;
-                $this->_rutaAbsoluta = '/Framework' . DS . 'Formularios' . DS . $form;
+                $this->_rutaAbsoluta = DIR_FRAMEWORK . DS . 'Formularios' . DS . $form;
+                #$this->_rutaAbsoluta = '/Framework' . DS . 'Formularios' . DS . $form;
             }
             else if ($this->_validarModulo($modulo)) {
                 $form = array_shift($this->_solicitud);
@@ -60,16 +60,16 @@ class Rutas {
         }
         else {
             $form = array_shift($this->_solicitud);
-            #$this->_rutaAbsoluta = DIR_APP . 'Formularios' . DS . $form;
-            $this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $form;
+            $this->_rutaAbsoluta = DIR_APP . 'Formularios' . DS . $form;
+            #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Formularios' . DS . $form;
         }
     }
 
     private function _analizarMenu () {
 
         $menu = array_shift($this->_solicitud);
-        #$this->_rutaAbsoluta = DIR_APP . 'Menus' . DS . $menu;
-        $this->_rutaAbsoluta = "/Aplicacion" . DS . 'Menus' . DS . $menu;
+        $this->_rutaAbsoluta = DIR_APP . 'Menus' . DS . $menu;
+        #$this->_rutaAbsoluta = "/Aplicacion" . DS . 'Menus' . DS . $menu;
 
     }
 
