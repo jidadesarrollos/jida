@@ -51,7 +51,7 @@ class Layout {
      */
     private static $_urlTema;
 
-    private $_js  = [];
+    private $_js = [];
     private $_css = [];
 
     /**
@@ -84,43 +84,47 @@ class Layout {
      * @return $this
      */
     private function _leer() {
+        try {
+            $padre = self::$padre;
+            $arranque = $padre::$Padre;
 
-        $padre = self::$padre;
-        $arranque = $padre::$Padre;
+            $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
 
-        $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
+            $this->_tema = $tema;
+            $path = Estructura::$directorio;
+            /**
+             * @var object $controlador
+             * @see \Jida\Core\Controlador;
+             */
+            $controlador = $arranque::$Controlador;
+            $directorio = $this->_DIRECTORIOS['app'];
 
-        $this->_tema = $tema;
-        $path = Estructura::$directorio;
-        /**
-         * @var object $controlador
-         * @see \Jida\Core\Controlador;
-         */
-        $controlador = $arranque::$Controlador;
-        $directorio = $this->_DIRECTORIOS['app'];
+            self::$_urlTema = Estructura::$urlBase . 'Aplicacion/Layout/';
+            if ($arranque->jadmin) {
+                $config = Config::obtener();
+                self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema . "/";
+                $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
 
-        self::$_urlTema = Estructura::$urlBase . 'Aplicacion/Layout/';
-        if ($arranque->jadmin) {
-            $config = Config::obtener();
-            self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema . "/";
-            $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
+                $directorio = ($tema === 'jadmin' || Directorios::validar($dirJida . $tema))
+                    ? $dirJida
+                    : $this->_DIRECTORIOS['app'];
+            }
 
-            $directorio = ($tema === 'jadmin' || Directorios::validar($dirJida . $tema))
-                ? $dirJida
-                : $this->_DIRECTORIOS['app'];
+            self::$directorio = $path . DS . $directorio;
+
+            if ($tema) {
+
+                self::$directorio .= $tema . DS;
+            }
+
+            self::$_path = self::$directorio;
+            self::$directorio .= $controlador->layout();
+
+            return $this;
         }
-
-        self::$directorio = $path . DS . $directorio;
-
-        if ($tema) {
-
-            self::$directorio .= $tema . DS;
+        catch (\Exception $e) {
+            Debug::imprimir(["excepcion", $e], true);
         }
-
-        self::$_path = self::$directorio;
-        self::$directorio .= $controlador->layout();
-
-        return $this;
 
     }
 

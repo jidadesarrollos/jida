@@ -6,24 +6,23 @@ use Jida\Core\Modelo;
 
 class Usuario extends Modelo {
 
-    private $_ce = "90010";
+    static private $_ce = 90010;
 
-    var $id_usuario;
-    var $nombre_usuario;
-    var $clave_usuario;
+    public $id_usuario;
+    public $nombre_usuario;
+    public $clave_usuario;
 
-    var $nombres;
-    var $apellidos;
-    var $correo;
-    var $sexo;
+    public $nombres;
+    public $apellidos;
+    public $correo;
+    public $sexo;
 
-    var $activo;
-    var $id_estatus;
-    var $id_empresa;
-    var $ultima_session;
-    var $validacion;
-    var $codigo_recuperacion;
-    var $img_perfil;
+    public $activo;
+    public $id_estatus;
+    public $ultima_session;
+    public $validacion;
+    public $codigo_recuperacion;
+    public $img_perfil;
 
     protected $perfiles = [];
 

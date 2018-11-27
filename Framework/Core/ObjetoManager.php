@@ -9,9 +9,11 @@
 
 namespace Jida\Core;
 
+use Jida\Medios\Debug;
+
 trait ObjetoManager {
 
-    protected function copiarAtributos ($clase) {
+    protected function copiarAtributos($clase) {
 
         if (is_object($clase)) {
             $atributos = get_object_vars($clase);
@@ -38,7 +40,7 @@ trait ObjetoManager {
      * @param mixed @clase Instancia de la clase
      *
      */
-    protected function establecerAtributos ($arr, $clase = '') {
+    protected function establecerAtributos($arr, $clase = '') {
 
         if (empty($clase)) {
             $clase = $this->_clase;
@@ -52,17 +54,12 @@ trait ObjetoManager {
         }
 
         foreach ($atributos as $k => $valor) {
-            if (is_object($arr)) {
-                if (property_exists($arr, $k))
-                    $this->$k = $arr->$k;
+            if (is_object($arr) and property_exists($arr, $k)) {
+                $this->$k = $arr->$k;
             }
-            else {
-                if (isset($arr[$k]))
-                    $this->$k = $arr[$k];
-            }
-
+            else if (isset($arr[$k])) $this->$k = $arr[$k];
         }
-        // Debug::imprimir('$this',$this,true);
+
     }
 
     /**
@@ -74,7 +71,7 @@ trait ObjetoManager {
      * @return mixed $partes Namespace armado
      *
      */
-    private function obtNamespace ($clase, $namespace = "") {
+    private function obtNamespace($clase, $namespace = "") {
 
         if ($this->tieneNamespace($clase)) {
 
@@ -88,12 +85,24 @@ trait ObjetoManager {
     }
 
     /**
+     * Verifica si el nombre de clase pasado contiene un namespace
+     * @method tieneNamespace
+     *
+     * @param {string} $clase Nombre de la clase
+     */
+    private function tieneNamespace($clase) {
+        if (strrpos($clase, '\\') !== false)
+            return true;
+        return false;
+    }
+
+    /**
      * Retorna el nombre de la clase sin el namespace
      *
      * @param string $clase
      * @return obtClaseNombre
      */
-    private function obtClaseNombre ($clase) {
+    private function obtClaseNombre($clase) {
 
         if ($this->tieneNamespace($clase)) {
 
@@ -107,7 +116,7 @@ trait ObjetoManager {
 
     }
 
-    private function addAtributos ($array) {
+    private function addAtributos($array) {
 
         if (is_array($array) or is_object($array)) {
 

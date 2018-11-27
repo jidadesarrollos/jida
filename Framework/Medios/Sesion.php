@@ -33,10 +33,7 @@ class Sesion {
 
         self::editar('__idSession', self::getIdSession());
 
-        #self::$usuario = new Usuario(1);
-        #Debug::imprimir([self::obt('__idSession')], true);
-
-        if (self::obt('_usuario')
+        if (self::obt('_sesionValida')
             and self::obt('_usuario') instanceof \Jida\Modulos\Usuario\Usuario) {
             self::$usuario = self::obt('_usuario');
         }
@@ -82,8 +79,6 @@ class Sesion {
      *
      * @return boolean true
      * @since    0.1
-     * @deprecated
-     * @see      activo
      *
      */
     static function activa() {

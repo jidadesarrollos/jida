@@ -26,7 +26,7 @@ class Manager {
 
     private $ruta;
 
-    function __construct ($ruta) {
+    function __construct($ruta) {
 
         try {
 
@@ -53,40 +53,31 @@ class Manager {
 
     }
 
-    public function inicio () {
+    public function inicio() {
 
-        try {
+        $this->_tiempoInicio = microtime(true);
 
-            $this->_tiempoInicio = microtime(true);
-
-            $config = self::$configuracion;
-            if (!$config) {
-                $msj = "No se consigue el objeto de configuración";
-                throw new \Exception($msj, $this->_ce . 2);
-            }
-
-            date_default_timezone_set($config::ZONA_HORARIA);
-            Medios\Sesion::iniciar();
-
-            $_SERVER = array_merge($_SERVER, getallheaders());
-
-            if ($this->_validador->inicio()) {
-                $this->_lector->validar();
-            }
-            else {
-                $msj = "La aplicación no se encuentra configurada de forma correcta";
-                Excepcion::procesar($msj, $this->_ce . 1);
-            }
-
-            $this->_tiempoFin = microtime(true);
-
+        $config = self::$configuracion;
+        if (!$config) {
+            $msj = "No se consigue el objeto de configuración";
+            throw new \Exception($msj, $this->_ce . 2);
         }
-        catch (\Exception $e) {
-            Medios\Debug::imprimir($e);
-            $excepcion = new Excepcion($e);
-            $excepcion->log();
 
+        date_default_timezone_set($config::ZONA_HORARIA);
+
+        Medios\Sesion::iniciar();
+
+        $_SERVER = array_merge($_SERVER, getallheaders());
+
+        if ($this->_validador->inicio()) {
+            $this->_lector->validar();
         }
+        else {
+            $msj = "La aplicación no se encuentra configurada de forma correcta";
+            Excepcion::procesar($msj, $this->_ce . 1);
+        }
+
+        $this->_tiempoFin = microtime(true);
 
     }
 
