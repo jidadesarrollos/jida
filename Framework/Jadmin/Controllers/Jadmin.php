@@ -34,7 +34,6 @@ class Jadmin extends JControl {
 
         $this->layout('login');
         $this->vista('login');
-        #this->redireccionar('/jadmin/2');
 
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
