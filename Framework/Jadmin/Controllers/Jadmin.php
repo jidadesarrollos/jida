@@ -18,19 +18,22 @@ class Jadmin extends JControl {
 
         parent::__construct();
 
-        $user = Sesion::$usuario;
-
-        if (!$user->permisos->es('jadmin')) {
-            $this->redireccionar('login');
-        }
-
     }
 
     function index() {
 
+        $user = Sesion::$usuario;
+
+        if (!$user->permisos->es('jadmin')) {
+            $this->_login();
+        }
+
     }
 
-    public function login() {
+    private function _login() {
+
+        $this->layout('login');
+        $this->vista('login');
 
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
@@ -40,14 +43,23 @@ class Jadmin extends JControl {
             if ($formLogin->validar()) {
 
                 $usuario = new Usuario();
-                $usuario->validarSesion($this->post('nombre_usuario'), $this->post('clave_usuario'));
+
+                if ($usuario->validarInicioSesion($this->post('nombre_usuario'), $this->post('clave_usuario'))) {
+                    $this->redireccionar('/');
+                }
+                else {
+                    Formulario::msj('error', 'Datos incorrectos');
+                }
 
             }
+
         }
 
         $this->data([
             'formulario' => $formLogin->render()
         ]);
+
+        return $this;
 
     }
 

@@ -2,7 +2,6 @@
 
 namespace Jida\Modulos\Usuario;
 
-use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuario\Componentes\Permisos;
 
@@ -24,16 +23,19 @@ class Usuario {
 
     }
 
-    public function validarSesion($_usuario, $_clave) {
+    public function validarInicioSesion($_usuario, $_clave) {
 
-        $modelo = $this->_modelo;
-        $usuario = $modelo->select('*')
-            ->filtro(['nombre_usuario' => $_usuario, 'clave_usuario' => md5($_clave)])
-            ->obt();
+        $modelo = new Modelos\Usuario();
+        $modelo->select('*');
+        $modelo->filtro(['nombre_usuario' => $_usuario, 'clave_usuario' => md5($_clave)]);
+        $usuario = $modelo->fila();
 
-        Debug::mostrarArray($usuario);
+        if (!$usuario) {
+            return false;
+        }
 
         Sesion::registrar();
+        $this->_modelo = new Modelos\Usuario($usuario['id_usuario']);
         return $this->_modelo->obtenerPropiedades();
 
     }
