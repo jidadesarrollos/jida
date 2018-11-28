@@ -147,7 +147,7 @@ class Estructura {
             $url = implode("/", $url);
             self::$urlRuta = $pathDominio;
 
-            self::$url = self::$dominio . $url;
+            self::$url = '//' . self::$dominio . $url;
         }
         catch (Excepcion $e) {
             Debug::imprimir($e);
@@ -170,6 +170,7 @@ class Estructura {
         self::$controlador = $arranque::$controlador;
         self::$metodo = $arranque::$metodo;
         self::$jadmin = $arranque->jadmin;
+        //Debug::imprimir([self::$ruta, self::$url], true);
 
     }
 

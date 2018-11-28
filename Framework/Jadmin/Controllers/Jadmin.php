@@ -34,6 +34,7 @@ class Jadmin extends JControl {
 
         $this->layout('login');
         $this->vista('login');
+        #this->redireccionar('/jadmin/2');
 
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
@@ -45,7 +46,7 @@ class Jadmin extends JControl {
                 $usuario = new Usuario();
 
                 if ($usuario->validarInicioSesion($this->post('nombre_usuario'), $this->post('clave_usuario'))) {
-                    $this->redireccionar('/');
+                    $this->redireccionar('/jadmin');
                 }
                 else {
                     Formulario::msj('error', 'Datos incorrectos');
