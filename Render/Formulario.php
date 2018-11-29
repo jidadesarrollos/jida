@@ -245,9 +245,13 @@ class Formulario extends Selector {
     /**
      *
      */
-    function __construct($form = "", $dataEdicion = "") {
+    function __construct($form = "", $dataEdicion = "", $enctype = "") {
 
         $this->_conf = $GLOBALS['JIDA_CONF'];
+		
+		if (!empty($enctype)) {
+			$this->enctype = $enctype;
+		}
 
         if ($form) {
             $this->_cargarFormulario($form, $dataEdicion);
