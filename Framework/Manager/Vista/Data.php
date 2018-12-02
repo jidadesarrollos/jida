@@ -12,7 +12,7 @@ class Data {
     private static $data;
     private static $instancia;
 
-    function __construct ($data) {
+    function __construct($data) {
 
         if (is_object($data)) {
             $this->copiarAtributos($data);
@@ -20,7 +20,7 @@ class Data {
 
     }
 
-    private static function validarInstancia ($data = null) {
+    private static function validarInstancia($data = null) {
 
         if (!self::$instancia) {
             self::$instancia = new Data($data);
@@ -28,7 +28,7 @@ class Data {
 
     }
 
-    static function inicializar ($data) {
+    static function inicializar($data = null) {
 
         self::validarInstancia($data);
 
@@ -41,7 +41,7 @@ class Data {
      * @see \Jida\Manager\Vista
      *
      */
-    static function obtener () {
+    static function obtener() {
 
         self::validarInstancia();
 
@@ -49,8 +49,7 @@ class Data {
 
     }
 
-    static function destruir () {
-
+    static function destruir() {
         self::$instancia = false;
     }
 }

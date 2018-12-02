@@ -9,6 +9,7 @@ namespace Jida\Core\Controlador;
 use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Vista\Layout;
+use Jida\Medios\Debug;
 
 class Control {
 
@@ -37,10 +38,11 @@ class Control {
 
     static private $_ce = 30003;
 
-    function __construct () {
+    function __construct() {
 
         $this->_inicializar();
         $this->_procesarPeticiones();
+        $this->_layout = Layout::obtener();
 
     }
 
@@ -50,13 +52,13 @@ class Control {
      *
      * @since 1.4
      * @param string $layout
-     * @return string
+     * @return Layout
      */
-    public function layout ($layout = "") {
+    public function layout($layout = null) {
 
-        if (!empty($layout) and !strpos($layout, ".tpl.php")) {
-            $layout .= ".tpl.php";
-            $this->_layout = $layout;
+        if ($layout) {
+            if (!strpos($layout, ".tpl.php")) $layout .= ".tpl.php";
+            $this->_layout->_definirPlantilla($layout);
         }
 
         return $this->_layout;
@@ -71,7 +73,7 @@ class Control {
      * $data es una cadena.
      *
      */
-    protected function data ($data, $valor = "") {
+    protected function data($data, $valor = "") {
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -89,7 +91,7 @@ class Control {
      *
      * @return {object} \App\Config\Configuracion
      */
-    protected function _conf () {
+    protected function _conf() {
 
         return Config::obtener();
     }
@@ -101,7 +103,7 @@ class Control {
      *
      * @return string nombre de la vista
      */
-    public function vista ($vista = "") {
+    public function vista($vista = "") {
 
         if ($vista and $vista != $this->vista) {
             $this->vista = $vista;
@@ -110,6 +112,5 @@ class Control {
         return $this->vista;
 
     }
-
 
 }

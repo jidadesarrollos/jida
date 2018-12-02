@@ -6,25 +6,27 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Medios\Debug;
+
 Trait RenderLayout {
 
-    public function incluirJS ($archivos, $modulo = "") {
+    public function incluirJS($archivos, $modulo = "") {
 
         if (!empty($modulo) and $modulo === 'tema') {
             $modulo = $this->_urlTema;
         }
 
         if (is_string($archivos)) {
-            $archivos = explode("", $archivos);
+            $archivos = (array)$archivos;
         }
 
         foreach ($archivos as $indice => $archivo) {
-            array_push($this->_js, "$modulo/$archivos");
+            array_push($this->_js, "$modulo/$archivo");
         }
 
     }
 
-    public function incluirCSS ($archivos, $modulo = "") {
+    public function incluirCSS($archivos, $modulo = "") {
 
         $modulo = Estructura::$urlBase;
         if (!empty($modulo) and $modulo === 'tema') {

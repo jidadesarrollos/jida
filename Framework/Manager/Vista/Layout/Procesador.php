@@ -20,7 +20,7 @@ Trait Procesador {
         "meta"
     ];
 
-    private function _imprimirJS($librerias) {
+    private function _imprimirJS($librerias, $modulo) {
 
         $html = "";
         $path = "/" . Estructura::$urlBase;

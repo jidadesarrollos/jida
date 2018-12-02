@@ -2,6 +2,7 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
@@ -14,18 +15,18 @@ Trait Archivo {
      * @param $archivo
      * @param array $datos
      * @return string
-     * @throws \Exception
+     *
      */
-    private function _obtenerContenido ($archivo, $datos = []) {
+    private function _obtenerContenido($archivo, $datos = []) {
 
         if (!Directorios::validar($archivo)) {
             $msj = 'No existe el archivo pasado para obtener contenido';
             Excepcion::procesar($msj, self::$_ce . 11);
         }
+
         extract($datos);
         ob_start();
 
-        /** @noinspection PhpIncludeInspection */
         include_once $archivo;
         $contenido = ob_get_clean();
 
@@ -38,13 +39,14 @@ Trait Archivo {
 
     /**
      * Permite incluir objetos media
+     *
      * @deprecated
      * @param $folder
      * @param $item
      * @param bool $tema
      * @return string
      */
-    function media ($folder, $item, $tema = true) {
+    function media($folder, $item, $tema = true) {
 
         return $this->htdocs($folder, $item, $tema);
     }
@@ -52,6 +54,7 @@ Trait Archivo {
     /**
      * Retorna la url publica de los archivos htdocs de un tema
      * @method htdocs
+     *
      * @params string $folder Carpeta a obtener
      * @params string $item nombre del archivo
      * @params boolean $tema Determina si el archivo debe buscarse en el contenido
@@ -62,7 +65,7 @@ Trait Archivo {
      * @return string
      */
 
-    function htdocs ($folder, $item, $tema = true) {
+    function htdocs($folder, $item, $tema = true) {
 
         $path = Estructura::$urlRuta;
         $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;

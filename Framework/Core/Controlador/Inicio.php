@@ -27,4 +27,6 @@ Trait Inicio {
         $this->_data = Data::inicializar(null);
 
     }
+
+
 }

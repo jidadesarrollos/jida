@@ -15,7 +15,9 @@ use Jida\Manager\Rutas\Procesador\Modulo;
 class Procesador {
 
     use Modulo, Controlador, Metodo;
-
+    /**
+     * @var Arranque $_padre
+     */
     protected $_padre;
     protected $_moduloValidado;
     protected $_default = 'Index';

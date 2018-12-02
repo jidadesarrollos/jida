@@ -59,7 +59,7 @@ class Lector {
     private function _procesar () {
 
         if (!$this->_arranque) {
-            $this->_arranque = new Arranque($this);
+            $this->_arranque = new Arranque();
         }
 
         return $this->_arranque;

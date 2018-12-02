@@ -54,13 +54,15 @@ class Arranque {
      */
     private $_managerVista;
 
-    public function __construct($control) {
+    public function __construct() {
 
         $conf = Config::obtener();
 
         $this->modulos = $conf::$modulos;
         $this->_arrayUrl = Estructura::$partes;
         $this->_parser();
+
+        $this->_managerVista = new ManagerVista($this);
 
     }
 
@@ -70,7 +72,8 @@ class Arranque {
 
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
-        } else {
+        }
+        else {
             $this->reingresarParametro($parametro);
         }
 
@@ -142,6 +145,7 @@ class Arranque {
             }
 
             self::$Controlador = new $objeto();
+
         }
 
         return self::$Controlador;
@@ -167,11 +171,11 @@ class Arranque {
 
                 $this->_pipeLines($controlador, '_jdPost');
 
-                $this->_managerVista = new ManagerVista($this, $controlador, $this->_dataVista);
                 $this->_managerVista->renderizar();
 
             }
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             Medios\Debug::imprimir(["capturada excepcion en arranque", $e], true);
         }
 
@@ -188,7 +192,8 @@ class Arranque {
             $dataVista = new Core\DataVista(self::$modulo, self::$controlador, self::$metodo, $this->jadmin);
             $GLOBALS['dataVista'] = $dataVista;
             $this->_dataVista = $dataVista;
-        } else {
+        }
+        else {
             $data = Data::obtener();
             $GLOBALS['dataVista'] = $data;
             $this->_dataVista = $data;

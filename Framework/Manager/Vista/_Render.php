@@ -19,7 +19,7 @@ class _Render {
     private $_ce = 100012;
     private $_data;
 
-    private function _obtenerData () {
+    private function _obtenerData() {
 
         $data = Data::obtener();
         $this->_data = $data;
@@ -36,7 +36,7 @@ class _Render {
      * @param string $vista Ruta de la vista a renderizar
      *
      */
-    function imprimir ($layout, $vista) {
+    function imprimir($layout, $vista) {
 
         if (!Directorios::validar($layout)) {
             throw new Excepcion ("El layout solicitado no existe, \n Layout: " . $layout, $this->_ce . 1);
@@ -64,15 +64,15 @@ class _Render {
 
     }
 
-    function __call ($metodo, $parametros) {
+    function __call($metodo, $parametros) {
 
         $layout = Layout::obtener();
         if (method_exists($layout, $metodo)) {
             call_user_func_array([
-                                     $layout,
-                                     $metodo
-                                 ],
-                                 $parametros);
+                $layout,
+                $metodo
+            ],
+                $parametros);
 
         }
 
@@ -87,7 +87,7 @@ class _Render {
      * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      */
-    function imprimirLibrerias ($lang, $modulo = "") {
+    function imprimirLibrerias($lang, $modulo = "") {
 
         $configuracion = Config::obtener();
         if (!$this->_data) {
@@ -143,8 +143,8 @@ class _Render {
                 //se pasa como lenguaje la variable $id ya que es un una etiqueta link la que se creara
                 //a partir del arreglo $libreria
                 $libsHTML .= $this->__obtHTMLLibreria('link',
-                                                      $libreria,
-                                                      $cont);
+                    $libreria,
+                    $cont);
             }
             else if (!is_array($libreria)) {
                 $libsHTML .= $this->__obtHTMLLibreria($lang, $libreria, $cont);
@@ -158,12 +158,12 @@ class _Render {
 
     }
 
-    private function __obtHTMLLibreria ($lang, $libreria, $cont = 2) {
+    private function __obtHTMLLibreria($lang, $libreria, $cont = 2) {
 
         $path = Estructura::$urlRuta;
 
         if ((defined('URL_BASE') and
-            (is_string($libreria) and strpos($libreria, 'http') === false))) {
+             (is_string($libreria) and strpos($libreria, 'http') === false))) {
             $path = "";
         }
 
@@ -182,27 +182,27 @@ class _Render {
                 $url = explode("/", $path . $libreria);
 
                 $link = "/" . implode("/",
-                                      array_filter($url,
-                                          function ($var) {
+                        array_filter($url,
+                            function ($var) {
 
-                                              return !!$var;
-                                          }));
+                                return !!$var;
+                            }));
 
                 $html = Selector::crear('link',
-                                        [
-                                            'href' => $link,
-                                            'rel'  => 'stylesheet',
-                                            'type' => 'text/css'
-                                        ],
-                                        null,
-                                        2);
+                    [
+                        'href' => $link,
+                        'rel'  => 'stylesheet',
+                        'type' => 'text/css'
+                    ],
+                    null,
+                    2);
                 break;
         }
 
         return $html;
     }
 
-    function segmento ($segmento, $params = []) {
+    function segmento($segmento, $params = []) {
 
         if (!is_array($params))
             $params = [$params];
@@ -225,10 +225,11 @@ class _Render {
 
     /**
      * Función para incluir archivos
+     *
      * @param mixed $files Nombre de Archivo o arreglo de archivos a incluir
      *
      */
-    function incluir ($archivo) {
+    function incluir($archivo) {
 
         if (is_array($archivo)) {
             foreach ($archivo as $key => $ar) {
@@ -244,7 +245,7 @@ class _Render {
      * Permite acceder a un nexo
      *
      */
-    function nexo ($nexo, $modulo = "") {
+    function nexo($nexo, $modulo = "") {
 
         $partes = explode(".", $nexo);
         if (count($partes) > 1) {
@@ -282,16 +283,16 @@ class _Render {
      * @param string $seccion [opcional] seccion declarada en el sistema de traducciones
      *
      */
-    function cadena ($texto, $ubicacion, $seccion = "") {
+    function cadena($texto, $ubicacion, $seccion = "") {
 
         if (!property_exists($this, 'traductor'))
             throw new Excepcion("El objeto vista no consigue al traductor, no se ha instanciado correctamente",
-                                $this->_ce . '10');
+                $this->_ce . '10');
 
         return $this->traductor->cadena($texto, $ubicacion);
     }
 
-    function enlace ($url = "") {
+    function enlace($url = "") {
 
         $path = (defined('URL_BASE')) ? URL_BASE : '';
         if (!empty($this->idioma))
@@ -307,10 +308,11 @@ class _Render {
      *
      * Metodo provisional para manejo de urls desde las vistas
      * @method cambiarUrl
+     *
      * @param {string} idioma
      * @since 0.5
      */
-    function cambiarUrl ($idioma) {
+    function cambiarUrl($idioma) {
 
         $url = "/";
         if (!empty($this->modulo))

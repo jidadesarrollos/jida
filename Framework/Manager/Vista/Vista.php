@@ -27,7 +27,7 @@ class Vista {
     private $_tema;
     private $_data;
 
-    function __construct ($padre) {
+    function __construct($padre) {
 
         self::$padre = $padre;
         $conf = Config::obtener();
@@ -43,7 +43,7 @@ class Vista {
      * @param $plantilla
      * @return bool|string
      */
-    function rutaPlantilla ($plantilla) {
+    function rutaPlantilla($plantilla) {
 
         $plantilla = $plantilla . ".php";
 
@@ -61,10 +61,9 @@ class Vista {
 
     }
 
-    function obtener ($plantilla = "") {
+    function obtener($plantilla = "") {
 
-        $padre = self::$padre;
-        $controlador = $padre::$controlador;
+        $controlador = \Jida\Manager::controlador();
 
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;

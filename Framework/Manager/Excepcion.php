@@ -12,6 +12,7 @@ use App\Config\Configuracion;
 use Jida\Componentes\Correo;
 use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Layout;
@@ -25,7 +26,7 @@ class Excepcion {
 
     const PLANTILLAS_APP = 'Aplicacion/plantillas/';
 
-    function __construct (\Exception $e) {
+    function __construct(\Exception $e) {
 
         $this->nombreArchivo = "error.log";
         $this->ruta = Estructura::path();
@@ -33,7 +34,7 @@ class Excepcion {
 
     }
 
-    function _registrar () {
+    function _registrar() {
 
         $separador = "--------------------------";
         $fecha = "Fecha: " . date('Y-m-d H:i:s');
@@ -64,21 +65,21 @@ class Excepcion {
         }
 
         $log = implode("\r\n",
-                       [
-                           $separador,
-                           $fecha,
-                           $separador,
-                           $codigo,
-                           $mensaje,
-                           $detalle
-                       ]);
+            [
+                $separador,
+                $fecha,
+                $separador,
+                $codigo,
+                $mensaje,
+                $detalle
+            ]);
 
         $this->txtLog = implode("<br/>",
-                                [
-                                    $codigo,
-                                    $mensaje,
-                                    $detalle
-                                ]);
+            [
+                $codigo,
+                $mensaje,
+                $detalle
+            ]);
 
         if (Configuracion::ENVIAR_EMAIL_ERROR) {
             $this->_enviarEmail();
@@ -91,7 +92,7 @@ class Excepcion {
 
     }
 
-    function log () {
+    function log() {
 
         $this->_registrar();
         $excepcion = $this->excepcion;
@@ -128,7 +129,7 @@ class Excepcion {
 
     }
 
-    private function _enviarEmail () {
+    private function _enviarEmail() {
 
         $destinatario = Configuracion::EMAIL_SOPORTE;
         $detalle_error = str_replace("\r\n", "<br/>", $this->txtLog);
@@ -138,16 +139,20 @@ class Excepcion {
         $correo->data([
             'aplicacion'    => Configuracion::NOMBRE_APP,
             'detalle_error' => $detalle_error
-                      ]);
+        ]);
         $correo->enviar($destinatario, "Error generado en " . Configuracion::NOMBRE_APP);
 
         return $this;
 
     }
 
-    public static function procesar ($msj, $codigo) {
-
-        throw new \Exception($msj, $codigo);
+    public static function procesar($msj, $codigo) {
+        try {
+            throw new \Exception($msj, $codigo);
+        }
+        catch (\Exception $exception) {
+            Debug::imprimir(["procesada excepcion", $exception], true);
+        }
 
     }
 

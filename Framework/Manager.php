@@ -6,6 +6,7 @@
 namespace Jida;
 
 use Jida\Configuracion as Conf;
+use Jida\Manager\Rutas\Arranque;
 use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
@@ -25,6 +26,8 @@ class Manager {
     public static $configuracion;
 
     private $ruta;
+
+    private static $_controlador;
 
     function __construct($ruta) {
 
@@ -79,6 +82,13 @@ class Manager {
 
         $this->_tiempoFin = microtime(true);
 
+    }
+
+    static function controlador() {
+        if (!self::$_controlador) {
+            self::$_controlador = Arranque::$Controlador;
+        }
+        return self::$_controlador;
     }
 
 }
