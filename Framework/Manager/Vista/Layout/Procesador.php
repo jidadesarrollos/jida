@@ -44,8 +44,6 @@ Trait Procesador {
             }
         }
 
-        Debug::mostrarArray($librerias);
-
         foreach ($librerias as $clave => $libreria) {
 
             if (is_object($libreria)) {

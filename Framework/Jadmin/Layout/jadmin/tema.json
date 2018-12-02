@@ -17,18 +17,20 @@
       }
     },
     "js": {
-      "jquery": "{tema}htdocs/js/jquery.min.js",
-      "modernizr": "{tema}htdocs/js/modernizr.min.js",
-      "moment": "{tema}htdocs/js/moment.min.js",
-      "popper": "{tema}htdocs/js/popper.min.js",
-      "bootstrap": "{tema}htdocs/js/bootstrap.min.js",
-      "detect": "{tema}htdocs/js/detect.js",
-      "fastclick": "{tema}htdocs/js/fastclick.js",
-      "jq-blockUI": "{tema}htdocs/js/jquery.blockUI.js",
-      "jq-nicescroll": "{tema}htdocs/js/jquery.nicescroll.js",
-      "jq-dataTables": "{tema}htdocs/plugins/datatables/jquery.dataTables.min.js",
-      "bt-dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
-      "jadmin": "{tema}htdocs/js/jadmin.js"
+      "general": {
+        "jquery": "{tema}htdocs/js/jquery.min.js",
+        "modernizr": "{tema}htdocs/js/modernizr.min.js",
+        "moment": "{tema}htdocs/js/moment.min.js",
+        "popper": "{tema}htdocs/js/popper.min.js",
+        "bootstrap": "{tema}htdocs/js/bootstrap.min.js",
+        "detect": "{tema}htdocs/js/detect.js",
+        "fastclick": "{tema}htdocs/js/fastclick.js",
+        "jq-blockUI": "{tema}htdocs/js/jquery.blockUI.js",
+        "jq-nicescroll": "{tema}htdocs/js/jquery.nicescroll.js",
+        "jq-dataTables": "{tema}htdocs/plugins/datatables/jquery.dataTables.min.js",
+        "bt-dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
+        "jadmin": "{tema}htdocs/js/jadmin.js"
+      }
     }
   },
   "prod": {

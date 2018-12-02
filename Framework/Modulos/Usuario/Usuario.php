@@ -2,6 +2,7 @@
 
 namespace Jida\Modulos\Usuario;
 
+use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuario\Componentes\Permisos;
 
@@ -42,6 +43,8 @@ class Usuario {
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
 
         Sesion::registrar();
+
+        Debug::mostrarArray(Sesion::$usuario);
 
         return $instancia->_modelo->obtenerPropiedades();
 

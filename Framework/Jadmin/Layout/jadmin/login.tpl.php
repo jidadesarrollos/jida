@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadmin</title>
-    <?= $this->imprimirLibrerias('css') ?>
+    <?= $this->imprimirLibrerias('css', 'login') ?>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<?= $this->imprimirLibrerias('js') ?>
+<?= $this->imprimirLibrerias('js', 'general') ?>
 
 </body>
 </html>
