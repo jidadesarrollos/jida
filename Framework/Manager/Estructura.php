@@ -128,39 +128,21 @@ class Estructura {
                 '.php',
                 '.html',
                 '.htm'
-            ],
-                '',
-                $url);
+            ], '', $url);
 
             $url = explode('/', $url);
 
-            self::$partes = array_filter($url,
-                function ($var) {
-
-                    return !!$var;
-                });
+            self::$partes = array_filter($url, function ($var) {
+                return !!$var;
+            });
 
             $pathDominio = str_replace("index.php", "", $_SERVER['PHP_SELF']);
-
-            $uri = $_SERVER['REQUEST_URI'];
-            $parts = explode('/', $uri);
-            $urlBase = $_SERVER['SERVER_NAME'];
-            for ($i = 0; $i < count($parts) - 1; $i++) {
-                $urlBase .= $parts[$i] . "/";
-            }
-
-            Debug::imprimir([
-                $_SERVER['SERVER_NAME'] . $pathDominio,
-                $urlBase,
-                $_SERVER['PHP_SELF'], $_SERVER['REQUEST_URI']],
-                true);
-            #self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
-            self::$urlBase = $urlBase;
+            self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
             self::$dominio = self::$urlBase;
             $url = implode("/", $url);
             self::$urlRuta = $pathDominio;
-
             self::$url = '//' . self::$dominio . $url;
+
         }
         catch (Excepcion $e) {
             Debug::imprimir($e);
