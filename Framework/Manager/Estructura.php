@@ -142,7 +142,15 @@ class Estructura {
 
             $pathDominio = str_replace("index.php", "", $_SERVER['PHP_SELF']);
 
-            self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
+            $uri = $_SERVER['REQUEST_URI'];
+            $parts = explode('/', $uri);
+            $urlBase = $_SERVER['SERVER_NAME'];
+            for ($i = 0; $i < count($parts) - 1; $i++) {
+                $urlBase .= $parts[$i] . "/";
+            }
+
+            #self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
+            self::$urlBase = $urlBase;
             self::$dominio = self::$urlBase;
             $url = implode("/", $url);
             self::$urlRuta = $pathDominio;
