@@ -25,9 +25,8 @@ class JControl extends Controlador {
 
         $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
-        $urlBase = Configuracion::URL_BASE;
-        $nombreApp = Configuracion::NOMBRE_APP;
 
+        $nombreApp = Configuracion::NOMBRE_APP;
         $usuario = Sesion::$usuario;
 
         if (!$usuario->permisos->es($this->_perfiles)) {
@@ -38,7 +37,6 @@ class JControl extends Controlador {
 
         $this->data([
             'menu'      => $menu->render(),
-            'urlBase'   => $urlBase,
             'nombreApp' => $nombreApp
         ]);
 
