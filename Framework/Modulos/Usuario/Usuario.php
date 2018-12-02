@@ -9,7 +9,7 @@ class Usuario {
 
     public $permisos;
 
-    private $_modelo;
+    private        $_modelo;
     private static $_instancia;
 
     function __construct($id = null) {
@@ -25,29 +25,12 @@ class Usuario {
 
     }
 
-    public function validarInicioSesion($_usuario, $_clave) {
-
-        $modelo = new Modelos\Usuario();
-        $modelo->select('*');
-        $modelo->filtro(['nombre_usuario' => $_usuario, 'clave_usuario' => md5($_clave)]);
-        $usuario = $modelo->fila();
-
-        if (!$usuario) {
-            return false;
-        }
-
-        Sesion::registrar();
-        $this->_modelo = new Modelos\Usuario($usuario['id_usuario']);
-        return $this->_modelo->obtenerPropiedades();
-
-    }
-
     static function iniciarSesion($usuario, $clave) {
 
         $instancia = self::obtener();
 
         $datos = $instancia
-            ->modelo
+            ->_modelo
             ->consulta()
             ->filtro(['nombre_usuario' => $usuario, 'clave_usuario' => md5($clave)])
             ->fila();

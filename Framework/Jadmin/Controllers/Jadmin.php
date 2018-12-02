@@ -43,7 +43,7 @@ class Jadmin extends JControl {
             $usuario = $this->post('nombre_usuario');
             $clave = $this->post('clave_usuario');
 
-            if ($formLogin->validar() and Usuario::inciarSesion($usuario, $clave)) {
+            if ($formLogin->validar() and Usuario::iniciarSesion($usuario, $clave)) {
                 $this->redireccionar('jadmin');
             }
 

@@ -17,8 +17,8 @@ Trait Url {
     protected function redireccionar($url) {
 
         $protocolo = parse_url($url, PHP_URL_SCHEME);
-        $url = $protocolo ? $url : Estructura::$urlBase . $url;
-        
+        $url = $protocolo ? $url : '//' . Estructura::$urlBase . $url;
+
         header('location:' . $url . '');
         exit;
 
