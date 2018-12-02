@@ -4,15 +4,23 @@ namespace Jida\Core\Controlador;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Medios\Debug;
 
 Trait Url {
 
     /**
      * Realizar una redireccion
      * @method redireccionar
+     *
      * @param $url
      */
-    protected function redireccionar ($url) {
+    protected function redireccionar($url) {
+
+        $protocolo = parse_url($url, PHP_URL_SCHEME);
+
+        if ($protocolo == 'http' or $protocolo == 'https') {
+            Debug::imprimir($protocolo, true);
+        }
 
         header('location:' . $url . '');
         exit;
@@ -21,10 +29,11 @@ Trait Url {
     /**
      * Retorna la url de la aplicacion actual
      * @method obtURLApp
+     *
      * @deprecated since 0.6.1
      *
      */
-    protected function obtURLApp () {
+    protected function obtURLApp() {
 
         $url = Estructura::$urlBase;
         if ($this->multiidioma) {
@@ -49,7 +58,7 @@ Trait Url {
      * @example  obtUrl('controlador/metodo', ['p1'=> $valor])
      *
      */
-    protected function obtUrl ($ruta = null, $data = []) {
+    protected function obtUrl($ruta = null, $data = []) {
 
         $url = Estructura::$url;
 

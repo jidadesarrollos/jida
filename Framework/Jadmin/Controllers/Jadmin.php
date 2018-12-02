@@ -24,6 +24,8 @@ class Jadmin extends JControl {
 
         $user = Sesion::$usuario;
 
+        $this->redireccionar('http://localhost/jida/jadmin');
+
         if (!$user->permisos->es('jadmin')) {
             $this->_login();
         }
