@@ -17,13 +17,11 @@ Trait Url {
     protected function redireccionar($url) {
 
         $protocolo = parse_url($url, PHP_URL_SCHEME);
-
-        if ($protocolo == 'http' or $protocolo == 'https') {
-            Debug::imprimir($protocolo, true);
-        }
-
+        $url = $protocolo ? $url : Estructura::$urlBase . $url;
+        
         header('location:' . $url . '');
         exit;
+
     }
 
     /**
