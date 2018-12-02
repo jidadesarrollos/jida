@@ -4,25 +4,28 @@ namespace Jida\Modulos\Usuario\Componentes;
 
 use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
-use Jida\Modelos\UsuarioPerfil;
+
 use Jida\Modulos\Usuario\Modelos\Usuario;
+use Jida\Modulos\Usuario\Modelos\UsuarioPerfil;
 
 class Permisos {
 
     private $_perfiles = [];
+    private $_usuario;
 
-    function __construct(Usuario $user = null) {
+    function __construct(Usuario $usuario) {
 
-        if (!$user) {
+        $this->_usuario = $usuario;
+        if (!$usuario) {
             $this->_obtener();
         }
 
     }
 
-    private function _obtener() {
+    function obtener() {
 
         $modelo = new UsuarioPerfil();
-        $perfiles = $modelo->obtPerfiles();
+        $perfiles = $modelo->obtPerfiles($this->_usuario->id_usuario);
 
         foreach ($perfiles as $id => $datos) {
             $this->_perfiles[$datos['identificador']] = $datos;
@@ -36,7 +39,7 @@ class Permisos {
 
         $usuario = Sesion::$usuario;
 
-        if ($usuario->id_usuario) {
+        if ($usuario->obtener('id_usuario')) {
 
             Debug::mostrarArray($usuario);
 

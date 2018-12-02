@@ -69,6 +69,7 @@ class Manager {
         date_default_timezone_set($config::ZONA_HORARIA);
 
         Medios\Sesion::iniciar();
+        Medios\Sesion::destruir();
 
         $_SERVER = array_merge($_SERVER, getallheaders());
 

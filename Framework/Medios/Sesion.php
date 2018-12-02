@@ -32,7 +32,7 @@ class Sesion {
         session_start();
 
         self::editar('__idSession', self::getIdSession());
-        self::$usuario = Usuario::obtener();
+        self::$usuario = Usuario::instancia();
 
     }
 

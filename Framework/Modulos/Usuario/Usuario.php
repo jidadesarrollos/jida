@@ -8,9 +8,12 @@ use Jida\Modulos\Usuario\Componentes\Permisos;
 
 class Usuario {
 
+    /**
+     * @var Permisos $permisos
+     */
     public $permisos;
 
-    private        $_modelo;
+    private $_modelo;
     private static $_instancia;
 
     function __construct($id = null) {
@@ -21,14 +24,12 @@ class Usuario {
     }
 
     private function _inicializar() {
-
         $this->permisos = new Permisos($this->_modelo);
-
     }
 
     static function iniciarSesion($usuario, $clave) {
 
-        $instancia = self::obtener();
+        $instancia = self::instancia();
 
         $datos = $instancia
             ->_modelo
@@ -41,10 +42,10 @@ class Usuario {
         }
 
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
-
+        $instancia->permisos->obtener();
+        Debug::imprimir("ak es", true);
         Sesion::registrar();
-
-        Debug::mostrarArray(Sesion::$usuario);
+        Sesion::editar('_usuario', self::$_instancia);
 
         return $instancia->_modelo->obtenerPropiedades();
 
@@ -53,7 +54,7 @@ class Usuario {
     /**
      * Retorna la instancia única del objeto usuario
      */
-    static function obtener() {
+    static function instancia() {
 
         if (self::$_instancia) {
             return self::$_instancia;
@@ -69,6 +70,16 @@ class Usuario {
         self::$_instancia = $instancia;
 
         return self::$_instancia;
+
+    }
+
+    public function obtener($propiedad) {
+
+        if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
+            $this->_modelo->{$propiedad};
+        }
+
+        return false;
 
     }
 }
