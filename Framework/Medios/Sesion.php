@@ -34,7 +34,6 @@ class Sesion {
         self::editar('__idSession', self::getIdSession());
         self::$usuario = Usuario::obtener();
 
-
     }
 
     /**

@@ -10,6 +10,10 @@ class Permisos {
         //todo: write construct
     }
 
+    private function _obtener() {
+        //todo: obtener perfiles
+    }
+
     function es() {
         //todo: write method validation
     }

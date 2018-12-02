@@ -149,6 +149,11 @@ class Estructura {
                 $urlBase .= $parts[$i] . "/";
             }
 
+            Debug::imprimir([
+                $_SERVER['SERVER_NAME'] . $pathDominio,
+                $urlBase,
+                $_SERVER['PHP_SELF'], $_SERVER['REQUEST_URI']],
+                true);
             #self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
             self::$urlBase = $urlBase;
             self::$dominio = self::$urlBase;

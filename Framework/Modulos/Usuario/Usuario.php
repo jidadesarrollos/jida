@@ -44,18 +44,22 @@ class Usuario {
 
     static function iniciarSesion($usuario, $clave) {
 
-        $instancia = self::$_instancia;
+        $instancia = self::obtener();
 
         $datos = $instancia
             ->modelo
             ->consulta()
-            ->filtro(['nombre_usuario' => $usuario, 'clave_usuario' => md5($clave)]);
+            ->filtro(['nombre_usuario' => $usuario, 'clave_usuario' => md5($clave)])
+            ->fila();
 
         if (!$datos) {
             return false;
         }
+
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
+
         Sesion::registrar();
+
         return $instancia->_modelo->obtenerPropiedades();
 
     }
