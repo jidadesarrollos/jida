@@ -10,6 +10,7 @@ namespace Jida\Jadmin\Controllers;
 
 use App\Config\Configuracion;
 use Jida\Core\Controlador;
+use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Render\Formulario;
 use Jida\Render\Menu;
@@ -29,7 +30,10 @@ class JControl extends Controlador {
         $nombreApp = Configuracion::NOMBRE_APP;
         $usuario = Sesion::$usuario;
 
+        Debug::imprimir([$this], true);
+
         if (!$usuario->permisos->es($this->_perfiles)) {
+
             $this->_login();
         }
 
@@ -49,7 +53,7 @@ class JControl extends Controlador {
 
     }
 
-    protected function _login() {
+    protected function login() {
 
         $this->layout('login');
         $this->vista('login');

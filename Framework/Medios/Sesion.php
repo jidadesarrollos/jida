@@ -18,6 +18,9 @@ use Jida\Modulos\Usuario\Usuario;
 class Sesion {
 
     use Functions, Validacion;
+    /**
+     * @var Usuario $usuario
+     */
     static public $usuario;
 
     /**

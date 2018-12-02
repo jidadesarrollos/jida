@@ -9,8 +9,8 @@ class Usuario extends Modelo {
     static private $_ce = 90010;
 
     public $id_usuario;
-    public $nombre_usuario;
-    public $clave_usuario;
+    public $usuario;
+    public $clave;
 
     public $nombres;
     public $apellidos;
@@ -28,7 +28,7 @@ class Usuario extends Modelo {
 
     protected $tablaBD = "s_usuarios";
     protected $pk = "id_usuario";
-    protected $unico = ['nombre_usuario'];
+    protected $unico = ['usuario'];
     protected $registro = false;
 
 }

@@ -31,22 +31,14 @@ class Permisos {
             $this->_perfiles[$datos['identificador']] = $datos;
         }
 
+        Debug::imprimir([$this->_perfiles]);
     }
 
-    function es($perfiles = []) {
+    function es($perfiles) {
 
-        $band = false;
+        if (is_string($perfiles)) $perfiles = (array)$perfiles;
 
-        $usuario = Sesion::$usuario;
-
-        if ($usuario->obtener('id_usuario')) {
-
-            Debug::mostrarArray($usuario);
-
-            return true;
-        }
-
-        return $band;
+        return !!array_intersect($perfiles, $this->_perfiles);
 
     }
 

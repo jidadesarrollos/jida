@@ -34,7 +34,7 @@ class Usuario {
         $datos = $instancia
             ->_modelo
             ->consulta()
-            ->filtro(['nombre_usuario' => $usuario, 'clave_usuario' => md5($clave)])
+            ->filtro(['usuario' => $usuario, 'clave' => md5($clave)])
             ->fila();
 
         if (!$datos) {
@@ -43,7 +43,7 @@ class Usuario {
 
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
         $instancia->permisos->obtener();
-        Debug::imprimir("ak es", true);
+
         Sesion::registrar();
         Sesion::editar('_usuario', self::$_instancia);
 

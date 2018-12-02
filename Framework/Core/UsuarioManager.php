@@ -220,7 +220,7 @@ trait UsuarioManager {
 
             $form->action = $this->url . "asociar-perfiles";
             $form->valueSubmit = "Asignar Perfiles a Objeto";
-            $form->titulo('Asignar perfiles al usuario ' . $user->nombre_usuario);
+            $form->titulo('Asignar perfiles al usuario ' . $user->usuario);
 
             if ($this->post('btnPerfilesAUsuario')) {
                 if ($form->validar()) {
@@ -228,7 +228,7 @@ trait UsuarioManager {
                     if ($accion['ejecutado'] == 1) {
                         Render\JVista::msj('componentes',
                                            'suceso',
-                                           'Asignados los perfiles al usuario ' . $user->nombre_usuario,
+                                           'Asignados los perfiles al usuario ' . $user->usuario,
                                            $this->urlController());
                     }
                     else {

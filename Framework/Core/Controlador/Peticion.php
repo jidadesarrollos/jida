@@ -2,6 +2,9 @@
 
 namespace Jida\Core\Controlador;
 
+use Jida\Manager;
+use Jida\Medios\Debug;
+
 Trait Peticion {
 
     private $_post;
@@ -18,6 +21,7 @@ Trait Peticion {
         $this->_post = $_POST;
         $this->_get = $_GET;
         $this->_request = $_REQUEST;
+
 
     }
 

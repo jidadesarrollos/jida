@@ -146,6 +146,7 @@ class Arranque {
 
             self::$Controlador = new $objeto();
 
+
         }
 
         return self::$Controlador;
