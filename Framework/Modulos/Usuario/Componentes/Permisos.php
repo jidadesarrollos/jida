@@ -2,16 +2,16 @@
 
 namespace Jida\Modulos\Usuario\Componentes;
 
-use Jida\Modulos\Usuario\Modelos\Perfil;
+use Jida\Medios\Debug;
+use Jida\Medios\Sesion;
+use Jida\Modelos\UsuarioPerfil;
 use Jida\Modulos\Usuario\Modelos\Usuario;
 
 class Permisos {
 
-    public $usuario;
     private $_perfiles = [];
 
     function __construct(Usuario $user = null) {
-        //todo: write construct
 
         if (!$user) {
             $this->_obtener();
@@ -30,11 +30,20 @@ class Permisos {
 
     }
 
-
     function es($perfiles = []) {
-        //todo: write method validation
+
         $band = false;
 
+        $usuario = Sesion::$usuario;
+
+        if ($usuario->id_usuario) {
+
+            Debug::mostrarArray($usuario);
+
+            return true;
+        }
+
+        return $band;
 
     }
 

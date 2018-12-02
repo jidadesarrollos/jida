@@ -4,14 +4,14 @@ namespace Jida\Modulos\Usuario\Modelos;
 
 use Jida\Core\Modelo;
 
-class Perfil extends Modelo {
+class UsuarioPerfil extends Modelo {
 
     public $id_perfil;
     public $id_usuario;
     public $id_usuario_perfil;
 
     protected $tablaBD = "s_usuarios_perfiles";
-    protected $pk = "id_usuario_perfil";
+    protected $pk      = "id_usuario_perfil";
 
     public function obtPerfiles($idUsuario) {
 

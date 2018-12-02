@@ -20,35 +20,19 @@ Trait Procesador {
         "meta"
     ];
 
-    private function _imprimirJS($librerias, $modulo) {
+    /**
+     * Imprime las etiquetas link registradas en la configuración del tema
+     *
+     */
+    private function _imprimirCSS($librerias, $modulo) {
 
-        $html = "";
-        $path = "/" . Estructura::$urlBase;
-
-        foreach ($librerias as $clave => $libreria) {
-
-            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
-
-            if (strpos($libreria, "http") === false) {
-                $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
-                $urlLibreria = "//$urlLibreria";
-            }
-
-            $html .= Selector::crear('script',
-                ['src' => $urlLibreria],
-                null,
-                2);
-
-        }
-
-        return $html;
+        return $this->_css($librerias, $modulo);
 
     }
 
     private function _css($librerias, $modulo) {
 
         $html = "";
-        $path = "/" . Estructura::$urlBase;
 
         if (!property_exists($librerias, $modulo)) {
             return false;
@@ -59,6 +43,8 @@ Trait Procesador {
                 $librerias = (array)$librerias;
             }
         }
+
+        Debug::mostrarArray($librerias);
 
         foreach ($librerias as $clave => $libreria) {
 
@@ -88,9 +74,51 @@ Trait Procesador {
 
     }
 
-    private function _imprimirCSS($librerias, $modulo) {
+    /**
+     * Imprime las etiquetas script registradas en la configuración del tema
+     *
+     */
+    private function _imprimirJS($librerias, $modulo) {
 
-        return $this->_css($librerias, $modulo);
+        return $this->_js($librerias, $modulo);
+
+    }
+
+    private function _js($librerias, $modulo) {
+
+        $html = "";
+
+        if (!property_exists($librerias, $modulo)) {
+            return false;
+        }
+        else {
+            $librerias = $librerias->{$modulo};
+            if (is_string($librerias)) {
+                $librerias = (array)$librerias;
+            }
+        }
+
+        foreach ($librerias as $clave => $libreria) {
+
+            if (is_object($libreria)) {
+                continue;
+            }
+
+            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
+
+            if (strpos($urlLibreria, "http") === false) {
+                $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
+                $urlLibreria = "//$urlLibreria";
+            }
+
+            $html .= Selector::crear('script',
+                ['src' => $urlLibreria],
+                null,
+                2);
+
+        }
+
+        return $html;
 
     }
 
@@ -121,6 +149,7 @@ Trait Procesador {
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);
+
         }
 
         return $html;
@@ -156,6 +185,7 @@ Trait Procesador {
     public function imprimirMeta() {
 
         return Meta::imprimir($this->_data);
+
     }
 
 }
