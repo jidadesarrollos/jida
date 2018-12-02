@@ -24,7 +24,7 @@ class Jadmin extends JControl {
 
         $user = Sesion::$usuario;
 
-        if (!$user->permisos->es('jadmin')) {
+        if (!$user->permisos->es($this->_perfiles)) {
             $this->_login();
         }
 

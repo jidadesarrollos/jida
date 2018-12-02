@@ -16,6 +16,7 @@ use Jida\Render as Render;
 
 class JControl extends Controlador {
 
+    protected $_perfiles = ['jadmin'];
     function __construct() {
 
         parent::__construct();
