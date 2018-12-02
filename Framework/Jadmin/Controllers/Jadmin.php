@@ -33,8 +33,9 @@ class Jadmin extends JControl {
     private function _login() {
 
         $this->layout('login');
+
         $this->vista('login');
-        $this->layout()->incluirJS('algo');
+
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
 

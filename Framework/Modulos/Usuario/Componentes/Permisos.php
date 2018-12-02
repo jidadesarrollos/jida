@@ -8,6 +8,7 @@ use Jida\Modulos\Usuario\Modelos\Usuario;
 class Permisos {
 
     public $usuario;
+    private $_perfiles = [];
 
     function __construct(Usuario $user = null) {
         //todo: write construct
@@ -19,17 +20,21 @@ class Permisos {
     }
 
     private function _obtener() {
-        //todo: obtener perfiles
 
-        $perfil = new Perfil();
-        $perfil->obtPerfiles();
+        $modelo = new UsuarioPerfil();
+        $perfiles = $modelo->obtPerfiles();
 
-
+        foreach ($perfiles as $id => $datos) {
+            $this->_perfiles[$datos['identificador']] = $datos;
+        }
 
     }
 
+
     function es($perfiles = []) {
         //todo: write method validation
+        $band = false;
+
 
     }
 
