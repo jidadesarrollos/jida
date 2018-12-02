@@ -24,8 +24,6 @@ class Jadmin extends JControl {
 
         $user = Sesion::$usuario;
 
-        $this->redireccionar('http://localhost/jida/jadmin');
-
         if (!$user->permisos->es('jadmin')) {
             $this->_login();
         }
@@ -46,7 +44,7 @@ class Jadmin extends JControl {
             $clave = $this->post('clave_usuario');
 
             if ($formLogin->validar() and Usuario::inciarSesion($usuario, $clave)) {
-                $this->redireccionar('/jadmin');
+                $this->redireccionar('jadmin');
             }
 
             Formulario::msj('error', 'Datos incorrectos');
