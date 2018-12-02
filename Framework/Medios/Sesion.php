@@ -32,14 +32,8 @@ class Sesion {
         session_start();
 
         self::editar('__idSession', self::getIdSession());
+        self::$usuario = Usuario::obtener();
 
-        if (self::obt('_sesionValida')
-            and self::obt('_usuario') instanceof \Jida\Modulos\Usuario\Usuario) {
-            self::$usuario = self::obt('_usuario');
-        }
-        else {
-            self::$usuario = new Usuario();
-        }
 
     }
 

@@ -40,18 +40,14 @@ class Jadmin extends JControl {
 
         if ($this->post('btnLogin')) {
 
-            if ($formLogin->validar()) {
+            $usuario = $this->post('nombre_usuario');
+            $clave = $this->post('clave_usuario');
 
-                $usuario = new Usuario();
-
-                if ($usuario->validarInicioSesion($this->post('nombre_usuario'), $this->post('clave_usuario'))) {
-                    $this->redireccionar('/jadmin');
-                }
-                else {
-                    Formulario::msj('error', 'Datos incorrectos');
-                }
-
+            if ($formLogin->validar() and Usuario::inciarSesion($usuario, $clave)) {
+                $this->redireccionar('/jadmin');
             }
+
+            Formulario::msj('error', 'Datos incorrectos');
 
         }
 
