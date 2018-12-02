@@ -75,7 +75,7 @@ class Usuario {
 
         if (Sesion::obt('_sesionValida')
             and Sesion::obt('_usuario') instanceof Usuario) {
-            $instancia = self::obt('_usuario');
+            $instancia = Sesion::obt('_usuario');
         }
         else {
             $instancia = new Usuario();
