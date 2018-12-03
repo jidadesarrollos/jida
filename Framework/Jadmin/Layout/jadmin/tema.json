@@ -17,7 +17,7 @@
       }
     },
     "js": {
-      "general": {
+      "principal": {
         "jquery": "{tema}htdocs/js/jquery.min.js",
         "modernizr": "{tema}htdocs/js/modernizr.min.js",
         "moment": "{tema}htdocs/js/moment.min.js",

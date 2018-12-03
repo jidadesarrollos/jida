@@ -6,20 +6,20 @@
   "estructura": "1x2",
   "campos": [
     {
-      "name": "nombre_usuario",
+      "name": "usuario",
       "type": "text",
-      "id": "nombre_usuario",
-      "label": "Nombre de Usuario",
-      "placeholder": "Nombre de Usuario",
+      "id": "usuario",
+      "label": "Usuario",
+      "placeholder": "Usuario",
       "eventos": {
         "obligatorio": {
-          "mensaje": "Debe ingresar su nombre de Usuario"
+          "mensaje": "Debe ingresar su usuario"
         }
       }
     },
     {
-      "name": "clave_usuario",
-      "id": "clave_usuario",
+      "name": "clave",
+      "id": "clave",
       "type": "password",
       "label": "Clave",
       "placeholder": "Clave",

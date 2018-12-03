@@ -2,7 +2,6 @@
 
 namespace Jida\Modulos\Usuario;
 
-use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuario\Componentes\Permisos;
 

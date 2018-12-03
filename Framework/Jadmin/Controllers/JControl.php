@@ -9,16 +9,12 @@
 namespace Jida\Jadmin\Controllers;
 
 use App\Config\Configuracion;
+use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
-use Jida\Medios\Debug;
-use Jida\Medios\Sesion;
-use Jida\Render\Formulario;
+use Jida\Manager\Estructura;
 use Jida\Render\Menu;
-use Jida\Modulos\Usuario\Usuario;
 
 class JControl extends Controlador {
-
-    protected $_perfiles = ['jadmin'];
 
     function __construct() {
 
@@ -27,21 +23,18 @@ class JControl extends Controlador {
         $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
 
+        $config = Config::obtener();
         $nombreApp = Configuracion::NOMBRE_APP;
-        $usuario = Sesion::$usuario;
-
-        Debug::imprimir([$this], true);
-
-        if (!$usuario->permisos->es($this->_perfiles)) {
-
-            $this->_login();
-        }
+        $urlBase = '//' . Estructura::$urlBase;
+        $urlTema = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
         $menu = new Menu('Jadmin');
 
         $this->data([
             'menu'      => $menu->render(),
-            'nombreApp' => $nombreApp
+            'nombreApp' => $nombreApp,
+            'urlBase'   => $urlBase,
+            'urlTema'   => $urlTema
         ]);
 
     }
@@ -50,35 +43,6 @@ class JControl extends Controlador {
 
         echo phpinfo();
         exit;
-
-    }
-
-    protected function login() {
-
-        $this->layout('login');
-        $this->vista('login');
-
-        $formLogin = new Formulario('jida/Login');
-        $formLogin->boton('principal', 'Iniciar sesión');
-
-        if ($this->post('btnLogin')) {
-
-            $usuario = $this->post('nombre_usuario');
-            $clave = $this->post('clave_usuario');
-
-            if ($formLogin->validar() and Usuario::iniciarSesion($usuario, $clave)) {
-                $this->redireccionar('jadmin');
-            }
-
-            Formulario::msj('error', 'Datos incorrectos');
-
-        }
-
-        $this->data([
-            'formulario' => $formLogin->render()
-        ]);
-
-        return $this;
 
     }
 

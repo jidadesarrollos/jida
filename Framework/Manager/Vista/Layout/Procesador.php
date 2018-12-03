@@ -7,10 +7,8 @@
 
 namespace Jida\Manager\Vista\Layout;
 
-use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
-use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {

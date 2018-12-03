@@ -3,7 +3,7 @@
 
     <!-- LOGO -->
     <div class="headerbar-left">
-        <a href="<?= $this->urlBase ?>/jadmin" class="logo">
+        <a href="<?= $this->urlBase ?>jadmin" class="logo">
             <span><?= $this->nombreApp ?></span>
         </a>
     </div>
@@ -15,7 +15,7 @@
             <li class="list-inline-item dropdown notif">
                 <a class="nav-link dropdown-toggle nav-user" data-toggle="dropdown" href="#" role="button"
                    aria-haspopup="false" aria-expanded="false">
-                    <img src="Framework/Jadmin/Layout/jadmin/htdocs/images/avatars/admin.png" alt="Profile image"
+                    <img src="<?= $this->urlTema ?>htdocs/images/avatars/admin.png" alt="Profile image"
                          class="avatar-rounded">
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
@@ -27,12 +27,12 @@
                     </div>
 
                     <!-- item-->
-                    <a href="/jadmin/users/cambio-clave" class="dropdown-item notify-item">
+                    <a href="#" class="dropdown-item notify-item">
                         <i class="fa fa-cog"></i> <span>Cambiar clave</span>
                     </a>
 
                     <!-- item-->
-                    <a href="/jadmin/users/cierresesion" class="dropdown-item notify-item">
+                    <a href="<?= $this->urlBase ?>jadmin/logout" class="dropdown-item notify-item">
                         <i class="fa fa-power-off"></i> <span>Salir</span>
                     </a>
 

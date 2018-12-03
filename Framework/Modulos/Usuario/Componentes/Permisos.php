@@ -2,9 +2,6 @@
 
 namespace Jida\Modulos\Usuario\Componentes;
 
-use Jida\Medios\Debug;
-use Jida\Medios\Sesion;
-
 use Jida\Modulos\Usuario\Modelos\Usuario;
 use Jida\Modulos\Usuario\Modelos\UsuarioPerfil;
 
@@ -16,8 +13,9 @@ class Permisos {
     function __construct(Usuario $usuario) {
 
         $this->_usuario = $usuario;
+
         if (!$usuario) {
-            $this->_obtener();
+            $this->obtener();
         }
 
     }
@@ -31,14 +29,17 @@ class Permisos {
             $this->_perfiles[$datos['identificador']] = $datos;
         }
 
-        Debug::imprimir([$this->_perfiles]);
     }
 
     function es($perfiles) {
 
         if (is_string($perfiles)) $perfiles = (array)$perfiles;
 
-        return !!array_intersect($perfiles, $this->_perfiles);
+        foreach ($perfiles as $id => $datos) {
+            $arrPerfiles[$datos]['identificador'] = $datos;
+        }
+
+        return !!array_intersect($arrPerfiles, $this->_perfiles);
 
     }
 

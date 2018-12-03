@@ -21,8 +21,8 @@ class Manager {
     private $_lector;
 
     /*Tiempos*/
-    private $_tiempoInicio;
-    private $_tiempoFin;
+    private       $_tiempoInicio;
+    private       $_tiempoFin;
     public static $configuracion;
 
     private $ruta;
@@ -69,7 +69,6 @@ class Manager {
         date_default_timezone_set($config::ZONA_HORARIA);
 
         Medios\Sesion::iniciar();
-        Medios\Sesion::destruir();
 
         $_SERVER = array_merge($_SERVER, getallheaders());
 

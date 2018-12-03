@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadmin</title>
+    <title><?= $this->nombreApp ?></title>
     <?= $this->imprimirLibrerias('css', 'principal') ?>
 </head>
 
@@ -64,7 +64,7 @@
 </div>
 <!-- END main -->
 
-<?= $this->imprimirLibrerias('js') ?>
+<?= $this->imprimirLibrerias('js', 'principal') ?>
 
 </body>
 </html>

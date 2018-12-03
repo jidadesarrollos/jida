@@ -25,7 +25,7 @@ class UsuarioPerfil extends Modelo {
             ['clave' => 'id_perfil', 'clave_relacion' => 'id_perfil']);
         $this->join(
             's_usuarios',
-            ['usuario', 'nombres', 'apellidos'],
+            ['usuario'],
             ['clave' => 'id_usuario', 'clave_relacion' => 'id_usuario']);
         $this->filtro(['id_usuario' => $idUsuario]);
 
