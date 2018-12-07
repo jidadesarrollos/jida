@@ -9,6 +9,10 @@ class Index extends App {
 
     function index() {
 
+        $this->data([
+            'mensaje' => "Somos Jida Desarrollos"
+        ]);
+
     }
 
 }
