@@ -23,6 +23,7 @@ class Index extends App {
 
             if ($form->validar()) {
                 $this->_enviarCorreo([$nombre, $mensaje]);
+                $this->redireccionar('index');
             }
 
             Formulario::msj('error', 'Datos incorrectos');
