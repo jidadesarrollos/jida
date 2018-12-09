@@ -6,8 +6,6 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Medios\Debug;
-
 Trait RenderLayout {
 
     public function incluirJS($archivos, $modulo = "") {
@@ -37,7 +35,7 @@ Trait RenderLayout {
         }
 
         foreach ($archivos as $indice => $archivo) {
-            array_push($this->_css, "$modulo/$archivos");
+            array_push($this->_css, "$modulo/$archivo");
         }
 
     }
