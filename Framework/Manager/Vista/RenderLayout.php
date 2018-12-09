@@ -6,8 +6,6 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Medios\Debug;
-
 Trait RenderLayout {
 
     public function incluirJS($archivos, $modulo = "") {

@@ -8,12 +8,13 @@
 
 namespace Jida\Jadmin\Controllers;
 
+use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 
 class Jadmin extends JControl {
 
     public function index() {
-
+        Debug::imprimir([Estructura::$rutaModulo], true);
         $this->layout()->incluirCSS([
 //            'Framework/Jadmin/Layout/jadmin/htdocs/plugins/datatables/dataTables.bootstrap4.min.css',
 //            '{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.css',
