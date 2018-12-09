@@ -32,7 +32,6 @@ Trait Procesador {
     private function _css($librerias, $modulo) {
 
         $html = "";
-        $arregloCSS = $this->_css;
 
         if (!property_exists($librerias, $modulo)) {
             return false;
@@ -44,6 +43,7 @@ Trait Procesador {
             $librerias = (array)$librerias;
         }
         else {
+            Debug::imprimir([$this->_css], true);
             foreach ($this->_css as $indice => $valor) {
                 $librerias->{$indice} = $valor;
             }

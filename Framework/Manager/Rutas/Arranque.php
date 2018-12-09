@@ -164,9 +164,6 @@ class Arranque {
 
                 $this->_pipeLines($controlador, '_jdPre');
 
-                Medios\Debug::imprimir([
-                    Estructura::$controlador,
-                    Estructura::$metodo], true);
                 call_user_func_array(
                     [
                         $controlador,

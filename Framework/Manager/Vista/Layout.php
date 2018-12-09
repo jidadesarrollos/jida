@@ -182,10 +182,10 @@ class Layout {
         }
         self::$directorio .= DS . $this->_plantilla;
 
-        $layout = $this->_obtenerContenido(self::$directorio, ['contenido' => $vista]);
-
-        exit("hola");
-        echo $layout;
+        echo $this->_obtenerContenido(
+            self::$directorio,
+            ['contenido' => $vista]
+        );
 
     }
 
