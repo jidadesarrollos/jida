@@ -35,7 +35,7 @@ Trait RenderLayout {
         }
 
         foreach ($archivos as $indice => $archivo) {
-            array_push($this->_css, "$modulo/$archivos");
+            array_push($this->_css, "$modulo/$archivo");
         }
 
     }
