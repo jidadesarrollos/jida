@@ -13,8 +13,8 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
-use Jida\Medios as Medios;
 use Jida\Manager\Estructura as Estructura;
+use Jida\Medios as Medios;
 
 class Vista {
 
@@ -68,10 +68,13 @@ class Vista {
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $modulo = Estructura::$modulo;
-        $modulo = (!$modulo && Estructura::$jadmin) ? "jadmin" : "index";
+        $controlador = Estructura::$controlador;
 
-        $vista = Estructura::$rutaModulo . "/Vistas/$modulo/$vista";
+        if (!$controlador) {
+            $controlador = (!!Estructura::$jadmin) ? "jadmin" : "index";
+        }
+
+        $vista = Estructura::$rutaModulo . "/Vistas/" . strtolower("$controlador/$vista");
 
         if (strpos($vista, '.php') === false) {
             $vista .= ".php";

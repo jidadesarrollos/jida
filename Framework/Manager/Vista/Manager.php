@@ -4,7 +4,6 @@ namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 
 class Manager {
 
@@ -71,6 +70,7 @@ class Manager {
         $plantilla = $this->_data->plantilla();
 
         $vista = $this->vista();
+
         $contenido = $vista->obtener($plantilla);
 
         $this->_layout->render($contenido);
