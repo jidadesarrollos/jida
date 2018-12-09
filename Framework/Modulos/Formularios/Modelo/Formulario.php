@@ -47,7 +47,7 @@ class Formulario extends JsonManager {
     private $_campos = [];
     private $_camposOrdenados = [];
 
-    function __construct ($form = "", $modulo = null) {
+    function __construct($form = "", $modulo = null) {
 
         if (!empty($form)) {
             $this->_instanciar($form, $modulo);
@@ -64,14 +64,14 @@ class Formulario extends JsonManager {
      *
      * @param $modulo
      */
-    function modulo ($modulo) {
+    function modulo($modulo) {
 
         $this->_modulo = $modulo;
 
         return $this;
     }
 
-    private function _instanciar ($form, $modulo) {
+    private function _instanciar($form, $modulo) {
 
         $json = $this->path($modulo) . DS . $form;
         $this->_ubicacion = $this->path($modulo);
@@ -88,7 +88,7 @@ class Formulario extends JsonManager {
      *
      * @return array
      */
-    function campos () {
+    function campos() {
 
         return $this->_campos;
     }
@@ -100,7 +100,7 @@ class Formulario extends JsonManager {
      * @param string $ambito o jida.
      * @param string $modulo [opcional] Permite definir el modulo del formulario
      */
-    function ubicacion ($ambito = "", $modulo = "") {
+    function ubicacion($ambito = "", $modulo = "") {
 
         $ubicacion = "";
         if (empty($ambito))
@@ -112,21 +112,21 @@ class Formulario extends JsonManager {
 
             $ubicacion = DIR_APP;
             if (!empty($modulo) and !in_array($modulo,
-                                              [
-                                                  "app",
-                                                  "jida"
-                                              ])) {
+                    [
+                        "app",
+                        "jida"
+                    ])) {
 
                 $ubicacion .= DS . 'Modulos' . DS . Medios\Cadenas::upperCamelCase($modulo);
                 if (!Medios\Directorios::validar($ubicacion)) {
                     throw new Excepcion("El modulo pasado para guardar el formulario no existe " . $ubicacion,
-                                        $this->_ce . '003');
+                        $this->_ce . '003');
                 }
                 $ubicacion .= DS . 'Formularios';
 
                 if (!Medios\Directorios::validar($ubicacion)) {
                     throw new Excepcion("El Formulario pasado no existe en el modulo " . $modulo . " no existe " . $ubicacion,
-                                        $this->_ce . '004');
+                        $this->_ce . '004');
 
                 }
             }
@@ -141,7 +141,7 @@ class Formulario extends JsonManager {
 
     }
 
-    private function _procesarCampos () {
+    private function _procesarCampos() {
 
         $camposOrdenados = [];
 
@@ -185,7 +185,7 @@ class Formulario extends JsonManager {
      * @return string $identificador Nombre del formulario en UpperCamelCase
      *
      */
-    private function _crearIdentificador ($nombre = "") {
+    private function _crearIdentificador($nombre = "") {
 
         if (empty($nombre))
             $nombre = $this->nombre;
@@ -205,7 +205,7 @@ class Formulario extends JsonManager {
      *
      * @param {mixed}  $campos String o Arreglo de campos
      */
-    private function _validarCampos ($campos = null) {
+    private function _validarCampos($campos = null) {
 
         if (is_null($campos)) {
             return;
@@ -244,7 +244,7 @@ class Formulario extends JsonManager {
      * @return strnig json_encode
      *
      */
-    private function _generarJson () {
+    private function _generarJson() {
 
         $json = [];
         foreach ($this->_modelo as $key => $campo) {
@@ -276,7 +276,7 @@ class Formulario extends JsonManager {
      * Guarda el contenido del objeto
      * @method salvar
      */
-    function salvar ($data = []) {
+    function salvar($data = []) {
 
         if (!empty($data)) {
 
@@ -321,12 +321,12 @@ class Formulario extends JsonManager {
      * jida es declarado los formularios se guardaran en la carpeta
      * formularios dentro del framework y no de la aplicacion
      */
-    function _ambito ($ambito = 'app') {
+    function _ambito($ambito = 'app') {
 
         $this->_ambito = $ambito;
     }
 
-    function orden ($campos) {
+    function orden($campos) {
 
         foreach ($campos as $nombre => $posicion) {
 
@@ -347,7 +347,7 @@ class Formulario extends JsonManager {
      *
      * @return bool|mixed
      */
-    function dataCampo ($campo, $data = null) {
+    function dataCampo($campo, $data = null) {
 
         $selector = false;
         if (array_key_exists($campo, $this->_campos)) {
@@ -374,7 +374,7 @@ class Formulario extends JsonManager {
 
     }
 
-    static function path ($modulo) {
+    static function path($modulo) {
 
         switch (strtolower($modulo)) {
             case 'jida':

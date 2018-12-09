@@ -9,6 +9,7 @@
 
 namespace Jida\Modelos;
 use Jida\BD as BD;
+
 class Elemento extends BD\DataModel{
 
     #Aqui tus propiedades publicas================
