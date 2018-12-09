@@ -31,14 +31,20 @@ Trait Procesador {
     private function _css($librerias, $modulo) {
 
         $html = "";
+        $arregloCSS = $this->_css;
 
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
+
+        $librerias = $librerias->{$modulo};
+
+        if (is_string($librerias)) {
+            $librerias = (array)$librerias;
+        }
         else {
-            $librerias = $librerias->{$modulo};
-            if (is_string($librerias)) {
-                $librerias = (array)$librerias;
+            foreach ($arregloCSS as $indice => $valor) {
+                $librerias->{$indice} = $valor;
             }
         }
 
@@ -83,14 +89,20 @@ Trait Procesador {
     private function _js($librerias, $modulo) {
 
         $html = "";
+        $arregloJS = $this->_js;
 
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
+
+        $librerias = $librerias->{$modulo};
+
+        if (is_string($librerias)) {
+            $librerias = (array)$librerias;
+        }
         else {
-            $librerias = $librerias->{$modulo};
-            if (is_string($librerias)) {
-                $librerias = (array)$librerias;
+            foreach ($arregloJS as $indice => $valor) {
+                $librerias->{$indice} = $valor;
             }
         }
 
