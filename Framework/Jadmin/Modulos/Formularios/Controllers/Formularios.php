@@ -19,7 +19,7 @@ use Jida\Render as Render;
 class Formularios extends JControl {
 
     private $_rutaJida;
-    public $manejoParams = true;
+    public  $manejoParams = true;
 
     function __construct() {
 
@@ -77,8 +77,6 @@ class Formularios extends JControl {
                 'Modulo'
             ]
         ];
-
-        //Medios\Debug::imprimir($formularios,true);
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
@@ -178,7 +176,6 @@ class Formularios extends JControl {
      */
     private function _dataVistaFormulario($formulario, $modulo) {
 
-        //$data = $this->_dataFormulario($formulario, $modulo);
         $data = "";
         if ($data) {
             if (array_key_exists('query', $data)) {

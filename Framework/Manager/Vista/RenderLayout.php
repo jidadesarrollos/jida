@@ -6,37 +6,48 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
+
 Trait RenderLayout {
 
-    public function incluirJS($archivos, $modulo = "") {
+    public function incluirJS($librerias, $modulo = false) {
 
-        if (!empty($modulo) and $modulo === 'tema') {
+        if ($modulo == true) {
+            $modulo = Estructura::$rutaModulo;
+        }
+        else {
             $modulo = $this->_urlTema;
         }
 
-        if (is_string($archivos)) {
-            $archivos = explode("", $archivos);
+        if (is_string($librerias)) {
+            $librerias = (array)$librerias;
         }
 
-        foreach ($archivos as $indice => $archivo) {
-            array_push($this->_js, "$modulo/$archivo");
+        foreach ($librerias as $indice => $valor) {
+            array_push($this->_js, "$modulo/$valor");
         }
 
     }
 
-    public function incluirCSS($archivos, $modulo = "") {
+    public function incluirCSS($librerias, $modulo = false) {
 
-        if (!empty($modulo) and $modulo === 'tema') {
+        if ($modulo == true) {
+            $modulo = Estructura::$rutaModulo;
+        }
+        else {
             $modulo = $this->_urlTema;
         }
 
-        if (is_string($archivos)) {
-            $archivos = explode("", $archivos);
+        if (is_string($librerias)) {
+            $librerias = (array)$librerias;
         }
 
-        foreach ($archivos as $indice => $archivo) {
-            array_push($this->_css, "$modulo/$archivo");
+        foreach ($librerias as $indice => $valor) {
+            array_push($this->_css, "$modulo/$valor");
         }
+
+        Debug::imprimir([$this->_css]);
 
     }
 
