@@ -9,6 +9,7 @@ namespace Jida\Manager\Vista\Layout;
 
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
+use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -32,6 +33,8 @@ Trait Procesador {
 
         $html = "";
         $arregloCSS = $this->_css;
+
+        Debug::imprimir([$arregloCSS]);
 
         if (!property_exists($librerias, $modulo)) {
             return false;
@@ -61,6 +64,8 @@ Trait Procesador {
                 $urlLibreria = "//$urlLibreria";
             }
 
+            Debug::imprimir([$urlLibreria]);
+
             $html .= Selector::crear('link',
                 [
                     'href' => $urlLibreria,
@@ -71,6 +76,8 @@ Trait Procesador {
                 2);
 
         }
+
+        exit;
 
         return $html;
 

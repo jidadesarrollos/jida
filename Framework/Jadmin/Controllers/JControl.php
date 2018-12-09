@@ -12,7 +12,6 @@ use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Render\Menu;
 
@@ -30,7 +29,6 @@ class JControl extends Controlador {
 
         if (Estructura::$metodo !== 'login' and !$esJadmin) {
             $this->redireccionar('/jadmin/login');
-
         }
 
     }
