@@ -12,9 +12,6 @@ class Jadmin extends JControl {
 
     public function index() {
 
-        if (!$this->_usuario->permisos->es($this->_perfiles)) {
-            $this->redireccionar('jadmin/login');
-        }
 
     }
 
