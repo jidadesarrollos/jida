@@ -156,4 +156,8 @@ class Excepcion {
 
     }
 
+    public static function capturar(\Exception $e) {
+        Debug::imprimir(["Capturada Excepcion", $e], true);
+    }
+
 }

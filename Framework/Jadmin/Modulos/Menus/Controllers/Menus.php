@@ -11,11 +11,12 @@
 namespace Jida\Jadmin\Modulos\menus\Controllers;
 
 use Exception;
+use Jida\Jadmin\Controllers\JControl;
 use Jida\Medios as Medios;
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 
-class Menus extends \Jida\Jadmin\Controllers\JController {
+class Menus extends JControl {
 
     var $manejoParams = true;
 
@@ -87,13 +88,15 @@ class Menus extends \Jida\Jadmin\Controllers\JController {
                 $cMenu->eliminar($id);
                 // Render\Vista::msj('menus','suceso', 'Menu eliminado');
 
-            } else {
+            }
+            else {
                 // Render\Vista::msj('menus',"error","No se ha eliminado menu");
             }
 
             $this->redireccionar('/jadmin/menus/');
 
-        } else {
+        }
+        else {
             throw new Exception("Debe seleccionar un menu", 1);
         }
     }//fin funcion

@@ -5,6 +5,7 @@ namespace Jida\Manager\Rutas\Procesador;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Jadmin;
+use Jida\Medios\Debug;
 
 Trait Modulo {
 
@@ -17,7 +18,7 @@ Trait Modulo {
     ];
     private $_namespace;
 
-    protected function _modulo () {
+    protected function _modulo() {
 
         $padre = $this->_padre;
 
@@ -27,24 +28,24 @@ Trait Modulo {
 
         if ($posModulo and
             (in_array($posModulo, $padre->modulos) or
-                array_key_exists($posModulo, $padre->modulos))
+             array_key_exists($posModulo, $padre->modulos))
         ) {
 
-            $padre::$modulo = $posModulo;
+            Estructura::$modulo = $posModulo;
             $padre::$ruta = 'app';
-            $namespace = $this->_namespaces['modulo'] . $padre::$modulo;
+            $namespace = $this->_namespaces['modulo'] . Estructura::$modulo;
             $namespace .= ($padre->jadmin) ? '\\Jadmin\\Controllers\\' : '\\Controllers\\';
             $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Modulos' . DS . $posModulo;
             $rutaModulo .= ($padre->jadmin) ? DS . 'Jadmin' : '';
 
         }
-        else if ($padre->jadmin) {
+        else if (Estructura::$jadmin) {
 
             $padre::$ruta = 'jida';
 
             if ($posModulo and $this->_moduloJadmin($posModulo)) {
 
-                $padre::$modulo = $posModulo;
+                Estructura::$modulo = $posModulo;
                 $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
                 $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . $posModulo;
             }
@@ -65,7 +66,7 @@ Trait Modulo {
         Estructura::$rutaModulo = $rutaModulo;
     }
 
-    private function _moduloJadmin ($posModulo) {
+    private function _moduloJadmin($posModulo) {
 
         $modulo = $this->_validarNombre($posModulo, 'upper');
         $config = Config::obtener();

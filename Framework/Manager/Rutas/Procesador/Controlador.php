@@ -2,20 +2,20 @@
 
 namespace Jida\Manager\Rutas\Procesador;
 
+use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 
 Trait Controlador {
 
-    private function _default () {
+    private function _default() {
 
-        $padre = $this->_padre;
-        $modulo = $padre::$modulo;
+        $modulo = Estructura::$modulo;
 
         if ($modulo) {
             $ctrlDefault = $modulo;
         }
         else {
-            $ctrlDefault = ($padre->jadmin) ? 'Jadmin' : 'Index';
+            $ctrlDefault = (Estructura::$jadmin) ? 'Jadmin' : 'Index';
         }
 
         $default = ($modulo) ? $this->_validarNombre($modulo, 'upper') : $ctrlDefault;
@@ -24,15 +24,13 @@ Trait Controlador {
 
     }
 
-    public function _controlador () {
-
-        $padre = $this->_padre;
+    public function _controlador() {
 
         $controlador = $this->_padre->proximoParametro();
 
-        if (empty($controlador))
+        if (empty($controlador)) {
             $controlador = $this->_default();
-
+        }
         else {
 
             $clase = $this->_validarNombre($controlador, 'upper');
@@ -49,7 +47,7 @@ Trait Controlador {
 
         }
 
-        $padre::$controlador = $controlador;
+        Estructura::$controlador = $controlador;
 
     }
 

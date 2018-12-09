@@ -72,6 +72,7 @@ class Arranque {
 
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
+            Estructura::$jadmin = true;
         }
         else {
             $this->reingresarParametro($parametro);
@@ -85,7 +86,6 @@ class Arranque {
     public function proximoParametro() {
 
         $proximo = array_shift($this->_arrayUrl);
-
         return $proximo;
 
     }
@@ -137,15 +137,16 @@ class Arranque {
         if (!self::$Controlador or $controlador != self::$controlador) {
             self::$controlador = str_replace("Controller", "", $controlador);
 
+            Estructura::$controlador = $controlador;
+
             $objeto = Estructura::$namespace . $controlador;
 
             if (!class_exists($objeto)) {
 
-                Excepcion::procesar("El controlador solicitado no existe", self::$_ce . 1);
+                Excepcion::procesar("El controlador {$controlador} solicitado no existe", self::$_ce . 1);
             }
 
             self::$Controlador = new $objeto();
-
 
         }
 
@@ -156,8 +157,8 @@ class Arranque {
     public function ejecutar() {
 
         try {
-            $controlador = self::obtenerControlador(self::$controlador);
 
+            $controlador = self::obtenerControlador(Estructura::$controlador);
             if ($this->_validar()) {
 
                 $this->_pipeLines($controlador, '_jdPre');
@@ -165,7 +166,7 @@ class Arranque {
                 call_user_func_array(
                     [
                         $controlador,
-                        self::$metodo
+                        Estructura::$metodo
                     ],
                     $this->parametros
                 );

@@ -36,10 +36,10 @@ class Permisos {
         if (is_string($perfiles)) $perfiles = (array)$perfiles;
 
         foreach ($perfiles as $id => $datos) {
-            $arrPerfiles[$datos]['identificador'] = $datos;
+            $arrPerfiles[$datos] = $datos;
         }
 
-        return !!array_intersect($arrPerfiles, $this->_perfiles);
+        return !!array_intersect_key($arrPerfiles, $this->_perfiles);
 
     }
 

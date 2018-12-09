@@ -3,31 +3,35 @@
 namespace Jida\Manager\Rutas\Procesador;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 
 Trait Metodo {
 
-    private function _validarMetodo ($controlador, $metodo) {
+    private function _validarMetodo($controlador, $metodo) {
 
-        $reflection = new \ReflectionClass($controlador);
-        $padre = $this->_padre;
+        try {
 
-        if (method_exists($controlador, $metodo) and $reflection->getMethod($metodo)->isPublic()) {
-            $padre::$metodo = $metodo;
+            $reflection = new \ReflectionClass($controlador);
 
-            return true;
+            if (method_exists($controlador, $metodo) and $reflection->getMethod($metodo)->isPublic()) {
+                Estructura::$metodo = $metodo;
+
+                return true;
+            }
+
+            return false;
         }
-
-        return false;
+        catch (\Exception $e) {
+            Excepcion::capturar($e);
+        }
 
     }
 
-    public function _metodo () {
+    public function _metodo() {
 
         $posMetodo = $this->_padre->proximoParametro();
-
-        $padre = $this->_padre;
-
-        $controlador = Estructura::$namespace . $padre::$controlador;
+        $metodo = false;
+        $controlador = Estructura::$namespace . Estructura::$controlador;
         $default = true;
 
         if ($posMetodo) {
@@ -48,13 +52,13 @@ Trait Metodo {
 
             $metodo = 'index';
             if (!$this->_validarMetodo($controlador, 'index')) {
-                throw new \Exception('El controlador ' . $controlador . ' debe poseer un metodo index',
-                                     $this->_ce . '0002');
+                $msj = 'El controlador ' . $controlador . ' debe poseer un metodo index';
+                Excepcion::procesar($msj, self::$_ce . 0002);
             }
 
         }
 
-        $padre::$metodo = $metodo;
+        Estructura::$metodo = $metodo;
 
         return true;
 
