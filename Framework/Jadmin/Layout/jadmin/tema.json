@@ -7,7 +7,6 @@
       "principal": {
         "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
         "font-awesome": "{tema}htdocs/font-awesome/css/font-awesome.min.css",
-        "dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.css",
         "style": "{tema}htdocs/css/style.css"
       },
       "login": {
@@ -27,8 +26,6 @@
         "fastclick": "{tema}htdocs/js/fastclick.js",
         "jq-blockUI": "{tema}htdocs/js/jquery.blockUI.js",
         "jq-nicescroll": "{tema}htdocs/js/jquery.nicescroll.js",
-        "jq-dataTables": "{tema}htdocs/plugins/datatables/jquery.dataTables.min.js",
-        "bt-dataTables": "{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.js",
         "jadmin": "{tema}htdocs/js/jadmin.js"
       }
     }
