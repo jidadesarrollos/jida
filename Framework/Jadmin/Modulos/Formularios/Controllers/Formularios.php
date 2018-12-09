@@ -12,7 +12,6 @@ namespace Jida\Jadmin\Modulos\Formularios\Controllers;
 
 use Jida\Configuracion\Config;
 use Jida\Jadmin\Controllers\JControl;
-use Jida\Manager\Estructura;
 use Jida\Medios as Medios;
 use Jida\Modelos\Formulario;
 use Jida\Render as Render;
@@ -20,12 +19,11 @@ use Jida\Render as Render;
 class Formularios extends JControl {
 
     private $_rutaJida;
-    public $manejoParams = true;
+    public  $manejoParams = true;
 
     function __construct() {
 
         parent::__construct();
-        Medios\Debug::imprimir([Estructura::$rutaModulo], true);
         $this->_rutaJida = DIR_FRAMEWORK . DS . 'formularios';
     }
 
@@ -79,8 +77,6 @@ class Formularios extends JControl {
                 'Modulo'
             ]
         ];
-
-        //Medios\Debug::imprimir($formularios,true);
 
         $jvista = new Render\JVista($formularios, $params, 'Formularios');
         $jvista->accionesFila([
@@ -180,7 +176,6 @@ class Formularios extends JControl {
      */
     private function _dataVistaFormulario($formulario, $modulo) {
 
-        //$data = $this->_dataFormulario($formulario, $modulo);
         $data = "";
         if ($data) {
             if (array_key_exists('query', $data)) {

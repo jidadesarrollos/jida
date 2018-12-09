@@ -41,10 +41,9 @@ Trait Procesador {
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
-        else {
-            foreach ($this->_css as $indice => $valor) {
-                $librerias->{$indice} = $valor;
-            }
+
+        foreach ($this->_css as $indice => $valor) {
+            $librerias->{$indice} = $valor;
         }
 
         foreach ($librerias as $clave => $libreria) {
@@ -98,10 +97,9 @@ Trait Procesador {
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
-        else {
-            foreach ($this->_js as $indice => $valor) {
-                $librerias->{$indice} = $valor;
-            }
+
+        foreach ($this->_js as $indice => $valor) {
+            $librerias->{$indice} = $valor;
         }
 
         foreach ($librerias as $clave => $libreria) {
