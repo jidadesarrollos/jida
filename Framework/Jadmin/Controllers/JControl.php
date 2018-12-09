@@ -27,9 +27,9 @@ class JControl extends Controlador {
         $this->_inicializar();
         $esJadmin = $this->_usuario->permisos->es($this->_perfiles);
 
-        if (Estructura::$metodo !== 'login' and !$esJadmin) {
-            $this->redireccionar('/jadmin/login');
-        }
+//        if (Estructura::$metodo !== 'login' and !$esJadmin) {
+//            $this->redireccionar('jadmin/login');
+//        }
 
     }
 

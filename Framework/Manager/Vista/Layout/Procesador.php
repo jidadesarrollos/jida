@@ -34,8 +34,6 @@ Trait Procesador {
         $html = "";
         $arregloCSS = $this->_css;
 
-        Debug::imprimir([$arregloCSS]);
-
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
@@ -46,7 +44,7 @@ Trait Procesador {
             $librerias = (array)$librerias;
         }
         else {
-            foreach ($arregloCSS as $indice => $valor) {
+            foreach ($this->_css as $indice => $valor) {
                 $librerias->{$indice} = $valor;
             }
         }
@@ -64,8 +62,6 @@ Trait Procesador {
                 $urlLibreria = "//$urlLibreria";
             }
 
-            Debug::imprimir([$urlLibreria]);
-
             $html .= Selector::crear('link',
                 [
                     'href' => $urlLibreria,
@@ -76,8 +72,6 @@ Trait Procesador {
                 2);
 
         }
-
-        exit;
 
         return $html;
 

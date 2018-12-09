@@ -161,10 +161,6 @@ class Estructura {
     static public function definir(Arranque $arranque) {
 
         self::$ruta = $arranque::$ruta;
-        self::$modulo = $arranque::$modulo;
-        self::$controlador = $arranque::$controlador;
-        self::$metodo = $arranque::$metodo;
-        self::$jadmin = $arranque->jadmin;
         //Debug::imprimir([self::$ruta, self::$url], true);
 
     }

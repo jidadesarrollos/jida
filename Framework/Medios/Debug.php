@@ -19,7 +19,7 @@ class Debug {
      * @since 0.1
      *
      */
-    static function mostrarArray ($ar, $exit = true) {
+    static function mostrarArray($ar, $exit = true) {
 
         echo "\n<pre style=\"background:black;color:#dcdcdc\">\n";
         print_r($ar);
@@ -33,9 +33,10 @@ class Debug {
      * Muestra el contenido de las variables pasadas como parametros en bloques de impresion
      *
      * @param array $impresiones Arreglo de impresiones a realizar.
-     * @param array $config Arreglo de configuraciones, tiene opciones para selector, corte y color de la impresion del arreglo
+     * @param array $config Arreglo de configuraciones, tiene opciones para selector, corte y color de la impresion del
+     *     arreglo
      */
-    static function imprimir ($impresiones = [], $config = []) {
+    static function imprimir($impresiones = [], $config = []) {
 
         if (!$impresiones) {
             return;
@@ -101,7 +102,7 @@ class Debug {
      * @since 0.1
      * @deprecated 0.6
      */
-    static function string ($content, $exit = false, $tag = "hr") {
+    static function string($content, $exit = false, $tag = "hr") {
 
         if (!is_array($content)) {
             echo $content . "<$tag/>";
@@ -121,7 +122,7 @@ class Debug {
      * @since 0.6
      *
      */
-    static function cadena ($content, $exit = false, $tag = "hr") {
+    static function cadena($content, $exit = false, $tag = "hr") {
 
         if (!is_array($content)) {
             echo $content . "<$tag/>";

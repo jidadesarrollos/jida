@@ -184,6 +184,7 @@ class Layout {
 
         $layout = $this->_obtenerContenido(self::$directorio, ['contenido' => $vista]);
 
+        exit("hola");
         echo $layout;
 
     }
@@ -241,6 +242,6 @@ class Layout {
         if (method_exists($this, $metodo)) {
             call_user_func_array([$this, $metodo], $params);
         }
-        
+
     }
 }

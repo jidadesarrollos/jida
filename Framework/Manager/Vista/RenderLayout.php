@@ -40,8 +40,6 @@ Trait RenderLayout {
             array_push($this->_css, "$modulo/$archivos");
         }
 
-        Debug::imprimir([$archivos]);
-
     }
 
 }

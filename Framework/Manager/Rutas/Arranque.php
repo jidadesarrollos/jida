@@ -134,7 +134,8 @@ class Arranque {
 
     public static function obtenerControlador($controlador) {
 
-        if (!self::$Controlador or $controlador != self::$controlador) {
+        if (!self::$Controlador) {
+
             self::$controlador = str_replace("Controller", "", $controlador);
 
             Estructura::$controlador = $controlador;
@@ -163,6 +164,9 @@ class Arranque {
 
                 $this->_pipeLines($controlador, '_jdPre');
 
+                Medios\Debug::imprimir([
+                    Estructura::$controlador,
+                    Estructura::$metodo], true);
                 call_user_func_array(
                     [
                         $controlador,

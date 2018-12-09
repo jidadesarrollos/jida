@@ -5,6 +5,7 @@ namespace Jida\Manager\Rutas;
 use Jida\Configuracion\Config;
 
 use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 
 class Lector {
@@ -33,7 +34,7 @@ class Lector {
      * @param $manager
      */
 
-    public function __construct ($manager) {
+    public function __construct($manager) {
 
         $this->_get = $_GET;
         $this->_manager = $manager;
@@ -41,7 +42,7 @@ class Lector {
 
     }
 
-    public function validar () {
+    public function validar() {
 
         $this
             ->_verificarEstructura()
@@ -56,7 +57,7 @@ class Lector {
      * @method _procesar
      * @return object Jida\Manager\Rutas\Arranque
      */
-    private function _procesar () {
+    private function _procesar() {
 
         if (!$this->_arranque) {
             $this->_arranque = new Arranque();
@@ -66,7 +67,7 @@ class Lector {
 
     }
 
-    private function _verificarEstructura () {
+    private function _verificarEstructura() {
 
         if (isset($this->_get['url'])) {
             unset($this->_get['url']);
@@ -89,7 +90,7 @@ class Lector {
 
     }
 
-    private function _validarIdioma () {
+    private function _validarIdioma() {
 
         $actual = $this->arrayUrl[0];
         $idiomas = Config::obtener()->idiomas;
