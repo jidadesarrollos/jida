@@ -5,7 +5,6 @@ namespace Jida\Manager\Rutas\Procesador;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Jadmin;
-use Jida\Medios\Debug;
 
 Trait Modulo {
 
@@ -47,7 +46,7 @@ Trait Modulo {
 
                 Estructura::$modulo = $posModulo;
                 $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
-                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . $posModulo;
+                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . "Modulos/{$posModulo}";
             }
             else {
                 $padre->reingresarParametro($posModulo);
