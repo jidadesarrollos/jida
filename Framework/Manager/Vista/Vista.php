@@ -81,7 +81,7 @@ class Vista {
         }
 
         if (!file_exists($vista)) {
-            throw new Excepcion('L1a vista solicitada no existe: ' . $vista, $this->_ce . '1');
+            throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');
         }
 
         return $this->_obtenerContenido($vista);
