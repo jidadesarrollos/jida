@@ -9,7 +9,6 @@ namespace Jida\Manager\Vista\Layout;
 
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
-use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -43,7 +42,6 @@ Trait Procesador {
             $librerias = (array)$librerias;
         }
         else {
-            Debug::imprimir([$this->_css], true);
             foreach ($this->_css as $indice => $valor) {
                 $librerias->{$indice} = $valor;
             }
@@ -90,7 +88,6 @@ Trait Procesador {
     private function _js($librerias, $modulo) {
 
         $html = "";
-        $arregloJS = $this->_js;
 
         if (!property_exists($librerias, $modulo)) {
             return false;
@@ -102,7 +99,7 @@ Trait Procesador {
             $librerias = (array)$librerias;
         }
         else {
-            foreach ($arregloJS as $indice => $valor) {
+            foreach ($this->_js as $indice => $valor) {
                 $librerias->{$indice} = $valor;
             }
         }
