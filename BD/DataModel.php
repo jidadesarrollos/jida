@@ -2190,13 +2190,9 @@ class DataModel {
         }
 
         $parametros = implode(",", $parametros);
-
-        //call sp_actualizar_horas(2, 10)
         $consulta = "CALL " . $sp . "({$parametros})";
 
-        $resultado = $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($consulta));
-
-        return $resultado;
+        return $this->bd->ejecutarQuery($consulta);
 
     }
 
