@@ -1259,6 +1259,7 @@ class DataModel {
      * @method select
      *
      * @see self::consulta
+     * @deprecated
      */
     function select ($campos = "") {
 
