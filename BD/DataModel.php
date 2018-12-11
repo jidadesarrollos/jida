@@ -2183,16 +2183,21 @@ class DataModel {
      * @param $sp
      * @param mixed $parametros
      */
-    function sp($sp, $parametros) {
+    function sp($sp, $parametros = []) {
 
-        if (is_string($parametros)) {
-            $parametros = (array)$parametros;
+        if (!!$parametros) {
+            if (is_string($parametros)) {
+                $parametros = (array)$parametros;
+            }
+
+            $parametros = "'" . implode("', '", $parametros) . "'";
+            $this->query = "CALL " . $sp . "({$parametros});";
+        }
+        else {
+            $this->query = "CALL " . $sp . ";";
         }
 
-        $parametros = implode(",", $parametros);
-        $consulta = "CALL " . $sp . "({$parametros})";
-
-        return $this->bd->ejecutarQuery($consulta);
+        return $this;
 
     }
 
