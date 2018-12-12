@@ -2197,7 +2197,9 @@ class DataModel {
             $this->query = "CALL " . $sp . ";";
         }
 
-        return $this;
+        $result = $this->bd->ejecutarQuery($this->query);
+
+        return is_object($result) ? $this->bd->obtenerDataCompleta($result) : $result;
 
     }
 
