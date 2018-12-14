@@ -33,17 +33,6 @@
             $menu = new \Jida\Render\Menu('Jadmin');
             echo $menu->render();
             ?>
-
-            <!--            <hr/>-->
-            <!---->
-            <!--            <ul class="nav nav-aside menu">-->
-            <!--                <li>-->
-            <!--                    <a href="#" class="menu-toggle"><span class="fa fa-arrow-right"></span>-->
-            <!--                        <span class="inner-text">Cerrar Men&uacute;</span>-->
-            <!--                    </a>-->
-            <!--                </li>-->
-            <!---->
-            <!--            </ul>-->
         </aside>
         <main class="main-panel">
             <div class="container-fluid">
