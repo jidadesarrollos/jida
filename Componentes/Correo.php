@@ -22,6 +22,7 @@ class Correo {
 
     /**
      * Arreglo de configuracion para liberia PHPMailer
+     *
      * @var array $_default
      *
      * Declarar SMTPDebug para depurador de envio de correos. 2 flujo con errores - 4 corrida completa
@@ -29,36 +30,40 @@ class Correo {
      * SMTPSecure para protocolo de envios, verificar en la configuracion (tls o ssl)
      *
      */
-    private $_default = ['Username' => '',
-                         'Password' => '',
-                         'From' => '',
-                         'FromName' => '',
-                         'Host' => '',
-                         'Port' => '',
-                         'SMTPSecure' => 'tls',
-                         'SMTPAuth' => TRUE,
+    private $_default = ['Username'      => '',
+                         'Password'      => '',
+                         'From'          => '',
+                         'FromName'      => '',
+                         'Host'          => '',
+                         'Port'          => '',
+                         'SMTPSecure'    => 'tls',
+                         'SMTPAuth'      => TRUE,
                          'AddAttachment' => []
-                         //'SMTPDebug'	=> 4
+        //'SMTPDebug'	=> 4
 
     ];
     /**
      * Define la ubicacion de las plantillas para correo
+     *
      * @var string $pathPlantillas
      */
     var $pathPlantillas = 'Vistas/correo';
     /**
      * Clase Mail Definida en la carpeta de Config
+     *
      * @var object $configMail
      */
     private $configMail;
     /**
      * Configuracion general a usar independientemente de la configuracion pedida para el envio de correo
+     *
      * @var array $_general
      *
      */
     private $_general = [];
     /**
      * Data definida en el objeto \Config\Mail que puede ser pasada a cualquier correo
+     *
      * @var array $_data
      */
     private $_data = [];
@@ -102,8 +107,8 @@ class Correo {
         if (property_exists($this->configMail, 'data') and is_array($this->configMail->data)) {
             $this->_data = $this->configMail->data;
         }
-        $this->phpMailer->SMTPOptions = ['ssl' => ['verify_peer' => FALSE,
-                                                   'verify_peer_name' => FALSE,
+        $this->phpMailer->SMTPOptions = ['ssl' => ['verify_peer'       => FALSE,
+                                                   'verify_peer_name'  => FALSE,
                                                    'allow_self_signed' => TRUE
         ]
         ];
@@ -113,7 +118,8 @@ class Correo {
 
         if (Directorios::validar(DIR_APP . $this->plantilla)) {
             $plantilla = DIR_APP . $this->plantilla;
-        } elseif (Directorios::validar(DIR_FRAMEWORK . 'Layout/correo/' . $this->plantilla . "tpl.php")) {
+        }
+        elseif (Directorios::validar(DIR_FRAMEWORK . 'Layout/correo/' . $this->plantilla . "tpl.php")) {
             $plantilla = DIR_FRAMEWORK . 'Layout/correo/' . $this->plantilla . "tpl.php";
         }
         if (empty($plantilla))
@@ -143,12 +149,13 @@ class Correo {
     /**
      * Permite registrar las variables a pasar a la plantilla de correo
      * @method data
+     *
      * @param array $data Valores.
      */
     function data($data) {
         $data = array_merge($this->_data, $data);
         foreach ($data as $key => $value) {
-            $this->_data[ ":" . $key ] = $value;
+            $this->_data[":" . $key] = $value;
         }
 
         return $this;
@@ -156,6 +163,7 @@ class Correo {
 
     /**
      * Imprime los valores del proceso de envio
+     *
      * @param int $numero Tipo de Debug, basado en los tipos de la clase PHPMailer
      *
      */
@@ -171,9 +179,10 @@ class Correo {
      *
      * El correo usara como plantilla la que se encuentre definida por el llamado previo al metodo $plantilla
      * @method enviar
-     * @param mixed  $destinatarios ;
+     *
+     * @param mixed $destinatarios ;
      * @param string $asunto Titulo del correo
-     * @param array  $mensaje Arreglo de valores a usar en la plantila, es opcional. los valores pueden pasarse por
+     * @param array $mensaje Arreglo de valores a usar en la plantila, es opcional. los valores pueden pasarse por
      *     medio del metodo data
      *
      */
@@ -192,7 +201,7 @@ class Correo {
             for ($i = 0; $i <= count($destinatarios) - 1; ++$i) {
 
                 $this->phpMailer->msgHTML($html);
-                $this->phpMailer->addAddress($destinatarios[ $i ], "");
+                $this->phpMailer->addAddress($destinatarios[$i], "");
 
                 if (is_array($this->_default['AddAttachment'])) {
                     foreach ($this->_default['AddAttachment'] as $adjunto) {
@@ -216,6 +225,7 @@ class Correo {
     /**
      * Edita el valor de configuracion para envio de correos
      * @method config
+     *
      * @param string $var Configuracion a usar, el valor pasado debe estar definido
      * como propiedad de la clase App\Config\Mail
      * @throws Excepion
@@ -231,6 +241,7 @@ class Correo {
     /**
      * Retorna los errores obtenidos en el envio de correos
      * @method obtError
+     *
      * @return string
      */
     function obtError() {
