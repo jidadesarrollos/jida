@@ -4,7 +4,6 @@ namespace Jida\Render\Inputs;
 
 use Jida\Render\Selector as Selector;
 
-
 abstract class InputBase extends Selector {
 
     use \Jida\Core\ObjetoManager;
@@ -12,6 +11,7 @@ abstract class InputBase extends Selector {
     var $type;
     var $id;
     var $label;
+
     /**
      * @var string Opciones Cadena de opciones pasada en la configuración del formulario
      */
@@ -26,6 +26,8 @@ abstract class InputBase extends Selector {
 
     protected $_html;
     protected $_name;
+
+    protected $_atributos;
     /**
      * Define el tipo de Selector de formulario
      *
@@ -49,6 +51,7 @@ abstract class InputBase extends Selector {
      * @var object $_padre ;
      */
     protected $_padre;
+
     /**
      * Retorna la estructura a renderizar
      *

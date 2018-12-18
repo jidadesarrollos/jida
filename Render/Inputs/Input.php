@@ -18,14 +18,14 @@ use Jida\Render\Selector as Selector;
 
 class Input extends InputBase {
 
-
     function __construct(\stdClass $params, $attr = FALSE) {
 
         if (property_exists($params, 'data')) {
 
             if (is_object($params->data)) {
                 $params->data = get_object_vars($params->data);
-            } else if (is_string($params->data)) {
+            }
+            else if (is_string($params->data)) {
                 $params->data = [];
             }
 
@@ -35,6 +35,8 @@ class Input extends InputBase {
         $this->_name = $params->name;
         $this->_tipo = $params->type;
 
+        $this->_atributos = (array)$params;
+
         if (property_exists($params, 'html')) {
             $this->_html = $params->html;
         }
@@ -43,7 +45,6 @@ class Input extends InputBase {
         if (property_exists($params, 'class')) {
             $this->addClass($params->class);
         }
-        #Helpers\Debug::imprimir($params);
 
     }
 
@@ -90,7 +91,8 @@ class Input extends InputBase {
 
     function _crearInput() {
 
-        $this->_attr = array_merge($this->_attr,
+        unset($this->_atributos['eventos']);
+        $this->_attr = array_merge($this->_atributos,
             [
                 'type'        => $this->_tipo,
                 'name'        => $this->_name,
@@ -99,8 +101,8 @@ class Input extends InputBase {
                 'placeholder' => $this->placeholder
             ]
         );
-        parent::__construct('input', $this->_attr);
 
+        parent::__construct('input', $this->_attr);
 
     }
 
@@ -108,7 +110,8 @@ class Input extends InputBase {
 
         if ($this->type == 'textarea') {
             $this->innerHTML($valor);
-        } else {
+        }
+        else {
             $this->attr('value', $valor);
         }
 
