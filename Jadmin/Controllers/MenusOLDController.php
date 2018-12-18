@@ -25,7 +25,7 @@ class MenusOLDController extends JController {
     }
 
     function index() {
-        $query = "select id_menu,nombre_menu \"Nombre Menu\" from s_menus";
+        $query = " from s_menus";
         $this -> vista = 'menus';
 
         $vistaMenu = new RenderHTML\Vista($query, $GLOBALS['configPaginador'], 'Menus');

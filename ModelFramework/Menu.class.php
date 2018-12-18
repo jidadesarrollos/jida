@@ -89,7 +89,7 @@ class Menu extends DataModel {
 	
     
     private function obtenerMenuByNombre($nombre){
-        $query = "select * from s_menus where nombre_menu='$nombre'";
+        $query = "select * from s_menus where menu='$nombre'";
         
         $result = $this->bd->ejecutarQuery($query);
         
