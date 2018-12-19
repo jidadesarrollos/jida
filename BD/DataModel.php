@@ -23,15 +23,15 @@ class DataModel {
 
     use \Jida\Core\ObjetoManager;
 
-    protected $debug            = false;
+    protected $debug = false;
     protected $tablaBD;
     protected $esquema;
     protected $manejadorBD;
-    private   $consultaMultiple = false;
-    private   $join             = false;
-    private   $usoLimit         = false;
-    private   $_ce              = '006';
-    private   $condicion        = 'and';
+    private $consultaMultiple = false;
+    private $join = false;
+    private $usoLimit = false;
+    private $_ce = '006';
+    private $condicion = 'and';
     /**
      * @var string $limit estring de la clausula limit
      */
@@ -44,14 +44,14 @@ class DataModel {
      *
      * @var $prefijoBD
      */
-    protected $prefijoBD          = PREFIJO_TABLA;
-    protected $fecha_creacion     = FECHA_CREACION;
+    protected $prefijoBD = PREFIJO_TABLA;
+    protected $fecha_creacion = FECHA_CREACION;
     protected $fecha_modificacion = FECHA_MODIFICACION;
 
     /**
      * @var int $nivelORM Define el nivel de navegación del ORM
      */
-    protected $nivelORM          = NIVEL_ORM;
+    protected $nivelORM = NIVEL_ORM;
     protected $prefijoRelacional = PREFIJO_RELACIONAL;
 
     /**
@@ -60,9 +60,9 @@ class DataModel {
      * @var array $unico
      * @example ['nombre',['valor1','valor2'],'valor3'];
      */
-    protected $unico                   = [];
+    protected $unico = [];
     protected $registroMomentoGuardado = true;
-    protected $registroUser            = true;
+    protected $registroUser = true;
 
     /**
      * Arreglo que define las relaciones uno a uno del objeto
@@ -2196,6 +2196,7 @@ class DataModel {
         else {
             $this->query = "CALL " . $sp . ";";
         }
+
 
         $result = $this->bd->ejecutarQuery($this->query);
 
