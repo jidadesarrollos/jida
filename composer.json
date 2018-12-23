@@ -3,7 +3,6 @@
   "description": "Framework para desarrollo Jida, desarrollo simple.",
   "type": "Framework",
   "license": "mit",
-  "version": "0.6.1",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "authors": [
