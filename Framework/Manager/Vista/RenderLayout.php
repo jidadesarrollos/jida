@@ -7,16 +7,16 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 
 Trait RenderLayout {
 
     public function incluirJS($librerias, $modulo = false) {
 
-        if ($modulo == true) {
+        if ($modulo === true) {
             $modulo = Estructura::$rutaModulo;
         }
         else {
+
             $modulo = $this->_urlTema;
         }
 
@@ -46,8 +46,6 @@ Trait RenderLayout {
         foreach ($librerias as $indice => $valor) {
             array_push($this->_css, "$modulo/$valor");
         }
-
-        Debug::imprimir([$this->_css]);
 
     }
 

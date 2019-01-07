@@ -7,8 +7,8 @@
 namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
-use Jida\Medios\Debug;
 use Jida\Manager\Rutas\Arranque;
+use Jida\Medios\Debug;
 
 class Estructura {
 
@@ -54,6 +54,7 @@ class Estructura {
     static public $namespace;
     static public $ruta;
     static public $rutaJida;
+    static public $rutaAplicacion;
     static public $modulo;
     static public $controlador;
     static public $metodo;
@@ -83,6 +84,7 @@ class Estructura {
         $directorio = implode("/", array_reverse($parte));
         self::$rutaJida = $directorio . DS . $carpeta;
         self::$directorio = $directorio;
+        self::$rutaAplicacion = $directorio . "/Aplicacion";
 
         return $directorio;
 

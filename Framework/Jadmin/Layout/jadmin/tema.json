@@ -1,32 +1,34 @@
 {
   "link": {
-    "shortcut icon": "{tema}htdocs/images/favicon.ico"
+    "shortcut icon": "{tema}/htdocs/images/favicon.ico"
   },
+  "layout": "jadmin",
+  "layoutError": "error",
   "dev": {
     "css": {
       "principal": {
-        "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
-        "font-awesome": "{tema}htdocs/font-awesome/css/font-awesome.min.css",
-        "style": "{tema}htdocs/css/style.css"
+        "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
+        "font-awesome": "{tema}/htdocs/font-awesome/css/font-awesome.min.css",
+        "style": "{tema}/htdocs/css/style.css"
       },
       "login": {
-        "bootstrap": "{tema}htdocs/css/bootstrap.min.css",
-        "font-awesome": "{tema}htdocs/font-awesome/css/font-awesome.min.css",
-        "login": "{tema}htdocs/css/login.css"
+        "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
+        "foJnt-awesome": "{tema}/htdocs/font-awesome/css/font-awesome.min.css",
+        "login": "{tema}/htdocs/css/login.css"
       }
     },
     "js": {
       "principal": {
-        "jquery": "{tema}htdocs/js/jquery.min.js",
-        "modernizr": "{tema}htdocs/js/modernizr.min.js",
-        "moment": "{tema}htdocs/js/moment.min.js",
-        "popper": "{tema}htdocs/js/popper.min.js",
-        "bootstrap": "{tema}htdocs/js/bootstrap.min.js",
-        "detect": "{tema}htdocs/js/detect.js",
-        "fastclick": "{tema}htdocs/js/fastclick.js",
-        "jq-blockUI": "{tema}htdocs/js/jquery.blockUI.js",
-        "jq-nicescroll": "{tema}htdocs/js/jquery.nicescroll.js",
-        "jadmin": "{tema}htdocs/js/jadmin.js"
+        "jquery": "{tema}/htdocs/js/jquery.min.js",
+        "modernizr": "{tema}/htdocs/js/modernizr.min.js",
+        "moment": "{tema}/htdocs/js/moment.min.js",
+        "popper": "{tema}/htdocs/js/popper.min.js",
+        "bootstrap": "{tema}/htdocs/js/bootstrap.min.js",
+        "detect": "{tema}/htdocs/js/detect.js",
+        "fastclick": "{tema}/htdocs/js/fastclick.js",
+        "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",
+        "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
+        "jadmin": "{tema}/htdocs/js/jadmin.js"
       }
     }
   },

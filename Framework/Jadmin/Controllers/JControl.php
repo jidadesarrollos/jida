@@ -26,12 +26,25 @@ class JControl extends Controlador {
 
         parent::__construct();
         $this->_usuario = Sesion::$usuario;
-        $this->_inicializar();
-        $esJadmin = $this->_usuario->permisos->es($this->_perfiles);
 
-//        if (Estructura::$metodo !== 'login' and !$esJadmin) {
-//            $this->redireccionar('jadmin/login');
-//        }
+        throw new \Exception("erro 1", 404);
+
+        $this->_inicializar();
+
+    }
+
+    protected function _validarSesion() {
+
+        $metodo = Estructura::$metodo;
+        $aceptados = ['login', 'logout'];
+
+        if (in_array($metodo, $aceptados)) {
+            return true;
+        }
+
+        if (!Sesion::activa()) {
+            $this->redireccionar('/jadmin/login');
+        }
 
     }
 
@@ -45,7 +58,7 @@ class JControl extends Controlador {
         $urlBase = '//' . Estructura::$urlBase;
         $urlTema = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
-        $menu = new Menu('Jadmin');
+        $menu = new Menu('/jadmin/menu');
 
         $this->data([
             'menu'      => $menu->render(),

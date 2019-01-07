@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $this->nombreApp ?></title>
-    <?= $this->imprimirLibrerias('css', 'principal') ?>
+    <?= $this->imprimirLibrerias('head', 'principal') ?>
 </head>
 
 <body class="adminbody">

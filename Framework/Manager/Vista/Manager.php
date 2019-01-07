@@ -33,6 +33,7 @@ class Manager {
 
         $this->Procesador = $padre->procesador;
         self::$Padre = $padre;
+
         $this->_layout = new Layout($this);
         $this->_data = Data::obtener();
         $this->_inicializar();
@@ -80,7 +81,7 @@ class Manager {
     function vista() {
 
         if (!self::$vista) {
-            self::$vista = new Vista($this);
+            self::$vista = new Vista($this->_data);
         }
 
         return self::$vista;

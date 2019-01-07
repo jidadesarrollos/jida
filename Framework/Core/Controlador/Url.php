@@ -4,7 +4,6 @@ namespace Jida\Core\Controlador;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
-use Jida\Medios\Debug;
 
 Trait Url {
 
@@ -14,10 +13,15 @@ Trait Url {
      *
      * @param $url
      */
+
+    private function _limpiarUrl($url) {
+        return implode("/", array_filter(explode("/", $url)));
+    }
+
     protected function redireccionar($url) {
 
         $protocolo = parse_url($url, PHP_URL_SCHEME);
-        $url = $protocolo ? $url : '//' . Estructura::$urlBase . $url;
+        $url = $protocolo ? $url : '//' . $this->_limpiarUrl(Estructura::$urlBase . $url);
 
         header('location:' . $url . '');
         exit;

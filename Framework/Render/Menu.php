@@ -11,8 +11,10 @@
 
 namespace Jida\Render;
 
-use \Exception as Excepcion;
-use Jida\Core\Rutas;
+use App\Config\Configuracion;
+use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Medios as Medios;
 
 class Menu extends Selector {
@@ -22,7 +24,7 @@ class Menu extends Selector {
      *
      * @var $_ce ;
      */
-    private $_ce = "100100";
+    static private $_ce = 100;
     /**
      * Define la ubicacion del archivo de configuracion del menu
      *
@@ -60,7 +62,7 @@ class Menu extends Selector {
      */
     function __construct($menu = "") {
 
-        $this->_conf = $GLOBALS['JIDA_CONF'];
+        $this->_conf = Config::obtener();
 
         if ($menu) {
             $this->cargarMenu($menu);
@@ -88,14 +90,48 @@ class Menu extends Selector {
             $menu = $menu . ".json";
         }
 
-        $path = Rutas::obtener($menu, 'menu')->absoluta();
+        $path = $this->_obtenerDirectorio($menu);
 
         if (!Medios\Directorios::validar($path)) {
-            throw new Excepcion("No se consigue el archivo de configuracion del menu " . $path, $this->_ce . '1');
+            $msj = "No se consigue el archivo de configuracion del menu $path";
+            Excepcion::procesar($msj, self::$_ce . 1);
+
         }
 
         $this->_path = $path;
         $this->validarJson();
+
+    }
+
+    private function _obtenerDirectorio($menu) {
+
+        $menu = strtolower($menu);
+        $partes = array_filter(explode("/", $menu));
+
+        if (count($partes) === 1) {
+            return Estructura::$rutaAplicacion . '/Menus/' . $menu;
+        }
+
+        $modulo = array_shift($partes);
+        if (strtolower($modulo) === 'jadmin') {
+            return Estructura::$rutaJida . "/Jadmin/" . implode("/", $partes);
+        }
+
+        if (count($partes) > 1) {
+
+            $ruta = Estructura::$ruta . '/Menus/';
+            $configuracion = Config::obtener();
+            $modulos = $configuracion::$modulos;
+            if (!in_array($modulo, $modulos)) {
+                Excepcion::procesar("No existe el modulo pasado", self::$_ce . 2);
+            }
+            if ($modulo !== 'app') {
+                $ruta = Estructura::$rutaAplicacion . '/Modulos/' . ucfirst($modulo) . " / ";
+            }
+
+            return $ruta = $ruta . implode(" / ", $partes);
+
+        }
 
     }
 
@@ -104,8 +140,9 @@ class Menu extends Selector {
         $contenido = file_get_contents($this->_path);
         $this->menu = json_decode($contenido);
 
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new Excepcion("El menu  " . $this->_path . " no esta estructurado correctamente", $this->_ce . "1");
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $msj = "El menu  " . $this->_path . " no esta estructurado correctamente";
+            Excepcion::procesar($msj, self::$_ce . "1");
         }
 
         return $this;
@@ -124,7 +161,7 @@ class Menu extends Selector {
         $this->html .= "<" . $this->selectorMenu;
 
         if (!empty($menu->id)) {
-            $this->html .= " id=\"" . $menu->id . "\"";
+            $this->html .= " id = \"" . $menu->id . "\"";
         }
         if (!empty($menu->class)) {
             $this->html .= " class=\"" . $menu->class . "\"";

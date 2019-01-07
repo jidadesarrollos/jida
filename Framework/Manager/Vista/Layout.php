@@ -1,16 +1,13 @@
 <?php
 /**
- * Codigo de error 7
+ * Codigo de error 8
  */
 
 namespace Jida\Manager\Vista;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Excepcion;
-use Jida\Medios\Debug;
-use Jida\Medios\Directorios;
-use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Layout\Procesador;
+use Jida\Medios\Debug;
 
 class Layout {
 
@@ -32,15 +29,9 @@ class Layout {
      */
     private $_data;
 
-    private $_DIRECTORIOS = [
-        'jida' => 'Framework/Layout/',
-        'app'  => 'Aplicacion/Layout/'
-    ];
+    private static $_ce = 10008;
 
-    private static $_ce = '10008';
-
-    private $_tema;
-    private $_configuracion;
+    private static $_configuracion;
     /**
      * @var string $_directorio Directorio fisico del tema y layout implementado
      */
@@ -73,7 +64,6 @@ class Layout {
         }
 
         $this->_leer();
-        $this->_configuracion();
 
     }
 
@@ -87,30 +77,18 @@ class Layout {
      */
     private function _leer() {
         try {
-            $padre = self::$padre;
-            $arranque = $padre::$Padre;
 
-            $tema = (!!$arranque->jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
-
-            $this->_tema = $tema;
-            $path = Estructura::$directorio;
-
-            $directorio = $this->_DIRECTORIOS['app'];
-
-            self::$_urlTema = Estructura::$urlBase . 'Aplicacion/Layout/';
-            if ($arranque->jadmin) {
-                $config = Config::obtener();
-                self::$_urlTema = '/' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema . "/";
-                $dirJida = Estructura::$directorioJida . "/Jadmin/Layout/";
-
-                $directorio = ($tema === 'jadmin' || Directorios::validar($dirJida . $tema))
-                    ? $dirJida
-                    : $this->_DIRECTORIOS['app'];
+            if (!Tema::$directorio) {
+                $tema = Tema::obtener();
+                self::$_urlTema = $tema::$url;
+                self::$directorio = $tema::$directorio;
+                self::$_configuracion = $tema::$configuracion;
+                return true;
             }
 
-            self::$directorio = $path . DS . $directorio;
-
-            if ($tema) self::$directorio .= $tema;
+            self::$_urlTema = Tema::$url;
+            self::$directorio = Tema::$directorio;
+            self::$_configuracion = Tema::$configuracion;
 
         }
         catch (\Excepcion $e) {
@@ -123,41 +101,14 @@ class Layout {
         return $this;
     }
 
-    /**
-     * Obtiene la configuración del tema implementado
-     *
-     */
-    private function _configuracion() {
-
-        $archivoConfiguracion = self::$directorio . DS . "tema.json";
-
-        if (!file_exists($archivoConfiguracion)) {
-            $msj = "No se consigue el archivo de configuracion del tema $this->_tema en " . self::$directorio;
-            \Jida\Manager\Excepcion::procesar($msj, self::$_ce . 5);
-        }
-
-        $configuracion = json_decode(file_get_contents($archivoConfiguracion));
-        $entorno = Config::ENTORNO_APP;
-
-        if (property_exists($configuracion, $entorno)) {
-
-            foreach ($configuracion->{$entorno} as $propiedad => $valor) {
-                $configuracion->{$propiedad} = $valor;
-            }
-            unset($configuracion->{$entorno});
-
-        }
-
-        $this->_configuracion = $configuracion;
-
-    }
-
-    private function _definirPlantilla($tpl) {
+    function _definirPlantilla($tpl) {
         $this->_plantilla = $tpl;
     }
 
-    static function definir($directorio) {
-
+    /**
+     * @param $directorio
+     */
+    static function definirDirectorio($directorio) {
         self::$directorio = $directorio;
     }
 
@@ -171,21 +122,61 @@ class Layout {
      */
     public function render($vista) {
 
-        if (!self::$directorio or !$vista) {
-            $msj = 'El parametro $vista es requerido para el metodo render';
-            Excepcion::procesar($msj, self::$_ce . '0001');
+        try {
+
+            if (!self::$directorio) {
+                $msj = 'No se ha definido el directorio del layout';
+                throw new \Exception($msj, self::$_ce . '0008');
+            }
+            if (!$vista) {
+                $msj = 'El parametro $vista es requerido para el metodo render';
+                throw new \Exception($msj, self::$_ce . '0001');
+            }
+            if (!$this->_plantilla) {
+                //todo: manejar  layout por defecto
+                throw new \Exception("No se ha definido layout para el metodo", self::$_ce . '0006');
+            }
+
+            $marco = self::$directorio . DS . $this->_plantilla;
+
+            echo $this->_obtenerContenido(
+                $marco,
+                ['contenido' => $vista]
+            );
 
         }
-        if (!$this->_plantilla) {
-            //todo: manejar layout por defecto
-            Excepcion::procesar("No se ha definido layout para el metodo", self::$_ce . 6);
+        catch (\Exception $e) {
+            Debug::imprimir([
+                "Excepcion en Layout::render",
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getTrace()
+            ],
+                true);
         }
-        self::$directorio .= DS . $this->_plantilla;
 
-        echo $this->_obtenerContenido(
-            self::$directorio,
-            ['contenido' => $vista]
-        );
+    }
+
+    function renderizarExcepcion($plantilla) {
+
+        try {
+            $marco = self::$directorio . DS . $this->_plantilla;
+
+            echo $this->_obtenerContenido(
+                $marco,
+                ['contenido' => $plantilla]
+            );
+
+        }
+        catch (\Exception $e) {
+            Debug::imprimir([
+                "Excepcion en Layout::render",
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getTrace()
+            ],
+                true);
+        }
 
     }
 
@@ -201,7 +192,8 @@ class Layout {
      */
     function imprimirLibrerias($lenguajes, $modulo = "") {
 
-        $configuracion = $this->_configuracion;
+        $configuracion = self::$_configuracion;
+
         $lenguajes = (is_string($lenguajes)) ? (array)$lenguajes : $lenguajes;
         $retorno = "";
 
@@ -229,11 +221,18 @@ class Layout {
      */
     static function obtener() {
 
-        if (!self::$instancia) {
-            \Jida\Manager\Excepcion::procesar("El objeto layout no ha sido instanciado", self::$_ce . "1");
-        }
+        try {
 
-        return self::$instancia;
+            if (!self::$instancia) {
+                throw new \Exception("El objeto layout no ha sido instanciado", self::$_ce . 1);
+            }
+
+            return self::$instancia;
+
+        }
+        catch (\Exception $e) {
+            Debug::imprimir([$e->getCode(), $e->getMessage(), $e->getTrace()], true);
+        }
 
     }
 

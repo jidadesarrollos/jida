@@ -16,7 +16,6 @@ use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Manager as ManagerVista;
-use Jida\Medios as Medios;
 
 class Arranque {
 
@@ -180,7 +179,7 @@ class Arranque {
             }
         }
         catch (\Exception $e) {
-            Medios\Debug::imprimir(["capturada excepcion en arranque", $e], true);
+            Excepcion::controller($e);
         }
 
     }

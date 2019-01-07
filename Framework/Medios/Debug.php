@@ -41,8 +41,10 @@ class Debug {
         if (!$impresiones) {
             return;
         }
+
         if (is_bool($config))
             $config = ['corte' => $config];
+
         $estandar = [
             'selector' => 'hr',
             'corte'    => false,
@@ -50,6 +52,7 @@ class Debug {
             'color'    => 'black'
 
         ];
+
         $traza = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
         echo "

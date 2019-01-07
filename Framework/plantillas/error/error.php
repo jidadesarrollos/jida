@@ -1,51 +1,18 @@
-<?php
-$e = $this->excepcion;
-?>
+<h3>Excepción Capturada</h3>
 
-<header class="page-header">
-    <h1>
-        Error <?= $e->codigo; ?>
-    </h1>
-</header>
-<div class="alert alert-danger mt-30">
-    <?= $e->mensaje; ?>
-</div>
+<h4>Excepcion: <?= $this->mensaje ?></h4>
+<h5>Código <?= $this->codigo ?></h5>
 
-<div class="alert alert-warning">
-    <ul>
-        <?php foreach ($e->traza as $key => $hito): ?>
-            <li>
-                <?php if (array_key_exists('file', $hito)) : ?>
-                    <h5><strong><?= $key ?> Archivo: </strong>
-                        <?= $hito['file'] ?>
-                    </h5>
-                <?php endif; ?>
-                <?php if (array_key_exists('line', $hito)) : ?>
+<?php foreach ($this->traza as $i => $item) { ?>
 
-                    <strong>Linea: </strong><?= $hito['line'] ?> <br/>
-                <?php endif; ?>
-                <?php if (array_key_exists('class', $hito)): ?>
-                    <h5>
-                        <strong>Clase: </strong><?= $hito['class'] ?>::<?= $hito['function'] ?>
-                    </h5>
-                <?php else: ?>
-                    <?= $hito['function'] ?>
-                <?php endif ?>
+    <UI>
+        <LI>Traza <?= $i ?>
+            <ul>
+                <li>Archivo: <?= $item['file'] ?></li>
+                <li>Linea: <?= $item['line'] ?></li>
+                <li><?= "{$item['class']}{$item['type']}{$item['function']}" ?></li>
+            </ul>
+        </LI>
+    </UI>
 
-            </li>
-        <?php endforeach ?>
-    </ul>
-</div>
-
-<div class="alert alert-info">
-    <h3>Si Desea cambiar esta plantilla</h3>
-    <ul>
-        <li>Cree un Controlador para excepciones y registrelo en la constante CONTROLADOR_EXCEPCIONES</li>
-        <li>Cree una plantilla para la excepción en el directorio <strong>Aplicacion/layout/error</strong>
-            llamara "error.php"
-        </li>
-        <li>Puede crear una plantilla para el error que desee dentro de ese directorio, solo debe crear el
-            archivo .php con el codigo de la excepcion como nombre.
-        </li>
-    </ul>
-</div>
+<?php } ?>

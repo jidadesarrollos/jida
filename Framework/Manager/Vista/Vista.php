@@ -5,7 +5,7 @@
  *
  * Corresponde al numero de excepciones,
  * Actualizar a medida que se vayan agregando excepciones
- * Numero de error 1
+ * Numero de error 2
  *
  */
 
@@ -23,17 +23,18 @@ class Vista {
     static private $_ce = 10009;
     static public $padre;
     static public $directorio;
-
+    /**
+     * @var Tema
+     */
     private $_tema;
     private $_data;
 
-    function __construct($padre) {
+    function __construct($data) {
 
-        self::$padre = $padre;
         $conf = Config::obtener();
         $this->_tema = $conf->tema;
 
-        $this->_data = $padre->data;
+        $this->_data = $data;
 
     }
 
@@ -85,6 +86,27 @@ class Vista {
         }
 
         return $this->_obtenerContenido($vista);
+
+    }
+
+    function obtenerPlantilla($plantilla) {
+
+        try {
+            if (!Medios\Directorios::validar($plantilla)) {
+                throw new \Exception('La plantilla no existe ' . $plantilla, self::$_ce . 2);
+            }
+
+            return $this->_obtenerContenido($plantilla);
+        }
+        catch (\Exception $e) {
+            Medios\Debug::imprimir(
+                ["Error vista",
+                    $e->getCode(),
+                    $e->getMessage()],
+                true
+            );
+        }
+
     }
 
 }

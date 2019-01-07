@@ -10,19 +10,22 @@ namespace Jida\Manager;
 
 use App\Config\Configuracion;
 use Jida\Componentes\Correo;
-use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
+use Jida\Manager\Excepcion\Log;
+use Jida\Manager\Vista\Layout;
+use Jida\Manager\Vista\Tema;
+use Jida\Manager\Vista\Vista;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
-use Jida\Manager\Vista\Data;
-use Jida\Manager\Vista\Layout;
 
 class Excepcion {
 
-    use GeneradorCodigo;
+    use GeneradorCodigo, Log;
     protected $ruta;
     protected $excepcion;
     protected $txtLog;
+
+    private static $contador;
 
     const PLANTILLAS_APP = 'Aplicacion/plantillas/';
 
@@ -31,101 +34,6 @@ class Excepcion {
         $this->nombreArchivo = "error.log";
         $this->ruta = Estructura::path();
         $this->excepcion = $e;
-
-    }
-
-    function _registrar() {
-
-        $separador = "--------------------------";
-        $fecha = "Fecha: " . date('Y-m-d H:i:s');
-        $mensaje = "Mensaje: " . $this->excepcion->getMessage();
-        $codigo = "Error: " . $this->excepcion->getCode();
-        $archivo = "Archivo: " . $this->excepcion->getFile();
-        $linea = "Linea: " . $this->excepcion->getLine();
-
-        $traza = $this->excepcion->getTrace();
-        $detalle = "";
-
-        foreach ($traza as $k => $v) {
-            if (array_key_exists('file', $v)) {
-                $detalle .= "Archivo: " . $v['file'];
-            }
-
-            if (array_key_exists('line', $v)) {
-                $detalle .= " | Linea: " . $v['line'];
-            }
-
-            if (array_key_exists('class', $v)) {
-                $detalle .= "\r\nClase: " . $v['class'] . "::" . $v['function'] . "\r\n";
-            }
-            else {
-                $detalle .= "\r\nClase: " . $v['function'] . "\r\n";
-            }
-
-        }
-
-        $log = implode("\r\n",
-            [
-                $separador,
-                $fecha,
-                $separador,
-                $codigo,
-                $mensaje,
-                $detalle
-            ]);
-
-        $this->txtLog = implode("<br/>",
-            [
-                $codigo,
-                $mensaje,
-                $detalle
-            ]);
-
-        if (Configuracion::ENVIAR_EMAIL_ERROR) {
-            $this->_enviarEmail();
-        }
-
-        $this
-            ->crear($this->nombreArchivo, "a+")
-            ->escribir($log)
-            ->cerrar();
-
-    }
-
-    function log() {
-
-        $this->_registrar();
-        $excepcion = $this->excepcion;
-
-        $configuracion = Config::obtener();
-
-        $path = $this->ruta;
-        $directorio = "";
-
-        if (Directorios::validar($path . '/Aplicacion/Layout/' . $configuracion->tema . '/error.tpl.php')) {
-            $directorio = $path . '/Aplicacion/Layout/' . $configuracion->tema . '/error.tpl.php';
-        }
-        else {
-            $directorio = $path . DS . DIR_JF . '/Layout/error.tpl.php';
-        }
-
-        $vista = $path . DS . DIR_JF . "/plantillas/error/error.php";
-
-        $dataExcepcion = new \stdClass();
-        $dataExcepcion->mensaje = $excepcion->getMessage();
-        $dataExcepcion->codigo = $excepcion->getCode();
-        $dataExcepcion->archivo = $excepcion->getFile();
-        $dataExcepcion->linea = $excepcion->getLine();
-        $dataExcepcion->traza = $excepcion->getTrace();
-        $dataExcepcion->trazaStr = $excepcion->getTraceAsString();
-
-        $layout = new Layout();
-        $layout::definir($directorio);
-        $data = new \stdClass();
-        $data->excepcion = $dataExcepcion;
-        Data::destruir();
-        Data::inicializar($data);
-        echo $layout->render($vista);
 
     }
 
@@ -151,13 +59,62 @@ class Excepcion {
             throw new \Exception($msj, $codigo);
         }
         catch (\Exception $exception) {
-            Debug::imprimir(["procesada excepcion", $exception], true);
+            self::controller($exception);
         }
 
     }
 
+    private static function _imprimirExcepcion() {
+
+    }
+
+    public static function controller(\Exception $exception) {
+
+        $layout = Layout::obtener();
+
+        $configuracion = Tema::$configuracion;
+
+        $marco = isset($configuracion->layoutError) ? $configuracion->layoutError : $configuracion->layout;
+
+        $layout->_definirPlantilla("$marco.tpl.php");
+        $layout::definirDirectorio(Tema::$directorio);
+        $plantilla = self::_obtenerPlantilla($layout, $exception->getCode());
+
+        $data = new \stdClass();
+        $data->mensaje = $exception->getMessage();
+        $data->codigo = $exception->getCode();
+        $data->traza = $exception->getTrace();
+
+        $vista = new Vista($data);
+
+        $layout->renderizarExcepcion($vista->obtenerPlantilla($plantilla));
+
+    }
+
+    private static function _obtenerPlantilla(&$layout, $codigo) {
+
+        $directorio = Tema::$directorio;
+
+        $rutaPlantilla = "$directorio/plantillas/$codigo.php";
+        $vista = "$codigo.php";
+
+        if (Directorios::validar($rutaPlantilla)) {
+            return $rutaPlantilla;
+        }
+
+        if (Directorios::validar("$directorio/plantillas/error.php")) {
+            return "$directorio/plantillas/error.php";
+        }
+
+        $rutaPlantilla = Estructura::$rutaJida . "/plantillas/error/";
+        $vista = Directorios::validar($rutaPlantilla . "$codigo.php") ? "$codigo.php" : "error.php";
+
+        return $rutaPlantilla . $vista;
+
+    }
+
     public static function capturar(\Exception $e) {
-        Debug::imprimir(["Capturada Excepcion", $e], true);
+        Debug::imprimir(["Capturada Excepcion", $e]);
     }
 
 }

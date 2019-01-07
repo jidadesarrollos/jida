@@ -149,7 +149,7 @@ Trait Procesador {
                 $configuracion = ['href' => $contenido, 'rel' => $etiqueta];
             }
 
-            $urlTema = self::$_urlTema;
+            $urlTema = "/" . self::$_urlTema;
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);
@@ -163,6 +163,7 @@ Trait Procesador {
     private function _imprimirHead($configuracion, $modulo) {
 
         $html = "";
+
         if (property_exists($configuracion, "link")) {
             $html .= $this->_link($configuracion->link, $modulo);
         }
