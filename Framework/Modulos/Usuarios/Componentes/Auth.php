@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Modulos\Usuario\Componentes;
+namespace Jida\Modulos\Usuarios\Componentes;
 
 class Auth {
 

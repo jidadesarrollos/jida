@@ -13,7 +13,7 @@ use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
 use Jida\Manager\Estructura;
 use Jida\Medios\Sesion;
-use Jida\Modulos\Usuario\Usuario;
+use Jida\Modulos\Usuarios\Usuario;
 use Jida\Render\Formulario;
 use Jida\Render\Menu;
 

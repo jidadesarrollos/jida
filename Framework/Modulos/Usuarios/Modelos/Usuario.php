@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Modulos\Usuario\Modelos;
+namespace Jida\Modulos\Usuarios\Modelos;
 
 use Jida\Core\Modelo;
 

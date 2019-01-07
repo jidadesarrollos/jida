@@ -1,9 +1,9 @@
 <?php
 
-namespace Jida\Modulos\Usuario;
+namespace Jida\Modulos\Usuarios;
 
 use Jida\Medios\Sesion;
-use Jida\Modulos\Usuario\Componentes\Permisos;
+use Jida\Modulos\Usuarios\Componentes\Permisos;
 
 class Usuario {
 

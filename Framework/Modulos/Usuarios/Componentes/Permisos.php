@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Modulos\Usuario\Componentes;
+namespace Jida\Modulos\Usuarios\Componentes;
 
 use Jida\Modulos\Usuario\Modelos\Usuario;
 use Jida\Modulos\Usuario\Modelos\UsuarioPerfil;
