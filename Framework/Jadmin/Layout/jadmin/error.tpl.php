@@ -12,7 +12,6 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1>Error jadmin</h1>
             <?= $contenido ?>
         </div>
     </div>

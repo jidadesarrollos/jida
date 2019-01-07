@@ -1,18 +1,29 @@
-<h3>Excepción Capturada</h3>
+<header class="page-header">
+    <h1>Excepción Capturada</h1>
+</header>
 
-<h4>Excepcion: <?= $this->mensaje ?></h4>
-<h5>Código <?= $this->codigo ?></h5>
+
+<h5>Excepcion: <?= $this->mensaje ?></h5>
+<h6>Código <?= $this->codigo ?></h6>
 
 <?php foreach ($this->traza as $i => $item) { ?>
-
-    <UI>
+    <ul>
         <LI>Traza <?= $i ?>
             <ul>
-                <li>Archivo: <?= $item['file'] ?></li>
-                <li>Linea: <?= $item['line'] ?></li>
-                <li><?= "{$item['class']}{$item['type']}{$item['function']}" ?></li>
+                <?php if (isset($item['file'])): ?>
+                    <li>Archivo: <?= $item['file'] ?></li>
+                <?php endif; ?>
+
+                <?php if (isset($item['line'])): ?>
+                    <li>Linea: <?= $item['line'] ?></li>
+                <?php endif; ?>
+
+                <?php if (isset($item['class'])): ?>
+                    <li><?= "{$item['class']}{$item['type']}{$item['function']}" ?></li>
+                <?php endif; ?>
+
             </ul>
         </LI>
-    </UI>
+    </ul>
 
 <?php } ?>

@@ -27,7 +27,7 @@ class JControl extends Controlador {
         parent::__construct();
         $this->_usuario = Sesion::$usuario;
 
-        throw new \Exception("erro 1", 404);
+        #throw new \Exception("erro 1", 404);
 
         $this->_inicializar();
 

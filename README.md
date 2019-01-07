@@ -2,4 +2,4 @@
 
 ### Instalación
 
-composer create-project --perfer-dist jida/framework@0.7.x-dev
+composer create-project --perfer-dist jida/framework@0.7.x-dev nombre-aplicacion

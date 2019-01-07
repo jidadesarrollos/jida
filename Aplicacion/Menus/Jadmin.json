@@ -9,10 +9,7 @@
       "submenu": {
         "class": "list-unstyled",
         "items": {
-          "clientes": {
-            "label": "Clientes",
-            "url": "/jadmin/clientes"
-          },
+
           "empresas": {
             "label": "Empresas",
             "url": "/jadmin/empresas"
