@@ -2,8 +2,8 @@
 
 namespace Jida\Modulos\Usuarios\Componentes;
 
-use Jida\Modulos\Usuario\Modelos\Usuario;
-use Jida\Modulos\Usuario\Modelos\UsuarioPerfil;
+use Jida\Modulos\Usuarios\Modelos\Usuario;
+use Jida\Modulos\Usuarios\Modelos\UsuarioPerfil;
 
 class Permisos {
 
