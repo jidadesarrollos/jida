@@ -22,7 +22,7 @@ class Config {
     const ZONA_HORARIA = 'America/Caracas';
     const MODELO_USUARIO = '\Jida\Modelos\User';
     const LOGO_APP = '';
-    const PATH_JIDA = "";
+    const PATH_JIDA = "Framework";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
     /**
