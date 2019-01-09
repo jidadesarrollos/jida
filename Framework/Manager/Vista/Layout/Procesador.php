@@ -7,6 +7,7 @@
 
 namespace Jida\Manager\Vista\Layout;
 
+use Jida\Configuracion\Config;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
 use Jida\Render\Selector;
@@ -19,16 +20,33 @@ Trait Procesador {
     ];
 
     /**
+     * @deprecated
+     * @see imprimirMeta
+     */
+    public function printHeadTags () {
+
+        $msj = "El metodo printHeadTags se encuentra en desuso, por favor reemplazar por imprimir meta";
+        Excepcion::procesar($msj, self::$_ce . 3);
+
+    }
+
+    public function imprimirMeta () {
+
+        return Meta::imprimir($this->_data);
+
+    }
+
+    /**
      * Imprime las etiquetas link registradas en la configuración del tema
      *
      */
-    private function _imprimirCSS($librerias, $modulo) {
+    private function _imprimirCSS ($librerias, $modulo) {
 
         return $this->_css($librerias, $modulo);
 
     }
 
-    private function _css($librerias, $modulo) {
+    private function _css ($librerias, $modulo) {
 
         $html = "";
 
@@ -56,17 +74,22 @@ Trait Procesador {
 
             if (strpos($urlLibreria, "http") === false) {
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
-                $urlLibreria = "//$urlLibreria";
+
+                if (strpos($urlLibreria, '{raiz}')==0) {
+                    $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
+                }
+                else
+                    $urlLibreria = "//$urlLibreria";
             }
 
             $html .= Selector::crear('link',
-                [
-                    'href' => $urlLibreria,
-                    'rel'  => 'stylesheet',
-                    'type' => 'text/css'
-                ],
-                null,
-                2);
+                                     [
+                                         'href' => $urlLibreria,
+                                         'rel'  => 'stylesheet',
+                                         'type' => 'text/css'
+                                     ],
+                                     null,
+                                     2);
 
         }
 
@@ -78,13 +101,13 @@ Trait Procesador {
      * Imprime las etiquetas script registradas en la configuración del tema
      *
      */
-    private function _imprimirJS($librerias, $modulo) {
+    private function _imprimirJS ($librerias, $modulo) {
 
         return $this->_js($librerias, $modulo);
 
     }
 
-    private function _js($librerias, $modulo) {
+    private function _js ($librerias, $modulo) {
 
         $html = "";
 
@@ -116,10 +139,26 @@ Trait Procesador {
             }
 
             $html .= Selector::crear('script',
-                ['src' => $urlLibreria],
-                null,
-                2);
+                                     ['src' => $urlLibreria],
+                                     null,
+                                     2);
 
+        }
+
+        return $html;
+
+    }
+
+    private function _imprimirHead ($configuracion, $modulo) {
+
+        $html = "";
+
+        if (property_exists($configuracion, "link")) {
+            $html .= $this->_link($configuracion->link, $modulo);
+        }
+
+        if (property_exists($configuracion, "css")) {
+            $html .= $this->_css($configuracion->css, $modulo);
         }
 
         return $html;
@@ -130,7 +169,7 @@ Trait Procesador {
      * Imprime las etiquetas links registradas en la configuración del tema
      *
      */
-    private function _link($etiquetas) {
+    private function _link ($etiquetas) {
 
         $html = "";
         foreach ($etiquetas as $etiqueta => $contenido) {
@@ -157,39 +196,6 @@ Trait Procesador {
         }
 
         return $html;
-
-    }
-
-    private function _imprimirHead($configuracion, $modulo) {
-
-        $html = "";
-
-        if (property_exists($configuracion, "link")) {
-            $html .= $this->_link($configuracion->link, $modulo);
-        }
-
-        if (property_exists($configuracion, "css")) {
-            $html .= $this->_css($configuracion->css, $modulo);
-        }
-
-        return $html;
-
-    }
-
-    /**
-     * @deprecated
-     * @see imprimirMeta
-     */
-    public function printHeadTags() {
-
-        $msj = "El metodo printHeadTags se encuentra en desuso, por favor reemplazar por imprimir meta";
-        Excepcion::procesar($msj, self::$_ce . 3);
-
-    }
-
-    public function imprimirMeta() {
-
-        return Meta::imprimir($this->_data);
 
     }
 
