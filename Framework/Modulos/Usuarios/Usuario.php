@@ -7,26 +7,26 @@ use Jida\Modulos\Usuarios\Componentes\Permisos;
 
 class Usuario {
 
+    private static $_instancia;
     /**
      * @var Permisos $permisos
      */
     public $permisos;
-
     private $_modelo;
-    private static $_instancia;
 
-    function __construct($id = null) {
+    function __construct ($id = null) {
 
         $this->_modelo = new Modelos\Usuario($id);
         $this->_inicializar();
 
     }
 
-    private function _inicializar() {
+    private function _inicializar () {
+
         $this->permisos = new Permisos($this->_modelo);
     }
 
-    static function iniciarSesion($usuario, $clave) {
+    static function iniciarSesion ($usuario, $clave) {
 
         $instancia = self::instancia();
 
@@ -53,7 +53,7 @@ class Usuario {
     /**
      * Retorna la instancia única del objeto usuario
      */
-    static function instancia() {
+    static function instancia () {
 
         if (self::$_instancia) {
             return self::$_instancia;
@@ -72,7 +72,7 @@ class Usuario {
 
     }
 
-    public function obtener($propiedad) {
+    public function obtener ($propiedad) {
 
         if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
             $this->_modelo->{$propiedad};
@@ -82,7 +82,14 @@ class Usuario {
 
     }
 
-    public function cambiarClave($claveVieja, $claveNueva){
-        return true;
+    public function cambiarClave ($claveVieja, $claveNueva) {
+
+        if ($claveVieja == $this->_modelo->clave) {
+            $this->_modelo->clave = $claveNueva;
+            $this->_modelo->salvar();
+            return true;
+        }
+        else return false;
+
     }
 }
