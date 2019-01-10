@@ -81,4 +81,8 @@ class Usuario {
         return false;
 
     }
+
+    public function cambiarClave($claveVieja, $claveNueva){
+        return true;
+    }
 }

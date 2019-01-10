@@ -15,9 +15,11 @@
                 <div class="col-sm-6">
                     <form id="form-contacto" class="form-contacto" data-toggle="validator" method="post" action="">
                         <?php
+
                         if (\Jida\Medios\Sesion::get('msjContacto')):
                             echo \Jida\Medios\Sesion::get('msjContacto');
                             \Jida\Medios\Sesion::destroy('msjContacto');
+
                         endif;
                         ?>
                         <div class="form-group">

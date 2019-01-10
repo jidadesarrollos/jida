@@ -1,0 +1,427 @@
+/* 
+=============================================== 
+Table Of Content
+=============================================== 
+
+1. Global CSS HTML
+  1.1 Heading
+  1.2 Default Ul li
+  1.3 Default Link Selection & Hr
+  1.4 Normal Heading and Padding
+  1.5 Button style Lool Section
+  1.6 Form Lool Section
+
+-------------------------------------------- */
+/* 
+=============================================== 
+1. Global CSS HTML
+===============================================
+*/
+.normal-heading {
+  margin: 0 auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mar-top-10 {
+  margin-top: 10px;
+}
+.mar-top-15 {
+  margin-top: 15px;
+}
+.mar-top-15i {
+  margin-top: 15px !important;
+}
+.mar-top-20 {
+  margin-top: 20px;
+}
+.mar-top-30 {
+  margin-top: 30px;
+}
+.mar-right-10 {
+  margin-right: 10px;
+}
+.mar-left-10 {
+  margin-left: 10px;
+}
+.mar-btm-0 {
+  margin-bottom: 0;
+}
+.mar-btm-10 {
+  margin-bottom: 10px;
+}
+.mar-btm-15 {
+  margin-bottom: 15px;
+}
+.mar-btm-20 {
+  margin-bottom: 20px;
+}
+.no-mar-right {
+  margin-right: 0 !important;
+}
+.no-pad-right {
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .no-pad-right {
+    padding-right: 0;
+  }
+}
+.no-pad-left {
+  padding-left: 15px;
+}
+@media (min-width: 768px) {
+  .no-pad-left {
+    padding-left: 0;
+  }
+}
+.pad-top-10 {
+  padding-top: 10px;
+}
+.pad-btm-10 {
+  padding-bottom: 10px;
+}
+.no-pad-page {
+  padding: 0 !important;
+  margin-bottom: 0;
+}
+.img-bow-center {
+  display: block;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .img-bow-center-res {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.img-full-size {
+  width: 100%;
+}
+body {
+  font-family: 'latoregular';
+  color: #000000;
+  background-color: #000000;
+}
+/* 
+=============================================== 
+1.1 Heading
+===============================================
+*/
+h1 {
+  font-family: 'montserratbold';
+  font-size: 33px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) {
+  h1 {
+    font-size: 35px;
+  }
+}
+h2 {
+  font-family: 'negra';
+  font-size: 40px;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) {
+  h2 {
+    font-size: 50px;
+  }
+}
+h3 {
+  font-family: 'latoregular';
+  -webkit-font-smoothing: antialiased;
+}
+h4 {
+  line-height: 25px;
+}
+h5 {
+  font-family: 'montserratregular';
+  -webkit-font-smoothing: antialiased;
+}
+label h5 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+/* 
+=============================================== 
+1.2 Default Ul li 
+===============================================
+*/
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+/* 
+=============================================== 
+1.3 Default Link Selection & Hr
+===============================================
+*/
+a {
+  color: #ffffff;
+}
+a:hover {
+  color: #e6e6e6;
+}
+a:hover,
+a:focus,
+a:active {
+  outline: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+}
+hr {
+  border-top: 1px #313131 solid;
+  clear: both;
+}
+/* 
+=============================================== 
+1.4 Normal Heading and Padding
+===============================================
+*/
+@media (min-width: 992px) {
+  .container {
+    width: 960px;
+  }
+}
+.pull-top-header {
+  margin-top: 70px;
+}
+.normal-heading {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.pad-top-0i {
+  padding-top: 0 !important;
+}
+.mar-both-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+.center-hr {
+  height: 2px;
+  background-color: #000000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+.img-full {
+  width: 100%;
+  display: block;
+}
+@media (max-width: 768px) {
+  .img-full {
+    margin: 0 auto;
+    max-width: 320px !important;
+  }
+}
+.img-center {
+  display: block;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .img-center {
+    max-width: 320px !important;
+  }
+}
+.img-preloder-lool {
+  display: block;
+  margin: 0 auto;
+}
+.jscroll-loading {
+  text-align: center;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.clear {
+  clear: both;
+}
+@media (max-width: 992px) {
+  .one-image {
+    min-height: 249px !important;
+  }
+}
+@media (min-width: 768px) {
+  .row-global {
+    margin-left: -7.5px;
+    margin-right: -7.5px;
+  }
+}
+@media (min-width: 768px) {
+  .pad-global {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+  }
+}
+/* 
+=============================================== 
+1.5 Button style Lool Section
+===============================================
+*/
+.btn-lool {
+  text-transform: uppercase;
+  border: none;
+  display: inline-block;
+}
+.btn-lool:focus,
+.btn-lool:active,
+.btn-lool.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.btn-lool.btn-black-square {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'montserratregular';
+  padding: 10px 15px;
+  letter-spacing: 1px;
+  border: solid 1px #ffffff;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.btn-lool.btn-black-square:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border: solid 1px #000000;
+  text-decoration: none;
+}
+.btn-lool.btn-green-square {
+  background-color: #90e3aa;
+  color: #ffffff;
+  font-family: 'montserratregular';
+  padding: 10px 15px;
+  letter-spacing: 1px;
+  border: solid 1px #ffffff;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.btn-lool.btn-green-square:hover {
+  background-color: #3fce6c;
+  color: #ffffff;
+}
+.btn-lool.btn-lool-yellow {
+  background-color: #f4cd59;
+  color: #ffffff;
+  padding: 15px 30px;
+  font-size: 15px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+@media (min-width: 992px) {
+  .btn-lool.btn-lool-yellow {
+    font-size: 20px;
+  }
+}
+.btn-lool.btn-lool-yellow:hover {
+  background-color: #f1bf29;
+  color: #ffffff;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.btn-lool-full {
+  width: 100%;
+}
+.owl-next,
+.owl-prev {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  font-family: 'montserratregular';
+  text-transform: uppercase;
+  padding: 10px 15px !important;
+  letter-spacing: 1px;
+  border: solid 1px #ffffff;
+  margin: 0 !important;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+.owl-next {
+  float: right;
+}
+.owl-prev {
+  float: left;
+}
+.icon-bar {
+  background-color: #000000;
+}
+.btn-default-lool {
+  border: solid 1px #000000;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  background-color: #ffffff;
+}
+.caret-lool {
+  right: 10px;
+  top: 10px;
+  position: absolute;
+  border-top: 7px solid;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+}
+/* 
+=============================================== 
+1.6 Form Lool Section
+===============================================
+*/
+.font-md {
+  font-size: 20px;
+}
+.form-lool {
+  font-family: 'montserratregular';
+  border: solid 1px #ffffff;
+  color: #ffffff;
+  box-shadow: none;
+  background-color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  padding: 20px 10px;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.form-lool:focus {
+  box-shadow: none;
+  border: solid 1px #9640d9;
+}
+.form-default-lool {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.form-default-lool:focus {
+  box-shadow: none;
+}

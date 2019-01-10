@@ -1,0 +1,355 @@
+/* 
+=============================================== 
+Table Of Content
+=============================================== 
+
+1. Global CSS HTML
+  1.1 Heading
+  1.2 Default Ul li
+  1.3 Default Link Selection & Hr
+  1.4 Normal Heading and Padding
+  1.5 Button style Lool Section
+  1.6 Form Lool Section
+
+-------------------------------------------- */
+/*
+=============================================== 
+1. Global CSS HTML
+===============================================
+*/
+@import "variable.less";
+
+body {
+  font-family: 'latoregular';
+  color: @black;
+  background-color: @black;
+}
+
+/* 
+=============================================== 
+1.1 Heading
+===============================================
+*/
+
+h1 {
+  font-family: 'montserratbold';
+  font-size: 33px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  -webkit-font-smoothing: antialiased;
+  @media (min-width: @screen-sm-min) {
+    font-size: 35px;
+  }
+}
+
+h2 {
+  font-family: 'negra';
+  font-size: 40px;
+  -webkit-font-smoothing: antialiased;
+  @media (min-width: @screen-sm-min) {
+    font-size: 50px;
+  }
+}
+
+h3 {
+  font-family: 'latoregular';
+  -webkit-font-smoothing: antialiased;
+}
+
+h4 {
+  line-height: 25px;
+}
+
+h5 {
+  font-family: 'montserratregular';
+  -webkit-font-smoothing: antialiased;
+}
+
+label {
+  h5 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+}
+
+/* 
+=============================================== 
+1.2 Default Ul li 
+===============================================
+*/
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 
+=============================================== 
+1.3 Default Link Selection & Hr
+===============================================
+*/
+
+a {
+  color: @white;
+  &:hover {
+    color: darken(@white, 10%);
+  }
+  &:hover, &:focus, &:active {
+    outline: none;
+    // border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+}
+
+hr {
+  border-top: 1px #313131 solid;
+  clear: both;
+}
+
+/* 
+=============================================== 
+1.4 Normal Heading and Padding
+===============================================
+*/
+
+.container {
+  @media (min-width: @screen-md-min) {
+    width: 960px;
+  }
+}
+
+.pull-top-header {
+  margin-top: 70px;
+}
+
+.normal-heading {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.pad-top-0i {
+  padding-top: 0 !important;
+}
+
+.mar-both-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.center-hr {
+  height: 2px;
+  background-color: @black;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.img-full {
+  width: 100%;
+  display: block;
+  @media (max-width: @screen-sm-min) {
+    margin: 0 auto;
+    max-width: 320px !important;
+  }
+}
+
+.img-center {
+  display: block;
+  margin: 0 auto;
+  @media (max-width: @screen-sm-min) {
+    max-width: 320px !important;
+  }
+}
+
+.img-preloder-lool {
+  display: block;
+  margin: 0 auto;
+}
+
+.jscroll-loading {
+  text-align: center;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.clear {
+  clear: both;
+}
+
+.one-image {
+  @media (max-width: @screen-md-min) {
+    min-height: 249px !important;
+  }
+}
+
+.row-global {
+  @media (min-width: @screen-sm-min) {
+    margin-left: -7.5px;
+    margin-right: -7.5px;
+  }
+}
+
+.pad-global {
+  @media (min-width: @screen-sm-min) {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+  }
+}
+
+/* 
+=============================================== 
+1.5 Button style Lool Section
+===============================================
+*/
+
+.btn-lool {
+  text-transform: uppercase;
+  border: none;
+  display: inline-block;
+  &:focus, &:active, &.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  &.btn-black-square {
+    background-color: @black;
+    color: @white;
+    font-family: 'montserratregular';
+    padding: 10px 15px;
+    letter-spacing: 1px;
+    border: solid 1px @white;
+    .transition(0.2s);
+    &:hover {
+      background-color: @white;
+      color: @black;
+      border: solid 1px @black;
+      text-decoration: none;
+    }
+  }
+
+  &.btn-green-square {
+    background-color: @green;
+    color: @white;
+    font-family: 'montserratregular';
+    padding: 10px 15px;
+    letter-spacing: 1px;
+    border: solid 1px @white;
+    .transition(0.2s);
+    &:hover {
+      background-color: darken(@green, 20%);
+      color: @white;
+    }
+  }
+
+  &.btn-lool-yellow {
+    background-color: @yellow;
+    color: @white;
+    padding: 15px 30px;
+    font-size: 15px;
+    @media (min-width: @screen-md-min) {
+      font-size: 20px;
+    }
+    .round(50px);
+    .transition(0.2s);
+    &:hover {
+      background-color: darken(@yellow, 10%);
+      color: @white;
+      .round(0);
+    }
+  }
+}
+
+.btn-lool-full {
+  width: 100%;
+}
+
+.owl-next, .owl-prev {
+  background-color: @black !important;
+  color: @white !important;
+  font-family: 'montserratregular';
+  text-transform: uppercase;
+  padding: 10px 15px !important;
+  letter-spacing: 1px;
+  border: solid 1px @white;
+  margin: 0 !important;
+  .transition(0.2s);
+  .round(0) !important;
+}
+
+.owl-next {
+  float: right;
+}
+
+.owl-prev {
+  float: left;
+}
+
+.icon-bar {
+  background-color: @black;
+}
+
+.btn-default-lool {
+  border: solid 1px @black;
+  box-shadow: none;
+  .round(0);
+  background-color: @white;
+}
+
+.caret-lool {
+  right: 10px;
+  top: 10px;
+  position: absolute;
+  border-top: 7px solid;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+}
+
+/* 
+=============================================== 
+1.6 Form Lool Section
+===============================================
+*/
+
+.font-md {
+  font-size: 20px;
+}
+
+.form-lool {
+  font-family: 'montserratregular';
+  border: solid 1px @white;
+  // font-style: italic;
+  color: @white;
+  box-shadow: none;
+  background-color: @black;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  .round(0);
+  padding: 20px 10px;
+  .transition(0.2s);
+  &:focus {
+    box-shadow: none;
+    border: solid 1px @blue;
+  }
+}
+
+.form-default-lool {
+  .round(0);
+  box-shadow: none;
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.ip-header {
+  z-index: 1100 !important;
+}
+
