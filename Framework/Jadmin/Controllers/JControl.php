@@ -90,7 +90,7 @@ class JControl extends Controlador {
     public function cambioClave () {
 
         $formCambioClave = new Formulario('jida/CambioClave');
-        $formCambioClave->boton('principal', 'Iniciar sesión');
+        $formCambioClave->boton('principal', 'Cambiar Clave');
         $this->data([
                         'formulario' => $formCambioClave->render()
                     ]);
