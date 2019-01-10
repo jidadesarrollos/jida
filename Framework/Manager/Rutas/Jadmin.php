@@ -8,6 +8,7 @@ class Jadmin {
     private $_ce = 10004;
     static public $modulos = [
         'Formularios',
-        'Menus'
+        'Menus',
+        'Usuario'
     ];
 }
