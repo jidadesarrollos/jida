@@ -44,7 +44,7 @@ class CSS {
     }
 
     static function archivos() {
-        Debug::imprimir([\Jida\Manager\Vista\Tema::$url], true);
+
         $clase = new CSS();
 
         return $clase->css();

@@ -261,7 +261,7 @@ class Formulario extends Selector {
      */
     private function _obtRutaFormulario($form) {
 
-        $partes = explode("/", strtolower($form));
+        $partes = explode("/", $form);
 
         if (count($partes) === 1) {
             return Estructura::$directorio . "/Aplicacion/Formularios/$form";
@@ -279,7 +279,7 @@ class Formulario extends Selector {
             $ruta .= '/Modulos/' . ucfirst(array_shift($partes));
         }
 
-        $ruta .= '/Formularios/' . array_shift($partes);
+        $ruta .= '/Formularios/' . ucfirst(array_shift($partes));
 
         return $ruta;
 

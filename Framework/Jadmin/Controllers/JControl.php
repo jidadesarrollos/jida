@@ -22,7 +22,7 @@ class JControl extends Controlador {
     protected $_perfiles = ['jadmin', 'admin'];
     protected $_usuario;
 
-    function __construct () {
+    function __construct() {
 
         parent::__construct();
         $this->_usuario = Sesion::$usuario;
@@ -33,7 +33,7 @@ class JControl extends Controlador {
 
     }
 
-    private function _inicializar () {
+    private function _inicializar() {
 
         $this->data('nombreApp', "Jida");
         $this->layout('jadmin');
@@ -46,15 +46,15 @@ class JControl extends Controlador {
         $menu = new Menu('/jadmin/menu');
 
         $this->data([
-                        'menu'      => $menu->render(),
-                        'nombreApp' => $nombreApp,
-                        'urlBase'   => $urlBase,
-                        'urlTema'   => $urlTema
-                    ]);
+            'menu'      => $menu->render(),
+            'nombreApp' => $nombreApp,
+            'urlBase'   => $urlBase,
+            'urlTema'   => $urlTema
+        ]);
 
     }
 
-    public function login () {
+    public function login() {
 
         $this->layout('login');
 
@@ -75,43 +75,46 @@ class JControl extends Controlador {
         }
 
         $this->data([
-                        'formulario' => $formLogin->render()
-                    ]);
+            'formulario' => $formLogin->render()
+        ]);
 
     }
 
-    public function logout () {
+    public function logout() {
 
         Sesion::destruir();
         $this->redireccionar('jadmin');
 
     }
 
-    public function cambioClave () {
+    public function cambioClave() {
 
-        $formCambioClave = new Formulario('jida/CambioClave');
+        $formCambioClave = new Formulario('jida/cambioClave');
         $formCambioClave->boton('principal', 'Cambiar Clave');
+
         if ($this->post('btnCambioClave')) {
+
             $claveVieja = $this->post('clave_actual');
             $claveNueva = $this->post('clave_nueva');
             $user = Sesion::$usuario;
             $resp = $user->cambiarClave($claveVieja, $claveVieja);
-        }
-        $this->data([
-                        'formulario' => $formCambioClave->render()
-                    ]);
 
+        }
+
+        $this->data([
+            'formulario' => $formCambioClave->render()
+        ]);
 
     }
 
-    function phpInfo () {
+    function phpInfo() {
 
         echo phpinfo();
         exit;
 
     }
 
-    protected function _validarSesion () {
+    protected function _validarSesion() {
 
         $metodo = Estructura::$metodo;
         $aceptados = ['login', 'logout'];
