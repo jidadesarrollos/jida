@@ -73,13 +73,16 @@ Trait Procesador {
             $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
 
             if (strpos($urlLibreria, "http") === false) {
+
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
-                if (strpos($urlLibreria, '{raiz}')==0) {
+                if (strpos($urlLibreria, '{raiz}') === 0) {
                     $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
                 }
-                else
-                    $urlLibreria = "//$urlLibreria";
+                else{
+                    $urlLibreria = '//'.$urlLibreria;
+                    //$urlLibreria = str_replace('localhost', "", $urlLibreria);
+                }
             }
 
             $html .= Selector::crear('link',
@@ -135,7 +138,14 @@ Trait Procesador {
 
             if (strpos($urlLibreria, "http") === false) {
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
-                $urlLibreria = "//$urlLibreria";
+
+                if (strpos($urlLibreria, '{raiz}') === 0) {
+                    $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
+                }
+                else{
+                    $urlLibreria = '//'.$urlLibreria;
+                    //$urlLibreria = str_replace('localhost', "", $urlLibreria);
+                }
             }
 
             $html .= Selector::crear('script',

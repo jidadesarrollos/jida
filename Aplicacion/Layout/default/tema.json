@@ -2,14 +2,19 @@
   "link": {
     "shortcut icon": "{tema}/htdocs/images/favicon.ico"
   },
-  "layout": "jadmin",
+  "layout": "lool",
   "layoutError": "error",
   "dev": {
     "css": {
       "principal": {
-        "bootstrap": "{raiz}/node_modules/bootstrap/dist/css/bootstrap.min.css",
-        "font-awesome": "{raiz}/node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-        "style": "{tema}/htdocs/css/style.css"
+        "bootstrap" : "{tema}/htdocs/stylesheets/css/bootstrap.css",
+        "font"      : "{tema}/htdocs/stylesheets/css/font-family.css",
+        "style"     : "{tema}/htdocs/stylesheets/css/style.css",
+        "global"    : "{tema}/htdocs/stylesheets/css/global.css",
+        "owl"       : "{tema}/htdocs/stylesheets/css/owl-carousel/owl.carousel.css",
+        "owl-theme" : "{tema}/htdocs/stylesheets/css/owl-carousel/owl.theme.css",
+        "animate"   : "{tema}/htdocs/stylesheets/css/animate.css",
+        "effect2"   : "{tema}/htdocs/stylesheets/css/effect2.css"
       },
       "login": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
@@ -19,16 +24,15 @@
     },
     "js": {
       "principal": {
-        "jquery": "{tema}/htdocs/js/jquery.min.js",
-        "modernizr": "{tema}/htdocs/js/modernizr.min.js",
-        "moment": "{tema}/htdocs/js/moment.min.js",
-        "popper": "{tema}/htdocs/js/popper.min.js",
-        "bootstrap": "{tema}/htdocs/js/bootstrap.min.js",
-        "detect": "{tema}/htdocs/js/detect.js",
-        "fastclick": "{tema}/htdocs/js/fastclick.js",
-        "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",
-        "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
-        "jadmin": "{tema}/htdocs/js/jadmin.js"
+        "modernizr"  : "{tema}/htdocs/javascripts/modernizr.custom.js",
+        "jq"         : "{tema}/htdocs/javascripts/jquery.js",
+        "bt"         : "{tema}/htdocs/javascripts/bootstrap.js",
+        "custom"     : "{tema}/htdocs/javascripts/custom.js",
+        "owl"        : "{tema}/htdocs/javascripts/owl-carousel/owl.carousel.js",
+        "jscroll"    : "{tema}/htdocs/javascripts/jscroll/jquery.jscroll.js",
+        "classie"    : "{tema}/htdocs/javascripts/classie.js",
+        "pathLoader" : "{tema}/htdocs/javascripts/pathLoader.js",
+        "main"       : "{tema}/htdocs/javascripts/main.js"
       }
     }
   },
