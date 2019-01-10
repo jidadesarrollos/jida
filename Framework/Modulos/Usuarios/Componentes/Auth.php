@@ -14,6 +14,6 @@ class Auth {
 
     }
     function cambioClave ($claveVieja, $claveNueva){
-        Sesion::$usuario->obtener();
+
     }
 }

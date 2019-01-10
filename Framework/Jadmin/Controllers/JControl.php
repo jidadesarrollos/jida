@@ -91,6 +91,12 @@ class JControl extends Controlador {
 
         $formCambioClave = new Formulario('jida/CambioClave');
         $formCambioClave->boton('principal', 'Cambiar Clave');
+        if ($this->post('btnCambioClave')) {
+            $claveVieja = $this->post('clave_actual');
+            $claveNueva = $this->post('clave_nueva');
+            $user = Sesion::$usuario;
+            $resp = $user->cambiarClave($claveVieja, $claveVieja);
+        }
         $this->data([
                         'formulario' => $formCambioClave->render()
                     ]);
