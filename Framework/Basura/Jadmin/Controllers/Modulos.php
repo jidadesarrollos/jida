@@ -3,7 +3,7 @@
 namespace Jida\Jadmin\Controllers;
 
 use Jida\Render as Render;
-use \Jida\helpers AS Helpers;
+use \Jida\Medios as Medios;
 
 class Modulos extends JController {
 
@@ -43,7 +43,7 @@ class Modulos extends JController {
         $result = [];
         $modulosCreados = self::arregloModulos('Aplicacion\Modulos');
 
-        // helpers\debug::imprimir($modulosCreados,true);
+        // Medios\debug::imprimir($modulosCreados,true);
 
         for ($i = 0; $i < count($modulosCreados) - 1; $i++) {
             $linea[] = '1';
@@ -54,7 +54,7 @@ class Modulos extends JController {
             $i++;
         }
 
-        // helpers\debug::imprimir($result,true);
+        // Medios\debug::imprimir($result,true);
 
         return $result;
 

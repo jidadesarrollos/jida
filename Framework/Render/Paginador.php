@@ -8,7 +8,7 @@
 */
 namespace Jida\Render;
 use Jida\Core  		as Core;
-use Jida\Medios 	as Helpers;
+use Jida\Medios 	as Medios;
 class Paginador extends  ListaSelector{
 	use Core\ObjetoManager;
 	var $linkFinal 			=TRUE;

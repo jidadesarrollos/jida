@@ -301,7 +301,7 @@ class Formulario extends Selector {
     private function _cargarFormulario($form, $dataEdicion) {
 
         if (!strrpos($form, ".json")) {
-            $form = $form . ".json";
+            $form = ucfirst($form) . ".json";
         }
 
         $path = $this->_obtRutaFormulario($form);

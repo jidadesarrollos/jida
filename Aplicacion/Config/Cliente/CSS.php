@@ -2,7 +2,7 @@
 
 namespace App\Config\Cliente;
 
-use App\Config\Configuracion;
+use Jida\Medios\Debug;
 
 /**
  * Archivos CSS Requeridos
@@ -14,32 +14,39 @@ class CSS {
 
     private $css = [
         [
-            'href' => Configuracion::URL_BASE . "/htdocs/img/favicon/favicon-32x32.png",
+            'href' => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/images/favicon-32x32.png',
             'rel'  => 'shortcut icon'
         ],
         'dev'    => [
-            'bootstrap' => Configuracion::URL_BASE . '/htdocs/bower_components/bootstrap/dist/css/bootstrap.min.css',
-            'principal' => Configuracion::URL_BASE . '/Aplicacion/Layout/default/htdocs/css/principal.css'
-        ],
-        'prod'   => [
+            'bootstrap' => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/bootstrap.css',
+            'font'      => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/font-family.css',
+            'style'     => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/style.css',
+            'global'    => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/global.css',
+            'owl'       => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/owl-carousel/owl.carousel.css',
+            'owl-theme' => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/owl-carousel/owl.theme.css',
+            'animate'   => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/animate.css',
+            'effect2'   => URL_BASE . URL_HTDOCS_TEMAS . 'default/assets/stylesheets/css/effect2.css',
 
         ],
+        'prod'   => [
+        ],
         'jadmin' => [
-            'bootstrap'    => Configuracion::URL_BASE . '/htdocs/bower_components/bootstrap/dist/css/bootstrap.min.css',
-            'font-awesome' => Configuracion::URL_BASE . '/Framework/htdocs/css/font-awesome.min.css',
-            'admin'        => Configuracion::URL_BASE . '/Framework/htdocs/css/dist/jadmin.css'
+            'bootstrap'    => URL_BASE . URL_BOWER . 'bootstrap/dist/css/bootstrap.min.css',
+            'font-awesome' => URL_BASE . URL_HTDOCS_JADMIN . 'css/font-awesome.min.css',
+            'admin'        => URL_BASE . URL_HTDOCS_JADMIN . 'css/dist/jadmin.css',
         ]
     ];
 
-    function css () {
+    function css() {
 
         return $this->css;
 
     }
 
-    static function archivos () {
-
+    static function archivos() {
+        Debug::imprimir([\Jida\Manager\Vista\Tema::$url], true);
         $clase = new CSS();
+
         return $clase->css();
 
     }

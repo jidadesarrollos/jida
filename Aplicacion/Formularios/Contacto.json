@@ -1,0 +1,66 @@
+{
+  "nombre": "Contacto",
+  "query": "",
+  "estructura": "",
+  "identificador": "Contacto",
+  "clave_primaria": "",
+  "campos": [
+    {
+      "label": "Nombre",
+      "name": "nombre",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar su nombre"
+        }
+      },
+      "orden": "1",
+      "placeholder": "Nombre",
+      "visibilidad": "1",
+      "id": "nombre",
+      "type": "text"
+    },
+    {
+      "label": "Correo electrónico",
+      "name": "correo",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar un correo electrónico"
+        },
+        "email": {
+          "mensaje": "Debe ingresar un correo electrónico válido"
+        }
+      },
+      "orden": "2",
+      "placeholder": "tucorreo@dominio.com",
+      "visibilidad": "1",
+      "id": "correo",
+      "type": "text"
+    },
+    {
+      "label": "Asunto",
+      "name": "asunto",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar un asunto"
+        }
+      },
+      "orden": "3",
+      "visibilidad": "1",
+      "id": "asunto",
+      "type": "text"
+    },
+    {
+      "label": "Mensaje",
+      "name": "mensaje",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar un mensaje"
+        }
+      },
+      "orden": "4",
+      "visibilidad": "1",
+      "id": "mensaje",
+      "type": "textarea"
+    }
+  ]
+}

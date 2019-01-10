@@ -10,7 +10,7 @@ namespace Jida\Core;
 
 use Jida\Render as Render;
 use Jida\Modelos as Modelos;
-use \Jida\Medios as Helpers;
+use \Jida\Medios as Medios;
 use \Jida\Medios\Debug as Debug;
 
 trait UsuarioManager {
