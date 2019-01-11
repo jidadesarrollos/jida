@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
-class App extends \Jida\Core\Controller {
+use Jida\Core\Controlador\Control;
+
+class App extends Control {
 
     function __construct() {
 
@@ -12,7 +14,7 @@ class App extends \Jida\Core\Controller {
 
         $js = [];
 
-        $this->dv->incluirJS($js, URL_BASE . URL_HTDOCS_TEMAS . '');
+        //$this->dv->incluirJS($js, URL_BASE . URL_HTDOCS_TEMAS . '');
 
         $this->data([
             'title'   => NOMBRE_APP,
