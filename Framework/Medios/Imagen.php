@@ -12,6 +12,7 @@
 
 namespace Jida\Medios;
 
+
 class Archivo extends Imagen {
 
 }
