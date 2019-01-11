@@ -56,7 +56,7 @@ class JControl extends Controlador {
 
     public function login() {
 
-        $this->layout('login');
+        /*$this->layout('login');
 
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
@@ -76,7 +76,7 @@ class JControl extends Controlador {
 
         $this->data([
             'formulario' => $formLogin->render()
-        ]);
+        ]);*/
 
     }
 
@@ -84,26 +84,6 @@ class JControl extends Controlador {
 
         Sesion::destruir();
         $this->redireccionar('jadmin');
-
-    }
-
-    public function cambioClave() {
-
-        $formCambioClave = new Formulario('jida/cambioClave');
-        $formCambioClave->boton('principal', 'Cambiar Clave');
-
-        if ($this->post('btnCambioClave')) {
-
-            $claveVieja = $this->post('clave_actual');
-            $claveNueva = $this->post('clave_nueva');
-            $user = Sesion::$usuario;
-            $resp = $user->cambiarClave($claveVieja, $claveVieja);
-
-        }
-
-        $this->data([
-            'formulario' => $formCambioClave->render()
-        ]);
 
     }
 

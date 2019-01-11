@@ -27,7 +27,7 @@
                     </div>
 
                     <!-- item-->
-                    <a href="/jadmin/cambioclave" class="dropdown-item notify-item">
+                    <a href="/jadmin/usuario/cambioclave" class="dropdown-item notify-item">
                         <i class="fa fa-cog"></i> <span>Cambiar clave</span>
                     </a>
 
