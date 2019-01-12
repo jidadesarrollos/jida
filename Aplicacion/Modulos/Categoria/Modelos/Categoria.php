@@ -15,8 +15,9 @@ class Categoria extends Modelo {
     var $id_categoria;
     var $nombre;
     var $descripcion;
+    var $slug;
 
-    protected $tablaBD = "m_categoria";
+    protected $tablaBD = "m_categorias";
     protected $pk = 'id_categoria';
 
 }

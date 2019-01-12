@@ -16,6 +16,7 @@ use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Manager as ManagerVista;
+use Jida\Medios\Debug;
 
 class Arranque {
 
