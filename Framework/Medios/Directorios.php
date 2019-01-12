@@ -26,7 +26,7 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function validar ($dir) {
+    static function validar($dir) {
 
         if (file_exists($dir)) {
             return true;
@@ -46,7 +46,7 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function crear ($directorio, $mode = 0777) {
+    static function crear($directorio, $mode = 0777) {
 
         if (is_array($directorio)) {
 
@@ -75,7 +75,7 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function listar ($ruta) {
+    static function listar($ruta) {
 
         $listado = [];
         if (is_dir($ruta)) {
@@ -105,7 +105,7 @@ class Directorios extends \Directory {
      * @since  0.1
      *
      */
-    static public function listarDirectoriosRuta ($ruta, &$arr, $expReg = '', &$i = 0) {
+    static public function listarDirectoriosRuta($ruta, &$arr, $expReg = '', &$i = 0) {
 
         if (is_dir($ruta)) {
             if ($directorio = opendir($ruta)) {
@@ -155,7 +155,7 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function eliminar ($dir) {
+    static function eliminar($dir) {
 
         foreach (glob($dir . "/*") as $files) {
             if (is_dir($files)) {
@@ -186,7 +186,7 @@ class Directorios extends \Directory {
      * @since    0.1
      *
      */
-    static function limpiar ($dir) {
+    static function limpiar($dir) {
 
         foreach (glob($dir . "/*") as $files) {
             if (is_dir($files)) {
@@ -208,16 +208,16 @@ class Directorios extends \Directory {
      * @since  0.1
      *
      */
-    static function getTotalArchivos ($ruta) {
+    static function getTotalArchivos($ruta) {
 
         $totalArchivos = 0;
         if ($handle = opendir($ruta)) {
             while (($file = readdir($handle)) !== false) {
                 if (!in_array($file,
-                              [
-                                  '.',
-                                  '..'
-                              ]) && !is_dir($ruta . $file)
+                        [
+                            '.',
+                            '..'
+                        ]) && !is_dir($ruta . $file)
                 )
                     $totalArchivos++;
             }
@@ -238,7 +238,7 @@ class Directorios extends \Directory {
      * @since  0.1
      *
      */
-    static function copiar ($origen, $destino) {
+    static function copiar($origen, $destino) {
 
         if (is_dir($origen) and is_readable($origen)) {
 

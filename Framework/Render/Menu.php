@@ -114,7 +114,14 @@ class Menu extends Selector {
 
         $modulo = array_shift($partes);
         if (strtolower($modulo) === 'jadmin') {
-            return Estructura::$rutaJida . "/Jadmin/" . implode("/", $partes);
+
+            $nombre = implode("/", $partes);
+
+            if (Medios\Directorios::validar(Estructura::$rutaAplicacion . "Jadmin/$nombre")) {
+                return Estructura::$rutaAplicacion . "Jadmin/$nombre";
+            }
+
+            return Estructura::$rutaJida . "/Jadmin/" . $nombre;
         }
 
         if (count($partes) > 1) {
