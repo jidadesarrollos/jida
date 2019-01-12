@@ -117,8 +117,8 @@ class Menu extends Selector {
 
             $nombre = implode("/", $partes);
 
-            if (Medios\Directorios::validar(Estructura::$rutaAplicacion . "Jadmin/$nombre")) {
-                return Estructura::$rutaAplicacion . "Jadmin/$nombre";
+            if (Medios\Directorios::validar(Estructura::$rutaAplicacion . "/Jadmin/$nombre")) {
+                return Estructura::$rutaAplicacion . "/Jadmin/$nombre";
             }
 
             return Estructura::$rutaJida . "/Jadmin/" . $nombre;
