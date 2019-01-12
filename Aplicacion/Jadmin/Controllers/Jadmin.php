@@ -2,10 +2,10 @@
 
 namespace App\Jadmin\Controllers;
 
-use Jida\Jadmin\Controllers\JadminController as JadminController;
+use Jida\Jadmin\Controllers\JControl;
 
-class Jadmin extends JadminController {
+class Jadmin extends JControl {
 
-    var $manejoParams = true;
+
 
 }
