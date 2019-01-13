@@ -141,6 +141,5 @@
                 </div>
             </div>
         </main>
-        <?php $this->incluirLayout('../../Layout/default/elementos/footer') ?>
     </div>
 </section>

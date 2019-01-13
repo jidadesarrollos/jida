@@ -5,6 +5,7 @@ namespace Jida\Manager\Vista;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 class Tema {
@@ -32,7 +33,7 @@ class Tema {
         if (Estructura::$jadmin and !Directorios::validar($rutaApp)) {
 
             //TODO: Manejar ruta para jadmin desde estructura
-            self::$url = '//' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema;
+            self::$url = '//' . Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema;
             self::$directorio = Estructura::$rutaJida . "/Jadmin/Layout/$this->_tema";
 
             return true;
@@ -50,12 +51,12 @@ class Tema {
     private function _framework() {
 
         $config = Config::obtener();
-        self::$url = '//' . Estructura::$urlBase . $config::PATH_JIDA . '/Jadmin/Layout/jadmin';
+        self::$url = '//' . Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/jadmin';
         self::$directorio = Estructura::$rutaJida . "/Jadmin/Layout/jadmin";
         $this->_leerConfiguracion(self::$directorio . DS . "tema.json");
         $layout = Layout::obtener();
         $layout->_leer();
-        #Debug::imprimir(["excepcion", self::$directorio, self::$configuracion], true);
+
     }
 
     /**
@@ -86,6 +87,7 @@ class Tema {
     private function _leerConfiguracion($archivoConfiguracion) {
 
         $configuracion = json_decode(file_get_contents($archivoConfiguracion));
+
         $entorno = Config::ENTORNO_APP;
 
         if (property_exists($configuracion, $entorno)) {

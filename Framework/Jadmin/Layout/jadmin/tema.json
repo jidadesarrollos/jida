@@ -1,6 +1,6 @@
 {
   "link": {
-    "shortcut icon": "{tema}/htdocs/images/favicon.ico"
+    "shortcut icon": "{tema}/htdocs/images/jida.png"
   },
   "layout": "jadmin",
   "layoutError": "error",

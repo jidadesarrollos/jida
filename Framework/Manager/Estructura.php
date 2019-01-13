@@ -139,11 +139,13 @@ class Estructura {
             });
 
             $pathDominio = str_replace("index.php", "", $_SERVER['PHP_SELF']);
-            self::$urlBase = $_SERVER['SERVER_NAME'] . $pathDominio;
-            self::$dominio = self::$urlBase;
+
             $url = implode("/", $url);
-            self::$urlRuta = $pathDominio;
-            self::$url = '//' . self::$dominio . $url;
+
+            self::$urlBase = rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
+            self::$dominio = self::$urlBase;
+            self::$urlRuta = rtrim($pathDominio, '/');
+            self::$url = rtrim("//" . self::$dominio . $url, "/");
 
         }
         catch (Excepcion $e) {

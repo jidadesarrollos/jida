@@ -7,6 +7,8 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
+use Jida\Medios\Directorios;
 
 Trait RenderLayout {
 
@@ -49,4 +51,13 @@ Trait RenderLayout {
 
     }
 
+    function incluir($plantilla) {
+
+        $directorio = Tema::$directorio;
+
+        if (!Directorios::validar("$directorio/$plantilla.php")) {
+            Debug::imprimir(["No existe el directorio $directorio/$plantilla.php"], true);
+        }
+        include_once "$directorio/$plantilla.php";
+    }
 }

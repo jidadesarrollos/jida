@@ -24,7 +24,7 @@
             Created by &copy; Dn All Right Reserve 2018
         </h5>
         <div class="img-logo-dn">
-            <img alt="img10" src="<?= $this->urlTema ?>assets/images/dn.png">
+            <img alt="img10" src="<?= $this->urlTema ?>/htdocs/images/dn.png">
         </div>
     </div>
 </footer>

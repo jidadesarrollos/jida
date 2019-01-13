@@ -23,14 +23,14 @@ Trait Procesador {
      * @deprecated
      * @see imprimirMeta
      */
-    public function printHeadTags () {
+    public function printHeadTags() {
 
         $msj = "El metodo printHeadTags se encuentra en desuso, por favor reemplazar por imprimir meta";
         Excepcion::procesar($msj, self::$_ce . 3);
 
     }
 
-    public function imprimirMeta () {
+    public function imprimirMeta() {
 
         return Meta::imprimir($this->_data);
 
@@ -40,13 +40,13 @@ Trait Procesador {
      * Imprime las etiquetas link registradas en la configuración del tema
      *
      */
-    private function _imprimirCSS ($librerias, $modulo) {
+    private function _imprimirCSS($librerias, $modulo) {
 
         return $this->_css($librerias, $modulo);
 
     }
 
-    private function _css ($librerias, $modulo) {
+    private function _css($librerias, $modulo) {
 
         $html = "";
 
@@ -79,20 +79,19 @@ Trait Procesador {
                 if (strpos($urlLibreria, '{raiz}') === 0) {
                     $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
                 }
-                else{
-                    $urlLibreria = '//'.$urlLibreria;
-                    //$urlLibreria = str_replace('localhost', "", $urlLibreria);
+                else {
+                    $urlLibreria = '//' . $urlLibreria;
                 }
             }
 
             $html .= Selector::crear('link',
-                                     [
-                                         'href' => $urlLibreria,
-                                         'rel'  => 'stylesheet',
-                                         'type' => 'text/css'
-                                     ],
-                                     null,
-                                     2);
+                [
+                    'href' => $urlLibreria,
+                    'rel'  => 'stylesheet',
+                    'type' => 'text/css'
+                ],
+                null,
+                2);
 
         }
 
@@ -104,13 +103,13 @@ Trait Procesador {
      * Imprime las etiquetas script registradas en la configuración del tema
      *
      */
-    private function _imprimirJS ($librerias, $modulo) {
+    private function _imprimirJS($librerias, $modulo) {
 
         return $this->_js($librerias, $modulo);
 
     }
 
-    private function _js ($librerias, $modulo) {
+    private function _js($librerias, $modulo) {
 
         $html = "";
 
@@ -142,16 +141,16 @@ Trait Procesador {
                 if (strpos($urlLibreria, '{raiz}') === 0) {
                     $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
                 }
-                else{
-                    $urlLibreria = '//'.$urlLibreria;
+                else {
+                    $urlLibreria = '//' . $urlLibreria;
                     //$urlLibreria = str_replace('localhost', "", $urlLibreria);
                 }
             }
 
             $html .= Selector::crear('script',
-                                     ['src' => $urlLibreria],
-                                     null,
-                                     2);
+                ['src' => $urlLibreria],
+                null,
+                2);
 
         }
 
@@ -159,12 +158,12 @@ Trait Procesador {
 
     }
 
-    private function _imprimirHead ($configuracion, $modulo) {
+    private function _imprimirHead($configuracion, $modulo) {
 
         $html = "";
 
         if (property_exists($configuracion, "link")) {
-            $html .= $this->_link($configuracion->link, $modulo);
+            $html .= $this->_link($configuracion->link);
         }
 
         if (property_exists($configuracion, "css")) {
@@ -179,7 +178,7 @@ Trait Procesador {
      * Imprime las etiquetas links registradas en la configuración del tema
      *
      */
-    private function _link ($etiquetas) {
+    private function _link($etiquetas) {
 
         $html = "";
         foreach ($etiquetas as $etiqueta => $contenido) {
@@ -198,7 +197,7 @@ Trait Procesador {
                 $configuracion = ['href' => $contenido, 'rel' => $etiqueta];
             }
 
-            $urlTema = "/" . self::$_urlTema;
+            $urlTema = "//" . self::$_urlTema;
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);

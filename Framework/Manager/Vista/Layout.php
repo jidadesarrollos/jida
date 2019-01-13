@@ -45,6 +45,8 @@ class Layout {
     private $_js = [];
     private $_css = [];
 
+    private $urlTema;
+
     private $_plantilla;
 
     /**
@@ -87,6 +89,8 @@ class Layout {
             }
 
             self::$_urlTema = Tema::$url;
+            $this->urlTema = '//' . Tema::$url;
+
             self::$directorio = Tema::$directorio;
             self::$_configuracion = Tema::$configuracion;
 
@@ -198,11 +202,15 @@ class Layout {
         $retorno = "";
 
         foreach ($lenguajes as $lenguaje) {
+            if ($lenguaje !== "head" and !isset($configuracion->{$lenguaje})) return;
+
             switch ($lenguaje) {
                 case 'head':
+
                     $retorno = $this->_imprimirHead($configuracion, $modulo);
                     break;
                 case 'js':
+
                     $retorno = $this->_imprimirJS($configuracion->{$lenguaje}, $modulo);
                     break;
                 case 'css':
