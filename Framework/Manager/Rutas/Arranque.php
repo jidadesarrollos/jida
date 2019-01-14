@@ -160,6 +160,7 @@ class Arranque {
         try {
 
             $controlador = self::obtenerControlador(Estructura::$controlador);
+
             if ($this->_validar()) {
 
                 #Medios\Debug::imprimir([Estructura::$rutaModulo, Estructura::$modulo], true);

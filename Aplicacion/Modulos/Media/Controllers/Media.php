@@ -12,7 +12,6 @@ use App\Controllers\App;
 
 class Media extends App {
 
-
     function index() {
 
     }

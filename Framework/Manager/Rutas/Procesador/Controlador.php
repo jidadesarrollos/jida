@@ -34,10 +34,10 @@ Trait Controlador {
         else {
 
             $clase = $this->_validarNombre($controlador, 'upper');
-            $nombreControl = $this->_namespace . $clase;
+            $nombreControl = Estructura::$namespace . $clase;
 
             if (class_exists($nombreControl)) {
-                $controlador = $nombreControl;
+                $controlador = $clase;
             }
             else {
                 $this->_padre->reingresarParametro($controlador);

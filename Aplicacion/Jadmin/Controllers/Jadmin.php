@@ -6,6 +6,8 @@ use Jida\Jadmin\Controllers\JControl;
 
 class Jadmin extends JControl {
 
+    function index() {
 
+    }
 
 }

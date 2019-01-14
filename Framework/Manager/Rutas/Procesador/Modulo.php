@@ -5,6 +5,7 @@ namespace Jida\Manager\Rutas\Procesador;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Jadmin;
+use Jida\Medios\Debug;
 
 Trait Modulo {
 
@@ -12,7 +13,8 @@ Trait Modulo {
         'app'        => 'App\\Controllers\\',
         'modulo'     => 'App\\Modulos\\',
         'jida'       => '\\Jida\\Jadmin\\Controllers\\',
-        'jidaModulo' => '\\Jida\\Jadmin\\Modulos\\'
+        'jidaModulo' => '\\Jida\\Jadmin\\Modulos\\',
+        'jadminApp'  => '\\App\Jadmin\\'
 
     ];
     private $_namespace;
@@ -38,20 +40,32 @@ Trait Modulo {
             $rutaModulo .= ($padre->jadmin) ? DS . 'Jadmin' : '';
 
         }
+
         else if (Estructura::$jadmin) {
 
-            $padre::$ruta = 'jida';
+            $namespace = $this->_namespaces['jadminApp'] . "Controllers\\";
 
-            if ($posModulo and $this->_moduloJadmin($posModulo)) {
+            if (class_exists($namespace . ucfirst($posModulo))) {
+                $padre::$ruta = 'app';
+                $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Jadmin';
 
-                Estructura::$modulo = $posModulo;
-                $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
-                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . "Modulos/{$posModulo}";
+                $padre->reingresarParametro($posModulo);
             }
             else {
-                $padre->reingresarParametro($posModulo);
-                $namespace = $this->_namespaces['jida'];
-                $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin';
+
+                $padre::$ruta = 'jida';
+
+                if ($posModulo and $this->_moduloJadmin($posModulo)) {
+                    Estructura::$modulo = $posModulo;
+                    $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
+                    $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . "Modulos/{$posModulo}";
+                }
+                else {
+                    $padre->reingresarParametro($posModulo);
+                    $namespace = $this->_namespaces['jida'];
+                    $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin';
+                }
+
             }
 
         }
