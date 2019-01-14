@@ -29,12 +29,16 @@ class Vista {
     private $_tema;
     private $_data;
 
+    public $url;
+
     function __construct($data) {
 
         $conf = Config::obtener();
         $this->_tema = $conf->tema;
 
         $this->_data = $data;
+
+        $this->url = Estructura::$url;
 
     }
 
