@@ -1,3 +1,10 @@
+<?php
+/**
+ * @see \JIDA\Manager\Vista\Layout
+ * @var Layout $this
+ */
+
+?>
 <footer>
     <div class="container">
         <ul class="social-lool">

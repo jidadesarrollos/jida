@@ -1,8 +1,9 @@
-<form enctype="multipart/form-data" action="<?= $this->url ?>" method="POST">
-    <!-- MAX_FILE_SIZE debe preceder al campo de entrada del fichero -->
+<form enctype="multipart/form-data"
+      action="<?= $this->url ?>"
+      method="POST">
     <input type="hidden" name="MAX_FILE_SIZE" value="30000"/>
-    <!-- El nombre del elemento de entrada determina el nombre en el array $_FILES -->
-    Enviar este fichero: <input name="fichero_usuario" type="file"/>
+    Enviar este fichero:
+    <input name="cargaArchivo" type="file"/>
     <hr/>
-    <input type="submit" value="Enviar fichero"/>
+    <input type="submit" name="cargaArchivos" CLASS="btn" value="Enviar fichero"/>
 </form>

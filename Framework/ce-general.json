@@ -2,5 +2,6 @@
   "Core": 3000,
   "Manager": 1000,
   "Componentes": 4000,
-  "Render": 2000
+  "Render": 2000,
+  "Medios": 5000
 }

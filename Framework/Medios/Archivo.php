@@ -14,16 +14,12 @@ namespace Jida\Medios;
 
 class Archivo {
 
+    /**
+     * @var string $extension Extension del archivo
+     */
+    public $extension;
+
     private static $_directorio;
     private static $_permisos;
-
-    /**
-     * Gestiona la carga de archivos
-     *
-     * @param $nombre nombre de la variable $file de transferencia
-     */
-    function cargar($nombre) {
-
-    }
 
 }
