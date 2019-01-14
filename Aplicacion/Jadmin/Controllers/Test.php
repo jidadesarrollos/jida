@@ -12,6 +12,10 @@ class Test extends Jadmin {
         if ($this->post('cargaArchivos')) {
 
             $procesador = new ProcesadorCarga('cargaArchivo');
+
+            if ($procesador->validar()) {
+                $procesador->moverArchivos($directorio);
+            }
         }
     }
 
