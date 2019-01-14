@@ -1,5 +1,5 @@
 <div class="card">
-    <h4 class="card-header">Categorias</h4>
+    <h4 class="card-header">Proyectos</h4>
     <div class="card-body">
         <?= \Jida\Medios\Mensajes::imprimirMsjSesion() ?>
         <?= $this->vista ?>

@@ -1,0 +1,51 @@
+{
+  "nombre": "Formulario de Proyectos",
+  "query": "select id_categoria, nombre, descripcion, id_categorias from m_proyectos",
+  "estructura": "",
+  "identificador": "FormularioProyectos",
+  "clave_primaria": "id_proyectos",
+  "campos": {
+    "id_categoria": {
+      "label": "id_proyectos",
+      "name": "id_proyectos",
+      "id": "id_proyectos",
+      "type": "hidden"
+    },
+    "nombre": {
+      "label": "Nombre",
+      "name": "nombre",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar el nombre del proyecto"
+        }
+      },
+      "orden": "1",
+      "placeholder": "Nombre del Proyecto",
+      "visibilidad": "1",
+      "id": "nombre",
+      "type": "text"
+    },
+    "descripcion": {
+      "label": "Descripcion",
+      "name": "descripcion",
+      "orden": "2",
+      "placeholder": "Descripcion del Proyecto",
+      "visibilidad": "1",
+      "id": "descripcion",
+      "type": "text"
+    },
+    "categoria": {
+      "label": "Categoria",
+      "name": "categoria",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar el nombre del proyecto"
+        }
+      },
+      "opciones": "=--Seleccione--;select id_categoria, nombre from m_categorias",
+      "orden": "3",
+      "id": "categoria",
+      "type": "select"
+    }
+  }
+}
