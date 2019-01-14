@@ -12,7 +12,7 @@ Table Of Content
   1.6 Form Lool Section
 
 -------------------------------------------- */
-/* 
+/*
 =============================================== 
 1. Global CSS HTML
 ===============================================
@@ -99,8 +99,8 @@ Table Of Content
 }
 body {
   font-family: 'latoregular';
-  color: #000000;
-  background-color: #000000;
+  color: #212121;
+  background-color: #212121;
 }
 /* 
 =============================================== 
@@ -203,7 +203,7 @@ hr {
 }
 .center-hr {
   height: 2px;
-  background-color: #000000;
+  background-color: #212121;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -278,7 +278,7 @@ hr {
   box-shadow: none;
 }
 .btn-lool.btn-black-square {
-  background-color: #000000;
+  background-color: #212121;
   color: #ffffff;
   font-family: 'montserratregular';
   padding: 10px 15px;
@@ -292,8 +292,8 @@ hr {
 }
 .btn-lool.btn-black-square:hover {
   background-color: #ffffff;
-  color: #000000;
-  border: solid 1px #000000;
+  color: #212121;
+  border: solid 1px #212121;
   text-decoration: none;
 }
 .btn-lool.btn-green-square {
@@ -344,7 +344,7 @@ hr {
 }
 .owl-next,
 .owl-prev {
-  background-color: #000000 !important;
+  background-color: #212121 !important;
   color: #ffffff !important;
   font-family: 'montserratregular';
   text-transform: uppercase;
@@ -368,10 +368,10 @@ hr {
   float: left;
 }
 .icon-bar {
-  background-color: #000000;
+  background-color: #212121;
 }
 .btn-default-lool {
-  border: solid 1px #000000;
+  border: solid 1px #212121;
   box-shadow: none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -399,7 +399,7 @@ hr {
   border: solid 1px #ffffff;
   color: #ffffff;
   box-shadow: none;
-  background-color: #000000;
+  background-color: #212121;
   text-transform: uppercase;
   letter-spacing: 2px;
   -webkit-border-radius: 0;
@@ -414,7 +414,7 @@ hr {
 }
 .form-lool:focus {
   box-shadow: none;
-  border: solid 1px #9640d9;
+  border: solid 1px #72c3ff;
 }
 .form-default-lool {
   -webkit-border-radius: 0;
@@ -424,4 +424,7 @@ hr {
 }
 .form-default-lool:focus {
   box-shadow: none;
+}
+.ip-header {
+  z-index: 1100 !important;
 }
