@@ -5,6 +5,10 @@
       "label": "<i class=\"fa fa-users\"></i> <span>Categoria</span>",
       "url": "/jadmin/categoria"
     },
+    "Proyectos": {
+      "label": "<i class=\"fa fa-users\"></i> <span>Categoria</span>",
+      "url": "/jadmin/proyectos"
+    },
     "usuarios": {
       "label": "<i class=\"fa fa-users\"></i> <span>Usuarios</span>",
       "url": "/jadmin/usuarios"
