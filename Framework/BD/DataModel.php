@@ -28,15 +28,6 @@ class DataModel {
     protected $tablaBD;
     protected $esquema;
     protected $manejadorBD;
-    private $consultaMultiple = false;
-    private $join = false;
-    private $usoLimit = false;
-    private $_ce = '006';
-    private $condicion = 'and';
-    /**
-     * @var string $limit estring de la clausula limit
-     */
-    private $_limit = "";
     /**
      * Permite definir un prefijo utilizado en la tabla de base de datos
      *
@@ -48,13 +39,11 @@ class DataModel {
     protected $prefijoBD = PREFIJO_TABLA;
     protected $fecha_creacion = FECHA_CREACION;
     protected $fecha_modificacion = FECHA_MODIFICACION;
-
     /**
      * @var int $nivelORM Define el nivel de navegación del ORM
      */
     protected $nivelORM = NIVEL_ORM;
     protected $prefijoRelacional = PREFIJO_RELACIONAL;
-
     /**
      * Permite registrar validaciones para registros unicos
      *
@@ -64,7 +53,6 @@ class DataModel {
     protected $unico = [];
     protected $registroMomentoGuardado = true;
     protected $registroUser = true;
-
     /**
      * Arreglo que define las relaciones uno a uno del objeto
      *
@@ -81,7 +69,6 @@ class DataModel {
      *
      */
     protected $tieneUno = [];
-
     /**
      * Arreglo que define las relaciones uno a muchos de un objeto
      *
@@ -105,25 +92,12 @@ class DataModel {
      */
 
     protected $perteneceAUno = [];
-
-    /**
-     * Consulta de base de datos construida
-     *
-     * @var $query
-     */
-    private $query;
-    /**
-     * Define el nivel actual del ORM
-     */
-    private $nivelActualORM = 0;
     /**
      * Nombre de la Clave primaria de base de datos
      *
      * @var string $pk
      */
     protected $pk;
-
-    private $tablaQuery;
     /**
      * Objeto de conexión a Base de datos
      *
@@ -141,30 +115,70 @@ class DataModel {
      */
     protected $configuracionBD = "default";
     /**
+     * @var boolean $usoBD Dedermina si es requerido el uso de base de datos
+     */
+    protected $usoBD = false;
+    /**
+     * Instancia de objeto para retorno de data de Base de Datos
+     *
+     * @param object $resultBD
+     */
+    protected $resultBD;
+    /**
+     * Nro de registros a mostrar por página
+     *
+     * @var int $filasPagina
+     * @since 0.5
+     */
+    protected $filasPagina = 12;
+    /**
+     * Numero total de registros para una consulta.
+     *
+     * Si la consulta se pide paginada, el valor de esta propiedad conrrespondera
+     * al total de los registros
+     *
+     * @var int $totalRegistros
+     * @since 0.5
+     */
+    protected $_totalRegistros;
+    private $consultaMultiple = false;
+    private $join = false;
+    private $usoLimit = false;
+    private $_ce = '006';
+    private $condicion = 'and';
+    /**
+     * @var string $limit estring de la clausula limit
+     */
+    private $_limit = "";
+    /**
+     * Consulta de base de datos construida
+     *
+     * @var $query
+     */
+    private $query;
+    /**
+     * Define el nivel actual del ORM
+     */
+    private $nivelActualORM = 0;
+    private $tablaQuery;
+    /**
      * Arreglo con las propiedades de base de datos del objeto
      *
      * @var array $propiedades
      */
     private $propiedades = [];
-
     /**
      * @var string $consultaRelaciones Registra el string de las consultas para
      * obtener la información de todas las relaciones creadas explicitamente en el objeto
      * instanciado
      */
     private $consultaRelaciones = [];
-
     /**
      * Permite identificar si la consulta contiene una clausula where;
      *
      * @var $usoWhere
      */
     private $usoWhere = false;
-
-    /**
-     * @var boolean $usoBD Dedermina si es requerido el uso de base de datos
-     */
-    protected $usoBD = false;
     /**
      * @property string $_groupby Registra la clausula order by de una consulta
      */
@@ -200,13 +214,6 @@ class DataModel {
      */
     private $_clase;
     /**
-     * Instancia de objeto para retorno de data de Base de Datos
-     *
-     * @param object $resultBD
-     */
-    protected $resultBD;
-
-    /**
      * Objeto ReflectionClass instanciado con el objeto
      *
      * @var object Reflection
@@ -229,23 +236,6 @@ class DataModel {
      * @var int $_paginas
      */
     private $_paginas;
-    /**
-     * Nro de registros a mostrar por página
-     *
-     * @var int $filasPagina
-     * @since 0.5
-     */
-    protected $filasPagina = 12;
-    /**
-     * Numero total de registros para una consulta.
-     *
-     * Si la consulta se pide paginada, el valor de esta propiedad conrrespondera
-     * al total de los registros
-     *
-     * @var int $totalRegistros
-     * @since 0.5
-     */
-    protected $_totalRegistros;
 
     /**
      * Funcion constructora
@@ -329,74 +319,286 @@ class DataModel {
     }
 
     /**
-     * Instancia las relaciones uno a uno de un objeto
-     *
-     * Crea un objeto vacio para cada relacion "tieneUno" definida en un objeto nuevo
-     * @method instanciarTieneUno
-     *
+     * Inicializa el objeto correspondiente para el manejo de la base de datos
+     * @method initBD
      */
-    private function instanciarTieneUno() {
+    private function initBD($manejador = "") {
 
-        foreach ($this->tieneUno as $key => $class) {
+        if (!empty($manejador))
+            $this->manejadorBD = $manejador;
+        if (empty($this->manejadorBD)) {
+            throw new Exception("No se encuentra definido el manejador de base de datos", 1);
+        }
+        switch ($this->manejadorBD) {
+            case 'PSQL' :
+                #include_once 'Psql.class.php';
+                $this->bd = new Psql ($this->configuracionBD);
+                break;
+            case 'MySQL' :
+                #include_once 'Mysql.class.php';
+                $this->bd = new Mysql($this->configuracionBD, $this->_clase);
+                break;
+            default:
+                throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);
 
-            if (!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))) {
+        }
 
-                if (is_string($key) and is_array($class)) {
-                    $relacion =& $key;
+        $this->resultBD = new ResultBD($this);
+    }
 
-                    $explode = explode('\\', $key);
-                    $nombreClass = array_pop($explode);
+    /**
+     * Obtiene el nombre de la clave primaria de la tabla de base de datos
+     *
+     * El nombre es construido en base al estandard
+     *
+     * @var obtenerpk
+     */
+    private function obtenerpk() {
 
-                    if (array_key_exists('objeto', $class)) {
-                        $relacion = $class['objeto'];
-                    }
-                    #Medios\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
-                    if (array_key_exists('fk', $class))
-                        $this->$nombreClass = new $relacion($this->{$class['fk']}, $this->nivelActualORM);
+        $clase = $this->_clase;
+        if (!empty($clase)) {
+            $pk = ($this->pk != "") ? $this->pk : "id_" . $clase;
+            $this->pk = strtolower($pk);
+        }
 
-                }
-                else {
-                    throw new Exception("No se encuentra definida correctamente la relacion para " . $this->_clase, 1);
-                }
+    }
+
+    /**
+     * Obtiene todas las propiedades públicas de un objeto instanciado.
+     *
+     * Hace uso de la clase Reflection, nativa de php
+     *
+     * @return array $arrayPropiedades Arreglo con propiedades publicas
+     */
+    private function obtenerPropiedadesObjeto() {
+
+        $this->reflector = new ReflectionClass($this->_clase);
+        $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
+        $arrayPropiedades = [];
+
+        foreach ($propiedades as $propiedad) {
+            if (!$propiedad->isStatic()) {
+                $arrayPropiedades[$propiedad->getName()] = $propiedad->getValue($this);
             }
-            else {
-                if (is_string($class) and class_exists($class) and !property_exists($this, $class)) {
+        }
+        $this->propiedades = $arrayPropiedades;
 
-                    $explode = explode('\\', $class);
-                    $nombreClass = array_pop($explode);
+    }
 
-                    // Revisar este funcionamiento
-                    // $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
+    private function debug($data, $string = true, $condicion = false) {
 
-                    $obj = new $class();
-                    //Medios\Debug::imprimir($obj->pk);
-                    $this->$nombreClass = new $class(null, $this->nivelActualORM);
-
-                }
-            }
-
+        if ($this->debug) {
+            ($string === true) ? Debug::string($data, $condicion) : Debug::mostrarArray($data, $condicion);
         }
 
         return $this;
     }
 
-    private function instanciarTieneMuchos() {
+    /**
+     * Inicializa un objeto a partir de Base de Datos
+     * @method inicializarObjeto
+     *
+     * @param int $id Identificador unico del registro;
+     */
+    private function instanciarObjeto($id, $data = []) {
 
-        foreach ($this->tieneMuchos as $key => $value) {
-            if (!is_array($value)) {
-                $explode = explode('\\', $value);
-                $class = array_pop($explode);
+        if (count($data) < 1) {
+            $data = $this->__obtConsultaInstancia($id)->fila();
+        }
 
-                $this->{$class} = [];
-                // Debug::imprimir($key,$value,"-");
+        $this->valoresIniciales = $data;
+
+        $this->establecerAtributos($data, $this->_clase);
+
+        if ($this->nivelActualORM <= $this->nivelORM) {
+
+            $this->identificarObjetosRelacion();
+            $this->obtenerDataRelaciones();
+        }
+
+        return $this;
+    }
+
+    function __obtConsultaInstancia($id) {
+
+        return $this->consulta()->filtro([$this->pk => $id]);
+    }
+
+    /**
+     * Permite realizar un filtro de la consulta a realizar
+     * @method filtro
+     *
+     * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
+     * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
+     *
+     * @return object $this Objeto DataModel instanciado
+     *
+     *
+     */
+
+    function filtro($arrayFiltro = [], $arrayOr = []) {
+
+        $this->where();
+        if (is_array($arrayFiltro)) {
+            $i = 0;
+            $o = 0;
+
+            foreach ($arrayFiltro as $key => $value) {
+                if ($i > 0)
+                    $this->query .= " and ";
+
+                if (is_array($value)) {
+
+                    if (!strpos($key, ".")) {
+
+                        if (empty($value[0]) || $value[0] == '')
+                            $this->query .= $key . $value[1] . " ";
+                        else
+                            $this->query .= "$this->tablaQuery.$key" . $value[1] . '\'' . $value[0] . "' ";
+
+                    }
+                    else {
+                        $this->query .= $key . $value[1] . $value[0] . " ";
+                    }
+                }
+                else {
+
+                    if (!strpos($key, "."))
+                        $this->query .= "$this->tablaQuery.$key='$value'";
+                    else
+                        $this->query .= "$key='$value'";
+                }
+
+                ++$i;
             }
-            else {
-                $explode = explode('\\', $key);
-                $class = array_pop($explode);
-                $this->{$key} = [];
+
+            if (is_array($arrayOr) and count($arrayOr) > 0) {
+                $this->query .= " or (";
+                foreach ($arrayOr as $key => $value) {
+                    if ($o > 0)
+                        $this->query .= " and ";
+
+                    if (!strpos($key, "."))
+                        $this->query .= " $this->tablaQuery.$key='$value'";
+                    else
+                        $this->query .= $key . "='$value'";
+                    ++$o;
+                }
+                $this->query .= ")";
+            }
+        }
+        else {
+            throw new Exception("No se ha definido correctamente el filtro", 201);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Agrega la clausula where a la consulta
+     * @method where
+     */
+    private function where($condicion = " and") {
+
+        if (!$this->usoWhere) {
+            $this->query .= " where ";
+            $this->usoWhere = true;
+        }
+        else {
+            $this->query .= " $condicion ";
+        }
+    }
+
+    /**
+     * Funcion para obtener datos de una tabla
+     * @method consulta
+     *
+     * @param array $campos Nombre de los campos a obtener
+     * @param mixed $pagina [Opcional] Si es pasado algun valor, la
+     *                      consulta será paginada segun los valores de las propiedasdes
+     *                      $filasPagina
+     *
+     */
+    function consulta($campos = "", $nroPaginacion = false) {
+
+        $banderaJoin = false;
+        $join = "";
+
+        if (empty($campos) or $campos == '*') {
+            $campos = array_keys($this->propiedades);
+        }
+
+        if (is_array($campos)) {
+
+            array_walk($campos,
+                function (&$key, $valor, $tabla) {
+
+                    $key = $tabla . "." . $key;
+                },
+                $this->tablaQuery);
+
+            $campos = implode(", ", $campos);
+        }
+        if ($nroPaginacion !== false) {
+            $this->paginar($nroPaginacion);
+        }
+        if ($this->consultaMultiple)
+            $this->query .= "SELECT $campos ";
+        else $this->query = "SELECT $campos ";
+        if ($banderaJoin === true)
+            $this->query .= ", " . $camposJoin;
+        $this->query .= " from $this->tablaQuery " . $join;
+        $this->usoWhere = false;
+
+        return $this;
+    }
+
+    /**
+     * Genera una consulta paginada
+     * @method paginar
+     *
+     * @since 0.5
+     */
+    function paginar($pagina) {
+
+        $this->_establecerPaginacion($pagina);
+
+        return $this;
+    }//fin función inicializarObjeto
+
+    /**
+     * Activa la configuracion para una consulta paginada
+     * @method pagina
+     *
+     * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
+     */
+    private function _establecerPaginacion($nroPagina = 1) {
+
+        $this->_paginaConsultada = $nroPagina;
+        $this->_paginar = true;
+
+        return $this;
+    }
+
+    private function identificarObjetosRelacion() {
+
+        foreach ($this->propiedades as $prop => $value) {
+            if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
+
+                $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
+                if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto,
+                        $this->tieneUno))
+                    $this->tieneUno[$objeto] = [
+                        'obj' => $objeto,
+                        'pk'  => $prop
+                    ];
             }
         }
     }
+    /**
+     * obtiene las relaciones declaradas uno a muchos del objeto
+     * @method obtenerPertenencias
+     */
 
     /**
      * Verifica las relaciones declaradas del Objeto
@@ -405,18 +607,6 @@ class DataModel {
 
         $this->obtTieneUno()->obtTieneMuchos()->obtPerteneceAUno()->obtPertenece()->instanciarRelaciones();
 
-    }
-
-    private function obtPerteneceAUno() {
-
-        foreach ($this->perteneceAUno as $key => $relacion) {
-
-            $rel = new $key();
-            $this->consultaRelaciones[$key] = $rel->consulta()->filtro([$relacion['pk'] => $this->{$relacion['pk']}])->obtQuery();
-
-        }
-
-        return $this;
     }
 
     /**
@@ -481,6 +671,101 @@ class DataModel {
     }
 
     /**
+     * Instancia las relaciones uno a uno de un objeto
+     *
+     * Crea un objeto vacio para cada relacion "tieneUno" definida en un objeto nuevo
+     * @method instanciarTieneUno
+     *
+     */
+    private function instanciarTieneUno() {
+
+        foreach ($this->tieneUno as $key => $class) {
+
+            if (!is_string($class) and is_string($key) and (class_exists($key) and !property_exists($this, $key))) {
+
+                if (is_string($key) and is_array($class)) {
+                    $relacion =& $key;
+
+                    $explode = explode('\\', $key);
+                    $nombreClass = array_pop($explode);
+
+                    if (array_key_exists('objeto', $class)) {
+                        $relacion = $class['objeto'];
+                    }
+                    #Medios\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
+                    if (array_key_exists('fk', $class))
+                        $this->$nombreClass = new $relacion($this->{$class['fk']}, $this->nivelActualORM);
+
+                }
+                else {
+                    throw new Exception("No se encuentra definida correctamente la relacion para " . $this->_clase, 1);
+                }
+            }
+            else {
+                if (is_string($class) and class_exists($class) and !property_exists($this, $class)) {
+
+                    $explode = explode('\\', $class);
+                    $nombreClass = array_pop($explode);
+
+                    // Revisar este funcionamiento
+                    // $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
+
+                    $obj = new $class();
+                    //Medios\Debug::imprimir($obj->pk);
+                    $this->$nombreClass = new $class(null, $this->nivelActualORM);
+
+                }
+            }
+
+        }
+
+        return $this;
+    }//fin indentificarRefereincas
+
+    /**
+     * Genera las consultas para las relaciones MaN
+     * @method obtPertenece
+     *
+     * @since 0.5
+     */
+    private function obtPertenece() {
+
+        $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
+
+        foreach ($this->pertenece as $nombreRelacion => $data) {
+            if (is_array($data)) {
+                $nombreObj = (array_key_exists('objeto', $data)) ? $data['objeto'] : $nombreRelacion;
+                $objRelacion = new $nombreObj();
+                $campos = array_key_exists('campos', $data) ? $data['campos'] : '';
+
+                $objRelacion->consulta($campos);
+                $relacion = (array_key_exists('relacion', $data)) ? $data['relacion'] : false;
+                $camposRelacion = (array_key_exists('campos_relacion', $data)) ? $data['campos_relacion'] : [];
+                if ($relacion) {
+                    $objRelacion->join($relacion,
+                        $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}]);
+                }
+
+                $this->consultaRelaciones[$nombreRelacion] = $objRelacion->obtQuery();
+            }
+        }
+
+        return $this;
+    }
+
+    private function obtPerteneceAUno() {
+
+        foreach ($this->perteneceAUno as $key => $relacion) {
+
+            $rel = new $key();
+            $this->consultaRelaciones[$key] = $rel->consulta()->filtro([$relacion['pk'] => $this->{$relacion['pk']}])->obtQuery();
+
+        }
+
+        return $this;
+    }
+
+    /**
      * Genera la consulta para las relaciones 1 : M del Objeto
      *
      * @method obtTieneMuchos
@@ -540,7 +825,7 @@ class DataModel {
         }
 
         return $this;
-    }
+    }//fin metodo initBD
 
     /**
      * Genera las consultas para las relaciones 1:1 del Objeto
@@ -558,7 +843,7 @@ class DataModel {
             //
             // $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
             // $rel = new $nombreObj();
-            // }else 
+            // }else
             if (is_string($relacion) and class_exists($relacion)) {
 
                 $rel = new $relacion();
@@ -581,35 +866,22 @@ class DataModel {
         //	$this->debug($consultas);
     }
 
-    /**
-     * Genera las consultas para las relaciones MaN
-     * @method obtPertenece
-     *
-     * @since 0.5
-     */
-    private function obtPertenece() {
+    private function instanciarTieneMuchos() {
 
-        $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
+        foreach ($this->tieneMuchos as $key => $value) {
+            if (!is_array($value)) {
+                $explode = explode('\\', $value);
+                $class = array_pop($explode);
 
-        foreach ($this->pertenece as $nombreRelacion => $data) {
-            if (is_array($data)) {
-                $nombreObj = (array_key_exists('objeto', $data)) ? $data['objeto'] : $nombreRelacion;
-                $objRelacion = new $nombreObj();
-                $campos = array_key_exists('campos', $data) ? $data['campos'] : '';
-
-                $objRelacion->consulta($campos);
-                $relacion = (array_key_exists('relacion', $data)) ? $data['relacion'] : false;
-                $camposRelacion = (array_key_exists('campos_relacion', $data)) ? $data['campos_relacion'] : [];
-                if ($relacion) {
-                    $objRelacion->join($relacion,
-                        $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}]);
-                }
-
-                $this->consultaRelaciones[$nombreRelacion] = $objRelacion->obtQuery();
+                $this->{$class} = [];
+                // Debug::imprimir($key,$value,"-");
+            }
+            else {
+                $explode = explode('\\', $key);
+                $class = array_pop($explode);
+                $this->{$key} = [];
             }
         }
-
-        return $this;
     }
 
     /**
@@ -621,124 +893,6 @@ class DataModel {
 
         return $this->instanciarObjeto($id, $data);
     }
-
-    /**
-     * Inicializa un objeto a partir de Base de Datos
-     * @method inicializarObjeto
-     *
-     * @param int $id Identificador unico del registro;
-     */
-    private function instanciarObjeto($id, $data = []) {
-
-        if (count($data) < 1) {
-            $data = $this->__obtConsultaInstancia($id)->fila();
-        }
-
-        $this->valoresIniciales = $data;
-
-        $this->establecerAtributos($data, $this->_clase);
-
-        if ($this->nivelActualORM <= $this->nivelORM) {
-
-            $this->identificarObjetosRelacion();
-            $this->obtenerDataRelaciones();
-        }
-
-        return $this;
-    }//fin función inicializarObjeto
-
-    function __obtConsultaInstancia($id) {
-
-        return $this->consulta()->filtro([$this->pk => $id]);
-    }
-
-    /**
-     * Verifica las relaciones existentes
-     *
-     * Valida las relaciones uno a muchos y muchos a muchos del objeto. Si el objeto
-     * está instanciado, obtiene la data de cada relacion basandose en el limite definido
-     * en la constante
-     * @method validarRelaciones
-     */
-    private function validarRelaciones() {
-
-        if ($this->nivelActualORM < $this->nivelORM) {
-            foreach ($this->tieneMuchos as $id => $key) {
-
-                if (is_integer($id) and class_exists($key)) {
-                    $keyObject = new $key(null, $this->nivelActualORM);
-                    $pk = $this->pk;
-                    $this->$key = $keyObject->obtenerBy($this->$pk, $pk);
-                }
-
-            }
-        }
-    }
-    /**
-     * obtiene las relaciones declaradas uno a muchos del objeto
-     * @method obtenerPertenencias
-     */
-
-    /**
-     * Identifica el nombre de la tabla de base de datos
-     * @method obtenerTablaBD
-     */
-    private function obtenerTablaBD() {
-
-    }
-
-    private function identificarObjetosRelacion() {
-
-        foreach ($this->propiedades as $prop => $value) {
-            if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
-
-                $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", str_replace("id_", "", $prop)));
-                if (class_exists($objeto) and !in_array($objeto, $this->tieneUno) and !array_key_exists($objeto,
-                        $this->tieneUno))
-                    $this->tieneUno[$objeto] = [
-                        'obj' => $objeto,
-                        'pk'  => $prop
-                    ];
-            }
-        }
-    }
-
-    /**
-     * Verifica que clases son identificadas como objetos
-     *
-     * @method identificarPropertyObjects
-     */
-    private function _identificarObjetosRelacion() {
-
-        if ($this->nivelActualORM < $this->nivelORM) {
-
-            foreach ($this->propiedades as $prop => $val) {
-                if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
-                    $propiedad = str_replace("id_", "", $prop);
-
-                    $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
-
-                    if ($propiedad != $this->_clase and class_exists($objeto)) {
-                        //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
-                        //ninguna relacion del objeto relacionado
-                        $obj = new $objeto(null, 2);
-                        $pk = $this->pk;
-                        if (!empty($this->$pk)) {
-
-                            $obj->obtenerBy($this->$prop, $prop);
-                            $this->$objeto = $obj;
-                        }
-                        else {
-                            $this->$objeto = new $objeto(null, 2);
-                        }
-                        $this->pertenece[$objeto] = $this->$objeto;
-
-                    }
-                    //$this->propiedadesObjetos[$prop]=new $objeto();
-                }
-            }//fin foreach
-        }
-    }//fin indentificarRefereincas
 
     /**
      * Permite acceder a propiedades privadas o protegidas del objeto instanciado
@@ -762,56 +916,6 @@ class DataModel {
         $this->establecerAtributos($arr, $this->_clase);
 
         return $this;
-    }
-
-    /**
-     * Inicializa el objeto correspondiente para el manejo de la base de datos
-     * @method initBD
-     */
-    private function initBD($manejador = "") {
-
-        if (!empty($manejador))
-            $this->manejadorBD = $manejador;
-        if (empty($this->manejadorBD)) {
-            throw new Exception("No se encuentra definido el manejador de base de datos", 1);
-        }
-        switch ($this->manejadorBD) {
-            case 'PSQL' :
-                #include_once 'Psql.class.php';
-                $this->bd = new Psql ($this->configuracionBD);
-                break;
-            case 'MySQL' :
-                #include_once 'Mysql.class.php';
-                $this->bd = new Mysql($this->configuracionBD, $this->_clase);
-                break;
-            default:
-                throw new Exception("No se ha definido correctamente el manejador de base de datos", 3);
-
-        }
-
-        $this->resultBD = new ResultBD($this);
-    }//fin metodo initBD
-
-    /**
-     * Obtiene todas las propiedades públicas de un objeto instanciado.
-     *
-     * Hace uso de la clase Reflection, nativa de php
-     *
-     * @return array $arrayPropiedades Arreglo con propiedades publicas
-     */
-    private function obtenerPropiedadesObjeto() {
-
-        $this->reflector = new ReflectionClass($this->_clase);
-        $propiedades = $this->reflector->getProperties(ReflectionProperty::IS_PUBLIC);
-        $arrayPropiedades = [];
-
-        foreach ($propiedades as $propiedad) {
-            if (!$propiedad->isStatic()) {
-                $arrayPropiedades[$propiedad->getName()] = $propiedad->getValue($this);
-            }
-        }
-        $this->propiedades = $arrayPropiedades;
-
     }
 
     /**
@@ -943,50 +1047,6 @@ class DataModel {
         return $this;
     }
 
-    /**
-     * Funcion para obtener datos de una tabla
-     * @method consulta
-     *
-     * @param array $campos Nombre de los campos a obtener
-     * @param mixed $pagina [Opcional] Si es pasado algun valor, la
-     *                      consulta será paginada segun los valores de las propiedasdes
-     *                      $filasPagina
-     *
-     */
-    function consulta($campos = "", $nroPaginacion = false) {
-
-        $banderaJoin = false;
-        $join = "";
-
-        if (empty($campos) or $campos == '*') {
-            $campos = array_keys($this->propiedades);
-        }
-
-        if (is_array($campos)) {
-
-            array_walk($campos,
-                function (&$key, $valor, $tabla) {
-
-                    $key = $tabla . "." . $key;
-                },
-                $this->tablaQuery);
-
-            $campos = implode(", ", $campos);
-        }
-        if ($nroPaginacion !== false) {
-            $this->paginar($nroPaginacion);
-        }
-        if ($this->consultaMultiple)
-            $this->query .= "SELECT $campos ";
-        else $this->query = "SELECT $campos ";
-        if ($banderaJoin === true)
-            $this->query .= ", " . $camposJoin;
-        $this->query .= " from $this->tablaQuery " . $join;
-        $this->usoWhere = false;
-
-        return $this;
-    }
-
     function query($campos = [], $tabla) {
 
         if (count($campos) < 1)
@@ -998,23 +1058,6 @@ class DataModel {
         $this->usoWhere = false;
 
         return $this;
-    }
-
-    /**
-     * Obtiene el nombre de la clave primaria de la tabla de base de datos
-     *
-     * El nombre es construido en base al estandard
-     *
-     * @var obtenerpk
-     */
-    private function obtenerpk() {
-
-        $clase = $this->_clase;
-        if (!empty($clase)) {
-            $pk = ($this->pk != "") ? $this->pk : "id_" . $clase;
-            $this->pk = strtolower($pk);
-        }
-
     }
 
     /**
@@ -1062,91 +1105,6 @@ class DataModel {
 
         }
 
-    }
-
-    /**
-     * Agrega la clausula where a la consulta
-     * @method where
-     */
-    private function where($condicion = " and") {
-
-        if (!$this->usoWhere) {
-            $this->query .= " where ";
-            $this->usoWhere = true;
-        }
-        else {
-            $this->query .= " $condicion ";
-        }
-    }
-
-    /**
-     * Permite realizar un filtro de la consulta a realizar
-     * @method filtro
-     *
-     * @param array $arrayFiltro [opcional] el key es el campo y el value el valor a filtrar
-     * @param array $arrayOr [opcional] Permite definir una condicion or de multiples valores
-     *
-     * @return object $this Objeto DataModel instanciado
-     *
-     *
-     */
-
-    function filtro($arrayFiltro = [], $arrayOr = []) {
-
-        $this->where();
-        if (is_array($arrayFiltro)) {
-            $i = 0;
-            $o = 0;
-
-            foreach ($arrayFiltro as $key => $value) {
-                if ($i > 0)
-                    $this->query .= " and ";
-
-                if (is_array($value)) {
-
-                    if (!strpos($key, ".")) {
-
-                        if (empty($value[0]) || $value[0] == '')
-                            $this->query .= $key . $value[1] . " ";
-                        else
-                            $this->query .= "$this->tablaQuery.$key" . $value[1] . '\'' . $value[0] . "' ";
-
-                    }
-                    else {
-                        $this->query .= $key . $value[1] . $value[0] . " ";
-                    }
-                }
-                else {
-
-                    if (!strpos($key, "."))
-                        $this->query .= "$this->tablaQuery.$key='$value'";
-                    else
-                        $this->query .= "$key='$value'";
-                }
-
-                ++$i;
-            }
-
-            if (is_array($arrayOr) and count($arrayOr) > 0) {
-                $this->query .= " or (";
-                foreach ($arrayOr as $key => $value) {
-                    if ($o > 0)
-                        $this->query .= " and ";
-
-                    if (!strpos($key, "."))
-                        $this->query .= " $this->tablaQuery.$key='$value'";
-                    else
-                        $this->query .= $key . "='$value'";
-                    ++$o;
-                }
-                $this->query .= ")";
-            }
-        }
-        else {
-            throw new Exception("No se ha definido correctamente el filtro", 201);
-        }
-
-        return $this;
     }//fin función filtro
 
     /**
@@ -1163,38 +1121,6 @@ class DataModel {
             $this->_groupBy .= " group by " . implode(",", $agrupacion);
         else
             $this->_groupBy .= " group by " . $agrupacion;
-
-        return $this;
-    }
-
-    /**
-     * Alias de metodo Consulta
-     * @method select
-     *
-     * @see self::consulta
-     */
-    function select($campos = "") {
-
-        $this->consulta($campos);
-
-        return $this;
-
-    }
-
-    /**
-     * Permite ordenar una consulta
-     *
-     * @method order
-     * @param mixed $order nombre de campo o arreglo de campos por los que se desea ordenar
-     * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
-     */
-    function order($order, $type = 'asc') {
-
-        if (is_array($order))
-            $order = implode(",", $order);
-
-        $campoOrden = strpos($order, '.') ? $order : $this->tablaQuery . "." . $order;
-        $this->order = "Order by " . $campoOrden . " " . $type;
 
         return $this;
     }
@@ -1274,7 +1200,7 @@ class DataModel {
         }
 
         return $this;
-    }//final función like
+    }
 
     /**
      * Permite hacer una consulta regExp
@@ -1293,7 +1219,68 @@ class DataModel {
             $this->query .= " " . $campo . " regexp '$valor'";
 
         return $this;
+    }
+
+    /**
+     * Retorna la data resultante de una consulta paginada
+     * Retorna un arreglo con los siguientes keys : filasPagina, registros, pagina, paginas
+     * @method dataPaginacion
+     *
+     * @return array
+     * @since 0.5
+     */
+    function dataPaginacion() {
+
+        return [
+            'consulta'     => $this->query,
+            'filasPagina'  => $this->filasPagina,
+            'registros'    => $this->_totalRegistros,
+            'paginaActual' => $this->_paginaConsultada,
+            'paginas'      => $this->_paginas
+        ];
+    }//final función like
+
+    function addConsulta() {
+
+        $this->query .= ";";
+        $this->consultaMultiple = true;
+        $this->consulta();
+
+        return $this;
     }//final función regExp
+
+    /**
+     * Retorna el resultado de multiples consultas
+     *
+     * Funcional para trabajar con Mysql. Retorna el resultado de multiples consultas solicitadas
+     *
+     * @see Mysql::mysqli_multi_query
+     * @method obtMultiple
+     *
+     */
+    function obtMultiple($keys) {
+
+        $this->consultaMultiple = false;
+
+        return $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery($this->query, 2), $keys);
+
+    }
+
+    /**
+     * Retorna todos los registros de Base de datos
+     * @method obtenerTodo
+     *
+     * @param string $key valor a usar de key en la matriz devuelta
+     *
+     * @return array $data
+     */
+    function obtenerTodo($key = "", $order = "") {
+
+        if (empty($order))
+            $order = $this->pk;
+
+        return $this->select()->order($order)->obt($key);
+    }
 
     /**
      * Retorna una matriz como resultado de una consulta realizada
@@ -1362,64 +1349,35 @@ class DataModel {
     }
 
     /**
-     * Retorna la data resultante de una consulta paginada
-     * Retorna un arreglo con los siguientes keys : filasPagina, registros, pagina, paginas
-     * @method dataPaginacion
+     * Permite ordenar una consulta
      *
-     * @return array
-     * @since 0.5
+     * @method order
+     * @param mixed $order nombre de campo o arreglo de campos por los que se desea ordenar
+     * @param string $type Tipo de ordenado "asc" o "desc" por default es asc
      */
-    function dataPaginacion() {
+    function order($order, $type = 'asc') {
 
-        return [
-            'consulta'     => $this->query,
-            'filasPagina'  => $this->filasPagina,
-            'registros'    => $this->_totalRegistros,
-            'paginaActual' => $this->_paginaConsultada,
-            'paginas'      => $this->_paginas
-        ];
-    }
+        if (is_array($order))
+            $order = implode(",", $order);
 
-    function addConsulta() {
-
-        $this->query .= ";";
-        $this->consultaMultiple = true;
-        $this->consulta();
+        $campoOrden = strpos($order, '.') ? $order : $this->tablaQuery . "." . $order;
+        $this->order = "Order by " . $campoOrden . " " . $type;
 
         return $this;
     }
 
     /**
-     * Retorna el resultado de multiples consultas
+     * Alias de metodo Consulta
+     * @method select
      *
-     * Funcional para trabajar con Mysql. Retorna el resultado de multiples consultas solicitadas
-     *
-     * @see Mysql::mysqli_multi_query
-     * @method obtMultiple
-     *
+     * @see self::consulta
      */
-    function obtMultiple($keys) {
+    function select($campos = "") {
 
-        $this->consultaMultiple = false;
+        $this->consulta($campos);
 
-        return $this->bd->obtenerDataMultiQuery($this->bd->ejecutarQuery($this->query, 2), $keys);
+        return $this;
 
-    }
-
-    /**
-     * Retorna todos los registros de Base de datos
-     * @method obtenerTodo
-     *
-     * @param string $key valor a usar de key en la matriz devuelta
-     *
-     * @return array $data
-     */
-    function obtenerTodo($key = "", $order = "") {
-
-        if (empty($order))
-            $order = $this->pk;
-
-        return $this->select()->order($order)->obt($key);
     }
 
     /**
@@ -1432,15 +1390,6 @@ class DataModel {
             $this->query .= " " . $this->order;
 
         return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery($this->query));
-    }
-
-    /**
-     * Retorna el query armado
-     * @method obtQuery
-     */
-    protected function obtQuery() {
-
-        return $this->query;
     }
 
     /**
@@ -1464,6 +1413,247 @@ class DataModel {
         }
 
         //return $this->resultBD->setValores($this);
+    }
+
+    /**
+     * Crea un nuevo registro unico
+     * @method insertar
+     *
+     * @param array $data Data a insertar
+     */
+    private function insertar($data = "") {
+
+        if (!$this->verificarUnicos()->esUnico()) {
+
+            $data = $this->estructuraInsert();
+
+            $insert = sprintf("insert into %s (%s) VALUES (%s)",
+                $this->tablaBD,
+                implode(",", $this->obtenerCamposQuery()),
+                implode(",", $data));
+
+            if ($this->bd->insertar($insert)) {
+                $pk = $this->pk;
+                $this->$pk = $this->bd->idResult;
+                $this->resultBD->setValores($this);
+
+            }
+        }
+        else {
+            $this->resultBD->__set('ejecutado', false);
+        }
+
+        #$this->bd->cerrarConexion();
+        return $this->resultBD;
+    }
+
+    /**
+     * Valida las restricciones unicas creadas por medio del array unico antes
+     * de realizar una inserción.
+     * @method verificarUnicos
+     *
+     * @see self::unicos
+     */
+    private function verificarUnicos($datos = "") {
+
+        if (!is_array($this->unico))
+            throw new Exception("No se ha creado correctamente el arreglo unico", 212);
+        if (count($this->unico) > 0) {
+            $filtro = [];
+            foreach ($this->unico as $key => $valorUnico) {
+                if (is_array($valorUnico)) {
+                    $i = 0;
+                    $v = "( ";
+                    foreach ($valorUnico as $key => $valor) {
+                        if ($i > 0)
+                            $v .= " and ";
+                        if (!empty($valor)) {
+                            $v .= "$valor='" . $this->propiedades[$valor] . "'";
+                            ++$i;
+                        }
+                    }
+                    $filtro[] = $v . " ) ";
+                }
+                else {
+                    $filtro[] = "$valorUnico='" . $this->propiedades[$valorUnico] . "'";
+                }
+            }
+
+            $this->query = "select $this->pk from $this->tablaBD WHERE " . implode("or ", $filtro);
+
+            $this->bd->ejecutarQuery($this->query);
+
+            if ($this->bd->totalRegistros > 0) {
+                $this->resultBD->setValores($this)->setUnico(true);
+            }
+            else {
+                $this->resultBD->setValores($this)->setUnico(false);
+            }
+
+        }
+
+        return $this->resultBD;
+    }
+
+    private function estructuraInsert($data = [], $insertPK = false) {
+
+        if (count($data) < 1) {
+            $data = $this->propiedades;
+        }
+
+        foreach ($data as $campo => $valor) {
+
+            if (($campo != $this->pk) || $insertPK) {
+                switch ($valor) {
+                    case '':
+                        if (!filter_var($valor, FILTER_VALIDATE_INT) and $valor !== 0) {
+                            $valores[] = "null";
+                        }
+                        else {
+                            $valores[] = $valor;
+                        }
+                        break;
+                    default:
+                        if (!in_array($valor, $this->bd->getValoresReservados())) {
+                            $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
+                        }
+                        else {
+                            $valores[] = $valor;
+                        }
+                        break;
+                }
+            }
+        }//fin foreach
+        if ($this->registroMomentoGuardado === true) {
+            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
+            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
+        }
+
+        if ($this->registroUser) {
+            if (Medios\Sesion::obt('Usuario')) {
+                $user = Medios\Sesion::obt('Usuario');
+                if (is_array($user) and array_key_exists('id_usuario', $user))
+                    $idUser = $user['id_usuario'];
+                else if (is_object($user) and property_exists($user, 'id_usuario'))
+                    $idUser = ($user->id_usuario > 0) ? $user->id_usuario : 0;
+            }
+            else {
+                if (is_array(Medios\Sesion::obt('usuario')) and array_key_exists('id_usuario',
+                        Medios\Sesion::obt('usuario')))
+                    $idUser = Medios\Sesion::obt('usuario')['id_usuario'];
+                else
+                    $idUser = 0;
+
+            }
+
+            $valores[] = $idUser;
+            $valores[] = $idUser;
+        };
+
+        return $valores;
+
+    }
+
+    /**
+     * Obtiene los campos de Base de datos utilizados para realizar una inserción
+     * o modificación.
+     *
+     * @method obtenerCamposQuery
+     * @return array $campos
+     */
+    private function obtenerCamposQuery($campos = "", $unsetPK = true) {
+
+        if (empty($campos) or !is_array($campos))
+            $campos = $this->propiedades;
+
+        if ($unsetPK)
+            unset($campos[$this->pk]);
+
+        $campos = array_keys($campos);
+        if ($this->registroMomentoGuardado) {
+            $campos[] = 'fecha_creacion';
+            $campos[] = 'fecha_modificacion';
+        }
+        if ($this->registroUser) {
+            $campos[] = "id_usuario_creador";
+            $campos[] = "id_usuario_modificador";
+        }
+
+        return $campos;
+    }
+
+    private function modificar() {
+
+        $dataUpdate = [];
+        if (!is_array($this->valoresIniciales)) {
+            $this->valoresIniciales = [];
+        }
+
+        $dataUpdate = array_diff_assoc($this->propiedades, $this->valoresIniciales);
+
+        if (count($dataUpdate) > 0) {
+            if ($this->registroUser) {
+                $idUser = Medios\Sesion::obt('id_usuario');
+                $dataUpdate['id_usuario_modificador'] = 0;
+                if (Medios\Sesion::activa()) {
+                    if (is_object(Medios\Sesion::obt('Usuario')))
+                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('Usuario')->id_usuario;
+                    else if (array_key_exists('id_usuario', Medios\Sesion::obt('usuario'))) {
+                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('usuario', 'id_usuario');
+                    }
+                }
+            }
+
+            $update = "UPDATE $this->tablaBD SET ";
+            $i = 0;
+
+            foreach ($dataUpdate as $campo => $valor) {
+                if ($i > 0)
+                    $update .= ",";
+                switch ($valor) {
+                    case '':
+                        if (!is_numeric($valor)) {
+                            $campoValor = "null";
+                        }
+                        else {
+                            $campoValor = $valor;
+                        }
+                        break;
+
+                    default:
+                        if (!in_array($valor, $this->bd->getValoresReservados())) {
+                            $campoValor = "'" . $this->bd->escaparTexto($valor) . "'";
+                        }
+                        else {
+                            $campoValor = $this->bd->escaparTexto($valor);
+                        }
+
+                        break;
+                }
+
+                $update .= " $campo=$campoValor";
+                ++$i;
+            }
+
+            $pk = $this->pk;
+            $update .= " WHERE $this->pk=" . $this->$pk;
+
+            $this->query = $update;
+
+            if ($this->bd->ejecutarQuery($this->query)) {
+                $this->establecerAtributos($dataUpdate);
+            }
+
+        }
+        else {
+
+            $this->query = "";
+        }
+        $this->resultBD->setValores($this);
+
+        #$this->bd->cerrarConexion();
+        return $this->resultBD;
+
     }
 
     /**
@@ -1664,202 +1854,11 @@ class DataModel {
             $this->idsResultantes[] = $lastId;
             $lastId++;
         }
-    }
+    }//fin crearInsert
 
     function obtIdsResultados() {
 
         return $this->idsResultantes;
-    }
-
-    /**
-     * Crea un nuevo registro unico
-     * @method insertar
-     *
-     * @param array $data Data a insertar
-     */
-    private function insertar($data = "") {
-
-        if (!$this->verificarUnicos()->esUnico()) {
-
-            $data = $this->estructuraInsert();
-
-            $insert = sprintf("insert into %s (%s) VALUES (%s)",
-                $this->tablaBD,
-                implode(",", $this->obtenerCamposQuery()),
-                implode(",", $data));
-
-            if ($this->bd->insertar($insert)) {
-                $pk = $this->pk;
-                $this->$pk = $this->bd->idResult;
-                $this->resultBD->setValores($this);
-
-            }
-        }
-        else {
-            $this->resultBD->__set('ejecutado', false);
-        }
-
-        #$this->bd->cerrarConexion();
-        return $this->resultBD;
-    }
-
-    /**
-     * Obtiene los campos de Base de datos utilizados para realizar una inserción
-     * o modificación.
-     *
-     * @method obtenerCamposQuery
-     * @return array $campos
-     */
-    private function obtenerCamposQuery($campos = "", $unsetPK = true) {
-
-        if (empty($campos) or !is_array($campos))
-            $campos = $this->propiedades;
-
-        if ($unsetPK)
-            unset($campos[$this->pk]);
-
-        $campos = array_keys($campos);
-        if ($this->registroMomentoGuardado) {
-            $campos[] = 'fecha_creacion';
-            $campos[] = 'fecha_modificacion';
-        }
-        if ($this->registroUser) {
-            $campos[] = "id_usuario_creador";
-            $campos[] = "id_usuario_modificador";
-        }
-
-        return $campos;
-    }
-
-    private function estructuraInsert($data = [], $insertPK = false) {
-
-        if (count($data) < 1) {
-            $data = $this->propiedades;
-        }
-
-        foreach ($data as $campo => $valor) {
-
-            if (($campo != $this->pk) || $insertPK) {
-                switch ($valor) {
-                    case '':
-                        if (!filter_var($valor, FILTER_VALIDATE_INT) and $valor !== 0) {
-                            $valores[] = "null";
-                        }
-                        else {
-                            $valores[] = $valor;
-                        }
-                        break;
-                    default:
-                        if (!in_array($valor, $this->bd->getValoresReservados())) {
-                            $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
-                        }
-                        else {
-                            $valores[] = $valor;
-                        }
-                        break;
-                }
-            }
-        }//fin foreach
-        if ($this->registroMomentoGuardado === true) {
-            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
-            $valores[] = "'" . Medios\FechaHora::datetime() . "'";
-        }
-        if ($this->registroUser) {
-            if (Medios\Sesion::obt('Usuario')) {
-                $user = Medios\Sesion::obt('Usuario');
-                if (is_array($user) and array_key_exists('id_usuario', $user))
-                    $idUser = $user['id_usuario'];
-                else if (is_object($user) and property_exists($user, 'id_usuario'))
-                    $idUser = ($user->id_usuario > 0) ? $user->id_usuario : 0;
-            }
-            else {
-                if (is_array(Medios\Sesion::obt('usuario')) and array_key_exists('id_usuario',
-                        Medios\Sesion::obt('usuario')))
-                    $idUser = Medios\Sesion::obt('usuario')['id_usuario'];
-                else
-                    $idUser = 0;
-            }
-
-            $valores[] = $idUser;
-            $valores[] = $idUser;
-        };
-
-        return $valores;
-
-    }//fin crearInsert
-
-    private function modificar() {
-
-        $dataUpdate = [];
-        if (!is_array($this->valoresIniciales)) {
-            $this->valoresIniciales = [];
-        }
-
-        $dataUpdate = array_diff_assoc($this->propiedades, $this->valoresIniciales);
-
-        if (count($dataUpdate) > 0) {
-            if ($this->registroUser) {
-                $idUser = Medios\Sesion::obt('id_usuario');
-                $dataUpdate['id_usuario_modificador'] = 0;
-                if (Medios\Sesion::activa()) {
-                    if (is_object(Medios\Sesion::obt('Usuario')))
-                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('Usuario')->id_usuario;
-                    else if (array_key_exists('id_usuario', Medios\Sesion::obt('usuario'))) {
-                        $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('usuario', 'id_usuario');
-                    }
-                }
-            }
-
-            $update = "UPDATE $this->tablaBD SET ";
-            $i = 0;
-
-            foreach ($dataUpdate as $campo => $valor) {
-                if ($i > 0)
-                    $update .= ",";
-                switch ($valor) {
-                    case '':
-                        if (!is_numeric($valor)) {
-                            $campoValor = "null";
-                        }
-                        else {
-                            $campoValor = $valor;
-                        }
-                        break;
-
-                    default:
-                        if (!in_array($valor, $this->bd->getValoresReservados())) {
-                            $campoValor = "'" . $this->bd->escaparTexto($valor) . "'";
-                        }
-                        else {
-                            $campoValor = $this->bd->escaparTexto($valor);
-                        }
-
-                        break;
-                }
-
-                $update .= " $campo=$campoValor";
-                ++$i;
-            }
-
-            $pk = $this->pk;
-            $update .= " WHERE $this->pk=" . $this->$pk;
-
-            $this->query = $update;
-
-            if ($this->bd->ejecutarQuery($this->query)) {
-                $this->establecerAtributos($dataUpdate);
-            }
-
-        }
-        else {
-
-            $this->query = "";
-        }
-        $this->resultBD->setValores($this);
-
-        #$this->bd->cerrarConexion();
-        return $this->resultBD;
-
     }
 
     /**
@@ -1879,52 +1878,155 @@ class DataModel {
     }
 
     /**
-     * Valida las restricciones unicas creadas por medio del array unico antes
-     * de realizar una inserción.
-     * @method verificarUnicos
+     * Retorna el objeto ResultBD obtenido a partir de una consulta a base de datos
      *
-     * @see self::unicos
+     * @method getResult
+     * @return object ResultBD();
      */
-    private function verificarUnicos($datos = "") {
-
-        if (!is_array($this->unico))
-            throw new Exception("No se ha creado correctamente el arreglo unico", 212);
-        if (count($this->unico) > 0) {
-            $filtro = [];
-            foreach ($this->unico as $key => $valorUnico) {
-                if (is_array($valorUnico)) {
-                    $i = 0;
-                    $v = "( ";
-                    foreach ($valorUnico as $key => $valor) {
-                        if ($i > 0)
-                            $v .= " and ";
-                        if (!empty($valor)) {
-                            $v .= "$valor='" . $this->propiedades[$valor] . "'";
-                            ++$i;
-                        }
-                    }
-                    $filtro[] = $v . " ) ";
-                }
-                else {
-                    $filtro[] = "$valorUnico='" . $this->propiedades[$valorUnico] . "'";
-                }
-            }
-
-            $this->query = "select $this->pk from $this->tablaBD WHERE " . implode("or ", $filtro);
-
-            $this->bd->ejecutarQuery($this->query);
-
-            if ($this->bd->totalRegistros > 0) {
-                $this->resultBD->setValores($this)->setUnico(true);
-            }
-            else {
-                $this->resultBD->setValores($this)->setUnico(false);
-            }
-
-        }
+    function getResult() {
 
         return $this->resultBD;
     }//fin función
+
+    function envolverFiltro() {
+
+        $consulta = explode('where', $this->query);
+        if (count($consulta > 0))
+            $this->query = $consulta[0] . ' where (' . $consulta[1] . ')';
+
+        return $this;
+    }
+
+    /**
+     * Registra el total de registros de una tabla
+     * @method totalRegistros
+     */
+    function totalRegistros($filtro = false) {
+
+        $this->query = "Select count(*) as total from " . $this->tablaBD . " ";
+        if ($filtro)
+            return $this;
+        else
+            return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from " . $this->tablaBD));
+    }
+
+    function imprimir($propiedad = "query", $exit = 1) {
+
+        Debug::string($this->{$propiedad}, $exit);
+    }
+
+    /**
+     * Utiliza la clausula between de mysql
+     * @method entre
+     *
+     * @param string $campo Nombre del campo a usar
+     * @param mixed $ini Valor inicial
+     * @param mixed $fin Valor final
+     */
+    function entre($campo, $ini, $fin) {
+
+        $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
+
+    }
+
+    /**
+     * Utiliza la clausula COUNT de mysql
+     * @method contar
+     */
+    function contar($campo = '*', $distinct = false) {
+
+        if ($campo != '*')
+            $campo = $this->tablaQuery . '.' . $campo;
+
+        if ($distinct)
+            $campo = 'DISTINCT ' . $campo;
+
+        $this->query = "SELECT  COUNT($campo) as total_count from $this->tablaQuery ";
+        $this->usoWhere = false;
+
+        return $this;
+    }
+
+    /**
+     * Retorna el query armado
+     * @method obtQuery
+     */
+    protected function obtQuery() {
+
+        return $this->query;
+    }
+
+    protected function guardarRelacion($arrayData) {
+
+    }
+
+    /**
+     * Verifica las relaciones existentes
+     *
+     * Valida las relaciones uno a muchos y muchos a muchos del objeto. Si el objeto
+     * está instanciado, obtiene la data de cada relacion basandose en el limite definido
+     * en la constante
+     * @method validarRelaciones
+     */
+    private function validarRelaciones() {
+
+        if ($this->nivelActualORM < $this->nivelORM) {
+            foreach ($this->tieneMuchos as $id => $key) {
+
+                if (is_integer($id) and class_exists($key)) {
+                    $keyObject = new $key(null, $this->nivelActualORM);
+                    $pk = $this->pk;
+                    $this->$key = $keyObject->obtenerBy($this->$pk, $pk);
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Identifica el nombre de la tabla de base de datos
+     * @method obtenerTablaBD
+     */
+    private function obtenerTablaBD() {
+
+    }
+
+    /**
+     * Verifica que clases son identificadas como objetos
+     *
+     * @method identificarPropertyObjects
+     */
+    private function _identificarObjetosRelacion() {
+
+        if ($this->nivelActualORM < $this->nivelORM) {
+
+            foreach ($this->propiedades as $prop => $val) {
+                if (substr($prop, 0, 2) == 'id' and $prop != $this->pk) {
+                    $propiedad = str_replace("id_", "", $prop);
+
+                    $objeto = Medios\Cadenas::upperCamelCase(str_replace("_", " ", $propiedad));
+
+                    if ($propiedad != $this->_clase and class_exists($objeto)) {
+                        //Se pasa la constante NIVEL_ORM +1 para que no sea instanciado
+                        //ninguna relacion del objeto relacionado
+                        $obj = new $objeto(null, 2);
+                        $pk = $this->pk;
+                        if (!empty($this->$pk)) {
+
+                            $obj->obtenerBy($this->$prop, $prop);
+                            $this->$objeto = $obj;
+                        }
+                        else {
+                            $this->$objeto = new $objeto(null, 2);
+                        }
+                        $this->pertenece[$objeto] = $this->$objeto;
+
+                    }
+                    //$this->propiedadesObjetos[$prop]=new $objeto();
+                }
+            }//fin foreach
+        }
+    }
 
     /**
      * Devuelve el plural de una palabra
@@ -1967,116 +2069,6 @@ class DataModel {
         }
 
         return implode($arrayPalabra);
-    }
-
-    /**
-     * Retorna el objeto ResultBD obtenido a partir de una consulta a base de datos
-     *
-     * @method getResult
-     * @return object ResultBD();
-     */
-    function getResult() {
-
-        return $this->resultBD;
-    }
-
-    function envolverFiltro() {
-
-        $consulta = explode('where', $this->query);
-        if (count($consulta > 0))
-            $this->query = $consulta[0] . ' where (' . $consulta[1] . ')';
-
-        return $this;
-    }
-
-    protected function guardarRelacion($arrayData) {
-
-    }
-
-    /**
-     * Registra el total de registros de una tabla
-     * @method totalRegistros
-     */
-    function totalRegistros($filtro = false) {
-
-        $this->query = "Select count(*) as total from " . $this->tablaBD . " ";
-        if ($filtro)
-            return $this;
-        else
-            return $this->bd->obtenerArrayAsociativo($this->bd->ejecutarQuery("select count(*) as total from " . $this->tablaBD));
-    }
-
-    private function debug($data, $string = true, $condicion = false) {
-
-        if ($this->debug) {
-            ($string === true) ? Debug::string($data, $condicion) : Debug::mostrarArray($data, $condicion);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Genera una consulta paginada
-     * @method paginar
-     *
-     * @since 0.5
-     */
-    function paginar($pagina) {
-
-        $this->_establecerPaginacion($pagina);
-
-        return $this;
-    }
-
-    /**
-     * Activa la configuracion para una consulta paginada
-     * @method pagina
-     *
-     * @param int $nroPagina Numero de la pagina que se desea de la consulta paginada
-     */
-    private function _establecerPaginacion($nroPagina = 1) {
-
-        $this->_paginaConsultada = $nroPagina;
-        $this->_paginar = true;
-
-        return $this;
-    }
-
-    function imprimir($propiedad = "query", $exit = 1) {
-
-        Debug::string($this->{$propiedad}, $exit);
-    }
-
-    /**
-     * Utiliza la clausula between de mysql
-     * @method entre
-     *
-     * @param string $campo Nombre del campo a usar
-     * @param mixed $ini Valor inicial
-     * @param mixed $fin Valor final
-     */
-    function entre($campo, $ini, $fin) {
-
-        $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
-
-    }
-
-    /**
-     * Utiliza la clausula COUNT de mysql
-     * @method contar
-     */
-    function contar($campo = '*', $distinct = false) {
-
-        if ($campo != '*')
-            $campo = $this->tablaQuery . '.' . $campo;
-
-        if ($distinct)
-            $campo = 'DISTINCT ' . $campo;
-
-        $this->query = "SELECT  COUNT($campo) as total_count from $this->tablaQuery ";
-        $this->usoWhere = false;
-
-        return $this;
     }
 
 }//fin clase;

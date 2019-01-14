@@ -6,11 +6,11 @@
  * Time: 03:03 PM
  */
 
-namespace App\Modulos\Proyecto\Modelos;
+namespace App\Modulos\Proyectos\Modelos;
 
 use Jida\Core\Modelo;
 
-class Proyecto extends Modelo {
+class Proyectos extends Modelo {
 
     var $id_proyecto;
     var $nombre;
