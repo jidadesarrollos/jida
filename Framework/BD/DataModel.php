@@ -1460,7 +1460,6 @@ class DataModel {
 
         }
         else {
-
             return $this->modificar();
         }
 
@@ -1802,7 +1801,7 @@ class DataModel {
             if ($this->registroUser) {
                 $idUser = Medios\Sesion::obt('id_usuario');
                 $dataUpdate['id_usuario_modificador'] = 0;
-                if (Medios\Sesion::checkLogg()) {
+                if (Medios\Sesion::activa()) {
                     if (is_object(Medios\Sesion::obt('Usuario')))
                         $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('Usuario')->id_usuario;
                     else if (array_key_exists('id_usuario', Medios\Sesion::obt('usuario'))) {

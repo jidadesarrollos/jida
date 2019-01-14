@@ -6,11 +6,11 @@
  * Time: 03:03 PM
  */
 
-namespace App\Modulos\Categoria\Modelos;
+namespace App\Modulos\Categorias\Modelos;
 
 use Jida\Core\Modelo;
 
-class Categoria extends Modelo {
+class Categorias extends Modelo {
 
     var $id_categoria;
     var $nombre;

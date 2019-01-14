@@ -1,0 +1,38 @@
+{
+  "nombre": "Formulario de Categorias",
+  "query": "select id_categoria, nombre, descripcion from m_categorias",
+  "estructura": "",
+  "identificador": "FormularioCategorias",
+  "clave_primaria": "id_categoria",
+  "campos": {
+    "id_categoria": {
+      "label": "id_categoria",
+      "name": "id_categoria",
+      "id": "id_categoria",
+      "type": "hidden"
+    },
+    "nombre": {
+      "label": "Nombre",
+      "name": "nombre",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "Debe ingresar el nombre de la cateogira"
+        }
+      },
+      "orden": "1",
+      "placeholder": "Nombre",
+      "visibilidad": "1",
+      "id": "nombre",
+      "type": "text"
+    },
+    "Descripcion": {
+      "label": "Descripcion",
+      "name": "descripcion",
+      "orden": "2",
+      "placeholder": "Descripcion",
+      "visibilidad": "1",
+      "id": "descripcion",
+      "type": "text"
+    }
+  }
+}

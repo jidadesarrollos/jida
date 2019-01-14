@@ -18,7 +18,7 @@ namespace Jida\Medios;
 
 class Mensajes {
 
-    function __construct () {
+    function __construct() {
     }
 
     /**
@@ -36,7 +36,7 @@ class Mensajes {
      *
      */
 
-    static function crear ($tipo, $msj, $hidden = false) {
+    static function crear($tipo, $msj, $hidden = false) {
 
         $css = self::obtenerEstiloMensaje($tipo);
         if ($hidden == true) {
@@ -71,7 +71,7 @@ class Mensajes {
      * @since      0.1
      * @deprecated 0.6
      */
-    static function obtenerEstiloMensaje ($clave) {
+    static function obtenerEstiloMensaje($clave) {
 
         $estilo = [];
         if (array_key_exists('configMensajes', $GLOBALS)) {
@@ -88,33 +88,6 @@ class Mensajes {
     }
 
     /**
-     * @internal Define el estilo de los mensajes tomando en cuenta la configuracion general
-     * @method obtEstilo
-     *
-     * @param string $tipo tipo de mensaje
-     *
-     * @return string
-     * @access   public
-     * @since    0.6
-     *
-     */
-    static function obtEstilo ($clave) {
-
-        $estilo = [];
-
-        if (array_key_exists('configMensajes', $GLOBALS)) {
-            $estilo = $GLOBALS['configMensajes'];
-        }
-
-        if (array_key_exists($clave, $estilo)) {
-
-            return $estilo[$clave];
-        }
-
-        return $estilo[$clave];
-    }
-
-    /**
      * @internal   Crea mensaje de con estilo error
      * @method mensajeError
      *
@@ -125,7 +98,7 @@ class Mensajes {
      * @since      0.1
      * @deprecated 0.6
      */
-    static function mensajeError ($mensaje) {
+    static function mensajeError($mensaje) {
 
         $css = self::obtenerEstiloMensaje('error');
         $mensaje = "
@@ -149,7 +122,7 @@ class Mensajes {
      * @since    0.6
      *
      */
-    static function error ($mensaje) {
+    static function error($mensaje) {
 
         $css = self::obtEstilo('error');
 
@@ -160,6 +133,33 @@ class Mensajes {
                     </DIV>";
 
         return $mensaje;
+    }
+
+    /**
+     * @internal Define el estilo de los mensajes tomando en cuenta la configuracion general
+     * @method obtEstilo
+     *
+     * @param string $tipo tipo de mensaje
+     *
+     * @return string
+     * @access   public
+     * @since    0.6
+     *
+     */
+    static function obtEstilo($clave) {
+
+        $estilo = [];
+
+        if (array_key_exists('configMensajes', $GLOBALS)) {
+            $estilo = $GLOBALS['configMensajes'];
+        }
+
+        if (array_key_exists($clave, $estilo)) {
+
+            return $estilo[$clave];
+        }
+
+        return $estilo[$clave];
     }
 
     /**
@@ -174,7 +174,7 @@ class Mensajes {
      * @deprecated 0.6
      */
 
-    static function mensajeAlerta ($mensaje) {
+    static function mensajeAlerta($mensaje) {
 
         $css = self::obtenerEstiloMensaje('alerta');
         $mensaje = "
@@ -197,7 +197,7 @@ class Mensajes {
      * @since    0.6
      *
      */
-    static function alerta ($mensaje) {
+    static function alerta($mensaje) {
 
         $css = self::obtEstilo('alerta');
         $mensaje = "
@@ -220,7 +220,7 @@ class Mensajes {
      * @since      0.1
      * @deprecated 0.6
      */
-    static function mensajeSuceso ($mensaje) {
+    static function mensajeSuceso($mensaje) {
 
         $css = self::obtenerEstiloMensaje('suceso');
         $mensaje = "
@@ -255,7 +255,7 @@ class Mensajes {
      * @since    0.6
      *
      */
-    static function suceso ($mensaje) {
+    static function suceso($mensaje) {
 
         $css = self::obtEstilo('suceso');
         $mensaje = "
@@ -279,7 +279,7 @@ class Mensajes {
      * @deprecated 0.6
      * >>>>>>> c843122350ef21b73c3a8aa57f90e3313eb58c64
      */
-    static function mensajeInformativo ($mensaje) {
+    static function mensajeInformativo($mensaje) {
 
         $css = self::obtenerEstiloMensaje('info');
         $mensaje = "
@@ -302,7 +302,7 @@ class Mensajes {
      * @since    0.6
      *
      */
-    static function informativo ($mensaje) {
+    static function informativo($mensaje) {
 
         $css = self::obtEstilo('info');
         $mensaje = "
@@ -324,22 +324,7 @@ class Mensajes {
      * @since      0.1
      * @deprecated 0.6
      */
-    static function imprimirMensaje ($msj = "__msj") {
-
-        self::imprimirMsjSesion($msj);
-    }
-
-    /**
-     * Imprime un mensaje si existe
-     *
-     * @param string $msj Nombre de la variable a imprimir.
-     * @method imprimir
-     *
-     * @access public
-     * @since  0.6
-     *
-     */
-    static function imprimir ($msj = "__msj") {
+    static function imprimirMensaje($msj = "__msj") {
 
         self::imprimirMsjSesion($msj);
     }
@@ -355,7 +340,7 @@ class Mensajes {
      * @access   public
      * @since    0.1
      */
-    static function imprimirMsjSesion ($msj = "__msj") {
+    static function imprimirMsjSesion($msj = "__msj") {
 
         if (isset($_SESSION[$msj])) {
             echo $_SESSION[$msj];
@@ -363,10 +348,29 @@ class Mensajes {
         }
     }
 
-    static function msjExcepcion ($msj, $ruta) {
+    /**
+     * Imprime un mensaje si existe
+     *
+     * @param string $msj Nombre de la variable a imprimir.
+     * @method imprimir
+     *
+     * @access public
+     * @since  0.6
+     *
+     */
+    static function imprimir($msj = "__msj") {
+
+        self::imprimirMsjSesion($msj);
+    }
+
+    static function msjExcepcion($msj, $ruta) {
 
         $_SESSION['__excepcion'] = $msj;
         echo $_SESSION['__excepcion'];
+    }
+
+    static function almacenar($msj, $variable = "__msj") {
+        $_SESSION[$variable] = $msj;
     }
 
 } // END

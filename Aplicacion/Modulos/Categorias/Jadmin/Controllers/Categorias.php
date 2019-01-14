@@ -6,16 +6,16 @@
  * Time: 08:26 AM
  */
 
-namespace App\Modulos\Categoria\Jadmin\Controllers;
+namespace App\Modulos\Categorias\Jadmin\Controllers;
 
-use App\Jadmin\Controllers\Jadmin;
-use App\Modulos\Categoria\Modelos\Categoria as Modelo;
+use App\Modulos\Categorias\Modelos\Categorias as Modelo;
+use Jida\Jadmin\Controllers\JControl;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
-class Categoria extends Jadmin {
+class Categorias extends JControl {
 
     function index() {
 
@@ -38,7 +38,7 @@ class Categoria extends Jadmin {
             [
                 'span'  => 'fa fa-edit',
                 'title' => "Editar Categoria",
-                'href'  => "/jadmin/categoria/gestion/{clave}"
+                'href'  => "/jadmin/categorias/gestion/{clave}"
             ],
             [
                 'span'        => 'fa fa-trash',
@@ -60,17 +60,20 @@ class Categoria extends Jadmin {
 
         $modelo = new Modelo($id);
 
-        $form = new Formulario('FormularioCategorias', ['id_categoria' => $id]);
+        $form = new Formulario('Categorias/Categorias', $id);
+
         $form->action = $this->obtUrl('', [$id]);
 
         if ($this->post('btnFormularioCategorias')) {
             if ($form->validar()) {
                 if ($modelo->salvar($this->post())) {
-                    Mensajes::suceso('Categoria almacenada correctamente');
+                    $condicion = empty($id) ? 'almacenada' : 'modificada';
+                    Mensajes::almacenar(Mensajes::suceso("Categoria {$condicion} correctamente"));
+                    $this->redireccionar("/jadmin/categorias");
                 }
-                else Mensajes::error('Error al guardar la informacion');
+                else Mensajes::almacenar(Mensajes::error('Error al guardar la informacion'));
             }
-            else Mensajes::error('Informacion no validad');
+            else Mensajes::almacenar(Mensajes::error('Informacion no validad'));
         }
 
         $this->data([
