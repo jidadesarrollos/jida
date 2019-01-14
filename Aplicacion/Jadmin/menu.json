@@ -2,11 +2,11 @@
   "nombre": "Jadmin",
   "items": {
     "Categoria": {
-      "label": "<i class=\"fa fa-users\"></i> <span>Categoria</span>",
-      "url": "/jadmin/categoria"
+      "label": "<i class=\"fa fa-users\"></i> <span>Categorias</span>",
+      "url": "/jadmin/categorias"
     },
     "Proyectos": {
-      "label": "<i class=\"fa fa-users\"></i> <span>Categoria</span>",
+      "label": "<i class=\"fa fa-users\"></i> <span>Proyectos</span>",
       "url": "/jadmin/proyectos"
     },
     "usuarios": {
