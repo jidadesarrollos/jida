@@ -8,14 +8,14 @@
 
 namespace App\Modulos\Categorias\Jadmin\Controllers;
 
-use App\Modulos\Categorias\Modelos\Categorias as Modelo;
-use Jida\Jadmin\Controllers\JControl;
+use App\Jadmin\Controllers\Jadmin;
+use App\Modulos\Categorias\Modelos\Categoria as Modelo;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
-class Categorias extends JControl {
+class Categorias extends Jadmin {
 
     function index() {
 

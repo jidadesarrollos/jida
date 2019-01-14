@@ -36,7 +36,7 @@
     },
     "categoria": {
       "label": "Categoria",
-      "name": "categoria",
+      "name": "id_categoria",
       "eventos": {
         "obligatorio": {
           "mensaje": "Debe ingresar el nombre del proyecto"
@@ -44,7 +44,7 @@
       },
       "opciones": "=--Seleccione--;select id_categoria, nombre from m_categorias",
       "orden": "3",
-      "id": "categoria",
+      "id": "id_categoria",
       "type": "select"
     }
   }

@@ -10,7 +10,7 @@ namespace App\Modulos\Proyectos\Modelos;
 
 use Jida\Core\Modelo;
 
-class Proyectos extends Modelo {
+class Proyecto extends Modelo {
 
     var $id_proyectos;
     var $nombre;

@@ -8,20 +8,20 @@
 
 namespace App\Modulos\Proyectos\Jadmin\Controllers;
 
-use App\Modulos\Categorias\Modelos\Categorias;
-use App\Modulos\Proyectos\Modelos\Proyectos as Modelo;
-use Jida\Jadmin\Controllers\JControl;
+use App\Jadmin\Controllers\Jadmin;
+use App\Modulos\Categorias\Modelos\Categoria;
+use App\Modulos\Proyectos\Modelos\Proyecto as Modelo;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
-class Proyectos extends JControl {
+class Proyectos extends Jadmin {
 
     function index($idfk = "") {
 
         $this->modelo = new Modelo();
-        $categoria = new Categorias($idfk);
+        $categoria = new Categoria($idfk);
         $data = $this->modelo->consulta();
 
         if (!empty($idfk)) {
@@ -80,7 +80,7 @@ class Proyectos extends JControl {
                 if ($modelo->salvar($this->post())) {
                     $condicion = empty($id) ? 'almacenada' : 'modificada';
                     Mensajes::almacenar(Mensajes::suceso("Proyecto {$condicion} correctamente"));
-                    $this->redireccionar("/jadmin/categorias");
+                    $this->redireccionar("/jadmin/proyectos");
                 }
                 else Mensajes::almacenar(Mensajes::error('Error al guardar la informacion'));
             }

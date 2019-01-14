@@ -6,11 +6,11 @@
  * Time: 08:26 AM
  */
 
-namespace App\Modulos\Categoria\Controllers;
+namespace App\Modulos\Categorias\Controllers;
 
 use App\Controllers\App;
 
-class Categoria extends App {
+class Categorias extends App {
 
 
     function index() {

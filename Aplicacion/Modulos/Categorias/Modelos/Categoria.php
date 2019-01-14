@@ -10,7 +10,7 @@ namespace App\Modulos\Categorias\Modelos;
 
 use Jida\Core\Modelo;
 
-class Categorias extends Modelo {
+class Categoria extends Modelo {
 
     var $id_categoria;
     var $nombre;

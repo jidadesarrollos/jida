@@ -10,7 +10,7 @@ namespace App\Modulos\Proyecto\Controllers;
 
 use App\Controllers\App;
 
-class Proyecto extends App {
+class Proyectos extends App {
 
 
     function index() {
