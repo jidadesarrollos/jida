@@ -45,7 +45,9 @@ Trait Modulo {
 
             $namespace = $this->_namespaces['jadminApp'] . "Controllers\\";
 
-            if (class_exists($namespace . ucfirst($posModulo))) {
+            if (!$this->_moduloJadmin($posModulo) and
+                class_exists($namespace . ucfirst($posModulo))) {
+
                 $padre::$ruta = 'app';
                 $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Jadmin';
 

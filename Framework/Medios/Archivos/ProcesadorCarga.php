@@ -18,9 +18,15 @@ class ProcesadorCarga {
     var $procesada;
 
     /**
+     * @var int $total Numero total de archivos que se intentan subir
+     */
+    var $totalArchivos = 0;
+    /**
      * @var int $total Numero total de archivos cargados
      */
-    var $total;
+    var $totalArchivosCargados = 0;
+
+    var $errores = [];
 
     private $_archivos = [];
 
@@ -32,12 +38,26 @@ class ProcesadorCarga {
 
             if (!is_array($carga['tmp_name'])) $carga = [$carga];
 
+            $this->totalArchivos = count($carga);
+
             foreach ($carga as $indice => $archivo) {
-                array_push($this->_archivos, new ArchivoCargado($archivo));
+                $archivo = new ArchivoCargado($archivo);
+                if ($archivo->cargado) {
+                    ++$this->totalArchivosCargados;
+                }
+                else {
+                    $this->errores[] = $archivo->error();
+                }
+
+                array_push($this->_archivos, $archivo);
             }
 
+            if ($this->totalArchivosCargados < $this->totalArchivos) {
+                Debug::imprimir(["hubo errores", $this->errores], true);
+            }
+            Debug::imprimir([$this->_archivos], true);
+
         }
-        Debug::imprimir([$this->_archivos], true);
 
     }
 

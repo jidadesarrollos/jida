@@ -20,29 +20,39 @@ class ArchivoCargado extends Archivo {
     var $type;
     var $size;
     var $tmp_name;
-    var $error;
     var $extension;
-
     var $finfo;
+
     var $mime;
     /**
      * @var bool $cargado Retorna el valor de la funcion is_uploaded_file
      * @see is_uploaded_file();
      */
     var $cargado;
+    const ERRORES = [
+        1 => 'UPLOAD_ERR_INI_SIZE',
+        2 => 'UPLOAD_ERR_FORM_SIZE',
+        6 => 'UPLOAD_ERR_NO_TMP_DIR',
+        7 => 'UPLOAD_ERR_CANT_WRITE'
+    ];
+
+    private $_error;
 
     function __construct($archivo) {
 
         $this->name = $archivo['name'];
         $this->type = $archivo['type'];
         $this->tmp_name = $archivo['tmp_name'];
-        $this->error = $archivo['error'];
+        $this->_error = $archivo['error'];
         $this->size = $archivo['size'];
-        $this->_obtExtension();
 
-        $this->finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $this->mime = finfo_file($this->finfo, $this->tmp_name);
         $this->cargado = is_uploaded_file($this->tmp_name);
+
+        if (!$this->_error) {
+            $this->finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $this->mime = finfo_file($this->finfo, $this->tmp_name);
+            $this->_obtExtension();
+        }
 
     }
 
@@ -69,6 +79,14 @@ class ArchivoCargado extends Archivo {
                 Excepcion::procesar($msj, self::$_ce . 002);
             }
         }
+
+    }
+
+    /**
+     * Retorna el error obtenido
+     */
+    function error() {
+        return ['codigo' => $this->_error, 'ERROR' => self::ERRORES[$this->_error]];
     }
 }
 
