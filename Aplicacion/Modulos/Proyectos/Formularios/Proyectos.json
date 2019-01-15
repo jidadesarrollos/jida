@@ -1,6 +1,6 @@
 {
   "nombre": "Formulario de Proyectos",
-  "query": "select id_categoria, nombre, descripcion, id_categorias from m_proyectos",
+  "query": "select id_proyectos, nombre, descripcion, id_categoria from m_proyectos",
   "estructura": "",
   "identificador": "FormularioProyectos",
   "clave_primaria": "id_proyectos",
