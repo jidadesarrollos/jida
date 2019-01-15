@@ -137,7 +137,6 @@ class Imagen extends Archivo {
         switch ($tipoImagen) {
             case "image/jpg":
             case "image/jpeg":
-
                 $imagen = imagejpeg($lienzo, $url, 90);
                 break;
             case "image/png":

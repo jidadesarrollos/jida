@@ -89,17 +89,20 @@ class ProcesadorCarga {
 
     function mover($directorio, $prefijo = "") {
 
+        $listaArchivos = [];
+
         if (!Directorios::validar($directorio))
             Directorios::crear($directorio);
 
-        foreach ($this->_archivos as $archivo) {
+        foreach ($this->_archivos as $indice => $archivo) {
 
             $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
             $nuevoArchivo = $directorio . "/" . $nombreArchivo;
             $archivo->mover($nuevoArchivo);
+            array_push($listaArchivos, $nuevoArchivo);
 
         }
-        return true;
+        return $listaArchivos;
 
     }
 

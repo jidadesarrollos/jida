@@ -5,12 +5,15 @@ namespace App\Jadmin\Controllers;
 use Jida\Manager\Estructura;
 use Jida\Medios\Archivos\ProcesadorCarga;
 use Jida\Medios\Debug;
+use Jida\Medios\Imagen;
 
 class Test extends Jadmin {
 
     function gestion() {
 
         if ($this->post('cargaArchivos')) {
+
+            $archivos = [];
 
             $procesador = new ProcesadorCarga('cargaArchivo');
 
@@ -19,10 +22,14 @@ class Test extends Jadmin {
                 // TODO: Manejo de errores
             }
             else {
-                $procesador->mover(Estructura::$directorio . '/htdocs/test/test5');
+                $archivos = $procesador->mover(Estructura::$directorio . '/htdocs/test/test5');
             }
 
-            Debug::imprimir(["todo bien"], true);
+            $imagen = new Imagen($archivos[0]);
+
+            $nuevaImagen = $imagen->redimencionar(200, 200);
+
+            Debug::imprimir(["todo bien {$nuevaImagen}"], true);
 
         }
 
