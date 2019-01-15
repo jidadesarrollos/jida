@@ -39,9 +39,12 @@ class ProcesadorCarga {
 
             if (!is_array($carga['tmp_name'])) $carga = [$carga];
 
+            $carga = $this->_listaArchivos($carga);
+
             $this->totalArchivos = count($carga);
 
             foreach ($carga as $indice => $archivo) {
+
                 $archivo = new ArchivoCargado($archivo);
                 if ($archivo->cargado) {
                     ++$this->totalArchivosCargados;
@@ -55,6 +58,20 @@ class ProcesadorCarga {
 
         }
 
+    }
+
+    private function _listaArchivos($archivos) {
+        $strucArchivos = [];
+        for ($i = 0; $i < count($archivos['name']); $i++) {
+            $archivo = [];
+            $archivo['name'] = $archivos['name'][$i];
+            $archivo['type'] = $archivos['type'][$i];
+            $archivo['tmp_name'] = $archivos['tmp_name'][$i];
+            $archivo['error'] = $archivos['error'][$i];
+            $archivo['size'] = $archivos['size'][$i];
+            $strucArchivos[$i] = $archivo;
+        }
+        return $strucArchivos;
     }
 
     /**
@@ -72,19 +89,18 @@ class ProcesadorCarga {
 
     function mover($directorio, $prefijo = "") {
 
-        if ((!Directorios::validar($directorio) ? Directorios::crear($directorio) : true)) {
-            foreach ($this->_archivos as $archivo) {
+        if (!Directorios::validar($directorio))
+            Directorios::crear($directorio);
 
-                $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
-                $nuevoArchivo = $directorio . "/" . $nombreArchivo;
-                if (!$archivo->mover($nuevoArchivo))
-                    Debug::imprimir("No se pudo mover", true);
+        foreach ($this->_archivos as $archivo) {
 
-            };
+            $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
+            $nuevoArchivo = $directorio . "/" . $nombreArchivo;
+            $archivo->mover($nuevoArchivo);
+
         }
-        else Debug::imprimir("No se pudo crear el directorio", true);
-
         return true;
+
     }
 
     private function _generadorNombres($extension, $prefijo = "") {

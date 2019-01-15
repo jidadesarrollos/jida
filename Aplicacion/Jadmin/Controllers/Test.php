@@ -15,13 +15,11 @@ class Test extends Jadmin {
             $procesador = new ProcesadorCarga('cargaArchivo');
 
             if (!$procesador->validar()) {
-                Debug::imprimir(["Hubo error en la carga"], true);
+                Debug::imprimir(["Hubo error en la carga", $procesador->errores], true);
                 // TODO: Manejo de errores
             }
             else {
-                if (!$procesador->mover(Estructura::$directorio . '/htdocs/test')) {
-                    Debug::imprimir(["Hubo error moviendola"], true);
-                }
+                $procesador->mover(Estructura::$directorio . '/htdocs/test/test5');
             }
 
             Debug::imprimir(["todo bien"], true);

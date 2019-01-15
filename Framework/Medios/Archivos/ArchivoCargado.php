@@ -58,7 +58,7 @@ class ArchivoCargado extends Archivo {
 
     private function _obtExtension() {
 
-        $explode = explode("/", $this->type);
+        $explode = explode(".", $this->name);
         $this->extension = $explode[1];
     }
 
