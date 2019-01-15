@@ -13,9 +13,12 @@ class Test extends Jadmin {
 
             $procesador = new ProcesadorCarga('cargaArchivo');
 
-            if ($procesador->errores) {
+            if (!$procesador->validar()) {
+                Debug::imprimir(["Hubo error en la carga"], true);
                 // TODO: Manejo de errores
             }
+
+            Debug::imprimir(["todo bien"], true);
 
         }
 

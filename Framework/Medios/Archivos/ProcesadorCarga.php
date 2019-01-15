@@ -52,11 +52,6 @@ class ProcesadorCarga {
                 array_push($this->_archivos, $archivo);
             }
 
-            if ($this->totalArchivosCargados < $this->totalArchivos) {
-                Debug::imprimir(["hubo errores", $this->errores], true);
-            }
-            Debug::imprimir([$this->_archivos], true);
-
         }
 
     }
@@ -67,20 +62,11 @@ class ProcesadorCarga {
      */
     function validar() {
 
-        $totalCarga = count($this->tmp_name);
-        $archivosCargados = 0;
-
-        foreach ($this->tmp_name as $key) {
-            if (is_uploaded_file($key)) ++$archivosCargados;
-        }//fin foreach
-
-        if ($totalCarga == $archivosCargados) {
-            $this->total = $archivosCargados;
-            return true;
+        if ($this->totalArchivosCargados < $this->totalArchivos) {
+            return false;
         }
 
-        return false;
-
+        return true;
     }
 
 }
