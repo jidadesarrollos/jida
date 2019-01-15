@@ -3,7 +3,7 @@
       method="POST">
     <input type="hidden" name="MAX_FILE_SIZE" value="30000"/>
     Enviar este fichero:
-    <input name="cargaArchivo" type="file"/>
+    <input name="cargaArchivo" type="file" multiple/>
     <hr/>
     <input type="submit" name="cargaArchivos" CLASS="btn" value="Enviar fichero"/>
 </form>

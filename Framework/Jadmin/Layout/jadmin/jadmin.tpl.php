@@ -42,7 +42,7 @@
         <!-- Start content -->
         <div class="content">
 
-            <div class="container-fluid">
+            <div class="container-fluid mt-4">
 
                 <?= $contenido ?>
 

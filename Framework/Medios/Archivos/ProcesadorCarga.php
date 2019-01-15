@@ -9,6 +9,7 @@
 namespace Jida\Medios\Archivos;
 
 use Jida\Medios\Debug;
+use Jida\Medios\Directorios;
 
 class ProcesadorCarga {
 
@@ -69,4 +70,29 @@ class ProcesadorCarga {
         return true;
     }
 
+    function mover($directorio, $prefijo = "") {
+
+        if ((!Directorios::validar($directorio) ? Directorios::crear($directorio) : true)) {
+            foreach ($this->_archivos as $archivo) {
+
+                $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
+                $nuevoArchivo = $directorio . "/" . $nombreArchivo;
+                if (!$archivo->mover($nuevoArchivo))
+                    Debug::imprimir("No se pudo mover", true);
+
+            };
+        }
+        else Debug::imprimir("No se pudo crear el directorio", true);
+
+        return true;
+    }
+
+    private function _generadorNombres($extension, $prefijo = "") {
+        $fecha = md5(Date('U'));
+        $random = rand(100000, 999999);
+        $name = $fecha . $random;
+        $name = (!empty($prefijo)) ? $prefijo . "-" . $name : $name;
+
+        return $name . "." . $extension;
+    }
 }

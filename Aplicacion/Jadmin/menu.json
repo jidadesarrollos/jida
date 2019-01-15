@@ -2,7 +2,7 @@
   "nombre": "Jadmin",
   "items": {
     "Categoria": {
-      "label": "<i class=\"fa fa-users\"></i> <span>Categorias</span>",
+      "label": "<i class=\"fa fa-grip-horizontal\"></i> <span>Categorias</span>",
       "url": "/jadmin/categorias"
     },
     "Proyectos": {

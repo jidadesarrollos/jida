@@ -60,7 +60,16 @@ class Proyectos extends Jadmin {
             ]
         ]);
 
-        $render = $vista->render();
+        $render = $vista->render(
+            function ($datos) {
+                foreach ($datos as $key => &$proyecto) {
+                    $categoria = new Categoria($proyecto['id_categoria']);
+                    $proyecto['id_categoria'] = $categoria->nombre;
+                }
+
+                return $datos;
+            }
+        );
         $this->data([
             'vista' => $render
         ]);

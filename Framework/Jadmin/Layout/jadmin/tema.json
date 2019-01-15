@@ -8,12 +8,12 @@
     "css": {
       "principal": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
-        "font-awesome": "{tema}/htdocs/font-awesome/css/font-awesome.min.css",
+        "font-awesome": "{tema}/htdocs/font-awesome/css/fontawesome.min.css",
         "style": "{tema}/htdocs/css/style.css"
       },
       "login": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
-        "foJnt-awesome": "{tema}/htdocs/font-awesome/css/font-awesome.min.css",
+        "font-awesome": "{tema}/htdocs/font-awesome/css/all.min.css",
         "login": "{tema}/htdocs/css/login.css"
       }
     },
@@ -28,6 +28,7 @@
         "fastclick": "{tema}/htdocs/js/fastclick.js",
         "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",
         "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
+        "font-awesome": "{tema}/htdocs/font-awesome/js/all.min.js",
         "jadmin": "{tema}/htdocs/js/jadmin.js"
       }
     }
