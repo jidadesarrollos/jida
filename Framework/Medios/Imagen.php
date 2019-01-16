@@ -53,12 +53,37 @@ class Imagen extends Archivo {
 
     function __construct($path) {
 
-        $archivoDir = $path; //tratar de manejar casos de dir completo y relativo
+        if (strpos(strtolower($path), strtolower(Estructura::$directorio)) !== false)
+            $archivoDir = $path;
+        elseif (strpos(strtolower($path), "{raiz}") !== false) {
+            $archivoDir = str_replace("{raiz}", Estructura::$directorio, $path);
+        }
+        else {
+
+        }
         if (!file_exists($archivoDir)) {
             $msj = "El archivo {$archivoDir} que usted indica no existe.";
             Excepcion::procesar($msj, self::$_ce . 001);
         }
+
+        $finfo = new \finfo();
+        $fileinfo = explode(";", $finfo->file($path, FILEINFO_MIME));
+        $mime = $fileinfo[0];
+
+        if (!array_key_exists($mime, $this->mimesAceptados)) {
+            $msj = "El archivo {$archivoDir} de tipo {$mime} usted indica no es aceptado por el Medio.";
+            Excepcion::procesar($msj, self::$_ce . 002);
+        }
+
         $this->_path = $path;
+        $infoData = getimagesize($path);
+        $this->_ancho = $infoData[0];
+        $this->_alto = $infoData[1];
+        $this->_tipo = $infoData['mime'];
+        $this->_atributos = $infoData[3];
+        $this->_peso = filesize($path);
+        $this->extension = array_slice(explode(".", $path), -1)[0];
+
     }
 
     /**
@@ -84,13 +109,7 @@ class Imagen extends Archivo {
 
     function redimencionar($nuevoAncho, $nuevoAlto, $nuevoDir = "") {
 
-        $infoImagen = getimagesize($this->_path);
-
-        $anchoActual = $infoImagen[0];
-        $altoActual = $infoImagen[1];
-        $tipoImagen = $infoImagen['mime'];
-
-        $proporcionActual = $anchoActual / $altoActual;
+        $proporcionActual = $this->_ancho / $this->_alto;
         $proporcionRedimension = $nuevoAncho / $nuevoAlto;
 
         if ($proporcionActual > $proporcionRedimension) {
@@ -109,7 +128,7 @@ class Imagen extends Archivo {
             }
         }
 
-        $imagen = $this->crearLienzo($tipoImagen, $this->_path);
+        $imagen = $this->crearLienzo($this->_path);
         $lienzo = imagecreatetruecolor($anchoRedimension, $altoRedimension);
         imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
         imagealphablending($lienzo, false);
@@ -122,24 +141,24 @@ class Imagen extends Archivo {
             0,
             $anchoRedimension,
             $altoRedimension,
-            $anchoActual,
-            $altoActual);
+            $this->_ancho,
+            $this->_alto);
 
         if (empty($nuevoDir)) {
             $dirs = explode("/", $this->_path);
             $file = array_pop($dirs);
             $actualDir = implode("/", $dirs);
-            $nuevoDir = $actualDir . "/" . $nuevoAncho . "x" . $nuevoAncho . "-" . $file;
+            $nuevoDir = $actualDir . "/" . $nuevoAncho . "x" . $nuevoAlto . "-" . $file;
         }
 
-        if ($this->salvarImagen($tipoImagen, $lienzo, $nuevoDir)) {
+        if ($this->salvarImagen($this->_tipo, $lienzo, $nuevoDir)) {
             return $nuevoDir;
         }
     }
 
-    private function crearLienzo($tipoImagen, $url) {
+    private function crearLienzo($url) {
 
-        switch ($tipoImagen) {
+        switch ($this->_tipo) {
             case "image/jpg":
             case "image/jpeg":
                 $imagen = imagecreatefromjpeg($url);
@@ -155,13 +174,13 @@ class Imagen extends Archivo {
         return $imagen;
     }
 
-    private function salvarImagen($tipoImagen, $lienzo, $url, $nombreImagen = "") {
+    private function salvarImagen($lienzo, $url, $nombreImagen = "") {
 
         if (!empty($nombreImagen)) {
             $url = $url . $nombreImagen;
         }
 
-        switch ($tipoImagen) {
+        switch ($this->_tipo) {
             case "image/jpg":
             case "image/jpeg":
                 $imagen = imagejpeg($lienzo, $url, 90);
@@ -170,10 +189,24 @@ class Imagen extends Archivo {
                 $imagen = imagepng($lienzo, $url, 2);
                 break;
             case "image/gif":
-                $imagen = imagegif($lienzo, $url, 90);
+                $imagen = imagegif($lienzo, $url);
                 break;
         }
 
         return true;
+    }
+
+    function recortar($alto, $ancho, $x, $y, $w, $h, $nuevaDir = "") {
+
+        if (empty($nuevaDir))
+            $nuevaDir = $this->_path;
+
+        $lienzo = $this->crearLienzo($this->_path);
+        $nuevaImg = imagecreatetruecolor($ancho, $alto);
+        imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
+
+        if ($this->salvarImagen($this->_tipo, $nuevaImg, $nuevaDir)) {
+            return true;
+        }
     }
 }
