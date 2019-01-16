@@ -151,7 +151,7 @@ class Imagen extends Archivo {
             $nuevoDir = $actualDir . "/" . $nuevoAncho . "x" . $nuevoAlto . "-" . $file;
         }
 
-        if ($this->salvarImagen($this->_tipo, $lienzo, $nuevoDir)) {
+        if ($this->salvarImagen($lienzo, $nuevoDir)) {
             return $nuevoDir;
         }
     }
@@ -205,7 +205,7 @@ class Imagen extends Archivo {
         $nuevaImg = imagecreatetruecolor($ancho, $alto);
         imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
 
-        if ($this->salvarImagen($this->_tipo, $nuevaImg, $nuevaDir)) {
+        if ($this->salvarImagen($nuevaImg, $nuevaDir)) {
             return true;
         }
     }

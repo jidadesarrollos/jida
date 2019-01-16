@@ -27,7 +27,7 @@ class Test extends Jadmin {
 
             $imagen = new Imagen($archivos[0]);
 
-            $nuevaImagen = $imagen->redimencionar(200, 200);
+            $nuevaImagen = $imagen->recortar(100, 100, 2, 2, 50, 50);
 
             Debug::imprimir(["todo bien {$nuevaImagen}"], true);
 
