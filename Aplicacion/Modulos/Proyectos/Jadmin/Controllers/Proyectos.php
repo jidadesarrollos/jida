@@ -47,6 +47,16 @@ class Proyectos extends Jadmin {
 
         $vista->accionesFila([
             [
+                'span'  => 'fas fa-images',
+                'title' => "ver Proyecto",
+                'href'  => "/jadmin/medias/index/{clave}"
+            ],
+            [
+                'span'  => 'fas fa-file-upload',
+                'title' => "Subir Imagenes",
+                'href'  => "/jadmin/medias/subir-imagenes/{clave}"
+            ],
+            [
                 'span'  => 'fa fa-edit',
                 'title' => "Editar Proyecto",
                 'href'  => "/jadmin/proyectos/gestion/{clave}"

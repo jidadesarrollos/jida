@@ -6,7 +6,7 @@
       "url": "/jadmin/categorias"
     },
     "Proyectos": {
-      "label": "<i class=\"fa fa-users\"></i> <span>Proyectos</span>",
+      "label": "<i class=\"fas fa-images\"></i> <span>Proyectos</span>",
       "url": "/jadmin/proyectos"
     },
     "usuarios": {

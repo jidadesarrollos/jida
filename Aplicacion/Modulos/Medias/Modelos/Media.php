@@ -6,7 +6,7 @@
  * Time: 03:03 PM
  */
 
-namespace App\Modulos\Media\Modelos;
+namespace App\Modulos\Medias\Modelos;
 
 use Jida\Core\Modelo;
 
@@ -18,9 +18,9 @@ class Media extends Modelo {
     var $descripcion;
     var $externa;
     var $mime;
-    var $id_proyecto;
+    var $id_proyectos;
 
-    protected $tablaBD = "t_media";
+    protected $tablaBD = "t_medias";
     protected $pk = 'id_media';
 
 }

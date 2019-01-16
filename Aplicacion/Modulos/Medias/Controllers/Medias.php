@@ -10,7 +10,7 @@ namespace App\Modulos\Media\Controllers;
 
 use App\Controllers\App;
 
-class Media extends App {
+class Medias extends App {
 
     function index() {
 
