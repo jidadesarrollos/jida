@@ -10,10 +10,11 @@
  * @since 0.1
  */
 
-namespace Jida\Medios;
+namespace Jida\Medios\Archivos;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Medios\Archivo;
 
 class Imagen extends Archivo {
 
@@ -59,7 +60,7 @@ class Imagen extends Archivo {
             $archivoDir = str_replace("{raiz}", Estructura::$directorio, $path);
         }
         else {
-
+            $archivoDir = $path;
         }
         if (!file_exists($archivoDir)) {
             $msj = "El archivo {$archivoDir} que usted indica no existe.";
@@ -107,7 +108,18 @@ class Imagen extends Archivo {
 
     }
 
-    function redimencionar($nuevoAncho, $nuevoAlto, $sobreescribir = false) {
+    /**
+     * Redimenciona una imagen
+     * @method redimencionar
+     *
+     * @param $nuevoAncho Nuevo ancho de la imagen
+     * @param $nuevoAlto Nuevo alto de la imagen
+     * @param $sobreescribir (opcional) indica si el archivo se va sobreescribir.
+     * @return array
+     *
+     */
+
+    function redimensionar($nuevoAncho, $nuevoAlto, $sobreescribir = false) {
 
         $proporcionActual = $this->_ancho / $this->_alto;
         $proporcionRedimension = $nuevoAncho / $nuevoAlto;

@@ -12,9 +12,11 @@ use App\Jadmin\Controllers\Jadmin;
 use App\Modulos\Categorias\Modelos\Categoria;
 use App\Modulos\Medias\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\Proyecto;
+use Jida\Medios\Archivos\Imagen;
 use Jida\Medios\Archivos\ProcesadorCarga;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
+use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
 class Medias extends Jadmin {
@@ -37,7 +39,7 @@ class Medias extends Jadmin {
             'Volver a Proyectos' => ['href' => '/jadmin/proyectos/']
         ]);
 
-        $vista->addMensajeNoRegistros('No hay cateogorias registradas.',
+        $vista->addMensajeNoRegistros('No hay materia multimedia registrado.',
             [
                 'link'    => "/jadmin/medias/subir-imagenes/{$idFk}/",
                 'txtLink' => 'Subir Fotografias'
@@ -61,7 +63,8 @@ class Medias extends Jadmin {
         $render = $vista->render(
             function ($datos) {
                 foreach ($datos as $key => &$media) {
-                    $url = substr($media['url_media'], 1);
+                    $imagen = new Modelo($media['id_media']);
+                    $url = substr($imagen->thumbnail(150, 150), 1);
                     $media['url_media'] = "<img src='{$url}' class='img-thumbnail' />";
                     $media['externa'] = isset($media['externa']) ? "Remoto" : "Local";
                 }
@@ -74,12 +77,33 @@ class Medias extends Jadmin {
         $this->data(['vista' => $render]);
     }
 
-    function gestion($idFk = "") {
+    function gestion($idFk = "", $id = "") {
         if (empty($idFk)) {
             $this->redireccionar('/jadmin/proyectos/');
         }
 
+        $this->modelo = new Modelo();
+        $proyecto = new Proyecto($idFk);
+
+        $form = new Formulario('Medias/Medias', $id);
+
+        $form->action = $this->obtUrl('', [$id]);
+
+        if ($this->post('btnFormularioMedia')) {
+            if ($form->validar()) {
+                if ($this->modelo->salvar($this->post())) {
+                    $condicion = empty($id) ? 'almacenada' : 'editada';
+                    Mensajes::almacenar(Mensajes::suceso("Fotografia {$condicion} correctamente"));
+                    $this->redireccionar("/jadmin/medias/index/{$idFk}");
+                }
+                else Mensajes::almacenar(Mensajes::error('Error al guardar la informacion'));
+            }
+            else Mensajes::almacenar(Mensajes::error('Informacion no valida'));
+        }
+
+
         $this->data([
+            'form' => $form->render(),
             'idFk' => $idFk
         ]);
 
@@ -106,10 +130,15 @@ class Medias extends Jadmin {
                 $objetos = [];
                 foreach ($archivos as $archivo) {
                     $objeto = [];
-                    $objeto['nombre'] = "";
+                    $objeto['nombre'] = " ";
                     $objeto['url_media'] = $archivo;
                     $objeto['id_proyectos'] = $idFk;
                     array_push($objetos, $objeto);
+                    $imagen = new Imagen($archivo);
+                    $imagen->redimensionar(150, 150);
+                    $imagen->redimensionar(300, 300);
+                    $imagen->redimensionar(600, 600);
+                    $imagen->redimensionar(1200, 1200);
                 }
 
                 $this->modelo->salvarTodo($objetos);
@@ -127,6 +156,27 @@ class Medias extends Jadmin {
             'nombre' => $proyecto->nombre
         ]);
 
+    }
+
+    function eliminar($id = "") {
+        if (!empty($id)) {
+
+            $this->modelo = new Modelo($id);
+            $idFk = $this->modelo->id_proyectos;
+            unlink($this->modelo->url_media);
+            if ($this->modelo->eliminar()) {
+                Mensajes::almacenar(Mensajes::suceso("La foto fue eliminada correctamente."));
+            }
+            else {
+                Mensajes::almacenar(Mensajes::error("No se pudo eliminar la foto."));
+            }
+
+        }
+        else {
+            Mensajes::almacenar(Mensajes::error("La foto indicada no existe."));
+        }
+
+        $this->redireccionar("/jadmin/medias/index/{$idFk}");
     }
 
 }

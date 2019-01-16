@@ -23,4 +23,15 @@ class Media extends Modelo {
     protected $tablaBD = "t_medias";
     protected $pk = 'id_media';
 
+    function thumbnail($refH, $refW) {
+        $dir = explode("/", $this->url_media);
+        $file = array_pop($dir);
+        $nameFile = explode(".", $file);
+        $dir = implode("/", $dir);
+        $nuevoUrl = "{$dir}/{$nameFile[0]}-{$refH}x{$refW}.{$nameFile[1]}";
+
+        return $nuevoUrl;
+
+    }
+
 }
