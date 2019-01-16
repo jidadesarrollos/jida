@@ -12,7 +12,6 @@ use App\Jadmin\Controllers\Jadmin;
 use App\Modulos\Categorias\Modelos\Categoria;
 use App\Modulos\Medias\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\Proyecto;
-use Jida\Manager\Estructura;
 use Jida\Medios\Archivos\ProcesadorCarga;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
@@ -27,9 +26,9 @@ class Medias extends Jadmin {
 
         $this->modelo = new Modelo();
         $proyectos = new Proyecto($idFk);
-        $data = $this->modelo->consulta()->filtro(['id_proyectos' => $idFk])->obt();
+        $data = $this->modelo->consulta(['id_media', 'url_media', 'nombre', 'descripcion', 'externa'])->filtro(['id_proyectos' => $idFk])->obt();
         $parametros = ['titulos' =>
-                           ['Nombre', 'Descripcion', 'Identificador', 'Proyecto', 'Pequeno', 'Medio', 'Grande']];
+                           ['Foto', 'Nombre', 'Descripcion', 'Origen']];
 
         $vista = new JVista($data, $parametros, "Lista de Material Multimedia del proyecto " . $proyectos->nombre . ":");
 
@@ -59,7 +58,18 @@ class Medias extends Jadmin {
             ]
         ]);
 
-        $render = $vista->render();
+        $render = $vista->render(
+            function ($datos) {
+                foreach ($datos as $key => &$media) {
+                    $url = substr($media['url_media'], 1);
+                    $media['url_media'] = "<img src='{$url}' class='img-thumbnail' />";
+                    $media['externa'] = isset($media['externa']) ? "Remoto" : "Local";
+                }
+
+                return $datos;
+            }
+
+        );
 
         $this->data(['vista' => $render]);
     }
@@ -90,15 +100,20 @@ class Medias extends Jadmin {
             if ($procesador->validar()) {
 
                 $archivos = $procesador->mover(
-                    Estructura::$directorio . "/htdocs/{$categoria->nombre}/{$proyecto->nombre}"
+                    "./htdocs/{$categoria->nombre}/{$proyecto->nombre}"
                 );
+
+                $objetos = [];
                 foreach ($archivos as $archivo) {
-                    $this->modelo->salvar([
-                        "nombre"       => "Test",
-                        "url_media"    => $archivo,
-                        "id_proyectos" => $idFk
-                    ]);
+                    $objeto = [];
+                    $objeto['nombre'] = "";
+                    $objeto['url_media'] = $archivo;
+                    $objeto['id_proyectos'] = $idFk;
+                    array_push($objetos, $objeto);
                 }
+
+                $this->modelo->salvarTodo($objetos);
+
                 Mensajes::almacenar(Mensajes::suceso("Imagenes Guardadas correctamente."));
                 $this->redireccionar("/jadmin/medias/index/{$idFk}");
 
