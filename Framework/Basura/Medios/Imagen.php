@@ -7,7 +7,9 @@
  * @category
  */
 
-namespace Jida\Medios;
+namespace Jida\Medios\Archivos;
+
+use Jida\Medios\Archivo;
 
 class Imagen extends Archivo {
 
