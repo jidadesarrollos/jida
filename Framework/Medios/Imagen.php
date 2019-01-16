@@ -107,7 +107,7 @@ class Imagen extends Archivo {
 
     }
 
-    function redimencionar($nuevoAncho, $nuevoAlto, $nuevoDir = "") {
+    function redimencionar($nuevoAncho, $nuevoAlto, $sobreescribir = false) {
 
         $proporcionActual = $this->_ancho / $this->_alto;
         $proporcionRedimension = $nuevoAncho / $nuevoAlto;
@@ -144,11 +144,15 @@ class Imagen extends Archivo {
             $this->_ancho,
             $this->_alto);
 
-        if (empty($nuevoDir)) {
+        if (!$sobreescribir) {
             $dirs = explode("/", $this->_path);
             $file = array_pop($dirs);
+            $file = explode(".", $file);
             $actualDir = implode("/", $dirs);
-            $nuevoDir = $actualDir . "/" . $nuevoAncho . "x" . $nuevoAlto . "-" . $file;
+            $nuevoDir = $actualDir . "/" . $file[0] . "-" . $nuevoAncho . "x" . $nuevoAlto . "." . $this->extension;
+        }
+        else {
+            $nuevoDir = $this->_path;
         }
 
         if ($this->salvarImagen($lienzo, $nuevoDir)) {
@@ -196,16 +200,24 @@ class Imagen extends Archivo {
         return true;
     }
 
-    function recortar($alto, $ancho, $x, $y, $w, $h, $nuevaDir = "") {
+    function recortar($alto, $ancho, $x, $y, $w, $h, $sobreescribir = false) {
 
-        if (empty($nuevaDir))
-            $nuevaDir = $this->_path;
+        if (!$sobreescribir) {
+            $dirs = explode("/", $this->_path);
+            $file = array_pop($dirs);
+            $file = explode(".", $file);
+            $actualDir = implode("/", $dirs);
+            $nuevoDir = $actualDir . "/" . $file[0] . "-" . $ancho . "x" . $alto . "." . $this->extension;
+        }
+        else {
+            $nuevoDir = $this->_path;
+        }
 
         $lienzo = $this->crearLienzo($this->_path);
         $nuevaImg = imagecreatetruecolor($ancho, $alto);
         imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
 
-        if ($this->salvarImagen($nuevaImg, $nuevaDir)) {
+        if ($this->salvarImagen($nuevaImg, $nuevoDir)) {
             return true;
         }
     }
