@@ -218,7 +218,7 @@ class Imagen extends Archivo {
         imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
 
         if ($this->salvarImagen($nuevaImg, $nuevoDir)) {
-            return true;
+            return $nuevoDir;
         }
     }
 }

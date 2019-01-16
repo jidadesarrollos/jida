@@ -22,7 +22,7 @@ class Test extends Jadmin {
                 // TODO: Manejo de errores
             }
             else {
-                $archivos = $procesador->mover(Estructura::$directorio . '/htdocs/test/test5');
+                $archivos = $procesador->mover(Estructura::$directorio . '/htdocs/test/test6');
             }
 
             $imagen = new Imagen($archivos[0]);
