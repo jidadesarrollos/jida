@@ -163,6 +163,10 @@ class Medias extends Jadmin {
 
             $this->modelo = new Modelo($id);
             $idFk = $this->modelo->id_proyectos;
+            unlink($this->modelo->thumbnail(150, 150));
+            unlink($this->modelo->thumbnail(300, 300));
+            unlink($this->modelo->thumbnail(600, 600));
+            unlink($this->modelo->thumbnail(1200, 1200));
             unlink($this->modelo->url_media);
             if ($this->modelo->eliminar()) {
                 Mensajes::almacenar(Mensajes::suceso("La foto fue eliminada correctamente."));
