@@ -37,9 +37,12 @@ class ProcesadorCarga {
 
             $carga = $_FILES[$carga];
 
-            if (!is_array($carga['tmp_name'])) $carga = [$carga];
-
-            $carga = $this->_listaArchivos($carga);
+            if (!is_array($carga['tmp_name'])) {
+                $carga = [$carga];
+            }
+            else {
+                $carga = $this->_listaArchivos($carga);
+            }
 
             $this->totalArchivos = count($carga);
 
