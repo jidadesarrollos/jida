@@ -8,15 +8,6 @@
 <footer>
     <div class="container">
         <ul class="social-lool">
-            <!--<li>
-                <a href="#">
-                    <div class="center-sosmed">
-                        <p class="icon icon-pinterest">
-                            &nbsp;
-                        </p>
-                    </div>
-                </a>
-            </li>-->
             <li>
                 <a href="www.facebook.com/Jjacobsen.Boda" target="_blank">
                     <div class="center-sosmed">

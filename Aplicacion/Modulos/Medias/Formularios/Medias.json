@@ -1,6 +1,6 @@
 {
   "nombre": "Formulario de Archivos Multimedias",
-  "query": "select id_media, nombre, descripcion, url_media, id_proyectos from t_medias",
+  "query": "select id_media, nombre, descripcion, url_media, id_proyecto from t_medias",
   "estructura": "",
   "identificador": "FormularioMedia",
   "clave_primaria": "id_media",
@@ -42,15 +42,15 @@
     },
     "proyecto": {
       "label": "Proyecto Fotografico",
-      "name": "id_proyectos",
+      "name": "id_proyecto",
       "eventos": {
         "obligatorio": {
           "mensaje": "Debe ingresar el nombre del proyecto"
         }
       },
-      "opciones": "=--Seleccione--;select id_proyectos, nombre from m_proyectos",
+      "opciones": "=--Seleccione--;select id_proyecto, nombre from m_proyectos",
       "orden": "3",
-      "id": "id_proyectos",
+      "id": "id_proyecto",
       "type": "select"
     }
   }

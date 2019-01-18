@@ -23,7 +23,7 @@
                             <a href="/">Home</a>
                         </li>
                         <li>
-                            <a href="/acerca">Acerca de Jonathan Jacobsen</a>
+                            <a href="/acerca">Acerca de Mí</a>
                         </li>
                         <li>
                             <a href="/galeria">Galería</a>

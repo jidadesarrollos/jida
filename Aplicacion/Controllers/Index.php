@@ -2,13 +2,48 @@
 
 namespace App\Controllers;
 
-use Jida\Medios as Medios;
+use App\Config\Configuracion;
+use App\Modulos\Categorias\Modelos\Categoria;
+use App\Modulos\Medias\Modelos\Media;
+use App\Modulos\Proyectos\Modelos\Proyecto;
+use Jida\Medios\Debug;
+use Jida\Render\Formulario;
+use Jida\Componentes\Correo;
 
 class Index extends App {
 
-    var $correoContacto = 'developers@jidadesarrollos.com';
+    var $correoContacto = 'rrodriguez@jidadesarrollos.com';
+    var $urlTema        = '/Aplicacion/Layout/jacobsen/';
 
     function index() {
+
+        $galeria = [];
+        $proyecto = new Proyecto();
+        $proyecto->select(['id_proyecto', 'nombre', 'slug', 'id_categoria']);
+        $proyecto->order('id_proyecto', 'desc');
+        $proyectos = $proyecto->obt();
+
+        foreach ($proyectos as $k => $row) {
+
+            $cat = new Categoria($row['id_categoria']);
+
+            $medios = new Media();
+            $medios->select(['id_media', 'url_media']);
+            $medios->filtro(['id_proyecto' => $row['id_proyecto']]);
+            $medio = $medios->obt();
+
+            $imagen = new Media($medio[0]['id_media']);
+            $imgPortada = $imagen->thumbnail(300, 300);
+
+            $galeria[$k]['proyecto'] = $row['nombre'];
+            $galeria[$k]['categoria'] = $cat->nombre;
+            $galeria[$k]['imagen'] = $imgPortada;
+
+        }
+
+        $this->data([
+            'galeria' => $galeria,
+        ]);
 
     }
 
@@ -18,18 +53,37 @@ class Index extends App {
 
     function galeria() {
 
+        $galeria = [];
+        $medios = new Media();
+        $medios->select(['id_media', 'url_media', 'id_proyecto']);
+        $result = $medios->obt();
+
+        foreach ($result as $k => $row) {
+            $medio = new Media($row['id_media']);
+            $imagen = $medio->thumbnail(300, 300);
+            $proyecto = new Proyecto($row['id_proyecto']);
+            $categoria = new Categoria($proyecto->id_categoria);
+            $galeria[$k]['proyecto'] = $proyecto->nombre;
+            $galeria[$k]['categoria'] = $categoria->nombre;
+            $galeria[$k]['imagen'] = $imagen;
+        }
+
+        $this->data([
+            'galeria' => $galeria
+        ]);
+
     }
 
     function contacto() {
 
-        $form = new \Jida\Render\Formulario('Contacto');
+        $form = new Formulario('Contacto');
         $form->titulo('Contacto');
         $form->boton('principal')->attr('value', 'Enviar Correo');
 
         if ($this->post('btnContacto')) {
 
             if ($form->validar()) {
-                $this->_enviarCorreo($this->post(), 'Contacto | ' . NOMBRE_APP);
+                $this->_enviarCorreo($this->post(), 'Contacto | ' . Configuracion::NOMBRE_APP);
                 $msj = 'Correo enviado exitosamente, pronto estaremos en contacto contigo.';
                 Medios\Mensajes::crear('info', $msj, true);
             }
@@ -43,7 +97,7 @@ class Index extends App {
 
     private function _enviarCorreo($post, $asunto) {
 
-        $correo = new \Jida\Componentes\Correo();
+        $correo = new Correo();
         $correo
             ->plantilla('contacto')
             ->data([

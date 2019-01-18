@@ -2,6 +2,7 @@
 
 /**
  * Clase Modelo
+ *
  * @author Julio Rodriguez
  * @package
  * @version
@@ -16,12 +17,12 @@ class Mail {
         'Username'   => 'pruebas@jidadesarrollos.com',
         'Password'   => 'pru3b45',
         'From'       => 'pruebas@jidadesarrollos.com',
-        'FromName'   => NOMBRE_APP,
+        'FromName'   => Configuracion::NOMBRE_APP,
         'Host'       => 'gtr.websitewelcome.com',
         'Port'       => 465,
         'SMTPSecure' => 'ssl',
     ];
-    var $data = [
+    var $data  = [
         'url_sitio'            => URL_APP_PUBLICA,
         'url_app'              => URL_APP_PUBLICA,
         'logo_app'             => 'http://jidadesarrollos.com/htdocs/img/jida/jida_solid.png',

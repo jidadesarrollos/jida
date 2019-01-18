@@ -18,7 +18,7 @@ class Media extends Modelo {
     var $descripcion;
     var $externa;
     var $mime;
-    var $id_proyectos;
+    var $id_proyecto;
 
     protected $tablaBD = "t_medias";
     protected $pk = 'id_media';

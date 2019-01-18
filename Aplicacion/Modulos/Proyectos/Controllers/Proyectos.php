@@ -12,7 +12,6 @@ use App\Controllers\App;
 
 class Proyectos extends App {
 
-
     function index() {
 
     }

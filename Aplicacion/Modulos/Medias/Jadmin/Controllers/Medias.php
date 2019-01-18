@@ -14,7 +14,6 @@ use App\Modulos\Medias\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\Proyecto;
 use Jida\Medios\Archivos\Imagen;
 use Jida\Medios\Archivos\ProcesadorCarga;
-use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
@@ -28,7 +27,7 @@ class Medias extends Jadmin {
 
         $this->modelo = new Modelo();
         $proyectos = new Proyecto($idFk);
-        $data = $this->modelo->consulta(['id_media', 'url_media', 'nombre', 'descripcion', 'externa'])->filtro(['id_proyectos' => $idFk])->obt();
+        $data = $this->modelo->consulta(['id_media', 'url_media', 'nombre', 'descripcion', 'externa'])->filtro(['id_proyecto' => $idFk])->obt();
         $parametros = ['titulos' =>
                            ['Foto', 'Nombre', 'Descripcion', 'Origen']];
 
@@ -132,7 +131,7 @@ class Medias extends Jadmin {
                     $objeto = [];
                     $objeto['nombre'] = " ";
                     $objeto['url_media'] = $archivo;
-                    $objeto['id_proyectos'] = $idFk;
+                    $objeto['id_proyecto'] = $idFk;
                     array_push($objetos, $objeto);
                     $imagen = new Imagen($archivo);
                     $imagen->redimensionar(150, 150);
@@ -162,7 +161,7 @@ class Medias extends Jadmin {
         if (!empty($id)) {
 
             $this->modelo = new Modelo($id);
-            $idFk = $this->modelo->id_proyectos;
+            $idFk = $this->modelo->id_proyecto;
             unlink($this->modelo->thumbnail(150, 150));
             unlink($this->modelo->thumbnail(300, 300));
             unlink($this->modelo->thumbnail(600, 600));

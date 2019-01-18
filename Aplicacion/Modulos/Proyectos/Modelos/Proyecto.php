@@ -12,13 +12,13 @@ use Jida\Core\Modelo;
 
 class Proyecto extends Modelo {
 
-    var $id_proyectos;
+    var $id_proyecto;
     var $nombre;
     var $descripcion;
     var $slug;
     var $id_categoria;
 
     protected $tablaBD = "m_proyectos";
-    protected $pk = 'id_proyectos';
+    protected $pk      = 'id_proyecto';
 
 }

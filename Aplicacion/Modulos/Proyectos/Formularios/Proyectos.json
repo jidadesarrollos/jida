@@ -1,14 +1,14 @@
 {
   "nombre": "Formulario de Proyectos",
-  "query": "select id_proyectos, nombre, descripcion, id_categoria from m_proyectos",
+  "query": "select id_proyecto, nombre, descripcion, id_categoria from m_proyectos",
   "estructura": "",
   "identificador": "FormularioProyectos",
-  "clave_primaria": "id_proyectos",
+  "clave_primaria": "id_proyecto",
   "campos": {
     "id_categoria": {
-      "label": "id_proyectos",
-      "name": "id_proyectos",
-      "id": "id_proyectos",
+      "label": "id_proyecto",
+      "name": "id_proyecto",
+      "id": "id_proyecto",
       "type": "hidden"
     },
     "nombre": {

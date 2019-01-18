@@ -17,12 +17,13 @@ use Jida\Manager\Estructura;
 
 $path = Estructura::path();
 
-require_once $path . '/Framework/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+require_once $path . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 
 class Correo {
 
     /**
      * Arreglo de configuracion para liberia PHPMailer
+     *
      * @var array $_default
      *
      * Declarar SMTPDebug para depurador de envio de correos. 2 flujo con errores - 4 corrida completa
@@ -45,25 +46,29 @@ class Correo {
     ];
     /**
      * Define la ubicacion de las plantillas para correo
+     *
      * @var string $pathPlantillas
      */
     var $pathPlantillas = 'Vistas/correo';
     /**
      * Clase Mail Definida en la carpeta de Config
+     *
      * @var object $configMail
      */
     private $configMail;
     /**
      * Configuracion general a usar independientemente de la configuracion pedida para el envio de correo
+     *
      * @var array $_general
      *
      */
     private $_general = [];
     /**
      * Data definida en el objeto \Config\Mail que puede ser pasada a cualquier correo
+     *
      * @var array $_data
      */
-    private $_data = [];
+    private $_data  = [];
     private $_error = "";
 
     /**
@@ -77,7 +82,7 @@ class Correo {
      * Funcion constructora
      * @method __construct
      */
-    function __construct ($configuracion = "index") {
+    function __construct($configuracion = "index") {
 
         $this->configMail = new Config\Mail();
 
@@ -95,7 +100,7 @@ class Correo {
         $this->checkConfiguracion();
     }
 
-    private function checkConfiguracion () {
+    private function checkConfiguracion() {
 
         foreach ($this->configuracion as $configuracion => $valor) {
             if (property_exists($this->phpMailer, $configuracion)) {
@@ -114,10 +119,10 @@ class Correo {
         ];
     }
 
-    private function construirMail () {
+    private function construirMail() {
 
-        if (Directorios::validar(DIR_APP . $this->plantilla)) {
-            $plantilla = DIR_APP . $this->plantilla;
+        if (Directorios::validar(DIR_APP . DS . $this->plantilla)) {
+            $plantilla = DIR_APP . DS . $this->plantilla;
         }
         else if (Directorios::validar(DIR_FRAMEWORK . DS . 'Layout/correo/' . $this->plantilla . "tpl.php")) {
             $plantilla = DIR_FRAMEWORK . DS . 'Layout/correo/' . $this->plantilla . "tpl.php";
@@ -126,7 +131,7 @@ class Correo {
             throw new \Exception("No existe la plantilla de correo " . DIR_APP . $this->plantilla, 500);
 
         ob_start();
-        include_once $this->plantilla;
+        include_once $plantilla;
         $content = ob_get_clean();
 
         foreach ($this->_data as $data => $valor)
@@ -140,7 +145,7 @@ class Correo {
      * Define la plantilla de correo a usar
      * @method plantilla
      */
-    function plantilla ($tpl = "index") {
+    function plantilla($tpl = "index") {
 
         $this->plantilla = $this->pathPlantillas . "/" . $tpl . ".tpl.php";
 
@@ -150,9 +155,10 @@ class Correo {
     /**
      * Permite registrar las variables a pasar a la plantilla de correo
      * @method data
+     *
      * @param array $data Valores.
      */
-    function data ($data) {
+    function data($data) {
 
         $data = array_merge($this->_data, $data);
         foreach ($data as $key => $value) {
@@ -164,10 +170,11 @@ class Correo {
 
     /**
      * Imprime los valores del proceso de envio
+     *
      * @param int $numero Tipo de Debug, basado en los tipos de la clase PHPMailer
      *
      */
-    function debug ($numero = 1) {
+    function debug($numero = 1) {
 
         $this->phpMailer->SMTPDebug = $numero;
 
@@ -179,13 +186,14 @@ class Correo {
      *
      * El correo usara como plantilla la que se encuentre definida por el llamado previo al metodo $plantilla
      * @method enviar
+     *
      * @param mixed $destinatarios ;
      * @param string $asunto Titulo del correo
      * @param array $mensaje Arreglo de valores a usar en la plantila, es opcional. los valores pueden pasarse por
      *     medio del metodo data
      *
      */
-    function enviar ($destinatarios, $asunto, $mensaje = []) {
+    function enviar($destinatarios, $asunto, $mensaje = []) {
 
         $this->phpMailer->IsHTML();
         $this->phpMailer->isSMTP();
@@ -224,11 +232,12 @@ class Correo {
     /**
      * Edita el valor de configuracion para envio de correos
      * @method config
+     *
      * @param string $var Configuracion a usar, el valor pasado debe estar definido
      * como propiedad de la clase App\Config\Mail
      * @throws Excepion
      */
-    function config ($configuracion) {
+    function config($configuracion) {
 
         if (!property_exists($this->configMail, $configuracion)) {
             throw new \Exception("La configuracion pasada no existe", 1);
@@ -240,9 +249,10 @@ class Correo {
     /**
      * Retorna los errores obtenidos en el envio de correos
      * @method obtError
+     *
      * @return string
      */
-    function obtError () {
+    function obtError() {
 
         return $this->_error;
     }
@@ -251,7 +261,7 @@ class Correo {
      * Agrega un archivo adjunto para el envio de correo
      * @method agregarAdjunto
      */
-    function agregarAdjunto ($archivo, $ruta) {
+    function agregarAdjunto($archivo, $ruta) {
 
         array_push($this->_default['AddAttachment'], $ruta . $archivo);
 
