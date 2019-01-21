@@ -15,6 +15,7 @@
       },
       "orden": "1",
       "placeholder": "Nombre",
+      "class": "form-control form-lool",
       "visibilidad": "1",
       "id": "nombre",
       "type": "text"
@@ -31,22 +32,10 @@
         }
       },
       "orden": "2",
+      "class": "form-control form-lool",
       "placeholder": "tucorreo@dominio.com",
       "visibilidad": "1",
       "id": "correo",
-      "type": "text"
-    },
-    {
-      "label": "Asunto",
-      "name": "asunto",
-      "eventos": {
-        "obligatorio": {
-          "mensaje": "Debe ingresar un asunto"
-        }
-      },
-      "orden": "3",
-      "visibilidad": "1",
-      "id": "asunto",
       "type": "text"
     },
     {
@@ -57,7 +46,8 @@
           "mensaje": "Debe ingresar un mensaje"
         }
       },
-      "orden": "4",
+      "orden": "3",
+      "class": "form-control form-lool",
       "visibilidad": "1",
       "id": "mensaje",
       "type": "textarea"

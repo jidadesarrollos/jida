@@ -78,7 +78,7 @@ class Validador {
 
         }
         catch (\Exception $e) {
-            Excepcion::catch($e);
+            Excepcion::capturar($e);
         }
 
         return $this;

@@ -1,0 +1,22 @@
+{
+  "nombre": "Menu principal",
+  "class": "nav navbar-nav navbar-right nav-right-lool",
+  "items": {
+    "home": {
+      "label": "Home",
+      "url": "/"
+    },
+    "acerca": {
+      "label": "Acerca de Mí",
+      "url": "/acerca"
+    },
+    "galeria": {
+      "label": "Galería",
+      "url": "/galeria"
+    },
+    "contacto": {
+      "label": "Contacto",
+      "url": "/contacto"
+    }
+  }
+}

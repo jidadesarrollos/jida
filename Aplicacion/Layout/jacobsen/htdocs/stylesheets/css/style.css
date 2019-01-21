@@ -696,6 +696,15 @@ figure.effect-julia:hover h3 {
   display: block;
   margin: 0 auto;
 }
+.img-logo-jida {
+  display: block;
+  text-align: center;
+}
+.img-logo-jida img {
+  display: block;
+  margin: 0 auto;
+  max-height: 80px !important;
+}
 /*
 =============================================== 
 4. Portfolio Lool

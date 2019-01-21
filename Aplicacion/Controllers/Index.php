@@ -13,7 +13,6 @@ use Jida\Componentes\Correo;
 class Index extends App {
 
     var $correoContacto = 'rrodriguez@jidadesarrollos.com';
-    var $urlTema        = '/Aplicacion/Layout/jacobsen/';
 
     function index() {
 
@@ -63,6 +62,7 @@ class Index extends App {
             $imagen = $medio->thumbnail(300, 300);
             $proyecto = new Proyecto($row['id_proyecto']);
             $categoria = new Categoria($proyecto->id_categoria);
+            $galeria[$k]['id_proyecto'] = $proyecto->id_proyecto;
             $galeria[$k]['proyecto'] = $proyecto->nombre;
             $galeria[$k]['categoria'] = $categoria->nombre;
             $galeria[$k]['imagen'] = $imagen;
@@ -70,6 +70,28 @@ class Index extends App {
 
         $this->data([
             'galeria' => $galeria
+        ]);
+
+    }
+
+    function detalle($id = "") {
+
+        if (empty($id)) {
+            $this->_404();
+        }
+
+        $proyecto = new Proyecto($id);
+        $categoria = new Categoria($proyecto->id_categoria);
+
+        $galeria = [];
+        $medios = new Media();
+        $medios->select(['id_media', 'url_media', 'id_proyecto']);
+        $medios->filtro(['id_proyecto' => $id]);
+        $galeria = $medios->obt();
+
+        $this->data([
+            'proyecto' => $proyecto,
+            'galeria'  => $galeria
         ]);
 
     }
@@ -91,7 +113,7 @@ class Index extends App {
         }
 
         $this->data([
-            'form' => $form->render()
+            'form' => $form->enArreglo()
         ]);
     }
 

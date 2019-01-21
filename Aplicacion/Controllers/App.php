@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use Jida\Core\Controlador\Control;
+use Jida\Medios\Debug;
+use Jida\Render\Menu;
 
 class App extends Control {
 
@@ -12,7 +14,14 @@ class App extends Control {
 
         $this->layout('default');
 
-      
+        $menu = new Menu('principal');
+
+        $urlTema = '/Aplicacion/Layout/jacobsen/';
+
+        $this->data([
+            'menu'    => $menu->render(),
+            'urlTema' => $urlTema
+        ]);
 
     }
 

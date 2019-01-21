@@ -10,11 +10,11 @@
                     <div class="col-sm-4 pad-global animated">
                         <div class="grid mar-top-15">
                             <figure class="effect-julia">
-                                <img alt="img10" class="img-full" src="<?= $medio['imagen'] ?>">
+                                <img alt="" class="img-full" src="<?= $medio['imagen'] ?>">
                                 <figcaption>
                                     <h3><?= $medio['proyecto'] ?></h3>
                                     <p><?= $medio['categoria'] ?></p>
-                                    <a href="/"> Ver más</a>
+                                    <a href="/detalle/<?= $medio['id_proyecto'] ?>"> Ver más</a>
                                 </figcaption>
                             </figure>
                         </div>

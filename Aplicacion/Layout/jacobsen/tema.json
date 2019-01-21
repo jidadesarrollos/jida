@@ -8,13 +8,11 @@
     "css": {
       "principal": {
         "bootstrap": "{tema}/htdocs/stylesheets/css/bootstrap.css",
-        "font": "{tema}/htdocs/stylesheets/css/font-family.css",
-        "style": "{tema}/htdocs/stylesheets/css/style.css",
-        "global": "{tema}/htdocs/stylesheets/css/global.css",
         "owl": "{tema}/htdocs/stylesheets/css/owl-carousel/owl.carousel.css",
         "owl-theme": "{tema}/htdocs/stylesheets/css/owl-carousel/owl.theme.css",
         "animate": "{tema}/htdocs/stylesheets/css/animate.css",
-        "effect2": "{tema}/htdocs/stylesheets/css/effect2.css"
+        "effect2": "{tema}/htdocs/stylesheets/css/effect2.css",
+        "principal": "{tema}/htdocs/stylesheets/css/principal.css"
       },
       "login": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",

@@ -18,20 +18,7 @@
                 </div>
                 <div class="navbar-collapse navbar-collapse-lool"
                      id="bs-example-navbar-collapse-6">
-                    <ul class="nav navbar-nav navbar-right nav-right-lool">
-                        <li>
-                            <a href="/">Home</a>
-                        </li>
-                        <li>
-                            <a href="/acerca">Acerca de Mí</a>
-                        </li>
-                        <li>
-                            <a href="/galeria">Galería</a>
-                        </li>
-                        <li>
-                            <a href="/contacto">Contacto</a>
-                        </li>
-                    </ul>
+                    <?= $this->menu ?>
                 </div>
                 <!--/.navbar-collapse-->
             </div>

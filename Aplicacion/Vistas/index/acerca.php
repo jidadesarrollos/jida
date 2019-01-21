@@ -7,7 +7,7 @@
             <hr>
             <div class="row">
                 <div class="col-sm-6">
-                    <img alt="img10" class="img-full" src="<?= $this->urlTema ?>assets/images/about.jpg">
+                    <img alt="Jonathan Jacobsen" class="img-full" src="<?= $this->urlTema ?>htdocs/images/jj.jpg">
                 </div>
                 <div class="col-sm-6">
                     <h1 class="mar-top-10">
@@ -30,7 +30,5 @@
                 </div>
             </div>
         </main>
-        <hr>
-        <?php //$this->incluir('elementos/footer') ?>
     </div>
 </section>

@@ -1296,6 +1296,15 @@ figure.effect-julia:hover h3 {
   display: block;
   margin: 0 auto;
 }
+.img-logo-jida {
+  display: block;
+  text-align: center;
+}
+.img-logo-jida img {
+  display: block;
+  margin: 0 auto;
+  max-height: 80px !important;
+}
 /*
 =============================================== 
 4. Portfolio Lool
@@ -1448,15 +1457,15 @@ footer h5 {
   text-transform: uppercase;
   color: #ffffff;
 }
-.slide-1 {
+.owl-lol .slide-1 {
   background: url("../../images/hasna-1.jpg") center no-repeat;
   background-size: cover;
 }
-.slide-2 {
+.owl-lol .slide-2 {
   background: url("../../images/hasna-2.jpg") center no-repeat;
   background-size: cover;
 }
-.slide-3 {
+.owl-lol .slide-3 {
   background: url("../../images/hasna-3.jpg") center no-repeat;
   background-size: cover;
 }
