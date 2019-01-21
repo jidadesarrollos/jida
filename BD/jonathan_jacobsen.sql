@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-01-2019 a las 23:13:07
+-- Tiempo de generación: 21-01-2019 a las 23:37:49
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.2.12
 
@@ -39,14 +39,6 @@ CREATE TABLE `m_categorias` (
   `id_usuario_modificador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `m_categorias`
---
-
-INSERT INTO `m_categorias` (`id_categoria`, `nombre`, `descripcion`, `slug`, `fecha_creacion`, `fecha_modificacion`, `id_usuario_creador`, `id_usuario_modificador`) VALUES
-(3, 'Cat1', 'Cat1', NULL, '2019-01-16 08:49:11', '2019-01-16 08:49:11', 0, 0),
-(4, 'Bodas', NULL, NULL, '2019-01-18 17:17:19', '2019-01-18 17:17:19', 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -64,14 +56,6 @@ CREATE TABLE `m_proyectos` (
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `m_proyectos`
---
-
-INSERT INTO `m_proyectos` (`id_proyecto`, `nombre`, `descripcion`, `slug`, `id_categoria`, `fecha_creacion`, `fecha_modificacion`, `id_usuario_creador`, `id_usuario_modificador`) VALUES
-(2, 'Proy1', 'Proy1', NULL, 3, '2019-01-16 08:49:32', '2019-01-16 08:49:32', 0, 0),
-(3, 'Diana de Gales', NULL, NULL, 4, '2019-01-18 17:17:48', '2019-01-18 17:17:48', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -515,15 +499,6 @@ CREATE TABLE `t_medias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `t_medias`
---
-
-INSERT INTO `t_medias` (`id_media`, `url_media`, `nombre`, `descripcion`, `externa`, `mime`, `id_proyecto`, `fecha_creacion`, `fecha_modificacion`, `id_usuario_creador`, `id_usuario_modificador`) VALUES
-(1, '/htdocs/Cat1/Proy1/d3341fdc32117ae37f8ebd9d27919d1a184362.png', ' ', NULL, NULL, NULL, 2, '2019-01-18 12:28:04', '2019-01-18 12:28:04', 0, 0),
-(2, '/htdocs/Cat1/Proy1/b01282623b5ecf4dc53ab3bbd0d5efc4189549.png', ' ', NULL, NULL, NULL, 2, '2019-01-18 14:32:44', '2019-01-18 14:32:44', 0, 0),
-(3, '/htdocs/Bodas/Diana de Gales/69e6c2f741f7851c33e04c9442e712e2520595.png', ' ', NULL, NULL, NULL, 3, '2019-01-18 17:18:04', '2019-01-18 17:18:04', 0, 0);
-
---
 -- Índices para tablas volcadas
 --
 
@@ -850,7 +825,7 @@ ALTER TABLE `s_usuarios_perfiles`
 -- AUTO_INCREMENT de la tabla `t_medias`
 --
 ALTER TABLE `t_medias`
-  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas

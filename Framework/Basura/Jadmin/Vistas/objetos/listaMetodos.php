@@ -1,5 +1,0 @@
-<?PHP
-
-echo $this->vistaMetodos;
-
-?>

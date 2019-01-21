@@ -10,9 +10,9 @@
                     <form id="form-contacto" class="form-contacto" data-toggle="validator" method="post" action="">
                         <?php
 
-                        if (\Jida\Medios\Sesion::obt('msjContacto')):
-                            echo \Jida\Medios\Sesion::obt('msjContacto');
-                            \Jida\Medios\Sesion::destroy('msjContacto');
+                        if (\Jida\Medios\Sesion::obt('__msjContacto')):
+                            echo \Jida\Medios\Sesion::obt('__msjContacto');
+                            \Jida\Medios\Sesion::destroy('__msjContacto');
 
                         endif;
                         ?>

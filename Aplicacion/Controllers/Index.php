@@ -7,6 +7,7 @@ use App\Modulos\Categorias\Modelos\Categoria;
 use App\Modulos\Medias\Modelos\Media;
 use App\Modulos\Proyectos\Modelos\Proyecto;
 use Jida\Medios\Debug;
+use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Componentes\Correo;
 
@@ -107,7 +108,7 @@ class Index extends App {
             if ($form->validar()) {
                 $this->_enviarCorreo($this->post(), 'Contacto | ' . Configuracion::NOMBRE_APP);
                 $msj = 'Correo enviado exitosamente, pronto estaremos en contacto contigo.';
-                Medios\Mensajes::crear('info', $msj, true);
+                Mensajes::crear('info', $msj, true);
             }
 
         }
