@@ -38,7 +38,7 @@
                                 <figcaption>
                                     <h3><?= $medio['proyecto'] ?></h3>
                                     <p><?= $medio['categoria'] ?></p>
-                                    <a href="/">Ver más</a>
+                                    <a href="/detalle/<?= $medio['id_proyecto'] ?>">Ver más</a>
                                 </figcaption>
                             </figure>
                         </div>

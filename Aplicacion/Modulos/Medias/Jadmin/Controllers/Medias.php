@@ -123,7 +123,7 @@ class Medias extends Jadmin {
             if ($procesador->validar()) {
 
                 $archivos = $procesador->mover(
-                    "./htdocs/{$categoria->nombre}/{$proyecto->nombre}"
+                    "/htdocs/{$categoria->nombre}/{$proyecto->nombre}"
                 );
 
                 $objetos = [];

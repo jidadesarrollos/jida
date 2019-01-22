@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-01-2019 a las 03:15:23
+-- Tiempo de generación: 22-01-2019 a las 03:24:08
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.2.12
 
@@ -518,12 +518,12 @@ CREATE TABLE `t_medias` (
 --
 
 INSERT INTO `t_medias` (`id_media`, `url_media`, `nombre`, `descripcion`, `externa`, `mime`, `id_proyecto`, `fecha_creacion`, `fecha_modificacion`, `id_usuario_creador`, `id_usuario_modificador`) VALUES
-(1, './htdocs/Bodas/Album 1/4f3510b4b2e59a365cbb834427770894922901.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:12:44', '2019-01-21 22:12:44', 0, 0),
-(2, './htdocs/Bodas/Album 1/aa1aad15831e7dc049decf7568f105a9323488.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:13:01', '2019-01-21 22:13:01', 0, 0),
-(3, './htdocs/Bodas/Album 1/b17d896ec97948882480551cae3b9046464885.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:13:12', '2019-01-21 22:13:12', 0, 0),
-(4, './htdocs/Bodas/Album 2/da65657c32888ccedec20ab5f22c901d129144.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:42', '2019-01-21 22:13:42', 0, 0),
-(5, './htdocs/Bodas/Album 2/1bcf71c88f4b032322bfd48e57e0372a419928.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:48', '2019-01-21 22:13:48', 0, 0),
-(6, './htdocs/Bodas/Album 2/4649a41c6e12d4bc74e36b0330d768d2885962.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:55', '2019-01-21 22:13:55', 0, 0);
+(1, '/htdocs/Bodas/Album 1/4f3510b4b2e59a365cbb834427770894922901.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:12:44', '2019-01-21 22:12:44', 0, 0),
+(2, '/htdocs/Bodas/Album 1/aa1aad15831e7dc049decf7568f105a9323488.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:13:01', '2019-01-21 22:13:01', 0, 0),
+(3, '/htdocs/Bodas/Album 1/b17d896ec97948882480551cae3b9046464885.jpg', ' ', NULL, NULL, NULL, 4, '2019-01-21 22:13:12', '2019-01-21 22:13:12', 0, 0),
+(4, '/htdocs/Bodas/Album 2/da65657c32888ccedec20ab5f22c901d129144.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:42', '2019-01-21 22:13:42', 0, 0),
+(5, '/htdocs/Bodas/Album 2/1bcf71c88f4b032322bfd48e57e0372a419928.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:48', '2019-01-21 22:13:48', 0, 0),
+(6, '/htdocs/Bodas/Album 2/4649a41c6e12d4bc74e36b0330d768d2885962.jpg', ' ', NULL, NULL, NULL, 5, '2019-01-21 22:13:55', '2019-01-21 22:13:55', 0, 0);
 
 --
 -- Índices para tablas volcadas
