@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title><?= \App\Config\Configuracion::NOMBRE_APP ?></title>
-    <?php $this->incluir('favicon') ?>
     <?= $this->imprimirLibrerias('head', 'principal') ?>
 
 </head>

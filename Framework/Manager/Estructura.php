@@ -138,11 +138,12 @@ class Estructura {
                 return !!$var;
             });
 
-            $pathDominio = str_replace("index.php", "", $_SERVER['PHP_SELF']);
+            $pathDominio = str_replace(["index.php", "index"], "", $_SERVER['PHP_SELF']);
 
             $url = implode("/", $url);
+            if ($url === 'index') $url = '';
 
-            self::$urlBase = rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
+            self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
             self::$url = rtrim("//" . self::$dominio . "/$url", "/");

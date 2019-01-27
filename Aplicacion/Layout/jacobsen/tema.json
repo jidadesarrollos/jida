@@ -2,7 +2,7 @@
   "link": {
     "shortcut icon": "{tema}/htdocs/images/favicon.ico"
   },
-  "layout": "lool",
+  "layout": "default",
   "layoutError": "error",
   "dev": {
     "css": {

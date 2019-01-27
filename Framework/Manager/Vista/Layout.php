@@ -185,45 +185,6 @@ class Layout {
     }
 
     /**
-     * Imprime las lirerias del lado cliente
-     *
-     * @see Layout\Procesador
-     * @since 1.4
-     * @param $lenguajes
-     * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
-     * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
-     * @throws Excepcion
-     */
-    function imprimirLibrerias($lenguajes, $modulo = "") {
-
-        $configuracion = self::$_configuracion;
-
-        $lenguajes = (is_string($lenguajes)) ? (array)$lenguajes : $lenguajes;
-        $retorno = "";
-
-        foreach ($lenguajes as $lenguaje) {
-            if ($lenguaje !== "head" and !isset($configuracion->{$lenguaje})) return;
-
-            switch ($lenguaje) {
-                case 'head':
-
-                    $retorno = $this->_imprimirHead($configuracion, $modulo);
-                    break;
-                case 'js':
-
-                    $retorno = $this->_imprimirJS($configuracion->{$lenguaje}, $modulo);
-                    break;
-                case 'css':
-                    $retorno = $this->_imprimirCSS($configuracion->{$lenguaje}, $modulo);
-                    break;
-            }
-        }
-
-        return $retorno;
-
-    }
-
-    /**
      * @return Layout
      * @throws Excepcion
      */
@@ -251,4 +212,6 @@ class Layout {
         }
 
     }
+
+
 }

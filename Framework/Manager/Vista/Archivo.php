@@ -35,7 +35,6 @@ Trait Archivo {
                 ob_end_clean();
             }
 
-
             return $contenido;
 
         }
@@ -54,7 +53,6 @@ Trait Archivo {
     /**
      * Permite incluir objetos media
      *
-     * @deprecated
      * @param $folder
      * @param $item
      * @param bool $tema
@@ -79,14 +77,39 @@ Trait Archivo {
      * @return string
      */
 
-    function htdocs($folder, $item, $tema = true) {
+    function htdocs($archivo = "", $item = "", $tema = true) {
+
+        $argumentos = func_num_args();
+
+        if ($argumentos > 1) return $this->_htdocs($archivo, $item, $tema);
+
+        if (!$archivo) return Estructura::$urlBase . '/htdocs';
+
+        if (strpos('tema', $archivo)) {
+
+            $ruta = str_replace('tema', Tema::$url, $archivo);
+
+            return $ruta;
+        }
+
+        return Estructura::$urlBase . '/htdocs/' . $archivo;
+
+    }
+
+    /**
+     * Compatibilidad funcionamiento htdocs versiones previas a 0.7
+     */
+    function _htdocs($carpeta, $item = "", $tema = true) {
 
         $path = Estructura::$urlRuta;
-        $url = $path . URL_HTDOCS_TEMAS . $this->_tema . '/htdocs/' . $folder . '/' . $item;
+        $urlTema = Tema::$url . "/htdocs/";
+
+        $url = $urlTema . $carpeta . '/' . $item;
         if ($tema) {
             return $url;
         }
 
         return $path . "htdocs/" . $folder . '/' . $item;
+
     }
 }
