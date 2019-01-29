@@ -79,6 +79,7 @@ Trait Modulo {
 
         Estructura::$namespace = $namespace;
         Estructura::$rutaModulo = $rutaModulo;
+
     }
 
     private function _moduloJadmin($posModulo) {

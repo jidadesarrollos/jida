@@ -30,7 +30,6 @@ Trait Metodo {
     public function _metodo() {
 
         $posMetodo = $this->_padre->proximoParametro();
-        $metodo = 'index';
         $controlador = Estructura::$namespace . Estructura::$controlador;
         $default = true;
 
@@ -50,11 +49,12 @@ Trait Metodo {
 
         if ($default) {
 
+            $metodo = 'index';
+
             if (!$this->_validarMetodo($controlador, 'index')) {
                 $msj = 'El controlador ' . $controlador . ' debe poseer un metodo index';
                 Excepcion::procesar($msj, self::$_ce . 0002);
             }
-
 
         }
 

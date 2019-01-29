@@ -10,7 +10,10 @@ namespace App\Modulos\Categorias\Jadmin\Controllers;
 
 use App\Jadmin\Controllers\Jadmin;
 use App\Modulos\Categorias\Modelos\Categoria as Modelo;
+use Jida\Manager\Estructura;
+use Jida\Medios\Cadenas;
 use Jida\Medios\Debug;
+use Jida\Medios\Directorios;
 use Jida\Medios\Mensajes;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
@@ -19,9 +22,21 @@ class Categorias extends Jadmin {
 
     function index() {
 
+        $vista = $this->_vista();
+        $render = $vista->render();
+        $this->data([
+            'vista' => $render
+        ]);
+
+    }
+
+    private function _vista() {
+
+        $parametros = ['titulos' => ['Nombre', 'Descripcion', 'Identificador']];
+
         $this->modelo = new Modelo();
         $data = $this->modelo->consulta()->obt();
-        $parametros = ['titulos' => ['Nombre', 'Descripcion', 'Identificador']];
+
         $vista = new JVista($data, $parametros, 'Listado de Categorias');
 
         $vista->acciones([
@@ -49,11 +64,7 @@ class Categorias extends Jadmin {
             ]
         ]);
 
-        $render = $vista->render();
-        $this->data([
-            'vista' => $render
-        ]);
-
+        return $vista;
     }
 
     function gestion($id = "") {
@@ -65,13 +76,22 @@ class Categorias extends Jadmin {
         $form->action = $this->obtUrl('', [$id]);
 
         if ($this->post('btnFormularioCategorias')) {
+
             if ($form->validar()) {
+
+                $modelo->identificador = Cadenas::guionCase($this->post('nombre'));
+                $this->_validarDirectorio($modelo->identificador);
                 if ($modelo->salvar($this->post())) {
-                    $condicion = empty($id) ? 'almacenada' : 'modificada';
-                    Mensajes::almacenar(Mensajes::suceso("Categoria {$condicion} correctamente"));
+
+                    $condicion = empty($id) ? 'creada' : 'modificada';
+
+                    Mensajes::crear('suceso', "Categoria {$condicion} correctamente");
+
                     $this->redireccionar("/jadmin/categorias");
+
                 }
                 else Mensajes::almacenar(Mensajes::error('Error al guardar la informacion'));
+
             }
             else Mensajes::almacenar(Mensajes::error('Informacion no valida'));
         }
@@ -79,6 +99,16 @@ class Categorias extends Jadmin {
         $this->data([
             'vista' => $form->render()
         ]);
+
+    }
+
+    private function _validarDirectorio($nombre) {
+
+        $ruta = trim(Estructura::$directorio . '/htdocs/media/' . $nombre);
+
+        if (Directorios::validar($ruta)) return true;
+
+        Directorios::crear($ruta);
 
     }
 

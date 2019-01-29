@@ -53,31 +53,19 @@ Trait Archivo {
     /**
      * Permite incluir objetos media
      *
-     * @param $folder
-     * @param $item
-     * @param bool $tema
-     * @return string
-     */
-    function media($folder, $item, $tema = true) {
-
-        return $this->htdocs($folder, $item, $tema);
-    }
-
-    /**
-     * Retorna la url publica de los archivos htdocs de un tema
-     * @method htdocs
+     * Los objetos media se pueden incluir desde el tema implementado en la aplicacion
+     * o desde la carpeta htdocs general. Si se quiere incluir algo desde el tema
+     * debe usarse la palabra "tema" siguiendo la estructura de url.
      *
-     * @params string $folder Carpeta a obtener
-     * @params string $item nombre del archivo
-     * @params boolean $tema Determina si el archivo debe buscarse en el contenido
-     * de un tema o en el contenido general.
-     * @param $folder
-     * @param $item
+     * @example $this->media('tema/favicon.png')
+     *
+     * @param string $archivo
+     * @param string $item
      * @param bool $tema
      * @return string
      */
 
-    function htdocs($archivo = "", $item = "", $tema = true) {
+    function media($archivo = "", $item = "", $tema = true) {
 
         $argumentos = func_num_args();
 
@@ -97,7 +85,18 @@ Trait Archivo {
     }
 
     /**
-     * Compatibilidad funcionamiento htdocs versiones previas a 0.7
+     * Retorna la url publica de los archivos htdocs de un tema
+     * @method htdocs
+     *
+     * @deprecated
+     * @params string $folder Carpeta a obtener
+     * @params string $item nombre del archivo
+     * @params boolean $tema Determina si el archivo debe buscarse en el contenido
+     * de un tema o en el contenido general.
+     * @param $folder
+     * @param $item
+     * @param bool $tema
+     * @return string
      */
     function _htdocs($carpeta, $item = "", $tema = true) {
 

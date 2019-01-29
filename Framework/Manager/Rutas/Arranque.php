@@ -163,7 +163,12 @@ class Arranque {
 
             if ($this->_validar()) {
 
-                #Medios\Debug::imprimir([Estructura::$rutaModulo, Estructura::$modulo], true);
+//                Debug::imprimir([Estructura::$rutaModulo,
+//                    "modulo" . Estructura::$modulo,
+//                    "controlador " . Estructura::$controlador,
+//                    "metodo " . Estructura::$metodo,
+//                ], true);
+
                 $this->_pipeLines($controlador, '_jdPre');
 
                 call_user_func_array(
@@ -182,6 +187,11 @@ class Arranque {
         }
         catch (\Exception $e) {
             Excepcion::controller($e);
+        }
+        catch (\Error $e) {
+            Excepcion::controller($e);
+            //Debug::imprimir(["obetnido error", $e->getMessage(), $e->getTrace()], true);
+
         }
 
     }

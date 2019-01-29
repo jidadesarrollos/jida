@@ -68,8 +68,11 @@ class Excepcion {
 
     }
 
-    public static function controller(\Exception $exception) {
+    public static function controller($exception) {
 
+        if (!is_a($exception, '\\Exception') and !is_a($exception, '\\Error')) {
+            Debug::imprimir(["No se puede procesar la excepcion", $exception], true);
+        }
         $layout = Layout::obtener();
 
         $configuracion = Tema::$configuracion;
