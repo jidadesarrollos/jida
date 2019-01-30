@@ -900,6 +900,7 @@ class Controller {
     /**
      * Define el layout a utilizar
      * @method layout
+     * @deprecated
      *
      * @since 1.4
      */

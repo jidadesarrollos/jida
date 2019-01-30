@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modulos\Proyectos\Jadmin\Controllers\proyectos;
+namespace App\Modulos\Proyectos\Jadmin\Controllers\Proyectos;
 
 use App\Modulos\Proyectos\Modelos\Proyecto as Modelo;
 use App\Modulos\Categorias\Modelos\Categoria;
 use Jida\Render\JVista;
 
-Trait vista {
+Trait Vista {
 
     private function _vista($idCategoria) {
 

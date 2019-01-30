@@ -6,12 +6,13 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Manager\Excepcion;
+use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
 use Jida\Medios\Debug;
 
 class Layout {
 
-    use Archivo, Render, RenderLayout, Procesador;
+    use Archivo, Render, RenderLayout, Procesador, Gestor;
     /**
      * @var object Objeto que llama o instancia a Layout
      */
@@ -212,6 +213,5 @@ class Layout {
         }
 
     }
-
 
 }

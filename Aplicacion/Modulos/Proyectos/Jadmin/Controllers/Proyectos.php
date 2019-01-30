@@ -10,10 +10,14 @@ namespace App\Modulos\Proyectos\Jadmin\Controllers;
 
 use App\Jadmin\Controllers\Jadmin;
 use App\Modulos\Categorias\Modelos\Categoria;
+use App\Modulos\Media\Jadmin\Controllers\Media\Gestion;
+use App\Modulos\Proyectos\Jadmin\Controllers\Proyectos\Vista;
 use App\Modulos\Proyectos\Modelos\Proyecto as Modelo;
 use Jida\Medios\Mensajes;
 
 class Proyectos extends Jadmin {
+
+    use Gestion, Vista;
 
     function index($idCategoria = "") {
 

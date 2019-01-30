@@ -10,6 +10,7 @@ namespace App\Modulos\Media\Jadmin\Controllers;
 
 use App\Jadmin\Controllers\Jadmin;
 
+use App\Modulos\Media\Modelos\Media as Modelo;
 use App\Modulos\Media\Jadmin\Controllers\Media\Carga;
 use App\Modulos\Media\Jadmin\Controllers\Media\Gestion;
 use App\Modulos\Media\Jadmin\Controllers\Media\Vista;
@@ -20,22 +21,22 @@ class Media extends Jadmin {
 
     use Vista, Gestion, Carga;
 
-    function index($idFk = "") {
+    function index($idProyecto = "") {
 
-        if (empty($idFk)) {
+        if (empty($idProyecto)) {
             $this->redireccionar('/jadmin/proyectos/');
         }
 
         $this->modelo = new Modelo();
-        $proyectos = new Proyecto($idFk);
+        $proyectos = new Proyecto($idProyecto);
 
         $titulo = "Lista de Material Multimedia del proyecto " . $proyectos->nombre;
         $data = $this->modelo->consulta(
             ['id_media', 'url_media', 'nombre', 'descripcion', 'externa'])
-            ->filtro(['id_proyecto' => $idFk])
+            ->filtro(['id_proyecto' => $idProyecto])
             ->obt();
 
-        $vista = $this->_vista($data, $titulo);
+        $vista = $this->_vista($data, $titulo, $idProyecto);
 
         $render = $vista->render(
             function ($datos) {
@@ -54,8 +55,8 @@ class Media extends Jadmin {
         $this->data(['vista' => $render]);
     }
 
-    function gestion($idFk = "", $id = "") {
-        $this->_gestion($idFk, $id);
+    function gestion($idProyecto = "", $id = "") {
+        $this->_gestion($idProyecto, $id);
 
     }
 
@@ -63,7 +64,7 @@ class Media extends Jadmin {
         if (!empty($id)) {
 
             $this->modelo = new Modelo($id);
-            $idFk = $this->modelo->id_proyecto;
+            $idProyecto = $this->modelo->id_proyecto;
             unlink($this->modelo->thumbnail(150, 150));
             unlink($this->modelo->thumbnail(300, 300));
             unlink($this->modelo->thumbnail(600, 600));
@@ -81,7 +82,7 @@ class Media extends Jadmin {
             Mensajes::almacenar(Mensajes::error("La foto indicada no existe."));
         }
 
-        $this->redireccionar("/jadmin/media/index/{$idFk}");
+        $this->redireccionar("/jadmin/media/index/{$idProyecto}");
     }
 
 }

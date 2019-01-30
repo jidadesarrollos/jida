@@ -21,7 +21,8 @@
       "jquery": "/htdocs/bower_components/jquery/dist/jquery.js",
       "bootstrap": "/htdocs/bower_components/bootstrap/dist/js/bootstrap.min.js",
       "tween": "/htdocs/bower_components/gsap/src/minified/TweenLite.min.js",
-      "jd-plugs": "/Framework/htdocs/js/dist/jd.plugs.js"
+      "jd-plugs": "/Framework/htdocs/js/dist/jd.plugs.js",
+      "mustache": "/node_modules/mustache/mustache.min.js"
     }
   },
   "prod": {

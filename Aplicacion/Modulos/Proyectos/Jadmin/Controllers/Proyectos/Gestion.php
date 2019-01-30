@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Modulos\Proyectos\Jadmin\Controllers\proyectos;
+namespace App\Modulos\Proyectos\Jadmin\Controllers\Proyectos;
+
 use App\Modulos\Proyectos\Modelos\Proyecto as Modelo;
 use Jida\Render\Formulario;
 

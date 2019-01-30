@@ -143,7 +143,7 @@ class JVista {
     ];
 
     private $configContenedorAcciones = [
-        'class' => 'col-md-offset-6 col-md-6 col-xs-12 text-right'
+        'class' => 'col-md-12 col-xs-12 text-right'
     ];
     private $configTitulo = [
         'section' => ['class' => 'col-md-12'],

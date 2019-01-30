@@ -28,6 +28,7 @@ class Media extends Modelo {
     protected $pk = 'id_media';
 
     function thumbnail($refH, $refW) {
+
         $dir = explode("/", $this->url_media);
         $file = array_pop($dir);
         $nameFile = explode(".", $file);

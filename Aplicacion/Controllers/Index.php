@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Config\Configuracion;
 use App\Modulos\Categorias\Modelos\Categoria;
-use App\Modulos\Medias\Modelos\Media;
+use App\Modulos\Media\Modelos\Media;
 use App\Modulos\Proyectos\Modelos\Proyecto;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
@@ -35,7 +35,7 @@ class Index extends App {
             $imagen = new Media($medio[0]['id_media']);
             $imgPortada = $imagen->thumbnail(300, 300);
 
-			$galeria[$k]['id_proyecto'] = $row['id_proyecto'];
+            $galeria[$k]['id_proyecto'] = $row['id_proyecto'];
             $galeria[$k]['proyecto'] = $row['nombre'];
             $galeria[$k]['categoria'] = $cat->nombre;
             $galeria[$k]['imagen'] = $imgPortada;

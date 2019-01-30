@@ -26,9 +26,9 @@ Trait Gestion {
                     Mensajes::almacenar(Mensajes::suceso("Fotografia {$condicion} correctamente"));
                     $this->redireccionar("/jadmin/media/index/{$idFk}");
                 }
-                else Mensajes::almacenar(Mensajes::error('Error al guardar la informacion'));
+                else Mensajes::crear('error','Error al guardar la informacion');
             }
-            else Mensajes::almacenar(Mensajes::error('Informacion no valida'));
+            else Mensajes::crear('error','Informacion no valida');
         }
 
         $this->data([

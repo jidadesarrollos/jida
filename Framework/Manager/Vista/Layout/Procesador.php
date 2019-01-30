@@ -8,8 +8,11 @@
 namespace Jida\Manager\Vista\Layout;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
+use Jida\Manager\Vista\Tema;
+use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -133,28 +136,32 @@ Trait Procesador {
                 continue;
             }
 
-            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
-
-            if (strpos($urlLibreria, "http") === false) {
-                $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
-
-                if (strpos($urlLibreria, '{raiz}') === 0) {
-                    $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
-                }
-                else {
-                    $urlLibreria = '//' . $urlLibreria;
-                    //$urlLibreria = str_replace('localhost', "", $urlLibreria);
-                }
-            }
-
             $html .= Selector::crear('script',
-                ['src' => $urlLibreria],
+                ['src' => $this->_procesarRuta($libreria)],
                 null,
                 2);
 
         }
 
         return $html;
+
+    }
+
+    private function _procesarRuta($libreria) {
+
+        if (strpos($libreria, "http") === false) {
+
+            if (strpos($libreria, '{base}') !== false) {
+                $libreria = str_replace('{base}', Estructura::$urlBase, $libreria);
+            }
+            else if (strpos($libreria, '{tema}') !== false) {
+                $libreria = str_replace('{tema}', Tema::$url, $libreria);
+            }
+            $libreria = "//" . implode("/", array_filter(explode("/", $libreria)));
+
+        }
+
+        return $libreria;
 
     }
 

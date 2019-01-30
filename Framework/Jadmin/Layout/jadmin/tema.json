@@ -9,7 +9,8 @@
       "principal": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
         "font-awesome": "{tema}/htdocs/font-awesome/css/fontawesome.min.css",
-        "style": "{tema}/htdocs/css/style.css"
+        "style": "{tema}/htdocs/css/style.css",
+        "main": "{tema}/htdocs/css/main.css"
       },
       "login": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
@@ -29,6 +30,7 @@
         "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",
         "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
         "font-awesome": "{tema}/htdocs/font-awesome/js/all.min.js",
+        "mustache": "{base}/node_modules/mustache/mustache.min.js",
         "jadmin": "{tema}/htdocs/js/jadmin.js"
       }
     }

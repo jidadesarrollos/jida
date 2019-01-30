@@ -6,7 +6,7 @@ use Jida\Render\JVista;
 
 Trait Vista {
 
-    function _vista($data, $titulo) {
+    function _vista($data, $titulo, $idProyecto) {
 
         $parametros = [
             'titulos' => ['Foto', 'Nombre', 'Descripcion', 'Origen']
@@ -14,13 +14,13 @@ Trait Vista {
         $vista = new JVista($data, $parametros, $titulo);
 
         $vista->acciones([
-            'Agregar Fotos'      => ['href' => "/jadmin/media/subir-imagenes/{$idFk}/"],
+            'Agregar Fotos'      => ['href' => "/jadmin/media/subir-imagenes/{$idProyecto}/"],
             'Volver a Proyectos' => ['href' => '/jadmin/proyectos/']
         ]);
 
         $vista->addMensajeNoRegistros('No hay materia multimedia registrado.',
             [
-                'link'    => "/jadmin/media/subir-imagenes/{$idFk}/",
+                'link'    => "/jadmin/media/subir-imagenes/{$idProyecto}/",
                 'txtLink' => 'Subir Fotografias'
             ]);
 
@@ -28,7 +28,7 @@ Trait Vista {
             [
                 'span'  => 'fa fa-edit',
                 'title' => "Editar Fotografia",
-                'href'  => "/jadmin/media/gestion/{$idFk}/{clave}"
+                'href'  => "/jadmin/media/gestion/{$idProyecto}/{clave}"
             ],
             [
                 'span'        => 'fa fa-trash',

@@ -33,7 +33,7 @@ class Tema {
         if (Estructura::$jadmin and !Directorios::validar($rutaApp)) {
 
             //TODO: Manejar ruta para jadmin desde estructura
-            self::$url = '//' . Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema;
+            self::$url = Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/' . $this->_tema;
             self::$directorio = Estructura::$rutaJida . "/Jadmin/Layout/$this->_tema";
 
             return true;

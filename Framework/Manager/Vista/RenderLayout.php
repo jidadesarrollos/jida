@@ -12,45 +12,6 @@ use Jida\Medios\Directorios;
 
 Trait RenderLayout {
 
-    public function incluirJS($librerias, $modulo = false) {
-
-        if ($modulo === true) {
-            $modulo = Estructura::$rutaModulo;
-        }
-        else {
-
-            $modulo = $this->_urlTema;
-        }
-
-        if (is_string($librerias)) {
-            $librerias = (array)$librerias;
-        }
-
-        foreach ($librerias as $indice => $valor) {
-            array_push($this->_js, "$modulo/$valor");
-        }
-
-    }
-
-    public function incluirCSS($librerias, $modulo = false) {
-
-        if ($modulo == true) {
-            $modulo = Estructura::$rutaModulo;
-        }
-        else {
-            $modulo = $this->_urlTema;
-        }
-
-        if (is_string($librerias)) {
-            $librerias = (array)$librerias;
-        }
-
-        foreach ($librerias as $indice => $valor) {
-            array_push($this->_css, "$modulo/$valor");
-        }
-
-    }
-
     function incluir($plantilla) {
 
         $directorio = Tema::$directorio;

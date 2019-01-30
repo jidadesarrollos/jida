@@ -20,11 +20,11 @@ Trait Modulo {
     private $_namespace;
 
     protected function _modulo() {
-
+        //TODO: mejorar logica metodo de obtención del modulo
         $padre = $this->_padre;
 
         $parametro = $padre->proximoParametro();
-
+        $url = "";
         $posModulo = $this->_validarNombre($parametro, 'upper');
 
         if ($posModulo and
@@ -38,7 +38,7 @@ Trait Modulo {
             $namespace .= ($padre->jadmin) ? '\\Jadmin\\Controllers\\' : '\\Controllers\\';
             $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Modulos' . DS . $posModulo;
             $rutaModulo .= ($padre->jadmin) ? DS . 'Jadmin' : '';
-
+            $url = "/Aplicacion/Modulos/$posModulo";
         }
 
         else if (Estructura::$jadmin) {
@@ -79,6 +79,7 @@ Trait Modulo {
 
         Estructura::$namespace = $namespace;
         Estructura::$rutaModulo = $rutaModulo;
+        Estructura::$urlModulo = Estructura::$urlBase . $url;
 
     }
 

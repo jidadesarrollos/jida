@@ -37,6 +37,14 @@ class Estructura {
      */
     static $urlRuta;
     /**
+     * @var $urlHtdocs url publica para archivos clientes
+     */
+    static $urlHtdocs;
+    /**
+     * @var string $urlModulo URL publica del modulo en ejecución.
+     */
+    static $urlModulo;
+    /**
      * @var string $directorio Directorio raiz en el que se ubica el proyecto
      */
     static $directorio;
@@ -146,6 +154,7 @@ class Estructura {
             self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
+            self::$urlHtdocs = self::$urlBase . '/htdocs/';
             self::$url = rtrim("//" . self::$dominio . "/$url", "/");
 
         }
@@ -166,7 +175,6 @@ class Estructura {
     static public function definir(Arranque $arranque) {
 
         self::$ruta = $arranque::$ruta;
-        //Debug::imprimir([self::$ruta, self::$url], true);
 
     }
 

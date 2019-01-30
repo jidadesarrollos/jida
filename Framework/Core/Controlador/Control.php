@@ -21,10 +21,6 @@ class Control {
     protected $vista;
     protected $helpers = [];
 
-    /**
-     * @var Layout Objeto layout instanciado
-     */
-    protected $Layout;
     protected $modelos = [];
     protected $modelo;
     protected $usuario;
@@ -33,6 +29,11 @@ class Control {
     private $post;
 
     private $get;
+    /**
+     * @var $_layout Objeto layout instanciado
+     * @see Layout
+     */
+
     private $_layout;
     private $request;
 
@@ -53,6 +54,7 @@ class Control {
      * @since 1.4
      * @param string $layout
      * @return Layout
+     * @see Layout;
      */
     public function layout($layout = null) {
 

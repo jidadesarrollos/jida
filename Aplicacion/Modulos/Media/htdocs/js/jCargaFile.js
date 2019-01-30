@@ -7,20 +7,20 @@
  */
 (function ($) {
 
-    var jCargaFile = function (objeto, config, event) {
+    let jCargaFile = function (objeto, config, event) {
         this.objeto = objeto;
         this.configuracion = config;
         this.$obj = $(this.objeto);
         this.init();
         this._FileReader = new FileReader();
         this._data = {};
-        var that = this;
+        let that = this;
     };
-    var selector = '[data-jida="cargaFile"]';
+    let selector = '[data-jida="cargaFile"]';
 
     jCargaFile.prototype = {
         regExps: {
-            'imagen': /\.(jpe?g|png|gif)$/i,
+            'imagen': /\.(jpe?g|png|gif)$/i
 
         },
         /**
@@ -36,15 +36,12 @@
         _data: {},
 
         _obtConfiguracion: function () {
-            var defaultConfig = {
+            let defaultConfig = {
                 'preCarga': function () {
                 },
                 'onLoadArchivo': this._defaultOnload,
-                'postCarga': function () {
-                    console.log("carga default");
-                },
                 'multiple': false,
-                'name': "_jcargaArchivo",
+                'name': '_jcargaArchivo',
                 'btnCarga': false,
                 'onLoad': false
             };
@@ -74,7 +71,7 @@
          */
         _manejarEventos: function () {
 
-            var plugin = this;
+            let plugin = this;
 
             this.$obj.on('click', function (e) {
                 this.$file.off();
@@ -88,52 +85,47 @@
          */
         _managerChange: function (e) {
 
-            var ele = e.target;
-            var plugin = this;
+            let ele = e.target;
+            let plugin = this;
             this._archivosSeleccionados = ele.files.length;
             this._defaultPrecarga.call(plugin, e);
 
             //this.$file.off();
         },
         _managerLoadEnd: function (e) {
-            var ele = e.currentTarget;
-            var plugin = this;
+            let ele = e.currentTarget;
+            let plugin = this;
             ++plugin._archivosCargados;
-            console.log("load end", this._configuracion.btnCarga);
-            console.log(plugin._archivosCargados + " == " + plugin._archivosSeleccionados);
-            console.log('configuracion url :', this._configuracion.url);
+
             if (this._configuracion.btnCarga) {
-
                 $(this._configuracion.btnCarga).on('click', this._postData.bind(this));
-
-            } else if ((plugin._archivosCargados == plugin._archivosSeleccionados) && this._configuracion.url) {
-                console.log("aki papi");
+            }
+            else if (
+                (plugin._archivosCargados == plugin._archivosSeleccionados)
+                && this._configuracion.url
+            ) {
                 this._postData();
 
             }
         },
         _managerOnLoad: function (e) {
-            var ele = e.target;
-            var plugin = this;
+            let ele = e.target;
+            let plugin = this;
 
             ele.removeEventListener('load', plugin._managerOnLoad);
 
             plugin._configuracion.onLoad.call(plugin, e);
         },
         _postData: function () {
-            console.log("post data");
-            var form = new FormData();
-            var plugin = this;
-            var name = (plugin._archivosCargados > 1) ? plugin._configuracion.name + "[]" : plugin._configuracion.name;
 
-            [].forEach.call(plugin._archivos, function (archivo) {
+            let form = new FormData();
+            let plugin = this;
+            let name = (plugin._archivosCargados > 1) ? plugin._configuracion.name + '[]' : plugin._configuracion.name;
 
-                form.append(name, archivo);
-            });
+            [].forEach.call(plugin._archivos, (archivo) => form.append(name, archivo));
 
-            for (key in plugin._data) {
-                form.append(key, plugin._data[key]);
-            }
+            for (let key in plugin._data) form.append(key, plugin._data[key]);
+
             $.ajax({
                 'url': this._configuracion.url,
                 'type': 'post',
@@ -146,19 +138,16 @@
                     plugin._archivosCargados = 0;
                     plugin._configuracion.postCarga(r);
                 },
-                'error': function (e) {
-                    console.log("error", e);
-                }
+                'error': e => console.log('error', e)
             });
 
         },
 
-
         _defaultPrecarga: function (event) {
 
-            var ele = event.target;
-            var plugin = this;
-            var archivos = ele.files;
+            let ele = event.target;
+            let plugin = this;
+            let archivos = ele.files;
             this._archivos = archivos;
             plugin._configuracion.preCarga.call(plugin, event);
 
@@ -169,7 +158,7 @@
 
                     archivo.id_app = band;
                     ++band;
-                    var reader = new FileReader();
+                    let reader = new FileReader();
                     reader.addEventListener('load', this._managerOnLoad.bind(plugin), false);
                     reader.addEventListener('loadend', this._managerLoadEnd.bind(plugin), false);
                     reader.readAsDataURL(archivo);
@@ -181,15 +170,17 @@
         },
 
         _defaultOnload: function (e) {
-            var image = new Image();
-            var ele = e.target;
-            var plugin = this;
+
+            let image = new Image();
+            let ele = e.target;
+            let plugin = this;
 
             image.height = 150;
             image.title = ele.title;
             image.src = ele.result;
             $li = $('<li>').html(image);
             $('#imagenes').append($li);
+
             ++this._archivoCargados;
 
         },
@@ -205,18 +196,13 @@
      *
      */
     function jPlugin(config, e) {
+        let $this = $(this);
+        return this.each((i, ele) => new jCargaFile(ele, config, e));
+    }
 
-        var $this = $(this);
-        return this.each(function (i, ele) {
-
-            v = new jCargaFile(ele, config, e);
-
-        });
-    };
     $.fn.jCargaFile = jPlugin;
-    $(selector).each(function (i, elem) {
-        new jCargaFile(elem);
-    });
+
+    $(selector).each((i, elem) => new jCargaFile(elem));
 
 })(jQuery);
 

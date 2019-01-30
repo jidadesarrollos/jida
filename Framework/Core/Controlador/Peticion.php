@@ -10,22 +10,23 @@ Trait Peticion {
     private $_post;
     private $_get;
     private $_request;
+    private $_files;
     /**
      * @var object $data Objeto Data para pasar la informacion a las vistas
      * @see Data
      */
     private $_data;
 
-    private function _procesarPeticiones () {
+    private function _procesarPeticiones() {
 
         $this->_post = $_POST;
         $this->_get = $_GET;
         $this->_request = $_REQUEST;
-
+        $this->_files = $_FILES;
 
     }
 
-    protected function post ($propiedad = "", $valor = "") {
+    protected function post($propiedad = "", $valor = "") {
 
         if ($valor) {
             $this->_post[$propiedad] = $valor;
@@ -44,7 +45,7 @@ Trait Peticion {
 
     }
 
-    protected function get ($propiedad, $valor = "") {
+    protected function get($propiedad, $valor = "") {
 
         if ($valor) {
             $this->_get[$propiedad] = $valor;
@@ -58,7 +59,7 @@ Trait Peticion {
 
     }
 
-    protected function request ($propiedad, $valor = "") {
+    protected function request($propiedad, $valor = "") {
 
         if ($valor) {
             $this->_request[$propiedad] = $valor;
@@ -69,6 +70,20 @@ Trait Peticion {
         }
 
         return $this->_request[$propiedad];
+
+    }
+
+    /**
+     * Permite acceder ala data buscada en el arreglo global $_FILES
+     *
+     * @param string $propiedad clave a buscar en $_FILES
+     * @return mixed
+     */
+    protected function files($propiedad) {
+
+        if (isset($this->_files[$propiedad])) {
+            return $this->_files[$propiedad];
+        }
 
     }
 

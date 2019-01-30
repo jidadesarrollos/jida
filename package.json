@@ -4,7 +4,8 @@
   "description": "Framework para desarrollo optimo de aplicaciones en entorno web",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jadmin": "less-watch-compiler ./Framework/Jadmin/Layout/jadmin/htdocs/less ./Framework/Jadmin/Layout/jadmin/htdocs/css main.less"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,9 @@
     "gulp-install": "^1.1.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-notify": "^2.2.0",
-    "gulp-uglify": "^2.0.0"
+    "gulp-uglify": "^2.0.0",
+    "less": "^3.9.0",
+    "mustache": "^3.0.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3"
