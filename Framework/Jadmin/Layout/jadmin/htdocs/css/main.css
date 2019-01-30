@@ -1,0 +1,34 @@
+.jida-galeria-media li figure {
+  height: 130px;
+  width: 130px;
+  overflow: hidden;
+  border: 4px solid transparent;
+  cursor: pointer;
+  position: relative;
+}
+.jida-galeria-media li figure.selected {
+  border-color: #337ab7;
+}
+.jida-galeria-media li figure img {
+  width: 140px;
+  object-fit: cover;
+}
+.jida-galeria-media li figure figcaption {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+}
+.jida-galeria-media li figure:hover figcaption {
+  background: rgba(0, 0, 0, 0.3);
+}
+.jida-galeria-media li figure.ui-widget-content.ui-selected {
+  border: 6px solid rgba(0, 0, 0, 0.5);
+}
+.jida-galeria-media li figure.ui-widget-content.ui-selected figcaption {
+  background: rgba(0, 0, 0, 0.3);
+}
+.jida-container.galeria .objeto-media-detalle img {
+  max-height: 500px;
+}
