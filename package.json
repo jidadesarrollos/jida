@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "jadmin": "less-watch-compiler ./Framework/Jadmin/Layout/jadmin/htdocs/less ./Framework/Jadmin/Layout/jadmin/htdocs/css main.less"
+    "jadmin": "less-watch-compiler ./Framework/Jadmin/Layout/jadmin/htdocs/less ./Framework/Jadmin/Layout/jadmin/htdocs/css main.less",
+    "jadmin-sass": "sass ./Framework/Jadmin/Layout/jadmin/htdocs/scss/main.scss ./Framework/Jadmin/Layout/jadmin/htdocs/css/main.css"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,8 @@
     "gulp-notify": "^2.2.0",
     "gulp-uglify": "^2.0.0",
     "less": "^3.9.0",
-    "mustache": "^3.0.1"
+    "mustache": "^3.0.1",
+    "sass": "^1.16.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3"

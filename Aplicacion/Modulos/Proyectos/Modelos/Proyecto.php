@@ -15,7 +15,7 @@ class Proyecto extends Modelo {
     var $id_proyecto;
     var $nombre;
     var $descripcion;
-    var $slug;
+    var $identificador;
     var $id_categoria;
 
     protected $tablaBD = "m_proyectos";

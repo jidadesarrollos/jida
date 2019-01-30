@@ -1,5 +1,6 @@
 .jida-galeria-media li figure {
   height: 130px;
+  overflow: hidden;
   width: 130px;
   overflow: hidden;
   border: 4px solid transparent;
@@ -29,6 +30,9 @@
 .jida-galeria-media li figure.ui-widget-content.ui-selected figcaption {
   background: rgba(0, 0, 0, 0.3);
 }
+
 .jida-container.galeria .objeto-media-detalle img {
   max-height: 500px;
 }
+
+/*# sourceMappingURL=main.css.map */
