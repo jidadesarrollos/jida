@@ -2,14 +2,14 @@
     <div class="container">
         <main>
             <h2>
-                <?= $this->proyecto->nombre ?>
+                <?= $this->proyecto['proyecto'] ?>
             </h2>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="owl-carousel owl-theme" id="owl-demo-3">
-                        <?php foreach ($this->galeria as $medio): ?>
+                        <?php foreach ($this->proyectos as $medio): ?>
                             <div class="item">
-                                <img src="<?= $medio['url_media'] ?>"
+                                <img src="<?= $medio['imagen'] ?>"
                                      alt="" class="img-full">
                             </div>
                         <?php endforeach; ?>

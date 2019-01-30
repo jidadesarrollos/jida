@@ -14,36 +14,57 @@ use Jida\Componentes\Correo;
 class Index extends App {
 
     var $correoContacto = 'rrodriguez@jidadesarrollos.com';
+    var $rutaImagen     = '/Aplicacion/Layout/jacobsen/htdocs/images/';
+
+    var $slider    = [];
+    var $proyectos = [];
+
+    function __construct() {
+        parent::__construct();
+
+        $this->slider = [
+            'slide-1' => [
+                'imagen' => $this->rutaImagen . 'hasna-1.jpg',
+                'titulo' => 'Bodas'
+            ],
+            'slide-2' => [
+                'imagen' => $this->rutaImagen . 'hasna-2.jpg',
+                'titulo' => 'Eventos'
+            ],
+            'slide-3' => [
+                'imagen' => $this->rutaImagen . 'hasna-3.jpg',
+                'titulo' => 'Retratos'
+            ]
+        ];
+
+        $this->proyectos = [
+            1 => [
+                'id_proyecto' => 1,
+                'proyecto'    => 'Proyecto 1',
+                'categoria'   => 'Bodas',
+                'imagen'      => $this->rutaImagen . 'hasna-1.jpg',
+            ],
+            2 => [
+                'id_proyecto' => 2,
+                'proyecto'    => 'Proyecto 2',
+                'categoria'   => 'Bodas',
+                'imagen'      => $this->rutaImagen . 'hasna-2.jpg',
+            ],
+            3 => [
+                'id_proyecto' => 3,
+                'proyecto'    => 'Proyecto 3',
+                'categoria'   => 'Bodas',
+                'imagen'      => $this->rutaImagen . 'hasna-3.jpg',
+            ]
+        ];
+
+    }
 
     function index() {
 
-        $galeria = [];
-        $proyecto = new Proyecto();
-        $proyecto->select(['id_proyecto', 'nombre', 'slug', 'id_categoria']);
-        $proyecto->order('id_proyecto', 'desc');
-        $proyectos = $proyecto->obt();
-
-        foreach ($proyectos as $k => $row) {
-
-            $cat = new Categoria($row['id_categoria']);
-
-            $medios = new Media();
-            $medios->select(['id_media', 'url_media']);
-            $medios->filtro(['id_proyecto' => $row['id_proyecto']]);
-            $medio = $medios->obt();
-
-            $imagen = new Media($medio[0]['id_media']);
-            $imgPortada = $imagen->thumbnail(300, 300);
-
-            $galeria[$k]['id_proyecto'] = $row['id_proyecto'];
-            $galeria[$k]['proyecto'] = $row['nombre'];
-            $galeria[$k]['categoria'] = $cat->nombre;
-            $galeria[$k]['imagen'] = $imgPortada;
-
-        }
-
         $this->data([
-            'galeria' => $galeria,
+            'slider'    => $this->slider,
+            'proyectos' => $this->proyectos
         ]);
 
     }
@@ -54,24 +75,8 @@ class Index extends App {
 
     function galeria() {
 
-        $galeria = [];
-        $medios = new Media();
-        $medios->select(['id_media', 'url_media', 'id_proyecto']);
-        $result = $medios->obt();
-
-        foreach ($result as $k => $row) {
-            $medio = new Media($row['id_media']);
-            $imagen = $medio->thumbnail(300, 300);
-            $proyecto = new Proyecto($row['id_proyecto']);
-            $categoria = new Categoria($proyecto->id_categoria);
-            $galeria[$k]['id_proyecto'] = $proyecto->id_proyecto;
-            $galeria[$k]['proyecto'] = $proyecto->nombre;
-            $galeria[$k]['categoria'] = $categoria->nombre;
-            $galeria[$k]['imagen'] = $imagen;
-        }
-
         $this->data([
-            'galeria' => $galeria
+            'proyectos' => $this->proyectos
         ]);
 
     }
@@ -82,18 +87,9 @@ class Index extends App {
             $this->_404();
         }
 
-        $proyecto = new Proyecto($id);
-        $categoria = new Categoria($proyecto->id_categoria);
-
-        $galeria = [];
-        $medios = new Media();
-        $medios->select(['id_media', 'url_media', 'id_proyecto']);
-        $medios->filtro(['id_proyecto' => $id]);
-        $galeria = $medios->obt();
-
         $this->data([
-            'proyecto' => $proyecto,
-            'galeria'  => $galeria
+            'proyecto'  => $this->proyectos[$id],
+            'proyectos' => $this->proyectos
         ]);
 
     }

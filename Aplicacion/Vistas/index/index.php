@@ -1,26 +1,14 @@
 <section class="big-slider">
     <div class="owl-carousel owl-theme owl-lol" id="owl-demo">
-        <div class="item slide-1">
-            <div class="container">
-                <div class="title-lol">
-                    <h2>Bodas</h2>
+        <?php foreach ($this->slider as $slide): ?>
+            <div class="item" style="background: url('<?= $slide['imagen'] ?>') center no-repeat; background-size: cover;">
+                <div class="container">
+                    <div class="title-lol">
+                        <h2><?= $slide['titulo'] ?></h2>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="item slide-2">
-            <div class="container">
-                <div class="title-lol">
-                    <h2>Retratos</h2>
-                </div>
-            </div>
-        </div>
-        <div class="item slide-3">
-            <div class="container">
-                <div class="title-lol">
-                    <h2>Eventos</h2>
-                </div>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 </section>
 
@@ -30,7 +18,7 @@
         <main>
             <h5>Soy un apasionado de la fotografía</h5>
             <div class="row">
-                <?php foreach ($this->galeria as $medio): ?>
+                <?php foreach ($this->proyectos as $medio): ?>
                     <div class="col-sm-4 pad-global">
                         <div class="grid mar-top-0 mar-btm-15">
                             <figure class="effect-julia">
@@ -49,7 +37,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="text-center mar-top-20">
-                            <a class="btn-lool btn-black-square" href="image-load.html">Load More</a>
+                            <a class="btn-lool btn-black-square" href="image-load.html">Ver Más</a>
                         </div>
                     </div>
                 </div>

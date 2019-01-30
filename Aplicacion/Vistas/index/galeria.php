@@ -6,7 +6,7 @@
             </h2>
             <hr>
             <div class="row row-global animated fadeIn">
-                <?php foreach ($this->galeria as $medio): ?>
+                <?php foreach ($this->proyectos as $medio): ?>
                     <div class="col-sm-4 pad-global animated">
                         <div class="grid mar-top-15">
                             <figure class="effect-julia">
