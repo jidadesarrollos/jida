@@ -183,7 +183,7 @@ class Imagen extends Archivo {
             $file = array_pop($dirs);
             $file = explode(".", $file);
             $actualDir = implode("/", $dirs);
-            $nuevoDir = "$actualDir /${file[0]}-{$dimension}.{$this->extension}";
+            $nuevoDir = "$actualDir/${file[0]}-{$dimension}.{$this->extension}";
 
         }
 

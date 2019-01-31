@@ -44,6 +44,7 @@ class Proyectos extends Jadmin {
 
             $modelo = new Modelo($id);
             if ($modelo->eliminar()) {
+
                 Mensajes::almacenar(Mensajes::suceso("Proyecto eliminado correctamente."));
             }
             else {

@@ -113,4 +113,8 @@ class Vista {
 
     }
 
+    function navegar($url) {
+        return Estructura::$urlBase . $url;
+    }
+
 }
