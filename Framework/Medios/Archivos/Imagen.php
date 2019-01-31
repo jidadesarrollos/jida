@@ -15,6 +15,7 @@ namespace Jida\Medios\Archivos;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Medios\Archivo;
+use Jida\Medios\Debug;
 
 class Imagen extends Archivo {
 
@@ -119,9 +120,17 @@ class Imagen extends Archivo {
      *
      */
 
-    function redimensionar($nuevoAncho, $nuevoAlto, $sobreescribir = false) {
+    private function _calcularRedimension($dimension) {
 
+        $partes = explode("x", $dimension);
         $proporcionActual = $this->_ancho / $this->_alto;
+
+        if (count($partes) < 2) {
+            Excepcion::procesar("Las dimensiones pasadas no son correctas", self::$_ce . 1);
+        }
+
+        $nuevoAncho = $partes[0];
+        $nuevoAlto = $partes[1];
         $proporcionRedimension = $nuevoAncho / $nuevoAlto;
 
         if ($proporcionActual > $proporcionRedimension) {
@@ -139,37 +148,47 @@ class Imagen extends Archivo {
                 $altoRedimension = $nuevoAlto;
             }
         }
+        Debug::imprimir([1, ['ancho' => $anchoRedimension, 'alto' => $altoRedimension]]);
+        return ['ancho' => $anchoRedimension, 'alto' => $altoRedimension];
 
-        $imagen = $this->crearLienzo($this->_path);
-        $lienzo = imagecreatetruecolor($anchoRedimension, $altoRedimension);
-        imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
-        imagealphablending($lienzo, false);
-        imagesavealpha($lienzo, true);
-        imagecopyresampled($lienzo,
-            $imagen,
-            0,
-            0,
-            0,
-            0,
-            $anchoRedimension,
-            $altoRedimension,
-            $this->_ancho,
-            $this->_alto);
+    }
+
+    function redimensionar($dimensiones, $sobreescribir = false) {
+
+        if (is_string($dimensiones)) $dimensiones = (array)$dimensiones;
+
+        foreach ($dimensiones as $item => $dimension) {
+
+            $calculos = $this->_calcularRedimension($dimension);
+
+            $imagen = $this->crearLienzo($this->_path);
+            $lienzo = imagecreatetruecolor($calculos['ancho'], $calculos['alto']);
+
+            imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
+            imagealphablending($lienzo, false);
+            imagesavealpha($lienzo, true);
+            imagecopyresampled(
+                $lienzo, $imagen, 0, 0, 0, 0,
+                $calculos['ancho'],
+                $calculos['alto'],
+                $this->_ancho,
+                $this->_alto
+            );
+
+        }
+        $nuevoDir = $this->_path;
 
         if (!$sobreescribir) {
             $dirs = explode("/", $this->_path);
             $file = array_pop($dirs);
             $file = explode(".", $file);
             $actualDir = implode("/", $dirs);
-            $nuevoDir = $actualDir . "/" . $file[0] . "-" . $nuevoAncho . "x" . $nuevoAlto . "." . $this->extension;
-        }
-        else {
-            $nuevoDir = $this->_path;
+            $nuevoDir = "$actualDir /${file[0]}-{$dimension}.{$this->extension}";
+
         }
 
-        if ($this->salvarImagen($lienzo, $nuevoDir)) {
-            return $nuevoDir;
-        }
+        return $this->salvarImagen($lienzo, $nuevoDir);
+
     }
 
     private function crearLienzo($url) {

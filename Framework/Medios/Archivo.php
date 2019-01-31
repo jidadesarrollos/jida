@@ -18,8 +18,16 @@ class Archivo {
      * @var string $extension Extension del archivo
      */
     public $extension;
-
-    private static $_directorio;
+    /**
+     * @var string $_directorio Ruta fisica del archivo
+     */
+    protected $_directorio;
     private static $_permisos;
 
+    /**
+     * @return string
+     */
+    function directorio() {
+        return $this->_directorio;
+    }
 }

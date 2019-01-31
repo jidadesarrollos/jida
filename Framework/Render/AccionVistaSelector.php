@@ -1,6 +1,7 @@
 <?php
 /**
  * Clase Modelo para AccionVistaSelector
+ *
  * @author Julio Rodriguez
  * @package
  * @version
@@ -65,6 +66,6 @@ class AccionVistaSelector extends Selector {
         }
 
         return parent::render();
-        
+
     }
 }

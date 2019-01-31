@@ -80,6 +80,10 @@ class ArchivoCargado extends Archivo {
             }
         }
 
+        $this->_directorio = $directorio;
+
+        return true;
+
     }
 
     /**

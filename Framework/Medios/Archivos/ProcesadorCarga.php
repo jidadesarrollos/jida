@@ -1,6 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Procesa la carga de archivos
+ *
+ * $_ce = 1
  * User: Isaac
  * Date: 14/1/2019
  * Time: 07:46
@@ -8,11 +10,13 @@
 
 namespace Jida\Medios\Archivos;
 
+use Jida\Manager\Excepcion;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 class ProcesadorCarga {
 
+    static private $_ce = 50002;
     /**
      * @var boolean $procesada Define si un archivo es subido exitosamente
      */
@@ -64,7 +68,9 @@ class ProcesadorCarga {
     }
 
     private function _listaArchivos($archivos) {
+
         $strucArchivos = [];
+
         for ($i = 0; $i < count($archivos['name']); $i++) {
             $archivo = [];
             $archivo['name'] = $archivos['name'][$i];
@@ -74,7 +80,9 @@ class ProcesadorCarga {
             $archivo['size'] = $archivos['size'][$i];
             $strucArchivos[$i] = $archivo;
         }
+
         return $strucArchivos;
+
     }
 
     /**
@@ -90,6 +98,13 @@ class ProcesadorCarga {
         return true;
     }
 
+    /***
+     * Mueve los archivos cargados al directorio especificado
+     *
+     * @param $directorio
+     * @param string $prefijo
+     * @return $this
+     */
     function mover($directorio, $prefijo = "") {
 
         $listaArchivos = [];
@@ -97,24 +112,56 @@ class ProcesadorCarga {
         if (!Directorios::validar($directorio))
             Directorios::crear($directorio);
 
+        Debug::imprimir([count($this->_archivos), $this->_archivos]);
         foreach ($this->_archivos as $indice => $archivo) {
 
             $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
-            $nuevoArchivo = $directorio . "/" . $nombreArchivo;
+            $nuevoArchivo = "$directorio/$nombreArchivo";
+            Debug::imprimir([$nombreArchivo, $nuevoArchivo]);
             $archivo->mover($nuevoArchivo);
             array_push($listaArchivos, $nuevoArchivo);
 
         }
-        return $listaArchivos;
+
+        return $this;
+
+    }
+
+    function redimensionar($dimensiones) {
+
+        if (is_string($dimensiones)) $dimensiones = (array)$dimensiones;
+
+        foreach ($dimensiones as $item => $dimension) {
+
+            $partes = explode("x", $dimension);
+            if (count($partes) < 2) {
+                Excepcion::procesar("Las dimensiones pasadas no son correctas", self::$_ce . 1);
+            }
+
+        }
+
+        return $this;
 
     }
 
     private function _generadorNombres($extension, $prefijo = "") {
+
         $fecha = md5(Date('U'));
         $random = rand(100000, 999999);
         $name = $fecha . $random;
         $name = (!empty($prefijo)) ? $prefijo . "-" . $name : $name;
 
         return $name . "." . $extension;
+
+    }
+
+    /**
+     * Devuelve un arreglo de objetos ArchivoCargado por cada archivo cargado
+     *
+     * @see ArchivoCargado
+     * @return array
+     */
+    function archivos() {
+        return $this->_archivos;
     }
 }

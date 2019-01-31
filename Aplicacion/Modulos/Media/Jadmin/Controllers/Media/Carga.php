@@ -18,33 +18,31 @@ Trait Carga {
     private function _procesarCarga($idProyecto, $proyecto, $categoria) {
 
         $imagen = $this->files('imagen');
-        $procesador = new ProcesadorCarga('imagenes');
+
+        $procesador = new ProcesadorCarga('imagen');
 
         if ($procesador->validar()) {
 
-            $archivos = $procesador->mover("/htdocs/{$categoria->nombre}/{$proyecto->nombre}");
+            $directorio = Estructura::$directorio . "/htdocs/{$categoria->identificador}/{$proyecto->identificador}";
+            $archivos = $procesador->mover($directorio)->archivos();
 
-            $objetos = [];
-            foreach ($archivos as $archivo) {
-                $objeto = [];
-                $objeto['nombre'] = " ";
-                $objeto['url_media'] = $archivo;
-                $objeto['id_proyecto'] = $idProyecto;
-                array_push($objetos, $objeto);
-                $imagen = new Imagen($archivo);
-                $imagen->redimensionar(150, 150);
-                $imagen->redimensionar(300, 300);
-                $imagen->redimensionar(600, 600);
-                $imagen->redimensionar(1200, 1200);
+            $ok = true;
+            foreach ($archivos as $item => $archivo) {
+
+                $imagen = new Imagen($archivo->directorio());
+                if (!$imagen->redimensionar(['150x150', '300x300'])) {
+                    $ok = false;
+
+                }
+
             }
+            $this->respuestaJson(['procesado' => $ok, 'directorio' => $directorio]);
+            $objetos = [];
 
-            $this->modelo->salvarTodo($objetos);
+            //$this->modelo->salvarTodo($objetos);
 
-            Mensajes::crear('suceso', "Imagenes Guardadas correctamente.");
-            $this->redireccionar("/jadmin/media/index/{$idProyecto}");
 
         }
-        else Mensajes::crear('error', "Una o mas fotografias no son validad");
 
     }
 
@@ -63,7 +61,7 @@ Trait Carga {
         $proyecto = new Proyecto($idProyecto);
         $categoria = new Categoria($proyecto->id_categoria);
 
-        if ($this->files    ('imagen')) {
+        if ($this->files('imagen')) {
             $this->_procesarCarga($idProyecto, $proyecto, $categoria);
         }
 
