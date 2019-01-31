@@ -1,6 +1,6 @@
-<section class="jumbotron text-center">
-    <div class="container">
-        <h1 class="jumbotron-heading">Subir imagenes al proyecto "<?= $this->nombre ?>"</h1>
+<section class="card mb-2">
+    <div class="card-body">
+        <h4 class="card-title">Subir imagenes al proyecto "<?= $this->nombre ?>"</h4>
         <p>
             <button type="button"
                     class="btn btn-primary my-2"
