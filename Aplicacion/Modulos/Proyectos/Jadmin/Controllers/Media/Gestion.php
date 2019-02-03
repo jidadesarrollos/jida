@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modulos\Media\Jadmin\Controllers\Media;
+namespace App\Modulos\Proyectos\Jadmin\Controllers\Media;
 
 use Jida\Render\Formulario;
 

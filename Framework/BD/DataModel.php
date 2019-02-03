@@ -13,6 +13,7 @@
 namespace Jida\BD;
 
 use Exception;
+use Jida\Manager\Excepcion;
 use Jida\Medios as Medios;
 use Jida\Medios\Debug as Debug;
 use Jida\Manager\Estructura;
@@ -281,14 +282,11 @@ class DataModel {
         }
         if ($id) {
             $this->instanciarObjeto($id);
-
         }
         else {
             $this->instanciarTieneUno()->instanciarTieneMuchos();
         }
-        if ($this->usoBD !== false) {
 
-        }
         if ($this->bd) {
             $this->bd->mantener = false;
             $this->bd->cerrarConexion();
@@ -692,7 +690,7 @@ class DataModel {
                     if (array_key_exists('objeto', $class)) {
                         $relacion = $class['objeto'];
                     }
-                    #Medios\Debug::imprimir($nombreClass, $class,1,$this->id_media_principal,"----");
+
                     if (array_key_exists('fk', $class))
                         $this->$nombreClass = new $relacion($this->{$class['fk']}, $this->nivelActualORM);
 
@@ -707,12 +705,8 @@ class DataModel {
                     $explode = explode('\\', $class);
                     $nombreClass = array_pop($explode);
 
-                    // Revisar este funcionamiento
-                    // $this->$nombreClass = new $class($this->{$this->pk},$this->nivelActualORM);
-
                     $obj = new $class();
-                    //Medios\Debug::imprimir($obj->pk);
-                    $this->$nombreClass = new $class(null, $this->nivelActualORM);
+                    $this->{$nombreClass} = new $class(null, $this->nivelActualORM);
 
                 }
             }
@@ -803,8 +797,10 @@ class DataModel {
 
                 if ($relacion) {
 
-                    $objRelacion->join($relacion,
-                        $camposRelacion)->filtro([$relacion . "." . $this->pk => $this->{$this->pk}])->agrupar($camposRelacion);
+                    $objRelacion
+                        ->join($relacion, $camposRelacion)
+                        ->filtro(["{$relacion}.{$this->pk}" => $this->{$this->pk}])
+                        ->agrupar($camposRelacion);
                 }
                 else {
                     //entra aqui si es una relacion 1 -> N
@@ -839,11 +835,6 @@ class DataModel {
         $dataOrm = ($this->nivelORM > NIVEL_ORM) ? [$this->nivelORM => $this->nivelActualORM] : $this->nivelActualORM;
         foreach ($this->tieneUno as $key => $relacion) {
 
-            // if(is_array($relacion)){
-            //
-            // $nombreObj = (array_key_exists('objeto', $data))?$data['objeto']:$nombreRelacion;
-            // $rel = new $nombreObj();
-            // }else
             if (is_string($relacion) and class_exists($relacion)) {
 
                 $rel = new $relacion();
@@ -855,11 +846,14 @@ class DataModel {
 
                 if (array_key_exists('fk', $relacion)) {
 
-                    $this->consultaRelaciones[$key] = $rel->consulta()->filtro([$rel->pk => $this->{$relacion['fk']}])->obtQuery();
+                    $this->consultaRelaciones[$key] = $rel->consulta()->filtro([
+                            $rel->pk => $this->{$relacion['fk']}]
+                    )->obtQuery();
 
                 }
 
             }
+
         }
 
         return $this;
@@ -874,7 +868,7 @@ class DataModel {
                 $class = array_pop($explode);
 
                 $this->{$class} = [];
-                // Debug::imprimir($key,$value,"-");
+
             }
             else {
                 $explode = explode('\\', $key);
@@ -1808,35 +1802,30 @@ class DataModel {
      */
     function salvarTodo($data, $insertPK = false) {
 
-        if (is_array($data)) {
-
-            $insert = "INSERT INTO " . $this->tablaBD . " ";
-
-            if ($insertPK)
-                $insert .= "(" . implode(",",
-                        $this->obtenerCamposQuery(array_slice($data, 0, 1)[0], false)) . ") VALUES ";
-            else
-                $insert .= "(" . implode(",", $this->obtenerCamposQuery(array_slice($data, 0, 1)[0])) . ") VALUES ";
-
-            $i = 0;
-
-            $this->totalInserciones = count($data);
-            foreach ($data as $key => $registro) {
-                if ($i > 0)
-                    $insert .= ",";
-                $datos = $this->estructuraInsert($registro, $insertPK);
-                $insert .= " (" . implode(',', $datos) . ")";
-                ++$i;
-            }
-
-            $this->bd->ejecutarQuery($insert);
-            $this->armarIdsInsertados();
-
-            return $this->resultBD->setValores($this);
+        if (!is_array($data)) {
+            $msj = "El arreglo pasado no se encuentra creado correctamente";
+            Excepcion::procesar($msj, 111);
         }
-        else {
-            throw new Exception("El arreglo pasado no se encuentra creado correctamente", 111);
+
+        $campos = $this->obtenerCamposQuery(array_slice($data, 0, 1)[0], $insertPK);
+
+        $insert = "INSERT INTO {$this->tablaBD} ";
+        $insert .= '(' . implode(",", $campos) . ') VALUES ';
+
+        for ($i = 0; $i < count($data); ++$i) {
+
+            if ($i > 0) $insert .= ',';
+            $datos = $this->estructuraInsert($data[$i], $insertPK);
+            $insert .= ' (' . implode(',', $datos) . ')';
+
         }
+
+        $this->totalInserciones = count($data);
+        $this->bd->ejecutarQuery($insert);
+        $this->armarIdsInsertados();
+
+        return $this->resultBD->setValores($this);
+
     }
 
     /**

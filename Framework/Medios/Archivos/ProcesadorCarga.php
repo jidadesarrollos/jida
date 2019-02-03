@@ -109,16 +109,15 @@ class ProcesadorCarga {
 
         $listaArchivos = [];
 
-        if (!Directorios::validar($directorio))
-            Directorios::crear($directorio);
+        if (!Directorios::validar($directorio)) Directorios::crear($directorio);
 
-        Debug::imprimir([count($this->_archivos), $this->_archivos]);
         foreach ($this->_archivos as $indice => $archivo) {
 
             $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
             $nuevoArchivo = "$directorio/$nombreArchivo";
-            Debug::imprimir([$nombreArchivo, $nuevoArchivo]);
+
             $archivo->mover($nuevoArchivo);
+
             array_push($listaArchivos, $nuevoArchivo);
 
         }

@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Clase Helper de Arreglos
+ * Clase Helper de Imagenes
+ *
+ *
+ * ce: 2
  *
  * @package Framework
  * @subpackage Helpers
@@ -20,8 +23,6 @@ use Jida\Medios\Debug;
 class Imagen extends Archivo {
 
     private static $_ce = 50001;
-
-    private $_path;
 
     private $mimes = [
         'image/gif'                     => 'gif',
@@ -47,62 +48,71 @@ class Imagen extends Archivo {
     /**
      * Información de la imagen accesible vía getimagedata
      */
-    private $_ancho;
-    private $_alto;
-    private $_tipo;
-    private $_atributos;
-    private $_peso;
+    var $ancho;
+    var $alto;
+    var $tipo;
+    var $atributos;
+    var $peso;
+    /**
+     * @var array $_urls Mapa de urls publicas de las redimensiones o recortes de la imagen
+     */
+    private $_urls = [];
+    /**
+     * @var array Mapa de directorio fisico de las redimensiones o recortes de la imagen
+     */
+    private $_directorios = [];
 
-    function __construct($path) {
+    function __construct($directorio = null) {
 
-        if (strpos(strtolower($path), strtolower(Estructura::$directorio)) !== false)
-            $archivoDir = $path;
-        elseif (strpos(strtolower($path), "{raiz}") !== false) {
-            $archivoDir = str_replace("{raiz}", Estructura::$directorio, $path);
-        }
-        else {
-            $archivoDir = $path;
-        }
-        if (!file_exists($archivoDir)) {
-            $msj = "El archivo {$archivoDir} que usted indica no existe.";
-            Excepcion::procesar($msj, self::$_ce . 001);
-        }
+        parent::__construct($directorio);
+
+        if (!$this->_directorio) return false;
 
         $finfo = new \finfo();
-        $fileinfo = explode(";", $finfo->file($path, FILEINFO_MIME));
+        $fileinfo = explode(";", $finfo->file($directorio, FILEINFO_MIME));
         $mime = $fileinfo[0];
 
         if (!array_key_exists($mime, $this->mimesAceptados)) {
-            $msj = "El archivo {$archivoDir} de tipo {$mime} usted indica no es aceptado por el Medio.";
+            $msj = "El archivo {$directorio} de tipo {$mime} usted indica no es aceptado por el Medio.";
             Excepcion::procesar($msj, self::$_ce . 002);
         }
+        $this->_directorios['original'] = $this->ruta;
+        $this->_urls['original'] = str_replace(Estructura::$directorio, Estructura::$urlBase, $this->_directorio);
 
-        $this->_path = $path;
-        $infoData = getimagesize($path);
-        $this->_ancho = $infoData[0];
-        $this->_alto = $infoData[1];
-        $this->_tipo = $infoData['mime'];
-        $this->_atributos = $infoData[3];
-        $this->_peso = filesize($path);
-        $this->extension = array_slice(explode(".", $path), -1)[0];
+        $this->_obtInformacion();
+
+    }
+
+    private function _obtInformacion() {
+
+        $infoData = getimagesize($this->ruta);
+
+        $this->ancho = $infoData[0];
+        $this->alto = $infoData[1];
+        $this->tipo = $infoData['mime'];
+        $this->atributos = $infoData[3];
+        $this->peso = filesize($this->ruta);
+
+        $this->extension = array_slice(
+            explode(".", $this->ruta), -1
+        )[0];
 
     }
 
     /**
-     * Obtiene las dimensiones de una imagen
-     * @method obtDimensiones
+     * Obtiene las dimensiones de la imagen original instanciada
+     * @method dimensiones
      *
-     * @param $img Ruta de la imagen
      * @return array
      *
      */
-    function obtDimensiones() {
+    function dimensiones() {
 
         $data = [
-            'ancho' => $this->_ancho,
-            'alto'  => $this->_alto,
-            'tipo'  => $this->_tipo,
-            'attr'  => $this->_atributos,
+            'ancho' => $this->ancho,
+            'alto'  => $this->alto,
+            'tipo'  => $this->tipo,
+            'attr'  => $this->atributos,
         ];
 
         return $data;
@@ -111,19 +121,17 @@ class Imagen extends Archivo {
 
     /**
      * Redimenciona una imagen
-     * @method redimencionar
+     * @method _calcularRedimension
      *
-     * @param $nuevoAncho Nuevo ancho de la imagen
-     * @param $nuevoAlto Nuevo alto de la imagen
-     * @param $sobreescribir (opcional) indica si el archivo se va sobreescribir.
+     * @internal
+     * @param $dimension
      * @return array
-     *
      */
 
     private function _calcularRedimension($dimension) {
 
         $partes = explode("x", $dimension);
-        $proporcionActual = $this->_ancho / $this->_alto;
+        $proporcionActual = $this->ancho / $this->alto;
 
         if (count($partes) < 2) {
             Excepcion::procesar("Las dimensiones pasadas no son correctas", self::$_ce . 1);
@@ -138,30 +146,42 @@ class Imagen extends Archivo {
             $altoRedimension = $nuevoAncho / $proporcionActual;
         }
         else {
+
             if ($proporcionActual < $proporcionRedimension) {
                 $anchoRedimension = $nuevoAncho * $proporcionActual;
                 $altoRedimension = $nuevoAlto;
-
             }
             else {
                 $anchoRedimension = $nuevoAncho;
                 $altoRedimension = $nuevoAlto;
             }
+
         }
-        Debug::imprimir([1, ['ancho' => $anchoRedimension, 'alto' => $altoRedimension]]);
+
         return ['ancho' => $anchoRedimension, 'alto' => $altoRedimension];
 
     }
 
+    /**
+     * Redimensiona una imagen manteniendo la proporción
+     *
+     * @param mixed $dimensiones Puede ser un string o un arreglo con varias dimensiones.
+     * Las dimensiones deben ser pasadas con la estructura {ancho}x{alto}
+     *
+     * @param bool $sobreescribir
+     * @return bool
+     */
     function redimensionar($dimensiones, $sobreescribir = false) {
 
         if (is_string($dimensiones)) $dimensiones = (array)$dimensiones;
+
+        $response = true;
 
         foreach ($dimensiones as $item => $dimension) {
 
             $calculos = $this->_calcularRedimension($dimension);
 
-            $imagen = $this->crearLienzo($this->_path);
+            $imagen = $this->_crearLienzo($this->ruta);
             $lienzo = imagecreatetruecolor($calculos['ancho'], $calculos['alto']);
 
             imagecolortransparent($lienzo, imagecolorallocate($lienzo, 0, 0, 0));
@@ -171,29 +191,43 @@ class Imagen extends Archivo {
                 $lienzo, $imagen, 0, 0, 0, 0,
                 $calculos['ancho'],
                 $calculos['alto'],
-                $this->_ancho,
-                $this->_alto
+                $this->ancho,
+                $this->alto
+            );
+
+            $response = $this->_guardar(
+                $lienzo,
+                $this->_crearNombre($dimension, $sobreescribir),
+                $dimension
             );
 
         }
-        $nuevoDir = $this->_path;
 
-        if (!$sobreescribir) {
-            $dirs = explode("/", $this->_path);
-            $file = array_pop($dirs);
-            $file = explode(".", $file);
-            $actualDir = implode("/", $dirs);
-            $nuevoDir = "$actualDir/${file[0]}-{$dimension}.{$this->extension}";
-
-        }
-
-        return $this->salvarImagen($lienzo, $nuevoDir);
+        return $response;
 
     }
 
-    private function crearLienzo($url) {
+    private function _definirURL() {
 
-        switch ($this->_tipo) {
+    }
+
+    private function _crearNombre($dimension, $sobreescribir = false) {
+
+        if ($sobreescribir) return $this->ruta;
+
+        $dirs = explode("/", $this->ruta);
+        $file = array_pop($dirs);
+        $file = explode(".", $file);
+        $actualDir = implode("/", $dirs);
+        $path = "$actualDir/${file[0]}-{$dimension}.{$this->extension}";
+
+        return $path;
+
+    }
+
+    private function _crearLienzo($url) {
+
+        switch ($this->tipo) {
             case "image/jpg":
             case "image/jpeg":
                 $imagen = imagecreatefromjpeg($url);
@@ -209,23 +243,24 @@ class Imagen extends Archivo {
         return $imagen;
     }
 
-    private function salvarImagen($lienzo, $url, $nombreImagen = "") {
+    private function _guardar($lienzo, $directorio, $dimensiones = "") {
 
-        if (!empty($nombreImagen)) {
-            $url = $url . $nombreImagen;
-        }
-
-        switch ($this->_tipo) {
+        switch ($this->tipo) {
             case "image/jpg":
             case "image/jpeg":
-                $imagen = imagejpeg($lienzo, $url, 90);
+                imagejpeg($lienzo, $directorio, 90);
                 break;
             case "image/png":
-                $imagen = imagepng($lienzo, $url, 2);
+                imagepng($lienzo, $directorio, 2);
                 break;
             case "image/gif":
-                $imagen = imagegif($lienzo, $url);
+                imagegif($lienzo, $directorio);
                 break;
+        }
+        if ($dimensiones) {
+            $this->_directorios[$dimensiones] = $directorio;
+            $url = str_replace(Estructura::$directorio, Estructura::$urlBase, $directorio);
+            $this->_urls[$dimensiones] = $url;
         }
 
         return true;
@@ -234,22 +269,35 @@ class Imagen extends Archivo {
     function recortar($alto, $ancho, $x, $y, $w, $h, $sobreescribir = false) {
 
         if (!$sobreescribir) {
-            $dirs = explode("/", $this->_path);
+            $dirs = explode("/", $this->_directorio);
             $file = array_pop($dirs);
             $file = explode(".", $file);
             $actualDir = implode("/", $dirs);
             $nuevoDir = $actualDir . "/" . $file[0] . "-" . $ancho . "x" . $alto . "." . $this->extension;
         }
         else {
-            $nuevoDir = $this->_path;
+            $nuevoDir = $this->ruta;
         }
 
-        $lienzo = $this->crearLienzo($this->_path);
+        $lienzo = $this->_crearLienzo($this->_directorio);
         $nuevaImg = imagecreatetruecolor($ancho, $alto);
         imagecopyresampled($nuevaImg, $lienzo, 0, 0, $x, $y, $ancho, $alto, $w, $h);
 
-        if ($this->salvarImagen($nuevaImg, $nuevoDir)) {
+        if ($this->_guardar($nuevaImg, $nuevoDir)) {
             return $nuevoDir;
         }
+    }
+
+    public function obtUrls() {
+        return $this->_urls;
+    }
+
+    function url($dimension) {
+
+        if (isset($this->_urls[$dimension]))
+            return $this->_urls[$dimension];
+
+        return false;
+
     }
 }

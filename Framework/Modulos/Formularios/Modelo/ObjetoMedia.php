@@ -1,6 +1,7 @@
 <?php
 /**
  * Clase Modelo
+ *
  * @author Julio Rodriguez
  * @package
  * @version
@@ -13,23 +14,36 @@ use App\Config\Configuracion;
 use Jida\BD as BD;
 
 class ObjetoMedia extends BD\DataModel {
+
     var $id_objeto_media;
     var $objeto_media;
     var $tipo_media;
     var $descripcion;
     var $leyenda;
+    /**
+     * @var
+     */
     var $alt;
+    /**
+     * @var string $meta_data Data adicional del objeto guardada como json
+     */
     var $meta_data;
+    /**
+     * @var string $modulo Modulo que implementa el objeto media
+     */
+    var $modulo;
     var $id_idioma;
     /**
      * Ubicación parcial de la imagen, distribución de carpetas dentro del directorio Publico,
      * la url del directorio absoluto debe ser omitida pues se usarán las constantes correspondientes.
+     *
      * @var $directorio
      */
     var $directorio;
     private $_data;
     /**
      * Define si un objeto media ha sido cargado de forma propia o si es un recurso externo
+     *
      * @var int $interno
      */
     var $interno;
@@ -38,14 +52,14 @@ class ObjetoMedia extends BD\DataModel {
     protected $tablaBD = "s_objetos_media";
     protected $pk = "id_objeto_media";
 
-    function __construct ($id = "") {
+    function __construct($id = "") {
 
         parent::__construct($id);
         $this->configuracion();
 
     }
 
-    private function configuracion () {
+    private function configuracion() {
 
         $this->tamanios = [
             'lg' => IMG_TAM_LG,
@@ -55,7 +69,7 @@ class ObjetoMedia extends BD\DataModel {
         ];
     }
 
-    function data ($prop = "") {
+    function data($prop = "") {
 
         if (empty($this->_data)) {
             $this->_data = json_decode($this->meta_data);
@@ -68,7 +82,7 @@ class ObjetoMedia extends BD\DataModel {
 
     }
 
-    function directorioMedia () {
+    function directorioMedia() {
 
         return Configuracion::URL_ABSOLUTA . '/' . $this->directorio . $this->objeto_media;
     }

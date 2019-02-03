@@ -40,12 +40,12 @@ Trait Vista {
             [
                 'span'  => 'fas fa-images',
                 'title' => "ver Proyecto",
-                'href'  => "/jadmin/media/{clave}"
+                'href'  => "/jadmin/proyectos/media/{clave}"
             ],
             [
                 'span'  => 'fas fa-file-upload',
                 'title' => "Subir Imagenes",
-                'href'  => "/jadmin/media/subir-imagenes/{clave}"
+                'href'  => "/jadmin/proyectos/media/carga/{clave}"
             ],
             [
                 'span'  => 'fa fa-edit',

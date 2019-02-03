@@ -1,6 +1,11 @@
 (function ($) {
     'use strict';
 
+    const RUTAS = {
+        'EDITAR': '/jadmin/proyectos/media/gestion',
+        'ELIMINAR': '/jadmin/proyectos/media/eliminar'
+    };
+
     let $btn = $('#btnCargaImagen');
     let $totalImagenes = $('#total-imas');
     let $galeria = $('.jida-galeria-media');
@@ -12,29 +17,31 @@
         if (respuesta.error) {
             $listaImagenes.before(`<div class="alert alert-warning">${respuesta.msj}</div>`);
             $('.jcargafile').remove();
+
+            return;
         }
-        else {
+        let total = $totalImagenes.data('total') + parseInt(respuesta.data.length);
+        $totalImagenes.attr('data-total', total);
+        $totalImagenes.html(total);
 
-            let total = $totalImagenes.data('total') + parseInt(respuesta.data.length);
-            $totalImagenes.attr('data-total', total);
-            $totalImagenes.html(total);
+        function renderizar(key, item) {
 
-            $('.jcargafile').each(function (key, item) {
+            if (key in respuesta.data) {
 
-                if (key in respuesta.data) {
+                let $item = $(item);
+                let img = JSON.parse(respuesta.data[key].meta_data);
+                let parametros = respuesta.ids[key];
 
-                    let $item = $(item);
-                    let img = JSON.parse(respuesta.data[key].meta_data);
+                $item.attr('data-imagen', img.sm);
+                $item.attr('data-parametros', parametros);
+                $item.removeClass('jcargafile');
 
-                    let parametros = respuesta.ids[key];
-                    $item.attr('data-imagen', img.sm);
-                    $item.attr('data-parametros', parametros);
+            }
 
-                    $item.removeClass('jcargafile');
-
-                }
-            });
         }
+
+        $('.jcargafile').each(renderizar());
+
     }
 
     function onload(e) {
@@ -66,5 +73,10 @@
         'onLoad': onload,
         'postCarga': postCarga
     });
+
+    function crearModal(evento) {
+        console.log("hago click", evento.currentTarget);
+    }
+    $galeria.on('click','[data-modal]', evento => crearModal(evento));
 
 })(jQuery);

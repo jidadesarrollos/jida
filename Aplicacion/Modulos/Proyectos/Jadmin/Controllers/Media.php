@@ -6,14 +6,14 @@
  * Time: 08:26 AM
  */
 
-namespace App\Modulos\Media\Jadmin\Controllers;
+namespace App\Modulos\Proyectos\Jadmin\Controllers;
 
 use App\Jadmin\Controllers\Jadmin;
 
-use App\Modulos\Media\Modelos\Media as Modelo;
-use App\Modulos\Media\Jadmin\Controllers\Media\Carga;
-use App\Modulos\Media\Jadmin\Controllers\Media\Gestion;
-use App\Modulos\Media\Jadmin\Controllers\Media\Vista;
+use App\Modulos\Proyectos\Modelos\Media as Modelo;
+use App\Modulos\Proyectos\Jadmin\Controllers\Media\Carga;
+use App\Modulos\Proyectos\Jadmin\Controllers\Media\Gestion;
+use App\Modulos\Proyectos\Jadmin\Controllers\Media\Vista;
 use App\Modulos\Proyectos\Modelos\{Proyecto};
 use Jida\Medios\Mensajes;
 
@@ -32,7 +32,7 @@ class Media extends Jadmin {
 
         $titulo = "Lista de Material Multimedia del proyecto " . $proyectos->nombre;
         $data = $this->modelo->consulta(
-            ['id_media', 'url_media', 'nombre', 'descripcion', 'externa'])
+            ['id_media_proyecto', 'directorio', 'nombre', 'descripcion'])
             ->filtro(['id_proyecto' => $idProyecto])
             ->obt();
 
@@ -55,10 +55,7 @@ class Media extends Jadmin {
         $this->data(['vista' => $render]);
     }
 
-    function gestion($idProyecto = "", $id = "") {
-        $this->_gestion($idProyecto, $id);
-
-    }
+    function gestion($idProyecto = "", $id = "") { $this->_gestion($idProyecto, $id); }
 
     function eliminar($id = "") {
         if (!empty($id)) {

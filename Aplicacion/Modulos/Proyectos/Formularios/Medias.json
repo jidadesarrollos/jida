@@ -11,12 +11,6 @@
       "id": "id_media",
       "type": "hidden"
     },
-    "url_media": {
-      "label": "url_media",
-      "name": "url_media",
-      "id": "url_media",
-      "type": "hidden"
-    },
     "nombre": {
       "label": "Nombre",
       "name": "nombre",

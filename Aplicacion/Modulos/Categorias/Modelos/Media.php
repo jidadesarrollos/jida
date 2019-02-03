@@ -1,6 +1,6 @@
 <?php
 
-namespace Jida\Modulos\Media\Modelo;
+namespace App\Modulos\Proyectos\Modelos;
 
 use Jida\BD\DataModel;
 use Jida\BD\Modelo;

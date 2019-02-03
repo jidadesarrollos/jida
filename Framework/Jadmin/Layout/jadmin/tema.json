@@ -25,6 +25,7 @@
         "moment": "{tema}/htdocs/js/moment.min.js",
         "popper": "{tema}/htdocs/js/popper.min.js",
         "bootstrap": "{tema}/htdocs/js/bootstrap.min.js",
+        "bootbox": "{tema}/htdocs/js/bootbox.min.js",
         "detect": "{tema}/htdocs/js/detect.js",
         "fastclick": "{tema}/htdocs/js/fastclick.js",
         "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",

@@ -6,11 +6,11 @@
  * Time: 08:26 AM
  */
 
-namespace App\Modulos\Media\Controllers;
+namespace App\Modulos\Proyectos\Controllers;
 
 use App\Controllers\App;
 
-class Medias extends App {
+class Media extends App {
 
     function index() {
 

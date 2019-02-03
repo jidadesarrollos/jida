@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modulos\Media\Jadmin\Controllers\Media;
+namespace App\Modulos\Proyectos\Jadmin\Controllers\Media;
 
 use Jida\Render\JVista;
 
@@ -20,7 +20,7 @@ Trait Vista {
 
         $vista->addMensajeNoRegistros('No hay materia multimedia registrado.',
             [
-                'link'    => "/jadmin/media/subir-imagenes/{$idProyecto}/",
+                'link'    => "/jadmin/proyectos/media/carga/{$idProyecto}/",
                 'txtLink' => 'Subir Fotografias'
             ]);
 
@@ -28,12 +28,12 @@ Trait Vista {
             [
                 'span'  => 'fa fa-edit',
                 'title' => "Editar Fotografia",
-                'href'  => "/jadmin/media/gestion/{$idProyecto}/{clave}"
+                'href'  => "/jadmin/proyectos/media/gestion/{$idProyecto}/{clave}"
             ],
             [
                 'span'        => 'fa fa-trash',
                 'title'       => 'Eliminar Fotografia',
-                'href'        => "/jadmin/media/eliminar/{clave}",
+                'href'        => "/jadmin/proyectos/media/eliminar/{clave}",
                 'data-jvista' => 'confirm',
                 'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar la categoria seleccionada?'
             ]
