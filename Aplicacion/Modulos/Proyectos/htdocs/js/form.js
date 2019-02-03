@@ -3,7 +3,8 @@
 
     const RUTAS = {
         'EDITAR': '/jadmin/proyectos/media/gestion',
-        'ELIMINAR': '/jadmin/proyectos/media/eliminar'
+        'ELIMINAR': '/jadmin/proyectos/media/eliminar',
+        'ENVIO': '/jadmin/proyectos/media/carga'
     };
 
     let $btn = $('#btnCargaImagen');
@@ -75,8 +76,9 @@
     });
 
     function crearModal(evento) {
-        console.log("hago click", evento.currentTarget);
+        console.log('hago click', evento.currentTarget);
     }
-    $galeria.on('click','[data-modal]', evento => crearModal(evento));
+
+    $galeria.on('click', '[data-modal]', evento => crearModal(evento));
 
 })(jQuery);

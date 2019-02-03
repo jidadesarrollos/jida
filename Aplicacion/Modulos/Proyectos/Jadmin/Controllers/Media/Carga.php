@@ -29,7 +29,6 @@ Trait Carga {
             $this->redireccionar('/jadmin/proyectos/');
         }
 
-        $this->modelo = new Modelo();
         $proyecto = new Proyecto($idProyecto);
 
         if (!$proyecto->id_proyecto) {
