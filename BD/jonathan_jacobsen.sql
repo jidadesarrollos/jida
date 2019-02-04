@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `m_categorias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `m_categorias` (
   `id_categoria` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `m_categorias` (
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_categoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `m_proyectos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `m_proyectos` (
   `id_proyecto` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE `m_proyectos` (
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_proyecto`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +82,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_clasificacion_posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_clasificacion_posts` (
   `id_clasificacion_post` int(11) NOT NULL,
   `id_post` int(11) DEFAULT NULL,
@@ -114,7 +114,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_clasificaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_clasificaciones` (
   `id_clasificacion` int(11) NOT NULL AUTO_INCREMENT,
   `clasificacion` varchar(100) DEFAULT NULL,
@@ -161,7 +161,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_comentarios_posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_comentarios_posts` (
   `id_comentario_post` int(11) NOT NULL AUTO_INCREMENT,
   `comentario_post` text,
@@ -197,7 +197,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_componentes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_componentes` (
   `id_componente` int(11) NOT NULL AUTO_INCREMENT,
   `componente` varchar(100) NOT NULL,
@@ -232,7 +232,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_componentes_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_componentes_perfiles` (
   `id_componente_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `id_perfil` int(11) NOT NULL,
@@ -264,7 +264,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_elementos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_elementos` (
   `id_elemento` int(11) NOT NULL AUTO_INCREMENT,
   `elemento` varchar(50) DEFAULT NULL,
@@ -300,7 +300,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_estatus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_estatus` (
   `id_estatus` int(11) NOT NULL AUTO_INCREMENT,
   `estatus` varchar(40) DEFAULT NULL,
@@ -334,7 +334,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_estatus_posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_estatus_posts` (
   `id_estatus_post` int(11) NOT NULL AUTO_INCREMENT,
   `estatus_post` varchar(80) DEFAULT NULL,
@@ -369,7 +369,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_idiomas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_idiomas` (
   `id_idioma` varchar(5) NOT NULL,
   `idioma` varchar(20) DEFAULT NULL,
@@ -399,7 +399,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_menus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_menus` (
   `id_menu` int(11) NOT NULL AUTO_INCREMENT,
   `menu` varchar(50) NOT NULL,
@@ -434,7 +434,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_metodos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_metodos` (
   `id_metodo` int(11) NOT NULL AUTO_INCREMENT,
   `id_objeto` int(11) DEFAULT NULL,
@@ -467,7 +467,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_metodos_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_metodos_perfiles` (
   `id_metodo_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `id_metodo` int(11) DEFAULT NULL,
@@ -499,7 +499,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_objetos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_objetos` (
   `id_objeto` int(11) NOT NULL AUTO_INCREMENT,
   `id_componente` int(11) DEFAULT NULL,
@@ -531,7 +531,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_objetos_media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_objetos_media` (
   `id_objeto_media` int(11) NOT NULL AUTO_INCREMENT,
   `objeto_media` varchar(100) NOT NULL,
@@ -572,7 +572,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_objetos_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_objetos_perfiles` (
   `id_objeto_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `id_perfil` int(11) NOT NULL,
@@ -604,7 +604,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_opciones_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_opciones_menu` (
   `id_opcion_menu` int(11) NOT NULL AUTO_INCREMENT,
   `opcion_menu` varchar(100) NOT NULL,
@@ -653,7 +653,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_opciones_menu_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_opciones_menu_perfiles` (
   `id_opcion_menu_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `id_opcion_menu` int(11) DEFAULT NULL,
@@ -685,7 +685,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_perfiles` (
   `id_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `perfil` varchar(50) DEFAULT NULL,
@@ -720,7 +720,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_posts` (
   `id_post` int(11) NOT NULL AUTO_INCREMENT,
   `post` varchar(160) DEFAULT NULL,
@@ -773,7 +773,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_usuarios` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
   `usuario` varchar(100) NOT NULL,
@@ -814,7 +814,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s_usuarios_perfiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `s_usuarios_perfiles` (
   `id_usuario_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
@@ -846,7 +846,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `t_media_proyectos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `t_media_proyectos` (
   `id_media_proyecto` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
@@ -888,7 +888,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `t_medias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ SET character_set_client = utf8 ;
 CREATE TABLE `t_medias` (
   `id_media` int(11) NOT NULL AUTO_INCREMENT,
   `url_media` text,
@@ -902,7 +902,7 @@ CREATE TABLE `t_medias` (
   `id_usuario_creador` int(11) DEFAULT NULL,
   `id_usuario_modificador` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_media`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

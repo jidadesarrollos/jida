@@ -19,7 +19,7 @@
             <div class="row mar-top-15">
                 <div class="col-sm-12">
                     <div class="text-center">
-                        <a class="btn-lool btn-black-square" href="/galeria">Ver todos</a>
+                        <a class="btn-lool btn-black-square" href="/proyectos">Ver todos</a>
                     </div>
                 </div>
             </div>
