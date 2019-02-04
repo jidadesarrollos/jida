@@ -16,6 +16,7 @@ use App\Modulos\Proyectos\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\{Proyecto};
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Archivo;
+use Jida\Medios\Debug;
 use Jida\Render\JVista;
 
 class Media extends Jadmin {
@@ -58,9 +59,14 @@ class Media extends Jadmin {
 
     }
 
-    function eliminar($id = "") {
+    function eliminar($id = "", $ejecutar = false) {
+        $this->layout()->incluirJSAjax(['modulo/eliminar.js']);
 
         $media = new Modelo($id);
+
+        if ($this->solicitudAjax() and $this->post("eliminar")) {
+            $this->respuestaJson("SOLO MANDA ESTA VERGA NO TODO");
+        }
 
         if (!$media->id_media_proyecto) {
             JVista::msj(
@@ -69,6 +75,10 @@ class Media extends Jadmin {
                 'No existe el objeto media pasado'
             );
         }
+
+        $this->data([
+            'id' => $id,
+        ]);
 
 
 

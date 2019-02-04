@@ -23,7 +23,14 @@ use Jida\Medios\Debug;
 class Imagen extends Archivo {
 
     private static $_ce = 50001;
-
+    /**
+     * Información de la imagen accesible vía getimagedata
+     */
+    var $ancho;
+    var $alto;
+    var $tipo;
+    var $atributos;
+    var $peso;
     private $mimes = [
         'image/gif'                     => 'gif',
         'image/jpeg'                    => 'jpeg',
@@ -38,21 +45,11 @@ class Imagen extends Archivo {
         'image/vnd.microsoft.icon'      => 'ico',
         'application/x-shockwave-flash' => 'swf'
     ];
-
     private $mimesAceptados = [
         'image/gif'  => 'gif',
         'image/jpeg' => 'jpeg',
         'image/png'  => 'png'
     ];
-
-    /**
-     * Información de la imagen accesible vía getimagedata
-     */
-    var $ancho;
-    var $alto;
-    var $tipo;
-    var $atributos;
-    var $peso;
     /**
      * @var array $_urls Mapa de urls publicas de las redimensiones o recortes de la imagen
      */
@@ -97,7 +94,7 @@ class Imagen extends Archivo {
     }
 
     private function procesarImagen() {
-        if(isset($this->data['meta_data'])) {
+        if (isset($this->data['meta_data'])) {
 
         }
     }
@@ -135,49 +132,6 @@ class Imagen extends Archivo {
         ];
 
         return $data;
-
-    }
-
-    /**
-     * Redimenciona una imagen
-     * @method _calcularRedimension
-     *
-     * @internal
-     * @param $dimension
-     * @return array
-     */
-
-    private function _calcularRedimension($dimension) {
-
-        $partes = explode("x", $dimension);
-        $proporcionActual = $this->ancho / $this->alto;
-
-        if (count($partes) < 2) {
-            Excepcion::procesar("Las dimensiones pasadas no son correctas", self::$_ce . 1);
-        }
-
-        $nuevoAncho = $partes[0];
-        $nuevoAlto = $partes[1];
-        $proporcionRedimension = $nuevoAncho / $nuevoAlto;
-
-        if ($proporcionActual > $proporcionRedimension) {
-            $anchoRedimension = $nuevoAncho;
-            $altoRedimension = $nuevoAncho / $proporcionActual;
-        }
-        else {
-
-            if ($proporcionActual < $proporcionRedimension) {
-                $anchoRedimension = $nuevoAncho * $proporcionActual;
-                $altoRedimension = $nuevoAlto;
-            }
-            else {
-                $anchoRedimension = $nuevoAncho;
-                $altoRedimension = $nuevoAlto;
-            }
-
-        }
-
-        return ['ancho' => $anchoRedimension, 'alto' => $altoRedimension];
 
     }
 
@@ -226,21 +180,46 @@ class Imagen extends Archivo {
 
     }
 
-    private function _definirURL() {
+    /**
+     * Redimenciona una imagen
+     * @method _calcularRedimension
+     *
+     * @internal
+     * @param $dimension
+     * @return array
+     */
 
-    }
+    private function _calcularRedimension($dimension) {
 
-    private function _crearNombre($dimension, $sobreescribir = false) {
+        $partes = explode("x", $dimension);
+        $proporcionActual = $this->ancho / $this->alto;
 
-        if ($sobreescribir) return $this->ruta;
+        if (count($partes) < 2) {
+            Excepcion::procesar("Las dimensiones pasadas no son correctas", self::$_ce . 1);
+        }
 
-        $dirs = explode("/", $this->ruta);
-        $file = array_pop($dirs);
-        $file = explode(".", $file);
-        $actualDir = implode("/", $dirs);
-        $path = "$actualDir/${file[0]}-{$dimension}.{$this->extension}";
+        $nuevoAncho = $partes[0];
+        $nuevoAlto = $partes[1];
+        $proporcionRedimension = $nuevoAncho / $nuevoAlto;
 
-        return $path;
+        if ($proporcionActual > $proporcionRedimension) {
+            $anchoRedimension = $nuevoAncho;
+            $altoRedimension = $nuevoAncho / $proporcionActual;
+        }
+        else {
+
+            if ($proporcionActual < $proporcionRedimension) {
+                $anchoRedimension = $nuevoAncho * $proporcionActual;
+                $altoRedimension = $nuevoAlto;
+            }
+            else {
+                $anchoRedimension = $nuevoAncho;
+                $altoRedimension = $nuevoAlto;
+            }
+
+        }
+
+        return ['ancho' => $anchoRedimension, 'alto' => $altoRedimension];
 
     }
 
@@ -285,6 +264,20 @@ class Imagen extends Archivo {
         return true;
     }
 
+    private function _crearNombre($dimension, $sobreescribir = false) {
+
+        if ($sobreescribir) return $this->ruta;
+
+        $dirs = explode("/", $this->ruta);
+        $file = array_pop($dirs);
+        $file = explode(".", $file);
+        $actualDir = implode("/", $dirs);
+        $path = "$actualDir/${file[0]}-{$dimension}.{$this->extension}";
+
+        return $path;
+
+    }
+
     function recortar($alto, $ancho, $x, $y, $w, $h, $sobreescribir = false) {
 
         if (!$sobreescribir) {
@@ -323,6 +316,11 @@ class Imagen extends Archivo {
     function setUrl($meta) {
         foreach ($meta as $dimension => $url) {
             $this->_urls[$dimension] = Estructura::$urlBase . $url;
+            $this->_directorios[$dimension] = Estructura::$directorio . $url;
         }
+    }
+
+    private function _definirURL() {
+
     }
 }
