@@ -1,13 +1,13 @@
 {
   "nombre": "Formulario de Archivos Multimedias",
-  "query": "select id_media, nombre, descripcion, url_media, id_proyecto from t_medias",
+  "query": "select id_media_proyecto, nombre, descripcion, id_proyecto from t_media_proyectos",
   "estructura": "",
   "identificador": "FormularioMedia",
-  "clave_primaria": "id_media",
+  "clave_primaria": "id_media_proyecto",
   "campos": {
     "id_media": {
-      "label": "id_media",
-      "name": "id_media",
+      "label": "id_media_proyecto",
+      "name": "id_media_proyecto",
       "id": "id_media",
       "type": "hidden"
     },
