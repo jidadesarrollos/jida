@@ -9,6 +9,7 @@
 namespace App\Modulos\Proyectos\Modelos;
 
 use Jida\Core\Modelo;
+use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 
 class Proyecto extends Modelo {
@@ -53,6 +54,10 @@ class Proyecto extends Modelo {
             $item = array_merge($mediaItem, [
                 'url' => json_decode($mediaItem['meta_data'], true)['urls']
             ]);
+            array_walk($item['url'],
+                function (&$item) {
+                    $item = Estructura::$urlBase . $item;
+                });
 
             unset($mediaItem['meta_data']);
             array_push($media, $item);
