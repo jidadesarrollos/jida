@@ -66,7 +66,6 @@
     }
 
     $btn.jCargaFile({
-
         'name': 'imagen',
         'multiple': true,
         'parametros': {'modelo': 'este es el modelo'},

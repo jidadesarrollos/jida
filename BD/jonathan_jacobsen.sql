@@ -870,7 +870,7 @@ CREATE TABLE `t_media_proyectos` (
   CONSTRAINT `` FOREIGN KEY (`id_proyecto`) REFERENCES `m_proyectos` (`id_proyecto`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_t_idiomas_t_media_proyectos` FOREIGN KEY (`id_idioma`) REFERENCES `s_idiomas` (`id_idioma`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_t_media_proyectos_texto_original` FOREIGN KEY (`texto_original`) REFERENCES `t_media_proyectos` (`id_media_proyecto`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -923,4 +923,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-03 14:50:50
+-- Dump completed on 2019-02-04  9:52:34
