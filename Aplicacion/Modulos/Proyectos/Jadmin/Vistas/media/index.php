@@ -24,7 +24,7 @@
                 <figure class="card mb-4 shadow-sm item"
                         data-id="<?= $item['id_media_proyecto'] ?>"
                         data-imagen="<?= $item['url']['original']; ?>">
-                    <img src="<?= $item['url']['300x300'] ?>" class="img-fluid"/>
+                    <img src="<?= $item['url']['400x400'] ?>" class="img-fluid"/>
                     <figcaption class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">

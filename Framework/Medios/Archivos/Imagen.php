@@ -88,8 +88,9 @@ class Imagen extends Archivo {
             $msj = "El archivo {$directorio} de tipo {$mime} usted indica no es aceptado por el Medio.";
             Excepcion::procesar($msj, self::$_ce . 002);
         }
+
         $this->_directorios['original'] = $this->ruta;
-        $this->_urls['original'] = str_replace(Estructura::$directorio, Estructura::$urlBase, $this->_directorio);
+        $this->_urls['original'] = str_replace(Estructura::$directorio, Estructura::$urlBase, $directorio);
 
         $this->_obtInformacion();
 
@@ -317,5 +318,11 @@ class Imagen extends Archivo {
 
         return false;
 
+    }
+
+    function setUrl($meta) {
+        foreach ($meta as $dimension => $url) {
+            $this->_urls[$dimension] = Estructura::$urlBase . $url;
+        }
     }
 }

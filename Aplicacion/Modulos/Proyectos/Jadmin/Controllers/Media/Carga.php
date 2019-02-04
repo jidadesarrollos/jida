@@ -69,9 +69,9 @@ Trait Carga {
         return [
             'nombre'      => $imagen->nombre,
             'tipo_media'  => $imagen->tipo,
-            'directorio'  => $imagen->directorio,
+            'directorio'  => str_replace(Estructura::$directorio, "", $imagen->directorio),
             'id_proyecto' => $idProyecto,
-            'meta_data'   => json_encode(['urls' => $imagen->obtUrls()]),
+            'meta_data'   => json_encode(['urls' => str_replace(Estructura::$urlBase, "", $imagen->obtUrls())]),
             'id_idioma'   => 'esp'
         ];
 
