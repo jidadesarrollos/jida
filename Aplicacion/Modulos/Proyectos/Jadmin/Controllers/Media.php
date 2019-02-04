@@ -12,8 +12,11 @@ use App\Jadmin\Controllers\Jadmin;
 use App\Modulos\Proyectos\Jadmin\Controllers\Media\Carga;
 use App\Modulos\Proyectos\Jadmin\Controllers\Media\Gestion;
 use App\Modulos\Proyectos\Jadmin\Controllers\Media\Vista;
+use App\Modulos\Proyectos\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\{Proyecto};
 use Jida\Manager\Estructura;
+use Jida\Manager\Vista\Archivo;
+use Jida\Render\JVista;
 
 class Media extends Jadmin {
 
@@ -56,6 +59,18 @@ class Media extends Jadmin {
     }
 
     function eliminar($id = "") {
+
+        $media = new Modelo($id);
+
+        if (!$media->id_media_proyecto) {
+            JVista::msj(
+                'vistaProyectos',
+                'alerta',
+                'No existe el objeto media pasado'
+            );
+        }
+
+
 
     }
 

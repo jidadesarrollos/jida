@@ -61,13 +61,25 @@ class Imagen extends Archivo {
      * @var array Mapa de directorio fisico de las redimensiones o recortes de la imagen
      */
     private $_directorios = [];
+    /**
+     * @var array Data del modelo
+     */
+    private $data;
 
     function __construct($directorio = null) {
+
+        if (is_array($directorio) and isset($directorio['directorio'])) {
+            $this->data = $directorio;
+            $directorio = $directorio['directorio'];
+        }
 
         parent::__construct($directorio);
 
         if (!$this->_directorio) return false;
 
+        if ($this->data) {
+            $this->procesarImagen();
+        }
         $finfo = new \finfo();
         $fileinfo = explode(";", $finfo->file($directorio, FILEINFO_MIME));
         $mime = $fileinfo[0];
@@ -81,6 +93,12 @@ class Imagen extends Archivo {
 
         $this->_obtInformacion();
 
+    }
+
+    private function procesarImagen() {
+        if(isset($this->data['meta_data'])) {
+
+        }
     }
 
     private function _obtInformacion() {
