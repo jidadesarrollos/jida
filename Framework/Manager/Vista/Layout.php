@@ -5,6 +5,7 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
@@ -44,6 +45,7 @@ class Layout {
     private static $_urlTema;
 
     private $_js = [];
+    private $_jsAjax = [];
     private $_css = [];
 
     private $urlTema;
@@ -58,9 +60,15 @@ class Layout {
     public function __construct($padre = null) {
 
         if ($padre) {
+
             self::$padre = $padre;
             self::$instancia = $this;
+
             $this->_data = $padre->data;
+            $this->urlBase = Estructura::$urlBase;
+            $this->urlModulo = Estructura::$urlModulo;
+            $this->url = Estructura::$url;
+
         }
         else {
             $this->_data = new \StdClass();
@@ -90,7 +98,7 @@ class Layout {
             }
 
             self::$_urlTema = Tema::$url;
-            $this->urlTema = '//' . Tema::$url;
+            $this->urlTema = Tema::$url;
 
             self::$directorio = Tema::$directorio;
             self::$_configuracion = Tema::$configuracion;

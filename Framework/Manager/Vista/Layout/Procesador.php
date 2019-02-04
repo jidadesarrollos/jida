@@ -106,27 +106,29 @@ Trait Procesador {
      * Imprime las etiquetas script registradas en la configuración del tema
      *
      */
-    private function _imprimirJS($librerias, $modulo) {
+    private function _imprimirJS($librerias, $modulo, $ajax = false) {
 
-        return $this->_js($librerias, $modulo);
+        return $this->_js($librerias, $modulo, $ajax);
 
     }
 
-    private function _js($librerias, $modulo) {
+    private function _js($librerias, $modulo, $ajax) {
 
         $html = "";
 
-        if (!property_exists($librerias, $modulo)) {
+        if (is_object($librerias) and !property_exists($librerias, $modulo)) {
             return false;
         }
 
-        $librerias = $librerias->{$modulo};
+        $librerias = is_object($librerias) ? $librerias->{$modulo} : new \StdClass();
 
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
 
-        foreach ($this->_js as $indice => $valor) {
+        $libreriasJS = $ajax === true ? $this->_jsAjax : $this->_js;
+
+        foreach ($libreriasJS as $indice => $valor) {
             $librerias->{$indice} = $valor;
         }
 

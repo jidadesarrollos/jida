@@ -87,4 +87,27 @@ Trait Peticion {
 
     }
 
+    /**
+     * Valida si se ha realizado una solicitud ajax (se debe usar el plugin javascript jd.ajax)
+     *
+     * Verifica la existencia del post s-ajax
+     * @method solicitudAjax
+     *
+     * @return boolean
+     */
+    protected function solicitudAjax() {
+
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) and
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) and
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+        ) {
+            $this->data('solicitudAjax', true);
+
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

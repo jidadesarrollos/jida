@@ -7,6 +7,7 @@ namespace App\Modulos\Proyectos\Jadmin\Controllers\Media;
 
 use App\Modulos\Proyectos\Modelos\Media;
 use App\Modulos\Proyectos\Modelos\Proyecto;
+use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Medios\Archivos\Imagen;
 use Jida\Medios\Archivos\ProcesadorCarga;
@@ -18,37 +19,6 @@ use Jida\Modulos\Proyectos\Modelo\Objeto;
 
 Trait Carga {
 
-    function carga($idProyecto = "") {
-
-        $this->layout()->incluirJS([
-            'modulo/jCargaFile.js',
-            'modulo/form.js'
-        ]);
-
-        if (empty($idProyecto)) {
-            $this->redireccionar('/jadmin/proyectos/');
-        }
-
-        $proyecto = new Proyecto($idProyecto);
-
-        if (!$proyecto->id_proyecto) {
-            $this->redireccionar('/jadmin/proyectos/');
-
-        }
-
-        if ($this->files('imagen')) {
-            $this->_procesarCarga($idProyecto, $proyecto);
-        }
-
-        $this->data([
-            'idFk'     => $idProyecto,
-            'nombre'   => $proyecto->nombre,
-            'media'    => $proyecto->media(),
-            'urlEnvio' => Estructura::$url
-        ]);
-
-    }
-
     private function _procesarCarga($idProyecto, $proyecto) {
 
         $categoria = $proyecto->Categoria;
@@ -58,20 +28,21 @@ Trait Carga {
         $procesador = new ProcesadorCarga('imagen');
         $media = new Media();
 
+        $configuracion = Config::obtener();
+
         if ($procesador->validar()) {
 
             $directorio = Estructura::$directorio . "/htdocs/imagenes/{$categoria->identificador}/{$proyecto->identificador}";
             $archivos = $procesador->mover($directorio)->archivos();
 
             $ok = true;
-            $datos = [];
-            $urls = [];
+            $datos = $urls = [];
 
             foreach ($archivos as $item => $archivo) {
 
                 $imagen = new Imagen($archivo->directorio());
 
-                if (!$imagen->redimensionar(['150x150', '300x300'])) {
+                if (!$imagen->redimensionar($configuracion::REDIMENSION_IMAGEN)) {
                     $ok = false;
                     continue;
                 }

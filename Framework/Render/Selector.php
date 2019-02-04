@@ -11,6 +11,8 @@
 namespace Jida\Render;
 
 use Exception as Excepcion;
+use Jida\Medios\Debug;
+use MongoDB\BSON\ObjectId;
 
 class Selector {
 
@@ -28,9 +30,9 @@ class Selector {
     /**
      * Atributos data para el selector
      *
-     * @var array $data
+     * @var object $data
      */
-    var $data = [];
+    var $data;
     var $class = "";
     var $style = "";
 
@@ -83,7 +85,7 @@ class Selector {
         'input'
     ];
 
-    function __construct ($selector = "", $attr = []) {
+    function __construct($selector = "", $attr = []) {
 
         if (!empty($selector))
             $this->selector = $selector;
@@ -102,7 +104,7 @@ class Selector {
      *
      * @param int $tabs Numero de tabulaciones ha imprimir
      */
-    function getSelector ($tabs = 0) {
+    function getSelector($tabs = 0) {
 
         $s =& $this->selectorCreado;
         $tabulaciones = self::addTabs($tabs);
@@ -134,7 +136,7 @@ class Selector {
      *
      * @access private;
      */
-    private function getElementosData () {
+    private function getElementosData() {
 
         if (is_array($this->data) and count($this->data) > 0) {
 
@@ -156,7 +158,7 @@ class Selector {
      * @access private;
      * @deprecta
      */
-    private function getAttr () {
+    private function getAttr() {
 
         if (is_array($this->attr) and count($this->attr) > 0) {
             foreach ($this->attr as $key => $value) {
@@ -173,7 +175,7 @@ class Selector {
      * @param array $atributos Arreglo de atributos para el selector
      * @param string $content Contenido del selector
      */
-    public static function crear ($selector, $atributos = [], $content = "", $tabs = 0) {
+    public static function crear($selector, $atributos = [], $content = "", $tabs = 0) {
 
         $selector = explode("#", $selector);
         if (is_array($selector) and count($selector) > 1) {
@@ -205,13 +207,13 @@ class Selector {
             }
         }
         if (!in_array($selector,
-                      [
-                          'img',
-                          'hr',
-                          'br',
-                          'link',
-                          'meta'
-                      ])) {
+            [
+                'img',
+                'hr',
+                'br',
+                'link',
+                'meta'
+            ])) {
 
             if (!empty($content)) {
                 $selectorHTML .= ">\n" . $tabulaciones . "$content";
@@ -236,7 +238,7 @@ class Selector {
      *
      * @return string $html Código HTML generado
      */
-    public static function crearBreadCrumb ($data, $config = []) {
+    public static function crearBreadCrumb($data, $config = []) {
 
         $default = [
             "keyLink" => "link",
@@ -267,7 +269,7 @@ class Selector {
      * @example array('selectorInterno'=>'img','content'=>array(...))
      */
 
-    public static function crearLista ($css, $content) {
+    public static function crearLista($css, $content) {
 
         $lista = "";
         if (is_array($content)) {
@@ -287,7 +289,7 @@ class Selector {
         }
     }
 
-    static function crearUL ($content, $attrUL = [], $attrLi = []) {
+    static function crearUL($content, $attrUL = [], $attrLi = []) {
 
         $li = "";
 
@@ -313,7 +315,7 @@ class Selector {
      *          arreglo de atributos personalizados.
      *
      */
-    public static function crearInput ($value, $valores = "") {
+    public static function crearInput($value, $valores = "") {
 
         $valoresXDefecto = [
             'type'  => 'submit',
@@ -332,7 +334,7 @@ class Selector {
         return $control;
     }
 
-    protected function establecerAtributos ($arr, $clase = "") {
+    protected function establecerAtributos($arr, $clase = "") {
 
         if (empty($clase)) {
             $clase = __CLASS__;
@@ -348,7 +350,7 @@ class Selector {
 
     }
 
-    static function addTabs ($nums) {
+    static function addTabs($nums) {
 
         $tabs = "";
         for ($i = 0; $i < $nums; ++$i):
@@ -361,14 +363,14 @@ class Selector {
     /**
      * Genera una instancia selector y la retorna
      */
-    static function obt ($selector) {
+    static function obt($selector) {
 
         $tag = new Selector($selector);
 
         return $tag;
     }
 
-    function render () {
+    function render() {
 
         $html = "";
 
@@ -395,7 +397,7 @@ class Selector {
         return $html;
     }
 
-    protected function renderContenido () {
+    protected function renderContenido() {
 
         if ($this->contenido instanceOf Selector) {
             $this->contenido->innerHTML($this->innerHTML);
@@ -409,7 +411,7 @@ class Selector {
 
     }
 
-    private function selectorCierre () {
+    private function selectorCierre() {
 
         if (in_array($this->selector, $this->noCierre)) {
             return false;
@@ -419,17 +421,17 @@ class Selector {
         }
     }
 
-    protected function renderAttr () {
+    protected function renderAttr() {
 
         $atribs = "";
         $i = 0;
+
         if ((is_array($this->attr) or (is_object($this->attr) and $this->attr instanceof \Countable))
             and count($this->attr) > 0) {
 
             foreach ($this->attr as $attr => $value) {
                 $atribs .= " ";
                 if (strpos($attr, "data-") !== false) {
-                    #echo "if()";
                     $atribs .= $attr . "='" . $value . "'";
                 }
                 else {
@@ -445,17 +447,16 @@ class Selector {
             }
         }
 
-        if ((is_array($this->data) or (is_object($this->data) and $this->data instanceof \Countable))
-            and count($this->data) > 0) {
+        if (is_object($this->data)) $this->data = (array)$this->data;
+
+        if ((is_array($this->data) and count($this->data) > 0)) {
 
             foreach ($this->data as $data => $value) {
 
-                if ($i > 0)
-                    $atribs .= " ";
-                if (is_array($value))
-                    $value = json_encode($value);
+                if ($i > 0) $atribs .= " ";
+                if (is_array($value)) $value = json_encode($value);
 
-                $atribs .= "data-" . $data . "='" . $value . "'";
+                $atribs .= "data-{$data}='{$value}'";
 
                 ++$i;
             }
@@ -466,14 +467,14 @@ class Selector {
 
     }
 
-    protected function obtClases () {
+    protected function obtClases() {
 
         $this->class = $this->attr['class'];
 
         return $this->attr['class'];
     }
 
-    function addClass ($clase) {
+    function addClass($clase) {
 
         if (!empty($this->attr['class']))
             $this->attr['class'] .= " " . $clase;
@@ -482,7 +483,7 @@ class Selector {
         }
     }
 
-    function removerClass () {
+    function removerClass() {
 
         $clases = explode(",", $this->attr['class']);
         if (in_array($clase, $clases)) {
@@ -490,7 +491,7 @@ class Selector {
         }
     }
 
-    function data ($data = "", $valor = "") {
+    function data($data = "", $valor = "") {
 
         if (empty($data)) {
             return $this->data;
@@ -500,22 +501,21 @@ class Selector {
         }
 
         if (!empty($valor)) {
+            $this->data->{$data} = $valor;
 
-            $this->{$data} = $valor;
-
-            return;
+            return $this;
         }
 
         if (is_array($data)) {
             foreach ($data as $id => $valor) {
-                $this->{$id} = $valor;
+                $this->data->{$id} = $valor;
             }
 
             return $this;
         }
 
         if (property_exists($this->data, $data)) {
-            return $this->{$data};
+            return $this->data->{$data};
         }
 
     }
@@ -532,7 +532,7 @@ class Selector {
      *
      *
      */
-    function attr ($attr, $valor = "") {
+    function attr($attr, $valor = "") {
 
         if (!empty($valor)) {
 
@@ -560,7 +560,7 @@ class Selector {
      * @method innerHTML
      *
      */
-    function innerHTML ($innerHTML = "") {
+    function innerHTML($innerHTML = "") {
 
         if (empty($innerHTML)) {
             return $this->innerHTML;
@@ -579,7 +579,7 @@ class Selector {
      *
      * @param string html a insertar
      */
-    function addInicio ($html) {
+    function addInicio($html) {
 
         $this->innerHTML($html . $this->innerHTML);
 
@@ -591,7 +591,7 @@ class Selector {
      * Agrega contenido al final del innerHTML
      * @method addFinal
      */
-    function addFinal ($html) {
+    function addFinal($html) {
 
         $this->innerHTML($this->innerHTML() . "\n" . $html);
 
@@ -607,7 +607,7 @@ class Selector {
      *
      * @param $selector
      */
-    function envolver ($selector, $attr = []) {
+    function envolver($selector, $attr = []) {
 
         $envoltorio = new Selector($selector);
         $envoltorio->attr($attr);
@@ -621,7 +621,7 @@ class Selector {
      *
      * @method ejecutarFuncion
      */
-    function ejecutarFuncion ($funcion) {
+    function ejecutarFuncion($funcion) {
 
         $numeroArgs = func_num_args();
 
@@ -644,7 +644,7 @@ class Selector {
      *
      * @since 0.5
      */
-    function obtSelector () {
+    function obtSelector() {
 
         return $this->selector;
 

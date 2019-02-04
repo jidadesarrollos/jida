@@ -32,6 +32,8 @@
         "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
         "font-awesome": "{tema}/htdocs/font-awesome/js/all.min.js",
         "mustache": "{base}/node_modules/mustache/mustache.min.js",
+        "jida-validador": "{tema}/htdocs/js/jida/validador.js",
+        "helpers": "{tema}/htdocs/js/helpers.js",
         "jadmin": "{tema}/htdocs/js/jadmin.js"
       }
     }

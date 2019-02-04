@@ -1,8 +1,14 @@
-<div class="card">
-    <h4 class="card-header">Detalles de la imagen.</h4>
-    <div class="card-body">
-        <?= \Jida\Medios\Mensajes::imprimirMsjSesion() ?>
+<div id="gestion-media-page" data-id="<?= $this->id ?>">
+    <h4 class="titulo">Detalles de la imagen.</h4>
+    <section>
         <?= $this->form ?>
         <div class="clear"></div>
-    </div>
+        <hr>
+        <button class="btn-cierre pull-right btn btn-default">
+            Cerrar
+        </button>
+    </section>
 </div>
+
+
+

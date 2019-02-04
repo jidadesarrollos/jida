@@ -933,14 +933,6 @@ class Formulario extends Selector {
         $this->armarFormulario();
     }
 
-    /*
-     * @deprecated usar metodo render
-     */
-    function armarFormulario() {
-
-        return $this->render();
-
-    }
 
     /**
      * Permite configurar botones para el formulario
@@ -958,7 +950,7 @@ class Formulario extends Selector {
      */
     function boton($boton, $label = "", $selector = "button") {
 
-        if (array_key_exists($boton, $this->_botones)) {
+        if (isset($this->_botones[$boton])) {
 
             if (!empty($label)) {
                 $btn = $this->_botones[$boton];
@@ -971,8 +963,6 @@ class Formulario extends Selector {
 
             }
 
-            return $this->_botones[$boton];
-
         }
         else {
 
@@ -980,8 +970,8 @@ class Formulario extends Selector {
             $btn->innerHTML($label);
             $this->_botones[$boton] = $btn;
 
-            return $this->_botones[$boton];
         }
+        return $this->_botones[$boton];
     }
 
     /**

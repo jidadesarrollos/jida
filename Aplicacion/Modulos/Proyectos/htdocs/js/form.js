@@ -76,9 +76,25 @@
     });
 
     function crearModal(evento) {
-        console.log('hago click', evento.currentTarget);
+
+        let target = evento.currentTarget;
+        let accion = target.dataset.accion;
+        let ruta = (accion === 'gestion') ? RUTAS.EDITAR : RUTAS.ELIMINAR;
+
+        let id = target.closest('.item').dataset.id;
+
+        function procesarRespuesta(respuesta) {
+
+            bootbox.dialog({'message': respuesta});
+        }
+
+        $.ajax({
+            'url': `${jida.url.base}${ruta}/${id}`
+
+        }).done(procesarRespuesta);
+
     }
 
-    $galeria.on('click', '[data-modal]', evento => crearModal(evento));
+    $galeria.on('click', '[data-accion]', evento => crearModal(evento));
 
 })(jQuery);

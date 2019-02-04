@@ -51,7 +51,7 @@ class Tema {
     private function _framework() {
 
         $config = Config::obtener();
-        self::$url = '//' . Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/jadmin';
+        self::$url =  Estructura::$urlBase . '/' . $config::PATH_JIDA . '/Jadmin/Layout/jadmin';
         self::$directorio = Estructura::$rutaJida . "/Jadmin/Layout/jadmin";
         $this->_leerConfiguracion(self::$directorio . DS . "tema.json");
         $layout = Layout::obtener();

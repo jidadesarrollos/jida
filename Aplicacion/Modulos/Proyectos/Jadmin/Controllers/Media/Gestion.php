@@ -2,38 +2,48 @@
 
 namespace App\Modulos\Proyectos\Jadmin\Controllers\Media;
 
+use App\Modulos\Proyectos\Modelos\Media;
+use Jida\Medios\Sesion;
 use Jida\Render\Formulario;
 
 Trait Gestion {
 
-    function _gestion($idFk, $id) {
+    private function gestionForm(Formulario $form, $idMedia) {
 
-        if (empty($idFk)) {
+        if (!$form->validar()) {
+            //la clase formulario genera la variable de sesion __msjForm automaticamente
+            //debe limpiarse para que no aparezca.
+            Sesion::destruir('__msjForm');
+            $this->respuestaJson(['estatus' => false]);
+        }
+        $media = new Media($idMedia);
+
+        if (!$media->salvar($this->post())) {
+            $this->respuestaJson(['estatus' => false]);
+        }
+
+        $this->respuestaJson(['estatus' => true]);
+
+    }
+
+    function _gestion($idMedia) {
+
+        $form = new Formulario('proyectos/Media', $idMedia);
+        $form->action = $this->obtUrl('', ['id' => $idMedia]);
+
+        $form->boton('principal')->attr('type', 'button');
+
+        if ($this->solicitudAjax() and $this->post('btnMedia')) {
+            $this->gestionForm($form, $idMedia);
+        }
+
+        if (empty($idMedia)) {
             $this->redireccionar('/jadmin/proyectos/');
         }
 
-        $this->modelo = new Modelo();
-        $proyecto = new Proyecto($idFk);
-
-        $form = new Formulario('Media/Media', $id);
-
-        $form->action = $this->obtUrl('', [$id]);
-
-        if ($this->post('btnFormularioMedia')) {
-            if ($form->validar()) {
-                if ($this->modelo->salvar($this->post())) {
-                    $condicion = empty($id) ? 'almacenada' : 'editada';
-                    Mensajes::almacenar(Mensajes::suceso("Fotografia {$condicion} correctamente"));
-                    $this->redireccionar("/jadmin/media/index/{$idFk}");
-                }
-                else Mensajes::crear('error','Error al guardar la informacion');
-            }
-            else Mensajes::crear('error','Informacion no valida');
-        }
-
         $this->data([
-            'form' => $form->render(),
-            'idFk' => $idFk
+            'id'   => $idMedia,
+            'form' => $form->render()
         ]);
 
     }

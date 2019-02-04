@@ -69,7 +69,8 @@ Trait Url {
             Excepcion::procesar($msj, self::$_ce . 1);
         }
 
-        $url .= "/$ruta";
+        if (!is_null($ruta) and !empty($ruta)) $url .= "/$ruta";
+
         if (count($data)) {
             $url .= "?" . http_build_query($data);
         }

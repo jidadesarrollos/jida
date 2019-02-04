@@ -12,6 +12,7 @@ use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
 use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Usuario;
 use Jida\Render\Formulario;
@@ -27,8 +28,6 @@ class JControl extends Controlador {
         parent::__construct();
         $this->_usuario = Sesion::$usuario;
 
-        #throw new \Exception("erro 1", 404);
-
         $this->_inicializar();
 
     }
@@ -36,11 +35,12 @@ class JControl extends Controlador {
     private function _inicializar() {
 
         $this->data('nombreApp', "Jida");
-        $this->layout('jadmin');
+        $layout = ($this->solicitudAjax())?'ajax': 'jadmin';
+        $this->layout($layout);
 
         $config = Config::obtener();
         $nombreApp = Configuracion::NOMBRE_APP;
-        $urlBase = '//' . Estructura::$urlBase;
+        $urlBase = Estructura::$urlBase;
         $urlTema = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
         $menu = new Menu('/jadmin/menu');

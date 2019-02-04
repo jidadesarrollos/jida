@@ -155,7 +155,7 @@ class Estructura {
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
             self::$urlHtdocs = self::$urlBase . '/htdocs/';
-            self::$url = rtrim("//" . self::$dominio . "/$url", "/");
+            self::$url = rtrim(self::$dominio . "/$url", "/");
 
         }
         catch (Excepcion $e) {

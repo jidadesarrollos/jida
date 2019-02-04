@@ -40,7 +40,8 @@ Trait RenderLayout {
         $retorno = "";
 
         foreach ($lenguajes as $lenguaje) {
-            if ($lenguaje !== "head" and !isset($configuracion->{$lenguaje})) return;
+            if (!in_array($lenguaje, ['head', 'jsAjax']) and !isset($configuracion->{$lenguaje}))
+                return null;
 
             switch ($lenguaje) {
                 case 'head':
@@ -48,8 +49,10 @@ Trait RenderLayout {
                     $retorno = $this->_imprimirHead($configuracion, $modulo);
                     break;
                 case 'js':
-
                     $retorno = $this->_imprimirJS($configuracion->{$lenguaje}, $modulo);
+                    break;
+                case 'jsAjax':
+                    $retorno = $this->_imprimirJS([], $modulo, true);
                     break;
                 case 'css':
                     $retorno = $this->_imprimirCSS($configuracion->{$lenguaje}, $modulo);

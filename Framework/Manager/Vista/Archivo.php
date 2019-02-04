@@ -8,6 +8,10 @@ use Jida\Medios\Directorios;
 
 Trait Archivo {
 
+    var $urlBase;
+    var $urlModulo;
+    var $url;
+
     /**
      * Obtiene el contenido de un archivo ya parseado y lo retorna en una variable
      *

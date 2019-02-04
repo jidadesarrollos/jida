@@ -5,65 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $this->nombreApp ?></title>
     <?= $this->imprimirLibrerias('head', 'principal') ?>
+    <?php $this->incluir('jida-js') ?>
 </head>
 
 <body class="adminbody">
-
 <div id="main">
 
-    <?php
-
-    //todo: cambiar por metodo para incluir layout
-    include 'elementos/header.php';
-    ?>
+    <?php include 'elementos/header.php'; ?>
 
     <!-- Left Sidebar -->
-    <div class="left main-sidebar">
-
+    <aside class="left main-sidebar">
         <div class="sidebar-inner leftscroll">
-
             <div id="sidebar-menu">
-
                 <?= $this->menu ?>
-
                 <div class="clearfix"></div>
-
             </div>
-
             <div class="clearfix"></div>
-
         </div>
 
-    </div>
+    </aside>
     <!-- End Sidebar -->
-
-    <div class="content-page">
-
+    <main class="content-page">
         <!-- Start content -->
         <div class="content">
-
             <div class="container-fluid mt-4">
-
                 <?= $contenido ?>
-
             </div>
             <!-- END container-fluid -->
-
         </div>
         <!-- END content -->
-
-    </div>
+    </main>
     <!-- END content-page -->
-
-    <?php
-
-    //todo:cambiar por metodo para incluir layout
-    include 'elementos/footer.php';
-    ?>
+    <?php include 'elementos/footer.php'; ?>
 
 </div>
-<!-- END main -->
-
 <?= $this->imprimirLibrerias('js', 'principal') ?>
 
 </body>

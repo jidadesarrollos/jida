@@ -3,8 +3,11 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
 
 Trait Render {
+
+
 
     public function __call($metodo, $argumentos = []) {
 

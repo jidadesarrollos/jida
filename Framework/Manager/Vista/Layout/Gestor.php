@@ -36,6 +36,19 @@ Trait Gestor {
 
     }
 
+    public function incluirJSAjax($librerias, $modulo = false) {
+
+        if (is_string($librerias)) {
+            $librerias = (array)$librerias;
+        }
+
+        foreach ($librerias as $indice => $libreria) {
+            array_push($this->_jsAjax, self::_procesarUbicacion($libreria, "js"));
+        }
+
+
+    }
+
     public function incluirCSS($librerias, $modulo = false) {
 
         if (is_string($librerias)) {

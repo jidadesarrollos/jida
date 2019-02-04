@@ -2,6 +2,5 @@
 node_modules
 bower_components
 /Aplicacion/Config/BD.php
-/Aplicacion/Config/Configuracion.php
 /vendor
 /error.log
