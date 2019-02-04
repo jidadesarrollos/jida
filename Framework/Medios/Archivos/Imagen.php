@@ -313,11 +313,15 @@ class Imagen extends Archivo {
 
     }
 
-    function setUrl($meta) {
-        foreach ($meta as $dimension => $url) {
+    function editarUrls($dimensiones) {
+
+        foreach ($dimensiones as $dimension => $url) {
+
             $this->_urls[$dimension] = Estructura::$urlBase . $url;
             $this->_directorios[$dimension] = Estructura::$directorio . $url;
+
         }
+
     }
 
     private function _definirURL() {

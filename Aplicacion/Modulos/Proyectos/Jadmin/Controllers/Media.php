@@ -15,8 +15,11 @@ use App\Modulos\Proyectos\Jadmin\Controllers\Media\Vista;
 use App\Modulos\Proyectos\Modelos\Media as Modelo;
 use App\Modulos\Proyectos\Modelos\{Proyecto};
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Archivo;
 use Jida\Medios\Debug;
+use Jida\Medios\Directorios;
+use Jida\Modulos\Media\Imagen;
 use Jida\Render\JVista;
 
 class Media extends Jadmin {
@@ -60,27 +63,26 @@ class Media extends Jadmin {
     }
 
     function eliminar($id = "", $ejecutar = false) {
-        $this->layout()->incluirJSAjax(['modulo/eliminar.js']);
 
         $media = new Modelo($id);
-
-        if ($this->solicitudAjax() and $this->post("eliminar")) {
-            $this->respuestaJson("SOLO MANDA ESTA VERGA NO TODO");
-        }
-
-        if (!$media->id_media_proyecto) {
+        if (!$media->id_media) {
             JVista::msj(
                 'vistaProyectos',
                 'alerta',
                 'No existe el objeto media pasado'
             );
+            $this->redireccionar('/proyectos');
         }
 
-        $this->data([
-            'id' => $id,
-        ]);
+        $imagen = new Imagen("{$media->directorio}/{$media->nombre}");
+        $imagen->editarUrls(json_decode($media->meta_data['urls']));
 
+        if (!$imagen->eliminar()) {
+            //todo: funcionalidad metodo eliminar
+            $this->respuestaJson(['procesado' => false, 'error' => 'mensaje error']);
+        }
 
+        $this->respuestaJson(['procesado' => true]);
 
     }
 
