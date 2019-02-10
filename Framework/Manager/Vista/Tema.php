@@ -88,7 +88,9 @@ class Tema {
 
         $configuracion = json_decode(file_get_contents($archivoConfiguracion));
 
-        $entorno = Config::ENTORNO_APP;
+        $conf = Config::obtener();
+        $entorno = $conf::ENTORNO_APP;
+
 
         if (property_exists($configuracion, $entorno)) {
 

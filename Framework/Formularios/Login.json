@@ -9,8 +9,8 @@
       "name": "usuario",
       "type": "text",
       "id": "usuario",
-      "label": "Usuario",
       "placeholder": "Usuario",
+      "label": "Usuario",
       "eventos": {
         "obligatorio": {
           "mensaje": "Debe ingresar su usuario"
@@ -19,9 +19,9 @@
     },
     {
       "name": "clave",
+      "label": "Clave",
       "id": "clave",
       "type": "password",
-      "label": "Clave",
       "placeholder": "Clave",
       "eventos": {
         "obligatorio": {

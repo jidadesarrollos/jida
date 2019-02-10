@@ -2,6 +2,7 @@
 
 namespace Jida\Modulos\Usuarios;
 
+use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Componentes\Permisos;
 
@@ -14,19 +15,19 @@ class Usuario {
     public $permisos;
     private $_modelo;
 
-    function __construct ($id = null) {
+    function __construct($id = null) {
 
         $this->_modelo = new Modelos\Usuario($id);
         $this->_inicializar();
 
     }
 
-    private function _inicializar () {
+    private function _inicializar() {
 
         $this->permisos = new Permisos($this->_modelo);
     }
 
-    static function iniciarSesion ($usuario, $clave) {
+    static function iniciarSesion($usuario, $clave) {
 
         $instancia = self::instancia();
 
@@ -53,7 +54,7 @@ class Usuario {
     /**
      * Retorna la instancia única del objeto usuario
      */
-    static function instancia () {
+    static function instancia() {
 
         if (self::$_instancia) {
             return self::$_instancia;
@@ -72,7 +73,7 @@ class Usuario {
 
     }
 
-    public function obtener ($propiedad) {
+    public function obtener($propiedad) {
 
         if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
             $this->_modelo->{$propiedad};
@@ -82,14 +83,20 @@ class Usuario {
 
     }
 
-    public function cambiarClave ($claveVieja, $claveNueva) {
+    public function cambiarClave($claveVieja, $claveNueva) {
 
-        if ($claveVieja == $this->_modelo->clave) {
-            $this->_modelo->clave = $claveNueva;
+        if (md5($claveVieja) == $this->_modelo->clave) {
+            $this->_modelo->clave = md5($claveNueva);
             $this->_modelo->salvar();
             return true;
         }
         else return false;
 
+    }
+
+    public function nombre() {
+        if (empty($this->_modelo->nombres) and empty($this->_modelo->apellidos))
+            return $this->_modelo->usuario;
+        else return "{$this->_modelo->nombres} {$this->_modelo->apellidos}";
     }
 }

@@ -86,8 +86,9 @@ class Excepcion {
         $data = new \stdClass();
         $data->mensaje = $exception->getMessage();
         $data->codigo = $exception->getCode();
-        $data->traza = $exception->getTrace();
-
+        $traza = $exception->getTrace();
+        array_pop($traza);
+        $data->traza = $traza;
         $vista = new Vista($data);
 
         $layout->renderizarExcepcion($vista->obtenerPlantilla($plantilla));

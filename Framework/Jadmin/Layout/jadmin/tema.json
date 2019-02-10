@@ -39,5 +39,18 @@
     }
   },
   "prod": {
+    "css": {
+      "principal": {
+        "tema": "{tema}/htdocs/css/principal.bundle.css"
+      },
+      "login": {
+        "tema": "{tema}/htdocs/css/login.bundle.css"
+      }
+    },
+    "js": {
+      "principal": {
+        "tema": "{tema}/htdocs/js/principal.bundle.js"
+      }
+    }
   }
 }

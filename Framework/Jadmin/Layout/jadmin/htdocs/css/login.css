@@ -8,10 +8,78 @@ body {
     color: #555;
 }
 
+.bg-login {
+    background: url("../images/bg/bg-login.jpg") center no-repeat;
+    background-size: cover;
+}
+
+.login-logo {
+    width: 100%;
+    margin: auto;
+}
+
+.form-group .btn-group {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 0 1.25rem 40px;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+.form-group {
+
+}
+
+.form-group label {
+    display: none;
+}
+
+.form-group input {
+    padding: 10px 5px;
+    background-color: transparent;
+    font-size: x-large;
+    border-radius: 0px;
+    border: 0px solid gray;
+    transition: border-bottom-color 4s ease-in;
+    border-bottom: 4px solid #3a6691;
+}
+
+.form-group input:focus {
+    background-color: transparent;
+    border-radius: 0px;
+    border: 0px solid gray;
+    border-bottom: 4px solid #294967;
+    box-shadow: none;
+}
+
+.form-group input:hover {
+    border-bottom: 4px solid #007ae9;
+}
+
+.form-group input:placeholder-shown {
+    padding-left: 10px;
+    color: #00165f;
+}
+
+.card-header {
+    font-size: x-large;
+}
+
+
 @media (min-width: 48em) {
     html {
         font-size: 16px;
     }
+}
+
+.btn-primary:focus, .btn-primary.focus {
+    box-shadow: none;
 }
 
 h1, .h1,
@@ -93,3 +161,46 @@ label {
     line-height: 60px;
     background-color: #f5f5f5;
 }
+
+.div-error {
+    font-size: 10px;
+    position: absolute;
+    z-index: 99999;
+    background-color: darkred;
+    color: #fff;
+    max-width: 95%;
+    padding: 10px 8px;
+    text-align: justify;
+    margin-left: 5px;
+    margin-top: -45px;
+    float: left;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.div-error:after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    border: 10px dashed darkred;
+    border-radius: 3px;
+    bottom: 0;
+    top: 32px;
+    left: 40px;
+    border-top-style: solid;
+    border-bottom: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.card {
+    background-color: rgba(205, 205, 205, 0.6);
+    width: 500px;
+}
+

@@ -17,8 +17,8 @@ Trait Gestor {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
 
         }
-        elseif (strpos($archivo, 'tema')) {
-            $archivo = str_replace('tema', Tema::$url, $archivo);
+        elseif (strpos($archivo, '{tema}')) {
+            $archivo = str_replace('{tema}', Tema::$url, $archivo);
         }
 
         return $archivo;
@@ -31,8 +31,9 @@ Trait Gestor {
         }
 
         foreach ($librerias as $indice => $libreria) {
-            array_push($this->_js, self::_procesarUbicacion($libreria, "js"));
+            $this->_js[$indice] = self::_procesarUbicacion($libreria, "js");
         }
+
 
     }
 
@@ -56,7 +57,7 @@ Trait Gestor {
         }
 
         foreach ($librerias as $indice => $libreria) {
-            array_push($this->_js, self::_procesarUbicacion($libreria, "css"));
+            $this->_css[$indice] = self::_procesarUbicacion($libreria, "css");
         }
 
     }

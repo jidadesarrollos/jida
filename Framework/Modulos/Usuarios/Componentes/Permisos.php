@@ -2,6 +2,7 @@
 
 namespace Jida\Modulos\Usuarios\Componentes;
 
+use Jida\Medios\Debug;
 use Jida\Modulos\Usuarios\Modelos\Usuario;
 use Jida\Modulos\Usuarios\Modelos\UsuarioPerfil;
 
@@ -39,7 +40,13 @@ class Permisos {
             $arrPerfiles[$datos] = $datos;
         }
 
-        return !!array_intersect_key($arrPerfiles, $this->_perfiles);
+        $perfil = [];
+
+        foreach ($this->_perfiles as $identificador => $data) {
+            ($data['usuario'] == $this->_usuario->usuario) ? $perfil[$identificador] = $identificador : null;
+        }
+
+        return !!array_intersect_key($perfil, $arrPerfiles);
 
     }
 

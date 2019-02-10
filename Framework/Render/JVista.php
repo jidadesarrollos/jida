@@ -126,16 +126,16 @@ class JVista {
     private $campos = [];
     private $nameInputLinea = 'seleccionar';
     private $configTabla = [
-        'class' => 'table'
+        'class' => 'table table-bordered'
     ];
 
     private $configAcciones = [
-        'class'       => 'btn btn-vista',
+        'class'       => 'btn btn-primary',
         'data-accion' => 'true',
 
     ];
     private $configAccionesFila = [
-        'class'          => 'btn',
+        'class'          => 'btn btn-outline-primary',
         'data-placement' => 'top',
         'data-toggle'    => 'tooltip',
 
@@ -521,7 +521,7 @@ class JVista {
 
             $this->procesarAccionesFila();
             $this->procesarControlFila();
-            $vista .= Selector::crear('div.col-md-12', [], $this->tabla->generar());
+            $vista .= Selector::crear('div', [], $this->tabla->generar());
             if (count($this->acciones) > 0) {
                 $vista .= $this->procesarAcciones();
             }
@@ -636,7 +636,7 @@ class JVista {
 					<div class="input-group">
 						<input type="search" class="form-control jvista-search" name="busqueda" value="' . $valorBusqueda . '"/>
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit">Buscar!</button>
+								<button class="btn btn-primary" type="submit">Buscar!</button>
 							</span>
 					</div>
 				</div>
@@ -1131,9 +1131,9 @@ class JVista {
         }
         else {
             if ($this->htmlPersonalizado)
-                return Selector::crear('div.col-md-12', null, $this->mensajeNoRegistros);
+                return Selector::crear('div', null, $this->mensajeNoRegistros);
 
-            return Selector::crear('div.col-md-12', null, Medios\Mensajes::crear('alert', $this->mensajeNoRegistros));
+            return Selector::crear('div', null, Medios\Mensajes::crear('alert', $this->mensajeNoRegistros));
         }
     }
 
@@ -1183,7 +1183,7 @@ class JVista {
             'link'          => false,
             'cssContenedor' => 'alert alert-warning',
             'attrLink'      => [],
-            'cssLink'       => 'btn btn-default pull-right',
+            'cssLink'       => 'btn btn-primary pull-right',
             'txtLink'       => 'Agregar'
 
         ];

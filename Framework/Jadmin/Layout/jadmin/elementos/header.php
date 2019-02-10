@@ -3,8 +3,8 @@
 
     <!-- LOGO -->
     <div class="headerbar-left">
-        <a href="<?= $this->urlBase ?>jadmin" class="logo">
-            <span><?= $this->nombreApp ?></span>
+        <a href="<?= $this->urlBase ?>/jadmin" class="logo">
+            <img src="<?= $this->urlBase ?>/htdocs/img/logo_corto.png" alt="<?= $this->nombreApp ?>" class="img-fluid">
         </a>
     </div>
 
@@ -15,24 +15,17 @@
             <li class="list-inline-item dropdown notif">
                 <a class="nav-link dropdown-toggle nav-user" data-toggle="dropdown" href="#" role="button"
                    aria-haspopup="false" aria-expanded="false">
-                    <img src="<?= $this->urlTema ?>/htdocs/images/avatars/admin.png" alt="Profile image"
-                         class="avatar-rounded">
+                    <?= \Jida\Medios\Sesion::$usuario->nombre() ?> <i class="fa fa-cog"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                    <!-- item-->
-                    <div class="dropdown-item noti-title">
-                        <h5 class="text-overflow">
-                            <small>Hola, [usuario]</small>
-                        </h5>
-                    </div>
 
                     <!-- item-->
-                    <a href="/jadmin/usuario/cambioclave" class="dropdown-item notify-item">
+                    <a href="<?= $this->urlBase ?>/jadmin/usuario/cambioclave" class="dropdown-item notify-item">
                         <i class="fa fa-cog"></i> <span>Cambiar clave</span>
                     </a>
 
                     <!-- item-->
-                    <a href="<?= $this->urlBase ?>jadmin/logout" class="dropdown-item notify-item">
+                    <a href="<?= $this->urlBase ?>/jadmin/logout" class="dropdown-item notify-item">
                         <i class="fa fa-power-off"></i> <span>Salir</span>
                     </a>
 

@@ -59,7 +59,7 @@ class ArchivoCargado extends Archivo {
     private function _obtExtension() {
 
         $explode = explode(".", $this->name);
-        $this->extension = $explode[1];
+        $this->extension = end($explode);
     }
 
     function validarCarga() {

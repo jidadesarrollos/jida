@@ -12,8 +12,12 @@
 
 namespace Jida\Medios;
 
+use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
+
 class Archivo {
 
+    private static $_ce = 50003;
     /**
      * @var string $extension Extension del archivo
      */
@@ -34,7 +38,11 @@ class Archivo {
      * @var string ruta fisica del archivo
      */
     var $ruta;
-
+    /**
+     * @var boolean $valido Define si el archivo instanciado es valido o no. Es false si el archivo no existe.
+     */
+    static $valido;
+    static $errores;
     private static $_permisos;
 
     function __construct($directorio = "") {
@@ -57,7 +65,8 @@ class Archivo {
 
         if (!file_exists($this->ruta)) {
             $msj = "El archivo {$directorio} que usted indica no existe.";
-            Excepcion::procesar($msj, self::$_ce . 001);
+            self::$valido = false;
+            self::$errores[] = $msj;
         }
 
     }

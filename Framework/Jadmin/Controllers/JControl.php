@@ -17,6 +17,7 @@ use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Usuario;
 use Jida\Render\Formulario;
 use Jida\Render\Menu;
+use Jida\Render\Selector;
 
 class JControl extends Controlador {
 
@@ -26,7 +27,13 @@ class JControl extends Controlador {
     function __construct() {
 
         parent::__construct();
+
         $this->_usuario = Sesion::$usuario;
+        $ruta = strtolower("/" . Estructura::$modulo . '/' . Estructura::$metodo);
+
+        if (!(strtolower($ruta) == "/usuario/login") and !Sesion::es($this->_perfiles)) {
+            $this->redireccionar("/jadmin/usuario/login");
+        }
 
         $this->_inicializar();
 
@@ -35,7 +42,7 @@ class JControl extends Controlador {
     private function _inicializar() {
 
         $this->data('nombreApp', "Jida");
-        $layout = ($this->solicitudAjax())?'ajax': 'jadmin';
+        $layout = ($this->solicitudAjax()) ? 'ajax' : 'jadmin';
         $this->layout($layout);
 
         $config = Config::obtener();
@@ -54,36 +61,10 @@ class JControl extends Controlador {
 
     }
 
-    public function login() {
-
-        /*$this->layout('login');
-
-        $formLogin = new Formulario('jida/Login');
-        $formLogin->boton('principal', 'Iniciar sesión');
-
-        if ($this->post('btnLogin')) {
-
-            $usuario = $this->post('usuario');
-            $clave = $this->post('clave');
-
-            if ($formLogin->validar() and Usuario::iniciarSesion($usuario, $clave)) {
-                $this->redireccionar('jadmin');
-            }
-
-            Formulario::msj('error', 'Datos incorrectos');
-
-        }
-
-        $this->data([
-            'formulario' => $formLogin->render()
-        ]);*/
-
-    }
-
     public function logout() {
 
         Sesion::destruir();
-        $this->redireccionar('jadmin');
+        $this->redireccionar('/jadmin');
 
     }
 

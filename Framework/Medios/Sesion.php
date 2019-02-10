@@ -90,9 +90,14 @@ class Sesion {
         $usuario = self::$usuario;
         if (!is_object($usuario)) return false;
 
-        if (!property_exists($usuario, 'perfiles')) return false;
+        if ($usuario->permisos->es($perfil)) return true;
 
-        if (array_intersect($perfil, $usuario->perfiles)) return true;
+//        $usuario = self::$usuario;
+//        if (!is_object($usuario)) return false;
+//
+//        if (!property_exists($usuario, 'perfiles')) return false;
+//
+//        if (array_intersect($perfil, $usuario->perfiles)) return true;
 
         return false;
 

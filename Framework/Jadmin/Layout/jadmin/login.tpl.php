@@ -7,10 +7,10 @@
     <?= $this->imprimirLibrerias('css', 'login') ?>
 </head>
 
-<body>
+<body class="bg-login">
 
-<div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
+<div class="container h-100 pt-5">
+    <div class="row h-100 pt-5 justify-content-center align-items-center">
         <?= $contenido ?>
     </div>
 </div>

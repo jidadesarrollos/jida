@@ -6882,34 +6882,15 @@ a:focus {
 }
 
 #content-wrapper .main-panel {
+    padding: 0px;
+    margin-left: 240px;
     -moz-transition: all 0.2s ease-in;
     -o-transition: all 0.2s ease-in;
     -web-kit-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
-    padding: 0;
-
-width:
-
-calc
-(
-100
-%
--
-{
-    @
 }
-left-side-width
 
-)
-;
-margin-left:
 
-240
-px
-
-;
-/* Content */
-}
 #content-wrapper .main-panel .content {
     width: 100%;
     margin-right: 400px;
@@ -6919,28 +6900,10 @@ px
 
 #content-wrapper.short-menu .main-panel {
 
-width:
+    margin-left: 60px;
 
-calc
-(
-100
-%
--
-{
-    @
 }
-left-side-short-width
 
-)
-!important
-;
-margin-left:
-
-60
-px
-
-;
-}
 @media screen and (min-width: 992px) {
     .aside {
         top: 50px;

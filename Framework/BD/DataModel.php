@@ -544,7 +544,7 @@ class DataModel {
             $this->query .= "SELECT $campos ";
         else $this->query = "SELECT $campos ";
         if ($banderaJoin === true)
-            $this->query .= ", " . $camposJoin;
+            $this->query .= ", " . $campos; //TODO: Originalmente existia $camposJoin
         $this->query .= " from $this->tablaQuery " . $join;
         $this->usoWhere = false;
 
@@ -1298,7 +1298,7 @@ class DataModel {
         }
         if (!empty($this->_limit)) {
             if ($this->_paginar) {
-                throw new Excepcion("No puede agregar la clausula limit a una consulta paginada", $this->_ce . "09");
+                throw new Exception("No puede agregar la clausula limit a una consulta paginada", $this->_ce . '09');
             }
             $this->query .= " " . $this->_limit;
         }
@@ -1592,7 +1592,7 @@ class DataModel {
                 if (Medios\Sesion::activa()) {
                     if (is_object(Medios\Sesion::obt('Usuario')))
                         $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('Usuario')->id_usuario;
-                    else if (array_key_exists('id_usuario', Medios\Sesion::obt('usuario'))) {
+                    else if (array_key_exists('id_usuario', [Medios\Sesion::obt('usuario')])) {
                         $dataUpdate['id_usuario_modificador'] = Medios\Sesion::obt('usuario', 'id_usuario');
                     }
                 }

@@ -19,7 +19,7 @@ class Usuario extends Modelo {
 
     public $activo;
     public $id_estatus;
-    public $ultima_session;
+    public $ultima_sesion;
     public $validacion;
     public $codigo_recuperacion;
     public $img_perfil;

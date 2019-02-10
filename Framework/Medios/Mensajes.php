@@ -42,11 +42,11 @@ class Mensajes {
         if ($hidden == true) {
 
             $mensaje = "
-                    <div class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" data-dismiss=\"alert\">
-                        <span aria-hidden=\"true\">&times;</span></button>
+                    <div class=\"$css\" role=\"alert\">
                         $msj
-
+                        <button type=\"button\" class=\"close pull-right\" data-dismiss=\"alert\" aria-label=\"Close\" data-dismiss=\"alert\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
                     </div>";
 
         }
@@ -102,10 +102,12 @@ class Mensajes {
 
         $css = self::obtenerEstiloMensaje('error');
         $mensaje = "
-                    <DIV class=\"$css\">
-                    <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
-                    </DIV>";
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\">
+                            <span aria-hidden=\"true\">&times;</span>                        
+                        </button>
+                    </div>";
 
         return $mensaje;
 
@@ -127,10 +129,12 @@ class Mensajes {
         $css = self::obtEstilo('error');
 
         $mensaje = "
-                    <DIV class=\"$css\">
-                    <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
-                    </DIV>";
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\" data-dismiss=\"alert\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
+                    </div>";
 
         return $mensaje;
     }
@@ -178,10 +182,12 @@ class Mensajes {
 
         $css = self::obtenerEstiloMensaje('alerta');
         $mensaje = "
-                    <DIV class=\"$css\">
-                    <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
-                    </DIV>";
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
+                    </div>";
 
         return $mensaje;
     }
@@ -201,9 +207,11 @@ class Mensajes {
 
         $css = self::obtEstilo('alerta');
         $mensaje = "
-                    <div class=\"$css\">
-                    <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\" data-dismiss=\"alert\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
                     </div>";
 
         return $mensaje;
@@ -224,10 +232,12 @@ class Mensajes {
 
         $css = self::obtenerEstiloMensaje('suceso');
         $mensaje = "
-                    <DIV class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
-                    </DIV>";
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
+                    </div>";
 
         return $mensaje;
     }
@@ -259,9 +269,11 @@ class Mensajes {
 
         $css = self::obtEstilo('suceso');
         $mensaje = "
-                    <div class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\" data-dismiss=\"alert\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
                     </div>";
 
         return $mensaje;
@@ -283,10 +295,12 @@ class Mensajes {
 
         $css = self::obtenerEstiloMensaje('info');
         $mensaje = "
-                    <DIV class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
-                    </DIV>";
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
+                    </div>";
 
         return $mensaje;
     }
@@ -306,9 +320,11 @@ class Mensajes {
 
         $css = self::obtEstilo('info');
         $mensaje = "
-                    <div class=\"$css\">
-                        <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" aria-hidden=\"true\">&times;</button>
+                    <div class=\"$css\" role=\"alert\">
                         $mensaje
+                        <button type=\"button\" class=\"close pull-right\" aria-hidden=\"true\" aria-label=\"Close\" data-dismiss=\"alert\">
+                            <span aria-hidden=\"true\">&times;</span>
+                        </button>
                     </div>";
 
         return $mensaje;

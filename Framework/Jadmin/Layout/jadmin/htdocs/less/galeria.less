@@ -1,32 +1,42 @@
 .jida-galeria-media {
-  li {
+  section {
     figure {
 
-      height: 130px;
       overflow: hidden;
-      width: 130px;
-      overflow: hidden;
-      border: 4px solid transparent;
       cursor: pointer;
       position: relative;
+
       &.selected {
         border-color: @brand-primary;
       }
-      img {
-        width: 140px;
-        object-fit: cover;
-      }
-      figcaption {
-        position: absolute;
-        top: 0;
+
+      .overlay {
         height: 100%;
         width: 100%;
-        background: transparent;
-      }
-      &:hover {
-        figcaption {
-          background: rgba(0, 0, 0, .3);
+
+        img {
+          width: 100%;
+          object-fit: cover;
+
+          &.img-fluid {
+            height: 15rem;
+            object-fit: cover;
+            object-position: center;
+          }
+
+          &:hover {
+            filter: brightness(50%);
+          }
+
         }
+      }
+
+      .menu-gallery-jadmin {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        background: transparent;
+        color: white;
       }
       &.ui-widget-content.ui-selected {
         border: 6px solid rgba(0, 0, 0, .5);

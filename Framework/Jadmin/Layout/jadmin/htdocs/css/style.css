@@ -61,7 +61,7 @@ img {
 }
 
 .bg-primary {
-    background-color: #0f9df7 !important;
+    background-color: #4980b5 !important;
 }
 
 .bg-success {
@@ -107,7 +107,7 @@ img {
 }
 
 .text-primary {
-    color: #0f9df7 !important;
+    color: #4980b5 !important;
 }
 
 .text-success {
@@ -260,7 +260,7 @@ a {
 }
 
 .nav-pills .nav-item.show .nav-link, .nav-pills .nav-link.active {
-    background-color: #0f9df7;
+    background-color: #4980b5;
 }
 
 .dropdown-item {
@@ -521,7 +521,7 @@ body.adminbody .main-sidebar.left {
 }
 
 #sidebar-menu > ul > li > a > span {
-    vertical-align: middle;
+    vertical-align: 1px;
 }
 
 #sidebar-menu ul li a i {
@@ -743,7 +743,7 @@ body.adminbody .main-sidebar.left {
 }
 
 #main.enlarged #sidebar-menu ul ul li.active a {
-    color: #0f9df7;
+    color: #4980b5;
 }
 
 .notif {
@@ -847,7 +847,7 @@ body.adminbody .main-sidebar.left {
 }
 
 .profile-dropdown span {
-    vertical-align: middle;
+    vertical-align: 0px;
 }
 
 .nav-user {
@@ -1015,8 +1015,8 @@ a.btn:focus {
 }
 
 .btn-primary {
-    background-color: #0f9df7;
-    border-color: #0f9df7;
+    background-color: #4980b5;
+    border-color: #4980b5;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
@@ -1110,18 +1110,18 @@ a.btn:focus {
 }
 
 .btn-outline-primary {
-    color: #0f9df7;
+    color: #4980b5;
     background-image: none;
     background-color: transparent;
-    border-color: #0f9df7;
+    border-color: #4980b5;
 }
 
 .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active, .btn-outline-primary.active,
 .btn-outline-primary.focus, .btn-outline-primary:active, .btn-outline-primary:focus, .btn-outline-primary:hover,
 .open > .dropdown-toggle.btn-outline-primary {
     color: #ffffff;
-    background-color: #0f9df7;
-    border-color: #0f9df7;
+    background-color: #4980b5;
+    border-color: #4980b5;
 }
 
 .btn-outline-success {
@@ -1314,7 +1314,7 @@ a.btn:focus {
 }
 
 .dropdown-item.active, .dropdown-item:active {
-    background-color: #0f9df7;
+    background-color: #4980b5;
 }
 
 #sidebar-menu > ul > li > a.pro {
@@ -1390,7 +1390,6 @@ a.btn:focus {
 
 .custom-modal .close {
     color: #fff;
-    text-shadow: 0;
 }
 
 .border-left {
@@ -1399,4 +1398,13 @@ a.btn:focus {
 
 .label-info {
     background-color: #5bc0de;
+}
+
+.jvista table th a {
+    color: black;
+}
+
+
+.jvista table td {
+    vertical-align: middle !important;
 }

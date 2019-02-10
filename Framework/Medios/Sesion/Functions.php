@@ -2,6 +2,8 @@
 
 namespace Jida\Medios\Sesion;
 
+use Jida\Medios\Debug;
+
 Trait Functions {
 
     /**
@@ -69,23 +71,15 @@ Trait Functions {
 
     static function destruir($key = false) {
 
-        if ($key) {
-
-            if (!is_array(($key)) and array_key_exists($key, $_SESSION)) {
-                unset($_SESSION[$key]);
-                return true;
-            }
-
-            foreach ($key as $clave) {
-                if (isset($_SESSION[$clave])) unset($_SESSION[$clave]);
-            }
-
-            return true;
-
-        }
-        else {
+        if (!$key) {
             session_destroy();
             session_unset();
+        }
+
+        $key = !is_array($key) ? [$key] : $key;
+
+        foreach ($key as $clave) {
+            if (isset($_SESSION[$clave])) unset($_SESSION[$clave]);
         }
 
         return true;

@@ -9,19 +9,22 @@
 namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
 use Jida\Jadmin\Controllers\JControl;
+use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
 use Jida\Medios\Sesion;
 use Jida\Render\Formulario;
 use Jida\Modulos\Usuarios\Usuario as Persona;
 
-
 class Usuario extends JControl {
-    public function login () {
+
+    public function login() {
 
         $this->layout('login');
 
         $formLogin = new Formulario('jida/Login');
         $formLogin->boton('principal', 'Iniciar sesión');
+        $formLogin->boton('principal')->attr('class', 'btn btn-primary btn-block');
 
         if ($this->post('btnLogin')) {
 
@@ -29,7 +32,7 @@ class Usuario extends JControl {
             $clave = $this->post('clave');
 
             if ($formLogin->validar() and Persona::iniciarSesion($usuario, $clave)) {
-                $this->redireccionar('jadmin');
+                $this->redireccionar('/jadmin');
             }
 
             Formulario::msj('error', 'Datos incorrectos');
@@ -37,32 +40,43 @@ class Usuario extends JControl {
         }
 
         $this->data([
-                        'formulario' => $formLogin->render()
-                    ]);
+            'logo'       => Estructura::$urlBase . '/htdocs/img/logo.png',
+            'formulario' => $formLogin->render()
+        ]);
+
     }
 
-    public function cambioclave () {
+    public function cambioClave() {
 
         $formCambioClave = new Formulario('jida/cambioClave');
         $formCambioClave->boton('principal', 'Cambiar Clave');
 
-        if ($this->post('btnCambioClave')) {
-            if ($formCambioClave->validar()) {
-                if ($this->post('nueva_clave') == $this->post('confirmacion_clave')) {
-                    $claveVieja = $this->post('clave_actual');
-                    $claveNueva = $this->post('nueva_clave');
-                    $resp = Sesion::$usuario->cambiarClave($claveVieja, $claveNueva);
-                    if ($resp) {
-                        Mensajes::suceso('Cambió su constraseña satisfactoriamente');
-                    }
-                    else  Mensajes::error('La contraseña actual que colocó es incorrecta.');
+        $this->data(['formulario' => $formCambioClave->render()]);
 
-                }
-                else Mensajes::error('La contraseña actual no corresponde con la confirmacion.');
+        if ($this->post('btnCambioClave')) {
+
+            if (!$formCambioClave->validar()) {
+                Mensajes::almacenar(Mensajes::error('Los datos introducidos no son validos.'));
+                return null;
+
             }
-            else Mensajes::error('Los datos introducidos no son validos.');
+
+            if ($this->post('nueva_clave') !== $this->post('confirmacion_clave')) {
+                Mensajes::almacenar(Mensajes::error('La contraseña actual no corresponde con la confirmacion.'));
+                return;
+            }
+
+            $claveVieja = $this->post('clave_actual');
+            $claveNueva = $this->post('nueva_clave');
+
+            if (!Sesion::$usuario->cambiarClave($claveVieja, $claveNueva)) {
+                Mensajes::almacenar(Mensajes::error('La contraseña actual que colocó es incorrecta.'));
+                return;
+            }
+
+            Mensajes::almacenar(Mensajes::suceso('Cambió su constraseña satisfactoriamente'));
+
         }
 
-        $this->data(['formulario' => $formCambioClave->render()]);
     }
 }

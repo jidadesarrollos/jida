@@ -1,2 +1,71 @@
 @import 'variables.less';
 @import 'galeria.less';
+
+.card-title {
+  margin-bottom: 0;
+}
+
+.content-page {
+
+  .content {
+    margin-top: 1.5rem;
+  }
+
+}
+
+.btn-primary:focus,
+.btn-primary.focus,
+.btn:focus,
+.btn.focus,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus,
+.btn-outline-primary:focus,
+.btn-outline-primary.focus,
+.btn-outline-primary:not(:disabled):not(.disabled):active:focus,
+.btn-outline-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-primary.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+.btn-outline-primary {
+  border: 0;
+}
+
+.div-error {
+  font-size: 10px;
+  position: absolute;
+  z-index: 99999;
+  background-color: darkred;
+  color: #fff;
+  max-width: 95%;
+  padding: 10px 8px;
+  text-align: justify;
+  margin-left: 5px;
+  margin-top: -45px;
+  float: left;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+
+  &:after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    border: 10px dashed darkred;
+    border-radius: 3px;
+    bottom: 0;
+    top: 32px;
+    left: 40px;
+    border-top-style: solid;
+    border-bottom: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+  }
+
+}

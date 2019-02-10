@@ -13,12 +13,12 @@ class Jadmin extends JControl {
     public function index() {
 
         $this->layout()->incluirCSS([
-            'bt-dataTables' => '{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.css',
+            'bt-dataTables' => '{tema}/htdocs/plugins/datatables/dataTables.bootstrap4.min.css',
         ]);
 
         $this->layout()->incluirJS([
-            'jq-dataTables' => '{tema}htdocs/plugins/datatables/jquery.dataTables.min.js',
-            'bt-dataTables' => '{tema}htdocs/plugins/datatables/dataTables.bootstrap4.min.js',
+            'jq-dataTables' => '{tema}/htdocs/plugins/datatables/jquery.dataTables.min.js',
+            'bt-dataTables' => '{tema}/htdocs/plugins/datatables/dataTables.bootstrap4.min.js',
         ]);
 
     }

@@ -77,13 +77,14 @@ class Imagen extends Archivo {
         if ($this->data) {
             $this->procesarImagen();
         }
+        //if (!self::$valido) return;
         $finfo = new \finfo();
         $fileinfo = explode(";", $finfo->file($directorio, FILEINFO_MIME));
         $mime = $fileinfo[0];
 
         if (!array_key_exists($mime, $this->mimesAceptados)) {
             $msj = "El archivo {$directorio} de tipo {$mime} usted indica no es aceptado por el Medio.";
-            Excepcion::procesar($msj, self::$_ce . 002);
+            self::$errores[] = $msj;
         }
 
         $this->_directorios['original'] = $this->ruta;
@@ -321,6 +322,17 @@ class Imagen extends Archivo {
             $this->_directorios[$dimension] = Estructura::$directorio . $url;
 
         }
+
+    }
+
+    function eliminar() {
+
+        foreach ($this->_directorios as $archivo) {
+            //todo: mover a medio padre Archivos;
+            if (file_exists($archivo)) unlink($archivo);
+        }
+
+        return true;
 
     }
 
