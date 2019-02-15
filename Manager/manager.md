@@ -15,4 +15,4 @@ Lector
 --
 Valida que la estructura y datos solicitados sean validos,
 procesa la informacion para identificar el controlador encargado
-y la vista a renderizar y posteriormente realiza la ejecucion.
+y la vista a renderizar y posteriormente r|ealiza la ejecucion.
