@@ -4,6 +4,7 @@
   "type": "Framework",
   "minimum-stability": "dev",
   "license": "mit",
+  "version": "0.7.1",
   "prefer-stable": true,
   "authors": [
     {
