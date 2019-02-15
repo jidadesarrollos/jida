@@ -1,6 +1,4 @@
+/node_modules/
+/vendor/
 .idea
-node_modules
-bower_components
-/Aplicacion/Config/BD.php
-/vendor
-/error.log
+package-lock.json
