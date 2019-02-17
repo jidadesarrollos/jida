@@ -152,7 +152,7 @@ class Validador {
      * @param array $datosValidacion [opcional] Datos adicionales a ejecutar en validacion a tener en cuenta
      *
      */
-    function __construct ($cadena = "", $validacion = "", $datosValidacion = []) {
+    function __construct($cadena = "", $validacion = "", $datosValidacion = []) {
 
         $this->valorCampo = $cadena;
         $this->validacion = true;
@@ -185,7 +185,7 @@ class Validador {
 
     }
 
-    function validarCadena ($nombreValidacion, $datosValidacion) {
+    function validarCadena($nombreValidacion, $datosValidacion) {
 
         if ($nombreValidacion == "decimal" or $nombreValidacion == "numerico") {
             $this->valorCampo = str_replace(".", "", $this->valorCampo);
@@ -212,7 +212,7 @@ class Validador {
         }
         else {
             $resultValidacion = (preg_match($this->dataValidaciones[$nombreValidacion]['expresion'],
-                                            $this->valorCampo)) ? true : false;
+                $this->valorCampo)) ? true : false;
         }
         if ($resultValidacion === true) {
             /**
@@ -234,7 +234,7 @@ class Validador {
      *
      * @obtener mensaje de error
      */
-    protected function obtenerMensajeError ($validacion, $datos) {
+    protected function obtenerMensajeError($validacion, $datos) {
 
         if (isset($datos['mensaje'])) {
             $this->mensajeError = $datos['mensaje'];
@@ -257,7 +257,7 @@ class Validador {
      *
      * @return boolean
      */
-    static function validar ($validacion, $cadena, $mensaje = false) {
+    static function validar($validacion, $cadena, $mensaje = false) {
 
         $validador = new Validador();
         if (is_array($validacion)) {
@@ -279,12 +279,12 @@ class Validador {
      *
      * @return boolean see::Validador::validacion;
      */
-    public function getValidacion () {
+    public function getValidacion() {
 
         return $this->validacion;
     }
 
-    public function getErrors () {
+    public function getErrors() {
 
         return $this->errors;
     }

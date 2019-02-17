@@ -4,7 +4,7 @@
   "type": "Framework",
   "minimum-stability": "dev",
   "license": "mit",
-  "prefer-stable": true,
+  "version": "0.7.1",
   "authors": [
     {
       "name": "jrodriguez",
@@ -21,6 +21,11 @@
       "Jida\\": [
         "./"
       ]
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "0.7.1": "0.7.x-dev"
     }
   },
   "scripts": {

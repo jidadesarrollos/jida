@@ -1,6 +1,6 @@
 {
   "name": "JidaFramework",
-  "version": "0.5.0",
+  "version": "0.7.1",
   "description": "Framework para desarrollo optimo de aplicaciones en entorno web",
   "main": "gulpfile.js",
   "scripts": {

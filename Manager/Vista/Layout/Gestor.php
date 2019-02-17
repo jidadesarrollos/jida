@@ -34,7 +34,6 @@ Trait Gestor {
             $this->_js[$indice] = self::_procesarUbicacion($libreria, "js");
         }
 
-
     }
 
     public function incluirJSAjax($librerias, $modulo = false) {
@@ -46,7 +45,6 @@ Trait Gestor {
         foreach ($librerias as $indice => $libreria) {
             array_push($this->_jsAjax, self::_procesarUbicacion($libreria, "js"));
         }
-
 
     }
 

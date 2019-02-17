@@ -1,6 +1,7 @@
 <?php
 /**
  * Clase Manejadora de archivos
+ *
  * @author Julio Rodriguez
  * @package
  * @version
@@ -33,9 +34,10 @@ trait GeneradorArchivo {
     /**
      * Crea un archivo
      * @method public crear
+     *
      * @param string $archivo Nombre del Archivo
      */
-    function crear ($archivo = "", $modo = "w+") {
+    function crear($archivo = "", $modo = "w+") {
 
         if (!empty($archivo)) {
             $this->nombreArchivo = $archivo;
@@ -52,10 +54,11 @@ trait GeneradorArchivo {
      * Si es pasado un parametro, será definido como el directorio del archivo.
      * Caso contrario se devolvera el directorio existente
      * @method directorio
+     *
      * @param url $dir Directorio a definir
      * @return mixed Objeto Instanciado o directorio
      */
-    function directorio ($dir = "") {
+    function directorio($dir = "") {
 
         if (!empty($dir)) {
             $this->dir = $dir;
@@ -68,7 +71,7 @@ trait GeneradorArchivo {
 
     }
 
-    function escribir ($contenido = "") {
+    function escribir($contenido = "") {
 
         if (!empty($contenido))
             $this->contenido = $contenido;
@@ -77,12 +80,12 @@ trait GeneradorArchivo {
         return $this;
     }
 
-    function cerrar () {
+    function cerrar() {
 
         return fclose($this->archivo);
     }
 
-    function saltodeLinea ($total = 1) {
+    function saltodeLinea($total = 1) {
 
         $saltos = "";
         for ($i = 0; $i <= $total; ++$i) {
@@ -96,10 +99,11 @@ trait GeneradorArchivo {
     /**
      * Agrega tabulaciones al archivo
      * @method tab
+     *
      * @access protected
      * @param int $cantidad Define el número de tabulaciones a ingresar
      */
-    function tab ($cantidad = 1) {
+    function tab($cantidad = 1) {
 
         $tabs = "";
         for ($i = 0; $i < $cantidad; ++$i)
@@ -108,14 +112,14 @@ trait GeneradorArchivo {
         return $tabs;
     }
 
-    function retorno () {
+    function retorno() {
 
         $this->contenido .= "\r";
 
         return $this;
     }
 
-    function addContenido ($contenido) {
+    function addContenido($contenido) {
 
         $this->contenido .= $contenido;
 
@@ -123,7 +127,7 @@ trait GeneradorArchivo {
 
     }
 
-    function imprimirContenido ($contenido = "") {
+    function imprimirContenido($contenido = "") {
 
         echo "<pre>";
         echo $contenido;
