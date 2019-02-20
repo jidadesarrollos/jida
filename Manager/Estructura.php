@@ -75,14 +75,14 @@ class Estructura {
      */
     static private function _obtenerDirectorio() {
 
-        $actual = explode(DS, __DIR__);
+        $actual = explode(DS, __DIR__ );
         unset($actual[array_search('Manager', $actual)]);
         $conf = Config::obtener();
         $carpeta = $conf::PATH_JIDA;
         $cuenta = array_count_values($actual);
 
         if (!array_key_exists($carpeta, $cuenta)) {
-            throw new \Exception("La carpeta especificada para el Jida no existe", self::$_ce . 2);
+            throw new \Exception("La carpeta especificada para el Jida no existe $carpeta", self::$_ce . 2);
         }
 
         $inverso = array_reverse($actual);

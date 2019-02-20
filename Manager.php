@@ -21,11 +21,12 @@ class Manager {
     private $_lector;
 
     /*Tiempos*/
-    private       $_tiempoInicio;
-    private       $_tiempoFin;
+    private $_tiempoInicio;
+    private $_tiempoFin;
     public static $configuracion;
 
     private $ruta;
+    private $rutaApp;
 
     private static $_controlador;
 
@@ -33,13 +34,18 @@ class Manager {
 
         try {
 
-            $this->ruta = $ruta;
+            if (!Medios\Directorios::validar($ruta)) {
+                throw new \Exception("La ruta pasada para iniciar el jida no existe: $ruta", 1);
+
+            }
+            $this->ruta = __DIR__;
+            $this->rutaApp = $ruta;
 
             Conf\Base::constantes();
 
             self::$configuracion = Conf\Config::obtener();
 
-            Estructura::procesar($ruta);
+            Estructura::procesar($this->ruta, $ruta);
             Conf\Base::path();
 
             $this->_validador = new Validador();
