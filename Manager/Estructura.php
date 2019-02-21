@@ -73,28 +73,13 @@ class Estructura {
      * @return string
      * @throws \Exception
      */
-    static private function _obtenerDirectorio() {
+    static private function _obtenerDirectorio($directorioJida, $directorioApp) {
 
-        $actual = explode(DS, __DIR__ );
-        unset($actual[array_search('Manager', $actual)]);
-        $conf = Config::obtener();
-        $carpeta = $conf::PATH_JIDA;
-        $cuenta = array_count_values($actual);
+        self::$rutaJida = $directorioJida;
+        self::$directorio = $directorioApp;
+        self::$rutaAplicacion = $directorioApp . "/Aplicacion";
 
-        if (!array_key_exists($carpeta, $cuenta)) {
-            throw new \Exception("La carpeta especificada para el Jida no existe $carpeta", self::$_ce . 2);
-        }
-
-        $inverso = array_reverse($actual);
-        $posicion = array_search($carpeta, $inverso) + 1;
-
-        $parte = array_splice($inverso, $posicion);
-        $directorio = implode("/", array_reverse($parte));
-        self::$rutaJida = $directorio . DS . $carpeta;
-        self::$directorio = $directorio;
-        self::$rutaAplicacion = $directorio . "/Aplicacion";
-
-        return $directorio;
+        return $directorioJida;
 
     }
 
@@ -124,10 +109,10 @@ class Estructura {
 
     }
 
-    static function procesar($directorioJida) {
+    static function procesar($directorioJida, $directorioApp) {
 
         try {
-            self::_obtenerDirectorio();
+            self::_obtenerDirectorio($directorioJida, $directorioApp);
             self::$directorioJida = $directorioJida;
 
             $url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_URL);
