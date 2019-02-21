@@ -1,7 +1,8 @@
 {
-  "name": "jida/app",
+  "name": "jida/jida",
   "description": "Framework para desarrollo Jida, desarrollo simple.",
-  "type": "project",
+  "type": "Framework",
+  "minimum-stability": "dev",
   "license": "mit",
   "authors": [
     {
