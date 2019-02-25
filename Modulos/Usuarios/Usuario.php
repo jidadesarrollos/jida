@@ -76,7 +76,7 @@ class Usuario {
     public function obtener($propiedad) {
 
         if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
-            $this->_modelo->{$propiedad};
+            return $this->_modelo->{$propiedad};
         }
 
         return false;
