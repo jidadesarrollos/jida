@@ -13,7 +13,8 @@
   "require": {
     "phpmailer/phpmailer": "^5.2",
     "ext-json": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "symfony/console": "^4.1"
   },
   "autoload": {
     "psr-4": {
