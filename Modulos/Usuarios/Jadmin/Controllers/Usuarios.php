@@ -11,6 +11,7 @@ namespace Jida\Modulos\Usuarios\Jadmin\Controllers;
 use Jida\Jadmin\Controllers\JControl;
 
 class Usuarios extends JControl {
+
     public function index(){
 
     }

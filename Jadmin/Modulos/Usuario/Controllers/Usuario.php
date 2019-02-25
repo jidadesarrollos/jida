@@ -9,6 +9,7 @@
 namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
 use Jida\Jadmin\Controllers\JControl;
+use Jida\Jadmin\Modulos\Usuario\Controllers\Usuario\Usuarios;
 use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 use Jida\Medios\Mensajes;
@@ -17,6 +18,8 @@ use Jida\Render\Formulario;
 use Jida\Modulos\Usuarios\Usuario as Persona;
 
 class Usuario extends JControl {
+
+    use Usuarios;
 
     public function login() {
 
