@@ -2060,4 +2060,19 @@ class DataModel {
         return implode($arrayPalabra);
     }
 
+    function sp($sp, $parametros = []) {
+        if (!!$parametros) {
+            if (is_string($parametros)) {
+                $parametros = (array)$parametros;
+            }
+            $parametros = "'" . implode("', '", $parametros) . "'";
+            $this->query = "CALL " . $sp . "({$parametros});";
+        }
+        else {
+            $this->query = "CALL " . $sp . ";";
+        }
+        $result = $this->bd->ejecutarQuery($this->query);
+        return is_object($result) ? $this->bd->obtenerDataCompleta($result) : $result;
+    }
+
 }//fin clase;

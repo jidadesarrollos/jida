@@ -11,7 +11,7 @@ Trait Peticion {
     private $_get;
     private $_request;
     private $_files;
-    
+
 
     private function _procesarPeticiones() {
 
