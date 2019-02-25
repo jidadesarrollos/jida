@@ -11,11 +11,7 @@ Trait Peticion {
     private $_get;
     private $_request;
     private $_files;
-    /**
-     * @var object $data Objeto Data para pasar la informacion a las vistas
-     * @see Data
-     */
-    private $_data;
+    
 
     private function _procesarPeticiones() {
 
