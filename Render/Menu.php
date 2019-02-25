@@ -199,7 +199,10 @@ class Menu extends Selector {
 
                 if (property_exists($item, 'url')) {
 
-                    $url = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
+                    if($item->url == '#')
+                        $url = '#';
+                    else
+                        $url = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
                     $link = new Selector('a', ['href' => $url]);
                     $label = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
                     $link->addFinal($label);
