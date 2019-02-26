@@ -8,20 +8,7 @@
                 </a>
                 <div class="triangle"></div>
             </li>
-            <li class="nav-item">
-                <a class="nav-item-hold" href="<?= $this->urlBase ?>/jadmin/actividades/">
-                    <i class="nav-icon i-Suitcase"></i>
-                    <span class="nav-text">Actividades</span>
-                </a>
-                <div class="triangle"></div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-item-hold" href="<?= $this->urlBase ?>/jadmin/centros-costos/">
-                    <i class="nav-icon i-Computer-Secure"></i>
-                    <span class="nav-text">Centros de Costos</span>
-                </a>
-                <div class="triangle"></div>
-            </li>
+
             <li class="nav-item" data-item="ajustes">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-File-Clipboard-File--Text"></i>
@@ -42,18 +29,7 @@
                     <span class="item-name">Usuarios</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="<?= $this->urlBase ?>/jadmin/departamentos/">
-                    <i class="nav-icon i-Clock-4"></i>
-                    <span class="item-name">Departamentos</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="<?= $this->urlBase ?>/jadmin/cargos/">
-                    <i class="nav-icon i-Over-Time"></i>
-                    <span class="item-name">Cargos</span>
-                </a>
-            </li>
+
         </ul>
     </div>
 
