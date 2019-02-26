@@ -37,6 +37,10 @@ trait Usuarios {
              'data-jvista' => 'confirm',
              'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el cliente seleccionado?']
         ]);
+        $vista->acciones([
+            'Nuevo Usuario' => ['href' => '/jadmin/usuario/gestion/']
+        ]);
+
 
         $render = $vista->render(
             function ($datos) {
