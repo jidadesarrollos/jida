@@ -1,34 +1,37 @@
 {
-  "name": "jida/jida",
-  "description": "Framework para desarrollo Jida, desarrollo simple.",
-  "type": "Framework",
-  "minimum-stability": "dev",
-  "license": "mit",
-  "authors": [
-    {
-      "name": "jrodriguez",
-      "email": "jrodriguez@jidadesarrollos.com"
-    }
-  ],
-  "require": {
-    "phpmailer/phpmailer": "^5.2",
-    "ext-json": "*",
-    "ext-gd": "*",
-    "symfony/console": "^4.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "Jida\\": [
-        "./"
-      ]
-    }
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "npm install"
+    "name": "jida/jida",
+    "description": "Framework para desarrollo Jida, desarrollo simple.",
+    "type": "Framework",
+    "minimum-stability": "dev",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "jrodriguez",
+            "email": "jrodriguez@jidadesarrollos.com"
+        }
     ],
-    "post-update-cmd": [
-      "npm update"
-    ]
-  }
+    "bin": [
+        "bin/jida"
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^5.2",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "symfony/console": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jida\\": [
+                "./"
+            ]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "npm install"
+        ],
+        "post-update-cmd": [
+            "npm update"
+        ]
+    }
 }

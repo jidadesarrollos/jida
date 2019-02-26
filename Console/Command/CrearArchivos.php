@@ -29,7 +29,7 @@ class CrearArchivos {
  * Creado por Jida Framework
  * $fecha
  */
-                
+
 EOD;
     }
 
