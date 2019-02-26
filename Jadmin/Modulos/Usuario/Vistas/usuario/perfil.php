@@ -3,7 +3,7 @@
     <div class="card-body">
         <div id="vista" class="row">
             <div class="col-12">
-                <?= \Jida\Medios\Sesion::obt('__msj') ?>
+                <?= \Jida\Medios\Mensajes::imprimirMsjSesion() ?>
             </div>
             <div class="col-12">
                 <form action="<?= \Jida\Manager\Estructura::$urlBase ?>/jadmin/usuario/perfil/<?= $this->id_usuario?>"
