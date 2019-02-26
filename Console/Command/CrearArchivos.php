@@ -67,7 +67,7 @@ EOD;
         $controller .= "class " . $nameClass . " extends " . $nameExtend . "{\n"
                 . "\n"
                 . "    public function index(){\n\n"
-                . "        \$this->data(['mensaje' => 'Controlador '+self::class]);\n"
+                . "        \$this->data(['mensaje' => 'Controlador '.self::class]);\n"
                 . "    }\n"
                 . "}\n";
         return $controller;
