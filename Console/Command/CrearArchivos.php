@@ -1,17 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Jida\Console\Command;
 
 /**
- * Description of CrearArchivos
+ * crea los codigos para los archivos del proyecto
  *
- * @author usuario
+ * @author Enyerber Franco <enyerverfranco@gmail.com>
+ * @package Framework
+ * @category Console
+ *
  */
 class CrearArchivos {
 
@@ -21,8 +18,19 @@ class CrearArchivos {
     const JcontrolClass   = "Jida\\Jadmin\\Controllers\\JControl";
     const ModelosClass    = "Jida\\Core\\Modelo";
 
+    protected $head;
+
     public function __construct($modulo) {
         $this->modulo = $modulo;
+        $fecha        = (new \DateTime('now'))->format('Y-m-d H:i:s');
+        $this->head   = <<<EOD
+                
+/**
+ * Creado por Jida Framework
+ * $fecha
+ */
+                
+EOD;
     }
 
     public function controlador($nombre = null) {
@@ -50,7 +58,7 @@ class CrearArchivos {
         $nameExtend = $e[count($e) - 1];
         $controller = "<?php\n"
                 . "\n";
-
+        $controller .= $this->head;
         $controller .= "namespace  " . implode("\\", $c) . ";\n\n";
         $controller .= "use " . implode("\\", $e) . "; \n\n";
 
@@ -72,7 +80,7 @@ class CrearArchivos {
         $nameExtend = $e[count($e) - 1];
         $controller = "<?php\n"
                 . "\n";
-
+        $controller .= $this->head;
         $controller .= "namespace  " . implode("\\", $c) . ";\n\n";
         $controller .= "use " . implode("\\", $e) . ";\n\n";
 
@@ -85,7 +93,8 @@ class CrearArchivos {
     }
 
     public function vista() {
-        return "<?= \$this->mensaje ?>";
+        $fecha = (new \DateTime('now'))->format('Y-m-d H:i:s');
+        return "<!-- Creado por Jida Framework  $fecha --> \n<?= \$this->mensaje ?>";
     }
 
 }

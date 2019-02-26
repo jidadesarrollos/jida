@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Jida\Console\Command;
 
 use Jida\Console\Command;
@@ -15,10 +9,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Comnado para crear un controlador
- * @category    framework
- * @package     Console
- * @author      Enyerber Franco <enyerverfranco@gmail.com>
+ * Comando para crear un controlador
+ *
+ * @author Enyerber Franco <enyerverfranco@gmail.com>
+ * @package Framework
+ * @category Console
+ *
  */
 class CrearControlador extends Command {
 

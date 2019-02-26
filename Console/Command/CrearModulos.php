@@ -9,9 +9,11 @@ use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Comnado para crear la estructura de modulos de un Modulo 
- * @category    framework
- * @package     Console
- * @author      Enyerber Franco <enyerverfranco@gmail.com>
+ *
+ * @author Enyerber Franco <enyerverfranco@gmail.com>
+ * @package Framework
+ * @category Console
+ *
  */
 class CrearModulos extends Command {
 
