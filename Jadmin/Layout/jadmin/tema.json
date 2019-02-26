@@ -1,0 +1,35 @@
+{
+  "link": {
+    "shortcut icon": "/htdocs/img/logo.png"
+  },
+  "layout": "jadmin",
+  "layoutError": "error",
+  "dev": {
+    "css": {
+      "principal": {
+        "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css",
+        "scroll": "{tema}/htdocs/styles/vendor/perfect-scrollbar.css",
+        "font-awesome": "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      },
+      "login": {
+        "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css"
+      }
+    },
+    "js": {
+      "principal": {
+        "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
+        "bt": "{tema}/htdocs/js/vendor/bootstrap.bundle.min.js",
+        "scroll": "{tema}/htdocs/js/vendor/perfect-scrollbar.min.js",
+        "script": "{tema}/htdocs/js/script.js",
+        "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
+        "jq-datatable": "{tema}/htdocs/js/jquery.dataTables.min.js",
+        "bootstrap-dt": "{tema}/htdocs/js/dataTables.bootstrap4.min.js",
+        "dt-es": "{tema}/htdocs/js/datatable-language.js"
+      },
+      "login": {
+        "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
+        "bt": "{tema}/htdocs/js/vendor/bootstrap.bundle.min.js"
+      }
+    }
+  }
+}

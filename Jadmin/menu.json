@@ -1,0 +1,9 @@
+{
+  "nombre": "Jadmin",
+  "items": {
+    "usuarios": {
+      "label": "<i class=\"fa fa-users\"></i> <span>Usuarios</span>",
+      "url": "/jadmin/usuarios"
+    }
+  }
+}
