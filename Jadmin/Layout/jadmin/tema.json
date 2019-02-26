@@ -8,6 +8,8 @@
     "css": {
       "principal": {
         "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
+        "bootstrap-dt": "{tema}/htdocs/css/dataTables.bootstrap4.min.css",
+        "bootstrap-time": "{tema}/htdocs/plugins/timepicker/bootstrap-timepicker.min.css",
         "font-awesome": "{tema}/htdocs/font-awesome/css/fontawesome.min.css",
         "style": "{tema}/htdocs/css/style.css",
         "main": "{tema}/htdocs/css/main.css"
@@ -21,10 +23,13 @@
     "js": {
       "principal": {
         "jquery": "{tema}/htdocs/js/jquery.min.js",
+        "jq-datatable": "{tema}/htdocs/js/jquery.dataTables.min.js",
         "modernizr": "{tema}/htdocs/js/modernizr.min.js",
         "moment": "{tema}/htdocs/js/moment.min.js",
         "popper": "{tema}/htdocs/js/popper.min.js",
         "bootstrap": "{tema}/htdocs/js/bootstrap.min.js",
+        "bootstrap-dt": "{tema}/htdocs/js/dataTables.bootstrap4.min.js",
+        "espanish-dt": "{tema}/htdocs/js/datatable-language.js",
         "bootbox": "{tema}/htdocs/js/bootbox.min.js",
         "detect": "{tema}/htdocs/js/detect.js",
         "fastclick": "{tema}/htdocs/js/fastclick.js",
@@ -32,9 +37,11 @@
         "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
         "font-awesome": "{tema}/htdocs/font-awesome/js/all.min.js",
         "mustache": "{base}/node_modules/mustache/mustache.min.js",
+        "datepicker-bt": "{tema}/htdocs/plugins/timepicker/bootstrap-timepicker.min.js",
         "jida-validador": "{tema}/htdocs/js/jida/validador.js",
         "helpers": "{tema}/htdocs/js/helpers.js",
-        "jadmin": "{tema}/htdocs/js/jadmin.js"
+        "jadmin": "{tema}/htdocs/js/jadmin.js",
+        "jadmin-2": "{base}/htdocs/js/jadmin.js"
       }
     }
   },

@@ -12,23 +12,6 @@
 
 class Uploader {
 
-    protected $options = array(
-        'limit'       => 10,
-        'maxSize'     => 10,
-        'extensions'  => null,
-        'required'    => false,
-        'uploadDir'   => 'uploads/',
-        'title'       => array('auto', 10),
-        'removeFiles' => true,
-        'perms'       => null,
-        'onCheck'     => null,
-        'onError'     => null,
-        'onSuccess'   => null,
-        'onUpload'    => null,
-        'onComplete'  => null,
-        'onRemove'    => null
-    );
-
     public $error_messages = array(
         1                      => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
         2                      => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
@@ -45,7 +28,22 @@ class Uploader {
         'required_and_no_file' => "No file was choosed. Please select one.",
         'no_download_content'  => "File could't be download."
     );
-
+    protected $options = array(
+        'limit'       => 10,
+        'maxSize'     => 10,
+        'extensions'  => null,
+        'required'    => false,
+        'uploadDir'   => 'uploads/',
+        'title'       => array('auto', 10),
+        'removeFiles' => true,
+        'perms'       => null,
+        'onCheck'     => null,
+        'onError'     => null,
+        'onSuccess'   => null,
+        'onUpload'    => null,
+        'onComplete'  => null,
+        'onRemove'    => null
+    );
     private $field = null;
     private $data  = array(
         "hasErrors"   => false,
@@ -128,6 +126,17 @@ class Uploader {
     }
 
     /**
+     * isURL method
+     *
+     * Check if string $url is a link
+     *
+     * @return boolean
+     */
+    private function isURL($url) {
+        return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+    }
+
+    /**
      * setOptions method
      *
      * Merge options
@@ -139,70 +148,6 @@ class Uploader {
             return false;
         }
         $this->options = array_merge($this->options, $options);
-    }
-
-    /**
-     * validation method
-     *
-     * Check the field and files
-     *
-     * @return boolean
-     */
-    private function validate($file = null) {
-        $field = $this->field;
-        $errors = array();
-        $options = $this->options;
-
-        if ($file == null) {
-            $ini = array(ini_get('file_uploads'), ((int)ini_get('upload_max_filesize')), ((int)ini_get('post_max_size')), ((int)ini_get('max_file_uploads')));
-
-            if (!isset($field) || empty($field)) return false;
-            if (!$ini[0]) $errors[] = $this->error_messages['file_uploads'];
-
-            if ($options['required'] && $field['length'] == 0) $errors[] = $this->error_messages['required_and_no_file'];
-            if (($options['limit'] && $field['length'] > $options['limit']) || ($field['length']) > $ini[3]) $errors[] = $this->error_messages['max_number_of_files'];
-            if (!file_exists($options['uploadDir']) && !is_dir($options['uploadDir']) && mkdir($options['uploadDir'], 750, true)) {
-                $this->data['hasWarnings'] = true;
-                $this->data['warnings'] = "A new directory was created in " . realpath($options['uploadDir']);
-            }
-            if (!is_writable($options['uploadDir'])) @chmod($options['uploadDir'], 750);
-
-            if ($field['Field_Type'] == "input") {
-                $total_size = 0;
-                foreach ($this->field['size'] as $key => $value) {
-                    $total_size += $value;
-                }
-                $total_size = $total_size / 1048576;
-                if ($options['maxSize'] && $total_size > $options['maxSize']) $errors[] = $this->error_messages['max_file_size'];
-
-                if ($total_size > $ini[1]) $errors[] = $this->error_messages[1];
-                if ($total_size > $ini[2]) $errors[] = $this->error_messages['post_max_size'];
-            }
-        }
-        else {
-            if (@$field['error'][$file['index']] > 0 && array_key_exists($field['error'][$file['index']], $this->error_messages)) $errors[] = $this->error_messages[$field['error'][$file['index']]];
-            if ($options['extensions'] && !in_array($file['extension'], $options['extensions'])) $errors[] = $this->error_messages['accept_file_types'];
-            if ($file['type'][0] == "image" && @!is_array(getimagesize($file['tmp']))) $errors[] = $this->error_messages['accept_file_types'];
-            if ($options['maxSize'] && $file['size'][0] > $options['maxSize']) $errors[] = $this->error_messages['max_file_size'];
-
-            if ($field['Field_Type'] == 'link' && empty($this->cache_download_content)) $errors[] = "";
-        }
-
-        $custom = $this->_onCheck($file);
-        if ($custom) $errors = array_merge($errors, $custom);
-
-        if (!empty($errors)) {
-            $this->data['hasErrors'] = true;
-            if (!isset($this->data['errors'])) $this->data['errors'] = array();
-
-            $this->data['errors'][] = $errors;
-            $custom = $this->_onError($errors, $file);
-
-            return false;
-        }
-        else {
-            return true;
-        }
     }
 
     /**
@@ -274,19 +219,77 @@ class Uploader {
     }
 
     /**
-     * uploadFile method
+     * validation method
      *
-     * Upload/Download files to server
+     * Check the field and files
      *
      * @return boolean
      */
-    private function uploadFile($source, $destination) {
-        if ($this->field['Field_Type'] == 'input') {
-            return @move_uploaded_file($source, $destination);
+    private function validate($file = null) {
+        $field = $this->field;
+        $errors = array();
+        $options = $this->options;
+
+        if ($file == null) {
+            $ini = array(ini_get('file_uploads'), ((int)ini_get('upload_max_filesize')), ((int)ini_get('post_max_size')), ((int)ini_get('max_file_uploads')));
+
+            if (!isset($field) || empty($field)) return false;
+            if (!$ini[0]) $errors[] = $this->error_messages['file_uploads'];
+
+            if ($options['required'] && $field['length'] == 0) $errors[] = $this->error_messages['required_and_no_file'];
+            if (($options['limit'] && $field['length'] > $options['limit']) || ($field['length']) > $ini[3]) $errors[] = $this->error_messages['max_number_of_files'];
+            if (!file_exists($options['uploadDir']) && !is_dir($options['uploadDir']) && mkdir($options['uploadDir'], 750, true)) {
+                $this->data['hasWarnings'] = true;
+                $this->data['warnings'] = "A new directory was created in " . realpath($options['uploadDir']);
+            }
+            if (!is_writable($options['uploadDir'])) @chmod($options['uploadDir'], 750);
+
+            if ($field['Field_Type'] == "input") {
+                $total_size = 0;
+                foreach ($this->field['size'] as $key => $value) {
+                    $total_size += $value;
+                }
+                $total_size = $total_size / 1048576;
+                if ($options['maxSize'] && $total_size > $options['maxSize']) $errors[] = $this->error_messages['max_file_size'];
+
+                if ($total_size > $ini[1]) $errors[] = $this->error_messages[1];
+                if ($total_size > $ini[2]) $errors[] = $this->error_messages['post_max_size'];
+            }
         }
-        elseif ($this->field['Field_Type'] == 'link') {
-            return $this->downloadFile($source, $destination);
+        else {
+            if (@$field['error'][$file['index']] > 0 && array_key_exists($field['error'][$file['index']], $this->error_messages)) $errors[] = $this->error_messages[$field['error'][$file['index']]];
+            if ($options['extensions'] && !in_array($file['extension'], $options['extensions'])) $errors[] = $this->error_messages['accept_file_types'];
+            if ($file['type'][0] == "image" && @!is_array(getimagesize($file['tmp']))) $errors[] = $this->error_messages['accept_file_types'];
+            if ($options['maxSize'] && $file['size'][0] > $options['maxSize']) $errors[] = $this->error_messages['max_file_size'];
+
+            if ($field['Field_Type'] == 'link' && empty($this->cache_download_content)) $errors[] = "";
         }
+
+        $custom = $this->_onCheck($file);
+        if ($custom) $errors = array_merge($errors, $custom);
+
+        if (!empty($errors)) {
+            $this->data['hasErrors'] = true;
+            if (!isset($this->data['errors'])) $this->data['errors'] = array();
+
+            $this->data['errors'][] = $errors;
+            $custom = $this->_onError($errors, $file);
+
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private function _onCheck() {
+        $arguments = func_get_args();
+        return $this->options['onCheck'] != null && function_exists($this->options['onCheck']) ? $this->options['onCheck'](@$arguments[0]) : null;
+    }
+
+    private function _onError() {
+        $arguments = func_get_args();
+        return $this->options['onError'] && function_exists($this->options['onError']) ? $this->options['onError'](@$arguments[0], @$arguments[1]) : null;
     }
 
     /**
@@ -312,6 +315,23 @@ class Uploader {
             }
         }
         return $removed_files;
+    }
+
+    /**
+     * isJson method
+     *
+     * Check if string is a valid json
+     *
+     * @return boolean
+     */
+    function isJson($string) {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+    private function _onRemove() {
+        $arguments = func_get_args();
+        return $this->options['onRemove'] && function_exists($this->options['onRemove']) ? $this->options['onRemove'](@$arguments[0], @$arguments[1]) : null;
     }
 
     /**
@@ -350,6 +370,30 @@ class Uploader {
         @fclose($downloaded_file);
 
         return $written;
+    }
+
+    /**
+     * formatSize method
+     *
+     * Convert file size
+     *
+     * @return float
+     */
+    private function formatSize($bytes) {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes > 0) {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        else {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
     }
 
     /**
@@ -397,65 +441,19 @@ class Uploader {
     }
 
     /**
-     * isJson method
+     * uploadFile method
      *
-     * Check if string is a valid json
-     *
-     * @return boolean
-     */
-    function isJson($string) {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
-    }
-
-    /**
-     * isURL method
-     *
-     * Check if string $url is a link
+     * Upload/Download files to server
      *
      * @return boolean
      */
-    private function isURL($url) {
-        return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
-    }
-
-    /**
-     * formatSize method
-     *
-     * Convert file size
-     *
-     * @return float
-     */
-    private function formatSize($bytes) {
-        if ($bytes >= 1073741824) {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+    private function uploadFile($source, $destination) {
+        if ($this->field['Field_Type'] == 'input') {
+            return @move_uploaded_file($source, $destination);
         }
-        elseif ($bytes >= 1048576) {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        elseif ($this->field['Field_Type'] == 'link') {
+            return $this->downloadFile($source, $destination);
         }
-        elseif ($bytes > 0) {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        }
-        else {
-            $bytes = '0 bytes';
-        }
-
-        return $bytes;
-    }
-
-    private function _onCheck() {
-        $arguments = func_get_args();
-        return $this->options['onCheck'] != null && function_exists($this->options['onCheck']) ? $this->options['onCheck'](@$arguments[0]) : null;
-    }
-
-    private function _onSuccess() {
-        $arguments = func_get_args();
-        return $this->options['onSuccess'] != null && function_exists($this->options['onSuccess']) ? $this->options['onSuccess'](@$arguments[0], @$arguments[1]) : null;
-    }
-
-    private function _onError() {
-        $arguments = func_get_args();
-        return $this->options['onError'] && function_exists($this->options['onError']) ? $this->options['onError'](@$arguments[0], @$arguments[1]) : null;
     }
 
     private function _onUpload() {
@@ -463,14 +461,14 @@ class Uploader {
         return $this->options['onUpload'] && function_exists($this->options['onUpload']) ? $this->options['onUpload'](@$arguments[0], @$arguments[1]) : null;
     }
 
+    private function _onSuccess() {
+        $arguments = func_get_args();
+        return $this->options['onSuccess'] != null && function_exists($this->options['onSuccess']) ? $this->options['onSuccess'](@$arguments[0], @$arguments[1]) : null;
+    }
+
     private function _onComplete() {
         $arguments = func_get_args();
         return $this->options['onComplete'] != null && function_exists($this->options['onComplete']) ? $this->options['onComplete'](@$arguments[0], @$arguments[1]) : null;
-    }
-
-    private function _onRemove() {
-        $arguments = func_get_args();
-        return $this->options['onRemove'] && function_exists($this->options['onRemove']) ? $this->options['onRemove'](@$arguments[0], @$arguments[1]) : null;
     }
 }
 
