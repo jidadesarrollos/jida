@@ -10,6 +10,7 @@ namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Modulos\Usuarios\Modelos\Perfil;
+use Jida\Render\JVista;
 
 class Perfiles extends JControl {
 
