@@ -17,6 +17,7 @@ namespace Jida\Configuracion;
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
+    const SHORT_NAME_APP = 'APP';
     const URL_BASE = '';
     const ENTORNO_APP = 'dev';
     const ZONA_HORARIA = 'America/Caracas';

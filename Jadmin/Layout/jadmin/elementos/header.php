@@ -5,7 +5,7 @@
     <div class="headerbar-left">
         <a href="<?= $this->urlBase ?>/jadmin" class="logo">
             <img src="<?= $this->urlBase ?>/htdocs/img/logo_corto.png" alt="<?= $this->nombreApp ?>" class="img-fluid">
-            <span> <?= $this->nombreApp ?></span>
+            <span> <?= $this->nombreCorto ?></span>
         </a>
     </div>
 

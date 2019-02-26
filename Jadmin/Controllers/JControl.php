@@ -47,6 +47,7 @@ class JControl extends Controlador {
 
         $config = Config::obtener();
         $nombreApp = Configuracion::NOMBRE_APP;
+        $nombreCorto = Configuracion::SHORT_NAME_APP;
         $urlBase = Estructura::$urlBase;
         $urlTema = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
@@ -55,6 +56,7 @@ class JControl extends Controlador {
         $this->data([
             'menu'      => $menu->render(),
             'nombreApp' => $nombreApp,
+            'nombreCorto' => $nombreCorto,
             'urlBase'   => $urlBase,
             'urlTema'   => $urlTema
         ]);

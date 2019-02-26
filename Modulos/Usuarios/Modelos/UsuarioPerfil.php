@@ -21,7 +21,7 @@ class UsuarioPerfil extends Modelo {
             'id_perfil']);
         $this->join(
             's_perfiles',
-            ['identificador'],
+            ['identificador', 'perfil'],
             ['clave' => 'id_perfil', 'clave_relacion' => 'id_perfil']);
         $this->join(
             's_usuarios',

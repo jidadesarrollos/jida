@@ -3,6 +3,7 @@
 namespace Jida\Modulos\Usuarios\Modelos;
 
 use Jida\Core\Modelo;
+use Jida\Medios\Debug;
 
 class Usuario extends Modelo {
 
@@ -30,5 +31,32 @@ class Usuario extends Modelo {
     protected $pk = "id_usuario";
     protected $unico = ['usuario'];
     protected $registro = false;
+
+    static private $instancia = null;
+
+    static function listaUsuarios($consulta = []){
+
+        if (self::$instancia == null) {
+            self::$instancia = new Usuario();
+        }
+
+        if(empty($consulta)){
+            $consulta = ['id_usuario', 'usuario', 'nombres', 'apellidos', 'correo', 'id_usuario as perfiles'];
+        } else {
+            $consulta[] = 'id_usuario as perfiles';
+        }
+
+        $data = self::$instancia->consulta($consulta)->obt();
+        $perfil = new UsuarioPerfil();
+
+        foreach ($data as &$fila){
+
+            $fila['perfiles'] = $perfil->obtPerfiles($fila['id_usuario']);
+
+        }
+
+
+        return $data;
+    }
 
 }

@@ -1,0 +1,25 @@
+{
+  "nombre": "Formulario de Perfiles",
+  "query": "select * from s_usuarios_perfiles",
+  "estructura": "",
+  "identificador": "GestionPerfiles",
+  "clave_primaria": "id_usuario",
+  "campos": {
+    "id_usuario": {
+      "label": "id_usuario",
+      "name": "id_usuario",
+      "id": "id_usuario",
+      "type": "hidden"
+    },
+    "Perfiles": {
+      "label": "Perfiles",
+      "name": "id_perfil",
+      "orden": "5",
+      "placeholder": "Perfiles",
+      "visibilidad": "1",
+      "id": "id_perfiles",
+      "opciones": "select id_perfil, perfil from s_perfiles",
+      "type": "checkbox"
+    }
+  }
+}

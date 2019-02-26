@@ -1,0 +1,122 @@
+{
+  "nombre": "Usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_empresa, id_estatus from s_usuarios",
+  "identificador": "Usuarios",
+  "estructura": "",
+  "clave_primaria": "id_usuario",
+  "campos": {
+    "id_usuario": {
+      "label": "id_usuario",
+      "name": "id_usuario",
+      "eventos": null,
+      "opciones": null,
+      "orden": 1,
+      "placeholder": null,
+      "class": null,
+      "data": null,
+      "visibilidad": null,
+      "id": "id_usuario",
+      "type": "hidden"
+    },
+    "nombre_usuario": {
+      "label": "Nombre de Usuario",
+      "name": "usuario",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "El campo Nombre de Usuario es obligatorio"
+        }
+      },
+      "opciones": null,
+      "orden": 2,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "nombre_usuario",
+      "type": "text"
+    },
+    "nombres": {
+      "label": "Nombres",
+      "name": "nombres",
+      "eventos": null,
+      "opciones": null,
+      "orden": 3,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "nombres",
+      "type": "text"
+    },
+    "apellidos": {
+      "label": "Apellidos",
+      "name": "apellidos",
+      "eventos": null,
+      "opciones": null,
+      "orden": 4,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "apellidos",
+      "type": "text"
+    },
+    "correo": {
+      "label": "Correo electrónico",
+      "name": "correo",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "El campo correo es obligatorio"
+        },
+        "email": {
+          "mensaje": "Debe ingresar un correo v&aacute;lido"
+        }
+      },
+      "opciones": null,
+      "orden": 5,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "correo",
+      "type": "text"
+    },
+    "empresa": {
+      "label": "Empresa",
+      "name": "id_empresa",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "El campo Empresa es obligatorio"
+        },
+        "numerico": {
+          "mensaje": "El campo Empresa debe ser numerico"
+        }
+      },
+      "opciones": "=Seleccione una empresa;select id_empresa,empresa from m_empresas order by empresa",
+      "orden": 6,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "id_empresa",
+      "type": "select"
+    },
+    "estatus": {
+      "label": "Estatus",
+      "name": "id_estatus",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "El campo Estatus es obligatorio"
+        }
+      },
+      "opciones": "=Seleccione;Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
+      "orden": 7,
+      "placeholder": null,
+      "class": null,
+      "data_atributo": null,
+      "visibilidad": null,
+      "id": "id_estatus",
+      "type": "select"
+    }
+  }
+}
