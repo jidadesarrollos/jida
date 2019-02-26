@@ -1,15 +1,8 @@
-<!-- Footer Start -->
-<div class="flex-grow-1"></div>
-<div class="app-footer">
-    <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
-        <span class="flex-grow-1"></span>
-        <div class="d-flex align-items-center">
-            <img class="logo" src="<?= $this->urlBase ?>/htdocs/img/logo.png" alt="">
-            <div>
-                <p class="m-0">&copy; <?= date('Y') ?> Jida Desarrollos</p>
-                <p class="m-0">Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- fotter end -->
+<footer class="footer">
+        <span class="text-right">
+            Copyright <?= date('Y') ?> <a target="_blank" href="http://www.jidadesarrollos.com">Jida Desarrollos</a>
+        </span>
+    <span class="float-right">
+            Powered by <a target="_blank" href="http://www.jidadesarrollos.com"><b>Jida Desarrollos</b></a>
+        </span>
+</footer>
