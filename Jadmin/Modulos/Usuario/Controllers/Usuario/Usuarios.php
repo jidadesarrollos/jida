@@ -18,33 +18,32 @@ use Jida\Render\JVista;
 
 trait Usuarios {
 
-    public function index () {
-
+    public function index() {
 
         $listaUsuarios = Usuario::listaUsuarios();
         $parametros = ['titulos' => ['Usuario', 'Nombre', 'Apellido', 'Correo', 'Perfiles']];
         $vista = new JVista($listaUsuarios, $parametros);
 
         $vista->accionesFila([
-                                 ['span'  => 'fas fa-user-alt',
-                                  'title' => 'Cambiar Perfiles',
-                                  'href'  => '/jadmin/usuario/perfil/{clave}'],
-                                 ['span'  => 'fa fa-edit',
-                                  'title' => "Editar Usuario",
-                                  'href'  => '/jadmin/usuario/gestion/{clave}'],
-                                 ['span'        => 'fa fa-trash',
-                                  'title'       => 'Eliminar usuario',
-                                  'href'        => '/jadmin/usuario/eliminar/{clave}',
-                                  'data-jvista' => 'confirm',
-                                  'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el cliente seleccionado?']
-                             ]);
+            ['span'  => 'fas fa-user-alt',
+             'title' => 'Cambiar Perfiles',
+             'href'  => '/jadmin/usuario/perfil/{clave}'],
+            ['span'  => 'fa fa-edit',
+             'title' => "Editar Usuario",
+             'href'  => '/jadmin/usuario/gestion/{clave}'],
+            ['span'        => 'fa fa-trash',
+             'title'       => 'Eliminar usuario',
+             'href'        => '/jadmin/usuario/eliminar/{clave}',
+             'data-jvista' => 'confirm',
+             'data-msj'    => '<h3>¡Cuidado!</h3>&iquest;Realmente desea eliminar el cliente seleccionado?']
+        ]);
 
         $render = $vista->render(
             function ($datos) {
 
                 foreach ($datos as $key => &$users) {
                     $listaPerfiles = '<ul>';
-                    foreach ($users['perfiles'] as $perfil){
+                    foreach ($users['perfiles'] as $perfil) {
                         $listaPerfiles .= "<li>{$perfil['perfil']}</li>";
                     }
                     $listaPerfiles .= '</ul>';
@@ -55,32 +54,33 @@ trait Usuarios {
         );
 
         $this->data([
-                        'vista' => $render
-                    ]);
+            'vista' => $render
+        ]);
 
     }
 
-    public function perfil($id_usuario){
+    public function perfil($id_usuario) {
 
         $usuarioPerfil = new UsuarioPerfil();
         $usuarioPerfil2 = $usuarioPerfil
-            ->consulta(['id_usuario_perfil','id_perfil'])
+            ->consulta(['id_usuario_perfil', 'id_perfil'])
             ->filtro(['id_usuario' => $id_usuario])
             ->obt();
         $listaPerfiles = [];
-        foreach ($usuarioPerfil2 as $fila){
+        foreach ($usuarioPerfil2 as $fila) {
             $listaPerfiles[] = $fila['id_perfil'];
         }
         $perfiles = new Perfil();
         $perfiles = $perfiles->consulta()->obt();
+        $usuario = new Usuario($id_usuario);
 
         if ($this->post('btnGestionPerfiles')) {
-            foreach ($usuarioPerfil2 as $fila){
+            foreach ($usuarioPerfil2 as $fila) {
                 $usuarioPerfil->eliminar($fila['id_usuario_perfil']);
             }
 
             $nuevosPerfiles = [];
-            foreach ($this->post('id_perfil') as $list){
+            foreach ($this->post('id_perfil') as $list) {
                 $nuevosPerfiles[] = ['id_perfil' => $list, 'id_usuario' => $id_usuario];
             }
             $usuarioPerfil->salvarTodo($nuevosPerfiles);
@@ -90,13 +90,14 @@ trait Usuarios {
         }
 
         $this->data([
-                        'listaPerfiles' => $listaPerfiles,
-                        'perfiles' => $perfiles,
-                        'id_usuario' => $id_usuario
-                    ]);
+            'listaPerfiles' => $listaPerfiles,
+            'perfiles'      => $perfiles,
+            'id_usuario'    => $id_usuario,
+            'name'          => "{$usuario->nombres} {$usuario->apellidos}"
+        ]);
     }
 
-    public function gestion($id_usuario){
+    public function gestion($id_usuario) {
 
         $form = new Formulario('jida/Usuarios/GestionUsuarios', $id_usuario);
         $usuario = new Usuario($id_usuario);
@@ -120,11 +121,11 @@ trait Usuarios {
         }
 
         $this->data([
-                        'vista' => $form->render(),
-                    ]);
+            'vista' => $form->render(),
+        ]);
     }
 
-    public function eliminar($id_usuario){
+    public function eliminar($id_usuario) {
 
         if (!empty($id_usuario)) {
 

@@ -9,6 +9,7 @@
 namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
 use Jida\Jadmin\Controllers\JControl;
+use Jida\Medios\Mensajes;
 use Jida\Modulos\Usuarios\Modelos\Perfil;
 use Jida\Render\JVista;
 
@@ -38,5 +39,26 @@ class Perfiles extends JControl {
             'vista' => $render
         ]);
 
+    }
+
+    public function eliminar($id_perfil){
+
+        if (!empty($id_perfil)) {
+
+            $perfil = new Perfil($id_perfil);
+            if (!empty($perfil->id_usuario) and $perfil->eliminar()) {
+                Mensajes::almacenar(Mensajes::suceso('El perfil ha sido eliminado correctamente'));
+                $this->redireccionar('/jadmin/usuario/perfiles');
+            }
+            else {
+                Mensajes::almacenar(Mensajes::error('El perfil no ha sido eliminado'));
+                $this->redireccionar('/jadmin/usuario/perfiles');
+            }
+
+        }
+        else {
+            Mensajes::almacenar(Mensajes::error('El usuario indicado no existe.'));
+            $this->redireccionar('/jadmin/usuario/perfiles');
+        }
     }
 }

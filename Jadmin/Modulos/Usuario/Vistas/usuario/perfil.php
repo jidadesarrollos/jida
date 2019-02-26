@@ -1,5 +1,5 @@
 <div class="card">
-    <h4 class="card-header">Usuarios</h4>
+    <h4 class="card-header">Usuario: <?= $this->name?></h4>
     <div class="card-body">
         <div id="vista" class="row">
             <div class="col-12">
