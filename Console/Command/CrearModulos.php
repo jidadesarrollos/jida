@@ -46,6 +46,9 @@ class CrearModulos extends Command {
 
         $nombre = $input->getArgument('nombre');
         $path   = realpath($this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . self::PathModelos);
+        if (!$path) {
+            mkdir($path);
+        }
         if (realpath($path . DIRECTORY_SEPARATOR . $nombre)) {
             $output->writeln("El modelo $nombre ya existe");
         }

@@ -67,7 +67,7 @@ EOD;
         $controller .= "class " . $nameClass . " extends " . $nameExtend . "{\n"
                 . "\n"
                 . "    public function index(){\n\n"
-                . "        \$this->data(['mensaje' => 'Hola mundo']);\n"
+                . "        \$this->data(['mensaje' => 'Controlador '+self:class]);\n"
                 . "    }\n"
                 . "}\n";
         return $controller;
@@ -94,7 +94,15 @@ EOD;
 
     public function vista() {
         $fecha = (new \DateTime('now'))->format('Y-m-d H:i:s');
-        return "<!-- Creado por Jida Framework  $fecha --> \n<?= \$this->mensaje ?>";
+
+        $text = <<<EOD
+<!-- Creado por Jida Framework  $fecha -->
+<div class = "jumbotron">
+<h2><?= \$this->mensaje ?></h2>
+<p>Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.</p>
+</div >
+EOD;
+        return $text;
     }
 
 }
