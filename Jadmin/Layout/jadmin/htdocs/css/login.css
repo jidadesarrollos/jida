@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+
 html {
     position: relative;
     min-height: 100%;
@@ -9,13 +12,14 @@ body {
 }
 
 .bg-login {
-    background: url("../images/bg/bg-login.jpg") center no-repeat;
+    background-color: #0a6aa1;
     background-size: cover;
 }
 
 .login-logo {
-    width: 100%;
+    width: 200px;
     margin: auto;
+    text-align: center;
 }
 
 .form-group .btn-group {
@@ -28,48 +32,17 @@ body {
     padding: 0 1.25rem 40px;
 }
 
-.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-primary.dropdown-toggle:focus {
+.card{
+    width: 400px;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
     box-shadow: none;
 }
 
-.form-group {
 
-}
-
-.form-group label {
-    display: none;
-}
-
-.form-group input {
-    padding: 10px 5px;
-    background-color: transparent;
-    font-size: x-large;
-    border-radius: 0px;
-    border: 0px solid gray;
-    transition: border-bottom-color 4s ease-in;
-    border-bottom: 4px solid #3a6691;
-}
-
-.form-group input:focus {
-    background-color: transparent;
-    border-radius: 0px;
-    border: 0px solid gray;
-    border-bottom: 4px solid #294967;
-    box-shadow: none;
-}
-
-.form-group input:hover {
-    border-bottom: 4px solid #007ae9;
-}
-
-.form-group input:placeholder-shown {
-    padding-left: 10px;
-    color: #00165f;
-}
-
-.card-header {
-    font-size: x-large;
-}
 
 
 @media (min-width: 48em) {
@@ -199,8 +172,4 @@ label {
     -webkit-border-radius: 3px;
 }
 
-.card {
-    background-color: rgba(205, 205, 205, 0.6);
-    width: 500px;
-}
 

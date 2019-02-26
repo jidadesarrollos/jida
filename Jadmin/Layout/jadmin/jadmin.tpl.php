@@ -1,44 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= $this->nombreApp ?></title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
     <?= $this->imprimirLibrerias('head', 'principal') ?>
     <?php $this->incluir('jida-js') ?>
 </head>
 
-<body class="adminbody">
-<div id="main">
+<body class="text-left">
 
-    <?php include 'elementos/header.php'; ?>
-
-    <!-- Left Sidebar -->
-    <aside class="left main-sidebar">
-        <div class="sidebar-inner leftscroll">
-            <div id="sidebar-menu">
-                <?= $this->menu ?>
-                <div class="clearfix"></div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-
-    </aside>
-    <!-- End Sidebar -->
-    <main class="content-page">
-        <!-- Start content -->
-        <div class="content">
-            <div class="container-fluid mt-4">
-                <?= $contenido ?>
-            </div>
-            <!-- END container-fluid -->
-        </div>
-        <!-- END content -->
-    </main>
-    <!-- END content-page -->
-    <?php include 'elementos/footer.php'; ?>
-
+<div class="app-admin-wrap layout-sidebar-large clearfix">
+    <?= $this->incluir('elementos/header') ?>
+    <?= $this->incluir('elementos/menu') ?>
+    <div class="main-content-wrap sidenav-open d-flex flex-column">
+        <?= $contenido ?>
+        <?= $this->incluir('elementos/footer') ?>
+    </div>
 </div>
+
 <?= $this->imprimirLibrerias('js', 'principal') ?>
 
 </body>

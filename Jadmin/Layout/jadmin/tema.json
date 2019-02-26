@@ -1,55 +1,34 @@
 {
   "link": {
-    "shortcut icon": "{tema}/htdocs/images/jida.png"
+    "shortcut icon": "/htdocs/img/logo.png"
   },
   "layout": "jadmin",
   "layoutError": "error",
   "dev": {
     "css": {
       "principal": {
-        "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
-        "font-awesome": "{tema}/htdocs/font-awesome/css/fontawesome.min.css",
-        "style": "{tema}/htdocs/css/style.css",
-        "main": "{tema}/htdocs/css/main.css"
+        "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css",
+        "scroll": "{tema}/htdocs/styles/vendor/perfect-scrollbar.css",
+        "font-awesome": "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       },
       "login": {
-        "bootstrap": "{tema}/htdocs/css/bootstrap.min.css",
-        "font-awesome": "{tema}/htdocs/font-awesome/css/all.min.css",
-        "login": "{tema}/htdocs/css/login.css"
+        "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css"
       }
     },
     "js": {
       "principal": {
-        "jquery": "{tema}/htdocs/js/jquery.min.js",
-        "modernizr": "{tema}/htdocs/js/modernizr.min.js",
-        "moment": "{tema}/htdocs/js/moment.min.js",
-        "popper": "{tema}/htdocs/js/popper.min.js",
-        "bootstrap": "{tema}/htdocs/js/bootstrap.min.js",
-        "bootbox": "{tema}/htdocs/js/bootbox.min.js",
-        "detect": "{tema}/htdocs/js/detect.js",
-        "fastclick": "{tema}/htdocs/js/fastclick.js",
-        "jq-blockUI": "{tema}/htdocs/js/jquery.blockUI.js",
-        "jq-nicescroll": "{tema}/htdocs/js/jquery.nicescroll.js",
-        "font-awesome": "{tema}/htdocs/font-awesome/js/all.min.js",
-        "mustache": "{base}/node_modules/mustache/mustache.min.js",
-        "jida-validador": "{tema}/htdocs/js/jida/validador.js",
-        "helpers": "{tema}/htdocs/js/helpers.js",
-        "jadmin": "{tema}/htdocs/js/jadmin.js"
-      }
-    }
-  },
-  "prod": {
-    "css": {
-      "principal": {
-        "tema": "{tema}/htdocs/css/principal.bundle.css"
+        "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
+        "bt": "{tema}/htdocs/js/vendor/bootstrap.bundle.min.js",
+        "scroll": "{tema}/htdocs/js/vendor/perfect-scrollbar.min.js",
+        "script": "{tema}/htdocs/js/script.js",
+        "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
+        "jq-datatable": "{tema}/htdocs/js/jquery.dataTables.min.js",
+        "bootstrap-dt": "{tema}/htdocs/js/dataTables.bootstrap4.min.js",
+        "dt-es": "{tema}/htdocs/js/datatable-language.js"
       },
       "login": {
-        "tema": "{tema}/htdocs/css/login.bundle.css"
-      }
-    },
-    "js": {
-      "principal": {
-        "tema": "{tema}/htdocs/js/principal.bundle.js"
+        "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
+        "bt": "{tema}/htdocs/js/vendor/bootstrap.bundle.min.js"
       }
     }
   }

@@ -1,48 +1,35 @@
-<!-- top bar navigation -->
-<div class="headerbar">
-
-    <!-- LOGO -->
-    <div class="headerbar-left">
-        <a href="<?= $this->urlBase ?>/jadmin" class="logo">
-            <img src="<?= $this->urlBase ?>/htdocs/img/logo_corto.png" alt="<?= $this->nombreApp ?>" class="img-fluid">
-        </a>
+<div class="main-header">
+    <div class="logo">
+        <img src="<?= $this->urlBase ?>/htdocs/img/logo.png" alt="">
     </div>
 
-    <nav class="navbar-custom">
+    <div class="menu-toggle">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
 
-        <ul class="list-inline float-right mb-0">
+    <div style="margin: auto"></div>
 
-            <li class="list-inline-item dropdown notif">
-                <a class="nav-link dropdown-toggle nav-user" data-toggle="dropdown" href="#" role="button"
-                   aria-haspopup="false" aria-expanded="false">
-                    <?= \Jida\Medios\Sesion::$usuario->nombre() ?> <i class="fa fa-cog"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-
-                    <!-- item-->
-                    <a href="<?= $this->urlBase ?>/jadmin/usuario/cambioclave" class="dropdown-item notify-item">
-                        <i class="fa fa-cog"></i> <span>Cambiar clave</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="<?= $this->urlBase ?>/jadmin/logout" class="dropdown-item notify-item">
-                        <i class="fa fa-power-off"></i> <span>Salir</span>
-                    </a>
-
+    <div class="header-part-right">
+        <!-- Full screen toggle -->
+        <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen></i>
+        <!-- User avatar dropdown -->
+        <div class="dropdown">
+            <i class="i-Administrator text-muted header-icon" id="dropdownMenuButton" data-toggle="dropdown"
+               aria-haspopup="true" role="button" aria-expanded="false"></i>
+            <div class="user col align-self-end">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <div class="dropdown-header">
+                        <i class="i-Lock-User mr-1"></i> <?= \Jida\Medios\Sesion::$usuario->nombre() ?>
+                    </div>
+                    <a class="dropdown-item" href="<?= $this->urlBase ?>/jadmin/usuario/cambioclave">Cambiar clave</a>
+                    <a class="dropdown-item" href="<?= $this->urlBase ?>/jadmin/logout">Salir</a>
                 </div>
-            </li>
-
-        </ul>
-
-        <ul class="list-inline menu-left mb-0">
-            <li class="float-left">
-                <button class="button-menu-mobile open-left">
-                    <i class="fa fa-fw fa-bars"></i>
-                </button>
-            </li>
-        </ul>
-
-    </nav>
+            </div>
+        </div>
+    </div>
 
 </div>
-<!-- End Navigation -->
+
+<!--=============== Left side End ================-->

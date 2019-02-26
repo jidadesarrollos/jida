@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= $this->nombreApp ?></title>
-    <?= $this->imprimirLibrerias('css', 'login') ?>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+    <?= $this->imprimirLibrerias('head', 'login') ?>
 </head>
 
-<body class="bg-login">
-
-<div class="container h-100 pt-5">
-    <div class="row h-100 pt-5 justify-content-center align-items-center">
+<body class="text-left">
+<div class="auth-layout-wrap" style="background-image: url(<?= $this->urlTema ?>/htdocs/images/photo-wide-4.jpg)">
+    <div class="auth-content">
         <?= $contenido ?>
     </div>
 </div>
 
-<?= $this->imprimirLibrerias('js', 'principal') ?>
-
+<?= $this->imprimirLibrerias('js', 'login') ?>
 </body>
 </html>

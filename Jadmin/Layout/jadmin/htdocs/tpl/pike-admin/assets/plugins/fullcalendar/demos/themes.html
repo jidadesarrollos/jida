@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8'/>
     <link href='../fullcalendar.min.css' rel='stylesheet'/>
-    <link href='../fullcalendar.print.min.css' rel='stylesheet' media='print'/>
+    <link href='../fullcalendar.print.min.css' media='print' rel='stylesheet'/>
     <script src='../lib/moment.min.js'></script>
     <script src='../lib/jquery.min.js'></script>
     <script src='../fullcalendar.min.js'></script>
@@ -152,21 +152,21 @@
 
     <div class='left'>
 
-        <div id='theme-system-selector' class='selector'>
+        <div class='selector' id='theme-system-selector'>
             Theme System:
 
             <select>
-                <option value='bootstrap3' selected>Bootstrap 3</option>
+                <option selected value='bootstrap3'>Bootstrap 3</option>
                 <option value='jquery-ui'>jQuery UI</option>
                 <option value='standard'>unthemed</option>
             </select>
         </div>
 
-        <div data-theme-system="bootstrap3" class='selector' style='display:none'>
+        <div class='selector' data-theme-system="bootstrap3" style='display:none'>
             Theme Name:
 
             <select>
-                <option value='' selected>Default</option>
+                <option selected value=''>Default</option>
                 <option value='cosmo'>Cosmo</option>
                 <option value='cyborg'>Cyborg</option>
                 <option value='darkly'>Darkly</option>
@@ -186,13 +186,13 @@
             </select>
         </div>
 
-        <div data-theme-system="jquery-ui" class='selector' style='display:none'>
+        <div class='selector' data-theme-system="jquery-ui" style='display:none'>
             Theme Name:
 
             <select>
                 <option value='black-tie'>Black Tie</option>
                 <option value='blitzer'>Blitzer</option>
-                <option value='cupertino' selected>Cupertino</option>
+                <option selected value='cupertino'>Cupertino</option>
                 <option value='dark-hive'>Dark Hive</option>
                 <option value='dot-luv'>Dot Luv</option>
                 <option value='eggplant'>Eggplant</option>
