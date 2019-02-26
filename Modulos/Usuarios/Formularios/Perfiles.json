@@ -1,0 +1,24 @@
+{
+  "nombre": "Formulario de Perfiles",
+  "query": "select * from s_perfiles",
+  "estructura": "",
+  "identificador": "Perfiles",
+  "clave_primaria": "id_perfil",
+  "campos": {
+    "id_usuario": {
+      "label": "id_perfil",
+      "name": "id_perfil",
+      "id": "id_perfil",
+      "type": "hidden"
+    },
+    "Perfiles": {
+      "label": "Perfiles",
+      "name": "perfil",
+      "orden": "5",
+      "placeholder": "Perfiles",
+      "visibilidad": "1",
+      "id": "perfil",
+      "type": "text"
+    }
+  }
+}

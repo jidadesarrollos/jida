@@ -11,6 +11,7 @@ namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Medios\Mensajes;
 use Jida\Modulos\Usuarios\Modelos\Perfil;
+use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
 class Perfiles extends JControl {
@@ -39,6 +40,37 @@ class Perfiles extends JControl {
             'vista' => $render
         ]);
 
+    }
+
+    public function gestion($id_perfil = ""){
+
+        $form = new Formulario('jida/Usuarios/Perfiles', $id_perfil);
+        $perfil = new Perfil($id_perfil);
+
+        if ($this->post('btnPerfiles')) {
+
+            if ($form->validar()) {
+
+                if ($perfil->salvar($this->post())) {
+
+                    Mensajes::almacenar(Mensajes::suceso('Perfil almacenado con exito'));
+                    $this->redireccionar('/jadmin/usuarios/perfiles');
+
+                }else {
+                    Mensajes::almacenar(Mensajes::error('Perfil no se pudo almacenar'));
+                    $this->redireccionar('/jadmin/usuarios/perfiles');
+                }
+
+            }
+            else {
+                Mensajes::almacenar(Mensajes::error('Los datos no son validos.'));
+                $this->redireccionar('/jadmin/usuarios/perfiles');
+            }
+        }
+
+        $this->data([
+            'vista' => $form->render(),
+        ]);
     }
 
     public function eliminar($id_perfil){
