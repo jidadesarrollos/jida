@@ -67,7 +67,7 @@ EOD;
         $controller .= "class " . $nameClass . " extends " . $nameExtend . "{\n"
                 . "\n"
                 . "    public function index(){\n\n"
-                . "        \$this->data(['mensaje' => 'Controlador '+self:class]);\n"
+                . "        \$this->data(['mensaje' => 'Controlador '+self::class]);\n"
                 . "    }\n"
                 . "}\n";
         return $controller;
@@ -98,8 +98,8 @@ EOD;
         $text = <<<EOD
 <!-- Creado por Jida Framework  $fecha -->
 <div class = "jumbotron">
-<h2><?= \$this->mensaje ?></h2>
-<p>Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.</p>
+    <h2><?= \$this->mensaje ?></h2>
+    <p>Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.</p>
 </div >
 EOD;
         return $text;

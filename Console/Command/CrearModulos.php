@@ -44,10 +44,13 @@ class CrearModulos extends Command {
     protected function ejecutar(InputInterface $input, OutputInterface $output) {
 
 
-        $nombre = $input->getArgument('nombre');
-        $path   = realpath($this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . self::PathModelos);
+        $nombre  = $input->getArgument('nombre');
+        $modelos = $this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . self::PathModelos;
+        $path    = realpath($modelos);
         if (!$path) {
-            mkdir($path);
+
+            mkdir($modelos);
+            $path = realpath($modelos);
         }
         if (realpath($path . DIRECTORY_SEPARATOR . $nombre)) {
             $output->writeln("El modelo $nombre ya existe");
