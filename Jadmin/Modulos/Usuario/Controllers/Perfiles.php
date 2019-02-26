@@ -17,8 +17,8 @@ class Perfiles extends JControl {
     public function index(){
 
         $listaPerfiles = new Perfil();
-        $listaPerfiles = $listaPerfiles->consulta()->obt();
-        $parametros = ['titulos' => ['Usuario', 'Nombre', 'Apellido', 'Correo', 'Perfiles']];
+        $listaPerfiles = $listaPerfiles->consulta(['id_perfil','perfil'])->obt();
+        $parametros = ['titulos' => ['Perfiles']];
         $vista = new JVista($listaPerfiles, $parametros);
 
         $vista->accionesFila([
