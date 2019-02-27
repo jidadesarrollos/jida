@@ -17,7 +17,7 @@
             <?= $this->menu ?>
             <div class="main-content-wrap sidenav-open d-flex flex-column">
                 <?= $contenido ?>
-                <?= htmlentities($this->menu) ?>
+
                 <?= $this->incluir('elementos/footer') ?>
             </div>
         </div>
