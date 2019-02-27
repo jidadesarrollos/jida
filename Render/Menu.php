@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Objeto Renderizador de Menu
  *
@@ -25,6 +26,7 @@ class Menu extends Selector {
      * @var $_ce ;
      */
     static private $_ce = 100;
+
     /**
      * Define la ubicacion del archivo de configuracion del menu
      *
@@ -32,23 +34,26 @@ class Menu extends Selector {
      * @access private
      */
     private $_path;
+
     /**
      * @var $menu Configuracion del menu
      */
     private $menu;
+
     /**
      * Contenido del menu en HTML
      *
      * @var $html
      */
     private $html;
+
     /**
      * Contenedor del menu, puede ser un <div> o <ul> etc. Por defecto es <ul>
      *
      * @var $contenedor
      */
-
     public $selectorMenu = "ul";
+
     /**
      * Selector de elementos del menu, puede ser <div> o <li> etc. Por defecto es <li>
      *
@@ -69,7 +74,6 @@ class Menu extends Selector {
         }
 
         parent::__construct($menu);
-
     }
 
     /**
@@ -95,17 +99,15 @@ class Menu extends Selector {
         if (!Medios\Directorios::validar($path)) {
             $msj = "No se consigue el archivo de configuracion del menu $path";
             Excepcion::procesar($msj, self::$_ce . 1);
-
         }
 
         $this->_path = $path;
         $this->validarJson();
-
     }
 
     private function _obtenerDirectorio($menu) {
 
-        $menu = strtolower($menu);
+        $menu   = strtolower($menu);
         $partes = array_filter(explode("/", $menu));
 
         if (count($partes) === 1) {
@@ -126,9 +128,9 @@ class Menu extends Selector {
 
         if (count($partes) > 1) {
 
-            $ruta = Estructura::$ruta . '/Menus/';
+            $ruta          = Estructura::$ruta . '/Menus/';
             $configuracion = Config::obtener();
-            $modulos = $configuracion::$modulos;
+            $modulos       = $configuracion::$modulos;
             if (!in_array($modulo, $modulos)) {
                 Excepcion::procesar("No existe el modulo pasado", self::$_ce . 2);
             }
@@ -137,23 +139,19 @@ class Menu extends Selector {
             }
 
             return $ruta = $ruta . implode(" / ", $partes);
-
         }
-
     }
 
     private function validarJson() {
 
-        $contenido = file_get_contents($this->_path);
+        $contenido  = file_get_contents($this->_path);
         $this->menu = json_decode($contenido);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $msj = "El menu  " . $this->_path . " no esta estructurado correctamente";
             Excepcion::procesar($msj, self::$_ce . "1");
         }
-
         return $this;
-
     }
 
     /**
@@ -165,7 +163,7 @@ class Menu extends Selector {
     private function _obtHtml($menu) {
 
         $this->html .= "\n";
-        $this->html .= "<" . $this->selectorMenu;
+        $this->html .= "<" . (!empty($menu->selectorMenu) ? $menu->selectorMenu : $this->selectorMenu);
 
         if (!empty($menu->id)) {
             $this->html .= " id = \"" . $menu->id . "\"";
@@ -176,14 +174,18 @@ class Menu extends Selector {
         if (!empty($menu->style)) {
             $this->html .= " style=\"" . $menu->style . "\"";
         }
-
+        if (!empty($menu->attrs)) {
+            foreach ($menu->attrs as $key => $value) {
+                $this->html .= " " . $key . "=\"" . $value . "\"";
+            }
+        }
         $this->html .= ">\n";
 
         if (!empty($menu->items)) {
 
             foreach ($menu->items as $key => $item) {
 
-                $this->html .= "<" . $this->selectorItem;
+                $this->html .= "<" . (!empty($menu->selectorItem) ? $menu->selectorItem : $this->selectorItem);
 
                 if (!empty($item->id)) {
                     $this->html .= " id=\"" . $item->id . "\"";
@@ -194,30 +196,38 @@ class Menu extends Selector {
                 if (!empty($item->style)) {
                     $this->html .= " style=\"" . $item->style . "\"";
                 }
-
+                if (!empty($item->attrs)) {
+                    foreach ($item->attrs as $key => $value) {
+                        $this->html .= " " . $key . "=\"" . $value . "\"";
+                    }
+                }
                 $this->html .= ">";
-
+                if (!empty($item->preHtml))
+                    $this->html .= $item->preHtml;
                 if (property_exists($item, 'url')) {
 
-                    $url = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
-                    $link = new Selector('a', ['href' => $url]);
-                    $label = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
+                    $url            = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
+                    $attrs          = ['href' => $url];
+                    if (!empty($item->{"a-class"}))
+                        $attrs['class'] = $item->{"a-class"};
+                    $link           = new Selector('a', $attrs);
+                    $label          = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
                     $link->addFinal($label);
-                    $this->html .= $link->render() . "\n";
+                    $this->html     .= $link->render() . "\n";
                 }
 
                 if (!empty($item->submenu)) {
                     $this->_obtHtml($item->submenu);
                 }
-
-                $this->html .= "</$this->selectorItem>\n";
+                if (!empty($item->postHtml))
+                    $this->html .= $item->postHtml;
+                $this->html .= "</" . (!empty($menu->selectorItem) ? $menu->selectorItem : $this->selectorItem) . ">\n";
             }
         }
 
-        $this->html .= "</$this->selectorMenu>\n";
+        $this->html .= "</" . (!empty($menu->selectorMenu) ? $menu->selectorMenu : $this->selectorMenu) . ">\n";
 
         return $this->html;
-
     }
 
     /**
@@ -231,7 +241,6 @@ class Menu extends Selector {
         $menu = $this->_obtHtml($this->menu);
 
         return $menu;
-
     }
 
 }
