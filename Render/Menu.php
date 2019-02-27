@@ -185,22 +185,36 @@ class Menu extends Selector {
 
             foreach ($menu->items as $key => $item) {
 
-                $this->html .= "<" . (!empty($menu->selectorItem) ? $menu->selectorItem : $this->selectorItem);
+                $this->html  .= "<" . (!empty($menu->selectorItem) ? $menu->selectorItem : $this->selectorItem);
+                if (empty($item->attrs))
+                    $item->attrs = new \stdClass();
 
                 if (!empty($item->id)) {
-                    $this->html .= " id=\"" . $item->id . "\"";
+                    $item->attrs->id = $item->id;
                 }
                 if (!empty($item->class)) {
-                    $this->html .= " class=\"" . $item->class . "\"";
+
+                    $item->attrs->class = $item->class;
                 }
                 if (!empty($item->style)) {
-                    $this->html .= " style=\"" . $item->style . "\"";
+                    $item->attrs->style = $item->style;
                 }
-                if (!empty($item->attrs)) {
-                    foreach ($item->attrs as $key => $value) {
-                        $this->html .= " " . $key . "=\"" . $value . "\"";
+                if (!empty($menu->itemAttrs)) {
+
+                    $class1 = !empty($menu->itemAttrs->class) ? $menu->itemAttrs->class : '';
+                    $class2 = !empty($item->attrs->class) ? $item->attrs->class : '';
+                    foreach ($menu->itemAttrs as $key => $value) {
+
+                        $item->attrs->{$key} = !empty($item->attrs->{$key}) ? $value : $item->attrs->{$key};
                     }
+
+                    $item->attrs->class = $class1 . " " . $class2;
                 }
+
+                foreach ($item->attrs as $key => $value) {
+                    $this->html .= " " . $key . "=\"" . $value . "\"";
+                }
+
                 $this->html .= ">";
                 if (!empty($item->preHtml))
                     $this->html .= $item->preHtml;

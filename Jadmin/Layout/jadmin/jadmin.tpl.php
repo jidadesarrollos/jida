@@ -10,15 +10,14 @@
         <?= $this->imprimirLibrerias('head', 'principal') ?>
         <?php $this->incluir('jida-js') ?>
     </head>
-
     <body class="text-left">
-
         <div class="app-admin-wrap layout-sidebar-large clearfix">
             <?= $this->incluir('elementos/header') ?>
 
             <?= $this->menu ?>
             <div class="main-content-wrap sidenav-open d-flex flex-column">
                 <?= $contenido ?>
+                <?= htmlentities($this->menu) ?>
                 <?= $this->incluir('elementos/footer') ?>
             </div>
         </div>
