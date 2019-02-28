@@ -107,7 +107,7 @@ class Menu extends Selector {
 
     private function _obtenerDirectorio($menu) {
 
-        $menu = strtolower($menu);
+        $menu   = strtolower($menu);
         $partes = array_filter(explode("/", $menu));
 
         if (count($partes) === 1) {
@@ -128,9 +128,9 @@ class Menu extends Selector {
 
         if (count($partes) > 1) {
 
-            $ruta = Estructura::$ruta . '/Menus/';
+            $ruta          = Estructura::$ruta . '/Menus/';
             $configuracion = Config::obtener();
-            $modulos = $configuracion::$modulos;
+            $modulos       = $configuracion::$modulos;
             if (!in_array($modulo, $modulos)) {
                 Excepcion::procesar("No existe el modulo pasado", self::$_ce . 2);
             }
@@ -144,7 +144,7 @@ class Menu extends Selector {
 
     private function validarJson() {
 
-        $contenido = file_get_contents($this->_path);
+        $contenido  = file_get_contents($this->_path);
         $this->menu = json_decode($contenido);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -222,15 +222,14 @@ class Menu extends Selector {
                 }
                 if (property_exists($item, 'url')) {
 
-                    $url = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
-                    $attrs = ['href' => $url];
+                    $url            = (strpos($item->url, 'http') !== false) ? $item->url : "//" . Estructura::$urlBase . $item->url;
+                    $attrs          = ['href' => $url];
                     if (!empty($item->{"a-class"}))
                         $attrs['class'] = $item->{"a-class"};
-                    $link = new Selector('a', $attrs);
-                    $label = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
+                    $link           = new Selector('a', $attrs);
+                    $label          = empty($item->encode_html) ? htmlentities($item->label) : $item->label;
                     $link->addFinal($label);
-                    $this->html .= $link->render() . "\n";
-
+                    $this->html     .= $link->render() . "\n";
                 }
 
                 if (!empty($item->submenu)) {
@@ -240,14 +239,12 @@ class Menu extends Selector {
                     $this->html .= $item->postHtml;
                 }
                 $this->html .= "</" . (!empty($menu->selectorItem) ? $menu->selectorItem : $this->selectorItem) . ">\n";
-
             }
         }
 
         $this->html .= "</" . (!empty($menu->selectorMenu) ? $menu->selectorMenu : $this->selectorMenu) . ">\n";
 
         return $this->html;
-
     }
 
     /**
