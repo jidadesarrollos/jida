@@ -227,7 +227,7 @@ class Menu extends Selector {
                     if (!empty($item->{"a-class"}))
                         $attrs['class'] = $item->{"a-class"};
                     $link           = new Selector('a', $attrs);
-                    $label          = empty($item->encode_html) ? htmlentities($item->label) : $item->label;
+                    $label          = !empty($item->encode_html) ? htmlentities($item->label) : $item->label;
                     $link->addFinal($label);
                     $this->html     .= $link->render() . "\n";
                 }
