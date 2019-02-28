@@ -20,8 +20,6 @@ trait Usuarios {
 
     public function index() {
 
-        $this->layout('jadmin');
-
         $listaUsuarios = Usuario::listaUsuarios();
         $parametros = ['titulos' => ['Usuario', 'Nombre', 'Apellido', 'Correo', 'Perfiles']];
         $vista = new JVista($listaUsuarios, $parametros);
