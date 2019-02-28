@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Isaac
@@ -29,14 +30,13 @@ class JControl extends Controlador {
         parent::__construct();
 
         $this->_usuario = Sesion::$usuario;
-        $ruta = strtolower("/" . Estructura::$modulo . '/' . Estructura::$metodo);
+        $ruta           = strtolower("/" . Estructura::$modulo . '/' . Estructura::$metodo);
 
-        if (!(strtolower($ruta) == "/usuario/login") and !Sesion::es($this->_perfiles)) {
+        if (!(strtolower($ruta) == "/usuario/login") and ! Sesion::es($this->_perfiles)) {
             $this->redireccionar("/jadmin/usuario/login");
         }
 
         $this->_inicializar();
-
     }
 
     private function _inicializar() {
@@ -45,41 +45,38 @@ class JControl extends Controlador {
         $layout = ($this->solicitudAjax()) ? 'ajax' : 'jadmin';
         $this->layout($layout);
 
-        $config = Config::obtener();
+        $config    = Config::obtener();
         $nombreApp = Configuracion::NOMBRE_APP;
-        $nombreCorto = Configuracion::SHORT_NAME_APP;
-        $urlBase = Estructura::$urlBase;
-        $urlTema = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
+        $urlBase   = Estructura::$urlBase;
+        $urlTema   = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
         $menu = new Menu('/jadmin/menu');
+        $menu->addClass('navigation-left');
+
 
         $this->data([
-            'menu'      => $menu->render(),
+            'menu' => $menu->render(),
             'nombreApp' => $nombreApp,
-            'nombreCorto' => $nombreCorto,
-            'urlBase'   => $urlBase,
-            'urlTema'   => $urlTema
+            'urlBase' => $urlBase,
+            'urlTema' => $urlTema
         ]);
-
     }
 
     public function logout() {
 
         Sesion::destruir();
         $this->redireccionar('/jadmin');
-
     }
 
     function phpInfo() {
 
         echo phpinfo();
         exit;
-
     }
 
     protected function _validarSesion() {
 
-        $metodo = Estructura::$metodo;
+        $metodo    = Estructura::$metodo;
         $aceptados = ['login', 'logout'];
 
         if (in_array($metodo, $aceptados)) {
@@ -89,7 +86,6 @@ class JControl extends Controlador {
         if (!Sesion::activa()) {
             $this->redireccionar('/jadmin/login');
         }
-
     }
 
 }
