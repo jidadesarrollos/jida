@@ -23,6 +23,7 @@
                 "scroll": "{tema}/htdocs/js/vendor/perfect-scrollbar.min.js",
                 "script": "{tema}/htdocs/js/script.js",
                 "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
+                "mustache": "{tema}/htdocs/js/mustache.min.js",
                 "font-awesome" : "{tema}/htdocs/js/all.min.js"
             },
             "login": {
