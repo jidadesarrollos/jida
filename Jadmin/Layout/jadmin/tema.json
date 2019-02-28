@@ -9,7 +9,7 @@
             "principal": {
                 "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css",
                 "scroll": "{tema}/htdocs/styles/vendor/perfect-scrollbar.css",
-                "font-awesome": "{tema}/htdocs/styles/css/all.min.css"
+                "font-awesome": "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
             },
             "login": {
                 "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css"
@@ -21,8 +21,7 @@
                 "bt": "{tema}/htdocs/js/vendor/bootstrap.bundle.min.js",
                 "scroll": "{tema}/htdocs/js/vendor/perfect-scrollbar.min.js",
                 "script": "{tema}/htdocs/js/script.js",
-                "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
-                "font-awesome" : "{tema}/htdocs/js/all.min.js"
+                "sidebar": "{tema}/htdocs/js/sidebar.large.script.js"
             },
             "login": {
                 "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
