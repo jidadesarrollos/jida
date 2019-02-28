@@ -206,7 +206,9 @@ class Menu extends Selector {
                     $class2 = !empty($item->attrs->class) ? $item->attrs->class : '';
                     foreach ($menu->itemAttrs as $key => $value) {
 
-                        $item->attrs->{$key} = !empty($item->attrs->{$key}) ? $value : $item->attrs->{$key};
+                        //TODO: Esta funcion se modifico, originalmente era
+                        //$item->attrs->{$key} = !empty($item->attrs->{$key}) ? $value : $item->attrs->{$key};
+                        $item->attrs->{$key} = $value;
                     }
 
                     $item->attrs->class = $class1 . " " . $class2;
