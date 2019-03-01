@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+ 
+use Jida\Console\App;
+ 
+$app = new App();
+$app->registarComandos();
+$app->run();
