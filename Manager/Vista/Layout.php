@@ -141,7 +141,7 @@ class Layout {
                 $msj = 'No se ha definido el directorio del layout';
                 throw new \Exception($msj, self::$_ce . '0008');
             }
-            if (!$vista) {
+            if (is_null($vista)) {
                 $msj = 'El parametro $vista es requerido para el metodo render';
                 throw new \Exception($msj, self::$_ce . '0001');
             }
