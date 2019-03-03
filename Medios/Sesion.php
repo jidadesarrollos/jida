@@ -85,19 +85,12 @@ class Sesion {
 
     }
 
-    static function es($perfil) {
+    static function es($perfiles) {
 
         $usuario = self::$usuario;
+
         if (!is_object($usuario)) return false;
-
-        if ($usuario->permisos->es($perfil)) return true;
-
-//        $usuario = self::$usuario;
-//        if (!is_object($usuario)) return false;
-//
-//        if (!property_exists($usuario, 'perfiles')) return false;
-//
-//        if (array_intersect($perfil, $usuario->perfiles)) return true;
+        if ($usuario->permisos->es($perfiles)) return true;
 
         return false;
 

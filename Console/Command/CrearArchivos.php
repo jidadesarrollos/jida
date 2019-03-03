@@ -15,15 +15,15 @@ class CrearArchivos {
     protected $modulo;
 
     const ControllerClass = "App\\Controllers\\App";
-    const JcontrolClass   = "Jida\\Jadmin\\Controllers\\JControl";
-    const ModelosClass    = "Jida\\Core\\Modelo";
+    const JcontrolClass = "Jida\\Jadmin\\Controllers\\JControl";
+    const ModelosClass = "Jida\\Core\\Modelo";
 
     protected $head;
 
     public function __construct($modulo) {
         $this->modulo = $modulo;
-        $fecha        = (new \DateTime('now'))->format('Y-m-d H:i:s');
-        $this->head   = <<<EOD
+        $fecha = (new \DateTime('now'))->format('Y-m-d H:i:s');
+        $this->head = <<<EOD
                 
 /**
  * Creado por Jida Framework
@@ -52,43 +52,39 @@ EOD;
     }
 
     public function controller($class, $extends) {
-        $c          = explode("\\", $class);
-        $nameClass  = array_pop($c);
-        $e          = explode("\\", $extends);
+        $c = explode("\\", $class);
+        $nameClass = array_pop($c);
+        $e = explode("\\", $extends);
         $nameExtend = $e[count($e) - 1];
         $controller = "<?php\n"
-                . "\n";
+                      . "\n";
         $controller .= $this->head;
         $controller .= "namespace  " . implode("\\", $c) . ";\n\n";
         $controller .= "use " . implode("\\", $e) . "; \n\n";
 
-
-
         $controller .= "class " . $nameClass . " extends " . $nameExtend . "{\n"
-                . "\n"
-                . "    public function index(){\n\n"
-                . "        \$this->data(['mensaje' => 'Controlador '.self::class]);\n"
-                . "    }\n"
-                . "}\n";
+                       . "\n"
+                       . "    public function index(){\n\n"
+                       . "        \$this->data(['mensaje' => 'Controlador '.self::class]);\n"
+                       . "    }\n"
+                       . "}\n";
         return $controller;
     }
 
     public function model($class, $extends) {
-        $c          = explode("\\", $class);
-        $nameClass  = array_pop($c);
-        $e          = explode("\\", $extends);
+        $c = explode("\\", $class);
+        $nameClass = array_pop($c);
+        $e = explode("\\", $extends);
         $nameExtend = $e[count($e) - 1];
         $controller = "<?php\n"
-                . "\n";
+                      . "\n";
         $controller .= $this->head;
         $controller .= "namespace  " . implode("\\", $c) . ";\n\n";
         $controller .= "use " . implode("\\", $e) . ";\n\n";
 
-
-
         $controller .= "class " . $nameClass . " extends " . $nameExtend . "{\n"
-                . "\n\n"
-                . "}\n";
+                       . "\n\n"
+                       . "}\n";
         return $controller;
     }
 

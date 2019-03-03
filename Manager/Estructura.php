@@ -28,6 +28,27 @@ class Estructura {
      * @var string $dominio
      */
     static $dominio;
+
+    /**
+     * @var string $directorio Directorio raiz en el que se ubica el proyecto
+     */
+    static $directorio;
+    /**
+     * @var array $partes Arreglo de partes de la url
+     */
+    static $partes;
+    /**
+     * Carpeta o directorio en donde se encuentra el JidaFramework.
+     *
+     * @var string $directorioJida
+     */
+    private static $directorioJida;
+
+    static public $namespace;
+    static public $modulo;
+    static public $controlador;
+    static public $metodo;
+    static public $jadmin;
     /**
      * @var string $urlRuta sección de la URL correspondiente al dominio
      */
@@ -44,30 +65,16 @@ class Estructura {
      * @var string $urlModulo URL publica del modulo en ejecución.
      */
     static $urlModulo;
+    static public $urlJida;
     /**
-     * @var string $directorio Directorio raiz en el que se ubica el proyecto
+     * @var subdirectorio donde se encuentra ubicado el jida.
      */
-    static $directorio;
-    /**
-     * @var array $partes Arreglo de partes de la url
-     */
-    static $partes;
-    /**
-     * Carpeta o directorio en donde se encuentra el JidaFramework.
-     *
-     * @var string $directorioJida
-     */
-    static $directorioJida;
-
-    static public $namespace;
+    public static $rutaJida;
     static public $ruta;
-    static public $rutaJida;
     static public $rutaAplicacion;
-    static public $modulo;
-    static public $controlador;
-    static public $metodo;
-    static public $jadmin;
     static public $rutaModulo;
+
+    private static $ubicacionJida;
 
     /**
      * @return string
@@ -78,6 +85,9 @@ class Estructura {
         self::$rutaJida = $directorioJida;
         self::$directorio = $directorioApp;
         self::$rutaAplicacion = $directorioApp . "/Aplicacion";
+        self::$ubicacionJida = implode(array_filter(
+            explode(DIRECTORY_SEPARATOR, str_replace($directorioApp, "", $directorioJida))
+        ));
 
         return $directorioJida;
 
@@ -140,6 +150,8 @@ class Estructura {
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
             self::$urlHtdocs = self::$urlBase . '/htdocs/';
+            self::$urlJida = self::$urlBase . "/" . self::$ubicacionJida;
+
             self::$url = rtrim(self::$dominio . "/$url", "/");
 
         }

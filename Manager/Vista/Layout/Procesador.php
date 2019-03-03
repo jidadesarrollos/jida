@@ -79,8 +79,8 @@ Trait Procesador {
 
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
-                if (strpos($urlLibreria, '{raiz}') === 0) {
-                    $urlLibreria = str_replace('{raiz}', ".", $urlLibreria);
+                if (strpos($urlLibreria, '{base}') === 0) {
+                    $urlLibreria = str_replace('{base}', ".", $urlLibreria);
                 }
                 else {
                     $urlLibreria = '//' . $urlLibreria;

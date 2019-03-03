@@ -22,7 +22,7 @@ use Jida\Render\Selector;
 
 class JControl extends Controlador {
 
-    protected $_perfiles = ['jadmin', 'admin'];
+    protected $_perfiles = ['jadmin', 'administrador'];
     protected $_usuario;
 
     function __construct() {
@@ -30,9 +30,9 @@ class JControl extends Controlador {
         parent::__construct();
 
         $this->_usuario = Sesion::$usuario;
-        $ruta           = strtolower("/" . Estructura::$modulo . '/' . Estructura::$metodo);
+        $ruta = strtolower("/" . Estructura::$modulo . '/' . Estructura::$metodo);
 
-        if (!(strtolower($ruta) == "/usuario/login") and ! Sesion::es($this->_perfiles)) {
+        if (!(strtolower($ruta) == "/usuario/login") and !Sesion::es($this->_perfiles)) {
             $this->redireccionar("/jadmin/usuario/login");
         }
 
@@ -45,20 +45,19 @@ class JControl extends Controlador {
         $layout = ($this->solicitudAjax()) ? 'ajax' : 'jadmin';
         $this->layout($layout);
 
-        $config    = Config::obtener();
+        $config = Config::obtener();
         $nombreApp = Configuracion::NOMBRE_APP;
-        $urlBase   = Estructura::$urlBase;
-        $urlTema   = $urlBase . $config::PATH_JIDA . '/Jadmin/Layout/' . $config->temaJadmin . "/";
+        $urlBase = Estructura::$urlBase;
+        $urlTema = Estructura::$urlJida . '/Jadmin/Layout/' . $config->temaJadmin . "/";
 
         $menu = new Menu('/jadmin/menu');
         $menu->addClass('navigation-left');
 
-
         $this->data([
-            'menu' => $menu->render(),
+            'menu'      => $menu->render(),
             'nombreApp' => $nombreApp,
-            'urlBase' => $urlBase,
-            'urlTema' => $urlTema
+            'urlBase'   => $urlBase,
+            'urlTema'   => $urlTema
         ]);
     }
 
@@ -76,7 +75,7 @@ class JControl extends Controlador {
 
     protected function _validarSesion() {
 
-        $metodo    = Estructura::$metodo;
+        $metodo = Estructura::$metodo;
         $aceptados = ['login', 'logout'];
 
         if (in_array($metodo, $aceptados)) {
