@@ -28,28 +28,35 @@ class CrearControlador extends Command {
     }
 
     protected function ejecutar(InputInterface $input, OutputInterface $output) {
+
         $path   = realpath($this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp);
         $nombre = $input->getArgument('nombre');
+
         if ($input->getOption('modulo')) {
+
             $modulo = $input->getOption('modulo');
+
             if ($input->getOption('jadmin')) {
+
                 $class = "App\\Modulos\\" . $modulo . "\\Jadmin\\Controllers\\" . $nombre;
                 $path  .= DIRECTORY_SEPARATOR . "Modulos" . DIRECTORY_SEPARATOR . $modulo . DIRECTORY_SEPARATOR . "Jadmin";
                 $this->createFiles($path, $nombre, $class, CrearArchivos::JcontrolClass);
                 $output->writeln("Controlador $class ha sido creado");
             }
             else {
+
                 $class = "App\\Modulos\\" . $modulo . "\\Controllers\\" . $nombre;
                 $path  .= DIRECTORY_SEPARATOR . "Modulos" . DIRECTORY_SEPARATOR . $modulo;
                 $this->createFiles($path, $nombre, $class, CrearArchivos::ControllerClass);
                 $output->writeln("Controlador $class ha sido creado");
+
             }
+
         }
         elseif ($input->getOption('jadmin')) {
+
             $path .= DIRECTORY_SEPARATOR . "Jadmin";
-
             $class = "App\\Jadmin\\Controllers\\" . $nombre;
-
             $this->createFiles($path, $nombre, $class, CrearArchivos::JcontrolClass);
             $output->writeln("Controlador $class ha sido creado");
         }
@@ -60,6 +67,7 @@ class CrearControlador extends Command {
             $this->createFiles($path, $nombre, $class, CrearArchivos::ControllerClass);
             $output->writeln("Controlador $class ha sido creado");
         }
+
     }
 
     protected function createFiles($path, $nombre, $class, $extends) {
