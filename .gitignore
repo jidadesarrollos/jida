@@ -2,3 +2,4 @@
 /vendor/
 .idea
 package-lock.json
+/composer.lock
