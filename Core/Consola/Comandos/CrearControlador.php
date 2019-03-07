@@ -24,9 +24,23 @@ class CrearControlador extends Comando {
     //put your code here
     protected function configurar () {
 
-        $this->addArgument('nombre', InputArgument::REQUIRED, 'Nombre del controlador a crear.');
-        $this->addOption('modulo', 'm', InputOption::VALUE_OPTIONAL, " Modulo donde sera creado el controlador");
-        $this->addOption('jadmin', 'j', InputOption::VALUE_NONE, "si esta presente el controlador se creara en Jadmin");
+        $this->addArgument(
+            'nombre', 
+            InputArgument::REQUIRED, 
+            'Nombre del controlador a crear.'
+        );
+        $this->addOption(
+            'modulo', 
+            'm', 
+            InputOption::VALUE_OPTIONAL, 
+            "Modulo donde sera creado el controlador"
+        );
+        $this->addOption(
+            'jadmin', 
+            'j', 
+            InputOption::VALUE_NONE, 
+            "si esta presente el controlador se creara en Jadmin"
+        );
 
     }
 

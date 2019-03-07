@@ -39,7 +39,11 @@ class CrearModulo extends Comando {
 
     protected function configurar () {
 
-        $this->addArgument('nombre', InputArgument::REQUIRED, 'Nombre del modulo a crear.');
+        $this->addArgument(
+            'nombre', 
+            InputArgument::REQUIRED, 
+            'Nombre del modulo a crear.'
+        );
 
     }
 

@@ -23,15 +23,43 @@ class InstaladorBd extends Comando {
 
     protected static $defaultName = 'instalar:bd';
 
-    //put your code here
+   
     protected function configurar () {
 
-        $this->addArgument('archivo', InputArgument:: OPTIONAL, 'Archivo que se cargara.');
-        $this->addOption('servidor', 's', InputOption:: VALUE_OPTIONAL, " servidor de la base de datos");
-        $this->addOption('puerto', 'p', InputOption:: VALUE_OPTIONAL, " puerto ");
-        $this->addOption('usuario', 'u', InputOption:: VALUE_OPTIONAL, " usuario de la base de datos ");
-        $this->addOption('clave', 'c', InputOption:: VALUE_OPTIONAL, " contraseña del usuario");
-        $this->addOption('bd', 'bd', InputOption:: VALUE_OPTIONAL, " nombre de la base de datos");
+        $this->addArgument(
+            'archivo', 
+            InputArgument::OPTIONAL, 
+            'Archivo que se cargara.'
+        );
+        $this->addOption(
+            'servidor', 
+            's', 
+            InputOption::ALUE_OPTIONAL, 
+            "Servidor de la base de datos");
+        $this->addOption(
+            'puerto', 
+            'p', 
+            InputOption::VALUE_OPTIONAL, 
+            " puerto "
+        );
+        $this->addOption(
+            'usuario', 
+            'u', 
+            InputOption::VALUE_OPTIONAL, 
+            "Usuario de la base de datos"
+        );
+        $this->addOption(
+            'clave', 
+            'c', 
+            InputOption::VALUE_OPTIONAL, 
+            "contraseña del usuario"
+        );
+        $this->addOption(
+            'bd', 
+            'bd', 
+            InputOption:: VALUE_OPTIONAL, 
+            "nombre de la base de datos"
+        );
 
     }
 
