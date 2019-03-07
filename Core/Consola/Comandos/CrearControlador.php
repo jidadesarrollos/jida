@@ -33,8 +33,8 @@ class CrearControlador extends Comando {
     protected function ejecutar (InputInterface $input, OutputInterface $output) {
 
         $path = realpath($this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp);
-        $nombre = $input->getArgument('nombre');
-
+        $nombre =  ucwords($input->getArgument('nombre'));
+        
         if ($input->getOption('modulo')) {
 
             $modulo = $input->getOption('modulo');

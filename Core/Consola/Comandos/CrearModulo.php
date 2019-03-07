@@ -45,7 +45,7 @@ class CrearModulo extends Comando {
 
     protected function ejecutar (InputInterface $input, OutputInterface $output) {
 
-        $nombre = $input->getArgument('nombre');
+        $nombre = ucwords($input->getArgument('nombre'));
         $modelos = $this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . self::PathModelos;
         $path = realpath($modelos);
 
