@@ -19,20 +19,28 @@ class Rdespues_de extends Regla {
     public function validar($value, array $parametros):bool {
 
         if (!($value instanceof \DateTime)) {
+            
             try {
+                
                 $date = new \DateTime($value);
+                
             }
             catch (\Exception $ex) {
+                
                 return false;
+                
             }
+            
         }
         else {
+            
             $date = $value;
         }
 
         $actual  = $date->getTimestamp();
         $despues = (new \DateTime($parametros[0]))->getTimestamp();
         return !($actual <= $despues);
+        
     }
 
 }

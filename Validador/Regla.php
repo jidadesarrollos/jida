@@ -34,7 +34,9 @@ abstract class Regla {
      * 
      */
     public function processValue($value, array $parametros) {
+        
         return $value;
+        
     }
 
 }

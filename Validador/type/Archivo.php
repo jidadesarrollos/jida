@@ -15,7 +15,9 @@ class Archivo extends \SplFileInfo {
     }
 
     public function __toString() {
+        
         return $this->getContent();
+        
     }
 
     /**
@@ -23,7 +25,9 @@ class Archivo extends \SplFileInfo {
      * @param string $dest directorio donde se copiara
      */
     public function copy($dest) {
+        
         copy($this->File['tmp_name'], $dest);
+        
     }
 
     /**
@@ -31,7 +35,9 @@ class Archivo extends \SplFileInfo {
      * @return string
      */
     public function getContent() {
+        
         return file_get_contents($this->File['tmp_name']);
+        
     }
 
     /**
@@ -42,31 +48,45 @@ class Archivo extends \SplFileInfo {
      * @return SplFileObject
      */
     public function openFile($open_mode = "r", $use_include_path = false, $context = null) {
+        
         return new \SplFileObject($this->File['tmp_name'], $open_mode, $use_include_path, $context);
+        
     }
 
     public function getType(): string {
+        
         return $this->File['type'];
+        
     }
 
     public function isDir() {
+        
         return isset($this->File['tmp_name']) && is_dir($this->File['tmp_name']);
+        
     }
 
     public function isFile() {
+        
         return isset($this->File['tmp_name']) && is_file($this->File['tmp_name']);
+        
     }
 
     public function isReadable() {
+        
         return isset($this->File['tmp_name']) && is_readable($this->File['tmp_name']);
+        
     }
 
     public function isExecutable() {
+        
         return isset($this->File['tmp_name']) && is_executable($this->File['tmp_name']);
+        
     }
 
     public function getSize() {
+        
         return isset($this->File['tmp_name']) && filesize($this->File['tmp_name']);
+        
     }
 
 }

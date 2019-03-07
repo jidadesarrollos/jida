@@ -3,7 +3,7 @@
 namespace Jida\Validador\Reglas;
 
 use Jida\Validador\Regla;
-
+use Jida\Validador\Type\DateTime;
 /**
  * valida y sanitiza fechas 
  *
@@ -21,32 +21,28 @@ class Rfecha extends Regla {
     protected $format;
 
     public function validar($value, array $parametros):bool {
+        
         if (!is_string($value)) {
+            
             return false;
+            
         }
         $this->format = self::FormatDefault;
         if (is_string($parametros[0]) && $parametros[0] != '') {
+            
             $this->format = $parametros[0];
+            
         }
 
         $d = \DateTime::createFromFormat($this->format, $value);
         return $d && $d->format($this->format) == $value;
+        
     }
 
     public function processValue($value, array $parametros) {
-        return new class($value, null, $this->format) extends \DateTime {
-
-            protected $format;
-
-            public function __construct($time, $timezone, $format) {
-                parent::__construct($time, $timezone);
-                $this->format = $format;
-            }
-
-            public function __toString() {
-                return $this->format($this->format);
-            }
-        };
+        
+        return new DateTime($value, null, $this->format);
+        
     }
 
 }

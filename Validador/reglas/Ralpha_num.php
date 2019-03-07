@@ -17,7 +17,9 @@ class Ralpha_num extends Regla {
     public $errorMsj = "{:attr} debe ser contener caracteres alfanumericos ";
 
     public function validar($value, array $parametros):bool {
+        
         return ctype_alnum($value);
+        
     }
 
 }

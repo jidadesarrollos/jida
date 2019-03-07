@@ -17,21 +17,30 @@ class Rantes_de extends Regla {
     public $errorMsj = "{:attr} debe ser antes de {:param[0]}";
 
     public function validar($value, array $parametros):bool {
+        
         if (!($value instanceof \DateTime)) {
+            
             try {
+                
                 $date = new \DateTime($value);
             }
             catch (\Exception $ex) {
+                
                 return false;
+                
             }
+            
         }
         else {
+            
             $date = $value;
+            
         }
         $date    = new \DateTime($value);
         $actual  = $date->getTimestamp();
         $despues = (new \DateTime($parametros[0]))->getTimestamp();
         return !($actual >= $despues);
+        
     }
 
 }

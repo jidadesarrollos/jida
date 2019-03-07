@@ -16,6 +16,7 @@ use Jida\Validador\Type\Archivo;
 class Rarchivo extends Regla {
 
     public $errorMsj    = "No se recibio el archivo o es invalidos";
+    
     protected $multiple = false;
 
     public function validar($value, array $parametros): bool {
@@ -24,22 +25,49 @@ class Rarchivo extends Regla {
             return false;
         }
 
-        if (!isset($value['name']) || !isset($value['type']) || !isset($value['tmp_name']) || !isset($value['error']) || !isset($value['size']))
-            return false;
+        if (!isset($value['name']) || !isset($value['type']) || 
+                !isset($value['tmp_name']) || !isset($value['error']) 
+                || !isset($value['size'])){
+            
+             return false;
+             
+        }
+           
         if ($parametros[0] == "multiple") {
-            if (!is_array($value['name']) || !is_array($value['type']) || !is_array($value['tmp_name']) || !is_array($value['error']) || !is_array($value['size']))
-                return false;
+            
+            if (!is_array($value['name']) || !is_array($value['type']) ||
+                    !is_array($value['tmp_name']) || !is_array($value['error']) 
+                    || !is_array($value['size'])){
+                
+                 return false;
+                
+            }
+               
             foreach ($value['tmp_name'] as $tmp_name) {
-                if (!is_uploaded_file($tmp_name) && isset($this->reglas['required']) && $this->reglas['required'] != false) {
+                
+                if (!is_uploaded_file($tmp_name) && isset($this->reglas['required']) && 
+                        $this->reglas['required'] != false) {
+                    
                     return false;
+                    
                 }
             }
+            
         }
         else {
+            
             if (!is_string($value['name']) || !is_string($value['type']) || !is_string($value['tmp_name']))
+            {
+                
                 return false;
-            if (!is_uploaded_file($value['tmp_name']) && isset($this->reglas['required']) && $this->reglas['required'] != false) {
+                
+            }
+                
+            if (!is_uploaded_file($value['tmp_name']) && isset($this->reglas['required']) &&
+                    $this->reglas['required'] != false) {
+                
                 return false;
+                
             }
         }
         return true;
@@ -48,8 +76,10 @@ class Rarchivo extends Regla {
     public function processValue($value, array $parametros) {
 
         if ($parametros[0] == "multiple") {
+            
             $file = [];
             foreach ($value['tmp_name'] as $i => $tmp_name) {
+                
                 $file[] = new Archivo([
                     'name' => $value['name'][$i],
                     'type' => $value['type'][$i],
@@ -57,10 +87,14 @@ class Rarchivo extends Regla {
                     'error' => $value['error'][$i],
                     'size' => $value['size'][$i],
                 ]);
+                
             }
+            
         }
         else {
+            
             $file = new Archivo($value);
+            
         }
 
         return $file;
