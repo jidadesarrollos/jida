@@ -50,7 +50,7 @@ class CrearModulo extends Comando {
     protected function ejecutar (InputInterface $input, OutputInterface $output) {
 
         $nombre = ucwords($input->getArgument('nombre'));
-        $modelos = $this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . self::PathModelos;
+        $modelos = $this->directorioDeProyecto . DS . self::PathApp . DS . self::PathModelos;
         $path = realpath($modelos);
 
         if (!$path) {
@@ -60,7 +60,7 @@ class CrearModulo extends Comando {
             
         }
 
-        if (realpath($path . DIRECTORY_SEPARATOR . $nombre)) {
+        if (realpath($path . DS . $nombre)) {
 
             $output->writeln("El modulo $nombre ya existe");
             
@@ -88,7 +88,7 @@ class CrearModulo extends Comando {
 
         foreach ($extructura as $carpeta => $subCarpetas) {
 
-            $path = $directorio . DIRECTORY_SEPARATOR . $carpeta;
+            $path = $directorio . DS . $carpeta;
             mkdir($path);
             $this->crearDirectorios($path, $subCarpetas);
             

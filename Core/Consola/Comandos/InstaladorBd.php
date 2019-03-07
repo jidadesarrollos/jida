@@ -168,7 +168,7 @@ class InstaladorBd extends Comando {
 
     protected function crearConfiguracion ($config) {
 
-        $path = $this->directorioDeProyecto . DIRECTORY_SEPARATOR . self::PathApp . DIRECTORY_SEPARATOR . "Config";
+        $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
         $configtpl = new MotorDePlantillas();
         $configtpl->asignar('servidor', $config['servidor']);
         $configtpl->asignar('puerto', $config['puerto']);
