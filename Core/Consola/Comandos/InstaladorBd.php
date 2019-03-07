@@ -52,13 +52,13 @@ class InstaladorBd extends Comando {
             'clave', 
             'c', 
             InputOption::VALUE_OPTIONAL, 
-            "contraseña del usuario"
+            "Contraseña del usuario"
         );
         $this->addOption(
             'bd', 
             'bd', 
             InputOption:: VALUE_OPTIONAL, 
-            "nombre de la base de datos"
+            "Nombre de la base de datos"
         );
 
     }
