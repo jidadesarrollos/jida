@@ -24,12 +24,17 @@ class Validador implements \ArrayAccess {
 
         $this->opciones = [];
         foreach ($opciones as $key => $v) {
+            
             $this->opciones[$key] = $this->procesarOpciones($v);
+            
         }
         $this->value = $value;
         foreach ($this->opciones as $key => $opcion) {
+            
             $this->value[$key] = $this->validar($key, isset($this->value[$key]) ? $this->value[$key] : NULL, $opcion);
+            
         }
+        
     }
 
     /**
@@ -39,12 +44,17 @@ class Validador implements \ArrayAccess {
      * @return \self
      */
     public static function crear(array $value, array $opciones) {
+        
         return new self($value, $opciones);
+        
     }
 
     public static function uno(string $value, string $opciones) {
+        
         $valid = new self(['uno' => $value], ['uno' => $opciones]);
+        
         return $valid->valido();
+        
     }
 
     /**
@@ -53,68 +63,109 @@ class Validador implements \ArrayAccess {
      * @param Regla $regla regla de validacion 
      */
     public static function registrarRegla(string $nombre, Regla $regla) {
+        
         self::$reglasGlobales[$nombre] = $regla;
+        
     }
 
     private function parseError($atributo, $opcion, $parametros, $value, $mensaje) {
+        
         foreach ($parametros as $i => $v) {
+            
             $mensaje = str_replace("{:param[$i]}", $v, $mensaje);
+            
         }
         $mensaje = str_replace("{:attr}", $atributo, $mensaje);
         $mensaje = str_replace("{:regla}", $opcion, $mensaje);
         return str_replace("{:valor}", $value, $mensaje);
+        
     }
 
     private function validar($atributo, $valor, $opciones) {
 
         if ($valor == NULL && isset($opciones['required']) && $opciones['required'][0] == 'false') {
+            
             return NULL;
+            
         }
         foreach ($opciones as $opcion => $parametros) {
 
             $class = "\\Jida\\validador\\Reglas\\R" . $opcion;
             if (isset(self::$reglasGlobales[$opcion])) {
+                
                 $regla         = clone self::$reglasGlobales;
                 $regla->reglas = $opciones;
                 if (!$regla->validar($valor, $parametros)) {
-                    if (!is_array($this->errores[$atributo]))
-                        $this->errores[$atributo] = [];
+                    
+                    if (!is_array($this->errores[$atributo])){
+                        
+                         $this->errores[$atributo] = [];
+                         
+                    }
+                       
                     if (isset($this->mensajes[$atributo]) && isset($this->mensajes[$atributo][$opcion])) {
+                        
                         $mensaje = $this->mensajes[$atributo][$opcion];
+                        
                     }
                     else {
+                        
                         $mensaje = $regla->errorMsj;
+                        
                     }
+                    
                     $this->errores[$atributo][] = $this->parseError($atributo, $opcion, $parametros, $valor, $mensaje);
+                    
                 }
                 else {
+                    
                     $valor = $regla->processValue($valor, $parametros);
+                    
                 }
+                
             }
             elseif (class_exists($class)) {
+                
                 $regla         = new $class();
                 $regla->reglas = $opciones;
                 if (!$regla->validar($valor, $parametros)) {
-                    if (!is_array($this->errores[$atributo]))
+                    
+                    if (!is_array($this->errores[$atributo])){
+                        
                         $this->errores[$atributo] = [];
-
+                        
+                    }
+                        
                     if (isset($this->mensajes[$atributo]) && isset($this->mensajes[$atributo][$opcion])) {
+                        
                         $mensaje = $this->mensajes[$atributo][$opcion];
+                        
                     }
                     else {
+                        
                         $mensaje = $regla->errorMsj;
+                        
                     }
+                    
                     $this->errores[$atributo][] = $this->parseError($atributo, $opcion, $parametros, $valor, $mensaje);
                 }
                 else {
+                    
                     $valor = $regla->processValue($valor, $parametros);
+                    
                 }
+                
             }
             else {
+                
                 throw new \Exception("no existe la regla " . $opcion);
+                
             }
+            
         }
+        
         return $valor;
+        
     }
 
     /**
@@ -122,7 +173,9 @@ class Validador implements \ArrayAccess {
      * @return boolean
      */
     public function valido() {
+        
         return count($this->errores) == 0;
+        
     }
 
     /**
@@ -130,19 +183,27 @@ class Validador implements \ArrayAccess {
      * @return boolean 
      */
     public function invalido() {
+        
         return !$this->valido();
+        
     }
 
     protected function procesarOpciones($string) {
+        
         $str     = preg_split('/[\|]/', $string);
         $options = [];
+        
         foreach ($str as $v) {
+            
             $exp1 = explode(':', $v);
             $name = $exp1[0];
             unset($exp1[0]);
             if (strtolower($name) == 'pattern') {
+                
                 $options[$name] = implode(':', $exp1);
+                
                 continue;
+                
             }
             $exp            = explode(',', implode(':', $exp1));
             /* if (count($exp) == 1) {
@@ -152,7 +213,9 @@ class Validador implements \ArrayAccess {
             $options[$name] = $exp;
             //}
         }
+        
         return $options;
+        
     }
 
     /**
