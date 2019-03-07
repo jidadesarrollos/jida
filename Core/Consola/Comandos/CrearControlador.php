@@ -94,7 +94,7 @@ class CrearControlador extends Comando {
         $vista = $vistaTpl->obt('vista.jida');
 
         $archivoControlador = "$path/Controllers/$nombre.php";
-        $directorioVista = "$path/Vistas/" . strtolower($nombre);
+        $directorioVista = "$path/Vistas/" . lcfirst ($nombre);
         $archivVista = "$directorioVista/index.php";
 
         file_put_contents($archivoControlador, $controlador);

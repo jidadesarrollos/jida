@@ -64,8 +64,8 @@ class CrearModulo extends Comando {
         else {
 
             $estructura = self::EstructuraDirectorios;
-            $estructura['Vistas'][strtolower($nombre)] = [];
-            $estructura['Jadmin']['Vistas'][strtolower($nombre)] = [];
+            $estructura['Vistas'][lcfirst ($nombre)] = [];
+            $estructura['Jadmin']['Vistas'][lcfirst ($nombre)] = [];
             $this->crearDirectorios($path, [$nombre => $estructura]);
             $this->crearArchivos($nombre, $path);
             $output->writeln("Estructura de directorios del modulo $nombre ha sido creada");
@@ -126,8 +126,8 @@ class CrearModulo extends Comando {
         file_put_contents("$path/$modulo/Modelos/$modulo.php", $modelo);
         file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
         file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
-        file_put_contents("$path/$modulo/Vistas/" . strtolower($modulo) . "/index.php", $vista);
-        file_put_contents("$path/$modulo/Jadmin/Vistas/" . strtolower($modulo) . "/index.php", $vista);
+        file_put_contents("$path/$modulo/Vistas/" . lcfirst ($modulo) . "/index.php", $vista);
+        file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst ($modulo) . "/index.php", $vista);
 
     }
 
