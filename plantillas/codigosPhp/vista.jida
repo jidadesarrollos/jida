@@ -1,0 +1,5 @@
+<!-- Creado por Jida Framework {date('Y-m-d H:i:s')} -->
+<div class = "jumbotron">
+    <h2>{{$cabecera}}</h2>
+    <p>{{$mensaje}}</p>
+</div >
