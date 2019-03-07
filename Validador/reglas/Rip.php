@@ -26,7 +26,7 @@ class Rip extends Regla {
                 case 'ipv4':
                     return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
                     
-                case 'ipv4':
+                case 'ipv6':
                     return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
             }
             

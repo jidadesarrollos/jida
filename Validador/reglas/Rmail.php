@@ -34,6 +34,7 @@ class Rmail extends Regla {
             }
             
             return true;
+            
         }
         
         return filter_var($value, FILTER_VALIDATE_EMAIL);

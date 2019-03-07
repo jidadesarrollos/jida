@@ -282,7 +282,6 @@ class Validador implements \ArrayAccess {
     public function offsetGet($offset) {
         if (!isset($this->value[$offset])) {
             trigger_error("indice " . $offset . "no definido ", E_USER_NOTICE);
-
             $offset = NULL;
             return $offset;
         }
