@@ -34,7 +34,7 @@ class InstaladorBd extends Comando {
         $this->addOption(
             'servidor', 
             's', 
-            InputOption::ALUE_OPTIONAL, 
+            InputOption::VALUE_OPTIONAL, 
             "Servidor de la base de datos");
         $this->addOption(
             'puerto', 

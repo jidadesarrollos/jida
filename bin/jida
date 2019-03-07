@@ -8,6 +8,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Jida\Core\Consola\App;
+Jida\Configuracion\Base::constantes();
 
 $app = new App();
 $app->registarComandos();
