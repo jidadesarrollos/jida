@@ -17,11 +17,15 @@ class Rmatch extends Regla {
     public $errorMsj = "el atributo {:attr} no es valido";
 
     public function validar($value, array $parametros):bool {
+        
         if (!is_string($value)) {
+            
             return false;
+            
         }
 
         return preg_match($parametros[0], $value);
+        
     }
 
 }

@@ -17,10 +17,15 @@ class Rmax extends Regla {
     public $errorMsj = "{:attr} debe ser mayor a {:param[0]}";
 
     public function validar($value, array $parametros):bool {
+        
         $num = new Rnumerico();
         if (!$num->validar($value, []))
+        {
             return false;
+        }
+            
         return $value <= $parametros[0];
+        
     }
 
 }
