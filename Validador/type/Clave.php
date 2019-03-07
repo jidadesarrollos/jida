@@ -2,7 +2,7 @@
 
 namespace Jida\Validador\Type;
 
-class Password {
+class Clave {
 
     protected $pass;
 

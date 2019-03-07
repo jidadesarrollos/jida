@@ -3,7 +3,7 @@
 namespace Jida\Validador\Reglas;
 
 use Jida\Validador\Regla;
-use Jida\Validador\Type\Password;
+use Jida\Validador\Type\Clave;
 
 /**
  * Regla para validacion de contraseñas
@@ -13,7 +13,7 @@ use Jida\Validador\Type\Password;
  * @category Validador
  *
  */
-class Rpassword extends Regla {
+class Rclave extends Regla {
 
     public $errorMsj = "  ";
 
@@ -38,7 +38,7 @@ class Rpassword extends Regla {
                
         }
         
-        return new Password($value, PASSWORD_BCRYPT, $opciones);
+        return new Clave($value, PASSWORD_BCRYPT, $opciones);
         
     }
 

@@ -45,8 +45,7 @@ como se puede ver se pueden aplicar varias reglas para cada item las reglas debe
 - `archivo`: Valida un archivo un arra de archivo recibido de $_FILES y lo convierte en un objeto de la clase *`Jida\Validador\Type\Archivo `* este acepta una opcion con la que se puede indicar si se reciben multiples archivos en el item `archivo:multiple` en este caso se convertirá en un array de objetos *`Jida\Validador\Type\Archivo `*
 - `mime_type`: puede usarse junto a `archivo` validar el tipo de archivo recibido se puede indicar los tipos de archivos en las opciones 
 - `mail`: Valida un mail acepta una opcion con la que se puede indicar si se reciben multiples mail separados por coma `mail:multiple` en este caso convertirá en un array con los mails recibidos 
-- `password`: Convierte la cadena en un objeto *`Jida\Validador\Type\Password`* que trasforma la cadena en un hash de *`password_hash`* acepta dos opciones el primero seria el salt y el segundo el costo 
+- `clave`: Convierte la cadena en un objeto *`Jida\Validador\Type\Clave`* que trasforma la cadena en un hash de *`password_hash`* acepta dos opciones el primero seria el salt y el segundo el costo 
 - `url`: valida una url si se le  pasa `activo` en la primera opcion valida que el url este activo 
 - `ip`: Valida una ip, se le puede pasar una opcion indicando `ipv4` o `ipv6` para indicar que tipo de ip es 
 - `match`: Valida que texto coincida con la exprecion regular pasada en la primera opcion 
-- 
