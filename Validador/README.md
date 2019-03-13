@@ -49,3 +49,21 @@ como se puede ver se pueden aplicar varias reglas para cada item las reglas debe
 - `url`: valida una url si se le  pasa `activo` en la primera opcion valida que el url este activo 
 - `ip`: Valida una ip, se le puede pasar una opcion indicando `ipv4` o `ipv6` para indicar que tipo de ip es 
 - `match`: Valida que texto coincida con la exprecion regular pasada en la primera opcion 
+
+
+### Validador::valido(): bool
+
+Indica si los valores del objeto son validos o no 
+
+
+### Validador::error($key = NULL): array
+
+Retorna los errores de incice pasado por el parametro si no se pasa ningun parametro retornara todos los errores 
+
+### Validador::primerError(string $key ): string
+
+Retorna al primer error del inidice indicado si no existe error retorna `null`
+
+### Validador::ultimoError(string $key ): string
+
+Retorna al ultimo error del inidice indicado si no existe error retorna `null`

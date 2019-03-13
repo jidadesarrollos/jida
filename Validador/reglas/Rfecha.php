@@ -14,7 +14,7 @@ use Jida\Validador\Type\DateTime;
  */
 class Rfecha extends Regla {
 
-    public $errorMsj = "el atributo {:attr} una fecha valida";
+    public $errorMsj = "El formato no es valido";
 
     const FormatDefault = "Y/m/d";
 

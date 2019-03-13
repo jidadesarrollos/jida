@@ -195,23 +195,36 @@ class Validador implements \ArrayAccess {
         
         foreach ($str as $v) {
             
-            $exp1 = explode(':', $v);
-            $name = $exp1[0];
-            unset($exp1[0]);
-            if (strtolower($name) == 'pattern') {
+           
+            $encontrados=[];
+          
+            if(preg_match("/^([\w]+)(:(.*))?/", $v,$encontrados)==1)
+            {
                 
-                $options[$name] = implode(':', $exp1);
+                $regla=$encontrados[1];
                 
-                continue;
-                
+                if(isset($encontrados[3]))
+                {
+                    
+                    if (strtolower($regla) == 'match') {
+                     
+                        $options[$regla]=[$encontrados[3]];
+                                
+                    }
+                    else{
+                        
+                        $options[$regla]=explode(',',$encontrados[3]);
+                         
+                    }
+                   
+                }
+                else{
+                    
+                    $options[$regla]=[true];
+                    
+                }
             }
-            $exp            = explode(',', implode(':', $exp1));
-            /* if (count($exp) == 1) {
-              $options[$name] = trim($exp[0]) == '' ? true : $exp[0];
-              }
-              else { */
-            $options[$name] = $exp;
-            //}
+           
         }
         
         return $options;
@@ -219,7 +232,7 @@ class Validador implements \ArrayAccess {
     }
 
     /**
-     * retorna los errores error de la clave pasada 
+     * retorna los errores de la clave pasada 
      * @param string $key (opcional) si no esta presente se retornan todos los errores 
      * @return array
      */
