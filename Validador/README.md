@@ -15,22 +15,23 @@ Este es un metodo estatico que procesa los datos y reglas pasados en sus paramet
 Ejemplo:
 ```php
 <?php
+
 $valid = Validador::crear(array_merge($_POST, $_FILES), [
     'file' => 'archivo|mime_type:image/jpeg,image/jpg,image/png',
-     'email' => 'mail|string:lower'
+    'email' => 'mail|string:lower'
 ]);
 if ($valid->valido()) {
 
     $name = 'file.' . $valid['file']->getExtension();
     $valid['file']->copy($name);
     echo "datos recividos de $valud[email]";
+
 }
 ```
 
 como se puede ver se pueden aplicar varias reglas para cada item las reglas deben estar separadas por el caracter  `| ` y cada regla admite opciones las cuales se pasan colocando `:`  despues de la regla y separando los las opciones por `,` las reglas validas son :
 
 - `string` : Esta regla valida una cadena de texto acepta las opciones `lower, ouper, md5, trim, htmlentities, htmlencode o urlencode` que aplicadas modifican el texto ejemplo `string:trim,lower`
-
 - `alpha`:  Valida una cadena alfabetica 
 - `alpha_num`:  Valida una cadena alfanumerica 
 - `length`: Valida que la cadena sea del tamaño especificado en la opcion 
