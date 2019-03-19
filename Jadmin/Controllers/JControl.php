@@ -22,7 +22,7 @@ use Jida\Render\Selector;
 
 class JControl extends Controlador {
 
-    protected $_perfiles = ['jadmin', 'administrador'];
+    protected $_perfiles = ['jadmin', 'administrador', 'jadmin'];
     protected $_usuario;
 
     function __construct() {

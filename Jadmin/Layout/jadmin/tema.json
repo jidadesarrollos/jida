@@ -24,7 +24,15 @@
                 "script": "{tema}/htdocs/js/script.js",
                 "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
                 "mustache": "{tema}/htdocs/js/mustache.min.js",
-                "font-awesome" : "{tema}/htdocs/js/all.min.js"
+                "moment" : "{tema}/htdocs/js/vendor/calendar/moment.min.js",
+                "font-awesome" : "{tema}/htdocs/js/all.min.js",
+                "jadmin" : "{base}/htdocs/js/jadmin.js",
+                "dataTable" : "{base}/htdocs/js/jquery.dataTables.min.js",
+                "dataTable-bt" : "{tema}/htdocs/js/dataTables.bootstrap4.min.js",
+                "dataTable-lenguajes" : "{base}/htdocs/js/libs/datatable-language.js",
+                "bt-datepicker": "{base}/htdocs/bower_components/datepicker/js/bootstrap-datepicker.js",
+                "scripts" : "{base}/htdocs/js/scripts.js",
+                "validador": "{base}/jida/htdocs/js/libs/validador.js"
             },
             "login": {
                 "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
