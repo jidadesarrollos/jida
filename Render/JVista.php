@@ -6,10 +6,8 @@
 
 namespace Jida\Render;
 
-use Jida\Core\Rutas;
 use Jida\Core\Tema;
 use Jida\Medios as Medios;
-use Jida\Render\Inputs\Estructura;
 
 class JVista {
 

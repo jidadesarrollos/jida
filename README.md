@@ -1,3 +1,6 @@
-#INSTALACION
+#instanciar el Jida
 
-Prueba 1
+```
+include_once 'vendor/autoload.php';
+Jida\Manager::inicio(__DIR__);
+```

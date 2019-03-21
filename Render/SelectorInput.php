@@ -41,7 +41,7 @@ class SelectorInput extends Selector {
      * @var array $_controlesMultiples ;
      */
     private $_controlesMultiples = ['checkbox',
-                                    'radio'
+        'radio'
     ];
 
     /**
@@ -99,7 +99,6 @@ class SelectorInput extends Selector {
   		</div>
   	';
 
-
     /**
      * Bandera interna que determina si el constructor debe o no llamar al metodo crearSelector
      *
@@ -131,9 +130,9 @@ class SelectorInput extends Selector {
      *
      * @internal Permite crear y definir selectores HTML para formularios
      *
-     * @param string $tipo  Tipo del Selector de Formulario
-     * @param array  $attr  Arreglo de atributos
-     * @param mixed  $items Valores para los selectores de multiseleccion
+     * @param string $tipo Tipo del Selector de Formulario
+     * @param array $attr Arreglo de atributos
+     * @param mixed $items Valores para los selectores de multiseleccion
      * @method __construct
      *
      * @example  new SelectorInput($name,$tipo="text",$attr=[],$items="")
@@ -144,11 +143,13 @@ class SelectorInput extends Selector {
         $numero = func_num_args();
         if ($numero == 1 or ($numero == 2 and in_array(func_get_arg(1), $this->_controlesMultiples))) {
             if ($numero > 1)
-                $this->__constructorObject(func_get_arg(0), func_get_arg(1)); else
+                $this->__constructorObject(func_get_arg(0), func_get_arg(1));
+            else
                 $this->__constructorObject(func_get_arg(0));
-        } else {
+        }
+        else {
             call_user_func_array([$this,
-                                  '__constructorParametros'
+                '__constructorParametros'
             ], func_get_args());
         }
         $this->_checkClaseExtendida();
@@ -170,7 +171,8 @@ class SelectorInput extends Selector {
         if (property_exists($params, 'data')) {
 
             if (is_object($params->data))
-                $params->data = get_object_vars($params->data); elseif (is_string($params->data))
+                $params->data = get_object_vars($params->data);
+            elseif (is_string($params->data))
                 $params->data = [];
 
         }
@@ -182,7 +184,7 @@ class SelectorInput extends Selector {
             $this->_html = $params->html;
 
         if (!$type and in_array($params->type, ['checkbox',
-                                                'radio'
+                'radio'
             ])) {
 
             $this->opciones = $params->opciones;
@@ -237,8 +239,8 @@ class SelectorInput extends Selector {
         for ($i = 0; $i < count($opciones); ++$i) {
 
             $class = new \stdClass();
-            $class->value = array_shift($opciones[ $i ]);
-            $class->labelOpcion = array_shift($opciones[ $i ]);
+            $class->value = array_shift($opciones[$i]);
+            $class->labelOpcion = array_shift($opciones[$i]);
 
             $class->name = ($this->type == 'checkbox') ? $this->name . "[]" : $this->name;
             $class->type = $this->type;
@@ -273,18 +275,19 @@ class SelectorInput extends Selector {
                     //Medios\Debug::imprimir($key, $data);
                 }
 
-                $opcion = new Selector('option', ['value' => $data[ $key[0] ]]);
-                if ($data[ $key[0] ] == $this->_valorUpdate) {
+                $opcion = new Selector('option', ['value' => $data[$key[0]]]);
+                if ($data[$key[0]] == $this->_valorUpdate) {
                     $opcion->attr('selected', 'selected');
                 }
 
-                $this->_selectoresOpcion[ $data[ $key[0] ] ] = $opcion;
-                $opcion->innerHTML($data[ $key[1] ]);
+                $this->_selectoresOpcion[$data[$key[0]]] = $opcion;
+                $opcion->innerHTML($data[$key[1]]);
 
-            } else {
+            }
+            else {
                 $opcion = new Selector('option', ['value' => $key]);
                 $opcion->innerHTML($data);
-                $this->_selectoresOpcion[ $key ] = $opcion;
+                $this->_selectoresOpcion[$key] = $opcion;
             }
 
         }
@@ -303,9 +306,11 @@ class SelectorInput extends Selector {
             if (stripos($opcion, 'select ') !== FALSE) {
                 $opciones = array_merge($opciones, BD::query($opcion));
 
-            } elseif (stripos($opcion, 'externo') !== FALSE) {
+            }
+            elseif (stripos($opcion, 'externo') !== FALSE) {
                 continue;
-            } else {
+            }
+            else {
                 $opciones[] = explode("=", $opcion);
             }
         }
@@ -328,7 +333,8 @@ class SelectorInput extends Selector {
         }
         if ($this->type == 'select') {
             $this->_crearOpcionesSelect($opciones);
-        } else {
+        }
+        else {
             $this->_crearOpcionesSelectorMultiple($opciones);
         }
 
@@ -345,10 +351,10 @@ class SelectorInput extends Selector {
         $key = strtolower($opcion);
         if (array_key_exists(strtolower($key), $this->_selectoresOpcion)) {
             if ($valor) {
-                $this->_selectoresOpcion[ $key ]->attr('value', $valor);
+                $this->_selectoresOpcion[$key]->attr('value', $valor);
             }
 
-            return $this->_selectoresOpcion[ $key ];
+            return $this->_selectoresOpcion[$key];
         }
 
         return FALSE;
@@ -360,7 +366,6 @@ class SelectorInput extends Selector {
                                                   'name' => $this->_name
         ]);
         parent::__construct($this->_tipo, $this->_attr);
-
 
     }
 
@@ -388,10 +393,10 @@ class SelectorInput extends Selector {
         }
         if ($this->type == 'select') {
             $this->_crearOpcionesSelect($opciones);
-        } else {
+        }
+        else {
             $this->_crearOpcionesSelectorMultiple($opciones);
         }
-
 
     }
 
@@ -435,7 +440,6 @@ class SelectorInput extends Selector {
         ]);
         parent::__construct('input', $this->_attr);
 
-
     }
 
     /**
@@ -455,11 +459,11 @@ class SelectorInput extends Selector {
             ];
             if ($this->inline) {
                 $tpl .= $this->_obtTemplate($this->_tplMultiplesInline, $data);
-            } else {
+            }
+            else {
                 $data['class'] = $this->classMultiples;
                 $tpl .= $this->_obtTemplate($this->_tplMultiples, $data);
             }
-
 
         }
 
@@ -492,9 +496,11 @@ class SelectorInput extends Selector {
 
         if (!$parent and in_array($this->_tipo, $this->_controlesMultiples)) {
             return $this->renderMultiples();
-        } elseif (!$parent and $this->_tipo == 'select') {
+        }
+        elseif (!$parent and $this->_tipo == 'select') {
             return $this->renderSelect();
-        } else {
+        }
+        else {
 
             return parent::render();
         }
@@ -527,16 +533,19 @@ class SelectorInput extends Selector {
                 }
             }
 
-        } else if ($this->type == 'select') {
+        }
+        else if ($this->type == 'select') {
             foreach ($this->_selectoresOpcion as $key => $selector) {
                 if ($selector->attr('value') == $valor) {
                     $selector->attr('selected', 'selected');
                 }
             }
 
-        } elseif ($this->type == "textarea") {
+        }
+        elseif ($this->type == "textarea") {
             $this->innerHTML($valor);
-        } else {
+        }
+        else {
             $this->attr('value', $valor);
         }
 
@@ -556,6 +565,5 @@ class SelectorInput extends Selector {
 
         return $template;
     }
-
 
 }

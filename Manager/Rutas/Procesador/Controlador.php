@@ -26,7 +26,7 @@ Trait Controlador {
 
     public function _controlador() {
 
-        $controlador = $this->_padre->proximoParametro();
+        $controlador = $this->_padre->url->proximoParametro();
 
         if (empty($controlador)) {
             $controlador = $this->_default();
@@ -40,7 +40,7 @@ Trait Controlador {
                 $controlador = $clase;
             }
             else {
-                $this->_padre->reingresarParametro($controlador);
+                $this->_padre->url->reingresarParametro($controlador);
                 $controlador = $this->_default();
 
             }

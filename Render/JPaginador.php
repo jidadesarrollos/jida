@@ -5,5 +5,8 @@
  */
 
 namespace Jida\Render;
+
 use Jida\BD as BD;
-class JPaginador extends BD\DataModel{}
+
+class JPaginador extends BD\DataModel {
+}

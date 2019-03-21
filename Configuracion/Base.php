@@ -2,9 +2,12 @@
 
 namespace Jida\Configuracion;
 
+use Jida\Manager\Estructura;
+use Jida\Medios\Directorios;
+
 class Base {
 
-    static function constantes () {
+    static function constantes() {
 
         define('DS', DIRECTORY_SEPARATOR);
         define("PS", PATH_SEPARATOR);
@@ -52,13 +55,13 @@ class Base {
 
     }
 
-    static function path () {
+    static function path() {
 
-        define('ROOT', \Jida\Manager\Estructura::path());
-        define('DIR_FRAMEWORK', ROOT . DS . 'Framework');
-        define('DIR_APP', ROOT . DS . 'Aplicacion');
+        define('ROOT', Estructura::path());
+        define('DIR_FRAMEWORK', Estructura::$rutaJida);
+        define('DIR_APP', Estructura::$rutaAplicacion);
 
-        if (file_exists(DIR_APP . DS . 'index.php')) {
+        if (Directorios::validar(Estructura::$rutaAplicacion . 'index.php')) {
             include_once DIR_APP . DS . 'index.php';
         }
 

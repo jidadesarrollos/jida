@@ -23,7 +23,7 @@ Trait Modulo {
         //TODO: mejorar logica metodo de obtención del modulo
         $padre = $this->_padre;
 
-        $parametro = $padre->proximoParametro();
+        $parametro = $padre->url->proximoParametro();
         $url = "";
         $posModulo = $this->_validarNombre($parametro, 'upper');
 
@@ -51,7 +51,7 @@ Trait Modulo {
                 $padre::$ruta = 'app';
                 $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Jadmin';
 
-                $padre->reingresarParametro($posModulo);
+                $padre->url->reingresarParametro($posModulo);
             }
             else {
 
@@ -63,7 +63,7 @@ Trait Modulo {
                     $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . "Modulos/{$posModulo}";
                 }
                 else {
-                    $padre->reingresarParametro($posModulo);
+                    $padre->url->reingresarParametro($posModulo);
                     $namespace = $this->_namespaces['jida'];
                     $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin';
                 }
@@ -74,7 +74,7 @@ Trait Modulo {
         else {
             $namespace = $this->_namespaces['app'];
             $rutaModulo = Estructura::$directorio . DS . "Aplicacion";
-            $padre->reingresarParametro($posModulo);
+            $padre->url->reingresarParametro($posModulo);
         }
 
         Estructura::$namespace = $namespace;
