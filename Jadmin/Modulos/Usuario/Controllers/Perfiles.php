@@ -8,13 +8,14 @@
 
 namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
+use Jida\Jadmin\Controllers\Jadmin;
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Medios\Mensajes;
 use Jida\Modulos\Usuarios\Modelos\Perfil;
 use Jida\Render\Formulario;
 use Jida\Render\JVista;
 
-class Perfiles extends JControl {
+class Perfiles extends Jadmin {
 
     public function index(){
 
