@@ -933,7 +933,6 @@ class Formulario extends Selector {
         $this->armarFormulario();
     }
 
-
     /**
      * Permite configurar botones para el formulario
      *

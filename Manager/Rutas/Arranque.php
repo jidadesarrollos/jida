@@ -14,6 +14,7 @@ use Jida\Configuracion\Config;
 use Jida\Core\Manager as Core;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Manager\Rutas\Procesador\Url;
 use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Manager as ManagerVista;
 use Jida\Medios\Debug;
@@ -22,6 +23,8 @@ class Arranque {
 
     private static $_ce = 10002;
     private $_arrayUrl;
+
+    public $url;
     public $procesador;
     /**
      * @var {object} Objeto controlador solicitado
@@ -29,22 +32,22 @@ class Arranque {
      */
     static public $Controlador;
     static public $metodo = false;
+
     /**
      * @var bool
      */
     static public $controlador = false;
-
     static public $modulo;
+
     /**
      * @var string $ruta Define si la ruta de archivos debe ser buscada en el framework o en la aplicacion
      */
     static public $ruta;
-
     public $default;
+
     public $jadmin = false;
 
     public $parametros = [];
-
     private $_dataVista;
     /**
      * Objeto Renderizador de la vista
@@ -54,12 +57,18 @@ class Arranque {
      */
     private $_managerVista;
 
+    static $idioma;
+
     public function __construct() {
 
         $conf = Config::obtener();
+        $this->_configuracion = $conf;
 
         $this->modulos = $conf::$modulos;
         $this->_arrayUrl = Estructura::$partes;
+        $this->url = new Url();
+        $this->_get = $_GET;
+
         $this->_parser();
 
         $this->_managerVista = new ManagerVista($this);
@@ -68,37 +77,19 @@ class Arranque {
 
     private function _parser() {
 
-        $parametro = $this->proximoParametro();
+        $parametro = $this->url->proximoParametro();
 
+        $this->_validarIdioma();
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
             Estructura::$jadmin = true;
         }
         else {
-            $this->reingresarParametro($parametro);
+            $this->url->reingresarParametro($parametro);
         }
 
         $this->procesador = new Procesador($this);
         $this->procesador->procesar();
-
-    }
-
-    public function proximoParametro() {
-
-        $proximo = array_shift($this->_arrayUrl);
-        return $proximo;
-
-    }
-
-    public function reingresarParametro($parametro) {
-
-        array_unshift($this->_arrayUrl, $parametro);
-
-    }
-
-    public function arrayUrl() {
-
-        return $this->_arrayUrl;
 
     }
 
@@ -215,6 +206,22 @@ class Arranque {
         }
 
         return true;
+
+    }
+
+    private function _validarIdioma() {
+
+        $parametro = $this->url->proximoParametro();
+
+        $idiomas = $this->_configuracion->idiomas;
+
+        if (array_key_exists($parametro, $idiomas) or in_array($parametro, $idiomas)) {
+            $this->_idioma = $parametro;
+            Estructura::$idioma = $parametro;
+            return;
+        }
+
+        $this->url->reingresarParametro($parametro);
 
     }
 

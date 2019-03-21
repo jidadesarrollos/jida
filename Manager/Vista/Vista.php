@@ -13,7 +13,9 @@ namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
+use Jida\Core\Controlador\Control;
 use Jida\Manager\Estructura as Estructura;
+use Jida\Manager\Rutas\Arranque;
 use Jida\Medios as Medios;
 
 class Vista {
@@ -66,9 +68,19 @@ class Vista {
 
     }
 
+    /**
+     * @param string $plantilla
+     * @return string
+     * @throws Excepcion
+     */
     function obtener($plantilla = "") {
 
-        $controlador = \Jida\Manager::controlador();
+        /**
+         * @var $controlador object Control
+         * @see Control
+         *
+         */
+        $controlador = Arranque::$Controlador;
 
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
@@ -79,7 +91,9 @@ class Vista {
             $controlador = (!!Estructura::$jadmin) ? "jadmin" : "index";
         }
 
-        $vista = Estructura::$rutaModulo . "/Vistas/" . strtolower("$controlador/$vista");
+        $ruta = Estructura::$rutaModulo;
+        $archivoVista = strtolower("$controlador/$vista");
+        $vista = "{$ruta}/Vistas/{$archivoVista}";
 
         if (strpos($vista, '.php') === false) {
             $vista .= ".php";
@@ -106,7 +120,8 @@ class Vista {
             Medios\Debug::imprimir(
                 ["Error vista",
                     $e->getCode(),
-                    $e->getMessage()],
+                    $e->getMessage()
+                ],
                 true
             );
         }
