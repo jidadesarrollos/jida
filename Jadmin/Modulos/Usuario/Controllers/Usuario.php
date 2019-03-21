@@ -78,6 +78,7 @@ class Usuario extends JControl {
             }
 
             Mensajes::almacenar(Mensajes::suceso('Cambió su constraseña satisfactoriamente'));
+            $this->redireccionar('/jadmin/usuario/cambioclave');
 
         }
 
