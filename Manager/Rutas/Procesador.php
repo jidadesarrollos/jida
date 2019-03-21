@@ -23,12 +23,12 @@ class Procesador {
     protected $_default = 'Index';
     private static $_ce = 10005;
 
-    function __construct (Arranque $padre) {
+    function __construct(Arranque $padre) {
 
         $this->_padre = $padre;
     }
 
-    public function procesar () {
+    public function procesar() {
 
         $this->_moduloValidado = false;
         $this->_modulo();
@@ -38,9 +38,9 @@ class Procesador {
 
     }
 
-    private function _argumentos () {
+    private function _argumentos() {
 
-        $parametros = $this->_padre->arrayUrl();
+        $parametros = $this->_padre->url->parametros();
 
         if (is_array($parametros) and $parametros) {
 
@@ -68,7 +68,7 @@ class Procesador {
      *
      * @return string $nombre Cadena Formateada resultante
      */
-    protected function _validarNombre ($str, $tipoCamelCase) {
+    protected function _validarNombre($str, $tipoCamelCase) {
 
         if (empty($str)) {
             return false;

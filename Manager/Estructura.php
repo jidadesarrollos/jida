@@ -49,6 +49,7 @@ class Estructura {
     static public $controlador;
     static public $metodo;
     static public $jadmin;
+    static public $idioma;
     /**
      * @var string $urlRuta sección de la URL correspondiente al dominio
      */

@@ -7,12 +7,10 @@ namespace Jida\Render;
 
 class ListaSelector extends Selector {
 
-
     protected $selector = "UL";
     protected $selectorItems = "LI";
 
     protected $items = [];
-
 
     function __construct($numeroItems = 0, $attr = []) {
 
@@ -25,6 +23,7 @@ class ListaSelector extends Selector {
      * El item agregado sera un objeto de Tipo Selector con valor de
      * $selectorItem
      * @method addItem
+     *
      * @see $selectorItems
      * @see Selector
      */
