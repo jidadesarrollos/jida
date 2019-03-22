@@ -16,6 +16,7 @@ namespace Jida\Configuracion;
 
 class Config {
 
+    const HASH_CLAVE="md5";
     const NOMBRE_APP = 'Aplicación Jida';
     const SHORT_NAME_APP = 'APP';
     const URL_BASE = '';

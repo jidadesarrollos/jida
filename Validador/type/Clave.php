@@ -3,7 +3,9 @@
 namespace Jida\Validador\Type;
 
 class Clave {
-
+    
+    const Md5="md5";
+    const PasswordHash="password_hash";
     protected $pass;
 
     /**
@@ -17,12 +19,15 @@ class Clave {
      * @var array 
      */
     private $Options;
+    
+    protected $hash_clave='';
 
     public function __construct(string $password, $algo = PASSWORD_BCRYPT, array $options = []) {
         
         $this->pass = $password;
         $this->Algorim = $algo;
         $this->Options = $options;
+        $this->hash_clave=\App\Config\Configuracion::HASH_CLAVE;
     }
 
     public function __toString() {
@@ -33,19 +38,34 @@ class Clave {
 
     public function compare($hash) {
         
-        return password_verify($this->pass, $hash);
+        switch ($this->hash_clave){
+            case self::Md5:
+                return md5($this->pass)===$hash;
+                
+            case self::PasswordHash:
+                return password_verify($this->pass, $hash);
+         
+        }
+      
         
     }
 
     public function hash() {
         
-        if (!isset($this->Options['cost'])) {
+        switch ($this->hash_clave){
+            case self::Md5:
+                return md5($this->pass);
+                
+            case self::PasswordHash:
+                if (!isset($this->Options['cost'])) {
             
-            $this->Options['cost'] = $this->generateCost();
-            
+                    $this->Options['cost'] = $this->generateCost();
+
+                }
+                return password_hash($this->pass, $this->Algorim, $this->Options);
+         
         }
-        return password_hash($this->pass, $this->Algorim, $this->Options);
-        
+       
     }
 
     /**
