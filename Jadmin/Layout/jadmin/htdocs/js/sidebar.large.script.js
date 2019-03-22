@@ -22,6 +22,8 @@ $(document).ready(function () {
     function closeSidebarSecondary() {
         $sidebarLeftSecondary.removeClass("open");
         $sidebarOverlay.removeClass("open");
+        var $navItem = $(".nav-item");
+        $navItem.removeClass("active");
     }
     function openSidebarOverlay() {
         $sidebarOverlay.addClass("open");
@@ -89,6 +91,11 @@ $(document).ready(function () {
         if (gullUtils.isMobile()) {
             closeSidebar();
         }
+        closeSidebarSecondary();
+    });
+
+    $mainContentWrap.on('mouseenter', function (event) {
+        $sidebarLeftSecondary.find(".childNav").hide();
         closeSidebarSecondary();
     });
 

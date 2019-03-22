@@ -517,6 +517,23 @@
             else
                 return false;
         },
+        mayorque: function ($campo, validacion, parametros) {
+            campo = $("#" + parametros.campo);
+
+            if(campo.attr('type') === 'date'){
+                let date1 = new Date($campo.val());
+                let date2 = new Date(campo.val());
+                if (date1 >= date2)
+                    return true;
+                else
+                    return false;
+            }
+
+            if ($campo.val() >= campo.val())
+                return true;
+            else
+                return false;
+        },
         /*------------------------------------------------------**/
         contrasenia: function ($campo, validacion, parametros) {
 
@@ -580,7 +597,8 @@
         },
         coordenada: {expr: /^\-?[0-9]{2}\.[0-9]{3,15}/, mensaje: "La coordenada debe tener el siguiente formato:"},
         internacional: {expr: /^\d{9,18}$/, mensaje: "El telefono internacional no es valido"},
-        igualdad: {'mensaje': 'Los campos no pueden ser iguales'}
+        igualdad: {'mensaje': 'Los campos no pueden ser iguales'},
+        mayorque:{'mensaje': 'El campo debe ser mayor que'}
 
     };
 

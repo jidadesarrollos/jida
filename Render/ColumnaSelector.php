@@ -1,18 +1,19 @@
 <?php
 /**
-* Clase Modelo para ColumnaSelector
-* @author Julio Rodriguez
-* @package
-* @version
-* @category
-*/
+ * Clase Modelo para ColumnaSelector
+ *
+ * @author Julio Rodriguez
+ * @package
+ * @version
+ * @category
+ */
 
 namespace Jida\Render;
-class ColumnaSelector extends Selector{
+class ColumnaSelector extends Selector {
 
-	function __construct($selector="TD"){
+    function __construct($selector = "TD") {
 
-		parent::__construct($selector);
+        parent::__construct($selector);
 
-	}
+    }
 }

@@ -13787,7 +13787,7 @@ h1, h2, h3, h4, h5, h6, .card-title, .text-title {
   .layout-sidebar-large .main-header .logo {
     width: 120px; }
     .layout-sidebar-large .main-header .logo img {
-      width: 60px;
+      width: auto;
       height: 60px;
       margin: 0 auto;
       display: block; }

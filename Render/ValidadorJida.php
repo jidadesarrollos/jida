@@ -10,8 +10,6 @@
 
 namespace Jida\Render;
 
-use Jida\Medios as Medios;
-
 class ValidadorJida extends \Jida\Core\Validador {
 
     /**
@@ -50,8 +48,8 @@ class ValidadorJida extends \Jida\Core\Validador {
     /**
      * Constructor de la clase Validador Jida
      *
-     * @param string $campo        Campo a validar
-     * @param array  $validaciones Arreglo con validaciones asignadas al campo
+     * @param string $campo Campo a validar
+     * @param array $validaciones Arreglo con validaciones asignadas al campo
      *
      * @opciones string $opciones [opcional] Las opciones asociadas al campo a validar
      */
@@ -70,7 +68,6 @@ class ValidadorJida extends \Jida\Core\Validador {
         $validaciones = is_array($validaciones) ? $validaciones : [];
         $this->validaciones = array_merge($this->validacionesDefault, $validaciones);
     }//fin funcion
-
 
     /**
      * Devuelve el arreglo con todas las validaciones existentes y los mensajes por defecto para cada
@@ -100,8 +97,8 @@ class ValidadorJida extends \Jida\Core\Validador {
      * Valida si la cadena cumple con el formato requerido por medio
      * de una expresión regular.
      *
-     * @param String $validacion      Nombre de la validación a aplicar.
-     * @param array  $datosValidacion Arreglo con inf. de la validacion
+     * @param String $validacion Nombre de la validación a aplicar.
+     * @param array $datosValidacion Arreglo con inf. de la validacion
      *
      * @return boolean True Si es correcto, fal
      */
@@ -112,12 +109,12 @@ class ValidadorJida extends \Jida\Core\Validador {
             $this->valorCampo = str_replace(".", "", $this->valorCampo);
             $this->valorCampo = str_replace(",", ".", $this->valorCampo);
 
-
         }
 
         if ($this->dataValidaciones[$nombreValidacion]["expresion"] != "") {
 
-        } else {
+        }
+        else {
             throw new Exception("Se llama a una expresion $nombreValidacion, la cual se encuentra indefinida", 1);
 
         }
@@ -131,7 +128,8 @@ class ValidadorJida extends \Jida\Core\Validador {
                 }
             }
             $resultValidacion = ($band === TRUE) ? TRUE : FALSE;
-        } else {
+        }
+        else {
             if (empty($this->valorCampo))
                 $resultValidacion = TRUE;
             else {
@@ -149,7 +147,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             }
 
             return TRUE;
-        } else {
+        }
+        else {
             $this->obtenerMensajeError($nombreValidacion, $datosValidacion);
 
             return FALSE;
@@ -184,14 +183,15 @@ class ValidadorJida extends \Jida\Core\Validador {
                     ? $datosObl['mensaje']
                     : $this->dataValidaciones['obligatorio']['mensaje'];
 
-        } elseif ($valorLleno === TRUE) {
+        }
+        elseif ($valorLleno === TRUE) {
             unset($this->validaciones['obligatorio']);
 
             foreach ($this->validaciones as $validacion => $detalle) {
                 $CheckValor = FALSE;
                 $validacion = strtolower($validacion);
 
-                $detalle = (is_object($detalle)) ?  json_decode(json_encode($detalle), TRUE): $detalle;
+                $detalle = (is_object($detalle)) ? json_decode(json_encode($detalle), TRUE) : $detalle;
                 if ($bandera == 0 and (is_array($detalle) or $detalle == TRUE)) {
 
                     switch ($validacion) {
@@ -219,6 +219,9 @@ class ValidadorJida extends \Jida\Core\Validador {
                         case "igualdad":
                             $CheckValor = $this->igualdad($validacion, $detalle);
                             break;
+                        case "mayorque":
+                            $CheckValor = $this->mayorque($validacion, $detalle);
+                            break;
                         case "documentacion":
 
                             $CheckValor = $this->validarDocumentacion($validacion, $detalle);
@@ -240,7 +243,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             return ['validacion' => TRUE,
                     'campo'      => $this->valorCampo
             ];
-        } else {
+        }
+        else {
             return ['validacion' => $this->mensajeError,
                     'campo'      => $this->valorCampo
             ];
@@ -260,7 +264,8 @@ class ValidadorJida extends \Jida\Core\Validador {
 
             if (is_object($this->validaciones['obligatorio'])) {
                 $datosValidacion = (array)$this->validaciones['obligatorio'];
-            } else if (is_array($this->validaciones['obligatorio'])) {
+            }
+            else if (is_array($this->validaciones['obligatorio'])) {
                 $datosValidacion = $this->validaciones['obligatorio'];
             }
 
@@ -268,7 +273,8 @@ class ValidadorJida extends \Jida\Core\Validador {
 
                 if (isset($_POST[$datosValidacion['condicional']]) and $_POST[$datosValidacion['condicional']] == $datosValidacion['condicion']) {
                     $validacion = TRUE;
-                } else {
+                }
+                else {
                     $validacion = FALSE;
                 }
 
@@ -278,10 +284,12 @@ class ValidadorJida extends \Jida\Core\Validador {
         if ($validacion === TRUE) {
             if ($this->valorCampo != "") {
                 return TRUE;
-            } else {
+            }
+            else {
                 return FALSE;
             }
-        } else {
+        }
+        else {
             return TRUE;
         }
 
@@ -295,7 +303,8 @@ class ValidadorJida extends \Jida\Core\Validador {
 
         if (array_key_exists('obligatorio', $detalle)) {
             return $this->validarCampoLleno();
-        } else {
+        }
+        else {
             return TRUE;
         }
     }
@@ -332,15 +341,16 @@ class ValidadorJida extends \Jida\Core\Validador {
 
         if (array_key_exists('tipo', $detalle) and
             ($detalle['tipo'] == 'telefono' and $validacionTlf == 1 or
-                $detalle['tipo'] == 'celular' and $validacionCel == 1 or
-                $detalle['tipo'] == 'internacional' and $validacionInter == 1 or
-                $detalle['tipo'] == "multiple" and ($validacionCel == 1 or $validacionTlf == 1)) or
+             $detalle['tipo'] == 'celular' and $validacionCel == 1 or
+             $detalle['tipo'] == 'internacional' and $validacionInter == 1 or
+             $detalle['tipo'] == "multiple" and ($validacionCel == 1 or $validacionTlf == 1)) or
 
             !array_key_exists('tipo', $detalle) and $validacionTlf == 1
         ) {
 
             return TRUE;
-        } else {
+        }
+        else {
             //Medios\Debug::imprimir($detalle);
             $this->obtenerMensajeError($detalle['tipo'], $detalle);
 
@@ -353,10 +363,28 @@ class ValidadorJida extends \Jida\Core\Validador {
         if (isset($this->dataValidaciones['campo'])) {
             if ($this->valorCampo == $_POST[$this->dataValidaciones['campo']]) {
                 return TRUE;
-            } else {
+            }
+            else {
                 return FALSE;
             }
-        } else {
+        }
+        else {
+            return TRUE;
+        }
+
+    }
+
+    private function mayorque($validacion, $detalle) {
+
+        if (isset($this->dataValidaciones['campo'])) {
+            if ($this->valorCampo >= $_POST[$this->dataValidaciones['campo']]) {
+                return TRUE;
+            }
+            else {
+                return FALSE;
+            }
+        }
+        else {
             return TRUE;
         }
 
@@ -384,7 +412,8 @@ class ValidadorJida extends \Jida\Core\Validador {
 
         if ($validacionMin == 1 && $validacionMay == 1 && $validacionNum == 1 && $validacionCaract == 1 && strlen($contrasenia) >= 8) {
             return TRUE;
-        } else {
+        }
+        else {
             $this->obtenerMensajeError('contrasenia', $detalle);
 
             return FALSE;
@@ -403,7 +432,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             $this->valorCampo = FechaHora::fechaInvertida($this->valorCampo);
 
             return TRUE;
-        } else {
+        }
+        else {
             $this->obtenerMensajeError('fecha', $detalle);
 
             return FALSE;
@@ -422,7 +452,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             $this->valorCampo = FechaHora::fechaInvertida($this->valorCampo);
 
             return TRUE;
-        } else {
+        }
+        else {
             $this->obtenerMensajeError('fechaHora', $detalle);
 
             return FALSE;
@@ -435,7 +466,8 @@ class ValidadorJida extends \Jida\Core\Validador {
             $this->obtenerMensajeError($validacion, $detalle);
 
             return FALSE;
-        } else {
+        }
+        else {
             return TRUE;
         }
     }

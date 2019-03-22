@@ -8,6 +8,7 @@
 
 namespace Jida\Jadmin\Modulos\Usuario\Controllers;
 
+use Jida\Jadmin\Controllers\Jadmin;
 use Jida\Jadmin\Controllers\JControl;
 use Jida\Jadmin\Modulos\Usuario\Controllers\Usuario\Usuarios;
 use Jida\Manager\Estructura;
@@ -17,7 +18,7 @@ use Jida\Medios\Sesion;
 use Jida\Render\Formulario;
 use Jida\Modulos\Usuarios\Usuario as Persona;
 
-class Usuario extends JControl {
+class Usuario extends Jadmin {
 
     use Usuarios;
 
@@ -78,6 +79,7 @@ class Usuario extends JControl {
             }
 
             Mensajes::almacenar(Mensajes::suceso('Cambió su constraseña satisfactoriamente'));
+            $this->redireccionar('/jadmin/usuario/cambioclave');
 
         }
 

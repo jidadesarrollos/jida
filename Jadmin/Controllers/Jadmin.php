@@ -8,7 +8,7 @@
 
 namespace Jida\Jadmin\Controllers;
 
-class Jadmin extends JControl {
+class Jadmin extends \App\Jadmin\Controllers\Jadmin {
 
     public function index() {
         

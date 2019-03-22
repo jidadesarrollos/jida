@@ -29,7 +29,7 @@ Trait Metodo {
 
     public function _metodo() {
 
-        $posMetodo = $this->_padre->proximoParametro();
+        $posMetodo = $this->_padre->url->proximoParametro();
         $controlador = Estructura::$namespace . Estructura::$controlador;
         $default = true;
 
@@ -40,7 +40,7 @@ Trait Metodo {
 
             if (!$this->_validarMetodo($controlador, $metodo)) {
 
-                $this->_padre->reingresarParametro($posMetodo);
+                $this->_padre->url->reingresarParametro($posMetodo);
                 $default = true;
 
             }
