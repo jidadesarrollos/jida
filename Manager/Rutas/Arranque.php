@@ -22,7 +22,6 @@ use Jida\Medios\Debug;
 class Arranque {
 
     private static $_ce = 10002;
-    private $_arrayUrl;
 
     public $url;
     public $procesador;
@@ -59,13 +58,15 @@ class Arranque {
 
     static $idioma;
 
-    public function __construct() {
+    public function __construct($parametros = []) {
 
         $conf = Config::obtener();
         $this->_configuracion = $conf;
 
+        if (count($parametros)) $this->_parametros($parametros);
+
         $this->modulos = $conf::$modulos;
-        $this->_arrayUrl = Estructura::$partes;
+
         $this->url = new Url();
         $this->_get = $_GET;
 
@@ -79,6 +80,7 @@ class Arranque {
 
         $parametro = $this->url->proximoParametro();
 
+        //pipeline de procesamiento
         $this->_validarIdioma();
         if (strtolower($parametro) === 'jadmin') {
             $this->jadmin = true;
@@ -91,6 +93,18 @@ class Arranque {
         $this->procesador = new Procesador($this);
         $this->procesador->procesar();
 
+    }
+
+    private function _parametros($parametros) {
+
+        if (isset($parametros['handlers'])) {
+            $this->procesarHandlers($parametros['handlers']);
+        }
+
+    }
+
+    private function procesarHandlers($handlers) {
+        Debug::imprimir([$handlers], true);
     }
 
     /**

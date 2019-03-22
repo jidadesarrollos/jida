@@ -28,6 +28,7 @@ class Config {
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
     /**
      * Define si la aplicacion es multiidioma
+     *
      * @const bolean MULTIIDIOMA
      */
     const MULTIIDIOMA = false;
@@ -85,7 +86,7 @@ class Config {
      *
      * @return \App\Config\Configuracion|Config
      */
-    public static function obtener () {
+    public static function obtener() {
 
         if (!self::$instancia) {
 

@@ -29,7 +29,9 @@ class Manager {
     private $rutaApp;
     private static $instancia;
 
-    function __construct($ruta) {
+    private $parametros;
+
+    function __construct($ruta, $parametros = []) {
 
         try {
 
@@ -39,6 +41,7 @@ class Manager {
 
             $this->ruta = __DIR__;
             $this->rutaApp = $ruta;
+            $this->parametros = $parametros;
 
             Conf\Base::constantes();
 
@@ -49,7 +52,7 @@ class Manager {
             Conf\Base::path();
 
             $this->_validador = new Validador();
-            $this->_arranque = new Arranque();
+            $this->_arranque = new Arranque($parametros);
 
         }
         catch (\Exception $e) {
@@ -96,10 +99,10 @@ class Manager {
 
     }
 
-    static function inicio($ruta) {
+    static function inicio($ruta, $parametros = []) {
 
         if (!self::$instancia) {
-            self::$instancia = new Manager($ruta);
+            self::$instancia = new Manager($ruta, $parametros);
         }
 
         $manager = self::$instancia;
