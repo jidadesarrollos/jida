@@ -16,7 +16,6 @@ namespace Jida\Configuracion;
 
 class Config {
 
-    const HASH_CLAVE="md5";
     const NOMBRE_APP = 'Aplicación Jida';
     const SHORT_NAME_APP = 'APP';
     const URL_BASE = '';
@@ -27,8 +26,11 @@ class Config {
     const PATH_JIDA = "vendor/jida/jida";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
+    const HASH_CLAVE = "md5";
+
     /**
      * Define si la aplicacion es multiidioma
+     *
      * @const bolean MULTIIDIOMA
      */
     const MULTIIDIOMA = false;
@@ -86,7 +88,7 @@ class Config {
      *
      * @return \App\Config\Configuracion|Config
      */
-    public static function obtener () {
+    public static function obtener() {
 
         if (!self::$instancia) {
 
