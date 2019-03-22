@@ -9,7 +9,8 @@
             "principal": {
                 "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css",
                 "scroll": "{tema}/htdocs/styles/vendor/perfect-scrollbar.css",
-                "font-awesome": "{tema}/htdocs/styles/css/all.min.css"
+                "font-awesome": "{tema}/htdocs/styles/css/all.min.css",
+                "validador": "{tema}/htdocs/css/validador.css"
             },
             "login": {
                 "theme": "{tema}/htdocs/styles/css/themes/lite-blue.css"

@@ -219,6 +219,9 @@ class ValidadorJida extends \Jida\Core\Validador {
                         case "igualdad":
                             $CheckValor = $this->igualdad($validacion, $detalle);
                             break;
+                        case "mayorque":
+                            $CheckValor = $this->mayorque($validacion, $detalle);
+                            break;
                         case "documentacion":
 
                             $CheckValor = $this->validarDocumentacion($validacion, $detalle);
@@ -359,6 +362,22 @@ class ValidadorJida extends \Jida\Core\Validador {
 
         if (isset($this->dataValidaciones['campo'])) {
             if ($this->valorCampo == $_POST[$this->dataValidaciones['campo']]) {
+                return TRUE;
+            }
+            else {
+                return FALSE;
+            }
+        }
+        else {
+            return TRUE;
+        }
+
+    }
+
+    private function mayorque($validacion, $detalle) {
+
+        if (isset($this->dataValidaciones['campo'])) {
+            if ($this->valorCampo >= $_POST[$this->dataValidaciones['campo']]) {
                 return TRUE;
             }
             else {
