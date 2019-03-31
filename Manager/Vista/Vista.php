@@ -32,14 +32,14 @@ class Vista {
     private $_data;
 
     public $url;
+    private $_controlador;
 
-    function __construct($data) {
+    function __construct($controlador) {
 
         $conf = Config::obtener();
+        $this->_controlador = $controlador;
         $this->_tema = $conf->tema;
-
-        $this->_data = $data;
-
+        $this->_data = Data::obtener($controlador);
         $this->url = Estructura::$url;
 
     }
@@ -55,11 +55,13 @@ class Vista {
         $plantilla = $plantilla . ".php";
 
         $path = Estructura::path() . DS . Estructura::DIR_APP . DS . "plantillas";
+
         if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $ruta = $path . DS . $plantilla;
         }
 
         $path = Estructura::path() . DS . Estructura::DIR_JIDA . DS . "plantillas";
+
         if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $path . DS . $plantilla;
         }
@@ -80,19 +82,14 @@ class Vista {
          * @see Control
          *
          */
-        $controlador = Arranque::$Controlador;
-
+        $controlador = $this->_controlador;
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $controlador = Estructura::$controlador;
-
-        if (!$controlador) {
-            $controlador = (!!Estructura::$jadmin) ? "jadmin" : "index";
-        }
 
         $ruta = Estructura::$rutaModulo;
-        $archivoVista = strtolower("$controlador/$vista");
+        $nombre = Estructura::$nombreControlador;
+        $archivoVista = strtolower("$nombre/$vista");
         $vista = "{$ruta}/Vistas/{$archivoVista}";
 
         if (strpos($vista, '.php') === false) {

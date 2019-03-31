@@ -7,6 +7,7 @@
 
 namespace Jida\Manager\Rutas;
 
+use Jida\Manager\Estructura;
 use Jida\Medios as Medios;
 use Jida\Manager\Rutas\Procesador\Controlador;
 use Jida\Manager\Rutas\Procesador\Metodo;
@@ -31,11 +32,19 @@ class Procesador {
     public function procesar() {
 
         $this->_moduloValidado = false;
+
         $this->_modulo();
         $this->_controlador();
         $this->_metodo();
         $this->_argumentos();
 
+        Medios\Debug::imprimir([
+            "fin",
+            "Ruta Modulo: " . Estructura::$rutaModulo,
+            "Modulo: " . Estructura::$modulo,
+            "Controlador: " . Estructura::$controlador,
+            "Metodo: " . Estructura::$metodo
+        ], false);
     }
 
     private function _argumentos() {
@@ -56,32 +65,5 @@ class Procesador {
 
     }
 
-    /**
-     * Ajusta el nombre de los Controladores y Metodos
-     *
-     * Realiza una modificación del string para crear nombres
-     * de clases controladoras y metodos validas
-     *
-     * @method validarNombre
-     * @param string $str Cadena a formatear
-     * @param int $tipoCamelCase lower, upper
-     *
-     * @return string $nombre Cadena Formateada resultante
-     */
-    protected function _validarNombre($str, $tipoCamelCase) {
-
-        if (empty($str)) {
-            return false;
-        }
-        if ($tipoCamelCase == 'upper') {
-            $nombre = str_replace(" ", "", Medios\Cadenas::upperCamelCase(str_replace("-", " ", $str)));
-        }
-        else {
-            $nombre = str_replace(" ", "", Medios\Cadenas::lowerCamelCase(str_replace("-", " ", $str)));
-        }
-
-        return $nombre;
-
-    }
 
 }

@@ -90,19 +90,26 @@ class Menu extends Selector {
      */
     private function cargarMenu($menu) {
 
-        if (!strrpos($menu, ".json")) {
-            $menu = $menu . ".json";
+        try {
+            if (!strrpos($menu, ".json")) {
+                $menu = $menu . ".json";
+            }
+
+            $path = $this->_obtenerDirectorio($menu);
+
+            if (!Medios\Directorios::validar($path)) {
+                $msj = "No se consigue el archivo de configuracion del menu $path";
+                //throw new \Exception($msj, self::$_ce . 1);
+                Excepcion::procesar($msj, self::$_ce . 1);
+            }
+
+            $this->_path = $path;
+            $this->validarJson();
+        }
+        catch (\Exception $e) {
+            Medios\Debug::imprimir($e->getMessage() . $e->getCode(), $e->getTrace());
         }
 
-        $path = $this->_obtenerDirectorio($menu);
-
-        if (!Medios\Directorios::validar($path)) {
-            $msj = "No se consigue el archivo de configuracion del menu $path";
-            Excepcion::procesar($msj, self::$_ce . 1);
-        }
-
-        $this->_path = $path;
-        $this->validarJson();
     }
 
     private function _obtenerDirectorio($menu) {

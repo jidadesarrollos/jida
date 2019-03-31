@@ -6,11 +6,12 @@
 namespace Jida;
 
 use Jida\Configuracion as Conf;
-use Jida\Manager\Rutas\Arranque;
+
+use Jida\Manager\Procesador;
 use Jida\Medios as Medios;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
-use Jida\Manager\Rutas\Lector;
+
 use Jida\Manager\Validador;
 
 class Manager {
@@ -31,7 +32,7 @@ class Manager {
 
     private $parametros;
 
-    function __construct($ruta, $parametros = []) {
+    private function __construct($ruta, $parametros = []) {
 
         try {
 
@@ -48,11 +49,9 @@ class Manager {
             self::$configuracion = Conf\Config::obtener();
 
             Estructura::procesar($this->ruta, $ruta);
-
             Conf\Base::path();
 
             $this->_validador = new Validador();
-            $this->_arranque = new Arranque($parametros);
 
         }
         catch (\Exception $e) {
@@ -88,7 +87,10 @@ class Manager {
         $_SERVER = array_merge($_SERVER, getallheaders());
 
         if ($this->_validador->inicio()) {
-            $this->_arranque->ejecutar();
+
+            $procesador = new Procesador($this->parametros);
+            $procesador->ejecutar();
+
         }
         else {
             $msj = "La aplicación no se encuentra configurada de forma correcta";
@@ -110,7 +112,11 @@ class Manager {
             $manager->_inicio();
         }
         catch (\Exception $exception) {
-            Medios\Debug::imprimir(["capturada excepcion", $exception->getMessage()], true);
+            Medios\Debug::imprimir(
+                ["capturada excepcion",
+                    $exception->getMessage(),
+                    $exception->getTrace()
+                ], true);
         }
 
     }

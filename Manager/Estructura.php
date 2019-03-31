@@ -6,7 +6,6 @@
 
 namespace Jida\Manager;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Rutas\Arranque;
 use Jida\Medios\Debug;
 
@@ -47,8 +46,9 @@ class Estructura {
     static public $namespace;
     static public $modulo;
     static public $controlador;
+    static public $nombreControlador;
     static public $metodo;
-    static public $jadmin;
+    static public $parametros = [];
     static public $idioma;
     /**
      * @var string $urlRuta sección de la URL correspondiente al dominio
@@ -176,13 +176,18 @@ class Estructura {
 
     }
 
-    /**
-     * Retorna la ruta de carpetas de un modulo solicitado
-     *
-     * @param $directorio
-     */
-    static public function modulo($directorio) {
+    static function imprimir() {
+
+        $reflection = new \ReflectionClass(__CLASS__);
+        $properties = $reflection->getProperties();
+
+        echo "<pre>";
+        foreach ($properties as $key => $prop) {
+            echo $prop->getName() . ": ";
+            print_r($prop->getValue());
+            echo "<br>";
+        }
+        echo "<pre/>";
 
     }
-
 }

@@ -12,6 +12,7 @@ namespace Jida\Manager\Rutas;
 
 use Jida\Configuracion\Config;
 use Jida\Core\Manager as Core;
+use Jida\Manager\Url\UrlPipeline;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Rutas\Procesador\Url;
@@ -58,54 +59,54 @@ class Arranque {
 
     static $idioma;
 
+    private $_handlers = [];
+    private $_handlersActivos = [];
+
     public function __construct($parametros = []) {
 
         $conf = Config::obtener();
         $this->_configuracion = $conf;
-
-        if (count($parametros)) $this->_parametros($parametros);
-
         $this->modulos = $conf::$modulos;
 
-        $this->url = new Url();
+        $this->url = Url::obtener();
         $this->_get = $_GET;
+        $this->parametros = $parametros;
 
-        $this->_parser();
+        $this->_inicializar();
 
         $this->_managerVista = new ManagerVista($this);
 
     }
 
-    private function _parser() {
+    private function _inicializar() {
 
-        $parametro = $this->url->proximoParametro();
+        $pipe = new UrlPipeline();
+        $handlers = isset($this->parametros['handlers']) ? $this->parametros['handlers'] : [];
 
-        //pipeline de procesamiento
-        $this->_validarIdioma();
-        if (strtolower($parametro) === 'jadmin') {
-            $this->jadmin = true;
-            Estructura::$jadmin = true;
+        if ($handlers) {
+
+            if (is_string($handlers)) $handlers = (array)$handlers;
+
+            foreach ($handlers as $item => $handler) {
+                if (!class_exists($handler)) continue;
+                $pipe->agregar(new $handler($this->url));
+            }
+
         }
-        else {
-            $this->url->reingresarParametro($parametro);
-        }
 
+        $pipe->procesar();
+
+        Debug::imprimir(["fin",
+            "Ruta Modulo: " . Estructura::$rutaModulo,
+            "Modulo: " . Estructura::$modulo,
+            "Controlador: " . Estructura::$controlador,
+            "Metodo: " . Estructura::$metodo
+        ], true);
         $this->procesador = new Procesador($this);
         $this->procesador->procesar();
 
     }
 
-    private function _parametros($parametros) {
-
-        if (isset($parametros['handlers'])) {
-            $this->procesarHandlers($parametros['handlers']);
-        }
-
-    }
-
-    private function procesarHandlers($handlers) {
-        Debug::imprimir([$handlers], true);
-    }
 
     /**
      * Verifica si hay funcionalidades definidas a ejecutar previo o posterior al metodo solicitado
@@ -220,22 +221,6 @@ class Arranque {
         }
 
         return true;
-
-    }
-
-    private function _validarIdioma() {
-
-        $parametro = $this->url->proximoParametro();
-
-        $idiomas = $this->_configuracion->idiomas;
-
-        if (array_key_exists($parametro, $idiomas) or in_array($parametro, $idiomas)) {
-            $this->_idioma = $parametro;
-            Estructura::$idioma = $parametro;
-            return;
-        }
-
-        $this->url->reingresarParametro($parametro);
 
     }
 

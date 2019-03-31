@@ -9,86 +9,56 @@ use Jida\Medios\Debug;
 
 Trait Modulo {
 
+    var $ruta;
+    var $url;
     private $_namespaces = [
-        'app'        => 'App\\Controllers\\',
-        'modulo'     => 'App\\Modulos\\',
-        'jida'       => '\\Jida\\Jadmin\\Controllers\\',
-        'jidaModulo' => '\\Jida\\Jadmin\\Modulos\\',
-        'jadminApp'  => '\\App\Jadmin\\'
+        'app'    => 'App\\Controllers\\',
+        'modulo' => 'App\\Modulos\\',
 
     ];
     private $_namespace;
 
+    private function definir() {
+
+        $modulo = Estructura::$modulo;
+        $directorio = Estructura::$directorio;
+        $ds = DS;
+
+        if (!$modulo) {
+
+            Estructura::$ruta = "${directorio}{$ds}Aplicacion";
+            Estructura::$rutaModulo = "${directorio}{$ds}Aplicacion";
+            Estructura::$namespace = $this->_namespaces['app'];
+            return;
+
+        }
+
+        $rutaModulo = "{$directorio}{$ds}Aplicacion{$ds}Modulos{$ds}{$modulo}";
+        $url = "/Aplicacion/Modulos/{$modulo}";
+        Estructura::$namespace = $this->_namespaces['modulo'];
+        Estructura::$urlModulo = $url;
+        Estructura::$rutaModulo = $rutaModulo;
+
+    }
+
     protected function _modulo() {
-        //TODO: mejorar logica metodo de obtención del modulo
+
         $padre = $this->_padre;
 
         $parametro = $padre->url->proximoParametro();
         $url = "";
-        $posModulo = $this->_validarNombre($parametro, 'upper');
+        $modulo = $this->_validarNombre($parametro, 'upper');
+        $modulos = $padre->modulos;
 
-        if ($posModulo and
-            (in_array($posModulo, $padre->modulos) or
-             array_key_exists($posModulo, $padre->modulos))
-        ) {
-
-            Estructura::$modulo = $posModulo;
-            $padre::$ruta = 'app';
-            $namespace = $this->_namespaces['modulo'] . Estructura::$modulo;
-            $namespace .= ($padre->jadmin) ? '\\Jadmin\\Controllers\\' : '\\Controllers\\';
-            $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Modulos' . DS . $posModulo;
-            $rutaModulo .= ($padre->jadmin) ? DS . 'Jadmin' : '';
-            $url = "/Aplicacion/Modulos/$posModulo";
-        }
-
-        else if (Estructura::$jadmin) {
-
-            $namespace = $this->_namespaces['jadminApp'] . "Controllers\\";
-
-            if (!$this->_moduloJadmin($posModulo) and
-                class_exists($namespace . ucfirst($posModulo))) {
-
-                $padre::$ruta = 'app';
-                $rutaModulo = Estructura::$directorio . DS . 'Aplicacion' . DS . 'Jadmin';
-
-                $padre->url->reingresarParametro($posModulo);
-            }
-            else {
-
-                $padre::$ruta = 'jida';
-
-                if ($posModulo and $this->_moduloJadmin($posModulo)) {
-                    Estructura::$modulo = $posModulo;
-                    $namespace = $this->_namespaces['jidaModulo'] . $posModulo . '\\Controllers\\';
-                    $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin' . DS . "Modulos/{$posModulo}";
-                }
-                else {
-                    $padre->url->reingresarParametro($posModulo);
-                    $namespace = $this->_namespaces['jida'];
-                    $rutaModulo = Estructura::$rutaJida . DS . 'Jadmin';
-                }
-
-            }
-
+        if ($modulo and (isset($modulos[$parametro]))) {
+            Estructura::$modulo = $modulo;
         }
         else {
-            $namespace = $this->_namespaces['app'];
-            $rutaModulo = Estructura::$directorio . DS . "Aplicacion";
-            $padre->url->reingresarParametro($posModulo);
+            $padre->url->reingresarParametro($parametro);
         }
 
-        Estructura::$namespace = $namespace;
-        Estructura::$rutaModulo = $rutaModulo;
-        Estructura::$urlModulo = Estructura::$urlBase . $url;
-
-    }
-
-    private function _moduloJadmin($posModulo) {
-
-        $modulo = $this->_validarNombre($posModulo, 'upper');
-        $config = Config::obtener();
-
-        return in_array($modulo, Jadmin::$modulos);
+        $this->definir();
+        $padre->pipeModulos($modulo);
 
     }
 

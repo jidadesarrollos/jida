@@ -17,10 +17,11 @@ class Tema {
     static $configuracion;
     static private $_instancia;
     static private $_ce = 100014;
+    static private $jadmin = false;
 
     private function __construct() {
 
-        $this->_tema = (!!Estructura::$jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
+        $this->_tema = (!!self::$jadmin) ? Config::obtener()->temaJadmin : Config::obtener()->tema;
         $this->_definirRuta();
         $this->_configuracion();
 
@@ -30,7 +31,7 @@ class Tema {
 
         $rutaApp = Estructura::$rutaAplicacion . "/Layout/" . $this->_tema;
 
-        if (Estructura::$jadmin and !Directorios::validar($rutaApp)) {
+        if (self::$jadmin and !Directorios::validar($rutaApp)) {
 
             //TODO: Manejar ruta para jadmin desde estructura
             self::$url = Estructura::$urlJida . '/Jadmin/Layout/' . $this->_tema;

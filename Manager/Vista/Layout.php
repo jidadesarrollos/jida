@@ -59,20 +59,7 @@ class Layout {
      */
     public function __construct($padre = null) {
 
-        if ($padre) {
-
-            self::$padre = $padre;
-            self::$instancia = $this;
-
-            $this->_data = $padre->data;
-            $this->urlBase = Estructura::$urlBase;
-            $this->urlModulo = Estructura::$urlModulo;
-            $this->url = Estructura::$url;
-
-        }
-        else {
-            $this->_data = new \StdClass();
-        }
+        $this->_data = Data::obtener();
 
         $this->_leer();
 
@@ -199,18 +186,11 @@ class Layout {
      */
     static function obtener() {
 
-        try {
-
-            if (!self::$instancia) {
-                throw new \Exception("El objeto layout no ha sido instanciado", self::$_ce . 1);
-            }
-
-            return self::$instancia;
-
+        if (!self::$instancia) {
+            self::$instancia = new self();
         }
-        catch (\Exception $e) {
-            Debug::imprimir([$e->getCode(), $e->getMessage(), $e->getTrace()], true);
-        }
+
+        return self::$instancia;
 
     }
 

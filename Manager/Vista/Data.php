@@ -2,7 +2,9 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Core\Manager\DataVista;
 use Jida\Core\ObjetoManager;
+use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Data\Meta;
 use Jida\Manager\Vista\Data\Plantilla;
 
@@ -41,7 +43,10 @@ class Data {
      * @see \Jida\Manager\Vista
      *
      */
-    static function obtener() {
+    static function obtener($controlador = null) {
+
+        $ControlPadre = 'Jida\Core\Controlador\Control';
+        $esData = ($controlador and $controlador instanceof $ControlPadre);
 
         self::validarInstancia();
 

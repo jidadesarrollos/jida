@@ -4,6 +4,7 @@ namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
 
 class Manager {
 
@@ -12,8 +13,6 @@ class Manager {
     //    private $_ce = 10006;
     private $_data;
 
-    private $_namespace;
-    private $_modulo;
     /**
      * Instancia de objeto Layout
      *
@@ -22,19 +21,13 @@ class Manager {
      *
      */
     private $_layout;
-
-    public $Procesador;
-
-    static public $controlador;
-    static public $Padre;
+    private $_controlador;
     static public $vista;
 
-    function __construct($padre) {
+    function __construct($controlador) {
 
-        $this->Procesador = $padre->procesador;
-        self::$Padre = $padre;
-
-        $this->_layout = new Layout($this);
+        $this->_controlador = $controlador;
+        $this->_layout = new Layout($this, $controlador);
         $this->_data = Data::obtener();
         $this->_inicializar();
 
@@ -54,15 +47,7 @@ class Manager {
     private function _inicializar() {
 
         $this->_procesarData();
-        $padre = self::$Padre;
-
-        $this->_namespace = Estructura::$namespace;
-        $this->_modulo = $padre::$modulo;
         $this->_layout = new Layout($this);
-
-    }
-
-    function excepcion() {
 
     }
 
@@ -81,7 +66,7 @@ class Manager {
     function vista() {
 
         if (!self::$vista) {
-            self::$vista = new Vista($this->_data);
+            self::$vista = new Vista($this->_controlador);
         }
 
         return self::$vista;

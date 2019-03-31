@@ -1,7 +1,8 @@
 <?php
 
-namespace Jida\Manager\Rutas\Procesador;
+namespace Jida\Manager\Url;
 
+use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 
 class Url {
@@ -12,6 +13,17 @@ class Url {
     private $_partes;
     static public $actual;
     static public $base;
+
+    public $modulo;
+    public $pathModulo;
+    public $urlModulo;
+    public $controlador;
+    public $pathControlador;
+    public $metodo;
+
+    private static $instancia;
+
+    static public $config;
 
     function __construct() {
 
@@ -47,4 +59,9 @@ class Url {
         return $this->_partes;
     }
 
+    static function obtener() {
+
+        if (!self::$instancia) self::$instancia = new self();
+        return self::$instancia;
+    }
 }
