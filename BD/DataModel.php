@@ -532,7 +532,6 @@ class DataModel {
 
             array_walk($campos,
                 function (&$key, $valor, $tabla) {
-
                     $key = $tabla . "." . $key;
                 },
                 $this->tablaQuery);
