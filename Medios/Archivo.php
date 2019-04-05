@@ -77,4 +77,15 @@ class Archivo {
     function directorio() {
         return $this->_directorio;
     }
+
+    static function crear($ruta, $contenido){
+        $dirname = dirname(Estructura::$directorio.$ruta);
+        if (!is_dir($dirname))
+        {
+            mkdir($dirname, 0755, true);
+        }
+        $archivo = fopen(Estructura::$directorio.$ruta, "w");
+        fwrite($archivo, $contenido);
+        fclose($archivo);
+    }
 }

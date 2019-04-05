@@ -152,10 +152,12 @@ class Layout {
 
             $marco = self::$directorio . DS . $this->_plantilla;
 
-            echo $this->_obtenerContenido(
+            $contenido = $this->_obtenerContenido(
                 $marco,
                 ['contenido' => $vista]
             );
+            \Jida\Medios\Archivo::crear('/app/archivos/prueba.html', $contenido);
+            echo $contenido;
 
         }
         catch (\Exception $e) {

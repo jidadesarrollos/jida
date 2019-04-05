@@ -112,7 +112,11 @@ Trait Archivo {
             return $url;
         }
 
-        return $path . "htdocs/" . $folder . '/' . $item;
+        return $path . "htdocs/" . $carpeta . '/' . $item;
+
+    }
+
+    static function crear(){
 
     }
 }
