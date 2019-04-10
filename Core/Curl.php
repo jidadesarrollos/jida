@@ -10,7 +10,10 @@
 
 namespace Jida\Core;
 
-class Curl extends Controller {
+use Jida\Core\Controlador\Control;
+use Jida\Medios\Debug;
+
+class Curl extends Control {
     /**
      * @var int $id Identificador de la llamada curl
      */

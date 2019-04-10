@@ -9,10 +9,10 @@
 
 namespace Jida\Componentes;
 
-use Jida\Debug as Debug;
-use Jida\Core\Curl as Curl;
+use Jida\Medios\Debug;
+use Jida\Core\Curl;
 
-include_once 'Framework/Core/Curl.php';
+//include_once 'Framework/Core/Curl.php';
 
 class InstagramManager {
 
