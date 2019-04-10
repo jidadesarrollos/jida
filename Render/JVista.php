@@ -366,7 +366,7 @@ class JVista {
             }
         }
         $this->_imprimir($this->paginaActual, $_GET, TRUE);
-        if (count($this->clausulas) > 0) {
+        if ((is_array($this->clausulas) or is_object($this->clausulas)) and count($this->clausulas) > 0) {
             foreach ($this->clausulas as $key => $parametros) {
                 foreach ($parametros as $clausula => $param) {
                     if (is_array($param)) {
