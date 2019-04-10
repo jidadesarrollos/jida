@@ -2,6 +2,7 @@
 
 namespace Jida\Manager\Vista;
 
+use Exception;
 use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
@@ -26,7 +27,7 @@ Trait Archivo {
 
             if (!Directorios::validar($archivo)) {
                 $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
-                throw new \Exception($msj, self::$_ce . 11);
+                throw new Exception($msj, self::$_ce . 11);
             }
 
             extract($datos);
@@ -42,7 +43,7 @@ Trait Archivo {
             return $contenido;
 
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Debug::imprimir([
                 "Excepcion en Layout::render",
                 $e->getCode(),
@@ -112,7 +113,7 @@ Trait Archivo {
             return $url;
         }
 
-        return $path . "htdocs/" . $folder . '/' . $item;
+        return $path . "htdocs/" . $carpeta . '/' . $item;
 
     }
 }

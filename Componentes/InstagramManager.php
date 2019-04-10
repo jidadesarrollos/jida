@@ -9,6 +9,7 @@
 
 namespace Jida\Componentes;
 
+use App\Config\Configuracion;
 use Jida\Medios\Debug;
 use Jida\Core\Curl;
 
@@ -20,7 +21,7 @@ class InstagramManager {
     private $secretID;
 
     private $version = 'v1';
-    private $urlApi = 'https://api.instagram.com/';
+    private $urlApi  = 'https://api.instagram.com/';
     /**
      * URL de Autorización para Instagram
      * @example https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code&scope=SCOPE
@@ -41,9 +42,9 @@ class InstagramManager {
      */
     function __construct () {
 
-        $this->accessToken = INSTAGRAM_ACCESS_TOKEN;
-        $this->secretID = INSTAGRAM_CLIENT_SECRET;
-        $this->redirectURI = URL_REDIRECCION;
+        $this->accessToken = Configuracion::INSTAGRAM_ACCESS_TOKEN;
+        $this->secretID = Configuracion::INSTAGRAM_CLIENT_SECRET;
+        $this->redirectURI = Configuracion::URL_REDIRECCION;
         $this->urlApi = $this->urlApi . $this->version . '/';
         $this->urlAuth = $this->urlAuth . '?client_id=' . $this->accessToken . '&redirect_uri=' . $this->redirectURI . '&response_type=code&' . $this->scopes;
     }

@@ -210,14 +210,14 @@ class _Render {
         foreach ($params as $key => $p)
             $this->$key = $p;
 
-        $directorio = DIR_APP . 'Segmentos/';
+        $directorio = DIR_APP . '/Segmentos/';
         if (file_exists($directorio . $segmento . '.php')) {
             echo $this->incluir('Aplicacion/Segmentos/' . $segmento);
             // echo  $this->obtenerContenidos('Aplicacion/Segmentos/'.$segmento.'.php');
             // return true;
         }
         else {
-            throw new \Exception("No existe el segmento $segmento en la carpeta " . $directorio, 100);
+            throw new Excepcion("No existe el segmento $segmento en la carpeta " . $directorio, 100);
         }
 
         return false;
