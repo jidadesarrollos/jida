@@ -8,8 +8,13 @@
 
 namespace Jida\Jadmin\Modulos\Usuario\Controllers\Usuario;
 
+use Jida\Manager\Estructura;
+use Jida\Medios\Archivos\ProcesadorCarga;
 use Jida\Medios\Debug;
+use Jida\Medios\Directorios;
 use Jida\Medios\Mensajes;
+use Jida\Medios\Sesion;
+use Jida\Medios\Archivos\Imagen;
 use Jida\Modulos\Usuarios\Modelos\Perfil;
 use Jida\Modulos\Usuarios\Modelos\Usuario;
 use Jida\Modulos\Usuarios\Modelos\UsuarioPerfil;
@@ -104,13 +109,25 @@ trait Usuarios {
     public function gestion($id_usuario) {
 
         $form = new Formulario('jida/Usuarios/GestionUsuarios', $id_usuario);
+        $form->attr(['enctype' => 'multipart/form-data']);
+
         $usuario = new Usuario($id_usuario);
 
-        if ($this->post('btnGestionUsuarios')) {
+        if ($this->post('btnUsuarios')) {
 
             if ($form->validar()) {
 
                 $this->post('clave', $usuario->clave);
+
+                if($this->files('foto')['name']){
+                    $procesador = new ProcesadorCarga('foto');
+                    if($procesador->validar()){
+                        $ruta = Estructura::$directorio."/htdocs/imgs/perfiles/{$id_usuario}";
+                        Directorios::eliminar($ruta);
+                        $archivo = $procesador->mover($ruta)->archivos();
+                        $this->post('img_perfil', str_replace(Estructura::$directorio,'',$archivo[0]->directorio()));
+                    }
+                }
 
                 if ($usuario->salvar($this->post())) {
 
@@ -129,12 +146,19 @@ trait Usuarios {
         ]);
     }
 
+    public function miPerfil(){
+        $id_propio = Sesion::$usuario->obtener('id_usuario');
+        $this->redireccionar("/jadmin/usuario/gestion/{$id_propio}");
+    }
+
     public function eliminar($id_usuario) {
 
         if (!empty($id_usuario)) {
 
             $usuario = new Usuario($id_usuario);
             if (!empty($usuario->id_usuario) and $usuario->eliminar()) {
+                $ruta = Estructura::$directorio."/htdocs/imgs/perfiles/{$id_usuario}";
+                Directorios::eliminar($ruta);
                 Mensajes::almacenar(Mensajes::suceso('El usuario ha sido eliminado correctamente'));
                 $this->redireccionar('/jadmin/usuario');
             }

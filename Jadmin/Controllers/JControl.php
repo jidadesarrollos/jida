@@ -15,7 +15,7 @@ use Jida\Core\Controlador;
 use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
-use Jida\Modulos\Usuarios\Usuario;
+use Jida\Modulos\Usuarios\Modelos\Usuario;
 use Jida\Render\Formulario;
 use Jida\Render\Menu;
 use Jida\Render\Selector;
@@ -53,11 +53,15 @@ class JControl extends Controlador {
         $menu = new Menu('/jadmin/menu');
         $menu->addClass('navigation-left');
 
+        $id_usuario = \Jida\Medios\Sesion::$usuario->obtener('id_usuario');
+        $perfil = new Usuario($id_usuario);
+
         $this->data([
             'menu'      => $menu->render(),
             'nombreApp' => $nombreApp,
             'urlBase'   => $urlBase,
-            'urlTema'   => $urlTema
+            'urlTema'   => $urlTema,
+            'imgPerfil' => Estructura::$urlBase.$perfil->img_perfil
         ]);
     }
 
