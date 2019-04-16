@@ -118,17 +118,6 @@
       "id": "id_estatus",
       "type": "select"
     },
-    "foto": {
-      "label": "Foto de Perfil",
-      "name": "foto",
-      "orden": 8,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
-      "id": "foto",
-      "type": "file"
-    },
     "img_perfil": {
       "name": "img_perfil",
       "orden": 9,

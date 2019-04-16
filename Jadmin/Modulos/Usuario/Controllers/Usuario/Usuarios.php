@@ -9,6 +9,7 @@
 namespace Jida\Jadmin\Modulos\Usuario\Controllers\Usuario;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Vista\Render;
 use Jida\Medios\Archivos\ProcesadorCarga;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
@@ -19,6 +20,7 @@ use Jida\Modulos\Usuarios\Modelos\Perfil;
 use Jida\Modulos\Usuarios\Modelos\Usuario;
 use Jida\Modulos\Usuarios\Modelos\UsuarioPerfil;
 use Jida\Render\Formulario;
+use Jida\Render\Selector;
 use Jida\Render\JVista;
 
 trait Usuarios {
@@ -45,7 +47,6 @@ trait Usuarios {
         $vista->acciones([
             'Nuevo Usuario' => ['href' => '/jadmin/usuario/gestion/']
         ]);
-
 
         $render = $vista->render(
             function ($datos) {
@@ -108,6 +109,8 @@ trait Usuarios {
 
     public function gestion($id_usuario) {
 
+        $this->layout()->incluirJS(['{base}/jida/htdocs/js/libs/jCargaFile.js', '{tema}/htdocs/js/cargarImagen.js']);
+
         $form = new Formulario('jida/Usuarios/GestionUsuarios', $id_usuario);
         $form->attr(['enctype' => 'multipart/form-data']);
 
@@ -119,13 +122,13 @@ trait Usuarios {
 
                 $this->post('clave', $usuario->clave);
 
-                if($this->files('foto')['name']){
-                    $procesador = new ProcesadorCarga('foto');
-                    if($procesador->validar()){
-                        $ruta = Estructura::$directorio."/htdocs/imgs/perfiles/{$id_usuario}";
+                if ($this->files('imagen')['name']) {
+                    $procesador = new ProcesadorCarga('imagen');
+                    if ($procesador->validar()) {
+                        $ruta = Estructura::$directorio . "/htdocs/imgs/perfiles/{$id_usuario}";
                         Directorios::eliminar($ruta);
                         $archivo = $procesador->mover($ruta)->archivos();
-                        $this->post('img_perfil', str_replace(Estructura::$directorio,'',$archivo[0]->directorio()));
+                        $this->post('img_perfil', str_replace(Estructura::$directorio, '', $archivo[0]->directorio()));
                     }
                 }
 
@@ -141,12 +144,21 @@ trait Usuarios {
             }
         }
 
+        $botonImg = Selector::crear('input', ['type'  => 'button',
+                                              'title' => 'Cargar nueva imagen de perfil',
+                                              'value' => 'Cargar nueva imagen de perfil',
+                                              'class' => 'btn btn-default pull-right',
+                                              'id'    => 'btnCargar'
+        ]);
+        $form->addFinal($botonImg);
+
         $this->data([
-            'vista' => $form->render(),
+            'vista'      => $form->render(),
+            'img_perfil' => Estructura::$urlBase . $usuario->img_perfil
         ]);
     }
 
-    public function miPerfil(){
+    public function miPerfil() {
         $id_propio = Sesion::$usuario->obtener('id_usuario');
         $this->redireccionar("/jadmin/usuario/gestion/{$id_propio}");
     }
@@ -157,7 +169,7 @@ trait Usuarios {
 
             $usuario = new Usuario($id_usuario);
             if (!empty($usuario->id_usuario) and $usuario->eliminar()) {
-                $ruta = Estructura::$directorio."/htdocs/imgs/perfiles/{$id_usuario}";
+                $ruta = Estructura::$directorio . "/htdocs/imgs/perfiles/{$id_usuario}";
                 Directorios::eliminar($ruta);
                 Mensajes::almacenar(Mensajes::suceso('El usuario ha sido eliminado correctamente'));
                 $this->redireccionar('/jadmin/usuario');
