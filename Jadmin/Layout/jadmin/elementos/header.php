@@ -16,7 +16,7 @@
         <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen></i>
         <!-- User avatar dropdown -->
         <div class="dropdown">
-            <?php if($this->imgPerfil==='' or is_null($this->imgPerfil)): ?>
+            <?php if(is_null($this->imgPerfil)): ?>
             <i class="i-Administrator text-muted header-icon" id="dropdownMenuButton" data-toggle="dropdown"
                aria-haspopup="true" role="button" aria-expanded="false"></i>
             <?php else: ?>

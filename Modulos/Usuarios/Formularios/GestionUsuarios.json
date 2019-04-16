@@ -1,6 +1,6 @@
 {
   "nombre": "Usuarios",
-  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_empresa, id_estatus from s_usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_empresa, id_estatus , img_perfil from s_usuarios",
   "identificador": "Usuarios",
   "estructura": "",
   "clave_primaria": "id_usuario",

@@ -150,7 +150,15 @@ trait Usuarios {
                                               'class' => 'btn btn-default pull-right',
                                               'id'    => 'btnCargar'
         ]);
+        $botonLimpiar = Selector::crear('input', ['type'  => 'button',
+                                                 'title' => 'Borrar imagen de perfil',
+                                                 'value' => 'Borrar imagen de perfil',
+                                                 'class' => 'btn btn-default pull-right',
+                                                 'id'    => 'btnLimpiar'
+        ]);
         $form->addFinal($botonImg);
+        $form->addFinal($botonLimpiar);
+
 
         $this->data([
             'vista'      => $form->render(),

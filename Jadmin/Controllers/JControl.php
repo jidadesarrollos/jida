@@ -56,12 +56,14 @@ class JControl extends Controlador {
         $id_usuario = \Jida\Medios\Sesion::$usuario->obtener('id_usuario');
         $perfil = new Usuario($id_usuario);
 
+        $img_perfil = isset($perfil->img_perfil) ? Estructura::$urlBase.$perfil->img_perfil: null ;
+
         $this->data([
             'menu'      => $menu->render(),
             'nombreApp' => $nombreApp,
             'urlBase'   => $urlBase,
             'urlTema'   => $urlTema,
-            'imgPerfil' => Estructura::$urlBase.$perfil->img_perfil
+            'imgPerfil' => $img_perfil
         ]);
     }
 
