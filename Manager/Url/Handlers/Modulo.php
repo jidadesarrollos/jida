@@ -34,23 +34,30 @@ class Modulo extends Handler {
         $parametro = $this->url->proximoParametro();
 
         $modulo = Definicion::objeto($parametro);
+        if (Estructura::$namespace && Estructura::$ruta) {
+            //Debug::imprimir(["ya se definio"], true);
+            return;
+        }
+
+        $ruta = Estructura::$rutaAplicacion;
 
         if (!isset($modulos[$parametro])) {
 
             $this->url->reingresarParametro($parametro);
 
             Estructura::$namespace = "App\\Controllers";
-            Estructura::$ruta = Estructura::$rutaAplicacion;
+            Estructura::$ruta = $ruta;
             Estructura::$modulo = $this->default;
-            Estructura::$rutaModulo = Estructura::$rutaAplicacion;
+            Estructura::$rutaModulo = $ruta;
             return;
 
         }
 
         Estructura::$modulo = $modulo;
         Estructura::$namespace = "App\\Modulos\\{$modulo}\\Controllers";
-        Estructura::$ruta = Estructura::$rutaAplicacion;
-        Estructura::$rutaModulo = Estructura::$rutaAplicacion;
+        Estructura::$ruta = $ruta;
+
+        Estructura::$rutaModulo = "{$ruta}/Modulos/$modulo";
 
     }
 

@@ -50,7 +50,10 @@ class Pipeline {
     function procesar() {
 
         foreach ($this->_handlers as $item => $handler) {
+
             if (method_exists($handler, 'definir')) {
+                //  Debug::imprimir(["processing " . get_class($handler) . ": " . Estructura::$controlador  ,]);
+
                 $handler->procesar();
             }
         }
@@ -78,5 +81,6 @@ class Pipeline {
             Estructura::$parametros = $parametros;
 
         }
+
     }
 }

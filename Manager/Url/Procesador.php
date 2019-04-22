@@ -37,6 +37,7 @@ class Procesador {
     private function _inicializar() {
 
         $pipe = new Pipeline();
+
         $handlers = isset($this->parametros['handlers']) ? $this->parametros['handlers'] : [];
 
         if ($handlers) {
@@ -44,6 +45,7 @@ class Procesador {
             if (is_string($handlers)) $handlers = (array)$handlers;
 
             foreach ($handlers as $item => $handler) {
+
                 if (!class_exists($handler)) continue;
                 $pipe->agregar(new $handler($this->url));
             }

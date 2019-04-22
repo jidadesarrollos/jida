@@ -31,6 +31,7 @@ class Url {
 
         if (isset($this->_get['url'])) {
             unset($this->_get['url']);
+            unset($_GET['url']);
         }
 
         if (count($this->_get)) {

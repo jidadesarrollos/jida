@@ -27,39 +27,22 @@ class Manager {
     function __construct($controlador) {
 
         $this->_controlador = $controlador;
-        $this->_layout = new Layout($this, $controlador);
         $this->_data = Data::obtener();
         $this->_inicializar();
 
     }
 
-    /**
-     * Procesa la data en el nuevo objeto data
-     *
-     * Esta funcion es provisoria hasta tanto el objeto dataVista sea reemplazado
-     */
-    private function _procesarData() {
-
-        Data::inicializar($this->_data);
-
-    }
-
     private function _inicializar() {
 
-        $this->_procesarData();
-        $this->_layout = new Layout($this);
+        $this->_layout = new Layout();
+        Data::inicializar($this->_data);
 
     }
 
     function renderizar() {
 
         $plantilla = $this->_data->plantilla();
-
-        $vista = $this->vista();
-
-        $contenido = $vista->obtener($plantilla);
-
-        $this->_layout->render($contenido);
+        $this->_layout->render($this->vista()->obtener($plantilla));
 
     }
 

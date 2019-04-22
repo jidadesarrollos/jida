@@ -19,16 +19,32 @@ class Controlador extends Handler {
         return true;
     }
 
-    function definir() {
+    private function controlador() {
 
         $parametro = $this->url->proximoParametro();
-        $controlador = Definicion::objeto($parametro);
         $namespace = Estructura::$namespace;
+
+        if (!$parametro) {
+            $resp = (Estructura::$modulo) ? Definicion::objeto(Estructura::$modulo) : 'Index';
+            return $resp;
+
+        }
+
+        $controlador = Definicion::objeto($parametro);
 
         if (!class_exists("$namespace\\$controlador")) {
             $this->url->reingresarParametro($parametro);
             $controlador = Estructura::$modulo;
         }
+
+        return $controlador;
+
+    }
+
+    function definir() {
+
+        $namespace = Estructura::$namespace;
+        $controlador = $this->controlador();
 
         if (!class_exists("$namespace\\$controlador")) {
             Debug::imprimir(["No existe el objeto", "$namespace\\$controlador"]);
@@ -37,6 +53,7 @@ class Controlador extends Handler {
         Estructura::$controlador = "{$namespace}\\{$controlador}";
         Estructura::$nombreControlador = $controlador;
         $this->url->controlador = $controlador;
+
     }
 
 }

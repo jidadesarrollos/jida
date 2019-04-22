@@ -57,10 +57,9 @@ class Layout {
      *
      * @param mixed $padre
      */
-    public function __construct($padre = null) {
+    public function __construct() {
 
         $this->_data = Data::obtener();
-
         $this->_leer();
 
     }
@@ -71,34 +70,24 @@ class Layout {
      * Verifica la configuracion de la aplicacion y define el directorio en el cual se encuentra
      * para disponibilizarlo en la propiedad estatica $directorio
      *
-     * @return $this
+     * @return mixed
      */
     private function _leer() {
-        try {
 
-            if (!Tema::$directorio) {
-                $tema = Tema::obtener();
-                self::$_urlTema = $tema::$url;
-                self::$directorio = $tema::$directorio;
-                self::$_configuracion = $tema::$configuracion;
-                return true;
-            }
-
-            self::$_urlTema = Tema::$url;
-            $this->urlTema = Tema::$url;
-
-            self::$directorio = Tema::$directorio;
-            self::$_configuracion = Tema::$configuracion;
-
-        }
-        catch (\Excepcion $e) {
-            Debug::imprimir(["excepcion", $e], true);
-        }
-        catch (\Error $e) {
-            Debug::imprimir(["Error", $e], true);
+        if (!Tema::$directorio) {
+            $tema = Tema::obtener();
+            //Debug::imprimir([1, "tema", $tema], true);
+            self::$_urlTema = $tema::$url;
+            self::$directorio = $tema::$directorio;
+            self::$_configuracion = $tema::$configuracion;
+            return true;
         }
 
-        return $this;
+        $this->urlTema = Tema::$url;
+        self::$_urlTema = Tema::$url;
+        self::$directorio = Tema::$directorio;
+        self::$_configuracion = Tema::$configuracion;
+
     }
 
     function _definirPlantilla($tpl) {
@@ -122,38 +111,30 @@ class Layout {
      */
     public function render($vista) {
 
-        try {
+        //try {
 
-            if (!self::$directorio) {
-                $msj = 'No se ha definido el directorio del layout';
-                throw new \Exception($msj, self::$_ce . '0008');
-            }
-            if (is_null($vista)) {
-                $msj = 'El parametro $vista es requerido para el metodo render';
-                throw new \Exception($msj, self::$_ce . '0001');
-            }
-            if (!$this->_plantilla) {
-                //todo: manejar  layout por defecto
-                throw new \Exception("No se ha definido layout para el metodo", self::$_ce . '0006');
-            }
+        if (!self::$directorio) {
+            $msj = 'No se ha definido el directorio del layout';
+            throw new \Exception($msj, self::$_ce . '0008');
+        }
+        if (is_null($vista)) {
+            $msj = 'El parametro $vista es requerido para el metodo render';
+            throw new \Exception($msj, self::$_ce . '0001');
+        }
+        if (!$this->_plantilla) {
 
-            $marco = self::$directorio . DS . $this->_plantilla;
-
-            echo $this->_obtenerContenido(
-                $marco,
-                ['contenido' => $vista]
-            );
+            $layout = Tema::propiedad('layout');
+            $layout = "{$layout}.tpl.php";
+            $this->_plantilla = $layout;
 
         }
-        catch (\Exception $e) {
-            Debug::imprimir([
-                "Excepcion en Layout::render",
-                $e->getCode(),
-                $e->getMessage(),
-                $e->getTrace()
-            ],
-                true);
-        }
+
+        $marco = self::$directorio . DS . $this->_plantilla;
+
+        echo $this->_obtenerContenido(
+            $marco,
+            ['contenido' => $vista]
+        );
 
     }
 
