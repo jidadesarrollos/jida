@@ -87,7 +87,7 @@ class Vista {
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
         $ruta = Estructura::$rutaModulo;
-        Medios\Debug::imprimir([$ruta]);
+
         $nombre = Estructura::$nombreControlador;
         $archivoVista = strtolower("$nombre/$vista");
         $vista = "{$ruta}/Vistas/{$archivoVista}";
