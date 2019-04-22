@@ -92,13 +92,27 @@ class Manager {
             $manager->_inicio($parametros);
         }
         catch (\Exception $exception) {
-            Medios\Debug::imprimir(
-                ["capturada excepcion",
-                    $exception->getMessage(),
-                    $exception->getTrace()
-                ], true);
+            self::error($exception);
+        }
+        catch (\Error $error) {
+            self::error($error, true);
         }
 
+    }
+
+    private static function error($exception) {
+
+        $error = is_a($exception, '\Error');
+        $mensaje = ($error) ? "Error capturado" : "Excepcion capturada";
+        $data = [
+            "tipo"    => $mensaje,
+            "mensaje" => $exception->getMessage(),
+            "traza"   => $exception->getTrace()
+
+        ];
+        echo json_encode($data);
+        exit;
+        //Medios\Debug::imprimir($data, true);
     }
 
 }
