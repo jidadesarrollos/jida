@@ -1,6 +1,6 @@
 {
   "nombre": "Usuarios",
-  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_empresa, id_estatus from s_usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_estatus from s_usuarios",
   "identificador": "Usuarios",
   "estructura": "",
   "clave_primaria": "id_usuario",
@@ -80,26 +80,6 @@
       "visibilidad": null,
       "id": "correo",
       "type": "text"
-    },
-    "empresa": {
-      "label": "Empresa",
-      "name": "id_empresa",
-      "eventos": {
-        "obligatorio": {
-          "mensaje": "El campo Empresa es obligatorio"
-        },
-        "numerico": {
-          "mensaje": "El campo Empresa debe ser numerico"
-        }
-      },
-      "opciones": "=Seleccione una empresa;select id_empresa,empresa from m_empresas order by empresa",
-      "orden": 6,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
-      "id": "id_empresa",
-      "type": "select"
     },
     "estatus": {
       "label": "Estatus",
