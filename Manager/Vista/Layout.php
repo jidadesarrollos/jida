@@ -61,6 +61,9 @@ class Layout {
 
         $this->_data = Data::obtener();
         $this->_leer();
+        $this->urlBase = Estructura::$urlBase;
+        $this->urlModulo = Estructura::$urlModulo;
+        $this->url = Estructura::$url;
 
     }
 
@@ -92,6 +95,7 @@ class Layout {
 
     function _definirPlantilla($tpl) {
         $this->_plantilla = $tpl;
+
     }
 
     /**
