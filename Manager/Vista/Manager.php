@@ -34,7 +34,7 @@ class Manager {
 
     private function _inicializar() {
 
-        $this->_layout = new Layout();
+        $this->_layout = Layout::obtener();
         Data::inicializar($this->_data);
 
     }

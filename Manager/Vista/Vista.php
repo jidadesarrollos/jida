@@ -106,22 +106,11 @@ class Vista {
 
     function obtenerPlantilla($plantilla) {
 
-        try {
-            if (!Medios\Directorios::validar($plantilla)) {
-                throw new \Exception('La plantilla no existe ' . $plantilla, self::$_ce . 2);
-            }
+        if (!Medios\Directorios::validar($plantilla)) {
+            \Jida\Manager\Excepcion::procesar('La plantilla no existe ' . $plantilla, self::$_ce . 2);
+        }
 
-            return $this->_obtenerContenido($plantilla);
-        }
-        catch (\Exception $e) {
-            Medios\Debug::imprimir(
-                ["Error vista",
-                    $e->getCode(),
-                    $e->getMessage()
-                ],
-                true
-            );
-        }
+        return $this->_obtenerContenido($plantilla);
 
     }
 

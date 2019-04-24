@@ -3,6 +3,7 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
@@ -22,35 +23,20 @@ Trait Archivo {
      */
     private function _obtenerContenido($archivo, $datos = []) {
 
-        try {
-
-            if (!Directorios::validar($archivo)) {
-                $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
-                throw new \Exception($msj, self::$_ce . 11);
-            }
-
-            extract($datos);
-            ob_start();
-
-            include_once $archivo;
-            $contenido = ob_get_clean();
-
-            if (ob_get_length()) {
-                ob_end_clean();
-            }
-
-            return $contenido;
-
+        if (!Directorios::validar($archivo)) {
+            $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
+            Excepcion::procesar($msj, self::$_ce . 11);
         }
-        catch (\Exception $e) {
-            Debug::imprimir([
-                "Excepcion en Layout::render",
-                $e->getCode(),
-                $e->getMessage(),
-                $e->getTrace()
-            ],
-                true);
-        }
+
+        extract($datos);
+        ob_start();
+
+        include_once $archivo;
+        $contenido = ob_get_clean();
+
+        if (ob_get_length()) ob_end_clean();
+
+        return $contenido;
 
     }
 
