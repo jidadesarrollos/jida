@@ -9,7 +9,7 @@ use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
-use Jida\Medios\Debug;
+use Jida\Medios;
 
 class Layout {
 
@@ -18,21 +18,8 @@ class Layout {
      * @var object Objeto que llama o instancia a Layout
      */
     public static $padre;
-
-    /**
-     * @var object $data Objeto DataVista
-     * @deprecated
-     */
-    public $data;
-
     public static $directorio;
-    /**
-     * @var object $_data Objeto Data Vista
-     */
-    private $_data;
-
     private static $_ce = 10008;
-
     private static $_configuracion;
     /**
      * @var string $_directorio Directorio fisico del tema y layout implementado
@@ -43,10 +30,18 @@ class Layout {
      * @var string $_urlTema Url de acceso al tema
      */
     private static $_urlTema;
-
-    private $_js = [];
+    /**
+     * @var object $data Objeto DataVista
+     * @deprecated
+     */
+    public $data;
+    /**
+     * @var object $_data Objeto Data Vista
+     */
+    private $_data;
+    private $_js     = [];
     private $_jsAjax = [];
-    private $_css = [];
+    private $_css    = [];
 
     private $urlTema;
 
@@ -93,16 +88,30 @@ class Layout {
 
     }
 
-    function _definirPlantilla($tpl) {
-        $this->_plantilla = $tpl;
-
-    }
-
     /**
      * @param $directorio
      */
     static function definirDirectorio($directorio) {
         self::$directorio = $directorio;
+    }
+
+    /**
+     * @return Layout
+     * @throws Excepcion
+     */
+    static function obtener() {
+
+        if (!self::$instancia) {
+            self::$instancia = new self();
+        }
+
+        return self::$instancia;
+
+    }
+
+    function _definirPlantilla($tpl) {
+        $this->_plantilla = $tpl;
+
     }
 
     /**
@@ -135,10 +144,13 @@ class Layout {
 
         $marco = self::$directorio . DS . $this->_plantilla;
 
-        echo $this->_obtenerContenido(
+        $contenido = $this->_obtenerContenido(
             $marco,
             ['contenido' => $vista]
         );
+
+        Medios\Archivo::crear('/Aplicacion/app/prueba.html', $contenido);
+        echo $contenido;
 
     }
 
@@ -154,7 +166,7 @@ class Layout {
 
         }
         catch (\Exception $e) {
-            Debug::imprimir([
+            Medios\Debug::imprimir([
                 "Excepcion en Layout::render",
                 $e->getCode(),
                 $e->getMessage(),
@@ -162,20 +174,6 @@ class Layout {
             ],
                 true);
         }
-
-    }
-
-    /**
-     * @return Layout
-     * @throws Excepcion
-     */
-    static function obtener() {
-
-        if (!self::$instancia) {
-            self::$instancia = new self();
-        }
-
-        return self::$instancia;
 
     }
 
