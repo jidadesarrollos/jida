@@ -235,8 +235,8 @@ class Layout {
     function logo() {
         $config = Config::obtener();
 
-        if ($config::LOGO) {
-            return Estructura::$urlBase . "/" . $config::LOGO;
+        if (!!$config->logo) {
+            return Estructura::$urlBase . $config->logo;
         }
 
         return Estructura::$urlBase . "/htdocs/img/logo.png";
