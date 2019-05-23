@@ -4,6 +4,7 @@ namespace Jida\Manager\Url;
 
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
+use Jida\Medios\Debug;
 
 class Url {
 

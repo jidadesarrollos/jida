@@ -8,28 +8,29 @@ use Jida\Medios\Debug;
 
 class Post extends Modelo {
     private static $instance = null;
-    public         $id_post;
-    public         $post;
-    public         $resumen;
-    public         $contenido;
-    public         $meta_descripcion;
-    public         $identificador;
-    public         $relevancia;
-    public         $id_media_principal;
-    public         $id_seccion;
-    public         $fecha_publicacion;
-    public         $numero_visitas;
-    public         $id_estatus_post;
-    public         $visibilidad;
-    public         $nombre_post;
-    public         $tipo;
-    public         $data;
-    public         $texto_original;
-    public         $id_idioma;
-    protected      $tablaBD  = "s_posts";
-    protected      $pk       = "id_post";
+    public $id_post;
+    public $post;
+    public $resumen;
+    public $contenido;
+    public $meta_descripcion;
+    public $identificador;
+    public $relevancia;
+    public $id_media_principal;
+    public $id_seccion;
+    public $fecha_publicacion;
+    public $numero_visitas;
+    public $id_estatus_post;
+    public $visibilidad;
+    public $nombre_post;
+    public $tipo;
+    public $data;
+    public $texto_original;
+    public $id_idioma;
+    protected $tablaBD = "s_posts";
+    protected $pk = "id_post";
 
     static function obtPostFromSlug($slug) {
+
         if (self::$instance == null) {
             self::$instance = new Post();
         }

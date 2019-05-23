@@ -23,6 +23,7 @@ class Metodo extends Handler {
         $metodo = $this->url->proximoParametro();
 
         if (!$metodo or !method_exists(Estructura::$controlador, $metodo)) {
+            $this->url->reingresarParametro($metodo);
             $metodo = 'index';
         }
 

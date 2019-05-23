@@ -39,9 +39,9 @@ class Layout {
      * @var object $_data Objeto Data Vista
      */
     private $_data;
-    private $_js     = [];
+    private $_js = [];
     private $_jsAjax = [];
-    private $_css    = [];
+    private $_css = [];
 
     private $urlTema;
 
@@ -158,7 +158,7 @@ class Layout {
 
         try {
             $marco = self::$directorio . DS . $this->_plantilla;
-
+            Medios\Debug::imprimir(["si"], true);   
             echo $this->_obtenerContenido(
                 $marco,
                 ['contenido' => $plantilla]
