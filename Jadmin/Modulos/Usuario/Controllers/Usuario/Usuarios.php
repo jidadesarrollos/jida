@@ -109,7 +109,7 @@ trait Usuarios {
 
     public function gestion($id_usuario) {
 
-        $this->layout()->incluirJS(['{base}/jida/htdocs/js/libs/jCargaFile.js', '{tema}/htdocs/js/cargarImagen.js']);
+        $this->layout()->incluirJS(['{base}/htdocs/js/libs/jCargaFile.js', '{tema}/htdocs/js/cargarImagen.js']);
 
         $form = new Formulario('jida/Usuarios/GestionUsuarios', $id_usuario);
         $form->attr(['enctype' => 'multipart/form-data']);
@@ -151,14 +151,13 @@ trait Usuarios {
                                               'id'    => 'btnCargar'
         ]);
         $botonLimpiar = Selector::crear('input', ['type'  => 'button',
-                                                 'title' => 'Borrar imagen de perfil',
-                                                 'value' => 'Borrar imagen de perfil',
-                                                 'class' => 'btn btn-default pull-right',
-                                                 'id'    => 'btnLimpiar'
+                                                  'title' => 'Borrar imagen de perfil',
+                                                  'value' => 'Borrar imagen de perfil',
+                                                  'class' => 'btn btn-default pull-right',
+                                                  'id'    => 'btnLimpiar'
         ]);
         $form->addFinal($botonImg);
         $form->addFinal($botonLimpiar);
-
 
         $this->data([
             'vista'      => $form->render(),

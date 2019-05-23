@@ -73,13 +73,17 @@ Trait Procesador {
                 continue;
             }
 
-            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
+            $urlLibreria = str_replace('{tema}', Tema::$url, $libreria);
 
             if (strpos($urlLibreria, "http") === false) {
 
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
+                    Debug::imprimir(["ak"], true);
+                    if (!!Estructura::$jadmin) {
+                        $urlLibreria = str_replace('{tema}', Estructura::$urlJida, $libreria);
+                    }
                     $urlLibreria = str_replace('{base}', ".", $urlLibreria);
                 }
                 else {
@@ -154,6 +158,11 @@ Trait Procesador {
         if (strpos($libreria, "http") === false) {
 
             if (strpos($libreria, '{base}') !== false) {
+
+                if (!!Estructura::$jadmin) {
+                    $libreria = str_replace('{base}', Estructura::$urlJida, $libreria);
+                }
+
                 $libreria = str_replace('{base}', Estructura::$urlBase, $libreria);
             }
             else if (strpos($libreria, '{tema}') !== false) {
