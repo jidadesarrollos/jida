@@ -27,7 +27,9 @@
         "mustache": "{tema}/htdocs/js/mustache.min.js",
         "moment": "{tema}/htdocs/js/vendor/calendar/moment.min.js",
         "font-awesome": "{tema}/htdocs/js/all.min.js",
-        "validador": "{base}/htdocs/js/libs/validador.js"
+        "validador": "{base}/htdocs/js/libs/validador.js",
+        "datatable": "{tema}/htdocs/js/vendor/datatables.min.js",
+        "datatableLanguage": "{tema}/htdocs/js/datatable-language.js"
       },
       "login": {
         "jq": "{tema}/htdocs/js/vendor/jquery-3.3.1.min.js",
