@@ -44,7 +44,7 @@ Trait Procesador {
      *
      */
     private function _imprimirCSS($librerias, $modulo) {
-
+        
         return $this->_css($librerias, $modulo);
 
     }
@@ -52,13 +52,13 @@ Trait Procesador {
     private function _css($librerias, $modulo) {
 
         $html = "";
-
+        
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
 
         $librerias = $librerias->{$modulo};
-
+        
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
@@ -80,7 +80,6 @@ Trait Procesador {
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
-                    Debug::imprimir(["ak"], true);
                     if (!!Estructura::$jadmin) {
                         $urlLibreria = str_replace('{tema}', Estructura::$urlJida, $libreria);
                     }
@@ -90,7 +89,7 @@ Trait Procesador {
                     $urlLibreria = '//' . $urlLibreria;
                 }
             }
-
+            
             $html .= Selector::crear('link',
                 [
                     'href' => $urlLibreria,
@@ -179,11 +178,11 @@ Trait Procesador {
     private function _imprimirHead($configuracion, $modulo) {
 
         $html = "";
-
+        
         if (property_exists($configuracion, "link")) {
             $html .= $this->_link($configuracion->link);
         }
-
+        
         if (property_exists($configuracion, "css")) {
             $html .= $this->_css($configuracion->css, $modulo);
         }

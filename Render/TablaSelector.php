@@ -6,6 +6,7 @@
 namespace Jida\Render;
 
 use Exception;
+use Jida\Medios\Debug;
 
 class TablaSelector extends Selector {
     use \Jida\Core\ObjetoManager;
@@ -156,7 +157,14 @@ class TablaSelector extends Selector {
      */
     function insertarColumna($funcion) {
         $numeroArgs = func_num_args();
-        $args = func_get_args();;
+        $args = func_get_args();
+
+        $parametros = [];
+
+        if ($numeroArgs === 3) {
+            $parametros = $args[2];
+            unset($args[2]);
+        }
 
         foreach ($this->filas as $key => $fila) {
 
@@ -169,7 +177,7 @@ class TablaSelector extends Selector {
                 $contenido = $funcion($this, $fila);
             }
 
-            $fila->agregarColumna($contenido);
+            $fila->agregarColumna($contenido, $parametros);
         }
 
         return $this;

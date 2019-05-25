@@ -85,11 +85,11 @@ class Estructura {
 
         self::$rutaJida = $directorioJida;
         self::$directorio = $directorioApp;
+
         self::$rutaAplicacion = $directorioApp . "/Aplicacion";
         self::$ubicacionJida = implode(array_filter(
             explode(DIRECTORY_SEPARATOR, str_replace($directorioApp, "", $directorioJida))
         ), "/");
-
 
         return $directorioJida;
 

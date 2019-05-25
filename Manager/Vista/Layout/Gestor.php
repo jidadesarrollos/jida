@@ -12,7 +12,7 @@ use Jida\Medios\Debug;
 Trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
-        
+         
         if (strpos($archivo, '{base}') !== false and Estructura::$jadmin) {
             $archivo = str_replace('{base}', Estructura::$urlJida, $archivo);
         }

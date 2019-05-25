@@ -656,6 +656,7 @@ class JVista {
             $this->tabla->insertarColumna(function ($ele, $acciones, $fila) {
 
                 $contenido = "";
+
                 if (is_array($acciones)) {
                     $keys = array_keys($fila->columnas);
 
@@ -720,8 +721,6 @@ class JVista {
                         }
                     }
 
-                    //                    Medios\Debug::imprimir('$contenido-------', $contenido,true);
-
                     return $contenido;
 
                 }
@@ -730,7 +729,7 @@ class JVista {
                 }
 
             },
-                $this->accionesFila);
+                $this->accionesFila, ['class' => 'jvista-opciones']);
         }
     }
 
@@ -868,8 +867,8 @@ class JVista {
             }
             $this->contenedorAcciones = new Selector('div', ['class' => 'contenedor-acciones']);
             $this->contenedorAcciones->attr($this->configContenedorAcciones);
-
-            return $this->contenedorAcciones->innerHTML($inner)->render();
+            $columna = new Selector('section', ['class' => 'row']);
+            return $columna->innerHTML($this->contenedorAcciones->innerHTML($inner)->render())->render();
         }
 
         return $inner;
@@ -1050,12 +1049,12 @@ class JVista {
             $seccionFiltro = new Selector('section', $this->configFiltros['section']);
 
             $listaFiltros = new ListaSelector(count($this->filtros), $this->configFiltros['listaFiltros']);
-            // $listaFiltros = new Selector('Article',['class'=>'jvista-filtros']);
-            $htmlFiltros = "";
+
             foreach ($filtros as $campoFiltro => $item) {
                 //Titulo filtro-------------------------------------------
                 $tituloFiltro = new Selector('h4');
                 $titulo = $campoFiltro;
+
                 if (array_key_exists('titulo', $item)) {
                     $titulo = $item['titulo'];
                     unset($item['titulo']);
