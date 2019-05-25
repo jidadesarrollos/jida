@@ -109,7 +109,7 @@ trait Usuarios {
 
     public function gestion($id_usuario) {
 
-        $this->layout()->incluirJS(['{base}/htdocs/js/libs/jCargaFile.js', '{tema}/htdocs/js/cargarImagen.js']);
+        $this->layout()->incluirJS(['{base}/htdocs/js/libs/jCargaFile.js', '{base}/htdocs/js/jadmin/cargarImagen.js']);
 
         $form = new Formulario('jida/Usuarios/GestionUsuarios', $id_usuario);
         $form->attr(['enctype' => 'multipart/form-data']);
