@@ -10,7 +10,7 @@
         "validador": "{tema}/htdocs/css/jadmin/jadmin.css"
       },
       "login": {
-        "theme": "{tema}/htdocs/css/themes/lite-blue.css"
+        "theme": "{tema}/htdocs/css/theme/themes/lite-blue.css"
       }
     },
     "js": {
