@@ -99,7 +99,7 @@ class Tema {
             unset($configuracion->{$entorno});
 
         }
-
+//        Debug::imprimir([$configuracion], true);
         self::$configuracion = $configuracion;
 
     }

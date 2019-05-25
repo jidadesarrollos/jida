@@ -199,6 +199,7 @@ Trait Procesador {
     private function _link($etiquetas) {
 
         $html = "";
+
         foreach ($etiquetas as $etiqueta => $contenido) {
 
             $configuracion = [];
@@ -216,7 +217,9 @@ Trait Procesador {
             }
 
             $urlTema = "//" . self::$_urlTema;
+
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
+            $configuracion['href'] = str_replace('{base}', Estructura::$urlBase, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);
 
