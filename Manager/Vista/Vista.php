@@ -41,6 +41,7 @@ class Vista {
         $this->_data = $data;
 
         $this->url = Estructura::$url;
+        $this->urlBase = Estructura::$urlBase;
 
     }
 

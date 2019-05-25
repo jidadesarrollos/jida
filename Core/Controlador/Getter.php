@@ -13,9 +13,9 @@ Trait Getter {
      */
     function __get ($propiedad) {
 
-        if (property_exists($this->Layout, $propiedad)) {
-            return $this->Layout->{$propiedad};
-        }
+//        if (property_exists($this->Layout, $propiedad)) {
+//            return $this->Layout->{$propiedad};
+//        }
 
         if (property_exists($this->_data, $propiedad)) {
             return $this->_data->{$propiedad};
