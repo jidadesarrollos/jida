@@ -78,9 +78,9 @@ Trait Archivo {
 
         if (!$archivo) return Estructura::$urlBase . '/htdocs';
 
-        if (strpos('tema', $archivo)) {
+        if (strpos('{tema}', $archivo)) {
 
-            $ruta = str_replace('tema', Tema::$url, $archivo);
+            $ruta = str_replace('{tema}', Tema::$url, $archivo);
 
             return $ruta;
         }
