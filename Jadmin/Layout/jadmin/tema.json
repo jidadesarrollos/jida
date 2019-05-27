@@ -26,6 +26,7 @@
         "script": "{tema}/htdocs/js/script.js",
         "sidebar": "{tema}/htdocs/js/sidebar.large.script.js",
         "validador": "{base}/htdocs/js/libs/validador.js",
+        "jd": "{base}/htdocs/js/min/jd.plugs.js",
         "custom": "{tema}/htdocs/js/jadmin/base.js"
       },
       "login": {
