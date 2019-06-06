@@ -29,6 +29,7 @@ abstract class Comando extends Command {
     public function __construct($path) {
 
         $this->path = $path;
+        $this->directorioDeProyecto = $path;
         parent::__construct(null);
 
     }
