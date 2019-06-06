@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2019-03-07 19:54:33
-  from 'E:\Programacion\php\jida\core-app\jida\plantillas\codigosPHP\clase.jida' */
+/* Smarty version 3.1.33, created on 2019-06-06 12:07:41
+  from 'D:\workspace\jida\framework\core-app\jida\plantillas\codigosPHP\clase.jida' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
-  'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_5c8168e936b000_26228252',
+  'version' => '3.1.33',
+  'unifunc' => 'content_5cf8e5ed0dc3d2_01701578',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '4afdd76ea71ec68a106857cba99bab26629def44' => 
+    'a87b2348faed8080a3d6daf645f7a04a431deca0' => 
     array (
-      0 => 'E:\\Programacion\\php\\jida\\core-app\\jida\\plantillas\\codigosPHP\\clase.jida',
-      1 => 1551984816,
+      0 => 'D:\\workspace\\jida\\framework\\core-app\\jida\\plantillas\\codigosPHP\\clase.jida',
+      1 => 1558579615,
       2 => 'file',
     ),
   ),
@@ -20,10 +20,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5c8168e936b000_26228252 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5cf8e5ed0dc3d2_01701578 (Smarty_Internal_Template $_smarty_tpl) {
 echo '<?php
-';?>
-/**
+';?>/**
  * Creado por Jida Framework
  * <?php echo date('Y-m-d H:i:s');?>
 
@@ -51,9 +50,8 @@ echo $_prefixVariable3;?>
 <?php
 }
 }
-$_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
-
-<?php ob_start();
+$_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);
+ob_start();
 echo $_smarty_tpl->tpl_vars['postNamespace']->value;
 $_prefixVariable4 = ob_get_clean();
 echo $_prefixVariable4;?>

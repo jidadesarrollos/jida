@@ -11,9 +11,10 @@ use {{$use}};
 {{$postNamespace}}
 class {{$class}} extends {{$extends}}{
     {foreach $metodos as $method=>$code}  
-    public function {{$method}} (){
+    public function {{$method}}() {
     
         {{$code}}
+
     }
     {foreachelse}
     // tu codigo aqui

@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Jida\Core\Consola\MotorDePlantillas;
 
 /**
- * Comnado para crear la estructura de modulos de un Modulo 
+ * Comnado para crear la estructura de modulos de un Modulo
  *
  * @author Enyerber Franco <efranco@jidadesarrollos.com>
  * @package Framework
@@ -20,10 +20,10 @@ class CrearModulo extends Comando {
 
     protected static $defaultName = 'crear:modulo';
 
-    const PathModelos = 'Modulos';
+    const PathModulos = 'Modulos';
 
     /**
-     * Estructura de directorio que sera creada 
+     * Estructura de directorio que sera creada
      */
     const EstructuraDirectorios = [
         'Controllers' => [],
@@ -37,66 +37,60 @@ class CrearModulo extends Comando {
         ]
     ];
 
-    protected function configurar () {
+    protected function configurar() {
 
         $this->addArgument(
-            'nombre', 
-            InputArgument::REQUIRED, 
+            'nombre',
+            InputArgument::REQUIRED,
             'Nombre del modulo a crear.'
         );
 
     }
 
-    protected function ejecutar (InputInterface $input, OutputInterface $output) {
+    protected function ejecutar(InputInterface $input, OutputInterface $output) {
 
         $nombre = ucwords($input->getArgument('nombre'));
-        $modelos = $this->directorioDeProyecto . DS . self::PathApp . DS . self::PathModelos;
-        $path = realpath($modelos);
+        $pathModulo = $this->path . DS . self::PathApp . DS . self::PathModulos;
 
-        if (!$path) {
+        $output->writeln($pathModulo);
+        if (!is_dir($pathModulo)) mkdir($pathModulo);
 
-            mkdir($modelos);
-            $path = realpath($modelos);
-            
-        }
+        $path = $pathModulo;
 
         if (realpath($path . DS . $nombre)) {
-
             $output->writeln("El modulo $nombre ya existe");
-            
+            return;
         }
-        else {
 
-            $estructura = self::EstructuraDirectorios;
-            $estructura['Vistas'][lcfirst ($nombre)] = [];
-            $estructura['Jadmin']['Vistas'][lcfirst ($nombre)] = [];
-            $this->crearDirectorios($path, [$nombre => $estructura]);
-            $this->crearArchivos($nombre, $path);
-            $output->writeln("Estructura de directorios del modulo $nombre ha sido creada");
-            
-        }
+        $estructura = self::EstructuraDirectorios;
+        $estructura['Vistas'][lcfirst($nombre)] = [];
+        $estructura['Jadmin']['Vistas'][lcfirst($nombre)] = [];
+        $this->crearDirectorios($path, [$nombre => $estructura]);
+        $this->crearArchivos($nombre, $path);
+        $output->writeln("Estructura de directorios del modulo $nombre ha sido creada");
+
+        return;
 
     }
 
-    public function crearDirectorios ($directorio, $extructura) {
+    public function crearDirectorios($directorio, $extructura) {
 
-        if (count($extructura) == 0) {
+        if (count($extructura) == 0) return;
 
-            return;
-            
-        }
+        echo "1-> $directorio\n";
+        if (!is_dir($directorio)) mkdir($directorio);
 
         foreach ($extructura as $carpeta => $subCarpetas) {
 
             $path = $directorio . DS . $carpeta;
             mkdir($path);
             $this->crearDirectorios($path, $subCarpetas);
-            
+
         }
 
     }
 
-    public function crearArchivos ($modulo, $path) {
+    public function crearArchivos($modulo, $path) {
 
         $codigoMetodo = "\$this->data(['mensaje' => 'Controlador '.self::class]);\n";
         $controladorTpl = new MotorDePlantillas();
@@ -130,8 +124,8 @@ class CrearModulo extends Comando {
         file_put_contents("$path/$modulo/Modelos/$modulo.php", $modelo);
         file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
         file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
-        file_put_contents("$path/$modulo/Vistas/" . lcfirst ($modulo) . "/index.php", $vista);
-        file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst ($modulo) . "/index.php", $vista);
+        file_put_contents("$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
+        file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
 
     }
 

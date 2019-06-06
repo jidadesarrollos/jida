@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2019-03-06 17:58:19
-  from 'E:\Programacion\php\jida\core-app\jida\plantillas\codigosPHP\vista.jida' */
+/* Smarty version 3.1.33, created on 2019-06-06 12:19:16
+  from 'D:\workspace\jida\framework\core-app\jida\Core\Consola\plantillas\codigosPHP\vista.jida' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
-  'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_5c7ffc2be18988_55145702',
+  'version' => '3.1.33',
+  'unifunc' => 'content_5cf8e8a48f7a10_35983478',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    'd9157fe8eee98c18cc9c788126c7b0f20bd8fb7d' => 
+    '2379a1938c8941b41fcec3149dfffb56964abe05' => 
     array (
-      0 => 'E:\\Programacion\\php\\jida\\core-app\\jida\\plantillas\\codigosPHP\\vista.jida',
-      1 => 1551891447,
+      0 => 'D:\\workspace\\jida\\framework\\core-app\\jida\\Core\\Consola\\plantillas\\codigosPHP\\vista.jida',
+      1 => 1559816341,
       2 => 'file',
     ),
   ),
@@ -20,10 +20,10 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5c7ffc2be18988_55145702 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5cf8e8a48f7a10_35983478 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!-- Creado por Jida Framework <?php echo date('Y-m-d H:i:s');?>
  -->
-<div class = "jumbotron">
+<div>
     <h2><?php ob_start();
 echo $_smarty_tpl->tpl_vars['cabecera']->value;
 $_prefixVariable9 = ob_get_clean();
