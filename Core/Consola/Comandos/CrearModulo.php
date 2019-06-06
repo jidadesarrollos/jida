@@ -77,7 +77,6 @@ class CrearModulo extends Comando {
 
         if (count($extructura) == 0) return;
 
-        echo "1-> $directorio\n";
         if (!is_dir($directorio)) mkdir($directorio);
 
         foreach ($extructura as $carpeta => $subCarpetas) {
