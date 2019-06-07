@@ -8,6 +8,7 @@
  */
 function Restaurar (array $config, $sql) {
 
+    echo
     $dsn = "mysql:host=$config[servidor];port=$config[puerto];";
 
     $pdo = new \PDO($dsn, $config['usuario'], $config['clave']);
