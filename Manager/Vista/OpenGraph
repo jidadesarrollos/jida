@@ -1,0 +1,13 @@
+<?php
+
+namespace Jida\Manager\Vista;
+
+class OpenGraph {
+
+    private $_ce = 10015;
+
+    static function imprimir() {
+
+    }
+
+}
