@@ -12,12 +12,14 @@ use Jida\Medios\Debug;
 Trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
-
-        if (strpos($archivo, 'modulo') !== false) {
-            $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
-
+         
+        if (strpos($archivo, '{base}') !== false and Estructura::$jadmin) {
+            $archivo = str_replace('{base}', Estructura::$urlJida, $archivo);
         }
-        elseif (strpos($archivo, '{tema}')) {
+        else if (strpos($archivo, 'modulo') !== false) {
+            $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
+        }
+        elseif (strpos($archivo, '{tema}') !== false) {
             $archivo = str_replace('{tema}', Tema::$url, $archivo);
         }
 

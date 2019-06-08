@@ -5,6 +5,7 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Layout\Gestor;
@@ -183,6 +184,25 @@ class Layout {
             call_user_func_array([$this, $metodo], $params);
         }
 
+    }
+
+    function config($propiedad) {
+
+        $config = Config::obtener();
+        if (property_exists($config, $propiedad)) {
+            return $config->{$propiedad};
+        }
+
+    }
+
+    function logo() {
+        $config = Config::obtener();
+
+        if (!!$config->logo) {
+            return Estructura::$urlBase . $config->logo;
+        }
+
+        return Estructura::$urlBase . "/htdocs/img/logo.png";
     }
 
 }

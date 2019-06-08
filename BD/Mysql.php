@@ -96,21 +96,21 @@ class Mysql extends ConexionBD {
     /**
      * Establece la conexión a base de datos
      */
-    function establecerConexion () {
+    function establecerConexion() {
 
         #if (!$this->mysql and !$this->_conexion) {
         if ($this->_conexion) {
             return;
         }
 
-        $this->mysqli = new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd);
+        $this->mysqli = new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd, $this->puerto);
         #$sesion = Medios\Sesion::obt('iddb');
         #Medios\Sesion::editar("iddb", $sesion + 1);
 
         if ($this->mysqli->connect_error) {
             $this->_conexion = false;
             throw new Exception("No se establecido la conexi&oacute;n a base de datos " . $this->mysqli->connect_error,
-                                1);
+                1);
 
         }
 
@@ -127,7 +127,7 @@ class Mysql extends ConexionBD {
      * @method consulta
      * @see      ejecutarQuery
      */
-    function consulta ($query, $tipoQuery = 1) {
+    function consulta($query, $tipoQuery = 1) {
 
         return $this->ejecutarQuery($query, $tipoQuery);
     }
@@ -136,7 +136,7 @@ class Mysql extends ConexionBD {
      * Implementa real_Scape_string
      *
      */
-    function escaparTexto ($texto) {
+    function escaparTexto($texto) {
 
         $this->establecerConexion();
 
@@ -152,7 +152,7 @@ class Mysql extends ConexionBD {
      *                   En caso de ser una consulta multiple no se devuelve el total de registros
      *
      */
-    function ejecutarQuery ($query = "", $tipoQuery = 1) {
+    function ejecutarQuery($query = "", $tipoQuery = 1) {
 
         if (!empty($query)) {
             $this->query = $query;
@@ -173,7 +173,7 @@ class Mysql extends ConexionBD {
         if (!$this->result) {
 
             throw new Exception("No se pudo ejecutar el query <br/> <strong>$query</strong><br/> (" . $this->mysqli->errno . ") " . $this->mysqli->error,
-                                200);
+                200);
         }
         $this->totalCampos = $this->mysqli->field_count;
         $this->idResult = $this->mysqli->insert_id;
@@ -195,7 +195,7 @@ class Mysql extends ConexionBD {
      *
      * @deprecated 0.4
      */
-    function escaparString ($string = "") {
+    function escaparString($string = "") {
 
         if (!$this->mysqli)
             $this->establecerConexion();
@@ -217,15 +217,15 @@ class Mysql extends ConexionBD {
      * @see        self::insertar
      *
      */
-    function insert ($nombreTabla, $camposTabla, $valoresCampos, $id, $unico) {
+    function insert($nombreTabla, $camposTabla, $valoresCampos, $id, $unico) {
 
         $insert = sprintf("insert into %s (%s) VALUES (%s)",
-                          $nombreTabla,
-                          implode(', ', $camposTabla),
-                          implode(', ', $valoresCampos));
+            $nombreTabla,
+            implode(', ', $camposTabla),
+            implode(', ', $valoresCampos));
 
         $result = [
-            "query" => $insert,
+            "query"       => $insert,
             'idResultado' => ""
         ];
 
@@ -284,7 +284,7 @@ class Mysql extends ConexionBD {
      * Realiza la inserción de un nuevo registro en base de datos
      * @method insertar
      */
-    function insertar ($insert) {
+    function insertar($insert) {
 
         $this->query = $insert;
         $this->ejecutarQuery($this->query);
@@ -295,7 +295,7 @@ class Mysql extends ConexionBD {
     /**
      * Cierra una conexión a Base de Datos
      */
-    function cerrarConexion () {
+    function cerrarConexion() {
 
         if ($this->_conexion and $this->mysqli->ping()) {
             $sesion = Medios\Sesion::obt('iddb');
@@ -307,7 +307,7 @@ class Mysql extends ConexionBD {
 
     }
 
-    function addLimit ($limit, $offset, $query = "") {
+    function addLimit($limit, $offset, $query = "") {
 
         $this->query = (!empty($query)) ? $query : $this->query;
         $this->query = "$this->query limit $offset,$limit";
@@ -316,12 +316,12 @@ class Mysql extends ConexionBD {
 
     }
 
-    function limit ($limit, $offset) {
+    function limit($limit, $offset) {
 
         return "limit $offset,$limit";
     }
 
-    function obtenerTotalCampos () {
+    function obtenerTotalCampos() {
 
         return $this->totalCampos;
 
@@ -338,7 +338,7 @@ class Mysql extends ConexionBD {
      * @return array $dataCompleta
      *
      */
-    function obtenerDataCompleta ($query = "", $key = "") {
+    function obtenerDataCompleta($query = "", $key = "") {
 
         if (is_string($query)) {
             $this->query = ($query == "") ? $this->query : $query;
@@ -390,7 +390,7 @@ class Mysql extends ConexionBD {
      * Devuelve un arreglo a partir de un result de base de datos
      *
      */
-    function obtenerArray ($result = "") {
+    function obtenerArray($result = "") {
 
         if ($result != "") {
             $this->result = $result;
@@ -412,7 +412,7 @@ class Mysql extends ConexionBD {
         return $arr;
     }
 
-    function obtenerArrayAsociativo ($result = "") {
+    function obtenerArrayAsociativo($result = "") {
 
         $arr = [];
 
@@ -433,7 +433,7 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    function comenzarTransaccion () {
+    function comenzarTransaccion() {
     }
 
     /**
@@ -442,7 +442,7 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    private function commit () {
+    private function commit() {
     }
 
     /**
@@ -451,7 +451,7 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    private function rollback () {
+    private function rollback() {
     }
 
     /**
@@ -460,7 +460,7 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    function establecerPuntoControl () {
+    function establecerPuntoControl() {
     }
 
     /**
@@ -469,7 +469,7 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    function finalizarTransaccion () {
+    function finalizarTransaccion() {
     }
 
     /**
@@ -478,12 +478,12 @@ class Mysql extends ConexionBD {
      * @return void
      * @author
      */
-    function fetchRow () {
+    function fetchRow() {
 
         return $this->result->fetch_row();
     }
 
-    function totalField () {
+    function totalField() {
 
         return $this->totalCampos;
     }
@@ -495,7 +495,7 @@ class Mysql extends ConexionBD {
      *
      * @return array
      */
-    function obtenerDatosColumnas ($result = "") {
+    function obtenerDatosColumnas($result = "") {
 
         if (!empty($result)) {
             $this->result = $result;
@@ -513,7 +513,7 @@ class Mysql extends ConexionBD {
      *
      * @return string $name Nombre del campo
      */
-    function obtenerNombreCampo ($result, $i) {
+    function obtenerNombreCampo($result, $i) {
 
         $datosColms = $this->obtenerDatosColumnas($result);
         if (empty($datosColms[$i]->name))
@@ -531,7 +531,7 @@ class Mysql extends ConexionBD {
      * @param string esquema (opcional)
      *
      */
-    function obtenerTablasBD ($esquema = "") {
+    function obtenerTablasBD($esquema = "") {
 
         $tablasBDResult = $this->ejecutarQuery("SHOW TABLES");
         $tablasBD = [];
@@ -548,7 +548,7 @@ class Mysql extends ConexionBD {
      *
      * @see mysqli::more_results
      */
-    function checkProximoResultado () {
+    function checkProximoResultado() {
 
     }
 
@@ -557,7 +557,7 @@ class Mysql extends ConexionBD {
      * en una multiConsulta
      * @method obtenerDataMultiQuery
      */
-    function obtenerDataMultiQuery ($result = "", $keys = []) {
+    function obtenerDataMultiQuery($result = "", $keys = []) {
 
         if (empty($result))
             $result = $this->result;
@@ -586,7 +586,7 @@ class Mysql extends ConexionBD {
         return $arrayResult;
     }
 
-    function __get ($propiedad) {
+    function __get($propiedad) {
 
         if (property_exists($this, $propiedad)) {
             return $this->$propiedad;
@@ -596,7 +596,7 @@ class Mysql extends ConexionBD {
         }
     }
 
-    function getValoresReservados () {
+    function getValoresReservados() {
 
         return $this->valoresReservados;
     }
@@ -607,7 +607,7 @@ class Mysql extends ConexionBD {
      * @method obtTablasBD
      *
      */
-    function obtTablasBD ($includeS = false) {
+    function obtTablasBD($includeS = false) {
 
         $q = "select table_name,table_type, table_collation, create_time
                 from information_schema.tables  where table_schema='" . $this->bd . "'
@@ -626,7 +626,7 @@ class Mysql extends ConexionBD {
      *
      * @param array $tabla
      */
-    function obtColumnasTabla ($tabla) {
+    function obtColumnasTabla($tabla) {
 
         $q = "select table_schema,table_name,column_name,data_type,column_type,column_key from
         information_schema.columns where table_schema='" . $this->bd . "' ";

@@ -2,8 +2,8 @@
 
 namespace Jida\Manager\Vista;
 
+use Exception;
 use Jida\Manager\Estructura;
-use Jida\Manager\Excepcion;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
@@ -23,20 +23,35 @@ Trait Archivo {
      */
     private function _obtenerContenido($archivo, $datos = []) {
 
-        if (!Directorios::validar($archivo)) {
-            $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
-            Excepcion::procesar($msj, self::$_ce . 11);
+        try {
+
+            if (!Directorios::validar($archivo)) {
+                $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
+                throw new Exception($msj, self::$_ce . 11);
+            }
+
+            extract($datos);
+            ob_start();
+
+            include_once $archivo;
+            $contenido = ob_get_clean();
+
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+
+            return $contenido;
+
         }
-
-        extract($datos);
-        ob_start();
-
-        include_once $archivo;
-        $contenido = ob_get_clean();
-
-        if (ob_get_length()) ob_end_clean();
-
-        return $contenido;
+        catch (Exception $e) {
+            Debug::imprimir([
+                "Excepcion en Layout::render",
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getTrace()
+            ],
+                true);
+        }
 
     }
 
@@ -63,9 +78,9 @@ Trait Archivo {
 
         if (!$archivo) return Estructura::$urlBase . '/htdocs';
 
-        if (strpos('tema', $archivo)) {
+        if (strpos('{tema}', $archivo)) {
 
-            $ruta = str_replace('tema', Tema::$url, $archivo);
+            $ruta = str_replace('{tema}', Tema::$url, $archivo);
 
             return $ruta;
         }
@@ -98,7 +113,7 @@ Trait Archivo {
             return $url;
         }
 
-        return $path . "htdocs/" . $folder . '/' . $item;
+        return $path . "htdocs/" . $carpeta . '/' . $item;
 
     }
 }

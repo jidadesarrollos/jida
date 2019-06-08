@@ -12,7 +12,7 @@ use Jida\Render as Render;
 use Jida\Modelos as Modelos;
 use \Jida\Medios as Medios;
 use \Jida\Medios\Debug as Debug;
-
+use Jida\Validador\Type\Clave;
 trait UsuarioManager {
 
     /**
@@ -159,8 +159,9 @@ trait UsuarioManager {
                 $user = new Modelos\User($campoUpdate);
                 $this->post('validacion', 1);
                 $this->post('activo', 1);
+                $clave= new Clave($this->post('clave_usuario'));
                 if ($this->post('clave_usuario') != $user->clave_usuario)
-                    $this->post('clave_usuario', md5($this->post('clave_usuario')));
+                    $this->post('clave_usuario', $clave->hash());
 
                 if ($user->salvar($this->post())->ejecutado() == 1)
                     $user->asociarPerfiles($this->post('id_perfil'));

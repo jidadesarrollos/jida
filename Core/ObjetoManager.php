@@ -26,7 +26,7 @@ trait ObjetoManager {
         foreach ($atributos as $key => $value) {
             $this->{$key} = $value;
         }
-
+        Debug::imprimir([$this, $clase], true);
     }
 
     /**

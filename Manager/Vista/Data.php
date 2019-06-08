@@ -7,6 +7,7 @@ use Jida\Core\ObjetoManager;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Data\Meta;
 use Jida\Manager\Vista\Data\Plantilla;
+use Jida\Medios\Debug;
 
 class Data {
 

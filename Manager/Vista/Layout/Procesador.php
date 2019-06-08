@@ -44,7 +44,7 @@ Trait Procesador {
      *
      */
     private function _imprimirCSS($librerias, $modulo) {
-
+        
         return $this->_css($librerias, $modulo);
 
     }
@@ -52,13 +52,13 @@ Trait Procesador {
     private function _css($librerias, $modulo) {
 
         $html = "";
-
+        
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
 
         $librerias = $librerias->{$modulo};
-
+        
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
@@ -73,20 +73,23 @@ Trait Procesador {
                 continue;
             }
 
-            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
+            $urlLibreria = str_replace('{tema}', Tema::$url, $libreria);
 
             if (strpos($urlLibreria, "http") === false) {
 
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
+                    if (!!Estructura::$jadmin) {
+                        $urlLibreria = str_replace('{tema}', Estructura::$urlJida, $libreria);
+                    }
                     $urlLibreria = str_replace('{base}', ".", $urlLibreria);
                 }
                 else {
                     $urlLibreria = '//' . $urlLibreria;
                 }
             }
-
+            
             $html .= Selector::crear('link',
                 [
                     'href' => $urlLibreria,
@@ -154,6 +157,11 @@ Trait Procesador {
         if (strpos($libreria, "http") === false) {
 
             if (strpos($libreria, '{base}') !== false) {
+
+                if (!!Estructura::$jadmin) {
+                    $libreria = str_replace('{base}', Estructura::$urlJida, $libreria);
+                }
+
                 $libreria = str_replace('{base}', Estructura::$urlBase, $libreria);
             }
             else if (strpos($libreria, '{tema}') !== false) {
@@ -170,11 +178,11 @@ Trait Procesador {
     private function _imprimirHead($configuracion, $modulo) {
 
         $html = "";
-
+        
         if (property_exists($configuracion, "link")) {
             $html .= $this->_link($configuracion->link);
         }
-
+        
         if (property_exists($configuracion, "css")) {
             $html .= $this->_css($configuracion->css, $modulo);
         }
@@ -190,6 +198,7 @@ Trait Procesador {
     private function _link($etiquetas) {
 
         $html = "";
+
         foreach ($etiquetas as $etiqueta => $contenido) {
 
             $configuracion = [];
@@ -207,7 +216,9 @@ Trait Procesador {
             }
 
             $urlTema = "//" . self::$_urlTema;
+
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
+            $configuracion['href'] = str_replace('{base}', Estructura::$urlBase, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);
 

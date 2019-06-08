@@ -5,7 +5,7 @@ namespace Jida\Modulos\Usuarios;
 use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Componentes\Permisos;
-
+use Jida\Validador\Type\Clave;
 class Usuario {
 
     private static $_instancia;
@@ -30,15 +30,21 @@ class Usuario {
     static function iniciarSesion($usuario, $clave) {
 
         $instancia = self::instancia();
+        $hash = new Clave($clave);
 
         $datos = $instancia
             ->_modelo
             ->consulta()
-            ->filtro(['usuario' => $usuario, 'clave' => md5($clave)])
+            ->filtro(['usuario' => $usuario])
             ->fila();
 
         if (!$datos) {
             return false;
+        }
+        if(!$hash->compare($datos['clave'])){
+            
+            return false;
+            
         }
 
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
@@ -85,8 +91,10 @@ class Usuario {
 
     public function cambiarClave($claveVieja, $claveNueva) {
 
-        if (md5($claveVieja) == $this->_modelo->clave) {
-            $this->_modelo->clave = md5($claveNueva);
+        $hashViejo = new Clave($claveVieja);
+        $hashNuevo = new Clave($claveNueva);
+        if ($hashViejo->compare($this->_modelo->clave) ) {
+            $this->_modelo->clave = $hashNuevo->hash();
             $this->_modelo->salvar();
             return true;
         }

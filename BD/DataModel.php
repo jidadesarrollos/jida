@@ -242,6 +242,8 @@ class DataModel {
      * Funcion constructora
      * @method __construct
      */
+    private static $instancia;
+
     function __construct($id = false) {
 
         $numeroParams = func_num_args();
@@ -530,7 +532,6 @@ class DataModel {
 
             array_walk($campos,
                 function (&$key, $valor, $tabla) {
-
                     $key = $tabla . "." . $key;
                 },
                 $this->tablaQuery);
@@ -2060,19 +2061,24 @@ class DataModel {
         return implode($arrayPalabra);
     }
 
-    function sp($sp, $parametros = []) {
+    static function sp($sp, $parametros = []) {
+        if (  !self::$instancia instanceof self)
+        {
+            self::$instancia = new self;
+        }
+
         if (!!$parametros) {
             if (is_string($parametros)) {
                 $parametros = (array)$parametros;
             }
             $parametros = "'" . implode("', '", $parametros) . "'";
-            $this->query = "CALL " . $sp . "({$parametros});";
+            self::$instancia->query = "CALL " . $sp . "({$parametros});";
         }
         else {
-            $this->query = "CALL " . $sp . ";";
+            self::$instancia->query = "CALL " . $sp . ";";
         }
-        $result = $this->bd->ejecutarQuery($this->query);
-        return is_object($result) ? $this->bd->obtenerDataCompleta($result) : $result;
+        $result = self::$instancia->bd->ejecutarQuery(self::$instancia->query);
+        return is_object($result) ? self::$instancia->bd->obtenerDataCompleta($result) : $result;
     }
 
 }//fin clase;

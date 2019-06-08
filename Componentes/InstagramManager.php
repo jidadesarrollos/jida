@@ -1,6 +1,7 @@
 <?php
 /**
  * Clase Para consultas a la API de Instagram
+ *
  * @author JidaDesarrollos
  * @version v0.1
  * @category API
@@ -9,10 +10,11 @@
 
 namespace Jida\Componentes;
 
-use Jida\Debug as Debug;
-use Jida\Core\Curl as Curl;
+use App\Config\Configuracion;
+use Jida\Medios\Debug;
+use Jida\Core\Curl;
 
-include_once 'Framework/Core/Curl.php';
+//include_once 'Framework/Core/Curl.php';
 
 class InstagramManager {
 
@@ -20,9 +22,10 @@ class InstagramManager {
     private $secretID;
 
     private $version = 'v1';
-    private $urlApi = 'https://api.instagram.com/';
+    private $urlApi  = 'https://api.instagram.com/';
     /**
      * URL de Autorización para Instagram
+     *
      * @example https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code&scope=SCOPE
      *
      */
@@ -39,11 +42,11 @@ class InstagramManager {
      * Funcion constructora
      * @method __construct
      */
-    function __construct () {
+    function __construct() {
 
-        $this->accessToken = INSTAGRAM_ACCESS_TOKEN;
-        $this->secretID = INSTAGRAM_CLIENT_SECRET;
-        $this->redirectURI = URL_REDIRECCION;
+        $this->accessToken = Configuracion::INSTAGRAM_ACCESS_TOKEN;
+        $this->secretID = Configuracion::INSTAGRAM_CLIENT_SECRET;
+        $this->redirectURI = Configuracion::URL_REDIRECCION;
         $this->urlApi = $this->urlApi . $this->version . '/';
         $this->urlAuth = $this->urlAuth . '?client_id=' . $this->accessToken . '&redirect_uri=' . $this->redirectURI . '&response_type=code&' . $this->scopes;
     }
@@ -51,22 +54,25 @@ class InstagramManager {
     /**
      * Envia a la URL de autenticación de instagram
      */
-    function autenticar () {
+    function autenticar() {
 
         header('location:' . $this->urlAuth . '');
         exit;
     }
 
-    function buscarID ($user, $token) {
+    function buscarID($user, $token) {
 
         $url = $this->urlApi . 'users/search?q=' . $user . '&access_token=' . $token;
         $curl = new Curl($this->urlApi);
         $data = $curl->get([], $url)->arreglo();
 
-        return $data['data'];
+        if (isset($data['data']))
+            return $data['data'];
+        else
+            return false;
     }
 
-    function solicitarAccessToken ($token) {
+    function solicitarAccessToken($token) {
 
         $url = 'https://api.instagram.com/oauth/access_token';
 
@@ -84,7 +90,7 @@ class InstagramManager {
         return $data;
     }
 
-    function miGaleria ($accessToken) {
+    function miGaleria($accessToken) {
 
         $photo_count = 6;
 
@@ -99,9 +105,10 @@ class InstagramManager {
 
     /**
      * Obtiene las fotos de un usuario especificado por su user-id de Instagram
+     *
      * @example https://api.instagram.com/v1/users/{user-id}/media/recent/?access_token=ACCESS-TOKEN
      */
-    function obtFotos ($accessToken, $userID) {
+    function obtFotos($accessToken, $userID) {
 
         $photo_count = 60;
 
@@ -122,7 +129,7 @@ class InstagramManager {
      * @param int|string $userID ID de usuario Instagram
      * @return mixed
      */
-    public function obtSeguidores ($accessToken, $userID) {
+    public function obtSeguidores($accessToken, $userID) {
 
         $url = $this->urlApi . 'users/' . $userID . '/followed-by?access_token=' . $accessToken;
 
@@ -142,7 +149,7 @@ class InstagramManager {
      * @param int|string $userID ID de usuario Instagram
      * @return mixed
      */
-    public function obtSeguidos ($accessToken, $userID) {
+    public function obtSeguidos($accessToken, $userID) {
 
         $url = $this->urlApi . 'users/' . $userID . '/follows?access_token=' . $accessToken;
 
@@ -163,7 +170,7 @@ class InstagramManager {
      *
      * @return mixed
      */
-    public function obtLikes ($accessToken, $postID) {
+    public function obtLikes($accessToken, $postID) {
 
         $url = $this->urlApi . 'media/' . $postID . '/likes?access_token=' . $accessToken;
 
@@ -184,7 +191,7 @@ class InstagramManager {
      *
      * @return mixed
      */
-    public function obtComentarios ($accessToken, $postID) {
+    public function obtComentarios($accessToken, $postID) {
 
         $url = $this->urlApi . 'media/' . $postID . '/comments?access_token=' . $accessToken;
 

@@ -41,6 +41,7 @@ class Vista {
         $this->_tema = $conf->tema;
         $this->_data = Data::obtener($controlador);
         $this->url = Estructura::$url;
+        $this->urlBase = Estructura::$urlBase;
 
     }
 
