@@ -26,7 +26,8 @@ class Config {
     const PATH_JIDA = "vendor/jida/jida";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
-    const HASH_CLAVE = "password_hash"; // opciones: password_hash, md5
+    const HASH_CLAVE = "md5"; // opciones: password_hash, md5
+    const TIPO = 'API';
 
     /**
      * Define si la aplicacion es multiidioma
