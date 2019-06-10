@@ -12,7 +12,7 @@ class \Jida\Manager\Vista\OpenGraph {
 
 Metodo
 --
-- **imprimir**: Imprime el HTML de las etiquetas meta Open Graph
+- **render**: renderiza el HTML de las etiquetas meta Open Graph
 
 Parámetros
 --
@@ -20,11 +20,7 @@ Parámetros
 
 Implementación
 ---
-- Se debe agregar en el layout principal el método _imprimirOG()_
-```php
-    echo $this->imprimirOG();
-```
-- Desde el controlador, se debe pasar mediante el objeto data, el arreglo con la configuración personalizada para las etiquetas open graph. 
+- Desde el controlador, se debe pasar mediante el layout, el arreglo con la configuración personalizada para las etiquetas open graph. 
 ```php
 $og = [
     'og:title' => 'Aplicación Jida',
@@ -33,7 +29,5 @@ $og = [
     'og:image' => 'http://jidadesarrollos.com/htdocs/img/logo.png'
 ];
 
-$this->data([
-    'og' => $og
-]);
+$this->layout()->openGraph($og);
 ```

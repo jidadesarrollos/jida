@@ -10,6 +10,7 @@ namespace Jida\Manager\Vista\Layout;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Meta;
 use Jida\Manager\Vista\OpenGraph;
 use Jida\Manager\Vista\Tema;
@@ -41,14 +42,16 @@ Trait Procesador {
     }
 
     /**
-     * Imprime las etiquetas Open Graph configurada para la página actual
+     * Asigna el valor de las etiquetas Open Graph configurada para la página actual
      *
-     * @method imprimirOG
+     * @method openGraph
+     * @param $data arreglo que contiene el valor de las etiquetas personalizadas para open graph
      *
      */
-    public function imprimirOG() {
+    public function openGraph($data = []) {
 
-        return OpenGraph::imprimir($this->_data);
+        $this->_data->og = $data;
+        return;
 
     }
 
@@ -198,6 +201,10 @@ Trait Procesador {
 
         if (property_exists($configuracion, "css")) {
             $html .= $this->_css($configuracion->css, $modulo);
+        }
+
+        if (property_exists($this->_data, "og")) {
+            $html .= OpenGraph::render($this->_data->og);
         }
 
         return $html;

@@ -12,21 +12,22 @@ use Jida\Render\Selector;
 class OpenGraph {
 
     /**
-     * Imprime las etiquetas Open Graph configurada para la página actual
+     * Rendriza las etiquetas Open Graph configuradas para la página actual
      *
-     * @method imprimir
+     * @method render
+     * @param $data arreglo de valores personalizados para crear las etiquetas meta open graph
      *
      */
 
-    static function imprimir($data) {
+    static function render($data) {
 
         $html = "";
 
-        if (count($data->og) > 0) {
+        if (count($data) > 0) {
 
             $selector = "";
 
-            foreach ($data->og as $property => $content) {
+            foreach ($data as $property => $content) {
 
                 $selector .= $html = Selector::crear(
                     'meta',
