@@ -5,7 +5,6 @@ namespace Jida\Core\Consola\Comandos;
 use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -16,12 +15,11 @@ use Symfony\Component\Console\Input\InputOption;
  * @category Consola
  *
  */
-class ConfiguradorBD extends Comando{
-
+class ConfiguradorBD extends Comando {
 
     protected static $defaultName = 'configurar:bd';
 
-    public function configurar () {
+    public function configurar() {
 
         $this->addOption(
             'servidor',
@@ -55,81 +53,26 @@ class ConfiguradorBD extends Comando{
 
     }
 
-    public function validarArchivoBD(InputInterface $input, OutputInterface $output){
-
-        if ($input->getArgument('archivo')) {
-
-            $archivo = $input->getArgument('archivo');
-        }
-        else {
-
-            $archivo = $this->path . '/BD/app.sql';
-        }
-
-        $sql = file_get_contents($archivo);
-
-        if (!file_exists($archivo)) {
-
-            return $output->writeln("El Archivo $archivo no existe");
-
-        }
-
-    }
-
-    public function ejecutar (InputInterface $input, OutputInterface $output) {
-
-
-        $this->validarArchivoBD($input, $output);
+    public function CrearConfigBD(InputInterface $input) {
 
         $config = [
-            'puerto'   => '3306',
-            'usuario'  => 'root',
-            'clave'    => '',
-            'bd'       => '',
-            'servidor' => 'localhost'
+            'puerto'   => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
+            'usuario'  => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
+            'clave'    => ($input->getOption('clave')) ? $input->getOption('clave') : '',
+            'bd'       => ($input->getOption('bd')) ? $input->getOption('bd') : '',
+            'servidor' => ($input->getOption('servidor')) ? $input->getOption('servidor') : 'localhost'
         ];
-        $params = false;
 
-        if ($input->getOption('servidor')) {
-            $config['servidor'] = $input->getOption('servidor');
-            $params = true;
-        }
-
-        if ($input->getOption('puerto')) {
-
-            $config['puerto'] = $input->getOption('puerto');
-            $params = true;
-
-        }
-
-        if ($input->getOption('usuario')) {
-
-            $config['usuario'] = $input->getOption('usuario');
-            $params = true;
-        }
-
-        if ($input->getOption('clave')) {
-
-            $config['clave'] = $input->getOption('clave');
-            $params = true;
-
-        }
-
-        if ($input->getOption('bd')) {
-
-            $config['bd'] = $input->getOption('bd');
-            $params = true;
-
-        }
-
+        return $config;
     }
 
-    public function CrearConfigBD( $params = false, $config, OutputInterface $output, $sql){
+    public function ejecutar(InputInterface $input, OutputInterface $output) {
 
+        $config = $this->CrearConfigBD($input);
         $BD = "$this->path/Aplicacion/Config/BD.php";
         $file_exists = file_exists($BD);
 
-        if (!$params && $file_exists) {
+        if ($file_exists) {
 
             $bd = new \App\Config\BD();
             $config = $bd->default;
@@ -142,33 +85,9 @@ class ConfiguradorBD extends Comando{
 
         }
 
-        $output->writeln("Restaurando base de datos espere...");
-
-        try {
-
-            $resultado = Restaurar($config, $sql);
-
-        }
-        catch (\Exception $ex) {
-
-            return $output->writeln($ex->getMessage());
-
-        }
-
-        if ($resultado == NULL) {
-
-            $output->writeln("Base de datos restaurada...");
-
-        }
-        else {
-
-            $output->writeln("Ocurrio un error $resultado...");
-
-        }
-
     }
 
-    protected function crearConfiguracion ($config) {
+    protected function crearConfiguracion($config) {
 
         $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
         $configtpl = new MotorDePlantillas();

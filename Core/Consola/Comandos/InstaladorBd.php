@@ -59,7 +59,7 @@ class InstaladorBd extends Comando {
 
     }
 
-    public function validarArchivoBD(InputInterface $input, OutputInterface $output) {
+    public function validarArchivoBD(InputInterface $input) {
 
         $archivo = $this->path . '/BD/app.sql';
 
@@ -142,6 +142,7 @@ class InstaladorBd extends Comando {
         try {
 
             $config = $this->crearConfigBD($input, $output);
+            //var_dump($config);
             $sql = $this->validarArchivoBD($input, $output);
 
             $output->writeln("Restaurando base de datos espere...");
