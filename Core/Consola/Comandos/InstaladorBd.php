@@ -141,9 +141,8 @@ class InstaladorBd extends Comando {
 
         try {
 
-            $configBD = $this->crearConfigBD($input, $output);
+            $config = $this->crearConfigBD($input, $output);
             $sql = $this->validarArchivoBD($input, $output);
-            $config = $configBD['config'];
 
             $output->writeln("Restaurando base de datos espere...");
 
