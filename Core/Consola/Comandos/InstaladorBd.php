@@ -96,88 +96,27 @@ class InstaladorBd extends Comando {
 
         //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
         $config = [
-            'puerto'   => '3306',
-            'usuario'  => 'root',
-            'clave'    => '',
-            'bd'       => '',
-            'servidor' => 'localhost'
+            'puerto'   => ($input->getOption('puerto'))? $input->getOption('puerto'): '3306',
+            'usuario'  => ($input->getOption('usuario'))? $input->getOption('usuario'): 'root',
+            'clave'    => ($input->getOption('clave'))? $input->getOption('clave'): '',
+            'bd'       => ($input->getOption('bd'))? $input->getOption('bd'): '',
+            'servidor' => ($input->getOption('servidor'))? $input->getOption('servidor'): 'localhost'
         ];
-
-        $params = false;
-
-        if ($input->getOption('servidor')) {
-            $config['servidor'] = $input->getOption('servidor');
-            $params = true;
-        }
-
-        if ($input->getOption('puerto')) {
-
-            $config['puerto'] = $input->getOption('puerto');
-            $params = true;
-
-        }
-
-        if ($input->getOption('usuario')) {
-
-            $config['usuario'] = $input->getOption('usuario');
-            $params = true;
-        }
-
-        if ($input->getOption('clave')) {
-
-            $config['clave'] = $input->getOption('clave');
-            $params = true;
-
-        }
-
-        if ($input->getOption('bd')) {
-
-            $config['bd'] = $input->getOption('bd');
-            $params = true;
-
-        }
-
-        /*$config['servidor'] = ($input->getOption('servidor')) ? $input->getOption('servidor') : $config['servidor'];
-        $config['puerto'] = ($input->getOption('puerto')) ? $input->getOption('puerto') : $config['puerto'];
-        $config['usuario'] = ($input->getOption('usuario')) ? $input->getOption('usuario') : $config['usuario'];
-        $config['clave'] = ($input->getOption('clave')) ? $input->getOption('clave') : $config['clave'];
-        $config['bd'] = ($input->getOption('bd')) ? $input->getOption('bd') : $config['bd'];*/
-
-        //Creamos el archivo de configuración BD y verificamos que se creo.
-        $BD = "$this->directorioDeProyecto/Aplicacion/Config/BD.php";
-        $file_exists = file_exists($BD);
 
         $configBD = [
             'config' => $config,
-            'file'   => $file_exists,
             'sql'    => $validarArchivoBD,
-            'params' => $params
         ];
         return $configBD;
 
     }
 
-    public function restaurarBD(InputInterface $input, OutputInterface $output) {
+    public function ejecutar(InputInterface $input, OutputInterface $output) {
 
         //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
         $configBD = $this->crearConfigBD($input, $output);
-        $file_exists = $configBD['file'];
         $config = $configBD['config'];
         $sql = $configBD['sql'];
-        $params = $configBD['params'];
-
-        if (!$params && $file_exists) {
-
-            $bd = new \App\Config\BD();
-            $config = $bd->default;
-
-        }
-        elseif (!$file_exists) {
-
-            $this->crearConfiguracion($config);
-            $output->writeln("Archivo de configuracion creado ...");
-
-        }
 
         $output->writeln("Restaurando base de datos espere...");
 
@@ -205,24 +144,5 @@ class InstaladorBd extends Comando {
 
     }
 
-    public function ejecutar(InputInterface $input, OutputInterface $output) {
-
-        $this->restaurarBD($input, $output);
-
-    }
-
-    protected function crearConfiguracion($config) {
-
-        $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
-        $configtpl = new MotorDePlantillas();
-        $configtpl->asignar('servidor', $config['servidor']);
-        $configtpl->asignar('puerto', $config['puerto']);
-        $configtpl->asignar('usuario', $config['usuario']);
-        $configtpl->asignar('clave', $config['clave']);
-        $configtpl->asignar('bd', $config['bd']);
-        $configtpl->asignar('manejador', 'MySQL');
-        file_put_contents("$path/BD.php", $configtpl->obt("clase-BD.jida"));
-
-    }
 
 }
