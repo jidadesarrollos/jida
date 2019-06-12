@@ -2,8 +2,6 @@
 
 namespace Jida\Core\Consola\Comandos;
 
-require(__DIR__ . "/../../../BD/Restaurar.php");
-
 use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -89,7 +87,6 @@ class InstaladorBd extends Comando {
 
     public function restaurar(array $config, $sql) {
 
-        echo
         $dsn = "mysql:host=$config[servidor];port=$config[puerto];";
 
         $pdo = new \PDO($dsn, $config['usuario'], $config['clave']);
