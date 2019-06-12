@@ -73,13 +73,8 @@ class InstaladorBd extends Comando {
 
     }
 
-    public function crearConfigBD(InputInterface $input, OutputInterface $output) {
+    public function crearConfigBD(InputInterface $input) {
 
-        //Validamos el archivo recibido para restaurar la BD y sino lo hay asignamos uno por defecto.
-
-        $validarArchivoBD = $this->validarArchivoBD($input, $output);
-
-        //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
         $config = [
             'puerto'   => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
             'usuario'  => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
@@ -88,11 +83,60 @@ class InstaladorBd extends Comando {
             'servidor' => ($input->getOption('servidor')) ? $input->getOption('servidor') : 'localhost'
         ];
 
-        $configBD = [
-            'config' => $config,
-            'sql'    => $validarArchivoBD,
-        ];
-        return $configBD;
+        return $config;
+
+    }
+
+    public function restaurar(array $config, $sql) {
+
+        echo
+        $dsn = "mysql:host=$config[servidor];port=$config[puerto];";
+
+        $pdo = new \PDO($dsn, $config['usuario'], $config['clave']);
+
+        $baseDatos = $config['bd'];
+
+        if (!$pdo->exec("DROP DATABASE IF EXISTS $baseDatos;")) {
+
+            if ($pdo->errorInfo()[0] != '00000') {
+
+                return $pdo->errorInfo()[2];
+
+            }
+
+        }
+
+        if (!$pdo->exec("CREATE DATABASE  $baseDatos;")) {
+
+            if ($pdo->errorInfo()[0] != '00000') {
+
+                return $pdo->errorInfo()[2];
+
+            }
+
+        }
+
+        if (!$pdo->exec("USE $baseDatos;")) {
+
+            if ($pdo->errorInfo()[0] != '00000') {
+
+                return $pdo->errorInfo()[2];
+
+            }
+
+        }
+
+        if (!$pdo->exec($sql)) {
+
+            if ($pdo->errorInfo()[0] != '00000') {
+
+                return $pdo->errorInfo()[2];
+
+            }
+
+        }
+
+        return NULL;
 
     }
 
@@ -101,18 +145,16 @@ class InstaladorBd extends Comando {
         try {
 
             $configBD = $this->crearConfigBD($input, $output);
+            $sql = $this->validarArchivoBD($input, $output);
             $config = $configBD['config'];
-            $sql = $configBD['sql'];
 
             $output->writeln("Restaurando base de datos espere...");
 
-            $resultado = Restaurar($config, $sql);
-
-            if ($resultado == NULL) {
+            if ($this->restaurar($config, $sql) === NULL) {
                 $output->writeln("Base de datos restaurada...");
             }
             else {
-                $output->writeln("Ocurrio un error $resultado...");
+                $output->writeln("Ocurrio un error $this->restaurar($config, $sql)...");
             }
 
         }
