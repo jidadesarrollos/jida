@@ -166,7 +166,7 @@ class InstaladorBd extends Comando {
 
     }
 
-    protected function crearConfiguracion ($config) {
+        protected function crearConfiguracion ($config) {
 
         $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
         $configtpl = new MotorDePlantillas();

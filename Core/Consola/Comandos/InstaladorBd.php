@@ -63,6 +63,7 @@ class InstaladorBd extends Comando {
 
     public function validarArchivoBD(InputInterface $input, OutputInterface $output) {
 
+        //Validamos el archivo recibido para restaurar la BD y sino lo hay asignamos uno por defecto.
         if ($input->getArgument('archivo')) {
 
             $archivo = $input->getArgument('archivo');
@@ -72,20 +73,28 @@ class InstaladorBd extends Comando {
             $archivo = $this->path . '/BD/app.sql';
         }
 
-        $sql = file_get_contents($archivo);
-
+        /*Sino existe el archivo de restauración de BD escribimos un mensaje, en caso contrario (si existe) creamos uno
+          con el contenido del recibido y lo retornamos*/
         if (!file_exists($archivo)) {
 
-            return $output->writeln("El Archivo $archivo no existe");
+            $output->writeln("El Archivo $archivo no existe");
+
+        }
+        else {
+
+            return $sql = file_get_contents($archivo);
 
         }
 
     }
 
-    public function ejecutar(InputInterface $input, OutputInterface $output) {
+    public function crearConfigBD(InputInterface $input, OutputInterface $output) {
 
-        $this->validarArchivoBD($input, $output);
+        //Validamos el archivo recibido para restaurar la BD y sino lo hay asignamos uno por defecto.
 
+        $validarArchivoBD = $this->validarArchivoBD($input, $output);
+
+        //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
         $config = [
             'puerto'   => '3306',
             'usuario'  => 'root',
@@ -93,6 +102,7 @@ class InstaladorBd extends Comando {
             'bd'       => '',
             'servidor' => 'localhost'
         ];
+
         $params = false;
 
         if ($input->getOption('servidor')) {
@@ -126,6 +136,92 @@ class InstaladorBd extends Comando {
             $params = true;
 
         }
+
+        /*$config['servidor'] = ($input->getOption('servidor')) ? $input->getOption('servidor') : $config['servidor'];
+        $config['puerto'] = ($input->getOption('puerto')) ? $input->getOption('puerto') : $config['puerto'];
+        $config['usuario'] = ($input->getOption('usuario')) ? $input->getOption('usuario') : $config['usuario'];
+        $config['clave'] = ($input->getOption('clave')) ? $input->getOption('clave') : $config['clave'];
+        $config['bd'] = ($input->getOption('bd')) ? $input->getOption('bd') : $config['bd'];*/
+
+        //Creamos el archivo de configuración BD y verificamos que se creo.
+        $BD = "$this->directorioDeProyecto/Aplicacion/Config/BD.php";
+        $file_exists = file_exists($BD);
+
+        $configBD = [
+            'config' => $config,
+            'file'   => $file_exists,
+            'sql'    => $validarArchivoBD,
+            'params' => $params
+        ];
+        return $configBD;
+
+    }
+
+    public function restaurarBD(InputInterface $input, OutputInterface $output) {
+
+        //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
+        $configBD = $this->crearConfigBD($input, $output);
+        $file_exists = $configBD['file'];
+        $config = $configBD['config'];
+        $sql = $configBD['sql'];
+        $params = $configBD['params'];
+
+        if (!$params && $file_exists) {
+
+            $bd = new \App\Config\BD();
+            $config = $bd->default;
+
+        }
+        elseif (!$file_exists) {
+
+            $this->crearConfiguracion($config);
+            $output->writeln("Archivo de configuracion creado ...");
+
+        }
+
+        $output->writeln("Restaurando base de datos espere...");
+
+        try {
+
+            $resultado = Restaurar($config, $sql);
+
+        }
+        catch (\Exception $ex) {
+
+            return $output->writeln($ex->getMessage());
+
+        }
+
+        if ($resultado == NULL) {
+
+            $output->writeln("Base de datos restaurada...");
+
+        }
+        else {
+
+            $output->writeln("Ocurrio un error $resultado...");
+
+        }
+
+    }
+
+    public function ejecutar(InputInterface $input, OutputInterface $output) {
+
+        $this->restaurarBD($input, $output);
+
+    }
+
+    protected function crearConfiguracion($config) {
+
+        $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
+        $configtpl = new MotorDePlantillas();
+        $configtpl->asignar('servidor', $config['servidor']);
+        $configtpl->asignar('puerto', $config['puerto']);
+        $configtpl->asignar('usuario', $config['usuario']);
+        $configtpl->asignar('clave', $config['clave']);
+        $configtpl->asignar('bd', $config['bd']);
+        $configtpl->asignar('manejador', 'MySQL');
+        file_put_contents("$path/BD.php", $configtpl->obt("clase-BD.jida"));
 
     }
 
