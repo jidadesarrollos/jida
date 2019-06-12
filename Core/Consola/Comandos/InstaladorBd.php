@@ -5,10 +5,10 @@ namespace Jida\Core\Consola\Comandos;
 require(__DIR__ . "/../../../BD/Restaurar.php");
 
 use Jida\Core\Consola\Comando;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Comando cargar un backup en la base de datos
@@ -63,28 +63,13 @@ class InstaladorBd extends Comando {
 
     public function validarArchivoBD(InputInterface $input, OutputInterface $output) {
 
-        //Validamos el archivo recibido para restaurar la BD y sino lo hay asignamos uno por defecto.
-        if ($input->getArgument('archivo')) {
+        $archivo = $this->path . '/BD/app.sql';
 
-            $archivo = $input->getArgument('archivo');
-        }
-        else {
+        if ($input->getArgument('archivo')) $archivo = $input->getArgument('archivo');
 
-            $archivo = $this->path . '/BD/app.sql';
-        }
+        if (!file_exists($archivo)) throw new \Exception('"El Archivo $archivo no existe', 100);
 
-        /*Sino existe el archivo de restauración de BD escribimos un mensaje, en caso contrario (si existe) creamos uno
-          con el contenido del recibido y lo retornamos*/
-        if (!file_exists($archivo)) {
-
-            $output->writeln("El Archivo $archivo no existe");
-
-        }
-        else {
-
-            return $sql = file_get_contents($archivo);
-
-        }
+        return file_get_contents($archivo);
 
     }
 
@@ -96,11 +81,11 @@ class InstaladorBd extends Comando {
 
         //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
         $config = [
-            'puerto'   => ($input->getOption('puerto'))? $input->getOption('puerto'): '3306',
-            'usuario'  => ($input->getOption('usuario'))? $input->getOption('usuario'): 'root',
-            'clave'    => ($input->getOption('clave'))? $input->getOption('clave'): '',
-            'bd'       => ($input->getOption('bd'))? $input->getOption('bd'): '',
-            'servidor' => ($input->getOption('servidor'))? $input->getOption('servidor'): 'localhost'
+            'puerto'   => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
+            'usuario'  => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
+            'clave'    => ($input->getOption('clave')) ? $input->getOption('clave') : '',
+            'bd'       => ($input->getOption('bd')) ? $input->getOption('bd') : '',
+            'servidor' => ($input->getOption('servidor')) ? $input->getOption('servidor') : 'localhost'
         ];
 
         $configBD = [
@@ -143,6 +128,5 @@ class InstaladorBd extends Comando {
         }
 
     }
-
 
 }
