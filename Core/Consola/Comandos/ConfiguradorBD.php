@@ -6,6 +6,7 @@ use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Jida\Core\Consola\MotorDePlantillas;
 
 /**
  * Comando cargar un backup en la base de datos
@@ -76,6 +77,7 @@ class ConfiguradorBD extends Comando {
 
             $bd = new \App\Config\BD();
             $config = $bd->default;
+            $output->writeln("Archivo de configuración previamente existente ...");
 
         }
         elseif (!$file_exists) {
