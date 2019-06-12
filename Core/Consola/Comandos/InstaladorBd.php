@@ -98,33 +98,26 @@ class InstaladorBd extends Comando {
 
     public function ejecutar(InputInterface $input, OutputInterface $output) {
 
-        //Procedemos a crear la configuración de BD recibida y sino la hay asignamos una por defecto.
-        $configBD = $this->crearConfigBD($input, $output);
-        $config = $configBD['config'];
-        $sql = $configBD['sql'];
-
-        $output->writeln("Restaurando base de datos espere...");
-
         try {
+
+            $configBD = $this->crearConfigBD($input, $output);
+            $config = $configBD['config'];
+            $sql = $configBD['sql'];
+
+            $output->writeln("Restaurando base de datos espere...");
 
             $resultado = Restaurar($config, $sql);
 
+            if ($resultado == NULL) {
+                $output->writeln("Base de datos restaurada...");
+            }
+            else {
+                $output->writeln("Ocurrio un error $resultado...");
+            }
+
         }
         catch (\Exception $ex) {
-
-            return $output->writeln($ex->getMessage());
-
-        }
-
-        if ($resultado == NULL) {
-
-            $output->writeln("Base de datos restaurada...");
-
-        }
-        else {
-
-            $output->writeln("Ocurrio un error $resultado...");
-
+            $output->writeln($ex->getMessage());
         }
 
     }
