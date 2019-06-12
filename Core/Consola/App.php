@@ -20,6 +20,7 @@ class App extends Application {
         $this->add(new Comandos\CrearModulo($path));
         $this->add(new Comandos\CrearControlador($path));
         $this->add(new Comandos\InstaladorBd($path));
+        $this->add(new Comandos\ConfiguradorBD($path));
 
     }
 

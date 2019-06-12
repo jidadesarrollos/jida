@@ -59,7 +59,7 @@ class InstaladorBd extends Comando {
 
     }
 
-    public function validarArchivoBD(InputInterface $input, OutputInterface $output) {
+    public function validarArchivoBD(InputInterface $input) {
 
         $archivo = $this->path . '/BD/app.sql';
 
