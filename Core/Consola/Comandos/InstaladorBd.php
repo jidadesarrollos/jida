@@ -2,7 +2,7 @@
 
 namespace Jida\Core\Consola\Comandos;
 
-require (__DIR__ . "/../../../BD/Restaurar.php");
+require(__DIR__ . "/../../../BD/Restaurar.php");
 
 use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,11 +20,9 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class InstaladorBd extends Comando {
 
-
     protected static $defaultName = 'instalar:bd';
 
-
-    public function configurar () {
+    public function configurar() {
 
         $this->addArgument(
             'archivo',
@@ -63,7 +61,7 @@ class InstaladorBd extends Comando {
 
     }
 
-    public function validarArchivoBD(InputInterface $input, OutputInterface $output){
+    public function validarArchivoBD(InputInterface $input, OutputInterface $output) {
 
         if ($input->getArgument('archivo')) {
 
@@ -84,9 +82,7 @@ class InstaladorBd extends Comando {
 
     }
 
-
-    public function ejecutar (InputInterface $input, OutputInterface $output) {
-
+    public function ejecutar(InputInterface $input, OutputInterface $output) {
 
         $this->validarArchivoBD($input, $output);
 
