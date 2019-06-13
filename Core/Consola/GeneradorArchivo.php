@@ -14,20 +14,20 @@ use Jida\Medios\Debug;
  * @category Console
  *
  */
-class MotorDePlantillas {
+class GeneradorArchivo {
 
     public function __construct() {
 
     }
 
-    public function crearArchivoConfigBD($variables) {
+    public function crearArchivo($variables, $plantilla) {
 
-        $archivo = __DIR__ . "/plantillas/clase-BD.jida";
-        if (!Directorios::validar($archivo)) {
-            Debug::imprimir(["no existe el archivo $archivo"], true);
+        if (!Directorios::validar($plantilla)) {
+            Debug::imprimir(["No existe el archivo $plantilla"], true);
         }
 
-        $content = file_get_contents($archivo);
+        $content = file_get_contents($plantilla);
+        var_dump($variables);
         foreach ($variables as $data => $valor) {
             $content = str_replace("{{{$data}}}", $valor, $content);
         }

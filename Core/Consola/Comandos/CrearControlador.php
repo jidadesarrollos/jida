@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Jida\Core\Consola\MotorDePlantillas;
+use Jida\Core\Consola\GeneradorArchivo;
 
 /**
  * Comando para crear un controlador
@@ -20,6 +20,7 @@ use Jida\Core\Consola\MotorDePlantillas;
 class CrearControlador extends Comando {
 
     protected static $defaultName = 'crear:controlador';
+    protected $variables;
 
     //put your code here
     protected function configurar() {
@@ -46,7 +47,7 @@ class CrearControlador extends Comando {
 
     protected function ejecutar(InputInterface $input, OutputInterface $output) {
 
-        $path = realpath($this->directorioDeProyecto . DS . self::PathApp);
+        $path = realpath($this->path . DS . self::PathApp);
         $nombre = ucwords($input->getArgument('nombre'));
 
         if ($input->getOption('modulo')) {
@@ -90,22 +91,27 @@ class CrearControlador extends Comando {
 
     protected function createFiles($path, $nombre, $class, $extends) {
 
-        $controladorTpl = new MotorDePlantillas();
+        $controladorTpl = new GeneradorArchivo();
         $c = explode("\\", $class);
         $nameClass = array_pop($c);
         $e = explode("\\", $extends);
         $nameExtend = $e[count($e) - 1];
-        $controladorTpl->asignar('namespace', implode("\\", $c));
-        $controladorTpl->asignar('uses', [implode("\\", $e)]);
-        $controladorTpl->asignar('class', $nameClass);
-        $controladorTpl->asignar('extends', $nameExtend);
-        $controladorTpl->asignar('metodos', ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]);
-        $controlador = $controladorTpl->obt("clase.jida");
+        $variables = [
+            'namespace' => implode("\\", $c),
+            'uses' => [implode("\\", $e)],
+            'class' => $nameClass,
+            'extends' => $nameExtend,
+            'metodos' => ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]
+        ];
+        $plantilla = dirname(__DIR__).'/plantillas/clase.jida';
+        $controlador = $controladorTpl->crearArchivo($variables, $plantilla);
 
-        $vistaTpl = new MotorDePlantillas();
-        $vistaTpl->asignar('cabecera', "<?= \$this->mensaje ?>");
-        $vistaTpl->asignar('mensaje', "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.");
-        $vista = $vistaTpl->obt('vista.jida');
+        $vistaTpl = new GeneradorArchivo();
+        $variables = ['cabecera' => "<?= \$this->mensaje ?>",
+                       'mensaje' => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."
+        ];
+        $plantilla = dirname(__DIR__).'/plantillas/vista.jida';
+        $vista = $vistaTpl->crearArchivo($variables, $plantilla);
 
         $archivoControlador = "$path/Controllers/$nombre.php";
         $directorioVista = "$path/Vistas/" . lcfirst($nombre);

@@ -3,17 +3,17 @@
  * Creado por Jida Framework
  * {date('Y-m-d H:i:s')}
  */
-{{$preNamespace}}
-namespace {{$namespace}};
+{{preNamespace}}
+namespace {{namespace}};
 {foreach $uses as $use}  
-use {{$use}};
+use {{use}};
 {/foreach}
-{{$postNamespace}}
-class {{$class}} extends {{$extends}}{
+{{postNamespace}}
+class {{class}} extends {{extends}}{
     {foreach $metodos as $method=>$code}  
-    public function {{$method}}() {
+    public function {{method}}() {
     
-        {{$code}}
+        {{code}}
 
     }
     {foreachelse}

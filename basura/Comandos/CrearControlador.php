@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Jida\Core\Consola\MotorDePlantillas;
+use Jida\Core\Consola\GeneradorArchivo;
 
 /**
  * Comando para crear un controlador
@@ -90,7 +90,7 @@ class CrearControlador extends Comando {
 
     protected function createFiles($path, $nombre, $class, $extends) {
 
-        $controladorTpl = new MotorDePlantillas();
+        $controladorTpl = new GeneradorArchivo();
         $c = explode("\\", $class);
         $nameClass = array_pop($c);
         $e = explode("\\", $extends);
@@ -102,7 +102,7 @@ class CrearControlador extends Comando {
         $controladorTpl->asignar('metodos', ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]);
         $controlador = $controladorTpl->obt("clase.jida");
 
-        $vistaTpl = new MotorDePlantillas();
+        $vistaTpl = new GeneradorArchivo();
         $vistaTpl->asignar('cabecera', "<?= \$this->mensaje ?>");
         $vistaTpl->asignar('mensaje', "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.");
         $vista = $vistaTpl->obt('vista.jida');

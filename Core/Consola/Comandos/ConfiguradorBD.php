@@ -6,7 +6,7 @@ use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Jida\Core\Consola\MotorDePlantillas;
+use Jida\Core\Consola\GeneradorArchivo;
 
 /**
  * Comando cargar un backup en la base de datos
@@ -19,6 +19,7 @@ use Jida\Core\Consola\MotorDePlantillas;
 class ConfiguradorBD extends Comando {
 
     protected static $defaultName = 'configurar:bd';
+    protected $pathPlantilla;
 
     public function configurar() {
 
@@ -62,12 +63,12 @@ class ConfiguradorBD extends Comando {
     public function CrearConfigBD(InputInterface $input) {
 
         $config = [
-            'manejador'   => ($input->getOption('manejador')) ? $input->getOption('manejador') : 'MySQL',
-            'puerto'   => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
-            'usuario'  => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
-            'clave'    => ($input->getOption('clave')) ? $input->getOption('clave') : '',
-            'bd'       => ($input->getOption('bd')) ? $input->getOption('bd') : '',
-            'servidor' => ($input->getOption('servidor')) ? $input->getOption('servidor') : 'localhost'
+            'manejador' => ($input->getOption('manejador')) ? $input->getOption('manejador') : 'MySQL',
+            'puerto'    => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
+            'usuario'   => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
+            'clave'     => ($input->getOption('clave')) ? $input->getOption('clave') : '',
+            'bd'        => ($input->getOption('bd')) ? $input->getOption('bd') : '',
+            'servidor'  => ($input->getOption('servidor')) ? $input->getOption('servidor') : 'localhost'
         ];
 
         return $config;
@@ -98,8 +99,9 @@ class ConfiguradorBD extends Comando {
     protected function generarConfigBD($config) {
 
         $path = $this->path . DS . self::PathApp . DS . "Config";
-        $configtpl = new MotorDePlantillas();
-        $archivoConfigBD = $configtpl->crearArchivoConfigBD($config);
+        $plantilla = dirname(__DIR__) . '/plantillas/clase-BD.jida';
+        $configtpl = new GeneradorArchivo();
+        $archivoConfigBD = $configtpl->crearArchivo($config, $plantilla);
         file_put_contents("$path/BD.php", $archivoConfigBD);
 
     }

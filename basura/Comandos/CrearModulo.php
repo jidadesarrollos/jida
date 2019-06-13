@@ -6,7 +6,7 @@ use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Jida\Core\Consola\MotorDePlantillas;
+use Jida\Core\Consola\GeneradorArchivo;
 
 /**
  * Comnado para crear la estructura de modulos de un Modulo
@@ -92,7 +92,7 @@ class CrearModulo extends Comando {
     public function crearArchivos($modulo, $path) {
 
         $codigoMetodo = "\$this->data(['mensaje' => 'Controlador '.self::class]);\n";
-        $controladorTpl = new MotorDePlantillas();
+        $controladorTpl = new GeneradorArchivo();
         $controladorTpl->asignar('namespace', "App\\Modulos\\$modulo\\Controllers");
         $controladorTpl->asignar('uses', [\App\Controllers\App::class]);
         $controladorTpl->asignar('class', $modulo);
@@ -100,7 +100,7 @@ class CrearModulo extends Comando {
         $controladorTpl->asignar('metodos', ['index' => $codigoMetodo]);
         $controlador = $controladorTpl->obt("clase.jida");
 
-        $jadminTpl = new MotorDePlantillas();
+        $jadminTpl = new GeneradorArchivo();
         $jadminTpl->asignar('namespace', "App\\Modulos\\$modulo\\Jadmin\\Controllers");
         $jadminTpl->asignar('uses', [\Jida\Jadmin\Controllers\JControl::class]);
         $jadminTpl->asignar('class', $modulo);
@@ -108,14 +108,14 @@ class CrearModulo extends Comando {
         $jadminTpl->asignar('metodos', ['index' => $codigoMetodo]);
         $jadmin = $jadminTpl->obt("clase.jida");
 
-        $modeloTpl = new MotorDePlantillas();
+        $modeloTpl = new GeneradorArchivo();
         $modeloTpl->asignar('namespace', "App\\Modulos\\$modulo\\Modelos");
         $modeloTpl->asignar('uses', [\Jida\Core\Modelo::class]);
         $modeloTpl->asignar('class', $modulo);
         $modeloTpl->asignar('extends', "Modelo");
         $modeloTpl->asignar('metodos', []);
         $modelo = $modeloTpl->obt("clase.jida");
-        $vistaTpl = new MotorDePlantillas();
+        $vistaTpl = new GeneradorArchivo();
         $vistaTpl->asignar('cabecera', "<?= \$this->mensaje ?>");
         $vistaTpl->asignar('mensaje', "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.");
         $vista = $vistaTpl->obt('vista.jida');
