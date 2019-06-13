@@ -1,0 +1,23 @@
+<?php
+/**
+ * Creado por Jida Framework
+ * {date('Y-m-d H:i:s')}
+ */
+{{$preNamespace}}
+namespace {{$namespace}};
+{foreach $uses as $use}  
+use {{$use}};
+{/foreach}
+{{$postNamespace}}
+class {{$class}} extends {{$extends}}{
+    {foreach $metodos as $method=>$code}  
+    public function {{$method}}() {
+    
+        {{$code}}
+
+    }
+    {foreachelse}
+    // tu codigo aqui
+    {/foreach}
+
+}

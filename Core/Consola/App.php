@@ -2,8 +2,8 @@
 
 namespace Jida\Core\Consola;
 
-use Symfony\Component\Console\Application;
 use Jida\Core\Consola\Comandos;
+use Symfony\Component\Console\Application;
 
 /**
  * Clase principal para el manejo de comandos
