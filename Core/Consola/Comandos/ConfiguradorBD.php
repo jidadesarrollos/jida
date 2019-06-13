@@ -23,6 +23,11 @@ class ConfiguradorBD extends Comando {
     public function configurar() {
 
         $this->addOption(
+            'manejador',
+            'm',
+            InputOption::VALUE_OPTIONAL,
+            "Manejador de la base de datos");
+        $this->addOption(
             'servidor',
             's',
             InputOption::VALUE_OPTIONAL,
@@ -57,6 +62,7 @@ class ConfiguradorBD extends Comando {
     public function CrearConfigBD(InputInterface $input) {
 
         $config = [
+            'manejador'   => ($input->getOption('manejador')) ? $input->getOption('manejador') : 'MySQL',
             'puerto'   => ($input->getOption('puerto')) ? $input->getOption('puerto') : '3306',
             'usuario'  => ($input->getOption('usuario')) ? $input->getOption('usuario') : 'root',
             'clave'    => ($input->getOption('clave')) ? $input->getOption('clave') : '',

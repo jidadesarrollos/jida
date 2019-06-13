@@ -129,7 +129,7 @@ class InstaladorBd extends Comando {
 
         if (!$params && $file_exists) {
 
-            $bd = new \App\Config\BD();
+            $bd = new \App\Config\viejo();
             $config = $bd->default;
             
         }

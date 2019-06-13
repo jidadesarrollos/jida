@@ -7,14 +7,14 @@ namespace App\Config;
 
 
 class BD{
-    var $manejador = '{{$manejador}}';
+    var $manejador = '{{manejador}}';
    
     var $default   = [
-        'puerto' => '{{$puerto}}',
-        'usuario' => '{{$usuario}}',
-        'clave' => '{{$clave}}',
-        'bd' => '{{$bd}}',
-        'servidor' => '{{$servidor}}'
+        'puerto' => '{{puerto}}',
+        'usuario' => '{{usuario}}',
+        'clave' => '{{clave}}',
+        'bd' => '{{bd}}',
+        'servidor' => '{{servidor}}'
     ];
 }
  

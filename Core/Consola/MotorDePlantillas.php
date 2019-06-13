@@ -16,22 +16,18 @@ use Jida\Medios\Debug;
  */
 class MotorDePlantillas {
 
-    protected $pathPlantillas;
-
     public function __construct() {
 
     }
 
     public function crearArchivoConfigBD($variables) {
 
-        $archivo = Estructura::$rutaJida . "/Core/Consola/plantillas/clase-BD.jida";
-        var_dump($archivo);
+        $archivo = __DIR__ . "/plantillas/clase-BD.jida";
         if (!Directorios::validar($archivo)) {
             Debug::imprimir(["no existe el archivo $archivo"], true);
         }
 
         $content = file_get_contents($archivo);
-
         foreach ($variables as $data => $valor) {
             $content = str_replace("{{{$data}}}", $valor, $content);
         }
