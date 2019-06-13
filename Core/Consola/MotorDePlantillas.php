@@ -2,6 +2,10 @@
 
 namespace Jida\Core\Consola;
 
+use Jida\Manager\Estructura;
+use Jida\Medios\Directorios;
+use Jida\Medios\Debug;
+
 /**
  * Clase base para crear comandos
  *
@@ -12,27 +16,27 @@ namespace Jida\Core\Consola;
  */
 class MotorDePlantillas {
 
-    protected $smarty;
+    protected $pathPlantillas;
 
     public function __construct() {
 
-        $this->smarty = new \Smarty();
-        $this->smarty->compile_dir = $this->smarty->template_dir = __DIR__ . "/plantillas/codigosPHP/";
-        $this->smarty->compile_dir .= 'CompiladosSmarty/';
-        $this->smarty->assign('preNamespace', "");
-        $this->smarty->assign('postNamespace', '');
-
     }
 
-    public function asignar($clave, $valor) {
+    public function crearArchivoConfigBD($variables) {
 
-        $this->smarty->assign($clave, $valor);
+        $archivo = Estructura::$rutaJida . "/Core/Consola/plantillas/clase-BD.jida";
+        var_dump($archivo);
+        if (!Directorios::validar($archivo)) {
+            Debug::imprimir(["no existe el archivo $archivo"], true);
+        }
 
-    }
+        $content = file_get_contents($archivo);
 
-    public function obt($pantilla) {
+        foreach ($variables as $data => $valor) {
+            $content = str_replace("{{{$data}}}", $valor, $content);
+        }
 
-        return $this->smarty->fetch($pantilla);
+        return $content;
 
     }
 

@@ -82,24 +82,19 @@ class ConfiguradorBD extends Comando {
         }
         elseif (!$file_exists) {
 
-            $this->crearConfiguracion($config);
+            $this->generarConfigBD($config);
             $output->writeln("Archivo de configuracion creado ...");
 
         }
 
     }
 
-    protected function crearConfiguracion($config) {
+    protected function generarConfigBD($config) {
 
-        $path = $this->directorioDeProyecto . DS . self::PathApp . DS . "Config";
+        $path = $this->path . DS . self::PathApp . DS . "Config";
         $configtpl = new MotorDePlantillas();
-        $configtpl->asignar('servidor', $config['servidor']);
-        $configtpl->asignar('puerto', $config['puerto']);
-        $configtpl->asignar('usuario', $config['usuario']);
-        $configtpl->asignar('clave', $config['clave']);
-        $configtpl->asignar('bd', $config['bd']);
-        $configtpl->asignar('manejador', 'MySQL');
-        file_put_contents("$path/BD.php", $configtpl->obt("clase-BD.jida"));
+        $archivoConfigBD = $configtpl->crearArchivoConfigBD($config);
+        file_put_contents("$path/BD.php", $archivoConfigBD);
 
     }
 }
