@@ -100,17 +100,17 @@ class CrearControlador extends Comando {
         $nameExtend = $e[count($e) - 1];
         $variables = [
             'namespace' => implode("\\", $c),
-            'uses'      => [implode("\\", $e)],
+            'use'      => implode("\\", $e),
             'class'     => $nameClass,
             'extends'   => $nameExtend,
-            'metodos'   => ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]
+            'method'   => 'index'
         ];
         $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
         $rutaControlador = "$path/Controllers/$nombre.php";
         $controladorTpl->crearArchivo($variables, $plantilla, $rutaControlador);
 
         $vistaTpl = new GeneradorArchivo();
-        $variables = ['cabecera' => "<?= \$this->mensaje ?>",
+        $variables = ['cabecera' => "¡Hola mundo!",
                       'mensaje'  => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."
         ];
         $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';

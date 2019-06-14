@@ -9,12 +9,14 @@ use Jida\Medios\Debug;
 /**
  * Clase base para crear comandos
  *
- * @author Enyerber Franco <efranco@jidadesarrollos.com>
+ * @author Abner Saavedra <asaavedra@jidadesarrollos.com>
  * @package Framework
  * @category Console
  *
  */
 class GeneradorArchivo {
+
+    public $plantilla;
 
     public function __construct() {
 
@@ -27,7 +29,7 @@ class GeneradorArchivo {
         }
 
         $content = file_get_contents($plantilla);
-        var_dump($variables);
+
         foreach ($variables as $data => $valor) {
 
             $content = str_replace("{{{$data}}}", $valor, $content);

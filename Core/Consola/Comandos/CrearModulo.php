@@ -96,10 +96,10 @@ class CrearModulo extends Comando {
         $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
         $variables = [
             'namespace' => "App\\Modulos\\$modulo\\Controllers",
-            'uses'      => [\App\Controllers\App::class],
+            'use'       => \App\Controllers\App::class,
             'class'     => $modulo,
             'extends'   => "App",
-            'metodos'   => ['index' => $codigoMetodo]
+            'method'    => 'index'
         ];
         $ruta = "$path/$modulo/Controllers/$modulo.php";
         $controladorTpl->crearArchivo($variables, $plantilla, $ruta);
@@ -107,10 +107,10 @@ class CrearModulo extends Comando {
         $jadminTpl = new GeneradorArchivo();
         $variables = [
             'namespace' => "App\\Modulos\\$modulo\\Jadmin\\Controllers",
-            'uses'      => [\Jida\Jadmin\Controllers\JControl::class],
+            'use'       => \Jida\Jadmin\Controllers\JControl::class,
             'class'     => $modulo,
             'extends'   => "JControl",
-            'metodos'   => ['index' => $codigoMetodo]
+            'method'    => 'index'
         ];
         $ruta = "$path/$modulo/Jadmin/Controllers/$modulo.php";
         $jadminTpl->crearArchivo($variables, $plantilla, $ruta);
@@ -118,18 +118,18 @@ class CrearModulo extends Comando {
         $modeloTpl = new GeneradorArchivo();
         $variables = [
             'namespace' => "App\\Modulos\\$modulo\\Modelos",
-            'uses'      => [\Jida\Core\Modelo::class],
+            'use'       => \Jida\Core\Modelo::class,
             'class'     => $modulo,
             'extends'   => "Modelo",
-            'metodos'   => []
+            'method'    => []
         ];
         $ruta = "$path/$modulo/Modelos/$modulo.php";
         $modeloTpl->crearArchivo($variables, $plantilla, $ruta);
 
         $vistaTpl = new GeneradorArchivo();
         $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
-        $variables = ['cabecera' =>  "<?= \$this->mensaje ?>",
-                      'mensaje' => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."];
+        $variables = ['cabecera' => "¡Hola mundo!",
+                      'mensaje'  => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."];
         $ruta = "$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php";
         $vistaTpl->crearArchivo($variables, $plantilla, $ruta);
         $ruta = "$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php";

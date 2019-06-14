@@ -2,4 +2,4 @@
 <div>
     <h2>{{cabecera}}</h2>
     <p>{{mensaje}}</p>
-</div >
+</div>
