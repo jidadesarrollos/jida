@@ -93,36 +93,44 @@ class CrearModulo extends Comando {
 
         $codigoMetodo = "\$this->data(['mensaje' => 'Controlador '.self::class]);\n";
         $controladorTpl = new GeneradorArchivo();
-        $controladorTpl->asignar('namespace', "App\\Modulos\\$modulo\\Controllers");
-        $controladorTpl->asignar('uses', [\App\Controllers\App::class]);
-        $controladorTpl->asignar('class', $modulo);
-        $controladorTpl->asignar('extends', "App");
-        $controladorTpl->asignar('metodos', ['index' => $codigoMetodo]);
-        $controlador = $controladorTpl->obt("clase.jida");
+        $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Controllers",
+            'uses'      => [\App\Controllers\App::class],
+            'class'     => $modulo,
+            'extends'   => "App",
+            'metodos'   => ['index' => $codigoMetodo]
+        ];
+        $controlador = $controladorTpl->crearArchivo($variables, $plantilla);
+        file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
 
         $jadminTpl = new GeneradorArchivo();
-        $jadminTpl->asignar('namespace', "App\\Modulos\\$modulo\\Jadmin\\Controllers");
-        $jadminTpl->asignar('uses', [\Jida\Jadmin\Controllers\JControl::class]);
-        $jadminTpl->asignar('class', $modulo);
-        $jadminTpl->asignar('extends', "JControl");
-        $jadminTpl->asignar('metodos', ['index' => $codigoMetodo]);
-        $jadmin = $jadminTpl->obt("clase.jida");
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Jadmin\\Controllers",
+            'uses'      => [\Jida\Jadmin\Controllers\JControl::class],
+            'class'     => $modulo,
+            'extends'   => "JControl",
+            'metodos'   => ['index' => $codigoMetodo]
+        ];
+        $jadmin = $jadminTpl->crearArchivo($variables, $plantilla);
+        file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
 
         $modeloTpl = new GeneradorArchivo();
-        $modeloTpl->asignar('namespace', "App\\Modulos\\$modulo\\Modelos");
-        $modeloTpl->asignar('uses', [\Jida\Core\Modelo::class]);
-        $modeloTpl->asignar('class', $modulo);
-        $modeloTpl->asignar('extends', "Modelo");
-        $modeloTpl->asignar('metodos', []);
-        $modelo = $modeloTpl->obt("clase.jida");
-        $vistaTpl = new GeneradorArchivo();
-        $vistaTpl->asignar('cabecera', "<?= \$this->mensaje ?>");
-        $vistaTpl->asignar('mensaje', "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.");
-        $vista = $vistaTpl->obt('vista.jida');
-
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Modelos",
+            'uses'      => [\Jida\Core\Modelo::class],
+            'class'     => $modulo,
+            'extends'   => "Modelo",
+            'metodos'   => []
+        ];
+        $modelo = $modeloTpl->crearArchivo($variables, $plantilla);
         file_put_contents("$path/$modulo/Modelos/$modulo.php", $modelo);
-        file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
-        file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
+
+        $vistaTpl = new GeneradorArchivo();
+        $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
+        $variables = ['cabecera' =>  "<?= \$this->mensaje ?>",
+                      'mensaje' => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."];
+        $vista = $vistaTpl->crearArchivo($variables, $plantilla);
         file_put_contents("$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
         file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
 

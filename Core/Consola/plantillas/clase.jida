@@ -5,12 +5,12 @@
  */
 {{preNamespace}}
 namespace {{namespace}};
-{foreach $uses as $use}  
+{foreach uses as use}
 use {{use}};
 {/foreach}
 {{postNamespace}}
 class {{class}} extends {{extends}}{
-    {foreach $metodos as $method=>$code}  
+    {foreach metodos as method=>$code}
     public function {{method}}() {
     
         {{code}}

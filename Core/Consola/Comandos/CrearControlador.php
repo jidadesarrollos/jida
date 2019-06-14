@@ -93,31 +93,31 @@ class CrearControlador extends Comando {
 
         $controladorTpl = new GeneradorArchivo();
         $c = explode("\\", $class);
+        /*echo "C: ";
+        var_dump($c);*/
         $nameClass = array_pop($c);
         $e = explode("\\", $extends);
         $nameExtend = $e[count($e) - 1];
         $variables = [
             'namespace' => implode("\\", $c),
-            'uses' => [implode("\\", $e)],
-            'class' => $nameClass,
-            'extends' => $nameExtend,
-            'metodos' => ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]
+            'uses'      => [implode("\\", $e)],
+            'class'     => $nameClass,
+            'extends'   => $nameExtend,
+            'metodos'   => ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]
         ];
-        $plantilla = dirname(__DIR__).'/plantillas/clase.jida';
+        $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
         $controlador = $controladorTpl->crearArchivo($variables, $plantilla);
+        $archivoControlador = "$path/Controllers/$nombre.php";
+        file_put_contents($archivoControlador, $controlador);
 
         $vistaTpl = new GeneradorArchivo();
         $variables = ['cabecera' => "<?= \$this->mensaje ?>",
-                       'mensaje' => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."
+                      'mensaje'  => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."
         ];
-        $plantilla = dirname(__DIR__).'/plantillas/vista.jida';
+        $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
         $vista = $vistaTpl->crearArchivo($variables, $plantilla);
-
-        $archivoControlador = "$path/Controllers/$nombre.php";
         $directorioVista = "$path/Vistas/" . lcfirst($nombre);
         $archivVista = "$directorioVista/index.php";
-
-        file_put_contents($archivoControlador, $controlador);
         mkdir($directorioVista);
         file_put_contents($archivVista, $vista);
 
