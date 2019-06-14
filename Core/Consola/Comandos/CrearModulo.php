@@ -101,8 +101,8 @@ class CrearModulo extends Comando {
             'extends'   => "App",
             'metodos'   => ['index' => $codigoMetodo]
         ];
-        $controlador = $controladorTpl->crearArchivo($variables, $plantilla);
-        file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
+        $ruta = "$path/$modulo/Controllers/$modulo.php";
+        $controladorTpl->crearArchivo($variables, $plantilla, $ruta);
 
         $jadminTpl = new GeneradorArchivo();
         $variables = [
@@ -112,8 +112,8 @@ class CrearModulo extends Comando {
             'extends'   => "JControl",
             'metodos'   => ['index' => $codigoMetodo]
         ];
-        $jadmin = $jadminTpl->crearArchivo($variables, $plantilla);
-        file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
+        $ruta = "$path/$modulo/Jadmin/Controllers/$modulo.php";
+        $jadminTpl->crearArchivo($variables, $plantilla, $ruta);
 
         $modeloTpl = new GeneradorArchivo();
         $variables = [
@@ -123,16 +123,17 @@ class CrearModulo extends Comando {
             'extends'   => "Modelo",
             'metodos'   => []
         ];
-        $modelo = $modeloTpl->crearArchivo($variables, $plantilla);
-        file_put_contents("$path/$modulo/Modelos/$modulo.php", $modelo);
+        $ruta = "$path/$modulo/Modelos/$modulo.php";
+        $modeloTpl->crearArchivo($variables, $plantilla, $ruta);
 
         $vistaTpl = new GeneradorArchivo();
         $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
         $variables = ['cabecera' =>  "<?= \$this->mensaje ?>",
                       'mensaje' => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."];
-        $vista = $vistaTpl->crearArchivo($variables, $plantilla);
-        file_put_contents("$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
-        file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
+        $ruta = "$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php";
+        $vistaTpl->crearArchivo($variables, $plantilla, $ruta);
+        $ruta = "$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php";
+        $vistaTpl->crearArchivo($variables, $plantilla, $ruta);
 
     }
 

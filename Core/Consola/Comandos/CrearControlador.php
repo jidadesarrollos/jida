@@ -106,20 +106,18 @@ class CrearControlador extends Comando {
             'metodos'   => ['index' => "\$this->data(['mensaje' => 'Controlador ' . self::class]);\n"]
         ];
         $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
-        $controlador = $controladorTpl->crearArchivo($variables, $plantilla);
-        $archivoControlador = "$path/Controllers/$nombre.php";
-        file_put_contents($archivoControlador, $controlador);
+        $rutaControlador = "$path/Controllers/$nombre.php";
+        $controladorTpl->crearArchivo($variables, $plantilla, $rutaControlador);
 
         $vistaTpl = new GeneradorArchivo();
         $variables = ['cabecera' => "<?= \$this->mensaje ?>",
                       'mensaje'  => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."
         ];
         $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
-        $vista = $vistaTpl->crearArchivo($variables, $plantilla);
         $directorioVista = "$path/Vistas/" . lcfirst($nombre);
-        $archivVista = "$directorioVista/index.php";
+        $rutaVista = "$directorioVista/index.php";
         mkdir($directorioVista);
-        file_put_contents($archivVista, $vista);
+        $vistaTpl->crearArchivo($variables, $plantilla, $rutaVista);
 
     }
 

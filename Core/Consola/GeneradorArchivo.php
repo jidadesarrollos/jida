@@ -20,7 +20,7 @@ class GeneradorArchivo {
 
     }
 
-    public function crearArchivo($variables, $plantilla) {
+    public function crearArchivo($variables, $plantilla, $ruta) {
 
         if (!Directorios::validar($plantilla)) {
             Debug::imprimir(["No existe el archivo $plantilla"], true);
@@ -29,10 +29,11 @@ class GeneradorArchivo {
         $content = file_get_contents($plantilla);
         var_dump($variables);
         foreach ($variables as $data => $valor) {
+
             $content = str_replace("{{{$data}}}", $valor, $content);
         }
 
-        return $content;
+        file_put_contents($ruta, $content);
 
     }
 
