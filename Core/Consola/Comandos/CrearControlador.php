@@ -50,24 +50,21 @@ class CrearControlador extends Comando {
         $path = realpath($this->path . DS . self::PathApp);
         $nombre = ucwords($input->getArgument('nombre'));
 
-        if ($input->getOption('modulo')) {
+        if ($modulo = $input->getOption('modulo')) {
 
-            $modulo = $input->getOption('modulo');
+            $extend = ($input->getOption('jadmin')) ?
+                \Jida\Jadmin\Controllers\JControl::class : \App\Controllers\App::class;
 
             if ($input->getOption('jadmin')) {
 
                 $class = "App\\Modulos\\$modulo\\Jadmin\\Controllers\\$nombre";
                 $path .= "/Modulos/$modulo/Jadmin";
-                $this->createFiles($path, $nombre, $class, \Jida\Jadmin\Controllers\JControl::class);
-                $output->writeln("Controlador $class ha sido creado");
 
             }
             else {
 
                 $class = "App\\Modulos\\$modulo\\Controllers\\$nombre";
                 $path .= "/Modulos/$modulo";
-                $this->createFiles($path, $nombre, $class, \App\Controllers\App::class);
-                $output->writeln("Controlador $class ha sido creado");
 
             }
         }
@@ -75,17 +72,16 @@ class CrearControlador extends Comando {
 
             $path .= "/Jadmin";
             $class = "App\\Jadmin\\Controllers\\$nombre";
-            $this->createFiles($path, $nombre, $class, \Jida\Jadmin\Controllers\JControl::class);
-            $output->writeln("Controlador $class ha sido creado");
 
         }
         else {
 
             $class = "App\\Controllers\\$nombre";
-            $this->createFiles($path, $nombre, $class, \App\Controllers\App::class);
-            $output->writeln("Controlador $class ha sido creado");
 
         }
+
+        $this->createFiles($path, $nombre, $class, $extend);
+        $output->writeln("Controlador $class ha sido creado");
 
     }
 
@@ -93,17 +89,15 @@ class CrearControlador extends Comando {
 
         $controladorTpl = new GeneradorArchivo();
         $c = explode("\\", $class);
-        /*echo "C: ";
-        var_dump($c);*/
         $nameClass = array_pop($c);
         $e = explode("\\", $extends);
         $nameExtend = $e[count($e) - 1];
         $variables = [
             'namespace' => implode("\\", $c),
-            'use'      => implode("\\", $e),
+            'use'       => implode("\\", $e),
             'class'     => $nameClass,
             'extends'   => $nameExtend,
-            'method'   => 'index'
+            'method'    => 'index'
         ];
         $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
         $rutaControlador = "$path/Controllers/$nombre.php";
