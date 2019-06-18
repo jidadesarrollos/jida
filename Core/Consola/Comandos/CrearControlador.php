@@ -49,35 +49,23 @@ class CrearControlador extends Comando {
 
         $path = realpath($this->path . DS . self::PathApp);
         $nombre = ucwords($input->getArgument('nombre'));
+        $class = "App\\Controllers\\$nombre";
+        $modulo = $input->getOption('modulo');
+        $jadmin = ($input->getOption('jadmin'));
+        $extend = ($input->getOption('jadmin')) ? \Jida\Jadmin\Controllers\JControl::class :
+            \App\Controllers\App::class;
 
-        if ($modulo = $input->getOption('modulo')) {
-
-            $extend = ($input->getOption('jadmin')) ?
-                \Jida\Jadmin\Controllers\JControl::class : \App\Controllers\App::class;
-
-            if ($input->getOption('jadmin')) {
-
-                $class = "App\\Modulos\\$modulo\\Jadmin\\Controllers\\$nombre";
-                $path .= "/Modulos/$modulo/Jadmin";
-
-            }
-            else {
-
-                $class = "App\\Modulos\\$modulo\\Controllers\\$nombre";
-                $path .= "/Modulos/$modulo";
-
-            }
+        if ($modulo) {
+            $path = $path . "/Modulos/$modulo";
+            $class = "App\\Modulos\\$modulo\\Controllers\\$nombre";
         }
-        elseif ($input->getOption('jadmin')) {
-
-            $path .= "/Jadmin";
+        if ($jadmin) {
+            $path = $path . "/Jadmin";
             $class = "App\\Jadmin\\Controllers\\$nombre";
-
         }
-        else {
-
-            $class = "App\\Controllers\\$nombre";
-
+        if ($modulo and $jadmin) {
+            $path = $path . "/Modulos/$modulo/Jadmin";
+            $class = "App\\Modulos\\$modulo\\Jadmin\\Controllers\\$nombre";
         }
 
         $this->createFiles($path, $nombre, $class, $extend);
