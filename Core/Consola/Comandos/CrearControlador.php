@@ -3,11 +3,11 @@
 namespace Jida\Core\Consola\Comandos;
 
 use Jida\Core\Consola\Comando;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Jida\Core\Consola\GeneradorArchivo;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Comando para crear un controlador
@@ -52,20 +52,19 @@ class CrearControlador extends Comando {
         $class = "App\\Controllers\\$nombre";
         $modulo = $input->getOption('modulo');
         $jadmin = ($input->getOption('jadmin'));
-        $extend = ($input->getOption('jadmin')) ? \Jida\Jadmin\Controllers\JControl::class :
-            \App\Controllers\App::class;
+        $extend = ($jadmin) ? \Jida\Jadmin\Controllers\JControl::class : \App\Controllers\App::class;
 
-        if ($modulo) {
-            $path = $path . "/Modulos/$modulo";
+        if ($modulo and $jadmin) {
+            $path = "$path/Modulos/$modulo/Jadmin";
+            $class = "App\\Modulos\\$modulo\\Jadmin\\Controllers\\$nombre";
+        }
+        else if ($modulo) {
+            $path = "$path/Modulos/$modulo";
             $class = "App\\Modulos\\$modulo\\Controllers\\$nombre";
         }
-        if ($jadmin) {
-            $path = $path . "/Jadmin";
+        else if ($jadmin) {
+            $path = "$path/Jadmin";
             $class = "App\\Jadmin\\Controllers\\$nombre";
-        }
-        if ($modulo and $jadmin) {
-            $path = $path . "/Modulos/$modulo/Jadmin";
-            $class = "App\\Modulos\\$modulo\\Jadmin\\Controllers\\$nombre";
         }
 
         $this->createFiles($path, $nombre, $class, $extend);
