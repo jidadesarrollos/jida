@@ -7,7 +7,6 @@ namespace Jida\Manager\Vista\Layout;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Tema;
-use Jida\Medios\Debug;
 
 Trait Gestor {
 
@@ -59,7 +58,6 @@ Trait Gestor {
         foreach ($librerias as $indice => $libreria) {
             $this->_css[$indice] = self::_procesarUbicacion($libreria, "css");
         }
-        Debug::imprimir([$this->_css]);
 
     }
 
