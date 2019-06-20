@@ -13,12 +13,9 @@ use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador;
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Modelos\Usuario;
-use Jida\Render\Formulario;
 use Jida\Render\Menu;
-use Jida\Render\Selector;
 
 class JControl extends Controlador {
 
@@ -56,7 +53,7 @@ class JControl extends Controlador {
         $id_usuario = \Jida\Medios\Sesion::$usuario->obtener('id_usuario');
         $perfil = new Usuario($id_usuario);
 
-        $img_perfil = isset($perfil->img_perfil) ? Estructura::$urlBase.$perfil->img_perfil: null ;
+        $img_perfil = isset($perfil->img_perfil) ? Estructura::$urlBase . $perfil->img_perfil : null;
 
         $this->data([
             'menu'      => $menu->render(),
@@ -65,6 +62,7 @@ class JControl extends Controlador {
             'urlTema'   => $urlTema,
             'imgPerfil' => $img_perfil
         ]);
+
     }
 
     public function logout() {
