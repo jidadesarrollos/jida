@@ -45,7 +45,7 @@ Trait Gestor {
         }
 
         foreach ($librerias as $indice => $libreria) {
-            array_push($this->_jsAjax, self::_procesarUbicacion($libreria, "js"));
+            $this->_jsAjax[$indice] = self::_procesarUbicacion($libreria, "js");
         }
 
     }
@@ -59,6 +59,7 @@ Trait Gestor {
         foreach ($librerias as $indice => $libreria) {
             $this->_css[$indice] = self::_procesarUbicacion($libreria, "css");
         }
+        Debug::imprimir([$this->_css]);
 
     }
 
