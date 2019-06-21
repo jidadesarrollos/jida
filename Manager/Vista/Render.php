@@ -7,8 +7,6 @@ use Jida\Manager\Estructura;
 
 Trait Render {
 
-
-
     public function __call($metodo, $argumentos = []) {
 
         if (!method_exists($this, $metodo)) {
@@ -36,4 +34,31 @@ Trait Render {
         }
 
     }
+
+    /**
+     * Traduce una cadena recibida
+     *
+     * @param string $cadena Cadena string a buscar
+     * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
+     */
+    function cadena($cadena, $ubicacion = "") {
+
+        if (empty($ubicacion))
+            $ubicacion = $this->ubicacion;
+
+        #Debug::mostrarArray($this->textos);
+        if (!empty($ubicacion)) {
+            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion]))
+                return $this->textos[$ubicacion][$cadena];
+        }
+        else {
+
+            if (array_key_exists($cadena, $this->textos))
+                return $this->textos[$cadena];
+        }
+
+        return 'Indefinido';
+
+    }
+
 }
