@@ -6,7 +6,7 @@ use Jida\Core\Consola\Comando;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Jida\Core\Consola\MotorDePlantillas;
+use Jida\Core\Consola\GeneradorArchivo;
 
 /**
  * Comnado para crear la estructura de modulos de un Modulo
@@ -92,39 +92,48 @@ class CrearModulo extends Comando {
     public function crearArchivos($modulo, $path) {
 
         $codigoMetodo = "\$this->data(['mensaje' => 'Controlador '.self::class]);\n";
-        $controladorTpl = new MotorDePlantillas();
-        $controladorTpl->asignar('namespace', "App\\Modulos\\$modulo\\Controllers");
-        $controladorTpl->asignar('uses', [\App\Controllers\App::class]);
-        $controladorTpl->asignar('class', $modulo);
-        $controladorTpl->asignar('extends', "App");
-        $controladorTpl->asignar('metodos', ['index' => $codigoMetodo]);
-        $controlador = $controladorTpl->obt("clase.jida");
+        $controladorTpl = new GeneradorArchivo();
+        $plantilla = dirname(__DIR__) . '/plantillas/clase.jida';
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Controllers",
+            'use'       => \App\Controllers\App::class,
+            'class'     => $modulo,
+            'extends'   => "App",
+            'method'    => 'index'
+        ];
+        $ruta = "$path/$modulo/Controllers/$modulo.php";
+        $controladorTpl->crearArchivo($variables, $plantilla, $ruta);
 
-        $jadminTpl = new MotorDePlantillas();
-        $jadminTpl->asignar('namespace', "App\\Modulos\\$modulo\\Jadmin\\Controllers");
-        $jadminTpl->asignar('uses', [\Jida\Jadmin\Controllers\JControl::class]);
-        $jadminTpl->asignar('class', $modulo);
-        $jadminTpl->asignar('extends', "JControl");
-        $jadminTpl->asignar('metodos', ['index' => $codigoMetodo]);
-        $jadmin = $jadminTpl->obt("clase.jida");
+        $jadminTpl = new GeneradorArchivo();
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Jadmin\\Controllers",
+            'use'       => \Jida\Jadmin\Controllers\JControl::class,
+            'class'     => $modulo,
+            'extends'   => "JControl",
+            'method'    => 'index'
+        ];
+        $ruta = "$path/$modulo/Jadmin/Controllers/$modulo.php";
+        $jadminTpl->crearArchivo($variables, $plantilla, $ruta);
 
-        $modeloTpl = new MotorDePlantillas();
-        $modeloTpl->asignar('namespace', "App\\Modulos\\$modulo\\Modelos");
-        $modeloTpl->asignar('uses', [\Jida\Core\Modelo::class]);
-        $modeloTpl->asignar('class', $modulo);
-        $modeloTpl->asignar('extends', "Modelo");
-        $modeloTpl->asignar('metodos', []);
-        $modelo = $modeloTpl->obt("clase.jida");
-        $vistaTpl = new MotorDePlantillas();
-        $vistaTpl->asignar('cabecera', "<?= \$this->mensaje ?>");
-        $vistaTpl->asignar('mensaje', "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web.");
-        $vista = $vistaTpl->obt('vista.jida');
+        $modeloTpl = new GeneradorArchivo();
+        $variables = [
+            'namespace' => "App\\Modulos\\$modulo\\Modelos",
+            'use'       => \Jida\Core\Modelo::class,
+            'class'     => $modulo,
+            'extends'   => "Modelo",
+            'method'    => []
+        ];
+        $ruta = "$path/$modulo/Modelos/$modulo.php";
+        $modeloTpl->crearArchivo($variables, $plantilla, $ruta);
 
-        file_put_contents("$path/$modulo/Modelos/$modulo.php", $modelo);
-        file_put_contents("$path/$modulo/Jadmin/Controllers/$modulo.php", $jadmin);
-        file_put_contents("$path/$modulo/Controllers/$modulo.php", $controlador);
-        file_put_contents("$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
-        file_put_contents("$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php", $vista);
+        $vistaTpl = new GeneradorArchivo();
+        $plantilla = dirname(__DIR__) . '/plantillas/vista.jida';
+        $variables = ['cabecera' => "¡Hola mundo!",
+                      'mensaje'  => "Use esta plantilla para iniciar de forma rápida el desarrollo de un sitio web."];
+        $ruta = "$path/$modulo/Vistas/" . lcfirst($modulo) . "/index.php";
+        $vistaTpl->crearArchivo($variables, $plantilla, $ruta);
+        $ruta = "$path/$modulo/Jadmin/Vistas/" . lcfirst($modulo) . "/index.php";
+        $vistaTpl->crearArchivo($variables, $plantilla, $ruta);
 
     }
 

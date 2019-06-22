@@ -24,12 +24,10 @@ abstract class Comando extends Command {
      * @var string
      */
     protected $path;
-    protected $directorioDeProyecto;
 
     public function __construct($path) {
 
         $this->path = $path;
-        $this->directorioDeProyecto = $path;
         parent::__construct(null);
 
     }

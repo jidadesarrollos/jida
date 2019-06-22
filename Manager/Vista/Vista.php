@@ -12,11 +12,12 @@
 namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
+use Jida\Componentes\Traductor;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador\Control;
-use Jida\Manager\Estructura as Estructura;
+use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Arranque;
-use Jida\Medios as Medios;
+use Jida\Medios;
 
 class Vista {
 
@@ -32,7 +33,6 @@ class Vista {
     private $_data;
 
     public $url;
-    private $_controlador;
 
     function __construct($controlador) {
 
@@ -42,6 +42,14 @@ class Vista {
         $this->_data = Data::obtener($controlador);
         $this->url = Estructura::$url;
         $this->urlBase = Estructura::$urlBase;
+
+        $idioma = Estructura::$idioma;
+
+        if (empty($idioma)) {
+            $idioma = key($conf->idiomas);
+        }
+
+        $this->traductor = new Traductor($idioma);
 
     }
 

@@ -1,0 +1,18 @@
+<?php
+/**
+ * Creado por Jida Framework
+ * {date('Y-m-d H:i:s')}
+ */
+
+namespace {{namespace}};
+
+use {{use}};
+
+class {{class}} extends {{extends}}{
+
+    public function {{method}}() {
+
+        // Tu código aquí
+    }
+
+}
