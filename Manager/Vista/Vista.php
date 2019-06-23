@@ -45,11 +45,9 @@ class Vista {
 
         $idioma = Estructura::$idioma;
 
-        if (empty($idioma)) {
-            $idioma = key($conf->idiomas);
-        }
 
         $this->traductor = new Traductor($idioma);
+
 
     }
 

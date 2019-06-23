@@ -2,9 +2,7 @@
 
 namespace Jida\Manager\Url;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 
 class Url {
 
@@ -52,9 +50,7 @@ class Url {
     }
 
     public function reingresarParametro($parametro) {
-
         array_unshift($this->_partes, $parametro);
-
     }
 
     function parametros() {

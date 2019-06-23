@@ -75,7 +75,6 @@ class Layout {
 
         if (!Tema::$directorio) {
             $tema = Tema::obtener();
-            //Debug::imprimir([1, "tema", $tema], true);
             self::$_urlTema = $tema::$url;
             self::$directorio = $tema::$directorio;
             self::$_configuracion = $tema::$configuracion;
@@ -159,7 +158,7 @@ class Layout {
 
         try {
             $marco = self::$directorio . DS . $this->_plantilla;
-            Medios\Debug::imprimir(["si"], true);   
+
             echo $this->_obtenerContenido(
                 $marco,
                 ['contenido' => $plantilla]

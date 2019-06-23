@@ -35,6 +35,7 @@ class Config {
      * @const bolean MULTIIDIOMA
      */
     const MULTIIDIOMA = false;
+    const IDIOMA_DEFAULT = "es";
 
     /**
      * Variable para definicion de modulos dentro de la aplicación
@@ -59,7 +60,9 @@ class Config {
      * @var $idiomas
      * @access protected
      */
-    public $idiomas = ['es'];
+    public $idiomas = [
+        'es' => "Español"
+    ];
 
     /**
      * Variable para definicion del tema a utilizar dentro de la aplicación

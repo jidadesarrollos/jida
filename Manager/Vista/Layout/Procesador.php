@@ -7,14 +7,11 @@
 
 namespace Jida\Manager\Vista\Layout;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
-use Jida\Manager\Vista\Data;
 use Jida\Manager\Vista\Meta;
 use Jida\Manager\Vista\OpenGraph;
 use Jida\Manager\Vista\Tema;
-use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -96,9 +93,6 @@ Trait Procesador {
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
-                    if (!!Estructura::$jadmin) {
-                        $urlLibreria = str_replace('{tema}', Estructura::$urlJida, $libreria);
-                    }
                     $urlLibreria = str_replace('{base}', ".", $urlLibreria);
                 }
                 else {
@@ -173,11 +167,6 @@ Trait Procesador {
         if (strpos($libreria, "http") === false) {
 
             if (strpos($libreria, '{base}') !== false) {
-
-                if (!!Estructura::$jadmin) {
-                    $libreria = str_replace('{base}', Estructura::$urlJida, $libreria);
-                }
-
                 $libreria = str_replace('{base}', Estructura::$urlBase, $libreria);
             }
             else if (strpos($libreria, '{tema}') !== false) {

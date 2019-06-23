@@ -9,7 +9,7 @@
 namespace Jida\Manager\Url;
 
 use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
+use Jida\Manager\Url\Handlers\Idioma;
 
 class Pipeline {
 
@@ -49,11 +49,13 @@ class Pipeline {
 
     function procesar() {
 
+        // el manejo de idiomas siempre es lo primero
+        array_unshift($this->_handlers, new Idioma($this->_url));
+
         foreach ($this->_handlers as $item => $handler) {
 
             if (method_exists($handler, 'definir')) {
-                //  Debug::imprimir(["processing " . get_class($handler) . ": " . Estructura::$controlador  ,]);
-
+                //Debug::imprimir(["-----processing " . get_class($handler) . ": " . Estructura::$controlador,]);
                 $handler->procesar();
             }
         }

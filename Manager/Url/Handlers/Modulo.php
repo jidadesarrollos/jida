@@ -9,10 +9,9 @@
 namespace Jida\Manager\Url\Handlers;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
 use Jida\Manager\Url\Definicion;
 use Jida\Manager\Url\Handler;
-use Jida\Manager\Estructura;
-use Jida\Medios\Debug;
 
 class Modulo extends Handler {
 
@@ -20,9 +19,8 @@ class Modulo extends Handler {
 
     function validacion() {
 
-        if ($this->url->modulo) {
-            return false;
-        }
+        if ($this->url->modulo) return false;
+
         return self::$aplica = true;
     }
 

@@ -8,9 +8,9 @@
 
 namespace Jida\Manager\Url\Handlers;
 
+use Jida\Manager\Estructura;
 use Jida\Manager\Url\Definicion;
 use Jida\Manager\Url\Handler;
-use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 
 class Controlador extends Handler {
@@ -31,7 +31,6 @@ class Controlador extends Handler {
         }
 
         $controlador = Definicion::objeto($parametro);
-
         if (!class_exists("$namespace\\$controlador")) {
             $this->url->reingresarParametro($parametro);
             $controlador = Estructura::$modulo;

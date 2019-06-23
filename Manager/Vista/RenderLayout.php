@@ -39,7 +39,6 @@ Trait RenderLayout {
         $lenguajes = (is_string($lenguajes)) ? (array)$lenguajes : $lenguajes;
         $retorno = "";
 
-        //Debug::imprimir([$configuracion]);
         foreach ($lenguajes as $lenguaje) {
             if (!in_array($lenguaje, ['head', 'jsAjax']) and !isset($configuracion->{$lenguaje}))
                 return null;
