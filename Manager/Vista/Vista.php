@@ -44,10 +44,9 @@ class Vista {
         $this->urlBase = Estructura::$urlBase;
 
         $idioma = Estructura::$idioma;
-
-
-        $this->traductor = new Traductor($idioma);
-
+        if ($idioma) {
+            $this->traductor = new Traductor($idioma);
+        }
 
     }
 

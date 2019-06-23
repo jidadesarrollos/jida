@@ -3,7 +3,6 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Configuracion\Config;
-use Jida\Manager\Estructura;
 
 Trait Render {
 
@@ -42,6 +41,8 @@ Trait Render {
      * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
      */
     function cadena($cadena, $ubicacion = "") {
+
+        if (!$this->traductor) return false;
 
         if (empty($ubicacion))
             $ubicacion = $this->ubicacion;
