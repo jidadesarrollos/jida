@@ -75,6 +75,7 @@ class Layout {
 
         if (!Tema::$directorio) {
             $tema = Tema::obtener();
+            $this->urlTema = $tema::$url;
             self::$_urlTema = $tema::$url;
             self::$directorio = $tema::$directorio;
             self::$_configuracion = $tema::$configuracion;
@@ -82,6 +83,7 @@ class Layout {
         }
 
         $this->urlTema = Tema::$url;
+        Medios\Debug::imprimir([200, Tema::$url], true);
         self::$_urlTema = Tema::$url;
         self::$directorio = Tema::$directorio;
         self::$_configuracion = Tema::$configuracion;
