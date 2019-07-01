@@ -1,11 +1,7 @@
 <?php
 
-namespace Jida\Manager\Vista;
+namespace Jida\Manager;
 
-use App\Config\Configuracion;
-use Jida\Manager\Estructura;
-use Jida\Manager\Excepcion;
-use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 class Textos {
@@ -21,6 +17,8 @@ class Textos {
     private $_archivo = "textos.json";
 
     public $textos = [];
+
+    private static $instancia;
 
     public function __construct() {
         $this->_inicializar();
@@ -42,6 +40,14 @@ class Textos {
 
             return $this;
 
+        }
+
+    }
+
+    public static function obtener() {
+
+        if (!self::$instancia) {
+            self::$instancia = new Textos();
         }
 
     }

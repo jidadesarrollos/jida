@@ -50,7 +50,7 @@ class Vista {
             $traducciones = new Textos();
 
             if (is_object($traducciones)) {
-                $this->textos = $traducciones->textos->$idioma;
+                $this->textos = $traducciones->textos->{$idioma};
             }
             else {
                 $this->textos = $traducciones->textos;
