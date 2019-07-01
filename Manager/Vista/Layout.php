@@ -125,8 +125,6 @@ class Layout {
      */
     public function render($vista) {
 
-        //try {
-
         if (!self::$directorio) {
             $msj = 'No se ha definido el directorio del layout';
             throw new \Exception($msj, self::$_ce . '0008');
@@ -150,7 +148,6 @@ class Layout {
             ['contenido' => $vista]
         );
 
-        Medios\Archivo::crear('/Aplicacion/app/prueba.html', $contenido);
         echo $contenido;
 
     }
