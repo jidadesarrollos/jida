@@ -12,7 +12,6 @@
 namespace Jida\Manager\Vista;
 
 use Exception as Excepcion;
-use Jida\Componentes\Traductor;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador\Control;
 use Jida\Manager\Estructura;
@@ -33,6 +32,7 @@ class Vista {
     private $_data;
 
     public $url;
+    public $textos;
 
     function __construct($controlador) {
 
@@ -44,8 +44,17 @@ class Vista {
         $this->urlBase = Estructura::$urlBase;
 
         $idioma = Estructura::$idioma;
-        if ($idioma) {
-            $this->traductor = new Traductor($idioma);
+
+        if ($conf::MULTIIDIOMA) {
+
+            $traducciones = new Textos();
+
+            if (is_object($traducciones)) {
+                $this->textos = $traducciones->textos->$idioma;
+            }
+            else {
+                $this->textos = $traducciones->textos;
+            }
         }
 
     }
