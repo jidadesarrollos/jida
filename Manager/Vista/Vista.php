@@ -16,6 +16,7 @@ use Jida\Configuracion\Config;
 use Jida\Core\Controlador\Control;
 use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Arranque;
+use Jida\Manager\Textos;
 use Jida\Medios;
 
 class Vista {
@@ -42,20 +43,7 @@ class Vista {
         $this->_data = Data::obtener($controlador);
         $this->url = Estructura::$url;
         $this->urlBase = Estructura::$urlBase;
-
-        $idioma = Estructura::$idioma;
-
-        if ($conf::MULTIIDIOMA) {
-
-            $traducciones = new Textos();
-
-            if (is_object($traducciones)) {
-                $this->textos = $traducciones->textos->{$idioma};
-            }
-            else {
-                $this->textos = $traducciones->textos;
-            }
-        }
+        $this->textos = Textos::obtener();
 
     }
 
@@ -131,6 +119,12 @@ class Vista {
 
     function navegar($url) {
         return Estructura::$urlBase . $url;
+    }
+
+    function texto($cadena) {
+
+        return $this->textos->texto($cadena);
+
     }
 
 }

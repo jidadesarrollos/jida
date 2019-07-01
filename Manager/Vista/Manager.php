@@ -4,6 +4,7 @@ namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Estructura;
+use Jida\Manager\Textos;
 use Jida\Medios\Debug;
 
 class Manager {
@@ -43,8 +44,6 @@ class Manager {
 
         $plantilla = $this->_data->plantilla();
         $this->_layout->render($this->vista()->obtener($plantilla));
-
-        # agregar instancia de clase Textos::validar para actualizar el arreglo de las traducciones
 
     }
 
