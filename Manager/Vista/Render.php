@@ -3,6 +3,9 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Estructura;
+use Jida\Manager\Textos;
+use Jida\Medios\Debug;
 
 Trait Render {
 
@@ -34,13 +37,29 @@ Trait Render {
 
     }
 
-    /**
+    /*
+     * Concatena la urlBase con la url pasada
+     *
+     * @param string $url
+     * @since 0.7.2
+     */
+    public function navegar($url = "") {
+
+        if (Estructura::$idioma !== Config::IDIOMA_DEFAULT) {
+            return Estructura::$urlBase . "/" . Estructura::$idioma . "/" . $url;
+        }
+
+        return Estructura::$urlBase . "/" . $url;
+
+    }
+
+    /*
      * Traduce una cadena recibida
      *
      * @param string $cadena Cadena string a buscar
      * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
      */
-    function cadena($cadena, $ubicacion = "") {
+    public function cadena($cadena, $ubicacion = "") {
 
         if (!$this->traductor) return false;
 
@@ -59,6 +78,36 @@ Trait Render {
         }
 
         return 'Indefinido';
+
+    }
+
+    /*
+     * Traduce una cadena recibida
+     *
+     * @param string $cadena texto
+     * @since 0.7.2
+     */
+    public function texto($cadena) {
+
+        return $this->textos->texto($cadena);
+
+    }
+
+    /*
+     * Funcion utilizada para cambiar de idioma
+     *
+     * @param string $idioma
+     * @since 0.7.2
+     */
+    public function cambiarIdioma($idioma) {
+
+        $config = Config::obtener();
+
+        if (!array_key_exists($idioma, $config->idiomas)) return;
+
+        if ($idioma === Estructura::$idioma) return;
+
+        return Estructura::$urlBase . "/" . $idioma;
 
     }
 

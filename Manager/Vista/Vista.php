@@ -117,14 +117,4 @@ class Vista {
 
     }
 
-    function navegar($url) {
-        return Estructura::$urlBase . $url;
-    }
-
-    function texto($cadena) {
-
-        return $this->textos->texto($cadena);
-
-    }
-
 }

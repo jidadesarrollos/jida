@@ -8,6 +8,7 @@ namespace Jida\Manager\Vista;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Manager\Textos;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
 use Jida\Medios;
@@ -47,6 +48,10 @@ class Layout {
     private $urlTema;
 
     private $_plantilla;
+    /**
+     * @var object $textos Objeto Textos
+     */
+    public $textos;
 
     /**
      * Layout constructor.
@@ -60,6 +65,7 @@ class Layout {
         $this->urlBase = Estructura::$urlBase;
         $this->urlModulo = Estructura::$urlModulo;
         $this->url = Estructura::$url;
+        $this->textos = Textos::obtener();
 
     }
 
