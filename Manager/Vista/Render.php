@@ -103,11 +103,11 @@ Trait Render {
 
         $config = Config::obtener();
 
-        if (!array_key_exists($idioma, $config->idiomas)) return;
+        if (array_key_exists($idioma, $config->idiomas) and $idioma !== $config::IDIOMA_DEFAULT) {
+            return Estructura::$urlBase . "/" . $idioma;
+        }
 
-        if ($idioma === Estructura::$idioma) return;
-
-        return Estructura::$urlBase . "/" . $idioma;
+        return Estructura::$urlBase;
 
     }
 
