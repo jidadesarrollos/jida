@@ -14,9 +14,10 @@ namespace Jida\Manager\Vista;
 use Exception as Excepcion;
 use Jida\Configuracion\Config;
 use Jida\Core\Controlador\Control;
-use Jida\Manager\Estructura as Estructura;
+use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Arranque;
-use Jida\Medios as Medios;
+use Jida\Manager\Textos;
+use Jida\Medios;
 
 class Vista {
 
@@ -32,16 +33,17 @@ class Vista {
     private $_data;
 
     public $url;
+    public $textos;
 
-    function __construct($data) {
+    function __construct($controlador) {
 
         $conf = Config::obtener();
+        $this->_controlador = $controlador;
         $this->_tema = $conf->tema;
-
-        $this->_data = $data;
-
+        $this->_data = Data::obtener($controlador);
         $this->url = Estructura::$url;
         $this->urlBase = Estructura::$urlBase;
+        $this->textos = Textos::obtener();
 
     }
 
@@ -56,11 +58,13 @@ class Vista {
         $plantilla = $plantilla . ".php";
 
         $path = Estructura::path() . DS . Estructura::DIR_APP . DS . "plantillas";
+
         if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $ruta = $path . DS . $plantilla;
         }
 
         $path = Estructura::path() . DS . Estructura::DIR_JIDA . DS . "plantillas";
+
         if (Medios\Directorios::validar($path . DS . $plantilla)) {
             return $path . DS . $plantilla;
         }
@@ -81,19 +85,14 @@ class Vista {
          * @see Control
          *
          */
-        $controlador = Arranque::$Controlador;
-
+        $controlador = $this->_controlador;
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $controlador = Estructura::$controlador;
-
-        if (!$controlador) {
-            $controlador = (!!Estructura::$jadmin) ? "jadmin" : "index";
-        }
-
         $ruta = Estructura::$rutaModulo;
-        $archivoVista = strtolower("$controlador/$vista");
+
+        $nombre = Estructura::$nombreControlador;
+        $archivoVista = strtolower("$nombre/$vista");
         $vista = "{$ruta}/Vistas/{$archivoVista}";
 
         if (strpos($vista, '.php') === false) {
@@ -110,27 +109,12 @@ class Vista {
 
     function obtenerPlantilla($plantilla) {
 
-        try {
-            if (!Medios\Directorios::validar($plantilla)) {
-                throw new \Exception('La plantilla no existe ' . $plantilla, self::$_ce . 2);
-            }
-
-            return $this->_obtenerContenido($plantilla);
-        }
-        catch (\Exception $e) {
-            Medios\Debug::imprimir(
-                ["Error vista",
-                    $e->getCode(),
-                    $e->getMessage()
-                ],
-                true
-            );
+        if (!Medios\Directorios::validar($plantilla)) {
+            \Jida\Manager\Excepcion::procesar('La plantilla no existe ' . $plantilla, self::$_ce . 2);
         }
 
-    }
+        return $this->_obtenerContenido($plantilla);
 
-    function navegar($url) {
-        return Estructura::$urlBase . $url;
     }
 
 }

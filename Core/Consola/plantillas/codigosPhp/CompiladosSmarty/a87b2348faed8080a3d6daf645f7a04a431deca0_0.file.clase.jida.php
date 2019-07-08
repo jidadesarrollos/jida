@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.33, created on 2019-06-06 12:07:41
+/* Smarty version 3.1.34-dev-7, created on 2019-03-22 22:21:55
   from 'D:\workspace\jida\framework\core-app\jida\plantillas\codigosPHP\clase.jida' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
-  'version' => '3.1.33',
-  'unifunc' => 'content_5cf8e5ed0dc3d2_01701578',
+  'version' => '3.1.34-dev-7',
+  'unifunc' => 'content_5c9551f3cf8d08_91982020',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'a87b2348faed8080a3d6daf645f7a04a431deca0' => 
     array (
       0 => 'D:\\workspace\\jida\\framework\\core-app\\jida\\plantillas\\codigosPHP\\clase.jida',
-      1 => 1558579615,
+      1 => 1553289251,
       2 => 'file',
     ),
   ),
@@ -20,9 +20,10 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5cf8e5ed0dc3d2_01701578 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5c9551f3cf8d08_91982020 (Smarty_Internal_Template $_smarty_tpl) {
 echo '<?php
-';?>/**
+';?>
+/**
  * Creado por Jida Framework
  * <?php echo date('Y-m-d H:i:s');?>
 

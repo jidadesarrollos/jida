@@ -10,6 +10,7 @@ namespace Jida\Manager;
 
 use App\Config\Configuracion;
 use Jida\Componentes\Correo;
+use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Manager\Excepcion\Log;
 use Jida\Manager\Vista\Layout;
@@ -64,7 +65,18 @@ class Excepcion {
 
     }
 
-    private static function _imprimirExcepcion() {
+    private static function imprimir(\Exception $excepcion) {
+
+        $traza = $excepcion->getTrace();
+        array_pop($traza);
+
+        $impresion = [
+            'message' => $excepcion->getMessage(),
+            'code'    => $excepcion->getCode(),
+            'trace'   => $traza
+        ];
+
+        exit(json_encode($impresion, JSON_PRETTY_PRINT));
 
     }
 
@@ -74,6 +86,13 @@ class Excepcion {
         if (!is_a($exception, '\\Exception') and !is_a($exception, '\\Error')) {
             Debug::imprimir(["No se puede procesar la excepcion", $exception], true);
         }
+
+        $config = Config::obtener();
+        if ($config::TIPO !== 'WEB') {
+            return self::imprimir($exception);
+
+        }
+
         $layout = Layout::obtener();
 
         $configuracion = Tema::$configuracion;

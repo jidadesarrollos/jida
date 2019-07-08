@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.33, created on 2019-06-06 12:07:41
+/* Smarty version 3.1.34-dev-7, created on 2019-03-22 21:51:41
   from 'D:\workspace\jida\framework\core-app\jida\plantillas\codigosPHP\vista.jida' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
-  'version' => '3.1.33',
-  'unifunc' => 'content_5cf8e5ed1563f6_32973680',
+  'version' => '3.1.34-dev-7',
+  'unifunc' => 'content_5c954add207d42_45506761',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '4bc1f717e02a2f0d52e026a2b9e102a78d51f453' => 
     array (
       0 => 'D:\\workspace\\jida\\framework\\core-app\\jida\\plantillas\\codigosPHP\\vista.jida',
-      1 => 1558579615,
+      1 => 1553286955,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5cf8e5ed1563f6_32973680 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5c954add207d42_45506761 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!-- Creado por Jida Framework <?php echo date('Y-m-d H:i:s');?>
  -->
 <div class = "jumbotron">

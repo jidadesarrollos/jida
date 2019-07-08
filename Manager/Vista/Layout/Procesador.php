@@ -7,12 +7,11 @@
 
 namespace Jida\Manager\Vista\Layout;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
+use Jida\Manager\Vista\OpenGraph;
 use Jida\Manager\Vista\Tema;
-use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -40,11 +39,25 @@ Trait Procesador {
     }
 
     /**
+     * Asigna el valor de las etiquetas Open Graph configurada para la página actual
+     *
+     * @method openGraph
+     * @param $data arreglo que contiene el valor de las etiquetas personalizadas para open graph
+     *
+     */
+    public function openGraph($data = []) {
+
+        $this->_data->og = $data;
+        return;
+
+    }
+
+    /**
      * Imprime las etiquetas link registradas en la configuración del tema
      *
      */
     private function _imprimirCSS($librerias, $modulo) {
-        
+
         return $this->_css($librerias, $modulo);
 
     }
@@ -52,13 +65,13 @@ Trait Procesador {
     private function _css($librerias, $modulo) {
 
         $html = "";
-        
+
         if (!property_exists($librerias, $modulo)) {
             return false;
         }
 
         $librerias = $librerias->{$modulo};
-        
+
         if (is_string($librerias)) {
             $librerias = (array)$librerias;
         }
@@ -80,16 +93,13 @@ Trait Procesador {
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
-                    if (!!Estructura::$jadmin) {
-                        $urlLibreria = str_replace('{tema}', Estructura::$urlJida, $libreria);
-                    }
                     $urlLibreria = str_replace('{base}', ".", $urlLibreria);
                 }
                 else {
                     $urlLibreria = '//' . $urlLibreria;
                 }
             }
-            
+
             $html .= Selector::crear('link',
                 [
                     'href' => $urlLibreria,
@@ -157,11 +167,6 @@ Trait Procesador {
         if (strpos($libreria, "http") === false) {
 
             if (strpos($libreria, '{base}') !== false) {
-
-                if (!!Estructura::$jadmin) {
-                    $libreria = str_replace('{base}', Estructura::$urlJida, $libreria);
-                }
-
                 $libreria = str_replace('{base}', Estructura::$urlBase, $libreria);
             }
             else if (strpos($libreria, '{tema}') !== false) {
@@ -178,13 +183,17 @@ Trait Procesador {
     private function _imprimirHead($configuracion, $modulo) {
 
         $html = "";
-        
+
         if (property_exists($configuracion, "link")) {
             $html .= $this->_link($configuracion->link);
         }
-        
+
         if (property_exists($configuracion, "css")) {
             $html .= $this->_css($configuracion->css, $modulo);
+        }
+
+        if (property_exists($this->_data, "og")) {
+            $html .= OpenGraph::render($this->_data->og);
         }
 
         return $html;

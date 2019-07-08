@@ -8,9 +8,10 @@ namespace Jida\Manager\Vista;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Manager\Textos;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
-use Jida\Medios\Debug;
+use Jida\Medios;
 
 class Layout {
 
@@ -19,21 +20,8 @@ class Layout {
      * @var object Objeto que llama o instancia a Layout
      */
     public static $padre;
-
-    /**
-     * @var object $data Objeto DataVista
-     * @deprecated
-     */
-    public $data;
-
     public static $directorio;
-    /**
-     * @var object $_data Objeto Data Vista
-     */
-    private $_data;
-
     private static $_ce = 10008;
-
     private static $_configuracion;
     /**
      * @var string $_directorio Directorio fisico del tema y layout implementado
@@ -44,7 +32,15 @@ class Layout {
      * @var string $_urlTema Url de acceso al tema
      */
     private static $_urlTema;
-
+    /**
+     * @var object $data Objeto DataVista
+     * @deprecated
+     */
+    public $data;
+    /**
+     * @var object $_data Objeto Data Vista
+     */
+    private $_data;
     private $_js = [];
     private $_jsAjax = [];
     private $_css = [];
@@ -52,30 +48,24 @@ class Layout {
     private $urlTema;
 
     private $_plantilla;
+    /**
+     * @var object $textos Objeto Textos
+     */
+    public $textos;
 
     /**
      * Layout constructor.
      *
      * @param mixed $padre
      */
-    public function __construct($padre = null) {
+    public function __construct() {
 
-        if ($padre) {
-
-            self::$padre = $padre;
-            self::$instancia = $this;
-
-            $this->_data = $padre->data;
-            $this->urlBase = Estructura::$urlBase;
-            $this->urlModulo = Estructura::$urlModulo;
-            $this->url = Estructura::$url;
-
-        }
-        else {
-            $this->_data = new \StdClass();
-        }
-
+        $this->_data = Data::obtener();
         $this->_leer();
+        $this->urlBase = Estructura::$urlBase;
+        $this->urlModulo = Estructura::$urlModulo;
+        $this->url = Estructura::$url;
+        $this->textos = Textos::obtener();
 
     }
 
@@ -85,38 +75,24 @@ class Layout {
      * Verifica la configuracion de la aplicacion y define el directorio en el cual se encuentra
      * para disponibilizarlo en la propiedad estatica $directorio
      *
-     * @return $this
+     * @return mixed
      */
     private function _leer() {
-        try {
 
-            if (!Tema::$directorio) {
-                $tema = Tema::obtener();
-                self::$_urlTema = $tema::$url;
-                self::$directorio = $tema::$directorio;
-                self::$_configuracion = $tema::$configuracion;
-                return true;
-            }
-
-            self::$_urlTema = Tema::$url;
-            $this->urlTema = Tema::$url;
-
-            self::$directorio = Tema::$directorio;
-            self::$_configuracion = Tema::$configuracion;
-
-        }
-        catch (\Excepcion $e) {
-            Debug::imprimir(["excepcion", $e], true);
-        }
-        catch (\Error $e) {
-            Debug::imprimir(["Error", $e], true);
+        if (!Tema::$directorio) {
+            $tema = Tema::obtener();
+            $this->urlTema = $tema::$url;
+            self::$_urlTema = $tema::$url;
+            self::$directorio = $tema::$directorio;
+            self::$_configuracion = $tema::$configuracion;
+            return true;
         }
 
-        return $this;
-    }
+        $this->urlTema = Tema::$url;
+        self::$_urlTema = Tema::$url;
+        self::$directorio = Tema::$directorio;
+        self::$_configuracion = Tema::$configuracion;
 
-    function _definirPlantilla($tpl) {
-        $this->_plantilla = $tpl;
     }
 
     /**
@@ -124,6 +100,25 @@ class Layout {
      */
     static function definirDirectorio($directorio) {
         self::$directorio = $directorio;
+    }
+
+    /**
+     * @return Layout
+     * @throws Excepcion
+     */
+    static function obtener() {
+
+        if (!self::$instancia) {
+            self::$instancia = new self();
+        }
+
+        return self::$instancia;
+
+    }
+
+    function _definirPlantilla($tpl) {
+        $this->_plantilla = $tpl;
+
     }
 
     /**
@@ -136,38 +131,30 @@ class Layout {
      */
     public function render($vista) {
 
-        try {
+        if (!self::$directorio) {
+            $msj = 'No se ha definido el directorio del layout';
+            throw new \Exception($msj, self::$_ce . '0008');
+        }
+        if (is_null($vista)) {
+            $msj = 'El parametro $vista es requerido para el metodo render';
+            throw new \Exception($msj, self::$_ce . '0001');
+        }
+        if (!$this->_plantilla) {
 
-            if (!self::$directorio) {
-                $msj = 'No se ha definido el directorio del layout';
-                throw new \Exception($msj, self::$_ce . '0008');
-            }
-            if (is_null($vista)) {
-                $msj = 'El parametro $vista es requerido para el metodo render';
-                throw new \Exception($msj, self::$_ce . '0001');
-            }
-            if (!$this->_plantilla) {
-                //todo: manejar  layout por defecto
-                throw new \Exception("No se ha definido layout para el metodo", self::$_ce . '0006');
-            }
-
-            $marco = self::$directorio . DS . $this->_plantilla;
-
-            echo $this->_obtenerContenido(
-                $marco,
-                ['contenido' => $vista]
-            );
+            $layout = Tema::propiedad('layout');
+            $layout = "{$layout}.tpl.php";
+            $this->_plantilla = $layout;
 
         }
-        catch (\Exception $e) {
-            Debug::imprimir([
-                "Excepcion en Layout::render",
-                $e->getCode(),
-                $e->getMessage(),
-                $e->getTrace()
-            ],
-                true);
-        }
+
+        $marco = self::$directorio . DS . $this->_plantilla;
+
+        $contenido = $this->_obtenerContenido(
+            $marco,
+            ['contenido' => $vista]
+        );
+
+        echo $contenido;
 
     }
 
@@ -183,34 +170,13 @@ class Layout {
 
         }
         catch (\Exception $e) {
-            Debug::imprimir([
+            Medios\Debug::imprimir([
                 "Excepcion en Layout::render",
                 $e->getCode(),
                 $e->getMessage(),
                 $e->getTrace()
             ],
                 true);
-        }
-
-    }
-
-    /**
-     * @return Layout
-     * @throws Excepcion
-     */
-    static function obtener() {
-
-        try {
-
-            if (!self::$instancia) {
-                throw new \Exception("El objeto layout no ha sido instanciado", self::$_ce . 1);
-            }
-
-            return self::$instancia;
-
-        }
-        catch (\Exception $e) {
-            Debug::imprimir([$e->getCode(), $e->getMessage(), $e->getTrace()], true);
         }
 
     }

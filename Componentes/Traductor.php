@@ -26,9 +26,8 @@
 namespace Jida\Componentes;
 
 use Jida\Configuracion\Config;
-use Jida\Medios\Debug;
-use Jida\Medios\Directorios as Directorios;
 use Jida\Manager\Estructura;
+use Jida\Medios\Directorios as Directorios;
 
 class Traductor {
 
@@ -40,6 +39,7 @@ class Traductor {
     private $textosSeccion = [];
     /**
      * Define el nombre del archivo para la seccion de textos
+     *
      * @see
      * @var string $dir
      */
@@ -49,16 +49,13 @@ class Traductor {
      * Funcion constructora
      * @method __construct
      */
-    function __construct ($idiomaActual, $data = []) {
+    function __construct($idiomaActual, $data = []) {
 
         $configuracion = Config::obtener();
 
         $this->idiomaActual = $idiomaActual;
 
-        $traducciones = [];
         $this->_obtenerArchivo($data);
-
-        $this->textos = $traducciones;
 
         if (property_exists($configuracion, 'idiomas')) {
             $this->idiomas = $configuracion->idiomas;
@@ -77,7 +74,7 @@ class Traductor {
      * @param array $data
      * @throws \Exception
      */
-    function _obtenerArchivo ($data) {
+    function _obtenerArchivo($data) {
 
         if (array_key_exists('path', $data)) {
             $this->path = $data['path'];
@@ -91,7 +88,7 @@ class Traductor {
 
         if (file_exists($archivo)) {
             include_once $archivo;
-
+            $this->textos = $traducciones;
         }
         else {
             $msj = "No existe el archivo de traducciones " . $this->idiomaActual . " en " . $archivo;
@@ -101,7 +98,7 @@ class Traductor {
 
     }
 
-    function path ($path = "") {
+    function path($path = "") {
 
         if (!empty($path) and Directorios::validar($path)) {
             $this->path = $path;
@@ -113,7 +110,7 @@ class Traductor {
 
     }
 
-    function seleccionarIdioma ($idioma) {
+    function seleccionarIdioma($idioma) {
 
         include_once strtolower($idioma) . ".php";
         $this->textos = $traducciones;
@@ -121,10 +118,11 @@ class Traductor {
 
     /**
      * Traduce una cadena recibida
+     *
      * @param string $cadena Cadena string a buscar
      * @param string $ubicacion Ubicacion de la cadena dentro de la matriz
      */
-    function cadena ($cadena, $ubicacion = "") {
+    function cadena($cadena, $ubicacion = "") {
 
         if (empty($ubicacion))
             $ubicacion = $this->ubicacion;
@@ -151,12 +149,13 @@ class Traductor {
      * una carpeta con el nombre del idioma. por ejemplo "es/index" y adentro debe haber un arreglo
      * llamado $traduccion
      * @method seccion
+     *
      * @param string $seccion
      * @param string $cadena
      * @param string $ubicaicon
      *
      */
-    function seccion ($cadena, $seccion = "", $ubicacion = "") {
+    function seccion($cadena, $seccion = "", $ubicacion = "") {
 
         $this->validarSeccion($seccion);
 
@@ -179,7 +178,7 @@ class Traductor {
         return 'Indefinido';
     }
 
-    private function validarSeccion ($seccion) {
+    private function validarSeccion($seccion) {
 
         if (!empty($seccion) and $seccion != $this->dir) {
 
@@ -202,7 +201,7 @@ class Traductor {
      * @method addUbicacion
      * @param string $ubicacion
      */
-    function addUbicacion ($ubicacion) {
+    function addUbicacion($ubicacion) {
 
         $this->ubicacion = $ubicacion;
 
@@ -213,7 +212,7 @@ class Traductor {
      * Renderiza una URL conforme al idioma actual
      * @method renderURL
      */
-    function renderURL ($url) {
+    function renderURL($url) {
 
         return "/" . $this->idiomaActual . $url;
     }
@@ -221,14 +220,15 @@ class Traductor {
     /**
      * Permite agregar una seccion de traducciones
      * @method addSeccion
+     *
      * @param string $seccion
      */
-    function addSeccion ($seccion) {
+    function addSeccion($seccion) {
 
         $this->validarSeccion($seccion);
     }
 
-    function obtTraduccionesArray () {
+    function obtTraduccionesArray() {
 
         return $this->textos;
     }
@@ -236,7 +236,7 @@ class Traductor {
     /**
      * Valida si una traduccion existe
      */
-    function validar ($traduccion, $ubicacion = "") {
+    function validar($traduccion, $ubicacion = "") {
 
         if (!empty($ubicacion) and array_key_exists($ubicacion, $this->textos)) {
             if (array_key_exists($traduccion, $this->textos[$ubicacion]))
