@@ -81,11 +81,7 @@ Trait Archivo {
         $pos = strpos($archivo, '{tema}');
 
         if ($pos !== false) {
-
-            Debug::imprimir([$archivo], true);
-
             $ruta = str_replace('{tema}', Tema::$url, $archivo);
-
             return $ruta;
         }
 
