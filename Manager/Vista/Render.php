@@ -45,11 +45,15 @@ Trait Render {
      */
     public function navegar($url = "") {
 
-        if (Estructura::$idioma !== Config::IDIOMA_DEFAULT) {
-            return Estructura::$urlBase . "/" . Estructura::$idioma . "/" . $url;
+        if (!empty($url)) {
+            $url = "/" . $url;
         }
 
-        return Estructura::$urlBase . "/" . $url;
+        if (Estructura::$idioma !== Config::IDIOMA_DEFAULT) {
+            return Estructura::$urlBase . "/" . Estructura::$idioma . $url;
+        }
+
+        return Estructura::$urlBase . $url;
 
     }
 
