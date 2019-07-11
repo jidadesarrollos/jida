@@ -28,10 +28,8 @@ Trait Render {
             if (property_exists($configuracion, $propiedad)) {
                 return $configuracion::$propiedad;
             }
-
-            //$msj = "La propiedad pedida no existe: " . $propiedad;
+            
             return null;
-            // throw new \Exception($msj, self::$_ce . 4);
 
         }
 
@@ -63,18 +61,19 @@ Trait Render {
 
         if (!$this->traductor) return false;
 
-        if (empty($ubicacion))
+        if (empty($ubicacion)) {
             $ubicacion = $this->ubicacion;
+        }
 
-        #Debug::mostrarArray($this->textos);
         if (!empty($ubicacion)) {
-            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion]))
+            if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion])) {
                 return $this->textos[$ubicacion][$cadena];
+            }
         }
         else {
-
-            if (array_key_exists($cadena, $this->textos))
+            if (array_key_exists($cadena, $this->textos)) {
                 return $this->textos[$cadena];
+            }
         }
 
         return 'Indefinido';
