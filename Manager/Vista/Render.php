@@ -28,7 +28,7 @@ Trait Render {
             if (property_exists($configuracion, $propiedad)) {
                 return $configuracion::$propiedad;
             }
-            
+
             return null;
 
         }
@@ -47,7 +47,7 @@ Trait Render {
             return Estructura::$urlBase . "/" . Estructura::$idioma . "/" . $url;
         }
 
-        return Estructura::$urlBase . $url;
+        return Estructura::$urlBase . "/" . $url;
 
     }
 
