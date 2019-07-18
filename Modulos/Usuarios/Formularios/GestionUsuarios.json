@@ -96,7 +96,7 @@
       "data_atributo": null,
       "visibilidad": null,
       "id": "id_estatus",
-      "type": "select"
+      "type": "radio"
     }
   }
 }

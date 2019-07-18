@@ -17,7 +17,7 @@
     },
     {
       "name": "sexo",
-      "type": "select",
+      "type": "radio",
       "id": "sexo",
       "label": "Sexo",
       "opciones": "M=Masculino;F=Femenino"
