@@ -63,8 +63,8 @@ Trait Archivo {
                 'actual' => Estructura::$url,
             ],
             'mapa' => [
-                'modulo'    => Estructura::$modulo,
-                'submodulo' => Estructura::$metodo
+                'modulo' => Estructura::$modulo,
+                'metodo' => Estructura::$metodo
             ]
         ];
         return "<script>window.jida=" . json_encode($data) . "</script>";
