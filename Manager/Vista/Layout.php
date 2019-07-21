@@ -102,6 +102,7 @@ class Layout {
         self::$directorio = $directorio;
     }
 
+
     /**
      * @return Layout
      * @throws Excepcion

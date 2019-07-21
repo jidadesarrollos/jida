@@ -16,7 +16,7 @@ Trait Gestor {
 //            $archivo = str_replace('{base}', Estructura::$urlJida, $archivo);
 //        }
 //        else
-            if (strpos($archivo, 'modulo') !== false) {
+        if (strpos($archivo, 'modulo') !== false) {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
         }
         elseif (strpos($archivo, '{tema}') !== false) {

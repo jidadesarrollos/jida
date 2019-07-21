@@ -35,7 +35,7 @@ Trait Archivo {
 
             include_once $archivo;
             $contenido = ob_get_clean();
-
+            $contenido . = $this->jidaJS();
             if (ob_get_length()) {
                 ob_end_clean();
             }
@@ -55,6 +55,21 @@ Trait Archivo {
 
     }
 
+    private function jidaJS() {
+        $data = [
+            'urls' => [
+                'modulo' => Estructura::$urlModulo,
+                'base'   => Estructura::$urlBase,
+                'actual' => Estructura::$url,
+            ],
+            'mapa' => [
+                'modulo'    => Estructura::$modulo,
+                'submodulo' => Estructura::$metodo
+            ]
+        ];
+        return "<script type='javascript'>window.jida=" . json_encode($data) . "</script>";
+    }
+
     /**
      * Permite incluir objetos media
      *
@@ -62,12 +77,12 @@ Trait Archivo {
      * o desde la carpeta htdocs general. Si se quiere incluir algo desde el tema
      * debe usarse la palabra "tema" siguiendo la estructura de url.
      *
-     * @example $this->media('tema/favicon.png')
-     *
      * @param string $archivo
      * @param string $item
      * @param bool $tema
      * @return string
+     * @example $this->media('tema/favicon.png')
+     *
      */
 
     function media($archivo = "", $item = "", $tema = true) {
@@ -93,15 +108,15 @@ Trait Archivo {
      * Retorna la url publica de los archivos htdocs de un tema
      * @method htdocs
      *
+     * @param $folder
+     * @param $item
+     * @param bool $tema
+     * @return string
      * @deprecated
      * @params string $folder Carpeta a obtener
      * @params string $item nombre del archivo
      * @params boolean $tema Determina si el archivo debe buscarse en el contenido
      * de un tema o en el contenido general.
-     * @param $folder
-     * @param $item
-     * @param bool $tema
-     * @return string
      */
     function _htdocs($carpeta, $item = "", $tema = true) {
 
