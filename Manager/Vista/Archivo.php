@@ -35,7 +35,7 @@ Trait Archivo {
 
             include_once $archivo;
             $contenido = ob_get_clean();
-            $contenido . = $this->jidaJS();
+            $contenido .= $this->jidaJS();
             if (ob_get_length()) {
                 ob_end_clean();
             }
