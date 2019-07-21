@@ -67,7 +67,7 @@ Trait Archivo {
                 'metodo' => Estructura::$metodo
             ]
         ];
-        return "<script>window.jida=" . json_encode($data) . "</script>";
+        return "<script type=\"application/javascript\">window.jida=" . json_encode($data) . "</script>";
     }
 
     /**
