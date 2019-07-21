@@ -4,8 +4,6 @@ namespace Jida\Manager\Vista;
 
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
-use Jida\Manager\Textos;
-use Jida\Medios\Debug;
 
 Trait Render {
 
@@ -44,10 +42,10 @@ Trait Render {
     public function navegar($url = "") {
 
         if (Estructura::$idioma !== Config::IDIOMA_DEFAULT) {
-            return Estructura::$urlBase . "/" . Estructura::$idioma . "/" . $url;
+            return Estructura::$urlBase . Estructura::$idioma . "/" . $url;
         }
 
-        return Estructura::$urlBase . "/" . $url;
+        return Estructura::$urlBase . $url;
 
     }
 
