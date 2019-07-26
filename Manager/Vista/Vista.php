@@ -32,7 +32,6 @@ class Vista {
     private $_tema;
     private $_data;
 
-    public $url;
     public $textos;
 
     function __construct($controlador) {
