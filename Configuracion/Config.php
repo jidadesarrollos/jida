@@ -26,7 +26,8 @@ class Config {
     const PATH_JIDA = "vendor/jida/jida";
     const ENVIAR_EMAIL_ERROR = false;
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
-    const HASH_CLAVE = "password_hash"; // opciones: password_hash, md5
+    const HASH_CLAVE = "md5"; // opciones: password_hash, md5
+    const TIPO = 'API';
 
     /**
      * Define si la aplicacion es multiidioma
@@ -34,6 +35,7 @@ class Config {
      * @const bolean MULTIIDIOMA
      */
     const MULTIIDIOMA = false;
+    const IDIOMA_DEFAULT = "es";
 
     /**
      * Variable para definicion de modulos dentro de la aplicación
@@ -58,7 +60,9 @@ class Config {
      * @var $idiomas
      * @access protected
      */
-    public $idiomas = ['es'];
+    public $idiomas = [
+        'es' => "Español"
+    ];
 
     /**
      * Variable para definicion del tema a utilizar dentro de la aplicación
@@ -67,8 +71,6 @@ class Config {
      * @access protected
      */
     public $tema = 'default';
-
-    public $temaJadmin = 'jadmin';
 
     /**
      * Variable para definicion del logo dentro de la aplicación

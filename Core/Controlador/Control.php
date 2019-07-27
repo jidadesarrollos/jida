@@ -10,6 +10,7 @@ use Jida\Configuracion\Config;
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Vista\Layout;
 use Jida\Medios\Debug;
+use Jida\Modulos\Posts\Modelos\Post;
 
 class Control {
 
@@ -113,6 +114,10 @@ class Control {
 
         return $this->vista;
 
+    }
+
+    protected function _obtPost($url) {
+        return Post::obtPostFromSlug($url);
     }
 
 }

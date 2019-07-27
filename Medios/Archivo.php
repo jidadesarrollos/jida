@@ -17,15 +17,17 @@ use Jida\Manager\Excepcion;
 
 class Archivo {
 
+    /**
+     * @var boolean $valido Define si el archivo instanciado es valido o no. Es false si el archivo no existe.
+     */
+    static         $valido;
+    static         $errores;
     private static $_ce = 50003;
+    private static $_permisos;
     /**
      * @var string $extension Extension del archivo
      */
     public $extension;
-    /**
-     * @var string $_directorio Ruta fisica del archivo
-     */
-    protected $_directorio;
     /**
      * @var mixed $nombre nombre del archivo
      */
@@ -39,11 +41,9 @@ class Archivo {
      */
     var $ruta;
     /**
-     * @var boolean $valido Define si el archivo instanciado es valido o no. Es false si el archivo no existe.
+     * @var string $_directorio Ruta fisica del archivo
      */
-    static $valido;
-    static $errores;
-    private static $_permisos;
+    protected $_directorio;
 
     function __construct($directorio = "") {
 
@@ -69,6 +69,16 @@ class Archivo {
             self::$errores[] = $msj;
         }
 
+    }
+
+    static function crear($ruta, $contenido) {
+        $dirname = dirname(Estructura::$directorio . $ruta);
+        if (!is_dir($dirname)) {
+            mkdir($dirname, 0755, true);
+        }
+        $archivo = fopen(Estructura::$directorio . $ruta, "w");
+        fwrite($archivo, $contenido);
+        fclose($archivo);
     }
 
     /**

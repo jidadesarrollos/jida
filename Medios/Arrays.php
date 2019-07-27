@@ -16,22 +16,27 @@ use stdClass;
 
 class Arrays {
 
+    static function asociativo(array $arr) {
+        if (array() === $arr) return false;
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
     /**
      * Filtra los registros de una matriz
      *
-     * @internal Filtra los registros de una matriz dada a partir de los valores
-     * de busqueda
-     * @method filtro
      * @param array $matriz
      * @param mixed $filtro Arreglo o matriz de valores para realizar el filtro
      * @return array $array Nuevo Arreglo armado
      * @access public
+     * @internal Filtra los registros de una matriz dada a partir de los valores
+     * de busqueda
+     * @method filtro
      * @since 0.1
      *
      * @example
      *
      */
-    static function filtro ($matriz, $filtro) {
+    static function filtro($matriz, $filtro) {
 
         $numeroFiltros = count($filtro);
         $array = [];
@@ -46,16 +51,16 @@ class Arrays {
     }
 
     /**
-     * @internal Combina dos arreglos utilizando uno para la
-     * estructura y otro para los valores
      * @param array $ar1 Arreglo con estructura a usar
      * @param array $ar2 Arreglo con valores a usar para llenar el array 1
      * @return array $ar1 arreglo inicial con valores insertados
      * @access public
+     * @internal Combina dos arreglos utilizando uno para la
+     * estructura y otro para los valores
      * @since 0.1
      *
      */
-    static function combinar ($ar1, $ar2) {
+    static function combinar($ar1, $ar2) {
 
         foreach ($ar1 as $key => $value) {
             if (array_key_exists($key, $ar2)) {
@@ -69,17 +74,17 @@ class Arrays {
     /**
      * Recorre un array recursivo buscando los valores solicitados
      *
-     * @internal Recorre un arreglo de forma recursiva buscando todos los valores que coincidan
-     * con una clave dada y retorna un nuevo arreglo ordenado con las posiciones relacionadas
-     * a la clave
      * @param array $arr Arreglo a recorrer
      * @param string $busqueda Nombre o valor a buscar
      * @param string $filtro Campo de filtro en estructura del arreglo
      * @access public
+     * @internal Recorre un arreglo de forma recursiva buscando todos los valores que coincidan
+     * con una clave dada y retorna un nuevo arreglo ordenado con las posiciones relacionadas
+     * a la clave
      * @since 0.1
      *
      */
-    static function obtenerHijosArray ($arr, $busqueda, $filtro) {
+    static function obtenerHijosArray($arr, $busqueda, $filtro) {
 
         $nuevoArreglo = [];
 
@@ -95,15 +100,15 @@ class Arrays {
     }
 
     /**
-     * @internal Devuelve un arreglo con los valores extraidos de una matriz
-     * @method obtenerKey
      * @param string $key Clave a buscar en los arreglos u objetos de cada posición del arreglo a buscar
      * @param array $array Arreglo multidimensional a filtrar
      * @access public
+     * @internal Devuelve un arreglo con los valores extraidos de una matriz
+     * @method obtenerKey
      * @since 0.1
      *
      */
-    static function obtenerKey ($clave, $array, $mantenerKey = false) {
+    static function obtenerKey($clave, $array, $mantenerKey = false) {
 
         $arrayResult = [];
         if (!is_array($array) and !is_object($array))
@@ -169,16 +174,17 @@ class Arrays {
     }
 
     /**
-     * @internal Agrega una columna a todos los valores de una matriz
-     * @method addColumn
      * @param array [,$arr] Arreglo a modificar
      * @param mixed $valores Arreglo o string de valores a insertar
-     * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de la matriz
+     * @param boolean $usoKeyValores Si es TRUE se usaran las claves del vector como claves en las nuevas columnas de
+     *     la matriz
      * @access public
+     * @internal Agrega una columna a todos los valores de una matriz
+     * @method addColumn
      * @since 0.1
      *
      */
-    static function addColumna ($matriz, $valores, $usoKeyValores = false) {
+    static function addColumna($matriz, $valores, $usoKeyValores = false) {
 
         if (is_array($valores)) {
             foreach ($matriz as $key => &$vector) {
@@ -210,17 +216,17 @@ class Arrays {
     }
 
     /**
-     * @internal Convierte un arreglo en un objeto tipo stdClass
-     * @method convertirAObjeto
      * @param array $array Arreglo a convertir
      * @return object $objeto Arreglo convertido en objeto
      * @access public
+     * @internal Convierte un arreglo en un objeto tipo stdClass
+     * @method convertirAObjeto
      * @since 0.1
      *
      * @example ca
      *
      */
-    static function convertirAObjeto ($array) {
+    static function convertirAObjeto($array) {
 
         $objeto = new stdClass();
         foreach ($array as $key => $value) {
@@ -232,7 +238,7 @@ class Arrays {
         return $objeto;
     }
 
-    static function ordenarMatriz ($matriz, $campo, $inverso = false) {
+    static function ordenarMatriz($matriz, $campo, $inverso = false) {
 
         $pivote = [];
         foreach ($matriz as $key => $fila) {

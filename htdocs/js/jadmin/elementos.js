@@ -1,9 +1,9 @@
 (function ($) {
-    var total = $("body").data('total');
-    console.log("paso");
+    var total = $('body').data('total');
+    console.log('paso');
 
-    if (!$("body").data('total'))
-        $("body").data('total', 1);
+    if (!$('body').data('total'))
+        $('body').data('total', 1);
     $('[data-jadmin="elementos"]').on('click', function () {
         var $this = $(this);
         var area = $this.data('area');
@@ -42,27 +42,25 @@
 
 })(jQuery);
 
-
 function addElementoArea($ele, elemento) {
     console.log(elemento);
-
 
     if (typeof total == 'undefined') {
         total = 1;
         $('body').data('total', total);
     }
-    var idForm = $ele.attr('id') + "-" + total;
+    var idForm = $ele.attr('id') + '-' + total;
     $ele.attr('id', idForm);
     $ele.find(':input').each(function (k, v) {
         $input = $(v);
-        $input.attr('id', $input.attr('id') + "-" + total);
+        $input.attr('id', $input.attr('id') + '-' + total);
     });
-    total = $("body").data('total');
-    tpl = "";
-    tpl += '<article class="contenedor-element"><section class="panel-heading" data-toggle="collapse" data-target="#ele-' + $input.attr('id') + "-" + total + '">';
+    total = $('body').data('total');
+    tpl = '';
+    tpl += '<article class="contenedor-element"><section class="panel-heading" data-toggle="collapse" data-target="#ele-' + $input.attr('id') + '-' + total + '">';
     tpl += '<h4 class="area-elemento-nombre">' + elemento.nombre + '<span class="pull-right fa fa-chevron-down"></span></h4>';
     tpl += '</section>';
-    tpl += '<section class="panel-body" id="ele-' + $input.attr('id') + "-" + total + '">';
+    tpl += '<section class="panel-body" id="ele-' + $input.attr('id') + '-' + total + '">';
     tpl += $ele.prop('outerHTML');
     tpl += '</section>';
     tpl += '<section class="panel-footer">';
@@ -70,14 +68,14 @@ function addElementoArea($ele, elemento) {
     tpl += '</section></article>';
     area = $('body').data('area');
     $('#body-' + area).append(tpl);
-    $("body").data('total', total + 1);
+    $('body').data('total', total + 1);
 }
 
 function saveElemento() {
     $this = $(this);
     $parent = $this.parents('form');
     var data = {};
-    $form = $("#" + $this.data('form'));
+    $form = $('#' + $this.data('form'));
     $inputs = $form.find(':input');
     console.log($inputs);
     $.each($inputs, function (k, input) {

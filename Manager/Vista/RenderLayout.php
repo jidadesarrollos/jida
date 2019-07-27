@@ -42,10 +42,9 @@ Trait RenderLayout {
         foreach ($lenguajes as $lenguaje) {
             if (!in_array($lenguaje, ['head', 'jsAjax']) and !isset($configuracion->{$lenguaje}))
                 return null;
-
+            
             switch ($lenguaje) {
                 case 'head':
-
                     $retorno = $this->_imprimirHead($configuracion, $modulo);
                     break;
                 case 'js':

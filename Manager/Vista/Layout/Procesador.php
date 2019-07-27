@@ -7,12 +7,11 @@
 
 namespace Jida\Manager\Vista\Layout;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
+use Jida\Manager\Vista\OpenGraph;
 use Jida\Manager\Vista\Tema;
-use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 Trait Procesador {
@@ -36,6 +35,20 @@ Trait Procesador {
     public function imprimirMeta() {
 
         return Meta::imprimir($this->_data);
+
+    }
+
+    /**
+     * Asigna el valor de las etiquetas Open Graph configurada para la página actual
+     *
+     * @method openGraph
+     * @param $data arreglo que contiene el valor de las etiquetas personalizadas para open graph
+     *
+     */
+    public function openGraph($data = []) {
+
+        $this->_data->og = $data;
+        return;
 
     }
 
@@ -73,14 +86,14 @@ Trait Procesador {
                 continue;
             }
 
-            $urlLibreria = str_replace('{tema}', self::$_urlTema, $libreria);
+            $urlLibreria = str_replace('{tema}', Tema::$url, $libreria);
 
             if (strpos($urlLibreria, "http") === false) {
 
                 $urlLibreria = implode("/", array_filter(explode("/", $urlLibreria)));
 
                 if (strpos($urlLibreria, '{base}') === 0) {
-                    $urlLibreria = str_replace('{base}', ".", $urlLibreria);
+                    $urlLibreria = str_replace('{base}', Estructura::$urlBase, $urlLibreria);
                 }
                 else {
                     $urlLibreria = '//' . $urlLibreria;
@@ -179,6 +192,10 @@ Trait Procesador {
             $html .= $this->_css($configuracion->css, $modulo);
         }
 
+        if (property_exists($this->_data, "og")) {
+            $html .= OpenGraph::render($this->_data->og);
+        }
+
         return $html;
 
     }
@@ -190,6 +207,7 @@ Trait Procesador {
     private function _link($etiquetas) {
 
         $html = "";
+
         foreach ($etiquetas as $etiqueta => $contenido) {
 
             $configuracion = [];
@@ -207,7 +225,9 @@ Trait Procesador {
             }
 
             $urlTema = "//" . self::$_urlTema;
+
             $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
+            $configuracion['href'] = str_replace('{base}', Estructura::$urlBase, $configuracion['href']);
 
             $html .= Selector::crear('link', $configuracion, null, 2);
 

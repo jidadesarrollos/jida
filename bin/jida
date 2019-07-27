@@ -1,15 +1,42 @@
 #!/usr/bin/env php
 <?php
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 
-    require_once __DIR__ . '/../vendor/autoload.php';
-}
-
-require_once __DIR__ . '/../../vendor/autoload.php';
-
+use Jida\Configuracion\Base;
 use Jida\Core\Consola\App;
-Jida\Configuracion\Base::constantes();
+use Jida\Manager;
 
-$app = new App();
-$app->registarComandos();
-$app->run();
+try {
+
+    $path = getcwd();
+    $include = '/vendor/autoload.php';
+
+    if ($path === false) {
+
+        $path = dirname(dirname(dirname(__FILE__)));
+        $composerPath = dirname(dirname(dirname(dirname(__FILE__))));
+
+        if (is_dir($composerPath)) $path = $composerPath;
+
+    }
+
+    if (!file_exists($path . $include)) {
+        throw new \Exception("No se encuentra el archivo de autocarga");
+    }
+
+
+    include_once $path . $include;
+
+    if (!class_exists('\\Jida\\Configuracion\\Base')) {
+        throw new \Exception("No se encuentra la configuracion de jida");
+    }
+
+    Base::constantes();
+
+    $app = new App();
+    $app->registarComandos($path);
+    $app->run();
+
+}
+catch (\Exception $e) {
+    exit($e->getMessage());
+}

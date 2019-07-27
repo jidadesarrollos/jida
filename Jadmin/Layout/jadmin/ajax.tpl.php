@@ -1,2 +1,0 @@
-<?= $this->imprimirLibrerias('jsAjax') ?>
-<?= $contenido ?>

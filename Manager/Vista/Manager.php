@@ -4,6 +4,8 @@ namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
 use Jida\Manager\Estructura;
+use Jida\Manager\Textos;
+use Jida\Medios\Debug;
 
 class Manager {
 
@@ -12,8 +14,6 @@ class Manager {
     //    private $_ce = 10006;
     private $_data;
 
-    private $_namespace;
-    private $_modulo;
     /**
      * Instancia de objeto Layout
      *
@@ -22,66 +22,35 @@ class Manager {
      *
      */
     private $_layout;
-
-    public $Procesador;
-
-    static public $controlador;
-    static public $Padre;
+    private $_controlador;
     static public $vista;
 
-    function __construct($padre) {
+    function __construct($controlador) {
 
-        $this->Procesador = $padre->procesador;
-        self::$Padre = $padre;
-
-        $this->_layout = new Layout($this);
+        $this->_controlador = $controlador;
         $this->_data = Data::obtener();
         $this->_inicializar();
 
     }
 
-    /**
-     * Procesa la data en el nuevo objeto data
-     *
-     * Esta funcion es provisoria hasta tanto el objeto dataVista sea reemplazado
-     */
-    private function _procesarData() {
-
-        Data::inicializar($this->_data);
-
-    }
-
     private function _inicializar() {
 
-        $this->_procesarData();
-        $padre = self::$Padre;
-
-        $this->_namespace = Estructura::$namespace;
-        $this->_modulo = $padre::$modulo;
-        $this->_layout = new Layout($this);
-
-    }
-
-    function excepcion() {
+        $this->_layout = Layout::obtener();
+        Data::inicializar($this->_data);
 
     }
 
     function renderizar() {
 
         $plantilla = $this->_data->plantilla();
-
-        $vista = $this->vista();
-
-        $contenido = $vista->obtener($plantilla);
-
-        $this->_layout->render($contenido);
+        $this->_layout->render($this->vista()->obtener($plantilla));
 
     }
 
     function vista() {
 
         if (!self::$vista) {
-            self::$vista = new Vista($this->_data);
+            self::$vista = new Vista($this->_controlador);
         }
 
         return self::$vista;

@@ -9,36 +9,26 @@
 
 namespace Jida\Core;
 
-use Jida\Medios\Debug;
-
 trait ObjetoManager {
 
     protected function copiarAtributos($clase) {
 
-        if (is_object($clase)) {
-            $atributos = get_object_vars($clase);
-        }
+        $atributos = is_object($clase) ? get_object_vars($clase) : get_class_vars($clase);
 
-        else {
-            $atributos = get_class_vars($clase);
-        }
-
-        foreach ($atributos as $key => $value) {
-            $this->{$key} = $value;
-        }
+        foreach ($atributos as $key => $value) $this->{$key} = $value;
 
     }
 
     /**
      * Establece los atributos de una clase.
      *
+     * @param array @arr Arreglo con valores
+     * @param mixed @clase Instancia de la clase
+     *
      * @internal Valida si los valores pasados en el arreglo corresponden
      * a los atributos de la clase en uso y asigna el valor correspondiente
      *
      * @access protected
-     * @param array @arr Arreglo con valores
-     * @param mixed @clase Instancia de la clase
-     *
      */
     protected function establecerAtributos($arr, $clase = '') {
 

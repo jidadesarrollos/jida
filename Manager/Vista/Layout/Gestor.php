@@ -7,17 +7,19 @@ namespace Jida\Manager\Vista\Layout;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Tema;
-use Jida\Medios\Debug;
 
 Trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
 
+//        if (strpos($archivo, '{base}') !== false) {
+//            $archivo = str_replace('{base}', Estructura::$urlJida, $archivo);
+//        }
+//        else
         if (strpos($archivo, 'modulo') !== false) {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
-
         }
-        elseif (strpos($archivo, '{tema}')) {
+        elseif (strpos($archivo, '{tema}') !== false) {
             $archivo = str_replace('{tema}', Tema::$url, $archivo);
         }
 
@@ -43,7 +45,7 @@ Trait Gestor {
         }
 
         foreach ($librerias as $indice => $libreria) {
-            array_push($this->_jsAjax, self::_procesarUbicacion($libreria, "js"));
+            $this->_jsAjax[$indice] = self::_procesarUbicacion($libreria, "js");
         }
 
     }
@@ -59,4 +61,5 @@ Trait Gestor {
         }
 
     }
+
 }

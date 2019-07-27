@@ -26,7 +26,7 @@ Trait Archivo {
 
             if (!Directorios::validar($archivo)) {
                 $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
-                throw new \Exception($msj, self::$_ce . 11);
+                throw new Exception($msj, self::$_ce . 11);
             }
 
             extract($datos);
@@ -34,7 +34,7 @@ Trait Archivo {
 
             include_once $archivo;
             $contenido = ob_get_clean();
-
+            $contenido .= $this->jidaJS();
             if (ob_get_length()) {
                 ob_end_clean();
             }
@@ -42,7 +42,7 @@ Trait Archivo {
             return $contenido;
 
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Debug::imprimir([
                 "Excepcion en Layout::render",
                 $e->getCode(),
@@ -54,6 +54,21 @@ Trait Archivo {
 
     }
 
+    private function jidaJS() {
+        $data = [
+            'urls' => [
+                'modulo' => Estructura::$urlModulo,
+                'base'   => Estructura::$urlBase,
+                'actual' => Estructura::$url,
+            ],
+            'mapa' => [
+                'modulo' => Estructura::$modulo,
+                'metodo' => Estructura::$metodo
+            ]
+        ];
+        return "<script type=\"application/javascript\">window.jida=" . json_encode($data) . "</script>";
+    }
+
     /**
      * Permite incluir objetos media
      *
@@ -61,12 +76,12 @@ Trait Archivo {
      * o desde la carpeta htdocs general. Si se quiere incluir algo desde el tema
      * debe usarse la palabra "tema" siguiendo la estructura de url.
      *
-     * @example $this->media('tema/favicon.png')
-     *
      * @param string $archivo
      * @param string $item
      * @param bool $tema
      * @return string
+     * @example $this->media('tema/favicon.png')
+     *
      */
 
     function media($archivo = "", $item = "", $tema = true) {
@@ -77,10 +92,10 @@ Trait Archivo {
 
         if (!$archivo) return Estructura::$urlBase . '/htdocs';
 
-        if (strpos('tema', $archivo)) {
+        $pos = strpos($archivo, '{tema}');
 
-            $ruta = str_replace('tema', Tema::$url, $archivo);
-
+        if ($pos !== false) {
+            $ruta = str_replace('{tema}', Tema::$url, $archivo);
             return $ruta;
         }
 
@@ -116,7 +131,4 @@ Trait Archivo {
 
     }
 
-    static function crear(){
-
-    }
 }

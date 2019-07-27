@@ -7,6 +7,7 @@
 
 namespace Jida\Manager\Vista;
 
+use Jida\Medios\Debug;
 use Jida\Render\Selector;
 
 class Meta {
@@ -23,12 +24,13 @@ class Meta {
      *
      */
 
-    static function imprimir ($data) {
+    static function imprimir($data) {
 
         $meta = "";
         $itemprop = "";
         $initTab = 0;
         //Titulo de La pagina
+
         if (count($data->meta) > 0) {
             $metaAdicional = "";
 

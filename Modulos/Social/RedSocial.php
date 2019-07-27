@@ -10,7 +10,7 @@
  * @version 0.1 10-2017
  */
 
-namespace Jida\Modelos;
+namespace Jida\Modulos\Social;
 
 use Jida\BD as BD;
 
