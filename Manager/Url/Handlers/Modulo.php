@@ -12,6 +12,7 @@ use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 use Jida\Manager\Url\Definicion;
 use Jida\Manager\Url\Handler;
+use Jida\Medios\Arrays;
 
 class Modulo extends Handler {
 
@@ -32,6 +33,7 @@ class Modulo extends Handler {
         $parametro = $this->url->proximoParametro();
 
         $modulo = Definicion::objeto($parametro);
+
         if (Estructura::$namespace && Estructura::$ruta) {
             //Debug::imprimir(["ya se definio"], true);
             return;
@@ -39,7 +41,7 @@ class Modulo extends Handler {
 
         $ruta = Estructura::$rutaAplicacion;
 
-        if (!isset($modulos[$parametro])) {
+        if (Arrays::asociativo($modulos) and !isset($modulos[$parametro]) || !in_array($parametro, $modulos)) {
 
             $this->url->reingresarParametro($parametro);
 
@@ -51,6 +53,7 @@ class Modulo extends Handler {
 
         }
 
+        //Debug::imprimir(["SI ES"], true);
         Estructura::$modulo = $modulo;
         Estructura::$namespace = "App\\Modulos\\{$modulo}\\Controllers";
         Estructura::$ruta = $ruta;
