@@ -107,15 +107,15 @@ Trait Archivo {
      * Retorna la url publica de los archivos htdocs de un tema
      * @method htdocs
      *
+     * @param $folder
+     * @param $item
+     * @param bool $tema
+     * @return string
      * @deprecated
      * @params string $folder Carpeta a obtener
      * @params string $item nombre del archivo
      * @params boolean $tema Determina si el archivo debe buscarse en el contenido
      * de un tema o en el contenido general.
-     * @param $folder
-     * @param $item
-     * @param bool $tema
-     * @return string
      */
     function _htdocs($carpeta, $item = "", $tema = true) {
 
