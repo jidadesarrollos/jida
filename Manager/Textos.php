@@ -56,16 +56,18 @@ class Textos {
     private function _obtenerContenido() {
 
         $salida = [];
-        $arreglo = $this->arreglo[$this->idioma];
+        $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
 
         if (isset($arreglo[Estructura::$metodo])) {
             $salida = array_merge($salida, $arreglo[Estructura::$metodo]);
             unset($arreglo[Estructura::$metodo]);
         }
 
-        foreach ($arreglo as $key => $value) {
-            if (!is_array($value)) {
-                $salida[$key] = $value;
+        if (count($arreglo) > 0) {
+            foreach ($arreglo as $key => $value) {
+                if (!is_array($value)) {
+                    $salida[$key] = $value;
+                }
             }
         }
 
