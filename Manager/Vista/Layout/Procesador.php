@@ -7,12 +7,12 @@
 
 namespace Jida\Manager\Vista\Layout;
 
+use Jida\Core\Selector;
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
 use Jida\Manager\Vista\Meta;
 use Jida\Manager\Vista\OpenGraph;
 use Jida\Manager\Vista\Tema;
-use Jida\Render\Selector;
 
 Trait Procesador {
 

@@ -11,7 +11,7 @@ use Jida\Manager\Excepcion;
 use Jida\Manager\Textos;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
-use Jida\Medios;
+use Jida\Medios\Debug;
 
 class Layout {
 
@@ -48,6 +48,7 @@ class Layout {
     private $urlTema;
 
     private $_plantilla;
+    private $_plantillaError;
     /**
      * @var object $textos Objeto Textos
      */
@@ -102,7 +103,6 @@ class Layout {
         self::$directorio = $directorio;
     }
 
-
     /**
      * @return Layout
      * @throws Excepcion
@@ -123,6 +123,22 @@ class Layout {
     }
 
     /**
+     * Retorna el layout requerido
+     */
+    private function _get() {
+
+        $layout = Tema::propiedad('layout');
+
+        if (is_object($layout)) {
+            $this->_plantilla = "{$layout->default}.tpl.php";
+            if ($layout->error) {
+                $this->_plantillaError = "{$layout->error}.tpl.php";
+            }
+        }
+
+    }
+
+    /**
      * Renderiza una vista
      * @method render
      *
@@ -130,7 +146,7 @@ class Layout {
      * @return void | string
      * @throws Excepcion
      */
-    public function render($vista) {
+    public function render($vista, $error = false) {
 
         if (!self::$directorio) {
             $msj = 'No se ha definido el directorio del layout';
@@ -140,45 +156,17 @@ class Layout {
             $msj = 'El parametro $vista es requerido para el metodo render';
             throw new \Exception($msj, self::$_ce . '0001');
         }
-        if (!$this->_plantilla) {
+        $this->_get();
+        $plantilla = (!$error) ? $this->_plantilla : $this->_plantillaError;
 
-            $layout = Tema::propiedad('layout');
-            $layout = "{$layout}.tpl.php";
-            $this->_plantilla = $layout;
-
-        }
-
-        $marco = self::$directorio . DS . $this->_plantilla;
-
+        $marco = self::$directorio . DS . $plantilla;
+        
         $contenido = $this->_obtenerContenido(
             $marco,
             ['contenido' => $vista]
         );
 
         echo $contenido;
-
-    }
-
-    function renderizarExcepcion($plantilla) {
-
-        try {
-            $marco = self::$directorio . DS . $this->_plantilla;
-
-            echo $this->_obtenerContenido(
-                $marco,
-                ['contenido' => $plantilla]
-            );
-
-        }
-        catch (\Exception $e) {
-            Medios\Debug::imprimir([
-                "Excepcion en Layout::render",
-                $e->getCode(),
-                $e->getMessage(),
-                $e->getTrace()
-            ],
-                true);
-        }
 
     }
 

@@ -9,7 +9,6 @@
 namespace Jida\Manager;
 
 use Jida\Manager\Vista;
-use Jida\Medios\Debug;
 
 class Procesador {
 
@@ -48,10 +47,11 @@ class Procesador {
 
         }
         catch (\Exception $e) {
-            Debug::imprimir(["excepcion en procesador", $e->getMessage(), $e->getTrace()]);
+            Excepcion::validar($e);
         }
         catch (\Error $e) {
-            Debug::imprimir(["error en procesador", $e->getMessage(), $e->getTrace()]);
+            Excepcion::validar($e, 'error');
+
         }
 
     }

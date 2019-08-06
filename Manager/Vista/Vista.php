@@ -116,4 +116,17 @@ class Vista {
 
     }
 
+    function error($code) {
+
+        $tema = Tema::obtener();
+        $dir = $tema::$directorio;
+
+        $path = "$dir./errors/${code}.php";
+        //validar si existe una vista para el error
+        if (!Medios\Directorios::validar($path)) $path = Estructura::$rutaJida . "/plantillas/error/error.php";
+
+        return $this->_obtenerContenido($path);
+
+    }
+
 }

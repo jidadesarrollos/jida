@@ -10,14 +10,10 @@ namespace Jida\Manager;
 
 use App\Config\Configuracion;
 use Jida\Componentes\Correo;
-use Jida\Configuracion\Config;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Manager\Excepcion\Log;
-use Jida\Manager\Vista\Layout;
+use Jida\Manager\Vista\Manager;
 use Jida\Manager\Vista\Tema;
-use Jida\Manager\Vista\Vista;
-use Jida\Medios\Debug;
-use Jida\Medios\Directorios;
 
 class Excepcion {
 
@@ -60,12 +56,12 @@ class Excepcion {
             throw new \Exception($msj, $codigo);
         }
         catch (\Exception $exception) {
-            self::controller($exception);
+            self::validar($exception);
         }
 
     }
 
-    private static function imprimir(\Exception $excepcion) {
+    private static function _api(\Exception $excepcion) {
 
         $traza = $excepcion->getTrace();
         array_pop($traza);
@@ -80,65 +76,20 @@ class Excepcion {
 
     }
 
-    public static function controller($exception) {
-
-        Debug::imprimir([$exception], true);
-        if (!is_a($exception, '\\Exception') and !is_a($exception, '\\Error')) {
-            Debug::imprimir(["No se puede procesar la excepcion", $exception], true);
-        }
-
-        $config = Config::obtener();
-        if ($config::TIPO !== 'WEB') {
-            return self::imprimir($exception);
-
-        }
-
-        $layout = Layout::obtener();
-
-        $configuracion = Tema::$configuracion;
-
-        $marco = isset($configuracion->layoutError) ? $configuracion->layoutError : $configuracion->layout;
-
-        $layout->_definirPlantilla("$marco.tpl.php");
-        $layout::definirDirectorio(Tema::$directorio);
-        $plantilla = self::_obtenerPlantilla($layout, $exception->getCode());
-
-        $data = new \stdClass();
-        $data->mensaje = $exception->getMessage();
-        $data->codigo = $exception->getCode();
-        $traza = $exception->getTrace();
-        array_pop($traza);
-        $data->traza = $traza;
-        $vista = new Vista($data);
-
-        $layout->renderizarExcepcion($vista->obtenerPlantilla($plantilla));
+    private static function _obtenerVista($e) {
 
     }
 
-    private static function _obtenerPlantilla(&$layout, $codigo) {
+    static function validar($e, $type = 'exception') {
 
-        $directorio = Tema::$directorio;
+        $tema = Tema::obtener();
+        $conf = $tema::$configuracion;
+        $hasTpl = !!is_object($conf->layout) and !isset($conf->layout->error);
 
-        $rutaPlantilla = "$directorio/plantillas/$codigo.php";
-        $vista = "$codigo.php";
+        if (!$conf or !$hasTpl) self::_api($e);
 
-        if (Directorios::validar($rutaPlantilla)) {
-            return $rutaPlantilla;
-        }
-
-        if (Directorios::validar("$directorio/plantillas/error.php")) {
-            return "$directorio/plantillas/error.php";
-        }
-
-        $rutaPlantilla = Estructura::$rutaJida . "/plantillas/error/";
-        $vista = Directorios::validar($rutaPlantilla . "$codigo.php") ? "$codigo.php" : "error.php";
-
-        return $rutaPlantilla . $vista;
+        $manager = new Manager($e);
+        $manager->renderizar();
 
     }
-
-    public static function capturar(\Exception $e) {
-        Debug::imprimir(["Capturada Excepcion", $e]);
-    }
-
 }

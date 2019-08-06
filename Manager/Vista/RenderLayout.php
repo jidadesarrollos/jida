@@ -6,7 +6,6 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Manager\Estructura;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 

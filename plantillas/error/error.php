@@ -3,10 +3,10 @@
 </header>
 
 
-<h5>Excepcion: <?= $this->mensaje ?></h5>
-<h6>Código <?= $this->codigo ?></h6>
+<h5>Excepcion: <?= $this->exception['error'] ?></h5>
+<h6>Código <?= $this->exception['code'] ?></h6>
 
-<?php foreach ($this->traza as $i => $item) { ?>
+<?php foreach ($this->exception['trace'] as $i => $item) { ?>
     <ul>
         <LI>Traza <?= $i ?>
             <ul>

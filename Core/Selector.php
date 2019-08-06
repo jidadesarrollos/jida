@@ -8,11 +8,9 @@
  * @version
  */
 
-namespace Jida\Render;
+namespace Jida\Core;
 
 use Exception as Excepcion;
-use Jida\Medios\Debug;
-use MongoDB\BSON\ObjectId;
 
 class Selector {
 

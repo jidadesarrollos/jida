@@ -103,7 +103,7 @@ class Mysql extends ConexionBD {
             return;
         }
 
-        $this->mysqli = new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd, $this->puerto);
+        $this->mysqli = @new mysqli($this->servidor, $this->usuario, $this->clave, $this->bd, $this->puerto);
         #$sesion = Medios\Sesion::obt('iddb');
         #Medios\Sesion::editar("iddb", $sesion + 1);
 

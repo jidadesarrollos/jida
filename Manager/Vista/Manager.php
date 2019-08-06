@@ -3,9 +3,6 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
-use Jida\Manager\Estructura;
-use Jida\Manager\Textos;
-use Jida\Medios\Debug;
 
 class Manager {
 
@@ -23,9 +20,14 @@ class Manager {
      */
     private $_layout;
     private $_controlador;
+    private $_error = false;
     static public $vista;
 
     function __construct($controlador) {
+
+        if (is_a($controlador, '\Exception') or is_a($controlador, '\Error')) {
+            $this->_error = $controlador;
+        }
 
         $this->_controlador = $controlador;
         $this->_data = Data::obtener();
@@ -42,8 +44,30 @@ class Manager {
 
     function renderizar() {
 
+        if ($this->_error) return $this->_renderizarError();
+
         $plantilla = $this->_data->plantilla();
         $this->_layout->render($this->vista()->obtener($plantilla));
+
+    }
+
+    private function _renderizarError() {
+        /**
+         * @var $exception \Exception;
+         */
+        $exception = $this->_error;
+
+        $this->_data->exception = [
+            'error' => $exception->getMessage(),
+            'code'  => $exception->getCode(),
+            'trace' => $exception->getTrace(),
+            'file'  => $exception->getFile(),
+            'line'  => $exception->getLine()
+        ];
+
+        $vista = $this->vista()->error($this->_error->getCode());
+
+        $this->_layout->render($vista, true);
 
     }
 
