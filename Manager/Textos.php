@@ -58,20 +58,19 @@ class Textos {
         $salida = [];
         $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
 
-
-        if(isset($arreglo[Estructura::$nombreControlador])){
-            $salida = array_merge($salida, $arreglo[Estructura::$nombreControlador]);
-            $textos = Textos::obtener();
-            unset($arreglo[Estructura::$nombreControlador]);
-
+        $controlador = strtolower(Estructura::$nombreControlador);
+        if (isset($arreglo[$controlador])) {
+            $salida = $arreglo[$controlador];
         }
 
-        if (isset($arreglo[Estructura::$metodo])){
-
-            $salida = array_merge($salida, $arreglo[Estructura::$metodo]);
-            unset($arreglo[Estructura::$metodo]);
+        if (empty($controlador)) {
+            if (isset($arreglo[Estructura::$metodo])) {
+                $salida = array_merge($salida, $arreglo[Estructura::$metodo]);
+                unset($arreglo[Estructura::$metodo]);
+            }
+        }else{
+            $salida = $arreglo[$controlador][Estructura::$metodo];
         }
-
 
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
@@ -82,12 +81,12 @@ class Textos {
         }
 
         $this->arreglo = $salida;
-        Debug::imprimir([$arreglo], true);
+        Debug::mostrarArray($this->arreglo, true);
 
     }
 
     public function texto($key) {
-
+        //Debug::imprimir([$key], true);
         if (array_key_exists($key, $this->arreglo)) {
             return $this->arreglo[$key];
         }
