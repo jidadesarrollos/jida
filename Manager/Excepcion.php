@@ -61,7 +61,7 @@ class Excepcion {
 
     }
 
-    private static function _api(\Exception $excepcion) {
+    private static function _api($excepcion) {
 
         $traza = $excepcion->getTrace();
         array_pop($traza);
