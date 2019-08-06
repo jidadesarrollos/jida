@@ -63,12 +63,7 @@ class Textos {
             $salida = $arreglo[$controlador];
         }
 
-        if (empty($controlador)) {
-            if (isset($arreglo[Estructura::$metodo])) {
-                $salida = array_merge($salida, $arreglo[Estructura::$metodo]);
-                unset($arreglo[Estructura::$metodo]);
-            }
-        }else{
+        if (isset($arreglo[$controlador][Estructura::$metodo])) {
             $salida = $arreglo[$controlador][Estructura::$metodo];
         }
 
@@ -81,7 +76,6 @@ class Textos {
         }
 
         $this->arreglo = $salida;
-        Debug::mostrarArray($this->arreglo, true);
 
     }
 
