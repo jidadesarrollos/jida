@@ -58,10 +58,20 @@ class Textos {
         $salida = [];
         $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
 
-        if (isset($arreglo[Estructura::$metodo])) {
+
+        if(isset($arreglo[Estructura::$nombreControlador])){
+            $salida = array_merge($salida, $arreglo[Estructura::$nombreControlador]);
+            $textos = Textos::obtener();
+            unset($arreglo[Estructura::$nombreControlador]);
+
+        }
+
+        if (isset($arreglo[Estructura::$metodo])){
+
             $salida = array_merge($salida, $arreglo[Estructura::$metodo]);
             unset($arreglo[Estructura::$metodo]);
         }
+
 
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
@@ -72,6 +82,7 @@ class Textos {
         }
 
         $this->arreglo = $salida;
+        Debug::imprimir([$arreglo], true);
 
     }
 
