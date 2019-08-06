@@ -67,6 +67,10 @@ class Textos {
             $salida = $arreglo[$controlador][Estructura::$metodo];
         }
 
+        if (isset($arreglo[Estructura::$metodo])) {
+            $salida = $arreglo[Estructura::$metodo];
+        }
+
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
                 if (!is_array($value)) {
@@ -80,7 +84,6 @@ class Textos {
     }
 
     public function texto($key) {
-        //Debug::imprimir([$key], true);
         if (array_key_exists($key, $this->arreglo)) {
             return $this->arreglo[$key];
         }
