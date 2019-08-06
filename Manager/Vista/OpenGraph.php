@@ -6,8 +6,7 @@
 
 namespace Jida\Manager\Vista;
 
-use Jida\Medios\Debug;
-use Jida\Render\Selector;
+use Jida\Core\Selector;
 
 class OpenGraph {
 
