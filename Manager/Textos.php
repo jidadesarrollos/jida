@@ -3,7 +3,6 @@
 namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
-use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 class Textos {
@@ -38,7 +37,7 @@ class Textos {
     private function _inicializar() {
 
         $archivo = Estructura::$rutaModulo . DS . $this->_dir . DS . $this->_archivo;
-        Debug::imprimir([$archivo]);
+
         if (Directorios::validar($archivo)) {
 
             $contenido = file_get_contents($archivo);
