@@ -3,6 +3,7 @@
 namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 class Textos {
@@ -55,11 +56,21 @@ class Textos {
     private function _obtenerContenido() {
 
         $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
+
+        if (count($arreglo) > 0) {
+            foreach ($arreglo as $key => $value) {
+                if (!is_array($value)) {
+                    $default[$key] = $value;
+                }
+            }
+        }
+
         $controlador = strtolower(Estructura::$nombreControlador);
+        $metodo = strtolower(Estructura::$metodo);
 
         if (isset($arreglo[$controlador])) $arreglo = $arreglo[$controlador];
 
-        if (isset($arreglo[Estructura::$metodo])) $arreglo = $arreglo[Estructura::$metodo];
+        if (isset($arreglo[$metodo])) $arreglo = $arreglo[$metodo];
 
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
@@ -68,6 +79,8 @@ class Textos {
                 }
             }
         }
+
+        $arreglo = array_merge($arreglo, $default);
 
         $this->arreglo = $arreglo;
 
