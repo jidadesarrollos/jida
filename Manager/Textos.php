@@ -57,6 +57,7 @@ class Textos {
 
         $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
 
+        $default = [];
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
                 if (!is_array($value)) {
