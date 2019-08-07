@@ -38,7 +38,7 @@ class Textos {
     private function _inicializar() {
 
         $archivo = Estructura::$rutaModulo . DS . $this->_dir . DS . $this->_archivo;
-
+        Debug::imprimir([$archivo]);
         if (Directorios::validar($archivo)) {
 
             $contenido = file_get_contents($archivo);
@@ -55,31 +55,22 @@ class Textos {
 
     private function _obtenerContenido() {
 
-        $salida = [];
         $arreglo = isset($this->arreglo[$this->idioma]) ? $this->arreglo[$this->idioma] : [];
-
         $controlador = strtolower(Estructura::$nombreControlador);
-        if (isset($arreglo[$controlador])) {
-            $salida = $arreglo[$controlador];
-        }
 
-        if (isset($arreglo[$controlador][Estructura::$metodo])) {
-            $salida = $arreglo[$controlador][Estructura::$metodo];
-        }
+        if (isset($arreglo[$controlador])) $arreglo = $arreglo[$controlador];
 
-        if (isset($arreglo[Estructura::$metodo])) {
-            $salida = $arreglo[Estructura::$metodo];
-        }
+        if (isset($arreglo[Estructura::$metodo])) $arreglo = $arreglo[Estructura::$metodo];
 
         if (count($arreglo) > 0) {
             foreach ($arreglo as $key => $value) {
                 if (!is_array($value)) {
-                    $salida[$key] = $value;
+                    $arreglo[$key] = $value;
                 }
             }
         }
 
-        $this->arreglo = $salida;
+        $this->arreglo = $arreglo;
 
     }
 

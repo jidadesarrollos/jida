@@ -11,7 +11,6 @@ use Jida\Manager\Excepcion;
 use Jida\Manager\Textos;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
-use Jida\Medios\Debug;
 
 class Layout {
 
@@ -48,6 +47,10 @@ class Layout {
     private $urlTema;
 
     private $_plantilla;
+    /**
+     * @var boolean $_custom True cuando el layout es definido desde un controlador.
+     */
+    private $_custom;
     private $_plantillaError;
     /**
      * @var object $textos Objeto Textos
@@ -118,8 +121,8 @@ class Layout {
     }
 
     function _definirPlantilla($tpl) {
+        $this->_custom = true;
         $this->_plantilla = $tpl;
-
     }
 
     /**
@@ -128,6 +131,8 @@ class Layout {
     private function _get() {
 
         $layout = Tema::propiedad('layout');
+
+        if ($this->_custom) return $this->_plantilla;
 
         if (is_object($layout)) {
             $this->_plantilla = "{$layout->default}.tpl.php";
@@ -157,10 +162,10 @@ class Layout {
             throw new \Exception($msj, self::$_ce . '0001');
         }
         $this->_get();
-        $plantilla = (!$error) ? $this->_plantilla : $this->_plantillaError;
 
+        $plantilla = (!$error) ? $this->_plantilla : $this->_plantillaError;
         $marco = self::$directorio . DS . $plantilla;
-        
+
         $contenido = $this->_obtenerContenido(
             $marco,
             ['contenido' => $vista]
