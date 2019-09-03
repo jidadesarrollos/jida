@@ -191,4 +191,45 @@ class Estructura {
         echo "<pre/>";
 
     }
+
+    static function requestMethod() {
+
+        $obj = new $className($this->_params);
+        $obj->requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
+
+        switch (strtolower($obj->requestMethod)) {
+            case 'get':
+                break;
+            case 'post':
+                $_POST = json_decode(file_get_contents('php://input'), TRUE);
+                if (!is_array($_POST)) {
+                    $_POST = [];
+                }
+                $_REQUEST = array_merge($_REQUEST, $_POST);
+                break;
+            case 'put':
+                $_PUT = json_decode(file_get_contents('php://input'), TRUE);
+                if (!is_array($_PUT)) {
+                    $_PUT = [];
+                }
+                $_REQUEST = array_merge($_REQUEST, $_PUT);
+                break;
+        }
+
+        if (method_exists($obj, '__pre')) {
+            $params = $obj->__pre($this->_params);
+        }
+        else {
+            $params = $this->_params;
+        }
+
+        $response = call_user_func_array([$obj, $method], $params);
+
+
+        if (method_exists($obj, '__post')) {
+            return $obj->__post($response);
+        }
+
+        return $response;
+    }
 }
