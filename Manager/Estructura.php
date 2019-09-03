@@ -78,6 +78,11 @@ class Estructura {
     private static $ubicacionJida;
 
     /**
+     * @var string $requestMethod Request Method que se esta ejecutando en la llamada.
+     */
+    static public $requestMethod;
+
+    /**
      * @return string
      * @throws \Exception
      */
@@ -114,8 +119,9 @@ class Estructura {
      */
     static function url() {
 
-        if (!self::$url)
+        if (!self::$url) {
             self::procesar();
+        }
 
         return self::$url;
 
@@ -156,6 +162,10 @@ class Estructura {
 
             self::$url = rtrim(self::$dominio . "/$url", "/");
 
+            if (!self::$requestMethod) {
+                self::requestMethod();
+            }
+
         }
         catch (Excepcion $e) {
             Debug::imprimir($e);
@@ -192,12 +202,19 @@ class Estructura {
 
     }
 
+    /**
+     * Retorna el request method de la llamada
+     *
+     * @method requestMethod
+     *
+     * @since 0.7
+     * @return string
+     */
     static function requestMethod() {
 
-        $obj = new $className($this->_params);
-        $obj->requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
+        $requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
 
-        switch (strtolower($obj->requestMethod)) {
+        switch ($requestMethod) {
             case 'get':
                 break;
             case 'post':
@@ -216,20 +233,9 @@ class Estructura {
                 break;
         }
 
-        if (method_exists($obj, '__pre')) {
-            $params = $obj->__pre($this->_params);
-        }
-        else {
-            $params = $this->_params;
-        }
+        self::$requestMethod = $requestMethod;
 
-        $response = call_user_func_array([$obj, $method], $params);
+        return self::$requestMethod;
 
-
-        if (method_exists($obj, '__post')) {
-            return $obj->__post($response);
-        }
-
-        return $response;
     }
 }
