@@ -1510,7 +1510,7 @@ class DataModel {
                         break;
                     default:
                         if (
-                            strpos($valor, '0x') === FALSE or
+                            strpos($valor, '0x') === FALSE and
                             !in_array($valor, $this->bd->getValoresReservados())
                         ) {
                             $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
