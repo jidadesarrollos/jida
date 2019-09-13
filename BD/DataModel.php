@@ -994,10 +994,10 @@ class DataModel {
      * Emula el in de base de datos
      * @method in
      *
-     * @var        $filtro Arreglo de campos a filtrar
+     * @return object $this Objeto instanciado
      * @var string $clave [opcional] Campo para realizar clausula, si se omite
      * será tomada la clave primaria
-     * @return object $this Objeto instanciado
+     * @var        $filtro Arreglo de campos a filtrar
      */
     function in($filtro, $clave = "", $condicion = "and") {
 
@@ -1509,13 +1509,17 @@ class DataModel {
                         }
                         break;
                     default:
-                        if (!in_array($valor, $this->bd->getValoresReservados())) {
+                        if (
+                            strpos($valor, '0x') === FALSE or
+                            !in_array($valor, $this->bd->getValoresReservados())
+                        ) {
                             $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
                         }
                         else {
                             $valores[] = $valor;
                         }
                         break;
+
                 }
             }
         }//fin foreach
@@ -1657,7 +1661,7 @@ class DataModel {
      * Si no se pasa ningun elemento se eliminará el objeto instanciado.
      * @method eliminar
      *
-     * @param        array  [$arrayDatos ] Arreglo de valores a ser eliminados
+     * @param array  [$arrayDatos ] Arreglo de valores a ser eliminados
      * @param string $campo Campo o propiedad por medio de la cual se eliminaran los objetos, si no es pasado sera usada
      *                      la clave primaria.
      *
@@ -1759,8 +1763,8 @@ class DataModel {
      * Retorna un arreglo con las propiedades publicas del objeto
      * @method objectAsArray Alias obtenerPropiedades
      *
-     * @deprecated
      * @return array
+     * @deprecated
      */
     function objectAsArray() {
 
@@ -1796,7 +1800,7 @@ class DataModel {
      * @method crearTodo
      *
      * @param array $data Data a insertar
-     * @param       boolean [$insertPK] bandera para indicarle al metodo si incluye la clave primaria en el query
+     * @param boolean [$insertPK] bandera para indicarle al metodo si incluye la clave primaria en el query
      *
      * @return object ResultBD
      * @see ResultBD
@@ -2062,8 +2066,7 @@ class DataModel {
     }
 
     static function sp($sp, $parametros = []) {
-        if (  !self::$instancia instanceof self)
-        {
+        if (!self::$instancia instanceof self) {
             self::$instancia = new self;
         }
 
