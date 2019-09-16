@@ -2077,6 +2077,7 @@ class DataModel {
         else {
             self::$instancia->query = "CALL " . $sp . ";";
         }
+        Debug::imprimir([self::$instancia->query], true);
         $result = self::$instancia->bd->ejecutarQuery(self::$instancia->query);
         return is_object($result) ? self::$instancia->bd->obtenerDataCompleta($result) : $result;
     }
