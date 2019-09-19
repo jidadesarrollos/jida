@@ -114,8 +114,8 @@ class Estructura {
      *
      * @method url
      *
-     * @since 0.6.1
      * @return mixed
+     * @since 0.6.1
      */
     static function url() {
 
@@ -207,8 +207,8 @@ class Estructura {
      *
      * @method requestMethod
      *
-     * @since 0.7
      * @return string
+     * @since 0.7
      */
     static function requestMethod() {
 
@@ -218,11 +218,12 @@ class Estructura {
             case 'get':
                 break;
             case 'post':
-                $_POST = json_decode(file_get_contents('php://input'), TRUE);
-                if (!is_array($_POST)) {
-                    $_POST = [];
+                $rawdata = json_decode(file_get_contents('php://input'), TRUE);
+
+                if (is_array($rawdata)) {
+                    $_POST = array_merge($_POST, $rawdata);
                 }
-                $_REQUEST = array_merge($_REQUEST, $_POST);
+
                 break;
             case 'put':
                 $_PUT = json_decode(file_get_contents('php://input'), TRUE);
