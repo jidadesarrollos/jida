@@ -1516,7 +1516,7 @@ class DataModel {
                             $valores[] = "'" . $this->bd->escaparTexto($valor) . "'";
                         }
                         else {
-                            $valores[] = $valor;
+                            $valores[] = "'" . $valor . "'";
                         }
                         break;
 
