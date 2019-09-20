@@ -776,7 +776,7 @@ class Controller {
                 if (count($data) > 0) {
                     foreach ($data as $key => $value) {
                         if (is_array($value))
-                            Medios\Debug::mostrarArray(debug_backtrace());
+                            //Medios\Debug::mostrarArray(debug_backtrace());
                         $params .= "$value/";
                     }
                 }
