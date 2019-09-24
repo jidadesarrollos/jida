@@ -12,7 +12,6 @@ Trait Peticion {
     private $_request;
     private $_files;
 
-
     private function _procesarPeticiones() {
 
         $this->_post = $_POST;
@@ -75,11 +74,13 @@ Trait Peticion {
      * @param string $propiedad clave a buscar en $_FILES
      * @return mixed
      */
-    protected function files($propiedad) {
+    protected function files($propiedad = "") {
 
         if (isset($this->_files[$propiedad])) {
             return $this->_files[$propiedad];
         }
+
+        return $this->_files;
 
     }
 
