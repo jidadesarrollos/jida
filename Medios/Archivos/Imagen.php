@@ -147,6 +147,7 @@ class Imagen extends Archivo {
      */
     function redimensionar($dimensiones, $sobreescribir = false) {
 
+
         if (is_string($dimensiones)) $dimensiones = (array)$dimensiones;
 
         $response = true;
