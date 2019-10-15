@@ -3,6 +3,7 @@
 namespace Jida\Core\Controlador;
 
 use Jida\Manager\Excepcion;
+use Jida\Medios\Debug;
 
 Trait Getter {
 
@@ -11,12 +12,13 @@ Trait Getter {
      * @return mixed
      * @throws \Exception
      */
-    function __get ($propiedad) {
+    function __get($propiedad) {
 
 //        if (property_exists($this->Layout, $propiedad)) {
 //            return $this->Layout->{$propiedad};
 //        }
 
+        Debug::imprimir([$this->_data], true);
         if (property_exists($this->_data, $propiedad)) {
             return $this->_data->{$propiedad};
         }
@@ -26,7 +28,7 @@ Trait Getter {
 
     }
 
-    function __call ($name, $arguments) {
+    function __call($name, $arguments) {
 
         if (method_exists($this->Layout, $name)) {
             call_user_func_array([$this->Layout, $name], $arguments);

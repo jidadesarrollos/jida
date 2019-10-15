@@ -4,7 +4,7 @@
  * Clase Helper de Imagenes
  *
  *
- * ce: 2
+ * ce: 3
  *
  * @package Framework
  * @subpackage Helpers
@@ -185,9 +185,9 @@ class Imagen extends Archivo {
      * Redimenciona una imagen
      * @method _calcularRedimension
      *
-     * @internal
      * @param $dimension
      * @return array
+     * @internal
      */
 
     private function _calcularRedimension($dimension) {
@@ -226,6 +226,7 @@ class Imagen extends Archivo {
 
     private function _crearLienzo($url) {
 
+        $imagen = null;
         switch ($this->tipo) {
             case "image/jpg":
             case "image/jpeg":
@@ -236,7 +237,14 @@ class Imagen extends Archivo {
                 break;
             case "image/gif":
                 $imagen = imagecreatefromgif($url);
+            case 'image/webp':
+                $imagen = imagecreatefromwbmp($url);
                 break;
+        }
+
+        if (is_null($imagen)) {
+            $msj = "El tipo de imagen pasado no es valido: {$this->tipo}";
+            Excepcion::procesar($msj, self::$_ce . 3);
         }
 
         return $imagen;
