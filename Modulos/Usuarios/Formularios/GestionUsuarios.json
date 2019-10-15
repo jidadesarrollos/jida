@@ -89,7 +89,7 @@
           "mensaje": "El campo Estatus es obligatorio"
         }
       },
-      "opciones": "=Seleccione;Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
+      "opciones": "Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
       "orden": 7,
       "placeholder": null,
       "class": null,
