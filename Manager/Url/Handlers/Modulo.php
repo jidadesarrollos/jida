@@ -19,9 +19,7 @@ class Modulo extends Handler {
     private $default = 'Index';
 
     function validacion() {
-
         if ($this->url->modulo) return false;
-
         return self::$aplica = true;
     }
 
@@ -29,22 +27,16 @@ class Modulo extends Handler {
 
         $config = Config::obtener();
         $modulos = $config::$modulos;
-
         $parametro = $this->url->proximoParametro();
-
         $modulo = Definicion::objeto($parametro);
 
-        if (Estructura::$namespace && Estructura::$ruta) {
-            //Debug::imprimir(["ya se definio"], true);
-            return;
-        }
+        if (Estructura::$namespace && Estructura::$ruta) return;
 
         $ruta = Estructura::$rutaAplicacion;
 
-        if (Arrays::asociativo($modulos) and !isset($modulos[$parametro]) || !in_array($parametro, $modulos)) {
+        if (Arrays::asociativo($modulos) and !isset($modulos[$parametro]) and !in_array($parametro, $modulos)) {
 
             $this->url->reingresarParametro($parametro);
-
             Estructura::$namespace = "App\\Controllers";
             Estructura::$ruta = $ruta;
             Estructura::$modulo = $this->default;
@@ -53,11 +45,9 @@ class Modulo extends Handler {
 
         }
 
-        //Debug::imprimir(["SI ES"], true);
         Estructura::$modulo = $modulo;
         Estructura::$namespace = "App\\Modulos\\{$modulo}\\Controllers";
         Estructura::$ruta = $ruta;
-
         Estructura::$rutaModulo = "{$ruta}/Modulos/$modulo";
 
     }
