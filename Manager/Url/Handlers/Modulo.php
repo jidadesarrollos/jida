@@ -40,6 +40,7 @@ class Modulo extends Handler {
         }
 
         $ruta = Estructura::$rutaAplicacion;
+        //isAsociativo = true, false, true
 
         if (Arrays::asociativo($modulos) and !isset($modulos[$parametro]) || !in_array($parametro, $modulos)) {
 
