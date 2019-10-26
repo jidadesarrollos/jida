@@ -6,6 +6,7 @@ use Jida\Medios\Debug;
 use Jida\Medios\Sesion;
 use Jida\Modulos\Usuarios\Componentes\Permisos;
 use Jida\Validador\Type\Clave;
+
 class Usuario {
 
     private static $_instancia;
@@ -35,16 +36,16 @@ class Usuario {
         $datos = $instancia
             ->_modelo
             ->consulta()
-            ->filtro(['usuario' => $usuario])
+            ->filtro(['usuario' => $usuario, 'id_estatus' => 1])
             ->fila();
 
         if (!$datos) {
             return false;
         }
-        if(!$hash->compare($datos['clave'])){
-            
+        if (!$hash->compare($datos['clave'])) {
+
             return false;
-            
+
         }
 
         $instancia->_modelo->instanciar($datos['id_usuario'], $datos);
@@ -93,7 +94,7 @@ class Usuario {
 
         $hashViejo = new Clave($claveVieja);
         $hashNuevo = new Clave($claveNueva);
-        if ($hashViejo->compare($this->_modelo->clave) ) {
+        if ($hashViejo->compare($this->_modelo->clave)) {
             $this->_modelo->clave = $hashNuevo->hash();
             $this->_modelo->salvar();
             return true;

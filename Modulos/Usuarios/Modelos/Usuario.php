@@ -41,7 +41,7 @@ class Usuario extends Modelo {
         }
 
         if(empty($consulta)){
-            $consulta = ['id_usuario', 'usuario', 'nombres', 'apellidos', 'correo', 'id_usuario as perfiles'];
+            $consulta = ['id_usuario', 'usuario', 'nombres', 'apellidos', 'correo', 'id_usuario as perfiles', 'id_estatus'];
         } else {
             $consulta[] = 'id_usuario as perfiles';
         }
