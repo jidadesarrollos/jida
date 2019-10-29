@@ -17,11 +17,12 @@ use Jida\Core\Controlador\Control;
 use Jida\Manager\Estructura;
 use Jida\Manager\Rutas\Arranque;
 use Jida\Manager\Textos;
+use Jida\Manager\Vista\Render\Common;
 use Jida\Medios;
 
 class Vista {
 
-    use Archivo, Render;
+    use Archivo, Common;
 
     static private $_ce = 10009;
     static public $padre;
@@ -89,17 +90,17 @@ class Vista {
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
         $ruta = Estructura::$rutaModulo;
-
         $nombre = Estructura::$nombreControlador;
         $archivoVista = strtolower("$nombre/$vista");
         $vista = "{$ruta}/Vistas/{$archivoVista}";
 
-        if (strpos($vista, '.php') === false) {
-            $vista .= ".php";
-        }
+        if (strpos($vista, '.php') === false) $vista .= ".php";
 
         if (!file_exists($vista)) {
-            throw new Excepcion('La vista solicitada no existe: ' . $vista, $this->_ce . '1');
+            \Jida\Manager\Excepcion::procesar(
+                'La vista solicitada no existe: ' . $vista,
+                $this->_ce . '1'
+            );
         }
 
         return $this->_obtenerContenido($vista);

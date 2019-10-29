@@ -22,25 +22,10 @@ class OpenGraph {
 
         $html = "";
 
-        if (count($data) > 0) {
+        if (count($data) <= 0) return $html;
 
-            $selector = "";
-
-            foreach ($data as $property => $content) {
-
-                $selector .= $html = Selector::crear(
-                    'meta',
-                    [
-                        'property' => $property,
-                        'content'  => $content
-                    ],
-                    null,
-                    2);
-
-            }
-
-            $html = $selector;
-
+        foreach ($data as $property => $content) {
+            $html .= "<meta property=\"{$property}\" content=\"{$content}\"/>\n\t\t";
         }
 
         return $html;

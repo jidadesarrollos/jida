@@ -14,6 +14,7 @@ use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Manager\Excepcion\Log;
 use Jida\Manager\Vista\Manager;
 use Jida\Manager\Vista\Tema;
+use Jida\Medios\Debug;
 
 class Excepcion {
 
@@ -21,10 +22,7 @@ class Excepcion {
     protected $ruta;
     protected $excepcion;
     protected $txtLog;
-
     private static $contador;
-
-    const PLANTILLAS_APP = 'Aplicacion/plantillas/';
 
     function __construct(\Exception $e) {
 
@@ -71,6 +69,13 @@ class Excepcion {
             'code'    => $excepcion->getCode(),
             'trace'   => $traza
         ];
+
+        foreach ($impresion['trace'] as $key => $item) {
+            array_walk($item['args'], function (&$elemento) {
+                if (is_string($elemento)) $elemento = strip_tags($elemento);
+            });
+            $impresion['trace'][$key] = $item;
+        }
 
         exit(json_encode($impresion, JSON_PRETTY_PRINT));
 

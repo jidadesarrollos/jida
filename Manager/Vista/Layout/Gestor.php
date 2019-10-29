@@ -12,10 +12,6 @@ Trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
 
-//        if (strpos($archivo, '{base}') !== false) {
-//            $archivo = str_replace('{base}', Estructura::$urlJida, $archivo);
-//        }
-//        else
         if (strpos($archivo, 'modulo') !== false) {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
         }

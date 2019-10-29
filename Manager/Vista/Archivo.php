@@ -25,16 +25,15 @@ Trait Archivo {
             $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
             throw new \Exception($msj, self::$_ce . 11);
         }
-        //Debug::imprimir([$archivo], true);
+
         extract($datos);
         ob_start();
 
         include_once $archivo;
         $contenido = ob_get_clean();
         $contenido .= $this->jidaJS();
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
+
+        if (ob_get_length()) ob_end_clean();
 
         return $contenido;
 
@@ -108,12 +107,10 @@ Trait Archivo {
         $path = Estructura::$urlRuta;
         $urlTema = Tema::$url . "/htdocs/";
 
-        $url = $urlTema . $carpeta . '/' . $item;
-        if ($tema) {
-            return $url;
-        }
+        $url = "{$urlTema}{$carpeta}/{$item}";
+        if ($tema) return $url;
 
-        return $path . "htdocs/" . $carpeta . '/' . $item;
+        return "{$path}htdocs/{$carpeta}/{$item}";
 
     }
 

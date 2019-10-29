@@ -1,11 +1,11 @@
 <?php
 
-namespace Jida\Manager\Vista;
+namespace Jida\Manager\Vista\Render;
 
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 
-Trait Render {
+Trait Common {
 
     public function __call($metodo, $argumentos = []) {
 
@@ -17,19 +17,14 @@ Trait Render {
 
     public function __get($propiedad) {
 
-        if (!property_exists($this, $propiedad)) {
+        if (property_exists($this, $propiedad)) return null;
 
-            $configuracion = Config::obtener();
-            if (is_object($this->_data) and property_exists($this->_data, $propiedad)) {
-                return $this->_data->{$propiedad};
-            }
-            if (property_exists($configuracion, $propiedad)) {
-                return $configuracion::$propiedad;
-            }
+        $configuracion = Config::obtener();
+        if (is_object($this->_data) and property_exists($this->_data, $propiedad)) return $this->_data->{$propiedad};
 
-            return null;
+        if (property_exists($configuracion, $propiedad)) return $configuracion::$propiedad;
 
-        }
+        return null;
 
     }
 
@@ -59,20 +54,15 @@ Trait Render {
 
         if (!$this->traductor) return false;
 
-        if (empty($ubicacion)) {
-            $ubicacion = $this->ubicacion;
-        }
+        if (empty($ubicacion)) $ubicacion = $this->ubicacion;
 
         if (!empty($ubicacion)) {
             if (array_key_exists($ubicacion, $this->textos) and array_key_exists($cadena, $this->textos[$ubicacion])) {
                 return $this->textos[$ubicacion][$cadena];
             }
+
         }
-        else {
-            if (array_key_exists($cadena, $this->textos)) {
-                return $this->textos[$cadena];
-            }
-        }
+        else if (array_key_exists($cadena, $this->textos)) return $this->textos[$cadena];
 
         return 'Indefinido';
 

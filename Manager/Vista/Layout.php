@@ -11,10 +11,12 @@ use Jida\Manager\Excepcion;
 use Jida\Manager\Textos;
 use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
+use Jida\Manager\Vista\Render\Common;
+use Jida\Manager\Vista\Render\Layout as RenderLayout;
 
 class Layout {
 
-    use Archivo, Render, RenderLayout, Procesador, Gestor;
+    use Archivo, Common, RenderLayout, Procesador, Gestor;
     /**
      * @var object Objeto que llama o instancia a Layout
      */
@@ -22,6 +24,7 @@ class Layout {
     public static $directorio;
     private static $_ce = 10008;
     private static $_configuracion;
+    private $_contenido;
     /**
      * @var string $_directorio Directorio fisico del tema y layout implementado
      */
@@ -69,6 +72,7 @@ class Layout {
         $this->urlBase = Estructura::$urlBase;
         $this->urlModulo = Estructura::$urlModulo;
         $this->url = Estructura::$url;
+
         $this->textos = Textos::obtener();
 
     }
@@ -135,10 +139,10 @@ class Layout {
         if ($this->_custom) return $this->_plantilla;
 
         if (is_object($layout)) {
+
             $this->_plantilla = "{$layout->default}.tpl.php";
-            if ($layout->error) {
-                $this->_plantillaError = "{$layout->error}.tpl.php";
-            }
+            if ($layout->error) $this->_plantillaError = "{$layout->error}.tpl.php";
+
         }
 
     }
@@ -150,29 +154,34 @@ class Layout {
      * @param $vista
      * @return void | string
      * @throws Excepcion
+     * @throws \Exception
      */
     public function render($vista, $error = false) {
 
+        $this->_contenido = $vista;
+
         if (!self::$directorio) {
             $msj = 'No se ha definido el directorio del layout';
-            throw new \Exception($msj, self::$_ce . '0008');
+            Excepcion::procesar($msj, self::$_ce . '0008');
         }
+
         if (is_null($vista)) {
             $msj = 'El parametro $vista es requerido para el metodo render';
-            throw new \Exception($msj, self::$_ce . '0001');
+            Excepcion::procesar($msj, self::$_ce . '0001');
         }
+
         $this->_get();
 
         $plantilla = (!$error) ? $this->_plantilla : $this->_plantillaError;
         $marco = self::$directorio . DS . $plantilla;
-
-        $contenido = $this->_obtenerContenido(
-            $marco,
-            ['contenido' => $vista]
-        );
+        $contenido = $this->_obtenerContenido($marco);
 
         echo $contenido;
 
+    }
+
+    private function contenido() {
+        return $this->_contenido;
     }
 
     function __call($metodo, $params) {
@@ -186,18 +195,14 @@ class Layout {
     function config($propiedad) {
 
         $config = Config::obtener();
-        if (property_exists($config, $propiedad)) {
-            return $config->{$propiedad};
-        }
+        if (property_exists($config, $propiedad)) return $config->{$propiedad};
 
     }
 
     function logo() {
         $config = Config::obtener();
 
-        if (!!$config->logo) {
-            return Estructura::$urlBase . $config->logo;
-        }
+        if (!!$config->logo) return Estructura::$urlBase . $config->logo;
 
         return Estructura::$urlBase . "/htdocs/img/logo.png";
     }

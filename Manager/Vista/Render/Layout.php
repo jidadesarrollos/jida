@@ -4,12 +4,13 @@
  *
  */
 
-namespace Jida\Manager\Vista;
+namespace Jida\Manager\Vista\Render;
 
+use Jida\Manager\Vista\Tema;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
-Trait RenderLayout {
+Trait Layout {
 
     function incluir($plantilla) {
 
@@ -24,12 +25,12 @@ Trait RenderLayout {
     /**
      * Imprime las lirerias del lado cliente
      *
-     * @see Layout\Procesador
-     * @since 1.4
      * @param $lenguajes
      * @param string $modulo Si es pasado, la funcion buscara imprimir solo los valores del key correspondiente.
      * @return string $libsHTML renderización HTML de los tags de inclusión de las librerias.
      * @throws Excepcion
+     * @see Layout\Procesador
+     * @since 1.4
      */
     function imprimirLibrerias($lenguajes, $modulo = "") {
 
@@ -41,16 +42,16 @@ Trait RenderLayout {
         foreach ($lenguajes as $lenguaje) {
             if (!in_array($lenguaje, ['head', 'jsAjax']) and !isset($configuracion->{$lenguaje}))
                 return null;
-            
+
             switch ($lenguaje) {
                 case 'head':
                     $retorno = $this->_imprimirHead($configuracion, $modulo);
                     break;
                 case 'js':
-                    $retorno = $this->_imprimirJS($configuracion->{$lenguaje}, $modulo);
+                    $retorno = $this->_js($configuracion->{$lenguaje}, $modulo);
                     break;
                 case 'jsAjax':
-                    $retorno = $this->_imprimirJS([], $modulo, true);
+                    $retorno = $this->_js([], $modulo, true);
                     break;
                 case 'css':
                     $retorno = $this->_imprimirCSS($configuracion->{$lenguaje}, $modulo);

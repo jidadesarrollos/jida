@@ -31,12 +31,6 @@ class Manager {
 
         $this->_controlador = $controlador;
         $this->_data = Data::obtener();
-        $this->_inicializar();
-
-    }
-
-    private function _inicializar() {
-
         $this->_layout = Layout::obtener();
         Data::inicializar($this->_data);
 
@@ -73,9 +67,7 @@ class Manager {
 
     function vista() {
 
-        if (!self::$vista) {
-            self::$vista = new Vista($this->_controlador);
-        }
+        if (!self::$vista)  self::$vista = new Vista($this->_controlador);
 
         return self::$vista;
 
@@ -83,9 +75,7 @@ class Manager {
 
     function __get($propiedad) {
 
-        if ($propiedad == 'data') {
-            return $this->_data;
-        }
+        if ($propiedad == 'data') return $this->_data;
 
     }
 }
