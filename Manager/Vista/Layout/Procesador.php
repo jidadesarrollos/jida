@@ -95,7 +95,7 @@ Trait Procesador {
         foreach ($librerias as $clave => $libreria) {
 
             if (is_string($libreria)) {
-                $libreria = ['src' => $libreria];
+                $libreria = ['src' => $libreria, 'type' => 'module'];
             }
             else if (is_object($libreria)) {
                 //module js support
