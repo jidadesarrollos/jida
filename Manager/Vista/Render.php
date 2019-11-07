@@ -2,6 +2,7 @@
 
 namespace Jida\Manager\Vista;
 
+use App\Config\Configuracion;
 use Jida\Configuracion\Config;
 use Jida\Manager\Estructura;
 
@@ -41,7 +42,7 @@ Trait Render {
      */
     public function navegar($url = "") {
 
-        if (Estructura::$idioma !== Config::IDIOMA_DEFAULT) {
+        if (Estructura::$idioma !== Configuracion::IDIOMA_DEFAULT) {
             return Estructura::$urlBase . "/" . Estructura::$idioma . $url;
         }
 
