@@ -15,11 +15,11 @@
   ],
   "require": {
     "phpmailer/phpmailer": "^5.2",
-    "ext-json": "*",
-    "ext-gd": "*",
     "php": ">=7.0"
   },
   "require-dev": {
+    "ext-json": "*",
+    "ext-gd": "*",
     "symfony/console": "^4.1",
     "smarty/smarty": "~3.1"
   },
