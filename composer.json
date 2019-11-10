@@ -15,11 +15,13 @@
   ],
   "require": {
     "phpmailer/phpmailer": "^5.2",
+    "php": ">=7.0"
+  },
+  "require-dev": {
     "ext-json": "*",
     "ext-gd": "*",
     "symfony/console": "^4.1",
-    "smarty/smarty": "~3.1",
-    "php": ">=7.0"
+    "smarty/smarty": "~3.1"
   },
   "autoload": {
     "psr-4": {
