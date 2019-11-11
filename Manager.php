@@ -20,8 +20,8 @@ class Manager {
 
     private $_validador;
     /*Tiempos*/
-    private $_tiempoInicio;
-    private $_tiempoFin;
+    private $_timeStart;
+    private $_finishTime;
     private static $instancia;
 
     private function __construct($ruta) {
@@ -56,7 +56,7 @@ class Manager {
      */
     private function _inicio($parametros = []) {
 
-        $this->_tiempoInicio = microtime(true);
+        $this->_timeStart = microtime(true);
         $config = Conf\Config::obtener();
 
         if (!$config) {
@@ -65,7 +65,8 @@ class Manager {
         }
 
         Medios\Sesion::iniciar();
-        date_default_timezone_set($config::ZONA_HORARIA);
+        date_default_timezone_set($config::TIME_ZONE);
+
         $_SERVER = array_merge($_SERVER, $this->_getAllHeaders());
 
         if (!$this->_validador->inicio()) {
@@ -79,7 +80,7 @@ class Manager {
         $procesador = new Procesador($parametros);
         $procesador->ejecutar();
 
-        $this->_tiempoFin = microtime(true);
+        $this->_finishTime = microtime(true);
 
     }
 

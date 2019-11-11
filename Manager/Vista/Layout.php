@@ -116,9 +116,7 @@ class Layout {
      */
     static function obtener() {
 
-        if (!self::$instancia) {
-            self::$instancia = new self();
-        }
+        if (!self::$instancia) self::$instancia = new self();
 
         return self::$instancia;
 

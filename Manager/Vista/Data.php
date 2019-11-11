@@ -25,15 +25,13 @@ class Data {
 
     private static function validarInstancia($data = null) {
 
-        if (!self::$instancia) {
-            self::$instancia = new Data($data);
-        }
+        if (!self::$instancia) self::$instancia = new Data($data);
 
     }
 
-    static function inicializar($data = null) {
+    static function inicializar() {
 
-        self::validarInstancia($data);
+        self::validarInstancia();
 
         return self::$instancia;
 

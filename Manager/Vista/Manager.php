@@ -9,6 +9,10 @@ class Manager {
     use ObjetoManager;
 
     //    private $_ce = 10006;
+    /**
+     * @var object Comunicator manager between controller & views.
+     *
+     */
     private $_data;
 
     /**
@@ -32,15 +36,23 @@ class Manager {
         $this->_controlador = $controlador;
         $this->_data = Data::obtener();
         $this->_layout = Layout::obtener();
-        Data::inicializar($this->_data);
+
+        Data::inicializar();
 
     }
 
+    /**
+     * Ejecuta el renderizado de la vista y el layout
+     *
+     * @throws \Exception
+     */
     function renderizar() {
 
         if ($this->_error) return $this->_renderizarError();
 
         $plantilla = $this->_data->plantilla();
+
+
         $this->_layout->render($this->vista()->obtener($plantilla));
 
     }
@@ -67,7 +79,7 @@ class Manager {
 
     function vista() {
 
-        if (!self::$vista)  self::$vista = new Vista($this->_controlador);
+        if (!self::$vista) self::$vista = new Vista($this->_controlador);
 
         return self::$vista;
 

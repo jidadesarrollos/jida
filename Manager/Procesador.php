@@ -35,14 +35,8 @@ class Procesador {
 
             $controlador = Estructura::$controlador;
             $this->_controlador = new $controlador;
-
-            call_user_func_array([
-                $this->_controlador,
-                Estructura::$metodo
-            ], Estructura::$parametros);
-
+            call_user_func_array([$this->_controlador, Estructura::$metodo], Estructura::$parametros);
             $vistaManger = new Vista\Manager($this->_controlador);
-
             $vistaManger->renderizar();
 
         }

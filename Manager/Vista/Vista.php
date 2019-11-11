@@ -27,6 +27,7 @@ class Vista {
     static private $_ce = 10009;
     static public $padre;
     static public $directorio;
+    static public $staticURl;
     /**
      * @var Tema
      */
@@ -44,6 +45,15 @@ class Vista {
         $this->url = Estructura::$url;
         $this->urlBase = Estructura::$urlBase;
         $this->textos = Textos::obtener();
+        $this->_directory();
+    }
+
+    private function _directory() {
+
+        $ruta = Estructura::$rutaModulo;
+        $nombre = strtolower(Estructura::$nombreControlador);
+        self::$staticURl = Estructura::$urlBase . "/Aplicacion/Vistas/$nombre/";
+        self::$directorio = "{$ruta}/Vistas/$nombre/";
 
     }
 
@@ -89,21 +99,33 @@ class Vista {
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $ruta = Estructura::$rutaModulo;
-        $nombre = Estructura::$nombreControlador;
-        $archivoVista = strtolower("$nombre/$vista");
-        $vista = "{$ruta}/Vistas/{$archivoVista}";
+        $vista = self::$directorio . $vista;
+
+        $hasModule = Medios\Directorios::validar(self::$directorio . "module.json");
 
         if (strpos($vista, '.php') === false) $vista .= ".php";
 
         if (!file_exists($vista)) {
-            \Jida\Manager\Excepcion::procesar(
-                'La vista solicitada no existe: ' . $vista,
-                $this->_ce . '1'
-            );
+            $msj = "La vista solicitada no existe: {$vista}";
+            \Jida\Manager\Excepcion::procesar($msj, $this->_ce . '1');
         }
 
-        return $this->_obtenerContenido($vista);
+        $contenido = $this->_obtenerContenido($vista);
+
+        if ($hasModule) {
+            $contenido .= $this->_addClientModule();
+        }
+
+        return $contenido;
+
+    }
+
+    private function _addClientModule() {
+
+        $module = json_decode(file_get_contents(self::$directorio . "module.json"));
+        $file = self::$staticURl . $module->bundle;
+
+        return "\n\t\t<script type=\"module\" src=\"{$file}.js\"></script>";
 
     }
 

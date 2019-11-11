@@ -3,6 +3,7 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Medios\Directorios;
 
 Trait Archivo {
@@ -23,7 +24,7 @@ Trait Archivo {
 
         if (!Directorios::validar($archivo)) {
             $msj = "No existe el ${archivo} archivo pasado para obtener contenido";
-            throw new \Exception($msj, self::$_ce . 11);
+            Excepcion::procesar($msj, self::$_ce . 11);
         }
 
         extract($datos);

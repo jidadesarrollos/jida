@@ -20,7 +20,7 @@ class Config {
     const SHORT_NAME_APP = 'APP';
     const URL_BASE = '';
     const ENTORNO_APP = 'dev';
-    const ZONA_HORARIA = 'America/Caracas';
+    const TIME_ZONE = 'America/Caracas';
     const MODELO_USUARIO = '\Jida\Modelos\User';
     const LOGO_APP = '';
     const PATH_JIDA = "vendor/jida/jida";
