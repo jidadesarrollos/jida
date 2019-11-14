@@ -4,6 +4,7 @@ namespace Jida\Manager\Vista;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Excepcion;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
 Trait Archivo {
@@ -28,8 +29,8 @@ Trait Archivo {
         }
 
         extract($datos);
-        ob_start();
 
+        ob_start();
         include_once $archivo;
         $contenido = ob_get_clean();
         $contenido .= $this->jidaJS();

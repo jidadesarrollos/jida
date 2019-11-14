@@ -123,7 +123,8 @@ class Vista {
     private function _addClientModule() {
 
         $module = json_decode(file_get_contents(self::$directorio . "module.json"));
-        $file = self::$staticURl . $module->bundle;
+        $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
+        $file = self::$staticURl . $bundle;
 
         return "\n\t\t<script type=\"module\" src=\"{$file}.js\"></script>";
 
