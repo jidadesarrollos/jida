@@ -45,7 +45,6 @@ class Procesador {
         }
         catch (\Error $e) {
             Excepcion::validar($e, 'error');
-
         }
 
     }

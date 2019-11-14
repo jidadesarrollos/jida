@@ -141,12 +141,9 @@ Trait Procesador {
      * Imprime las etiquetas links registradas en la configuración del tema
      *
      */
-    private
-    function _link($etiquetas) {
+    private function _link($etiquetas) {
 
         $html = "";
-
-        Debug::imprimir(["link", $etiquetas], true);
 
         foreach ($etiquetas as $etiqueta => $contenido) {
 
@@ -166,10 +163,13 @@ Trait Procesador {
 
             $urlTema = "//" . self::$_urlTema;
 
-            $configuracion['href'] = str_replace('{tema}', $urlTema, $configuracion['href']);
-            $configuracion['href'] = str_replace('{base}', Estructura::$urlBase, $configuracion['href']);
-
-            $html .= Selector::crear('link', $configuracion, null, 2);
+            $href = str_replace('{tema}', $urlTema, $configuracion['href']);
+            $href = str_replace('{base}', Estructura::$urlBase, $href);
+            $html .= "\n\t\t<link href=\"{$href}\"";
+            array_walk($configuracion, function ($item, $value, $html) {
+                $html .= " $item=\"$value\" ";
+            }, $html);
+            $html .= "/>";
 
         }
 
