@@ -52,6 +52,7 @@ class Vista {
 
         $ruta = Estructura::$rutaModulo;
         $nombre = strtolower(Estructura::$nombreControlador);
+        if (!empty(Estructura::$metodo)) $nombre .= Medios\Cadenas::guionCase(Estructura::$metodo) . '/';
         self::$staticURl = Estructura::$urlBase . "/Aplicacion/Vistas/$nombre/";
         self::$directorio = "{$ruta}/Vistas/$nombre/";
 
