@@ -3,6 +3,7 @@
 namespace Jida\Manager\Vista;
 
 use Jida\Core\ObjetoManager;
+use Jida\Medios\Debug;
 
 class Manager {
 
@@ -51,8 +52,7 @@ class Manager {
         if ($this->_error) return $this->_renderizarError();
 
         $plantilla = $this->_data->plantilla();
-
-
+        Debug::imprimir([$plantilla, 30], true);
         $this->_layout->render($this->vista()->obtener($plantilla));
 
     }
@@ -70,6 +70,7 @@ class Manager {
             'file'  => $exception->getFile(),
             'line'  => $exception->getLine()
         ];
+
 
         $vista = $this->vista()->error($this->_error->getCode());
 

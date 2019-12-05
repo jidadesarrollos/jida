@@ -12,6 +12,7 @@ use App\Config\Configuracion;
 use Jida\Componentes\Correo;
 use Jida\Core\GeneradorCodigo\GeneradorCodigo;
 use Jida\Manager\Excepcion\Log;
+use Jida\Manager\Vista\Layout;
 use Jida\Manager\Vista\Manager;
 use Jida\Manager\Vista\Tema;
 use Jida\Medios\Debug;
@@ -89,11 +90,17 @@ class Excepcion {
 
         $tema = Tema::obtener();
         $conf = $tema::$configuracion;
+        /**
+         * TODO: configure API way
+         */
         $hasTpl = !!is_object($conf->layout) and !isset($conf->layout->error);
 
         if (!$conf or !$hasTpl) self::_api($e);
+//        $layout = Layout::obtener();
+//        $layout->_definirPlantilla($conf->layout->error . ".tpl.php");
 
         $manager = new Manager($e);
+
         $manager->renderizar();
 
     }

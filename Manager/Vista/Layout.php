@@ -13,6 +13,7 @@ use Jida\Manager\Vista\Layout\Gestor;
 use Jida\Manager\Vista\Layout\Procesador;
 use Jida\Manager\Vista\Render\Common;
 use Jida\Manager\Vista\Render\Layout as RenderLayout;
+use Jida\Medios\Debug;
 
 class Layout {
 
@@ -145,6 +146,20 @@ class Layout {
 
     }
 
+    private function _errorTpl() {
+
+        $tema = Tema::obtener();
+        $conf = $tema::$configuracion;
+
+        $tpl = $this->_plantilla;
+
+        if (is_object($conf->layout) && property_exists($conf->layout, 'error')) {
+            $tpl = $conf->layout->error . ".tpl.php";
+        }
+
+        return $tpl;
+    }
+
     /**
      * Renderiza una vista
      * @method render
@@ -170,7 +185,7 @@ class Layout {
 
         $this->_get();
 
-        $plantilla = (!$error) ? $this->_plantilla : $this->_plantillaError;
+        $plantilla = (!$error) ? $this->_plantilla : $this->_errorTpl();
         $marco = self::$directorio . DS . $plantilla;
         $contenido = $this->_obtenerContenido($marco);
 

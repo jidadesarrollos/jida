@@ -28,6 +28,11 @@ Trait Archivo {
             Excepcion::procesar($msj, self::$_ce . 11);
         }
 
+        if (is_dir($archivo)) {
+            $msj = "La vista debe ser un archivo y no un directorio $archivo";
+            debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            exit($msj);
+        }
         extract($datos);
 
         ob_start();

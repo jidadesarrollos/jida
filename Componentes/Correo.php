@@ -12,6 +12,7 @@
 namespace Jida\Componentes;
 
 use App\Config as Config;
+use Jida\Medios\Debug;
 use Jida\Medios\Directorios as Directorios;
 use Jida\Manager\Estructura;
 
@@ -21,6 +22,7 @@ require_once $path . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 
 class Correo {
 
+    static private $_ce = 800000;
     /**
      * Arreglo de configuracion para liberia PHPMailer
      *
@@ -68,7 +70,7 @@ class Correo {
      *
      * @var array $_data
      */
-    private $_data  = [];
+    private $_data = [];
     private $_error = "";
 
     /**
@@ -134,8 +136,9 @@ class Correo {
         include_once $plantilla;
         $content = ob_get_clean();
 
-        foreach ($this->_data as $data => $valor)
+        foreach ($this->_data as $data => $valor) {
             $content = str_replace("{{{$data}}}", $valor, $content);
+        }
 
         return $content;
 
@@ -147,6 +150,14 @@ class Correo {
      */
     function plantilla($tpl = "index") {
 
+        $plantilla = $this->pathPlantillas . "/" . $tpl . ".tpl.php";
+
+        if (!Directorios::validar($plantilla)) {
+            $msj = "La plantilla de correo no existe: $plantilla";
+            \Jida\Manager\Excepcion::procesar($msj, self::$_ce . 1);
+        }
+
+        Debug::imprimir([$plantilla], true);
         $this->plantilla = $this->pathPlantillas . "/" . $tpl . ".tpl.php";
 
         return $this;
