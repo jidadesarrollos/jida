@@ -18,7 +18,7 @@ class Estructura {
 
     const NOMBRE_VISTA = 'index';
     /**
-     * @var string $url Url completa solicitada
+     * @var string $url Retorna la url actual completa
      */
     static $url;
     /**
@@ -100,10 +100,34 @@ class Estructura {
 
     }
 
-    static function path() {
+    /**
+     * Retorna la url publica del modulo actual
+     *
+     * @param $place
+     */
+    static function publicUrl() {
 
-        if (!self::$directorio)
-            self::_obtenerDirectorio();
+        $module = Estructura::$rutaModulo;
+        $baseDirectory = Estructura::$directorio;
+        $local = str_replace($baseDirectory, '', $module);
+        $url = Estructura::$urlBase . "/" . $local;
+
+        if (self::$nombreControlador) $url .= '/Vistas/' . strtolower(self::$nombreControlador);
+        $vista = self::$metodo;
+        /**
+         * Todo: el nombre de la carpeta Vistas debe ser provisto por un objeto que permita configurarlo.
+         */
+        $rutaVistas = $module . "/Vistas/" . strtolower(self::$nombreControlador);
+
+        if (is_dir($rutaVistas . "/$vista")) {
+            $url .= "/$vista";
+        }
+
+        return $url;
+
+    }
+
+    static function path() {
 
         return self::$directorio;
 
@@ -238,5 +262,33 @@ class Estructura {
 
         return self::$requestMethod;
 
+    }
+
+    static public function get() {
+        return [
+            '$url'               => self::$url,
+            '$urlHtdocs'         => self::$urlHtdocs,
+            '$urlJida'           => self::$urlJida,
+            '$urlBase'           => self::$urlBase,
+            '$dominio'           => self::$dominio,
+            '$ubicacionJida'     => self::$ubicacionJida,
+            '$directorio'        => self::$directorio,
+            '$urlModulo'         => self::$urlModulo,
+            '$urlRuta'           => self::$urlRuta,
+            '$controlador'       => self::$controlador,
+            '$directorioJida'    => self::$directorioJida,
+            '$idioma'            => self::$idioma,
+            '$metodo'            => self::$metodo,
+            '$modulo'            => self::$modulo,
+            '$namespace'         => self::$namespace,
+            '$nombreControlador' => self::$nombreControlador,
+            '$requestMethod'     => self::$requestMethod,
+            '$ruta'              => self::$ruta,
+            '$rutaAplicacion'    => self::$rutaAplicacion,
+            '$rutaJida'          => self::$rutaJida,
+            '$rutaModulo'        => self::$rutaModulo,
+            '$partes'            => self::$partes,
+            '$parametros'        => self::$parametros,
+        ];
     }
 }

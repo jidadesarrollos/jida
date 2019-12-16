@@ -14,6 +14,8 @@
 
 namespace Jida\Configuracion;
 
+use Jida\Medios\Debug;
+
 class Config {
 
     const NOMBRE_APP = 'Aplicación Jida';
@@ -107,4 +109,13 @@ class Config {
 
     }
 
+    static function modulo($modulo) {
+
+        $config = Config::obtener();
+
+        if (in_array(ucfirst($modulo), $config::$modulos) or in_array($modulo, $config::$modulos)) return true;
+
+        if (isset(self::$modulos[$modulo])) return true;
+
+    }
 }

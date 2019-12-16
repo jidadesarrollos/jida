@@ -52,7 +52,7 @@ class Manager {
         if ($this->_error) return $this->_renderizarError();
 
         $plantilla = $this->_data->plantilla();
-        Debug::imprimir([$plantilla, 30], true);
+//        Debug::imprimir([$plantilla, 30], true);
         $this->_layout->render($this->vista()->obtener($plantilla));
 
     }

@@ -52,7 +52,7 @@ class Vista {
 
         $ruta = Estructura::$rutaModulo;
         $nombre = strtolower(Estructura::$nombreControlador);
-        self::$staticURl = Estructura::$urlBase . "/Aplicacion/Vistas/$nombre/";
+        self::$staticURl = Estructura::publicUrl();
         self::$directorio = "{$ruta}/Vistas/$nombre/";
 
     }
@@ -99,8 +99,16 @@ class Vista {
         $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
         $vista = (!!$controlador->vista()) ? $controlador->vista() : $vista;
 
-        $vista = self::$directorio . $vista;
+        /**
+         * Validamos si es un directorio
+         */
+        if (is_dir(self::$directorio . $vista)) {
+            $viewName = Medios\Directorios::validar(self::$directorio . $vista . "/view.php");
 
+            $vista .= ($viewName) ? '/view' : '/' . $vista;
+        }
+
+        $vista = self::$directorio . $vista;
         $hasModule = Medios\Directorios::validar(self::$directorio . "module.json");
 
         if (strpos($vista, '.php') === false) $vista .= ".php";
@@ -124,9 +132,9 @@ class Vista {
 
         $module = json_decode(file_get_contents(self::$directorio . "module.json"));
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
-        $file = self::$staticURl . $bundle;
+        $file = self::$staticURl . "/$bundle";
 
-        return "\n\t\t<script type=\"module\" src=\"{$file}.js\"></script>";
+        return "\n\t\t1<script type=\"module\" src=\"{$file}.js\"></script>";
 
     }
 

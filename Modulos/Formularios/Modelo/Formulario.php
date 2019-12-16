@@ -108,7 +108,7 @@ class Formulario extends JsonManager {
         if (empty($modulo))
             $modulo = $this->_modulo;
 
-        if ($ambito == 'app') {
+        if ($ambito === 'app') {
 
             $ubicacion = DIR_APP;
             if (!empty($modulo) and !in_array($modulo,

@@ -26,7 +26,6 @@ class Modulo extends Handler {
     function definir() {
 
         $config = Config::obtener();
-        $modulos = $config::$modulos;
         $parametro = $this->url->proximoParametro();
         $modulo = Definicion::objeto($parametro);
 
@@ -34,7 +33,7 @@ class Modulo extends Handler {
 
         $ruta = Estructura::$rutaAplicacion;
 
-        if (Arrays::asociativo($modulos) and !isset($modulos[$parametro]) and !in_array($parametro, $modulos)) {
+        if (!$config::modulo($parametro)) {
 
             $this->url->reingresarParametro($parametro);
             Estructura::$namespace = "App\\Controllers";
