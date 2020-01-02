@@ -102,13 +102,10 @@ class Vista {
         /**
          * Validamos si es un directorio
          */
-        //Medios\Debug::imprimir([self::$directorio, $vista]);
         $directory = self::$directorio . $vista;
         if (is_dir($directory)) {
-            Medios\Debug::imprimir([1]);
             $viewName = Medios\Directorios::validar(self::$directorio . "/view.php");
             $viewName = ($viewName) ? '/view' : '/' . $vista;
-
             $vista = $directory . $viewName;
         }
         else {
@@ -137,7 +134,8 @@ class Vista {
 
     private function _addClientModule() {
 
-        $module = json_decode(file_get_contents(self::$directorio . "module.json"));
+        $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
+        $module = json_decode(file_get_contents(self::$directorio . $vista . "/module.json"));
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
         $file = self::$staticURl . "/$bundle";
 
