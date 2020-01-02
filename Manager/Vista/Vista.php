@@ -125,17 +125,16 @@ class Vista {
         $contenido = $this->_obtenerContenido($vista);
 
         if ($hasModule) {
-            $contenido .= $this->_addClientModule();
+            $contenido .= $this->_addClientModule($directory);
         }
 
         return $contenido;
 
     }
 
-    private function _addClientModule() {
+    private function _addClientModule($directorio) {
 
-        $vista = (!!Estructura::$metodo) ? Estructura::$metodo : Estructura::NOMBRE_VISTA;
-        $module = json_decode(file_get_contents(self::$directorio . $vista . "/module.json"));
+        $module = json_decode(file_get_contents($directorio . "/module.json"));
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
         $file = self::$staticURl . "/$bundle";
 
