@@ -134,7 +134,7 @@ class Vista {
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
         $file = self::$staticURl . "/$bundle";
 
-        return "\n\t\t1<script type=\"module\" src=\"{$file}.js\"></script>";
+        return "\n\t\t<script type=\"module\" src=\"{$file}.js\"></script>";
 
     }
 

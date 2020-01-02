@@ -157,27 +157,11 @@ class Estructura {
             self::_obtenerDirectorio($directorioJida, $directorioApp);
             self::$directorioJida = $directorioJida;
 
-            $url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_URL);
-
-            unset($_GET['url']);
-
-            $url = str_replace([
-                '.php',
-                '.html',
-                '.htm'
-            ], '', $url);
-
-            $url = explode('/', $url);
-
-            self::$partes = array_filter($url, function ($var) {
-                return !!$var;
-            });
+            $url = Router::rewrite();
 
             $pathDominio = str_replace(["index.php", "index"], "", $_SERVER['PHP_SELF']);
 
-            $url = implode("/", $url);
-            if ($url === 'index') $url = '';
-
+            Debug::imprimir([$url], true);
             self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
