@@ -105,13 +105,16 @@ class Vista {
         //Medios\Debug::imprimir([self::$directorio, $vista]);
         $directory = self::$directorio . $vista;
         if (is_dir($directory)) {
-
+            Medios\Debug::imprimir([1]);
             $viewName = Medios\Directorios::validar(self::$directorio . "/view.php");
             $viewName = ($viewName) ? '/view' : '/' . $vista;
 
             $vista = $directory . $viewName;
         }
-        else $directory = self::$directorio;
+        else {
+            $directory = self::$directorio;
+            $vista = $directory . $vista;
+        }
 
         $hasModule = Medios\Directorios::validar($directory . "/module.json");
 
