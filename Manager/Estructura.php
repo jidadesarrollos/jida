@@ -161,7 +161,7 @@ class Estructura {
 
             $pathDominio = str_replace(["index.php", "index"], "", $_SERVER['PHP_SELF']);
 
-            Debug::imprimir([$url], true);
+            self::$partes = Router::$partes;
             self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');

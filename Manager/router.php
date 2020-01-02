@@ -6,6 +6,8 @@ use Jida\Medios\Debug;
 
 Class Router {
 
+    public static $partes = [];
+
     static function rewrite() {
 
         chdir(__DIR__);
@@ -18,7 +20,6 @@ Class Router {
             $url = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
         }
 
-        Debug::imprimir([0, $_SERVERSER]);
         $url = str_replace([
             '.php',
             '.html',
@@ -26,6 +27,9 @@ Class Router {
         ], '', $url);
 
         $url = explode('/', $url);
+        self::$partes = array_filter($url, function ($var) {
+            return !!$var;
+        });
         $url = implode("/", $url);
         if ($url === 'index') $url = '';
 

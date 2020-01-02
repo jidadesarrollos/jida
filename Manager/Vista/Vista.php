@@ -102,14 +102,18 @@ class Vista {
         /**
          * Validamos si es un directorio
          */
-        if (is_dir(self::$directorio . $vista)) {
-            $viewName = Medios\Directorios::validar(self::$directorio . $vista . "/view.php");
+        //Medios\Debug::imprimir([self::$directorio, $vista]);
+        $directory = self::$directorio . $vista;
+        if (is_dir($directory)) {
 
-            $vista .= ($viewName) ? '/view' : '/' . $vista;
+            $viewName = Medios\Directorios::validar(self::$directorio . "/view.php");
+            $viewName = ($viewName) ? '/view' : '/' . $vista;
+
+            $vista = $directory . $viewName;
         }
+        else $directory = self::$directorio;
 
-        $vista = self::$directorio . $vista;
-        $hasModule = Medios\Directorios::validar(self::$directorio . "module.json");
+        $hasModule = Medios\Directorios::validar($directory . "/module.json");
 
         if (strpos($vista, '.php') === false) $vista .= ".php";
 
