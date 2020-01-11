@@ -82,6 +82,7 @@ class Manager {
 
         $this->_finishTime = microtime(true);
 
+
     }
 
     private function _getAllHeaders() {
