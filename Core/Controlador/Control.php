@@ -52,9 +52,9 @@ class Control {
      * Define el layout a utilizar
      * @method layout
      *
-     * @since 1.4
      * @param string $layout
      * @return Layout
+     * @since 1.4
      * @see Layout;
      */
     public function layout($layout = null) {
@@ -118,6 +118,10 @@ class Control {
 
     protected function _obtPost($url) {
         return Post::obtPostFromSlug($url);
+    }
+
+    protected function addCss($css, $url = '') {
+        return $this->_layout->addCSS($css, $url);
     }
 
 }

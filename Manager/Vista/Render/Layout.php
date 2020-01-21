@@ -62,4 +62,24 @@ Trait Layout {
         return $retorno;
 
     }
+
+    /**
+     * Agrega un css a la hoja de estilo global
+     * @method addCss
+     *
+     * @param mixed $css Arreglo o string con ubicación del css
+     * @param boolean $ambito TRUE si se desea usar la constante URL_CSS como ubicacion
+     * @param string $ambito Usado para agregar css solo para prod o dev
+     */
+    function addCSS($css, $url = '') {
+
+        $url = (empty($url)) ? $this->_urlCssBase : $url;
+
+        if (is_string($css)) $css = [$css];
+
+        foreach ($css as $i => $file) {
+            $this->_css[] = $url . $file;
+        }
+
+    }
 }
