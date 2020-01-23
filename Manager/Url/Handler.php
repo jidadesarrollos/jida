@@ -13,6 +13,7 @@ use Jida\Medios\Debug;
 
 abstract class Handler {
 
+    protected static $_ce = '80000';
     /**
      * @var string $path Nombre del path a buscar en la url.
      */

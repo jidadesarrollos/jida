@@ -9,6 +9,7 @@
 namespace Jida\Manager\Url\Handlers;
 
 use Jida\Manager\Estructura;
+use Jida\Manager\Excepcion;
 use Jida\Manager\Url\Definicion;
 use Jida\Manager\Url\Handler;
 use Jida\Medios\Debug;
@@ -46,7 +47,8 @@ class Controlador extends Handler {
         $controlador = $this->controlador();
 
         if (!class_exists("$namespace\\$controlador")) {
-            Debug::imprimir(["No existe el objeto", "$namespace\\$controlador"]);
+            $msj = "No existe el objeto $namespace\\$controlador";
+            Excepcion::procesar($msj, self::$_ce . 1);
         }
 
         Estructura::$controlador = "{$namespace}\\{$controlador}";
