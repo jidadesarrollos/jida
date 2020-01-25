@@ -148,6 +148,7 @@ Trait Procesador {
         foreach ($etiquetas as $etiqueta => $contenido) {
 
             $configuracion = [];
+
             if (is_object($contenido)) {
 
                 if (!property_exists($contenido, 'href')) {
@@ -156,6 +157,7 @@ Trait Procesador {
                 }
 
                 $configuracion = (array)$contenido;
+
             }
             else {
                 $configuracion = ['href' => $contenido, 'rel' => $etiqueta];
@@ -164,11 +166,12 @@ Trait Procesador {
             $urlTema = "//" . self::$_urlTema;
 
             $href = str_replace('{tema}', $urlTema, $configuracion['href']);
-            $href = str_replace('{base}', Estructura::$urlBase, $href);
-            $html .= "\n\t\t<link href=\"{$href}\"";
-            array_walk($configuracion, function ($item, $value, $html) {
+            $configuracion['href'] = str_replace('{base}', Estructura::$urlBase, $href);
+            $html .= "\n\t\t<link ";
+            foreach ($configuracion as $item => $value) {
                 $html .= " $item=\"$value\" ";
-            }, $html);
+            }
+
             $html .= "/>";
 
         }
