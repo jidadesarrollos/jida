@@ -172,7 +172,7 @@ class Mysql extends ConexionBD {
 
         if (!$this->result) {
 
-            throw new Exception("No se pudo ejecutar el query <br/> <strong>$query</strong><br/> (" . $this->mysqli->errno . ") " . $this->mysqli->error,
+            throw new Exception("No se pudo ejecutar el query $query (" . $this->mysqli->errno . ") " . $this->mysqli->error,
                 200);
         }
         $this->totalCampos = $this->mysqli->field_count;

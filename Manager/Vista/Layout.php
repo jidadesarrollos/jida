@@ -40,6 +40,7 @@ class Layout {
      * @deprecated
      */
     public $data;
+    private $config;
     /**
      * @var object $_data Objeto Data Vista
      */
@@ -73,7 +74,7 @@ class Layout {
         $this->urlBase = Estructura::$urlBase;
         $this->urlModulo = Estructura::$urlModulo;
         $this->url = Estructura::$url;
-
+        $this->config = Config::obtener();
         $this->textos = Textos::obtener();
 
     }

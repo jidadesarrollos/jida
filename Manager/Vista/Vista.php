@@ -113,6 +113,7 @@ class Vista {
             $vista = $directory . $vista;
         }
 
+
         $hasModule = Medios\Directorios::validar($directory . "/module.json");
 
         if (strpos($vista, '.php') === false) $vista .= ".php";
