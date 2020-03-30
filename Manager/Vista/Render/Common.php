@@ -90,12 +90,16 @@ Trait Common {
     public function cambiarIdioma($idioma) {
 
         $config = Config::obtener();
+        $path = parse_url(Estructura::$url, PHP_URL_PATH);
+        $arrPath = array_filter(explode('/', $path));
+        $arrIdiomas = array_keys($config->idiomas);
+        $path = implode('/', array_diff($arrPath, $arrIdiomas));
 
         if (array_key_exists($idioma, $config->idiomas) and $idioma !== $config::IDIOMA_DEFAULT) {
-            return Estructura::$urlBase . "/" . $idioma;
+            return implode("/", [Estructura::$urlBase, $idioma, $path]);
         }
 
-        return Estructura::$urlBase;
+        return Estructura::$urlBase . "/" . $path;
 
     }
 
