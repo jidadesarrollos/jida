@@ -14,7 +14,7 @@ class Usuario {
      * @var Permisos $permisos
      */
     public $permisos;
-    private $_modelo;
+    public $modelo;
 
     function __construct($id = null) {
 

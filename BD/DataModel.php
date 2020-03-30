@@ -2066,10 +2066,12 @@ class DataModel {
     }
 
     static function sp($sp, $parametros = []) {
-        if (!self::$instancia instanceof self) {
-            self::$instancia = new self;
-        }
 
+        if (!self::$instancia instanceof self) {
+
+        }
+        self::$instancia = new self;
+        Debug::imprimir([self::$instancia->query]);
         if (!!$parametros) {
             if (is_string($parametros)) {
                 $parametros = (array)$parametros;
@@ -2081,6 +2083,7 @@ class DataModel {
             self::$instancia->query = "CALL " . $sp . ";";
         }
 
+        Debug::imprimir([self::$instancia->query]);
         $result = self::$instancia->bd->ejecutarQuery(self::$instancia->query);
         return is_object($result) ? self::$instancia->bd->obtenerDataCompleta($result) : $result;
     }

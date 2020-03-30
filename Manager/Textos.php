@@ -28,10 +28,8 @@ class Textos {
         $this->idioma = Estructura::$idioma;
         $config = Config::obtener();
 
-        if ($config::MULTIIDIOMA) {
-            $this->_inicializar();
-            $this->_obtenerContenido();
-        }
+        $this->_inicializar();
+        $this->_obtenerContenido();
 
     }
 
