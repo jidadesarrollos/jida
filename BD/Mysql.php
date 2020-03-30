@@ -169,7 +169,7 @@ class Mysql extends ConexionBD {
         else {
             $this->result = $this->mysqli->query($this->query);
         }
-        Medios\Debug::imprimir([$this->query, $this->result]);
+
         if (!$this->result) {
 
             throw new Exception("No se pudo ejecutar el query $query (" . $this->mysqli->errno . ") " . $this->mysqli->error,

@@ -78,7 +78,6 @@ class Excepcion {
             $impresion['trace'][$key] = $item;
         }
 
-        Debug::imprimir([$impresion], true);
         exit(json_encode(htmlspecialchars($impresion), JSON_PRETTY_PRINT));
 
     }
