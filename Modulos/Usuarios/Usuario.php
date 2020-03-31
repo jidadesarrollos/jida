@@ -28,6 +28,15 @@ class Usuario {
         $this->permisos = new Permisos($this->_modelo);
     }
 
+    public static function getRandomString($num = 5) {
+
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $key = substr(str_shuffle($chars), 0, $num);
+
+        return $key;
+
+    }
+
     static function iniciarSesion($usuario, $clave) {
 
         $instancia = self::instancia();

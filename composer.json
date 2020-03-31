@@ -14,7 +14,7 @@
     "bin/jida"
   ],
   "require": {
-    "phpmailer/phpmailer": "^6.1",
+    "phpmailer/phpmailer": "5.2.27",
     "php": ">=7.0"
   },
   "require-dev": {
