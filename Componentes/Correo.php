@@ -152,8 +152,9 @@ class Correo {
 
         $plantilla = $this->pathPlantillas . "/" . $tpl . ".tpl.php";
 
-        if (!Directorios::validar($plantilla)) {
-            $msj = "La plantilla de correo no existe: $plantilla";
+        if (!Directorios::validar(Estructura::$rutaAplicacion . DS . $plantilla)) {
+            $msj = "La plantilla de correo no existe: " . Estructura::$rutaAplicacion . DS . $plantilla;
+
             \Jida\Manager\Excepcion::procesar($msj, self::$_ce . 1);
         }
 
