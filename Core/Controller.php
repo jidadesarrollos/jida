@@ -923,8 +923,7 @@ class Controller {
      */
     protected function data ($data, $valor = "") {
 
-        // Medios\Debug::imprimir('Controleeer');
-        // $this->establecerAtributos($data);
+
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 $this->dv->{

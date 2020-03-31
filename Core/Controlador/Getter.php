@@ -14,7 +14,6 @@ Trait Getter {
      */
     function __get($propiedad) {
 
-        //Debug::imprimir([$this]);
         if (property_exists($this, 'Layout') and property_exists($this->Layout, $propiedad)) {
             return $this->Layout->{$propiedad};
         }

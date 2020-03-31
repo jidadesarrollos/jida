@@ -267,8 +267,6 @@ class Formulario extends JsonManager {
         }
         $json['campos'] = $campos;
 
-        #Medios\Debug::imprimir($json, true);
-
         return json_encode($json, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);
     }
 

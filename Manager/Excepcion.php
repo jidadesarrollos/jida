@@ -78,7 +78,7 @@ class Excepcion {
             $impresion['trace'][$key] = $item;
         }
 
-        exit(json_encode(htmlspecialchars($impresion), JSON_PRETTY_PRINT));
+        exit(json_encode($impresion, JSON_PRETTY_PRINT));
 
     }
 

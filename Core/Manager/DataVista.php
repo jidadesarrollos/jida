@@ -198,7 +198,6 @@ class DataVista {
             }
         }
 
-        // Medios\Debug::imprimir($this->js,$js,true);
     }
 
     /**

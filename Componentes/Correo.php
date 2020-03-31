@@ -157,7 +157,6 @@ class Correo {
             \Jida\Manager\Excepcion::procesar($msj, self::$_ce . 1);
         }
 
-        Debug::imprimir([$plantilla], true);
         $this->plantilla = $this->pathPlantillas . "/" . $tpl . ".tpl.php";
 
         return $this;

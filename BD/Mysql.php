@@ -299,8 +299,7 @@ class Mysql extends ConexionBD {
 
         if ($this->_conexion and $this->mysqli->ping()) {
             $sesion = Medios\Sesion::obt('iddb');
-            #			Medios\Sesion::editar("iddb", $sesion - 1);
-            #			Medios\Debug::imprimir("cerramos ", $sesion - 1);
+
             $this->mysqli->close();
             $this->_conexion = false;
         }
