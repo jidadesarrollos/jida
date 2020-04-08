@@ -23,7 +23,7 @@ Trait Url {
     protected function redireccionar($url) {
 
         $config = Config::obtener();
-        $urlBase = Estructura::$idioma !== $config::IDIOMA_DEFAULT ? Estructura::$urlBase . "/" . Estructura::$idioma;
+        $urlBase = Estructura::$idioma !== $config::IDIOMA_DEFAULT ? Estructura::$urlBase . "/" . Estructura::$idioma : Estructura::$urlBase;
         $protocolo = parse_url($url, PHP_URL_SCHEME);
         $url = $protocolo ? $url : '//' . $this->_limpiarUrl($urlBase . $url);
 
