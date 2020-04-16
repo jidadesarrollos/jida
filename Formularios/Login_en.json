@@ -1,0 +1,33 @@
+{
+  "nombre": "Inicio de Sesion",
+  "query": "false",
+  "clave_primaria": "false",
+  "identificador": "Login",
+  "estructura": "1x2",
+  "campos": [
+    {
+      "name": "usuario",
+      "type": "text",
+      "id": "usuario",
+      "placeholder": "Usuario",
+      "label": "User",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      }
+    },
+    {
+      "name": "clave",
+      "label": "Password",
+      "id": "clave",
+      "type": "password",
+      "placeholder": "Password",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      }
+    }
+  ]
+}

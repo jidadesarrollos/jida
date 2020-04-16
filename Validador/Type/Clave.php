@@ -24,7 +24,7 @@ class Clave {
 
     protected $hash_clave = '';
 
-    public function __construct(string $password, $algo = PASSWORD_BCRYPT, array $options = []) {
+    public function __construct($password, $algo = PASSWORD_BCRYPT, $options = []) {
 
         $this->pass = $password;
         $this->Algorim = $algo;
