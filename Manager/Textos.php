@@ -87,7 +87,7 @@ class Textos {
 
     }
 
-    public function texto($key, $secondLevel) {
+    public function texto($key, $secondLevel = "") {
 
         if (array_key_exists($key, $this->arreglo)) {
 
