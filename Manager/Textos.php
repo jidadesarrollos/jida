@@ -3,6 +3,7 @@
 namespace Jida\Manager;
 
 use Jida\Configuracion\Config;
+use Jida\Manager\Vista\Layout;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
@@ -23,19 +24,20 @@ class Textos {
 
     private static $instancia;
 
-    public function __construct() {
+    public function __construct($entry) {
 
         $this->idioma = Estructura::$idioma;
         $config = Config::obtener();
 
-        $this->_inicializar();
+        $this->_inicializar($entry);
         $this->_obtenerContenido();
 
     }
 
-    private function _inicializar() {
+    private function _inicializar($entry) {
 
-        $archivo = Estructura::$rutaModulo . DS . $this->_dir . DS . $this->_archivo;
+        $path = empty($entry) ? Estructura::$rutaModulo : $entry;
+        $archivo = $path . DS . $this->_dir . DS . $this->_archivo;
 
         if (Directorios::validar($archivo)) {
 
@@ -85,13 +87,19 @@ class Textos {
 
     }
 
-    public function texto($key) {
+    public function texto($key, $secondLevel) {
+
         if (array_key_exists($key, $this->arreglo)) {
-            return $this->arreglo[$key];
+
+            if (is_string($this->arreglo[$key])) return $this->arreglo[$key];
+
+            if (!is_null($secondLevel) and array_key_exists($secondLevel, $this->arreglo[$key])) {
+                return $this->arreglo[$key][$secondLevel];
+            }
+
+            return 'Indefinido';
+
         }
-
-        return 'Indefinido';
-
     }
 
     public static function validar() {
@@ -106,10 +114,10 @@ class Textos {
 
     }
 
-    public static function obtener() {
+    public static function obtener($entry = "") {
 
         if (!self::$instancia) {
-            self::$instancia = new Textos();
+            self::$instancia = new Textos($entry);
         }
 
         return self::$instancia;

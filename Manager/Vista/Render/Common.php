@@ -75,9 +75,9 @@ Trait Common {
      * @param string $cadena texto
      * @since 0.7.2
      */
-    public function texto($cadena) {
+    public function texto($cadena, $secondLevel = null) {
 
-        return $this->textos->texto($cadena);
+        return $this->textos->texto($cadena, $secondLevel);
 
     }
 

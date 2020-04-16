@@ -9,7 +9,7 @@
       "name": "usuario",
       "type": "text",
       "id": "usuario",
-      "placeholder": "Usuario",
+      "placeholder": "User",
       "label": "User",
       "eventos": {
         "obligatorio": {

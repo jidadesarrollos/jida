@@ -75,7 +75,8 @@ class Layout {
         $this->urlModulo = Estructura::$urlModulo;
         $this->url = Estructura::$url;
         $this->config = Config::obtener();
-        $this->textos = Textos::obtener();
+
+        $this->textos = Textos::obtener(self::$directorio);
 
     }
 
