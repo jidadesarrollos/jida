@@ -39,7 +39,7 @@ class Textos {
 
         $path = empty($entry) ? Estructura::$rutaModulo : $entry;
         $archivo = $path . DS . $this->_dir . DS . $this->_archivo;
-        Debug::imprimir([$entry, $archivo]);
+
         if (Directorios::validar($archivo)) {
 
             $contenido = file_get_contents($archivo);
@@ -89,7 +89,6 @@ class Textos {
     }
 
     public function texto($key, $secondLevel = "") {
-
 
         if (array_key_exists($key, $this->arreglo)) {
 
