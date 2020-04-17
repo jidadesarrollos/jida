@@ -117,7 +117,7 @@ class Textos {
 
     public static function obtener($entry = "") {
 
-        if ($entry && self::$layoutInstancia) {
+        if ($entry && !self::$layoutInstancia) {
             self::$layoutInstancia = new Textos($entry);
             return self::$layoutInstancia;
         }
