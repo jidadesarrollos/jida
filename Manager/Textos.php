@@ -23,8 +23,9 @@ class Textos {
     public $idioma;
 
     private static $instancia;
+    private static $layoutInstancia;
 
-    public function __construct($entry) {
+    public function __construct($entry = null) {
 
         $this->idioma = Estructura::$idioma;
         $config = Config::obtener();
@@ -116,8 +117,12 @@ class Textos {
 
     public static function obtener($entry = "") {
 
+        if ($entry && self::$layoutInstancia) {
+            self::$layoutInstancia = new Textos($entry);
+            return self::$layoutInstancia;
+        }
         if (!self::$instancia) {
-            self::$instancia = new Textos($entry);
+            self::$instancia = new Textos();
         }
 
         return self::$instancia;
