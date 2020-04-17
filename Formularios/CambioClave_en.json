@@ -1,0 +1,58 @@
+{
+  "nombre": "Password change",
+  "identificador": "CambioClave",
+  "clave_primaria": "id_campo",
+  "campos": [
+    {
+      "label": "",
+      "name": "clave_actual",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is requiered"
+        }
+      },
+      "opciones": "",
+      "orden": "1",
+      "placeholder": "Current Password",
+      "class": "input-control",
+      "data": null,
+      "visibilidad": "1",
+      "id": "clave_actual",
+      "type": "password"
+    },
+    {
+      "label": "",
+      "name": "nueva_clave",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "opciones": "",
+      "orden": "2",
+      "placeholder": "Enter New Password",
+      "class": "input-control",
+      "data_atributo": "",
+      "visibilidad": "1",
+      "id": "nueva_clave",
+      "type": "password"
+    },
+    {
+      "label": "",
+      "name": "confirmacion_clave",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is requiered"
+        }
+      },
+      "opciones": "",
+      "orden": "3",
+      "placeholder": "Confirm New Password",
+      "class": "input-control",
+      "data": "",
+      "visibilidad": "1",
+      "id": "confirmacion_clave",
+      "type": "password"
+    }
+  ]
+}
