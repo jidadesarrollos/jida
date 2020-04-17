@@ -23,8 +23,9 @@ class Textos {
     public $idioma;
 
     private static $instancia;
+    private static $layoutInstancia;
 
-    public function __construct($entry) {
+    public function __construct($entry = null) {
 
         $this->idioma = Estructura::$idioma;
         $config = Config::obtener();
@@ -38,7 +39,7 @@ class Textos {
 
         $path = empty($entry) ? Estructura::$rutaModulo : $entry;
         $archivo = $path . DS . $this->_dir . DS . $this->_archivo;
-
+        Debug::imprimir([$entry, $archivo]);
         if (Directorios::validar($archivo)) {
 
             $contenido = file_get_contents($archivo);
@@ -89,6 +90,7 @@ class Textos {
 
     public function texto($key, $secondLevel = "") {
 
+
         if (array_key_exists($key, $this->arreglo)) {
 
             if (is_string($this->arreglo[$key])) return $this->arreglo[$key];
@@ -116,8 +118,12 @@ class Textos {
 
     public static function obtener($entry = "") {
 
+        if ($entry && self::$layoutInstancia) {
+            self::$layoutInstancia = new Textos($entry);
+            return self::$layoutInstancia;
+        }
         if (!self::$instancia) {
-            self::$instancia = new Textos($entry);
+            self::$instancia = new Textos();
         }
 
         return self::$instancia;
