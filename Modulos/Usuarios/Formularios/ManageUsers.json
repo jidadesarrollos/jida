@@ -1,0 +1,70 @@
+{
+  "nombre": "Usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_estatus from s_usuarios",
+  "identificador": "Usuarios",
+  "estructura": "",
+  "clave_primaria": "id_usuario",
+  "campos": {
+    "id_usuario": {
+      "label": "id_usuario",
+      "name": "id_usuario",
+      "orden": 1,
+      "id": "id_usuario",
+      "type": "hidden"
+    },
+    "nombre_usuario": {
+      "label": "Username",
+      "name": "usuario",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "orden": 2,
+      "id": "nombre_usuario",
+      "type": "text"
+    },
+    "nombres": {
+      "label": "Name",
+      "name": "nombres",
+      "orden": 3,
+      "id": "nombres",
+      "type": "text"
+    },
+    "apellidos": {
+      "label": "Lastname",
+      "name": "apellidos",
+      "orden": 4,
+      "id": "apellidos",
+      "type": "text"
+    },
+    "correo": {
+      "label": "Email",
+      "name": "correo",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        },
+        "email": {
+          "mensaje": "Enter a valid email"
+        }
+      },
+      "orden": 5,
+      "id": "correo",
+      "type": "text"
+    },
+    "estatus": {
+      "label": "Status",
+      "name": "id_estatus",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "opciones": "Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
+      "orden": 7,
+      "id": "id_estatus",
+      "type": "radio"
+    }
+  }
+}
