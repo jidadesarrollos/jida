@@ -1,6 +1,6 @@
 {
   "nombre": "Usuarios",
-  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_estatus from s_usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, birthday, telefono, id_estatus from s_usuarios",
   "identificador": "Usuarios",
   "estructura": "",
   "clave_primaria": "id_usuario",
@@ -8,13 +8,7 @@
     "id_usuario": {
       "label": "id_usuario",
       "name": "id_usuario",
-      "eventos": null,
-      "opciones": null,
       "orden": 1,
-      "placeholder": null,
-      "class": null,
-      "data": null,
-      "visibilidad": null,
       "id": "id_usuario",
       "type": "hidden"
     },
@@ -26,38 +20,21 @@
           "mensaje": "El campo Nombre de Usuario es obligatorio"
         }
       },
-      "opciones": null,
       "orden": 2,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
       "id": "nombre_usuario",
       "type": "text"
     },
     "nombres": {
       "label": "Nombres",
       "name": "nombres",
-      "eventos": null,
-      "opciones": null,
       "orden": 3,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
       "id": "nombres",
       "type": "text"
     },
     "apellidos": {
       "label": "Apellidos",
       "name": "apellidos",
-      "eventos": null,
-      "opciones": null,
       "orden": 4,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
       "id": "apellidos",
       "type": "text"
     },
@@ -72,14 +49,33 @@
           "mensaje": "Debe ingresar un correo v&aacute;lido"
         }
       },
-      "opciones": null,
       "orden": 5,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
       "id": "correo",
       "type": "text"
+    },
+    "birthday": {
+      "label": "Fecha de nacimiento",
+      "name": "birthday",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "orden": 6,
+      "id": "birthday",
+      "type": "date"
+    },
+    "telefono": {
+      "label": "Telefono",
+      "name": "telefono",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "orden": 7,
+      "id": "telefono",
+      "type": "tel"
     },
     "estatus": {
       "label": "Estatus",
@@ -90,11 +86,7 @@
         }
       },
       "opciones": "Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
-      "orden": 7,
-      "placeholder": null,
-      "class": null,
-      "data_atributo": null,
-      "visibilidad": null,
+      "orden": 8,
       "id": "id_estatus",
       "type": "radio"
     }

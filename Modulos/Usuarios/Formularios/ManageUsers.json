@@ -1,6 +1,6 @@
 {
   "nombre": "Usuarios",
-  "query": "select id_usuario, usuario, nombres, apellidos, correo, id_estatus from s_usuarios",
+  "query": "select id_usuario, usuario, nombres, apellidos, correo, birthday, telefono, id_estatus from s_usuarios",
   "identificador": "Usuarios",
   "estructura": "",
   "clave_primaria": "id_usuario",
@@ -53,6 +53,30 @@
       "id": "correo",
       "type": "text"
     },
+    "birthday": {
+      "label": "Birthday",
+      "name": "birthday",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "orden": 6,
+      "id": "birthday",
+      "type": "date"
+    },
+    "telefono": {
+      "label": "Phone number",
+      "name": "telefono",
+      "eventos": {
+        "obligatorio": {
+          "mensaje": "This field is required"
+        }
+      },
+      "orden": 7,
+      "id": "telefono",
+      "type": "tel"
+    },
     "estatus": {
       "label": "Status",
       "name": "id_estatus",
@@ -62,7 +86,7 @@
         }
       },
       "opciones": "Select id_estatus,estatus from s_estatus where id_estatus!=3 and id_estatus!=4 order by id_estatus",
-      "orden": 7,
+      "orden": 8,
       "id": "id_estatus",
       "type": "radio"
     }
