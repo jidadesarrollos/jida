@@ -25,6 +25,9 @@ class Usuario extends Modelo {
     public $codigo_recuperacion;
     public $img_perfil;
 
+    public $birthday;
+    public $telefono;
+
     protected $perfiles = [];
 
     protected $tablaBD = "s_usuarios";
