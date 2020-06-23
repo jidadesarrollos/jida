@@ -113,7 +113,7 @@ class ProcesadorCarga {
 
         foreach ($this->_archivos as $indice => $archivo) {
 
-            $nombreArchivo = $this->_generadorNombres($archivo->extension, $prefijo);
+            $nombreArchivo = $this->_generadorNombres(strtolower($archivo->extension), $prefijo);
             $nuevoArchivo = "$directorio/$nombreArchivo";
 
             $archivo->mover($nuevoArchivo);
