@@ -27,8 +27,8 @@ class Textos {
 
     public function __construct($entry = null) {
 
-        $this->idioma = Estructura::$idioma;
         $config = Config::obtener();
+        $this->idioma = !empty(Estructura::$idioma) ? Estructura::$idioma : $config::IDIOMA_DEFAULT;
 
         $this->_inicializar($entry);
         $this->_obtenerContenido();
