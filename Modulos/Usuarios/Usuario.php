@@ -76,8 +76,7 @@ class Usuario {
             return self::$_instancia;
         }
 
-        if (Sesion::obt('_sesionValida')
-            and Sesion::obt('_usuario') instanceof Usuario) {
+        if (Sesion::obt('_sesionValida') and Sesion::obt('_usuario') instanceof Usuario) {
             $instancia = Sesion::obt('_usuario');
         }
         else {

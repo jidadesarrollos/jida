@@ -18,6 +18,7 @@ use Jida\Modulos\Usuarios\Usuario;
 class Sesion {
 
     use Functions, Validacion;
+
     /**
      * @var Usuario $usuario
      */
@@ -70,10 +71,10 @@ class Sesion {
     }
 
     /**
+     * @return boolean true
      * @internal Verifica si el usuario actual tiene sesión iniciada
      * en el sistema
      *
-     * @return boolean true
      * @since    0.1
      *
      */
@@ -94,6 +95,10 @@ class Sesion {
 
         return false;
 
+    }
+
+    static function user() {
+        return Usuario::instancia();
     }
 
 }
