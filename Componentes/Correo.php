@@ -93,7 +93,7 @@ class Correo {
             throw new \Exception("No se ha realizado la configuraci&oacute;n para el envio de correos", 1);
         }
 
-        $this->phpMailer = new \PHPMailer();
+        $this->phpMailer = new PHPMailer();
         $this->phpMailer->CharSet = 'UTF-8';
 
         if (property_exists($this->configMail, 'general'))
