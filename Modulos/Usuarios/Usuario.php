@@ -97,7 +97,7 @@ class Usuario {
     }
 
     public function obtener($propiedad) {
-        return $this->get($propiedad)
+        return $this->get($propiedad);
     }
 
     public function cambiarClave($claveVieja, $claveNueva) {
