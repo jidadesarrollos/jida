@@ -88,14 +88,16 @@ class Usuario {
 
     }
 
-    public function obtener($propiedad) {
-
+    public function get($property) {
         if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
             return $this->_modelo->{$propiedad};
         }
 
-        return false;
+        return null;
+    }
 
+    public function obtener($propiedad) {
+        return $this->get($propiedad)
     }
 
     public function cambiarClave($claveVieja, $claveNueva) {
