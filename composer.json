@@ -7,14 +7,14 @@
   "authors": [
     {
       "name": "jrodriguez",
-      "email": "jrodriguez@jidadesarrollos.com"
+      "email": "jrodriguegz@jidadesarrollos.com"
     }
   ],
   "bin": [
     "bin/jida"
   ],
   "require": {
-    "phpmailer/phpmailer": "6.0.*",
+    "phpmailer/phpmailer": "^6.2",
     "php": ">=7.0"
   },
   "require-dev": {
