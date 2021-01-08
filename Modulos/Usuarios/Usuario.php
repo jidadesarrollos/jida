@@ -89,8 +89,8 @@ class Usuario {
     }
 
     public function get($property) {
-        if (is_object($this->_modelo) and property_exists($this->_modelo, $propiedad)) {
-            return $this->_modelo->{$propiedad};
+        if (is_object($this->_modelo) and property_exists($this->_modelo, $property)) {
+            return $this->_modelo->{$property};
         }
 
         return null;
