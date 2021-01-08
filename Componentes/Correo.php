@@ -18,7 +18,8 @@ use Jida\Manager\Estructura;
 
 $path = Estructura::path();
 
-require_once $path . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Correo {
 
