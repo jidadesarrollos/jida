@@ -62,6 +62,7 @@ class Estructura {
      * @var $urlHtdocs url publica para archivos clientes
      */
     static $urlHtdocs;
+    static $publicURL;
     /**
      * @var string $urlModulo URL publica del modulo en ejecución.
      */
