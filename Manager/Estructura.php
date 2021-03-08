@@ -6,7 +6,6 @@
 
 namespace Jida\Manager;
 
-use Jida\Configuracion\Config;
 use Jida\Manager\Rutas\Arranque;
 use Jida\Medios\Debug;
 
@@ -163,13 +162,10 @@ class Estructura {
             $pathDominio = str_replace(["index.php", "index"], "", $_SERVER['PHP_SELF']);
 
             self::$partes = Router::$partes;
-
-            $config = Config::obtener();
-
-            self::$urlBase = !empty($config::URL_BASE)
+            self::$publicURL = !empty($config::URL_BASE)
                 ? $config::URL_BASE
                 : "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
-
+            self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
             self::$urlHtdocs = self::$urlBase . '/htdocs/';
