@@ -165,10 +165,12 @@ class Estructura {
             self::$partes = Router::$partes;
 
             $config = Config::obtener();
-            self::$urlBase = (!empty($config::URL_BASE))
-                ? URL_BASE
-                : //" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
-                self::$dominio = self::$urlBase;
+
+            self::$urlBase = !empty($config::URL_BASE)
+                ? $config::URL_BASE
+                : "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
+
+            self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
             self::$urlHtdocs = self::$urlBase . '/htdocs/';
             self::$urlJida = self::$urlBase . "/" . self::$ubicacionJida;
