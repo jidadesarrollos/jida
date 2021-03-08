@@ -62,7 +62,6 @@ class Estructura {
      * @var $urlHtdocs url publica para archivos clientes
      */
     static $urlHtdocs;
-    static $publicURL;
     /**
      * @var string $urlModulo URL publica del modulo en ejecución.
      */
@@ -163,9 +162,6 @@ class Estructura {
             $pathDominio = str_replace(["index.php", "index"], "", $_SERVER['PHP_SELF']);
 
             self::$partes = Router::$partes;
-            self::$publicURL = !empty($config::URL_BASE)
-                ? $config::URL_BASE
-                : "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$urlBase = "//" . rtrim($_SERVER['SERVER_NAME'] . $pathDominio, "/");
             self::$dominio = self::$urlBase;
             self::$urlRuta = rtrim($pathDominio, '/');
