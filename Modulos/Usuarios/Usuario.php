@@ -45,7 +45,9 @@ class Usuario {
         $datos = $instancia
             ->_modelo
             ->consulta()
-            ->filtro(['usuario' => $usuario, 'id_estatus' => 1])
+            ->filtro(
+                ['usuario' => $usuario, 'id_estatus' => 1],
+                ['correo' => $usuario, 'id_estatus' => 1])
             ->fila();
 
         if (!$datos) {
