@@ -30,6 +30,7 @@ class Config {
     const EMAIL_SOPORTE = 'jcontreras@jidadesarrollos.com';
     const HASH_CLAVE = "md5"; // opciones: password_hash, md5
     const TIPO = 'API';
+    const VERSION = '0.1';
 
     /**
      * Define si la aplicacion es multiidioma
