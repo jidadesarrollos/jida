@@ -27,6 +27,7 @@ class Usuario extends Modelo {
 
     public $birthday;
     public $telefono;
+    public $permission;
 
     protected $perfiles = [];
 
@@ -37,27 +38,27 @@ class Usuario extends Modelo {
 
     static private $instancia = null;
 
-    static function listaUsuarios($consulta = []){
+    static function listaUsuarios($consulta = []) {
 
         if (self::$instancia == null) {
             self::$instancia = new Usuario();
         }
 
-        if(empty($consulta)){
+        if (empty($consulta)) {
             $consulta = ['id_usuario', 'usuario', 'nombres', 'apellidos', 'correo', 'id_usuario as perfiles', 'id_estatus'];
-        } else {
+        }
+        else {
             $consulta[] = 'id_usuario as perfiles';
         }
 
         $data = self::$instancia->consulta($consulta)->obt();
         $perfil = new UsuarioPerfil();
 
-        foreach ($data as &$fila){
+        foreach ($data as &$fila) {
 
             $fila['perfiles'] = $perfil->obtPerfiles($fila['id_usuario']);
 
         }
-
 
         return $data;
     }
