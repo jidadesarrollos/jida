@@ -10,7 +10,7 @@ use Jida\Manager\Vista\Tema;
 use Jida\Medios\Debug;
 use Jida\Medios\Directorios;
 
-Trait Layout {
+trait Layout {
 
     function incluir($plantilla) {
 
@@ -81,5 +81,10 @@ Trait Layout {
             $this->_css[] = $url . $file;
         }
 
+    }
+
+    function openGraph($arr) {
+        Debug::imprimir([$arr], true);
+        $this->_data(['og' => $arr]);
     }
 }

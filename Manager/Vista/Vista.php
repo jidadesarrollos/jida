@@ -113,7 +113,6 @@ class Vista {
             $vista = $directory . $vista;
         }
 
-
         $hasModule = Medios\Directorios::validar($directory . "/module.json");
 
         if (strpos($vista, '.php') === false) $vista .= ".php";
@@ -138,8 +137,9 @@ class Vista {
         $module = json_decode(file_get_contents($directorio . "/module.json"));
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
         $file = self::$staticURl . "/$bundle";
-
-        return "\n\t\t<script type=\"module\" src=\"{$file}.js\"></script>";
+        $config = Config::obtener();
+        $version = $config::VERSION;
+        return "\n\t\t<script type=\"module\" src=\"{$file}.js?v={$version}\"></script>";
 
     }
 
