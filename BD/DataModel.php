@@ -1918,9 +1918,12 @@ class DataModel {
      * @param mixed $fin Valor final
      */
     function entre($campo, $ini, $fin) {
-
+        if (!$this->usoWhere) {
+            $this->query .= " where ";
+            $this->usoWhere = true;
+        }
         $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
-
+        return $this;
     }
 
     /**
