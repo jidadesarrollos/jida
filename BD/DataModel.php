@@ -1922,6 +1922,8 @@ class DataModel {
             $this->query .= " where ";
             $this->usoWhere = true;
         }
+        else $this->query .= " and ";
+        
         $this->query .= $campo .= ' between \'' . $ini . '\' and \'' . $fin . '\'';
         return $this;
     }
