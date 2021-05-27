@@ -137,6 +137,7 @@ class Vista {
         $module = json_decode(file_get_contents($directorio . "/module.json"));
         $bundle = property_exists($module, 'bundle') ? $module->bundle : 'code';
         $file = self::$staticURl . "/$bundle";
+        $file = implode("/", array_filter(explode('/', $file)));
         $config = Config::obtener();
         $version = $config::VERSION;
         return "\n\t\t<script type=\"module\" src=\"{$file}.js?v={$version}\"></script>";
