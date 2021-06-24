@@ -11,7 +11,6 @@ use Jida\Manager\Vista\Tema;
 trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
-
         $archivo = (is_array($archivo)) ? $archivo["src"] : $archivo;
         if (strpos($archivo, 'modulo') !== false) {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
