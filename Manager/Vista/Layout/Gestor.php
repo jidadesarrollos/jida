@@ -8,10 +8,11 @@ namespace Jida\Manager\Vista\Layout;
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Tema;
 
-Trait Gestor {
+trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
 
+        $archivo = (is_array($archivo)) ? $archivo["src"] : $archivo;
         if (strpos($archivo, 'modulo') !== false) {
             $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
         }
