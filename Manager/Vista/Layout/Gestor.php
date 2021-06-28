@@ -7,16 +7,23 @@ namespace Jida\Manager\Vista\Layout;
 
 use Jida\Manager\Estructura;
 use Jida\Manager\Vista\Tema;
+use Jida\Medios\Debug;
 
-Trait Gestor {
+trait Gestor {
 
     private static function _procesarUbicacion($archivo, $tipo) {
 
-        if (strpos($archivo, 'modulo') !== false) {
-            $archivo = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
+        $url = is_array($archivo) ? $archivo['src'] : $archivo;
+
+        if (strpos($url, 'modulo') !== false) {
+            $url = str_replace('modulo', Estructura::$urlModulo . "/htdocs/$tipo/", $archivo);
         }
-        elseif (strpos($archivo, '{tema}') !== false) {
-            $archivo = str_replace('{tema}', Tema::$url, $archivo);
+        elseif (strpos($url, '{tema}') !== false) {
+            $url = str_replace('{tema}', Tema::$url, $archivo);
+        }
+
+        if (is_array($archivo)) {
+            $archivo['src'] = $url;
         }
 
         return $archivo;
